@@ -5,13 +5,22 @@
 #define MACHINE_GUI_WIDGET_H_INCLUDED
 
 #include "_Math.h"
+typedef struct Machine_GUI_Context Machine_GUI_Context;
+typedef struct Machine_GUI_WidgetList Machine_GUI_WidgetList;
 
 /// @brief Base of all widgets.
 MACHINE_DECLARE_CLASSTYPE(Machine_GUI_Widget)
 
 struct Machine_GUI_Widget {
   Machine_Object parent;
-  void (*render)(Machine_GUI_Widget* self, float width, float height);
+
+  /// @brief The children of this widget.
+  Machine_GUI_WidgetList* children;
+
+  /// @brief A pointer to the name of this widget or a null pointer.
+  Machine_String* name;
+
+  void (*render)(Machine_GUI_Widget* self, Machine_GUI_Context* context, float width, float height);
   
   const Machine_Math_Rectangle2* (*getRectangle)(Machine_GUI_Widget* self);
   void (*setRectangle)(Machine_GUI_Widget* self, const Machine_Math_Rectangle2* rectangle);
@@ -37,7 +46,7 @@ void Machine_GUI_Widget_construct(Machine_GUI_Widget* self, size_t numberOfArgum
 /// @param self This widget.
 /// @param width The width of the canvas.
 /// @param height The height of the canvas.
-void Machine_GUI_Widget_render(Machine_GUI_Widget* self, float width, float height);
+void Machine_GUI_Widget_render(Machine_GUI_Widget* self, Machine_GUI_Context* context, float width, float height);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 

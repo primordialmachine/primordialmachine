@@ -43,7 +43,7 @@ static const Machine_Math_Rectangle2* Machine_GUI_TextLabel_getRectangle(Machine
 
 static const Machine_Math_Vector2* Machine_GUI_TextLabel_getPreferredSize(Machine_GUI_TextLabel* self);
 
-static void Machine_GUI_TextLabel_render(Machine_GUI_TextLabel* self, float width, float height);
+static void Machine_GUI_TextLabel_render(Machine_GUI_TextLabel* self, Machine_GUI_Context* context, float width, float height);
 
 void Machine_GUI_TextLabel_construct(Machine_GUI_TextLabel* self, size_t numberOfArguments, const Machine_Value* arguments) {
   Machine_GUI_Widget_construct((Machine_GUI_Widget*)self, numberOfArguments, arguments);
@@ -51,7 +51,7 @@ void Machine_GUI_TextLabel_construct(Machine_GUI_TextLabel* self, size_t numberO
   self->foreground = Machine_Text_Layout_create(Machine_String_create("", strlen("")), font);
   self->background = Machine_Rectangle2_create();
   self->childDirty = true;
-  ((Machine_GUI_Widget*)self)->render = (void (*)(Machine_GUI_Widget *, float, float))&Machine_GUI_TextLabel_render;
+  ((Machine_GUI_Widget*)self)->render = (void (*)(Machine_GUI_Widget *, Machine_GUI_Context*, float, float))&Machine_GUI_TextLabel_render;
   ((Machine_GUI_Widget*)self)->setRectangle = (void (*)(Machine_GUI_Widget*, const Machine_Math_Rectangle2*)) & Machine_GUI_TextLabel_setRectangle;
   ((Machine_GUI_Widget*)self)->getRectangle = (const Machine_Math_Rectangle2 * (*)(Machine_GUI_Widget*)) & Machine_GUI_TextLabel_getRectangle;
   ((Machine_GUI_Widget*)self)->setPosition= (void (*)(Machine_GUI_Widget*, const Machine_Math_Vector2*)) & Machine_GUI_TextLabel_setPosition;
@@ -147,7 +147,7 @@ const Machine_Math_Rectangle2* Machine_GUI_TextLabel_getRectangle(Machine_GUI_Te
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-void Machine_GUI_TextLabel_render(Machine_GUI_TextLabel* self, float width, float height) {
+void Machine_GUI_TextLabel_render(Machine_GUI_TextLabel* self, Machine_GUI_Context* context, float width, float height) {
   if (self->childDirty) {
     // TODO: Only do this layouting if necessary.
     Machine_Math_Rectangle2* clipRect = Machine_Rectangle2_getRectangle(self->background);

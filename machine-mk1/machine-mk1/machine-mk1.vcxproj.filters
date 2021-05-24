@@ -120,6 +120,9 @@
     <ClCompile Include="GUI\WidgetList.c">
       <Filter>Quelldateien\GUI</Filter>
     </ClCompile>
+    <ClCompile Include="GUI\Context.c">
+      <Filter>Quelldateien\GUI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\external\glad\include\glad\glad.h">
@@ -195,6 +198,9 @@
       <Filter>Headerdateien\GUI</Filter>
     </ClInclude>
     <ClInclude Include="GUI\WidgetList.h">
+      <Filter>Headerdateien\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\Context.h">
       <Filter>Headerdateien\GUI</Filter>
     </ClInclude>
   </ItemGroup>

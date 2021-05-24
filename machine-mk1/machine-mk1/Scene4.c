@@ -17,6 +17,7 @@
 #include "Texture.h"
 #include "VertexDescriptor.h"
 #include "Binding.h"
+#include "GUI/Context.h"
 #include "GUI/TextLabel.h"
 #include "GUI/Widget.h"
 
@@ -24,6 +25,7 @@
 struct Scene4 {
   Scene parent;
   Machine_Fonts_Font* font;
+  Machine_GUI_Context* context;
   /// @brief Text layout #1.
   Machine_Text_Layout* text1;
   /// @brief Text label #2.
@@ -37,6 +39,9 @@ void Scene4_destruct(Scene4* self);
 static void Scene4_visit(Scene4* self) {
   if (self->font) {
     Machine_visit(self->font);
+  }
+  if (self->context) {
+    Machine_visit(self->context);
   }
   if (self->text1) {
     Machine_visit(self->text1);
@@ -54,6 +59,8 @@ MACHINE_DEFINE_CLASSTYPE_EX(Scene4, Scene, &Scene4_visit, &Scene4_construct, NUL
 
 static void Scene4_onStartup(Scene4* scene) {
   scene->font = Machine_Fonts_createFont("RobotoSlab-Regular.ttf", 20);
+  //
+  scene->context = Machine_GUI_Context_create();
   //
   scene->text1 = Machine_Text_Layout_create(Machine_String_create("", strlen("")), scene->font);
   {
@@ -125,6 +132,7 @@ static void updateText3(Scene4* self, float width, float height) {
 }
 
 static void Scene4_onCanvasSizeChanged(Scene4* self, Machine_CanvasSizeChangedEvent* event) {
+  Machine_GUI_Context_setCanvasSize(self->context, event->width, event->height);
   updateText1(self, event->width, event->height);
   updateText2(self, event->width, event->height);
   updateText3(self, event->width, event->height);
@@ -137,7 +145,7 @@ static void Scene4_onUpdate(Scene4* self, float width, float height) {
 
   Machine_Text_Layout_render(self->text1, width, height);
   Machine_Text_Layout_render(self->text2, width, height);
-  Machine_GUI_Widget_render((Machine_GUI_Widget *)self->textLabel3, width, height);
+  Machine_GUI_Widget_render((Machine_GUI_Widget *)self->textLabel3, self->context, width, height);
 }
 
 static void Scene4_onShutdown(Scene4* self) {

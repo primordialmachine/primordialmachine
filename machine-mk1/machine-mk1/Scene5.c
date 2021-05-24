@@ -19,6 +19,7 @@
 #include "GUI/TextButton.h"
 #include "GUI/Border.h"
 #include "GUI/WidgetList.h"
+#include "GUI/Context.h"
 
 
 static const float OUTER_BORDER_SIZE = 4.f;
@@ -28,6 +29,7 @@ static const float INNER_BORDER_SIZE = 16.f;
 struct Scene5 {
   Scene parent;
   Machine_Fonts_Font* font;
+  Machine_GUI_Context* context;
   /// @brief The main menu (start game, options, exit, credits).
   Machine_GUI_WidgetList* mainMenu;
   /// @brief Label #2.
@@ -41,6 +43,9 @@ void Scene5_destruct(Scene5* self);
 static void Scene5_visit(Scene5* self) {
   if (self->font) {
     Machine_visit(self->font);
+  }
+  if (self->context) {
+    Machine_visit(self->context);
   }
   if (self->mainMenu) {
     Machine_visit(self->mainMenu);
@@ -103,18 +108,20 @@ static Machine_GUI_Widget* createTextButton(const char* text, Machine_Fonts_Font
 }
 
 
-static void Scene5_startup(Scene5* scene) {
-  scene->font = Machine_Fonts_createFont("RobotoSlab-Regular.ttf", 20);
+static void Scene5_startup(Scene5* self) {
+  self->font = Machine_Fonts_createFont("RobotoSlab-Regular.ttf", 20);
   //
-  scene->mainMenu = Machine_GUI_WidgetList_create();
-  Machine_GUI_WidgetList_append(scene->mainMenu, createTextButton("Start Game", scene->font));
-  Machine_GUI_WidgetList_append(scene->mainMenu, createTextButton("Options", scene->font));
-  Machine_GUI_WidgetList_append(scene->mainMenu, createTextButton("Exit Game", scene->font));
-  Machine_GUI_WidgetList_append(scene->mainMenu, createTextButton("Credits", scene->font));
+  self->context = Machine_GUI_Context_create();
   //
-  scene->label2 = createTextLabel("Server Version 1.0\nClient Version 1.0", scene->font);
+  self->mainMenu = Machine_GUI_WidgetList_create();
+  Machine_GUI_WidgetList_append(self->mainMenu, createTextButton("Start Game", self->font));
+  Machine_GUI_WidgetList_append(self->mainMenu, createTextButton("Options", self->font));
+  Machine_GUI_WidgetList_append(self->mainMenu, createTextButton("Exit Game", self->font));
+  Machine_GUI_WidgetList_append(self->mainMenu, createTextButton("Credits", self->font));
   //
-  scene->label3 = createTextLabel("Nanobox IV\n400 units of unprimed nanites.", scene->font);
+  self->label2 = createTextLabel("Server Version 1.0\nClient Version 1.0", self->font);
+  //
+  self->label3 = createTextLabel("Nanobox IV\n400 units of unprimed nanites.", self->font);
 }
 
 /// @brief Compute the rectangle of all widgets.
@@ -186,6 +193,7 @@ static void updateText3(Scene5* scene, float width, float height) {
 }
 
 static void Scene5_onCanvasSizeChanged(Scene5* self, Machine_CanvasSizeChangedEvent* event) {
+  Machine_GUI_Context_setCanvasSize(self->context, event->width, event->height);
   updateText1(self, event->width, event->height);
   updateText2(self, event->width, event->height);
   updateText3(self, event->width, event->height);
@@ -196,12 +204,13 @@ static void Scene5_update(Scene5* self, float width, float height) {
   Machine_UtilitiesGl_call(glViewport(0, 0, width, height));
   Machine_UtilitiesGl_call(glClear(GL_COLOR_BUFFER_BIT));
 
+  Machine_GUI_Context_setCanvasSize(self->context, width, height);
   for (size_t i = 0, n = Machine_GUI_WidgetList_getSize(self->mainMenu); i < n; ++i) {
     Machine_GUI_Widget* widget = Machine_GUI_WidgetList_getAt(self->mainMenu, i);
-    Machine_GUI_Widget_render(widget, width, height);
+    Machine_GUI_Widget_render(widget, self->context, width, height);
   }
-  Machine_GUI_Widget_render((Machine_GUI_Widget*)self->label2, width, height);
-  Machine_GUI_Widget_render((Machine_GUI_Widget*)self->label3, width, height);
+  Machine_GUI_Widget_render((Machine_GUI_Widget*)self->label2, self->context, width, height);
+  Machine_GUI_Widget_render((Machine_GUI_Widget*)self->label3, self->context, width, height);
 }
 
 static void Scene5_shutdown(Scene5* scene) {
@@ -226,9 +235,5 @@ Scene5* Scene5_create() {
   static const size_t NUMBER_OF_ARGUMENTS = 0;
   static const Machine_Value ARGUMENTS[] = { { Machine_ValueFlag_Void, Machine_Void_Void } };
   Scene5* scene = (Scene5*)Machine_allocateClassObject(ty, NUMBER_OF_ARGUMENTS, ARGUMENTS);
-  if (!scene) {
-    Machine_setStatus(Machine_Status_AllocationFailed);
-    Machine_jump();
-  }
   return scene;
 }
