@@ -42,7 +42,7 @@ struct Machine_Binding {
   Machine_Binding_Node* nodes;
   Machine_ShaderProgram* program;
   Machine_VertexDescriptor* vertexDescriptor;
-  Machine_FloatBuffer* buffer;
+  Machine_VideoBuffer* buffer;
   GLuint id;
   bool dirty;
 };
@@ -69,7 +69,7 @@ static void Machine_Binding_visit(Machine_Binding* self) {
   }
 }
 
-Machine_Binding* Machine_Binding_create(Machine_ShaderProgram *program, Machine_VertexDescriptor *vertexDescriptor, Machine_FloatBuffer* buffer) {
+Machine_Binding* Machine_Binding_create(Machine_ShaderProgram *program, Machine_VertexDescriptor *vertexDescriptor, Machine_VideoBuffer* buffer) {
   Machine_Binding* self = Machine_allocate(sizeof(Machine_Binding), (void (*)(void*)) & Machine_Binding_visit, (void (*)(void *))&Machine_Binding_finalize);
   if (!self) {
     Machine_setStatus(Machine_Status_AllocationFailed);
@@ -140,17 +140,17 @@ void Machine_Binding_activate(Machine_Binding* self) {
           switch (semantics) {
           case Machine_VertexElementSemantics_XfYf:
             glEnableVertexAttribArray(i);
-            glBindBuffer(GL_ARRAY_BUFFER, *(GLuint*)Machine_VideoBuffer_getId((Machine_VideoBuffer *)self->buffer));
+            glBindBuffer(GL_ARRAY_BUFFER, *((GLuint*)Machine_VideoBuffer_getId(self->buffer)));
             glVertexAttribPointer(inputIndex, 2, GL_FLOAT, GL_FALSE, vertexSize, (void*)offset);
             break;
           case Machine_VertexElementSemantics_RfGfBf:
             glEnableVertexAttribArray(i);
-            glBindBuffer(GL_ARRAY_BUFFER, *(GLuint*)Machine_VideoBuffer_getId((Machine_VideoBuffer *)self->buffer));
+            glBindBuffer(GL_ARRAY_BUFFER, *((GLuint*)Machine_VideoBuffer_getId(self->buffer)));
             glVertexAttribPointer(inputIndex, 3, GL_FLOAT, GL_FALSE, vertexSize, (void*)offset);
             break;
           case Machine_VertexElementSemantics_UfVf:
             Machine_UtilitiesGl_call(glEnableVertexAttribArray(i));
-            Machine_UtilitiesGl_call(glBindBuffer(GL_ARRAY_BUFFER, *(GLuint*)Machine_VideoBuffer_getId((Machine_VideoBuffer *)self->buffer)));
+            Machine_UtilitiesGl_call(glBindBuffer(GL_ARRAY_BUFFER, *((GLuint*)Machine_VideoBuffer_getId(self->buffer))));
             Machine_UtilitiesGl_call(glVertexAttribPointer(inputIndex, 2, GL_FLOAT, GL_FALSE, vertexSize, (void*)offset));
             break;
           };

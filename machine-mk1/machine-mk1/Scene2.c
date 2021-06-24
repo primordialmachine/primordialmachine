@@ -11,6 +11,7 @@
 
 #include "Fonts.h"
 #include "_Images.h"
+#include "_Video.h"
 #include "GL/Buffer.h"
 #include "GL/Texture.h"
 #include "ShaderProgram.h"
@@ -41,7 +42,7 @@ struct Scene2 {
   Machine_ShaderProgram* shaderProgram;
   GLint mvp_location;
   Machine_Binding* binding;
-  Machine_FloatBuffer* vertices;
+  Machine_VideoBuffer* vertices;
 };
 
 static void Scene2_destruct(Scene2* self);
@@ -61,8 +62,8 @@ static void Scene2_visit(Scene2* self) {
 MACHINE_DEFINE_CLASSTYPE_EX(Scene2, Scene, &Scene2_visit, &Scene2_construct, NULL)
 
 static void Scene2_onStartup(Scene2* scene) {
-  scene->vertices = (Machine_FloatBuffer *)Machine_GL_FloatBuffer_create();
-  Machine_VideoBuffer_setData((Machine_VideoBuffer *)scene->vertices, sizeof(vertices), (void const *)vertices);
+  scene->vertices = (Machine_VideoBuffer*)Machine_GL_FloatBuffer_create();
+  Machine_VideoBuffer_setData((Machine_VideoBuffer *)scene->vertices, sizeof(vertices), (void const*)vertices);
 
   scene->shaderProgram = Machine_ShaderProgram_generate(false, true, false, false);
   scene->mvp_location = glGetUniformLocation(scene->shaderProgram->programId, "modelToProjectionMatrix");
@@ -71,7 +72,7 @@ static void Scene2_onStartup(Scene2* scene) {
   Machine_VertexDescriptor_append(vd, Machine_VertexElementSemantics_XfYf);
   Machine_VertexDescriptor_append(vd, Machine_VertexElementSemantics_RfGfBf);
 
-  scene->binding = Machine_Binding_create(scene->shaderProgram, vd, scene->vertices);
+  scene->binding = Machine_Binding_create(scene->shaderProgram, vd, (Machine_VideoBuffer*)scene->vertices);
   Machine_Binding_set(scene->binding, Machine_String_create_noraise("vertex_position", strlen("vertex_position") + 1), 0);
   Machine_Binding_set(scene->binding, Machine_String_create_noraise("vertex_color", strlen("vertex_color") + 1), 1);
 }

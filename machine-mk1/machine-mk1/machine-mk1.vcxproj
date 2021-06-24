@@ -83,6 +83,21 @@
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)GL\</ObjectFileName>
     </ClCompile>
     <ClCompile Include="GUI\BorderModel.c" />
+    <ClCompile Include="GUI\Context.c" />
+    <ClCompile Include="GUI\GDL\Context.c">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)/GUI/GDL</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)/GUI/GDL</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="GUI\GDL\ListToVector.c" />
+    <ClCompile Include="GUI\GDL\ValueToReal.c" />
+    <ClCompile Include="GUI\Group.c" />
+    <ClCompile Include="GUI\LayoutModel.c" />
+    <ClCompile Include="GUI\Reader\Reader.c" />
+    <ClCompile Include="GUI\Reader\Reader.package.c" />
+    <ClCompile Include="GUI\Signals\Context.c">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)/GUI/Signals</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)/GUI/Signals</ObjectFileName>
+    </ClCompile>
     <ClCompile Include="GUI\WidgetList.c" />
     <ClCompile Include="GUI\TextButton.c" />
     <ClCompile Include="GUI\Widget.c" />
@@ -111,6 +126,15 @@
     <ClInclude Include="GL\Buffer.h" />
     <ClInclude Include="GL\Texture.h" />
     <ClInclude Include="GUI\BorderModel.h" />
+    <ClInclude Include="GUI\Context.h" />
+    <ClInclude Include="GUI\GDL\Context.h" />
+    <ClInclude Include="GUI\GDL\ListToVector.h" />
+    <ClInclude Include="GUI\GDL\ValueToReal.h" />
+    <ClInclude Include="GUI\Group.h" />
+    <ClInclude Include="GUI\LayoutModel.h" />
+    <ClInclude Include="GUI\Reader\Reader.h" />
+    <ClInclude Include="GUI\Reader\Reader.package.h" />
+    <ClInclude Include="GUI\Signals\Context.h" />
     <ClInclude Include="GUI\WidgetList.h" />
     <ClInclude Include="GUI\TextButton.h" />
     <ClInclude Include="GUI\Widget.h" />
@@ -135,6 +159,9 @@
     <ProjectReference Include="..\core\machine-mk1-core.vcxproj">
       <Project>{f34866d8-3093-4b44-a225-7da2b5cd8e83}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\gdl\machine-mk1-gdl.vcxproj">
+      <Project>{a45e158d-8db9-4d07-9642-a79c583a5dd1}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\images\machine-mk1-images.vcxproj">
       <Project>{f0b732b5-824d-40ab-aa0a-a067b6a852f9}</Project>
     </ProjectReference>
@@ -150,6 +177,10 @@
     <ProjectReference Include="..\video\machine-mk1-video.vcxproj">
       <Project>{ea697f45-b77e-4384-8bf1-6001586e058c}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="GUI\GDL\Context.i" />
+    <None Include="GUI\Signals\Context.i" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

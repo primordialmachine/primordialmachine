@@ -11,6 +11,7 @@
 
 #include "Fonts.h"
 #include "_Images.h"
+#include "_Video.h"
 #include "GL/Buffer.h"
 #include "GL/Texture.h"
 #include "ShaderProgram.h"
@@ -43,7 +44,7 @@ struct Scene3 {
   GLint mvp_location;
   GLint texture_location;
   Machine_Binding* binding;
-  Machine_FloatBuffer* vertices;
+  Machine_VideoBuffer* vertices;
   Machine_Images_Image* image;
   Machine_Texture* texture;
 };
@@ -74,8 +75,8 @@ static void Scene3_startup(Scene3* scene) {
   scene->image = Machine_Images_createImageFromPath(Machine_String_create("test-transparency-1.png", strlen("test-transparency-1.png")));
   scene->texture = (Machine_Texture *)Machine_GL_Texture_create(scene->image);
 
-  scene->vertices = (Machine_FloatBuffer *)Machine_GL_FloatBuffer_create();
-  Machine_VideoBuffer_setData((Machine_VideoBuffer*)scene->vertices, sizeof(vertices), (void const *)vertices);
+  scene->vertices = (Machine_VideoBuffer*)Machine_GL_FloatBuffer_create();
+  Machine_VideoBuffer_setData((Machine_VideoBuffer*)scene->vertices, sizeof(vertices), (void const*)vertices);
 
   scene->shaderProgram = Machine_ShaderProgram_generate(false, true, true, true);
   scene->mvp_location = glGetUniformLocation(scene->shaderProgram->programId, "modelToProjectionMatrix");
@@ -86,7 +87,7 @@ static void Scene3_startup(Scene3* scene) {
   Machine_VertexDescriptor_append(vd, Machine_VertexElementSemantics_RfGfBf);
   Machine_VertexDescriptor_append(vd, Machine_VertexElementSemantics_UfVf);
 
-  scene->binding = Machine_Binding_create(scene->shaderProgram, vd, scene->vertices);
+  scene->binding = Machine_Binding_create(scene->shaderProgram, vd, (Machine_VideoBuffer*)scene->vertices);
   Machine_Binding_set(scene->binding, Machine_String_create("vertex_position", strlen("vertex_position") + 1), 0);
   Machine_Binding_set(scene->binding, Machine_String_create("vertex_color", strlen("vertex_color") + 1), 1);
   Machine_Binding_set(scene->binding, Machine_String_create("vertex_texture_coordinate_1", strlen("vertex_texture_coordinate_1") + 1), 2);

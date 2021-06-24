@@ -229,14 +229,14 @@ Machine_Fonts_Font* Machine_Fonts_createFont(const char* path, int pointSize) {
   Machine_pushJumpTarget(&jumpTarget);
   if (!setjmp(jumpTarget.environment)) {
     font->map = Map_create();
-    font->vertices = (Machine_FloatBuffer *)Machine_GL_FloatBuffer_create();
+    font->vertices = (Machine_FloatBuffer*)Machine_GL_FloatBuffer_create();
     font->shader = Machine_ShaderProgram_generateTextShader(true);
 
     Machine_VertexDescriptor* vertexDescriptor = Machine_VertexDescriptor_create();
     Machine_VertexDescriptor_append(vertexDescriptor, Machine_VertexElementSemantics_XfYf);
     Machine_VertexDescriptor_append(vertexDescriptor, Machine_VertexElementSemantics_UfVf);
 
-    font->binding = Machine_Binding_create(font->shader, vertexDescriptor, font->vertices);
+    font->binding = Machine_Binding_create(font->shader, vertexDescriptor, (Machine_VideoBuffer*)font->vertices);
     Machine_Binding_set(font->binding, Machine_String_create("vertex_position", strlen("vertex_position") + 1), 0);
     Machine_Binding_set(font->binding, Machine_String_create("vertex_texture_coordinate_1", strlen("vertex_texture_coordinate_1") + 1), 1);
 

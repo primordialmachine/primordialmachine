@@ -1,0 +1,13 @@
+{
+  kind : 'Border',
+  borderWidth : 4,
+  child : {
+    kind : 'Border',
+    borderWidth : 16,
+    borderColor: [1, 1, 1],
+    child : {
+      kind : 'TextLabel',
+      text : 'Nanobox IV\n400 units of unprimed nanites.'
+    }
+  }
+}

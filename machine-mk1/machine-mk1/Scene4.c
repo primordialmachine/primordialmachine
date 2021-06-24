@@ -12,17 +12,20 @@
 #include "Fonts.h"
 #include "Shape2.h"
 #include "_Images.h"
-#include "GL/Buffer.h"
-#include "GL/Texture.h"
+#include "_Video.h"
 #include "ShaderProgram.h"
 #include "VertexDescriptor.h"
 #include "Binding.h"
+#include "GUI/Context.h"
 #include "GUI/TextLabel.h"
 #include "GUI/Widget.h"
 
 
 struct Scene4 {
   Scene parent;
+  //
+  Machine_GUI_Context* guiContext;
+  //
   Machine_Fonts_Font* font;
   /// @brief Text layout #1.
   Machine_Text_Layout* text1;
@@ -35,6 +38,9 @@ struct Scene4 {
 void Scene4_destruct(Scene4* self);
 
 static void Scene4_visit(Scene4* self) {
+  if (self->guiContext) {
+    Machine_visit(self->guiContext);
+  }
   if (self->font) {
     Machine_visit(self->font);
   }
@@ -52,6 +58,9 @@ static void Scene4_visit(Scene4* self) {
 MACHINE_DEFINE_CLASSTYPE_EX(Scene4, Scene, &Scene4_visit, &Scene4_construct, NULL)
 
 static void Scene4_onStartup(Scene4* scene) {
+  //
+  scene->guiContext = Machine_GUI_Context_create(Machine_GDL_Context_create());
+  //
   scene->font = Machine_Fonts_createFont("RobotoSlab-Regular.ttf", 20);
   //
   scene->text1 = Machine_Text_Layout_create(Machine_String_create("", strlen("")), scene->font);
@@ -66,7 +75,7 @@ static void Scene4_onStartup(Scene4* scene) {
     Machine_Text_Layout_setText(scene->text2, Machine_String_create(text, strlen(text)));
   }
   //
-  scene->textLabel3 = Machine_GUI_TextLabel_create();
+  scene->textLabel3 = Machine_GUI_TextLabel_create(scene->guiContext);
   {
     const char* text = "Nanobox IV\n400 units of unprimed nanites.";
     Machine_GUI_TextLabel_setText(scene->textLabel3, Machine_String_create(text, strlen(text)));

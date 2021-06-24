@@ -9,6 +9,7 @@
 #endif
 
 #include "./Runtime/Collection.h"
+typedef struct Machine_List Machine_List;
 
 /// @brief A map.
 MACHINE_DECLARE_CLASSTYPE(Machine_Map)
@@ -46,5 +47,10 @@ void Machine_Map_set(Machine_Map* self, Machine_Value key, Machine_Value value);
 /// @param key The key.
 /// @return The value for the key if any. If no value for that key exists, the void value is returned.
 Machine_Value Machine_Map_get(const Machine_Map* self, Machine_Value key);
+
+/// @brief Convert the specified map to a list of key value pairs.
+/// @param self This map.
+/// @return A Machine_List of Machine_Pair values. 
+Machine_List* Machine_Map_toList(const Machine_Map* self);
 
 #endif // MACHINE_RUNTIME_MAP_H_INCLUDED

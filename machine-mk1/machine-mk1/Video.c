@@ -1,6 +1,8 @@
 #include "Video.h"
 
 #include <stdio.h>
+#include "_Video.h"
+#include "GL/Buffer.h"
 #include "GL/Texture.h"
 #include "ShaderProgram.h"
 
@@ -131,11 +133,19 @@ void Machine_Video_shutdown() {
   glfwTerminate();
 }
 
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
 void Machine_Video_bindTexture(size_t textureUnit, Machine_Texture* texture) {
   Machine_GL_Texture* textureGL = (Machine_GL_Texture*)texture;
   Machine_UtilitiesGl_call(glActiveTexture(GL_TEXTURE0 + textureUnit));
   Machine_UtilitiesGl_call(glBindTexture(GL_TEXTURE_2D, textureGL->id));
 }
+
+Machine_Texture* Machine_Video_createTextureFromImage(Machine_Images_Image* image) {
+  return (Machine_Texture *)Machine_GL_Texture_create(image);
+}
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 void Machine_Video_bindShaderProgram(Machine_ShaderProgram* shaderProgram) {
   Machine_UtilitiesGl_call(glUseProgram(shaderProgram->programId));

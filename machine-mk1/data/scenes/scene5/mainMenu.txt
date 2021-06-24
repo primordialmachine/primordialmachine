@@ -1,0 +1,62 @@
+{
+  kind : 'Group',
+  layout : {
+    direction : 'column',
+    justification : 'center',
+    interspacing : 5,
+  },
+  children: [
+    {
+      kind : 'Border',
+      borderWidth : 4,
+      child : {
+        kind : 'Border',
+        borderWidth : 16,
+        borderColor: [1, 1, 1],
+        child : {
+          kind : 'TextButton',
+          text : 'Start Game'
+        }
+      }
+    },
+    {
+      kind : 'Border',
+      borderWidth : 4,
+      child : {
+        kind : 'Border',
+        borderWidth : 16,
+        borderColor: [1, 1, 1],
+        child : {
+          kind : 'TextButton',
+          text : 'Options'
+        }
+      }
+    },
+    {
+      kind : 'Border',
+      borderWidth : 4,
+      child : {
+        kind : 'Border',
+        borderWidth : 16,
+        borderColor: [1, 1, 1],
+        child : {
+          kind : 'TextButton',
+          text : 'Exit Game'
+        }
+      }
+    },
+    {
+      kind : 'Border',
+      borderWidth : 4,
+      child : {
+        kind : 'Border',
+        borderWidth : 16,
+        borderColor: [1, 1, 1],
+        child : {
+          kind : 'TextButton',
+          text : 'Credits'
+        }
+      }
+    },
+  ]
+}

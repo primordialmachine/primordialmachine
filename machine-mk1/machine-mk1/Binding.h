@@ -3,7 +3,6 @@
 
 
 
-#include "_Runtime.h"
 #include "_Video.h"
 #include "ShaderProgram.h"
 #include "VertexDescriptor.h"
@@ -17,7 +16,7 @@
 /// However EVERY shader program input needs to have a corresponding vertex element.
 MACHINE_DECLARE_CLASSTYPE(Machine_Binding)
 
-Machine_Binding* Machine_Binding_create(Machine_ShaderProgram* program, Machine_VertexDescriptor* vertexDescriptor, Machine_FloatBuffer* buffer);
+Machine_Binding* Machine_Binding_create(Machine_ShaderProgram* program, Machine_VertexDescriptor* vertexDescriptor, Machine_VideoBuffer* buffer);
 
 bool Machine_Binding_set(Machine_Binding* self, Machine_String* name, size_t index);
 

@@ -4,6 +4,7 @@
 #include "_Math.h"
 #include "_Video.h"
 #include "./UtilitiesGL.h"
+typedef struct Machine_Images_Image Machine_Images_Image;
 typedef struct Machine_Texture Machine_Texture;
 typedef struct Machine_ShaderProgram Machine_ShaderProgram;
 
@@ -21,15 +22,25 @@ int Machine_Video_startup();
 /// UNDEFINED if the reference count is @a 0.
 void Machine_Video_shutdown();
 
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
 /// @brief Assign a texture unit.
 /// @param unit The index of the texture unit.
 /// @param texture A pointer to the texture or the null pointer.
 void Machine_Video_bindTexture(size_t unit, Machine_Texture* texture);
 
+/// @brief Create a texture from an image.
+/// @param image The image.
+/// @return The texture.
+Machine_Texture* Machine_Video_createTextureFromImage(Machine_Images_Image* image);
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
 /// @brief Assign a shader program.
 /// @param shaderProgram The shader program.
 void Machine_Video_bindShaderProgram(Machine_ShaderProgram* shaderProgram);
 
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 /// @brief Set the clear color.
 /// @param clearColor The clear color.

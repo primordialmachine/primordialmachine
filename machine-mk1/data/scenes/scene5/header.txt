@@ -1,0 +1,15 @@
+{
+  kind : 'Border',
+  borderWidth : 4,
+  child :
+  {
+    kind : 'Border',
+    borderWidth : 16,
+    borderColor: [1, 1, 1],
+    child :
+    {
+      kind : 'TextLabel',
+      text : 'Server Version 1.0\nClient Version 1.0'
+    }
+  }
+}

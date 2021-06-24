@@ -60,16 +60,25 @@ typedef int Machine_StatusValue;
 #define Machine_Status_SyntacticalError (11)
 
 /// @brief Symbolic constant for a status variable value.
+/// That value indicates the occurrence of a semantical error.
+#define Machine_Status_SemanticalError (12)
+
+/// @brief Symbolic constant for a status variable value.
 /// The value indicates a program point was reached which should not be reached.
 #define Machine_Status_UnreachableProgramPointReached (13)
 
 /// @brief Symbolic constant for a status variable value.
 /// That value indicates an pointer argument is null.
-#define Machine_Status_ArgumentNull (13)
+#define Machine_Status_ArgumentNull (14)
 
 /// @brief Symbolic constant for a status variable value.
 /// That value indicates an invalid number of arguments.
-#define Machine_Status_InvalidNumberOfArguments (14)
+#define Machine_Status_InvalidNumberOfArguments (15)
+
+/// @brief Symbolic constant for a status variable value.
+/// That value indicates a conversion failed.
+#define Machine_Status_ConversionFailed (16)
+
 
 /// @brief Symbolic constant for a status variable value.
 /// That value indicates a conversion failed.
