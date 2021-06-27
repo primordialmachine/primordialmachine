@@ -120,7 +120,7 @@ void Machine_Rectangle2_construct(Machine_Rectangle2* self, size_t numberOfArgum
   ((Machine_Shape2*)self)->render = (void(*)(Machine_Shape2*, float, float))&Machine_Rectangle2_render;
 
   self->vertices = Machine_Video_createBuffer();
-  self->shader = Machine_GL_ShaderProgram_generateShape2Shader(false);
+  self->shader = Machine_GL_ShaderProgram_generateShape2Shader();
 
   Machine_VertexDescriptor* vertexDescriptor = Machine_VertexDescriptor_create();
   Machine_VertexDescriptor_append(vertexDescriptor, Machine_VertexElementSemantics_XfYf);

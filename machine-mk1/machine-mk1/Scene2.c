@@ -62,10 +62,10 @@ MACHINE_DEFINE_CLASSTYPE_EX(Scene2, Scene, &Scene2_visit, &Scene2_construct, NUL
 
 static void Scene2_onStartup(Scene2* scene) {
   scene->vertices = Machine_Video_createBuffer();
-  Machine_VideoBuffer_setData(scene->vertices, sizeof(vertices), (void const *)vertices);
+  Machine_VideoBuffer_setData(scene->vertices, sizeof(vertices), (void const*)vertices);
 
-  scene->shaderProgram = Machine_GL_ShaderProgram_generateDefaultShader(false, true, false, false);
-  scene->mvp_location = glGetUniformLocation(((Machine_GL_ShaderProgram *)(scene->shaderProgram))->programId, "modelToProjectionMatrix");
+  scene->shaderProgram = (Machine_ShaderProgram *)Machine_GL_ShaderProgram_generateDefaultShader(false, true, false, false);
+  scene->mvp_location = glGetUniformLocation(((Machine_GL_ShaderProgram *)scene->shaderProgram)->programId, "modelToProjectionMatrix");
 
   Machine_VertexDescriptor* vd = Machine_VertexDescriptor_create();
   Machine_VertexDescriptor_append(vd, Machine_VertexElementSemantics_XfYf);

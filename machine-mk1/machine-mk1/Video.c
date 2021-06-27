@@ -1,13 +1,9 @@
 #include "Video.h"
 
-
-
 #include <stdio.h>
 #include "GL/Buffer.h"
 #include "GL/ShaderProgram.h"
 #include "GL/Texture.h"
-
-
 
 static GLFWwindow* g_window = NULL;
 
@@ -147,12 +143,16 @@ Machine_VideoBuffer* Machine_Video_createBuffer() {
 Machine_ShaderProgram* Machine_Video_createShaderProgram(Machine_String* vertexProgramText, Machine_String* geometryProgramText, Machine_String* fragmentProgramText) {
   return (Machine_ShaderProgram*)Machine_GL_ShaderProgram_create(vertexProgramText, geometryProgramText, fragmentProgramText);
 }
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 void Machine_Video_bindTexture(size_t textureUnit, Machine_Texture* texture) {
   Machine_GL_Texture* textureGL = (Machine_GL_Texture*)texture;
   Machine_UtilitiesGl_call(glActiveTexture(GL_TEXTURE0 + textureUnit));
   Machine_UtilitiesGl_call(glBindTexture(GL_TEXTURE_2D, textureGL->id));
 }
+
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 void Machine_Video_bindShaderProgram(Machine_ShaderProgram* shaderProgram) {
   Machine_UtilitiesGl_call(glUseProgram(((Machine_GL_ShaderProgram *)shaderProgram)->programId));

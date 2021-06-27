@@ -38,15 +38,20 @@ Machine_VideoBuffer * Machine_Video_createBuffer();
 /// @return The shader program.
 Machine_ShaderProgram* Machine_Video_createShaderProgram(Machine_String *vertexProgramText, Machine_String* geometryProgramText, Machine_String* fragmentProgramText);
 
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
 /// @brief Assign a texture unit.
 /// @param unit The index of the texture unit.
 /// @param texture A pointer to the texture or the null pointer.
 void Machine_Video_bindTexture(size_t unit, Machine_Texture* texture);
 
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
 /// @brief Assign a shader program.
 /// @param shaderProgram The shader program.
 void Machine_Video_bindShaderProgram(Machine_ShaderProgram* shaderProgram);
 
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 /// @brief Set the clear color.
 /// @param clearColor The clear color.

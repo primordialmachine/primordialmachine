@@ -12,8 +12,9 @@
 MACHINE_DECLARE_CLASSTYPE(Machine_GUI_TextLabel)
 
 /// @brief Create a text label with default values.
+/// @param context The GUI context the text label belongs to.
 /// @return The text label.
-Machine_GUI_TextLabel* Machine_GUI_TextLabel_create();
+Machine_GUI_TextLabel* Machine_GUI_TextLabel_create(Machine_GUI_Context *context);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 

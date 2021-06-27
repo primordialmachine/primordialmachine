@@ -12,8 +12,9 @@
 MACHINE_DECLARE_CLASSTYPE(Machine_GUI_TextButton)
 
 /// @brief Create a text button with default values.
+/// @param context The GUI context the text button belongs to.
 /// @return The text button.
-Machine_GUI_TextButton* Machine_GUI_TextButton_create();
+Machine_GUI_TextButton* Machine_GUI_TextButton_create(Machine_GUI_Context *context);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 

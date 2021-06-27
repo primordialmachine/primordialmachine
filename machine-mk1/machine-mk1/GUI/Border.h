@@ -12,9 +12,10 @@
 /// @extends Machine.GUI.Widget
 MACHINE_DECLARE_CLASSTYPE(Machine_GUI_Border)
 
-/// @brief Create a label with default values.
-/// @return The label.
-Machine_GUI_Border* Machine_GUI_Border_create();
+/// @brief Create a border with default values.
+/// @param context The context the border belongs to.
+/// @return The border.
+Machine_GUI_Border* Machine_GUI_Border_create(Machine_GUI_Context* context);
 
 /// @brief Get the child.
 /// @param self This border.
@@ -39,11 +40,18 @@ void Machine_GUI_Border_setBorderColor(Machine_GUI_Border *self, const Machine_M
 /// @brief Get the border width.
 /// @param self This border.
 /// @return The border width.
-float Machine_GUI_Border_getBorderWidth(const Machine_GUI_Border* self);
+float Machine_GUI_Border_getBorderLeftWidth(const Machine_GUI_Border* self);
+float Machine_GUI_Border_getBorderRightWidth(const Machine_GUI_Border* self);
+float Machine_GUI_Border_getBorderTopWidth(const Machine_GUI_Border* self);
+float Machine_GUI_Border_getBorderBottomWidth(const Machine_GUI_Border* self);
 
 /// @brief Set the border width.
 /// @param self This border.
 /// @param width The border width.
 void Machine_GUI_Border_setBorderWidth(Machine_GUI_Border* self, float width);
+void Machine_GUI_Border_setLeftBorderWidth(Machine_GUI_Border* self, float width);
+void Machine_GUI_Border_setRightBorderWidth(Machine_GUI_Border* self, float width);
+void Machine_GUI_Border_setTopBorderWidth(Machine_GUI_Border* self, float width);
+void Machine_GUI_Border_setBottomBorderWidth(Machine_GUI_Border* self, float width);
 
 #endif // MACHINE_GUI_BORDER_H_INCLUDED

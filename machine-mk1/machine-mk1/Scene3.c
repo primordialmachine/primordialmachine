@@ -75,11 +75,11 @@ static void Scene3_startup(Scene3* scene) {
   scene->texture = Machine_Video_createTextureFromImage(scene->image);
 
   scene->vertices = Machine_Video_createBuffer();
-  Machine_VideoBuffer_setData(scene->vertices, sizeof(vertices), (void const *)vertices);
+  Machine_VideoBuffer_setData(scene->vertices, sizeof(vertices), (void const*)vertices);
 
-  scene->shaderProgram = Machine_GL_ShaderProgram_generateDefaultShader(false, true, true, true);
-  scene->mvp_location = glGetUniformLocation(((Machine_GL_ShaderProgram*)(scene->shaderProgram))->programId, "modelToProjectionMatrix");
-  scene->texture_location = glGetUniformLocation(((Machine_GL_ShaderProgram*)(scene->shaderProgram))->programId, "texture_1");
+  scene->shaderProgram = (Machine_ShaderProgram *)Machine_GL_ShaderProgram_generateDefaultShader(false, true, true, true);
+  scene->mvp_location = glGetUniformLocation(((Machine_GL_ShaderProgram *)(scene->shaderProgram))->programId, "modelToProjectionMatrix");
+  scene->texture_location = glGetUniformLocation(((Machine_GL_ShaderProgram *)(scene->shaderProgram))->programId, "texture_1");
 
   Machine_VertexDescriptor* vd = Machine_VertexDescriptor_create();
   Machine_VertexDescriptor_append(vd, Machine_VertexElementSemantics_XfYf);

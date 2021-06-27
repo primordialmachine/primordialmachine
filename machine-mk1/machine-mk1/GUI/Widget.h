@@ -6,12 +6,19 @@
 
 #include "_Math.h"
 #include "_Signals.h"
+typedef struct Machine_GUI_Context Machine_GUI_Context;
 
 /// @brief Base of all widgets.
 MACHINE_DECLARE_CLASSTYPE(Machine_GUI_Widget)
 
 struct Machine_GUI_Widget {
-  Machine_Object parent;
+  Machine_Object __parent;
+
+  /// @brief The context this widget belongs to.
+  Machine_GUI_Context* context;
+  /// @brief Rectangle in canvas coordinate sof the parent.
+  Machine_Math_Rectangle2* rectangle;
+  Machine_GUI_Widget* parent;
 
   Machine_List* connections;
 
@@ -19,7 +26,8 @@ struct Machine_GUI_Widget {
   
   const Machine_Math_Rectangle2* (*getRectangle)(const Machine_GUI_Widget* self);
   void (*setRectangle)(Machine_GUI_Widget* self, const Machine_Math_Rectangle2* rectangle);
-  
+  const Machine_Math_Rectangle2* (*getCanvasRectangle)(const Machine_GUI_Widget* self);
+
   const Machine_Math_Vector2* (*getPosition)(const Machine_GUI_Widget* self);
   void (*setPosition)(Machine_GUI_Widget* self, const Machine_Math_Vector2* position);
 
@@ -27,6 +35,10 @@ struct Machine_GUI_Widget {
   void (*setSize)(Machine_GUI_Widget* self, const Machine_Math_Vector2* size);
 
   const Machine_Math_Vector2* (*getPreferredSize)(const Machine_GUI_Widget* self);
+
+  const Machine_Math_Vector2* (*getAbsolutePosition)(const Machine_GUI_Widget* self);
+  const Machine_Math_Rectangle2* (*getAbsoluteRectangle)(const Machine_GUI_Widget* self);
+  const Machine_Math_Rectangle2* (*getAbsoluteCanvasRectangle)(const Machine_GUI_Widget* self);
 };
 
 /// @brief Construct this widget.
@@ -79,12 +91,34 @@ void Machine_GUI_Widget_setRectangle(Machine_GUI_Widget* self, const Machine_Mat
 /// @return The rectangle.
 const Machine_Math_Rectangle2* Machine_GUI_Widget_getRectangle(const Machine_GUI_Widget* self);
 
+/// @brief Get the canvas rectangle.
+/// @param self This widget.
+/// @return The canvas rectangle.
+const Machine_Math_Rectangle2* Machine_GUI_Widget_getCanvasRectangle(const Machine_GUI_Widget* self);
+
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 /// @brief Get the preferred size.
 /// @param self This widget.
 /// @return The preferred size.
 const Machine_Math_Vector2* Machine_GUI_Widget_getPreferredSize(const Machine_GUI_Widget* self);
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+/// @brief Get the absolute position.
+/// @param self This widget.
+/// @return The absolute position.
+const Machine_Math_Vector2* Machine_GUI_Widget_getAbsolutePosition(const Machine_GUI_Widget* self);
+
+/// @brief Get the absolute rectangle.
+/// @param self This widget.
+/// @return The absolute rectangle.
+const Machine_Math_Rectangle2* Machine_GUI_Widget_getAbsoluteRectangle(const Machine_GUI_Widget* self);
+
+/// @brief Get the absolute canvas rectangle.
+/// @param self This widget.
+/// @return The absolute canvas rectangle.
+const Machine_Math_Rectangle2* Machine_GUI_Widget_getAbsoluteCanvasRectangle(const Machine_GUI_Widget* self);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
@@ -117,5 +151,10 @@ void Machine_GUI_Widget_unsubscribe(Machine_GUI_Widget* self, Machine_String *na
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 void Machine_GUI_Widget_emitSignal(Machine_GUI_Widget* self, Machine_String* name, size_t numberOfArguments, const Machine_Value* arguments);
+
+void Machine_GUI_Widget_emitPositionChangedSignal(Machine_GUI_Widget* self);
+
+void Machine_GUI_Widget_emitSizeChangedSignal(Machine_GUI_Widget* self);
+
 
 #endif // MACHINE_GUI_WIDGET_H_INCLUDED

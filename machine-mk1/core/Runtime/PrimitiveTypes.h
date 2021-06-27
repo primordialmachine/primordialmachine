@@ -26,6 +26,7 @@
 #error('DEPRECATED already defined')
 #endif
 #define DEPRECATED
+//#define DEPRECATED __declspec(deprecated)
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
@@ -73,7 +74,7 @@ typedef int32_t Machine_Integer;
 #define Machine_Integer_Greatest INT32_MAX
 
 /// @brief The least <code>Integer</code> value.
-#define Machine_Integer_Least INT32_MIN
+#define Machine_Integer_LEast INT32_MIN
 
 INLINE size_t Machine_Integer_getHashValue(Machine_Integer x) {
   return (size_t)x;

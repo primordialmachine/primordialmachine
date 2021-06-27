@@ -4,7 +4,8 @@
 #define MACHINE_RUNTIME_PRIVATE (1)
 #include "Runtime/Map.h"
 
-
+#include "Runtime/List.h"
+#include "Runtime/Pair.h"
 #include <malloc.h>
 #include <memory.h>
 
@@ -177,4 +178,18 @@ void Machine_Map_set(Machine_Map* self, Machine_Value key, Machine_Value value) 
 Machine_Value Machine_Map_get(const Machine_Map* self, Machine_Value key) {
   MACHINE_ASSERT_NOTNULL(self);
   return self->get(self, key);
+}
+
+Machine_List* Machine_Map_toList(const Machine_Map* self) {
+  Map* map = (Map*)self->pimpl;
+  Machine_List* list = Machine_List_create();
+  for (size_t i = 0, n = map->capacity; i < n; ++i) {
+    for (Node* node = map->buckets[i]; NULL != node; node = node->next) {
+      Machine_Pair *pair = Machine_Pair_create(node->key, node->value);
+      Machine_Value temporary;
+      Machine_Value_setObject(&temporary, (Machine_Object*)pair);
+      Machine_List_append(list, temporary);
+    }
+  }
+  return list;
 }

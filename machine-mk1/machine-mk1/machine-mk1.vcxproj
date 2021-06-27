@@ -87,7 +87,17 @@
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)GL\</ObjectFileName>
     </ClCompile>
     <ClCompile Include="GUI\BorderModel.c" />
-    <ClCompile Include="GUI\GDL\Context.c" />
+    <ClCompile Include="GUI\Context.c" />
+    <ClCompile Include="GUI\GDL\Context.c">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)/GUI/GDL</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)/GUI/GDL</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="GUI\GDL\ListToVector.c" />
+    <ClCompile Include="GUI\GDL\ValueToReal.c" />
+    <ClCompile Include="GUI\Group.c" />
+    <ClCompile Include="GUI\LayoutModel.c" />
+    <ClCompile Include="GUI\Reader\Reader.c" />
+    <ClCompile Include="GUI\Reader\Reader.package.c" />
     <ClCompile Include="GUI\Signals\Context.c">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)/GUI/Signals</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)/GUI/Signals</ObjectFileName>
@@ -120,7 +130,14 @@
     <ClInclude Include="GL\ShaderProgram.h" />
     <ClInclude Include="GL\Texture.h" />
     <ClInclude Include="GUI\BorderModel.h" />
+    <ClInclude Include="GUI\Context.h" />
     <ClInclude Include="GUI\GDL\Context.h" />
+    <ClInclude Include="GUI\GDL\ListToVector.h" />
+    <ClInclude Include="GUI\GDL\ValueToReal.h" />
+    <ClInclude Include="GUI\Group.h" />
+    <ClInclude Include="GUI\LayoutModel.h" />
+    <ClInclude Include="GUI\Reader\Reader.h" />
+    <ClInclude Include="GUI\Reader\Reader.package.h" />
     <ClInclude Include="GUI\Signals\Context.h" />
     <ClInclude Include="GUI\WidgetList.h" />
     <ClInclude Include="GUI\TextButton.h" />
