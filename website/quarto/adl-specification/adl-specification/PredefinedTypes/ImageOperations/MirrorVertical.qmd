@@ -1,0 +1,25 @@
+### *ADL.ImageOperations.MirrorVertical* {#ref-type-adl-imageoperations-mirrorvertical}
+Image operation mirroring the the image vertically.
+
+Let \f$w geq 0\f$ and \f$h \geq 0\f$ be the width of the height of the image, respectively,
+then the pixel at \f$(x,y)\f$ with \f$x \in [1,w]\f$ and \f$y \in [1,h]\f$ is swapped with the pixel at \f$(x,h-y)\f$.
+
+**Type**
+
+DDL type: *DDL.Map*
+
+ADL supertype: *ADL.ImageOperations
+
+ADL type: *ADL.ImageOperations.MirrorVertical*
+
+**Enclosing Elements**
+
+*ADL.ImageOperationList*
+
+__Key/Value Pairs__
+
+- `type`
+
+  DDL type: *DDL.String*, ADL type: *ADL.TypeName*
+
+  Must be `ImageOperations.MirrorVertical`.

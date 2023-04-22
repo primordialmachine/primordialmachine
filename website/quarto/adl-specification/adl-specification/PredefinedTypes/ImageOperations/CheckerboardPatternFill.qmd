@@ -1,0 +1,111 @@
+### *ADL.ImageOperations.CheckerboardPatternFill* {#ref-type-adl-imageoperations-checkerboardpatternfill}
+An image.
+
+**Type**
+
+DDL type: *DDL.Map*
+
+ADL supertype: *ADL.ImageOperation*
+
+ADL type: *ADL.ImageOperations.CheckerboardPatternFill*
+
+**Enclosing Elements**
+
+*ADL.ImageOperationList*
+
+**Key/Value Pairs**
+
+- `type`
+
+  DDL type: *DDL.String*, ADL type: *ADL.Type*
+
+  Must be `ADL.ImageOperations.CheckerboardPatternFill`.
+
+- `checkerSize`
+
+  ADL type: *ADL.ImageOperations.CheckerboardPatternFill.CheckerSize*
+
+- `numberOfCheckers`
+
+  ADL type: *ADL.ImageOperations.CheckerboardPatternFill.NumberOfCheckers*
+
+- `checkerColors`
+
+  ADL type: *ADL.ImageOperations.CheckerboardPatternFill.CheckerColors*
+  
+#### *ADL.ImageOperations.CheckerboardPatternFill.CheckerSize*
+The size of a checker.
+
+**Type**
+
+DDL type: *DDL.Map*
+
+ADL type: *ADL.ImageOperations.CheckerboardPatternFill.CheckerSize*
+
+**Enclosing Elements**
+
+The value of the key `checkerSize` of `ADL.ImageOperations.CheckerboardPatternFill`.
+
+**Key/Value Pairs**
+
+- `horizontal`
+  A non-negative number denoting the size of a checker along the horizontal axis.
+  
+  DDL type: *DDL.Number*
+
+- `vertical`
+  A non-negative number denoting the size of a checker along the vertical axis.
+  
+  DDL type: *DDL.Number*
+
+#### *ADL.ImageOperations.CheckerboardPatternFill.NumberOfCheckers*
+An image.
+
+**Type**
+
+DDL type: *DDL.Map*
+
+ADL type: *ADL.ImageOperations.CheckerboardPatternFill.NumberOfCheckers*
+
+**Enclosing Elements**
+
+The value of the key `numberOfCheckers` of `ADL.ImageOperations.CheckerboardPatternFill`.
+
+**Key/Value Pairs**
+
+- `horizontal`
+  A non-negative number denoting the number of checkers along the horizontal axis.
+  
+  DDL type: *DDL.Number*
+
+- `vertical`
+  A non-negative number denoting the number of checkers along the vertical axis.
+  
+  DDL type: *DDL.Number*
+
+#### *ADL.ImageOperations.CheckerboardPatternFill.CheckerColors*
+An image.
+
+**Type**
+
+DDL type: *DDL.Map*
+
+ADL type: *ADL.ImageOperations.CheckerboardPatternFill.CheckerColors*
+
+**Enclosing Elements**
+
+The value of the key `checkerColors` of *ADL.ImageOperations.CheckerboardPatternFill*.
+
+**Key/Value Pairs**
+
+- `first`
+
+  The first checker color.
+  
+  ADL type: *ADL.ColorInstance*
+
+- `second`
+
+  The second checker color.
+
+  ADL type: *ADL.ColorInstance*

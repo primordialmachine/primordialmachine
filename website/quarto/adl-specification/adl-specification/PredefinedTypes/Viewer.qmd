@@ -1,0 +1,37 @@
+## *ADL.Viewer*
+A viewer.
+
+**Type**
+
+- DDL type: *DDL.Map*
+- ADL type: *ADL.Viewer*
+
+**Enclosing Types**
+
+*ADL.SceneElementList*
+
+**Key/Value Pairs**
+
+- `type`
+
+  DDL type: *DDL.String*, ADL type: *ADL.TypeName*
+
+  Must be `Viewer`.
+
+- `up`
+
+  DDL type: *DDL.Map*, ADL type: *ADL.Vector3*
+
+  The up vector of the viewer.
+
+- `source`
+
+  DDL type: *DDL.Map*, ADL type: *ADL.Vector3*
+
+  The position the viewer is located at.
+
+- `target`
+
+  DDL type: *DDL.Map*, ADL type: *ADL.Vector3*
+
+  The position the viewer is looking at.

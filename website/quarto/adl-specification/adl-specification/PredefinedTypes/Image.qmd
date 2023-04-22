@@ -1,0 +1,127 @@
+## *ADL.Image* {#ref-type-adl-image}
+An image.
+
+**Type**
+
+- DDL type: *DDL.Map*
+- ADL type: *ADL.Image*
+
+**Enclosing Types**
+
+*ADL.SceneElementList*
+
+__Key/Value Pairs__
+
+- `type`
+
+  DDL type: *DDL.String*, ADL type: *ADL.TypeName*
+
+  Must be `Image`.
+
+- `width`
+
+  DDL type: *DDL.Number*, ADL type: *ADL.NaturalNumber*, optional
+  
+  The width, in pixels, of the image.
+
+- `height`
+
+  DDL type: *DDL.Number*, ADL type: *ADL.NaturalNumber*, optional
+  
+  The height, in pixels, of the image.
+
+- `pixelFormat`
+
+   DDL type: *DDL.String*, ADL type: *ADL.PixelFormat*, optional
+   
+   Denotes the pixel format of the image.
+
+- `path`
+
+  DDL type: *DDL.String*, ADL type: *ADL.Path*, optional
+  
+  Denoting the path to an image file.
+
+- `operations`
+
+  DDL type: *DDL.List*, ADL type: *ADL.ImageOperationsList*, optional
+
+  List of *ADL.ImageOperation* elements.
+
+**Remarks**
+Exactly one of the following statements must be true:
+- `width`, `height`, and `pixelFormat` are specified
+  If `width` and `height` and `pixelFormat` are specified,
+  then an image of the specified width, height and pixel format is created.
+  All pixels of the images are assigned the default pixel value for the specified pixel format.
+- `path` is specified
+  An image is loaded from the specified file path
+
+## *ADL.PixelFormat* {#ref-type-adl-pixelformat}
+
+A pixel format
+
+**Type**
+
+- DDL type: *DDL.Map*
+- ADL type: *ADL.PixelFormat*
+
+**Valid Values**
+
+- `'AN8 BN8 GN8 RN8'`
+  Four consecutive component values.
+  The first value denotes the intensity of the alpha component.
+  The second value denotes the intensity of the blue component,
+  the third the intensity of the green component,
+  the fourth the intensity of the red component.
+  Each component value is a natural number within the range of $[0,255]$
+  where $0$ indicates the least intensity and $255$ indicates the greatest intensity.
+  The default value of a pixel of this pixel format is opaque black.
+
+- `'AN8 RN8 GN8 BN8'`
+  Four consecutive component values.
+  The first value denotes the intensity of the alpha component.
+  The second value denotes the intensity of the red component,
+  the third the intensity of the green component,
+  the fourth the intensity of the blue component.
+  Each component value is a natural number within the range of $[0,255]$
+  where $0$ indicates the least intensity and $255$ indicates the greatest intensity.
+  The default value of a pixel of this pixel format is opaque black.
+
+- `'BN8 GN8 RN8'`
+  Three consecutive component values.
+  The first value denotes the intensity of the blue component,
+  the second the intensity of the green component,
+  the third the intensity of the red component.
+  Each component value is a natural number within the range of $[0,255]$
+  where $0$ indicates the least intensity and $255$ indicates the greatest intensity.
+  The default value of a pixel of this pixel format is black.
+
+- `'BN8 GN8 RN8 AN8'`
+  Four consecutive component values.
+  The first value denotes the intensity of the blue component,
+  the second the intensity of the green component,
+  the third the intensity of the red component.
+  The fourth value denotes the intensity of the alpha component.
+  Each component value is a natural number within the range of $[0,255]$
+  where $0$ indicates the least intensity and $255$ indicates the greatest intensity.
+  The default value of a pixel of this pixel format is opaque black.
+
+- `'RN8 GN8 BN8'`
+  Three consecutive component values.
+  The first value denotes the intensity of the red component,
+  the second the intensity of the green component,
+  the third the intensity of the blue component.
+  Each component value is a natural number within the range of $[0,255]$
+  where $0$ indicates the least intensity and $255$ indicates the greatest intensity.
+  The default value of a pixel of this pixel format is black.
+
+- `'RN8 GN8 BN8 AN8'`
+  Four consecutive component values.
+  The first value denotes the intensity of the red component,
+  the second the intensity of the green component,
+  the third the intensity of the blue component.
+  The fourth value denotes the intensity of the alpha component.
+  Each component value is a natural number within the range of $[0,255]$
+  where $0$ indicates the least intensity and $255$ indicates the greatest intensity.
+  The default value of a pixel of this pixel format is opaque black.

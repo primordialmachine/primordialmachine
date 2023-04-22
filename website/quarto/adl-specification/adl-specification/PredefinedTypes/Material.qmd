@@ -1,0 +1,22 @@
+## *ADL.Material*
+A material.
+
+**Type**
+
+- DDL type: *DDL.Map*
+- ADL type: *ADL.Material*
+
+**Enclosing Types**
+
+*ADL.SceneElementList*
+
+__Key/Value Pairs__
+
+- `type`
+
+  DDL type: *DDL.String*, ADL type: *ADL.TypeName*
+
+  Must be `Material`.
+- `texture`
+
+  DDL type: *DDL.Map*, ADL type: *ADL.TextureInstance*

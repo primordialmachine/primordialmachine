@@ -1,0 +1,16 @@
+# Predefined Types
+
+{{< include adl-specification/PredefinedTypes/Scene.qmd >}}
+{{< include adl-specification/PredefinedTypes/Image.qmd >}}
+  {{< include adl-specification/PredefinedTypes/ImageOperations/CheckerboardPatternfill.qmd >}}
+  {{< include adl-specification/PredefinedTypes/ImageOperations/ColorFill.qmd >}}
+  {{< include adl-specification/PredefinedTypes/ImageOperations/MirrorHorizontal.qmd >}}
+  {{< include adl-specification/PredefinedTypes/ImageOperations/MirrorVertical.qmd >}}
+{{< include adl-specification/PredefinedTypes/Material.qmd >}}
+{{< include adl-specification/PredefinedTypes/MaterialInstance.qmd >}}
+{{< include adl-specification/PredefinedTypes/Mesh.qmd >}}
+{{< include adl-specification/PredefinedTypes/MeshInstance.qmd >}}
+{{< include adl-specification/PredefinedTypes/Optics/Orthographic.qmd >}}
+{{< include adl-specification/PredefinedTypes/Texture.qmd >}}
+{{< include adl-specification/PredefinedTypes/Viewer.qmd >}}
+{{< include adl-specification/PredefinedTypes/ViewerInstance.qmd >}}

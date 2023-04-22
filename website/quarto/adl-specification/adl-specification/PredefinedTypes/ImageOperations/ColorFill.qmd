@@ -1,0 +1,25 @@
+### *ADL.ImageOperations.ColorFill* {#ref-type-adl-imageoperations-colorfill}
+An image.
+
+**Type**
+
+DDL type: *DDL.Map*
+
+ADL supertype: *ADL.ImageOperation*
+
+ADL type: *ADL.ImageOperations.ColorFill*
+
+**Enclosing Elements**
+
+*ADL.ImageOperationList*
+
+**Key/Value Pairs**
+
+- `type`
+
+  DDL type: *DDL.String*, ADL type: *ADL.TypeName*
+
+  Must be `ImageOperations.ColorFill`.
+- `color`
+
+  DDL type: *DDL.Map*, ADL type: *ADL.ColorInstance*

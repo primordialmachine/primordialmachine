@@ -1,0 +1,11 @@
+## *ADL.MaterialInstance*
+A material instance.
+
+**Type**
+
+- DDL type: *DDL.Map*
+- ADL type: *ADL.MeshInstance*
+
+**Enclosing Types**
+
+*ADL.Scene* and in values of other ADL types as specified by those types.

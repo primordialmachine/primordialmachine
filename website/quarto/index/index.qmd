@@ -1,0 +1,11 @@
+---
+title: "Primordial Machine"
+format:
+  html:
+    sidebar: false
+---
+
+This is the starting page of Primordial Machine's development section.
+Primordial Machine is a Game and its Engine *in the making*.
+The source of this project is made available publicly in our [GithHub Repository](https://github.com/primordialmachine/primordialmachine).
+You can also download the latest [prebuild binaries](https://github.com/primordialmachine/primordialmachine/releases/latest).

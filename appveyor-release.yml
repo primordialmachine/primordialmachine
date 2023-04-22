@@ -1,0 +1,101 @@
+# AppVeyor configuration for AppVeyor project "primordialmachine".
+clone_depth: 1
+
+# Build worker image (VM template).
+image: Visual Studio 2022
+
+# Build on pushes to "master" branch.
+branches:
+  only:
+    - master
+
+# Do not build on tag pushes.
+skip_tags: true
+
+# Build platform "x64" and "Win32".
+platform:
+    - x64
+    - Win32
+
+# Build configurations.
+configuration:
+    - Release
+
+install:
+    # Download and install CMake.
+    - set CMAKE_URL="https://cmake.org/files/v3.27/cmake-3.27.0-windows-x86_64.zip"
+    - appveyor DownloadFile %CMAKE_URL% -FileName cmake.zip
+    - 7z x cmake.zip -oC:\projects\deps > nul
+    - move C:\projects\deps\cmake-* C:\projects\deps\cmake # Move to a version-agnostic directory
+    - set PATH=C:\projects\deps\cmake\bin;%PATH%
+    - cmake --version
+
+# Generate solution and project files.
+before_build:
+    - ps: |
+        ${env:ZIP_FILENAME}="primordialmachine";
+        ${env:RELEASE_NAME}="primordialmachine-v$(APPVEYOR_BUILD_VERSION).ToLower())"
+        
+        ${env:CMAKE_GENERATOR_NAME}="";
+        ${env:CMAKE_ARCHITECTURE_NAME}="";
+        
+        
+        ${env:ZIP_FILENAME}="${env:ZIP_FILENAME}-v$(APPVEYOR_BUILD_VERSION).ToLower())"
+                
+        if (${env:PLATFORM} -eq 'Win32') {
+          ${env:ZIP_FILENAME}="${env:ZIP_FILENAME}-x86"
+          ${env:CMAKE_GENERATOR_NAME}="Visual Studio 17 2022"
+          ${env:CMAKE_ARCHITECTURE_NAME}=${env:PLATFORM}
+          #${env:RELEASE_NAME}="${env:RELEASE_NAME}-x86"
+        } elseif(${env:PLATFORM} -eq 'x64') {
+          ${env:ZIP_FILENAME}="${env:ZIP_FILENAME}-x64"
+          ${env:CMAKE_GENERATOR_NAME}="Visual Studio 17 2022"
+          ${env:CMAKE_ARCHITECTURE_NAME}=${env:PLATFORM}
+          #${env:RELEASE_NAME}="${env:RELEASE_NAME}-x64"
+        } else {
+          throw "unsupported platform ${env:PLATFORM}";
+        }
+        
+        ${env:ZIP_FILENAME}="${env:ZIP_FILENAME}.zip"
+        #Write-Host "Release Name:           ${env:RELEASE_NAME}";
+        Write-Host "AppVeyor Platform:      ${env:PLATFORM}";
+        Write-Host "AppVeyor Configuration: ${env:CONFIGURATION}";
+        Write-Host "Zip File Name:          ${env:ZIP_FILENAME}";
+        Write-Host "CMake Generator:        ${env:CMAKE_GENERATOR_NAME}"
+        Write-Host "CMake Architecture:     ${env:CMAKE_ARCHITECTURE_NAME}"
+    - ps: |
+        Write-Host "CMake Generator: ${env:CMAKE_GENERATOR_NAME}"
+        Write-Host "CMake Architecture: ${env:CMAKE_ARCHITECTURE_NAME}"
+        cmake -DBUILD_DOCUMENTATION=OFF -G ${env:CMAKE_GENERATOR_NAME} -A ${env:CMAKE_ARCHITECTURE_NAME} CMakeLists.txt
+
+build:
+    parallel: true       # enable MSBuild parallel builds
+    project: dailies.sln # path to Visual Studio solution or project
+
+after_build:
+    - ps: 7z a ${env:ZIP_FILENAME} ${env:APPVEYOR_BUILD_FOLDER}\player\$(${env:CONFIGURATION}.ToLower())\dailies.player.exe
+    - ps: 7z a ${env:ZIP_FILENAME} ${env:APPVEYOR_BUILD_FOLDER}\player\$(${env:CONFIGURATION}.ToLower())\freetype-plugin.dll
+    - ps: 7z a ${env:ZIP_FILENAME} ${env:APPVEYOR_BUILD_FOLDER}\player\$(${env:CONFIGURATION}.ToLower())\wic-plugin.dll
+    - ps: 7z a ${env:ZIP_FILENAME} ${env:APPVEYOR_BUILD_FOLDER}\player\assets
+                                          
+# If one matrix entry fails, all entries fails (https://www.appveyor.com/docs/build-configuration#failing-strategy).
+matrix:
+    fast_finish: true
+
+artifacts:
+    - path: $(ZIP_FILENAME)
+      name: $(ZIP_FILENAME)
+
+deploy:
+    release: primordialmachine-v$(APPVEYOR_BUILD_VERSION)
+    tag: primordialmachine-v$(APPVEYOR_BUILD_VERSION)
+    description: 'Primordial Machine v$(APPVEYOR_BUILD_VERSION)'
+    provider: GitHub
+    auth_token:
+        secure: NPrtXEjMD8sb39W2ObCrJDNA3ejA/vqHurZKUjnBBnLkaDjgZn9ERjg69rhcfF7R # encrypted token from GitHub
+        artifact: $(ZIP_FILENAME)                                                # upload the artifact
+    draft: false
+    prerelease: false
+    force_update: true
+    on:
+        branch: master                                                           # release from master branch only

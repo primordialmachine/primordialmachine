@@ -1,0 +1,24 @@
+## *ADL.Scene*
+The single value defined by an ADL file.
+
+**Type**
+
+DDL type: *DDL.Map*
+
+ADL supertype: n/a
+
+ADL type: *ADL.Scene*
+
+**Key/Value Pairs**
+
+- `type`
+
+  DDL type: *DDL.String*, ADL type: *ADL.TypeName*
+
+  Must be `Scene`.
+
+- `elements`,  optional
+
+  DDL type: *DDL.List*, ADL type: *ADL.SceneElementList*
+
+  The list of scene elements contained in this scene.

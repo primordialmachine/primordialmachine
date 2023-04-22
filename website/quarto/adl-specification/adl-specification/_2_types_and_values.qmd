@@ -1,0 +1,22 @@
+# Types and Values
+ADL programs are DDL programs that adhere to the with lexical, syntactical, and semantical requirements of the ADL described in this manual.
+A valid ADL program is a valid DDL program, but not vice versa.
+
+The lexical, syntactical, and semantical requirements are described in terms of ADL types.
+The values (of DDL types) in a program form values (of ADL types).
+
+There are many ADL types. ADL types are written in *italic* and have the prefix *ADL.*.
+For example, *ADL.Mesh* is the type for values providing providing the data of a mesh asset and *ADL.Material* is the type of values for the data of a material asset.
+
+For a value of a DDL type to become a value of a particular ADL type, it must fulfil the lexical, syntactical, and semantical requirements of the ADL type described in this manual.
+For example both *ADL.Mesh* and *ADL.Material* must be of the DDL type *DDL.Map* and require the existence of two key/value pairs, one with the key `type` and a value of ADL type *ADL.TypeName*, another with the key `name` and a value of the ADL type *ADL.Name*.
+Furthermore, values of these types can only be occur as elements of a *DDL.List* value of the key value pair with key `elements` inside a value of the ADL type *ADL.Assets*.
+
+This specification describes ADL types in terms and such a description at least encompasses 
+- the name of ADL type and the name of its its underlaying DDL type.
+- the enclosing elements
+- the map key/value pairs as required (if the underlaying DDL type is *DDL.Map*)
+- the list elements as require d(if the underlaying DDL type is *DDL.List*
+
+Some ADL types are sub-types of other ADL types.
+The general consensus is, that wherever a value of an ADL type can be defined, then also a value of one of its sub-types can be defined.
