@@ -101,14 +101,14 @@ artifacts:
       name: $(ZIP_FILENAME)
 
 deploy:
-    release: primordialmachine-v$(APPVEYOR_BUILD_VERSION)
-    tag: primordialmachine-v$(APPVEYOR_BUILD_VERSION)
-    description: 'Primordial Machine v$(APPVEYOR_BUILD_VERSION)'
+    release: primordialmachine-develop-v$(APPVEYOR_BUILD_VERSION)
+    tag: primordialmachine-develop-v$(APPVEYOR_BUILD_VERSION)
+    description: 'Primordial Machine Develop v$(APPVEYOR_BUILD_VERSION)'
     provider: GitHub
     auth_token:
         secure: NPrtXEjMD8sb39W2ObCrJDNA3ejA/vqHurZKUjnBBnLkaDjgZn9ERjg69rhcfF7R # encrypted token from GitHub
         artifact: $(ZIP_FILENAME)                                                # upload the artifact
-    draft: false
+    draft: true
     prerelease: false
     force_update: true
     on:
