@@ -4,10 +4,9 @@ clone_depth: 1
 # Build worker image (VM template).
 image: Visual Studio 2022
 
-# Build on pushes to "develop" and "master" branches.
+# Build on pushes to "develop".
 branches:
   only:
-    - master
     - develop
 
 # Do not build on tag pushes.
@@ -114,8 +113,8 @@ deploy:
     auth_token:
         secure: NPrtXEjMD8sb39W2ObCrJDNA3ejA/vqHurZKUjnBBnLkaDjgZn9ERjg69rhcfF7R # encrypted token from GitHub
         artifact: $(ZIP_FILENAME)                                                # upload the artifact
-    draft: true
+    draft: false
     prerelease: false
     force_update: true
     on:
-        branch: master                 # release from master branch only
+        branch: develop                                                          # release from "develop" branch only
