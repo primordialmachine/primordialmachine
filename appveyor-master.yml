@@ -101,7 +101,7 @@ deploy:
     auth_token:
         secure: NPrtXEjMD8sb39W2ObCrJDNA3ejA/vqHurZKUjnBBnLkaDjgZn9ERjg69rhcfF7R # encrypted token from GitHub
         artifact: $(ZIP_FILENAME)                                                # upload the artifact
-    draft: false
+    draft: true
     prerelease: false
     force_update: true
     on:
