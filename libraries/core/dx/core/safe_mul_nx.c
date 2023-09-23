@@ -8,7 +8,7 @@
   #elif defined(_M_IX86)
     #include "dx/core/asm/x86/_umul16.h"
   #else
-    #error("environment not supported")
+    #error("environment not (yet) supported")
   #endif
 #endif
 
@@ -31,7 +31,7 @@ uint8_t dx_mul_u8(uint8_t x, uint8_t y, uint8_t* z) {
   #elif defined(_M_IX86)
     #include "dx/core/asm/x86/_umul32.h"
   #else
-      #error("environment not supported")
+    #error("environment not (yet) supported")
   #endif
 #endif
 
@@ -54,7 +54,7 @@ uint16_t dx_mul_u16(uint16_t x, uint16_t y, uint16_t* z) {
   #elif defined(_M_IX86)
     #include "dx/core/asm/x86/_umul64.h"
   #else
-    #error("environment not supported")
+    #error("environment not (yet) supported")
   #endif
 #endif
 
@@ -76,7 +76,7 @@ uint32_t dx_mul_u32(uint32_t x, uint32_t y, uint32_t* z) {
 #elif defined(_M_IX86)
   #include "dx/core/asm/x86/_umul128.h"
 #else
-  #error("environment not supported")
+  #error("environment not (yet) supported")
 #endif
 
 uint64_t dx_mul_u64(uint64_t x, uint64_t y, uint64_t* z) {
@@ -92,7 +92,7 @@ dx_size dx_mul_sz(dx_size a, dx_size b, dx_size* c) {
 #elif defined(_M_IX86)
   return dx_mul_u32(a, b, c);
 #else
-  #error("environment not supported")
+  #error("environment not (yet) supported")
 #endif
 }
 

@@ -47,7 +47,7 @@ typedef struct DX_INLINE_POINTER_ARRAY_CONFIGURATION {
 /// @param SELF A pointer to this dx_inline_pointer_array object.
 /// @param initial_capacity The initial capacity.
 /// @param configuration A pointer to the configuration.
-/// @default-runtime-calling-convention
+/// @method-call
 /// @error #DX_ERROR_INVALID_ARGUMENT @a SELF is a null pointer
 /// @error #DX_ERROR_ALLOCATION_FAILED @a initial_capacity is too big
 /// @error #DX_ERROR_ALLOCATION_FAILED an allocation failed
@@ -60,7 +60,7 @@ void dx_inline_pointer_array_uninitialize(dx_inline_pointer_array* SELF);
 /// @brief Increase the capacity.
 /// @param SELF A pointer to this dx_inline_pointer_array object.
 /// @param additional_capacity The amount to increase the capacity by.
-/// @default-runtime-calling-convention
+/// @method-call
 /// @error #DX_ERROR_INVALID_ARGUMENT @a SELF is a null pointer
 /// @error #DX_ERROR_ALLOCATION_FAILED @a additional_capacity is too big
 /// @error #DX_ERROR_ALLOCATION_FAILED an allocation failed
@@ -70,7 +70,7 @@ dx_result dx_inline_pointer_array_increase_capacity(dx_inline_pointer_array* SEL
 /// @brief Ensure the free capacity is greater than or equal to a specified value.
 /// @param SELF A pointer to this dx_pointer_deque object.
 /// @param required_free_capacity The required free capacity.
-/// @default-runtime-calling-convention
+/// @method-call
 /// @error #DX_INVALID_ARGUMENT @a self is a null pointer
 /// @error #DX_ALLOCATION_FAILED @a required_free_capacity is too big
 /// @error #DX_ALLOCATION_FAILED an allocation failed
@@ -80,7 +80,7 @@ dx_result dx_inline_pointer_array_ensure_free_capacity(dx_inline_pointer_array* 
 /// @brief Append an element.
 /// @param SELF A pointer to this dx_inline_pointer_array object.
 /// @param pointer The element.
-/// @default-runtime-calling-convention
+/// @method-call
 /// @error #DX_ERROR_INVALID_ARGUMENT @a SELF is a null pointer
 /// @error #DX_ERROR_ALLOCATION_FAILED an allocation failed
 dx_result dx_inline_pointer_array_append(dx_inline_pointer_array* SELF, dx_inline_pointer_array_element pointer);
@@ -88,7 +88,7 @@ dx_result dx_inline_pointer_array_append(dx_inline_pointer_array* SELF, dx_inlin
 /// @brief Prepend an element.
 /// @param SELF A pointer to this dx_inline_pointer_array object.
 /// @param pointer The element.
-/// @default-runtime-calling-convention
+/// @method-call
 /// @error #DX_ERROR_INVALID_ARGUMENT @a SELF is a null pointer
 /// @error #DX_ERROR_ALLOCATION_FAILED an allocation failed
 dx_result dx_inline_pointer_array_prepend(dx_inline_pointer_array* SELF, dx_inline_pointer_array_element pointer);
@@ -97,7 +97,7 @@ dx_result dx_inline_pointer_array_prepend(dx_inline_pointer_array* SELF, dx_inli
 /// @param SELF A pointer to this dx_inline_pointer_array object.
 /// @param pointer The element.
 /// @param index The index.
-/// @default-runtime-calling-convention
+/// @method-call
 /// @error #DX_ERROR_INVALID_ARGUMENT @a SELF is a null pointer
 /// @error #DX_ERROR_INVALID_ARGUMENT @a index is greater than the size of this dx_inline_pointer_array object
 /// @error #DX_ERROR_ALLOCATION_FAILED an allocation failed
@@ -108,7 +108,7 @@ dx_result dx_inline_pointer_array_insert(dx_inline_pointer_array* SELF, dx_inlin
 /// @param SELF A pointer to this dx_inline_pointer_array object.
 /// @param index The index.
 /// @success <code>*RETURN</code> was assigned the pointer at the specified index.
-/// @default-runtime-calling-convention
+/// @method-call
 /// @error #DX_ERROR_INVALID_ARGUMENT @a SELF is a null pointer
 /// @error #DX_ERROR_INVALID_ARGUMENT @a index is greater than or equal to the size of this dx_inline_pointer_array object
 dx_result dx_inline_pointer_array_get_at(dx_inline_pointer_array_element* RETRUN, dx_inline_pointer_array const* SELF, dx_size index);
@@ -116,7 +116,7 @@ dx_result dx_inline_pointer_array_get_at(dx_inline_pointer_array_element* RETRUN
 /// @brief Get the size, in elements.
 /// @param SELF A pointer to this dx_inline_pointer_array object.
 /// @success <code>*RETURN</code> was assigned the size.
-/// @default-runtime-calling-convention
+/// @method-call
 /// @error #DX_ERROR_INVALID_ARGUMENT @a RETURN is a null pointer
 /// @error #DX_ERROR_INVALID_ARGUMENT @a self is a null pointer
 dx_result dx_inline_pointer_array_get_size(dx_size* RETURN, dx_inline_pointer_array const* SELF);
@@ -124,7 +124,7 @@ dx_result dx_inline_pointer_array_get_size(dx_size* RETURN, dx_inline_pointer_ar
 /// @brief Get the capacity, in elements.
 /// @param SELF A pointer to this dx_inline_pointer_array object.
 /// @success <code>*RETURN</code> was assigned the capacity.
-/// @default-runtime-calling-convention
+/// @method-call
 /// @error #DX_ERROR_INVALID_ARGUMENT @a RETURN is a null pointer
 /// @error #DX_ERROR_INVALID_ARGUMENT @a SELF is a null pointer
 dx_result dx_inline_pointer_array_get_capacity(dx_size* RETURN, dx_inline_pointer_array const* SELF);
@@ -132,21 +132,21 @@ dx_result dx_inline_pointer_array_get_capacity(dx_size* RETURN, dx_inline_pointe
 /// @brief Get the free capacity, in elements.
 /// @param SELF A pointer to this dx_inline_pointer_array object.
 /// @success <code>*RETURN</code> was assigned the free capacity.
-/// @default-runtime-calling-convention
+/// @method-call
 /// @error #DX_ERROR_INVALID_ARGUMENT @a RETURN is a null pointer
 /// @error #DX_ERROR_INVALID_ARGUMENT @a SELF is a null pointer
 dx_result dx_inline_pointer_array_get_free_capacity(dx_size* RETURN, dx_inline_pointer_array const* SELF);
 
 /// @brief Remove all elements.
 /// @param SELF A pointer to this dx_inline_pointer_array object.
-/// @default-runtime-calling-convention
+/// @method-call
 /// @error #DX_ERROR_INVALID_ARGUMENT @a SELF is a null pointer
 dx_result dx_inline_pointer_array_clear(dx_inline_pointer_array* SELF);
 
 /// @brief Remove the specified number of elements.
 /// @param SELF A pointer to this dx_inline_pointer_array object.
 /// @param n The number of objects to remove.
-/// @default-runtime-calling-convention
+/// @method-call
 /// @remarks If this function fails, no elements were removed.
 /// @error #DX_ERROR_INVALID_ARGUMENT @a n is greater than the size of the dx_inline_pointer_array object.
 dx_result dx_inline_pointer_array_pop_back_n(dx_inline_pointer_array* SELF, dx_size n);

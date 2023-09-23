@@ -59,24 +59,24 @@ struct dx_data_definition_language_scanner_dispatch {
 /// @param SELF A pointer to this scanner.
 /// @param diagnostics A pointer to the diagnostics used by this scanner.
 /// @success The scanner was assigned the empty input and is in the start state w.r.t. the specified input.
-/// @default-runtime-calling-convention
+/// @method-call
 dx_result dx_data_definition_language_scanner_construct(dx_data_definition_language_scanner* SELF, dx_data_definition_language_diagnostics* diagnostics);
 
 /// @brief Create this scanner with an empty input.
 /// @param RETURN A pointer to a <code>dx_data_definition_language_scanner*</code> variable.
 /// @param diagnostics A pointer to the diagnostics used by this scanner.
-/// @default-runtime-calling-convention
+/// @method-call
 /// @success
 /// <code>*RETURN</code> was assigned a pointer to the dx_data_definition_language_scanner object.
 /// The scanner was assigned the empty input and is in the start state w.r.t. the specified input.
-/// @default-runtime-calling-convention
+/// @method-call
 dx_result dx_data_definition_language_scanner_create(dx_data_definition_language_scanner** RETURN, dx_data_definition_language_diagnostics* diagnostics);
 
 /// @brief Get the type of the current word.
 /// @param RETURN A pointer to a <code>dx_ddl_word_kind</code> variable.
 /// @param SELF a pointer to this scanner.
 /// @success <code>*RETURN</code> was assigned the word kind.
-/// @default-runtime-calling-convention
+/// @method-call
 dx_result dx_data_definition_language_scanner_get_word_kind(dx_ddl_word_kind* RETURN, dx_data_definition_language_scanner const* SELF);
 
 #endif // DX_DATA_DEFINITION_LANGUAGE_SCANNER_H_INCLUDED

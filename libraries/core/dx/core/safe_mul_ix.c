@@ -29,7 +29,7 @@ int8_t dx_mul_i8(int8_t x, int8_t y, int8_t* z) {
   #elif defined(_M_IX86)
     #include "dx/core/asm/x86/_imul32.h"
   #else
-    #error("environment not supported")
+    #error("environment not (yet) supported")
   #endif
 #endif
 
@@ -75,7 +75,7 @@ int32_t dx_mul_i32(int32_t x, int32_t y, int32_t* z) {
   #elif defined(_M_IX86)
     #include "dx/core/asm/x86/_imul128.h"
   #else
-    #error("environment not supported")
+    #error("environment not (yet) supported")
   #endif
 #endif
 
@@ -86,7 +86,7 @@ int64_t dx_mul_i64(int64_t x, int64_t y, int64_t* z) {
   *z = hi;
   return lo;
 #else
-  #error("environment not supported")
+  #error("environment not (yet) supported")
 #endif
 }
 

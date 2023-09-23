@@ -25,31 +25,31 @@ struct dx_data_definition_language_diagnostics_dispatch {
 
 /// @brief Construct this diagnostics object.
 /// @param SELF A pointer to this diagnostics object.
-/// @default-runtime-calling-convention
+/// @method-call
 dx_result dx_data_definition_language_diagnostics_construct(dx_data_definition_language_diagnostics* SELF);
 
 /// @brief Construct a diagnostics object.
 /// @param RETURN A pointer to a <code>dx_data_definition_language_diagnostics*</code> variable.
 /// @success <code>*RETURN</code> was assigned a pointer to the diagnostics object.
-/// @default-runtime-calling-convention
+/// @method-call
 dx_result dx_data_definition_language_diagnostics_create(dx_data_definition_language_diagnostics** RETURN);
 
-/// @default-runtime-calling-convention
+/// @method-call
 dx_result dx_data_definition_language_diagnostics_on_lexical(dx_data_definition_language_diagnostics* SELF);
 
-/// @default-runtime-calling-convention
+/// @method-call
 dx_result dx_data_definition_language_diagnostics_on_unclosed_string_literal(dx_data_definition_language_diagnostics* SELF);
 
-/// @default-runtime-calling-convention
+/// @method-call
 dx_result dx_data_definition_language_diagnostics_on_invalid_number_literal(dx_data_definition_language_diagnostics* SELF);
 
-/// @default-runtime-calling-convention
+/// @method-call
 dx_result dx_data_definition_language_diagnostics_on_unclosed_multi_line_comment(dx_data_definition_language_diagnostics* SELF);
 
-/// @default-runtime-calling-convention
+/// @method-call
 dx_result dx_data_definition_language_diagnostics_on_invalid_name(dx_data_definition_language_diagnostics* SELF);
 
-/// @default-runtime-calling-convention
+/// @method-call
 dx_result dx_data_definition_language_diagnostics_on_unexpected_symbol(dx_data_definition_language_diagnostics* SELF);
 
 #endif // DX_DATA_DEFINITION_LANGUAGE_DIAGNOSTICS_H_INCLUDED

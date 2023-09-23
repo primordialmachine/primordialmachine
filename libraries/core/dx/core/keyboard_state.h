@@ -5,7 +5,7 @@
 #include "dx/core/hapticals.h"
 
 /// @warning Keep this synchronized with keyboard_keys.i.
-#define dx_keyboard_state_configuration_number_of_keyboard_keys (255)
+#define dx_keyboard_state_configuration_number_of_keyboard_keys (255 + 1)
 
 DX_DECLARE_OBJECT_TYPE("dx.keyboard_state",
                        dx_keyboard_state,
@@ -17,7 +17,7 @@ static inline dx_keyboard_state* DX_KEYBOARD_STATE(void* p) {
 
 struct dx_keyboard_state {
   dx_object _parent;
-  dx_bool state[dx_keyboard_state_configuration_number_of_keyboard_keys + 1];
+  dx_bool state[dx_keyboard_state_configuration_number_of_keyboard_keys];
 };
 
 static inline dx_keyboard_state_dispatch* DX_KEYBOARD_STATE_DISPATCH(void* p) {
@@ -53,7 +53,7 @@ dx_result dx_keyboard_state_set_state(dx_keyboard_state* SELF, dx_keyboard_key k
 
 /// @brief Set the state of all keys to @a false.
 /// @param SELF A pointer to this keyboard state.
-/// @default-runtime-calling-convention
+/// @method-call
 dx_result dx_keyboard_state_clear(dx_keyboard_state* SELF);
 
 #endif // DX_KEYBOARD_STATE_H_INCLUDED

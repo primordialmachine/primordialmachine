@@ -107,24 +107,21 @@ typedef struct dx_msg_queue dx_msg_queue;
 // @post
 // On success:
 // The message was added to the queue and the queue acquired a reference to the message.
-// @return @a 0 on success. A non-zero value on failure.
-int dx_msg_queue_push(dx_msg_queue* msg_queue, dx_msg* msg);
+// @return #DX_SUCCESS on success. #DX_FAILURE on failure.
+dx_result dx_msg_queue_push(dx_msg_queue* SELF, dx_msg* msg);
 
-// Pop a message from the message queue.
-// @post
-// On success:
-// <code>*msg</code> was assigned a pointer to the message if the queue is not empty.
-// The reference acquired to the message when it was added to the message queue was transferred to the caller.
-// It was assigned the null pointer otherwise.
-// On failure:
-// <code>msg</code> is not dereferenced.
-// @return
-// @a 0 on success. A non-zero value on failure
-int dx_msg_queue_pop(dx_msg_queue* msg_queue, dx_msg** msg);
+// @brief Pop a message from the message queue.
+// @param RETURN A pointer to a <code>dx_msg*</code> variable.
+// @param SELF A pointer to this message queue.
+// @success
+// If a message was available for removal then <code>*RETURN</code> was assigned a pointer to that message and the caller acquired a reference to that message.
+// Otherwise the pointer is a null poiinter.
+// @return #DX_SUCCESS on success. #DX_FAILURE on failure.
+dx_result dx_msg_queue_pop(dx_msg** RETURN, dx_msg_queue* SELF);
 
 // Create a message queue.
 // @return pointer to the message queue on success. null pointer on failure.
-dx_msg_queue* dx_msg_queue_create();
+dx_result dx_msg_queue_create(dx_msg_queue** RETURN);
 
 // Destroy a message queue.
 // The message queue relinquishes all references to messages contained in the queue.

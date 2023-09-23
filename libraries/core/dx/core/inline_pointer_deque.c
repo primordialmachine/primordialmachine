@@ -68,7 +68,7 @@ static void _dx_impl_uninitialize(_dx_impl* self);
 /// @param RETURN A pointer to a <code>dx_size</code> variable.
 /// @param SELF A pointer to this _dx_impl object.
 /// @success <code>*RETURN</code> was assigned the size.
-/// @default-runtime-calling-convention
+/// @method-call
 /// @error #DX_ERROR_INVALID_ARGUMENT @a RETURN is a null pointer
 /// @error #DX_ERROR_INVALID_ARGUMENT @a SELF is a null pointer
 static dx_result _dx_impl_get_size(dx_size* RETURN, _dx_impl const* SELF);
@@ -77,7 +77,7 @@ static dx_result _dx_impl_get_size(dx_size* RETURN, _dx_impl const* SELF);
 /// @param RETURN A pointer to a <code>dx_size</code> variable.
 /// @param SELF A pointer to this _dx_impl object.
 /// @success <code>*RETURN</code> was assigned the capacity.
-/// @default-runtime-calling-convention
+/// @method-call
 /// @error #DX_ERROR_INVALID_ARGUMENT @a RETURN is a null pointer
 /// @error #DX_ERROR_INVALID_ARGUMENT @a SELF is a null pointer
 static dx_result _dx_impl_get_capacity(dx_size* RETURN, _dx_impl const* self);
@@ -86,7 +86,7 @@ static dx_result _dx_impl_get_capacity(dx_size* RETURN, _dx_impl const* self);
 /// @param RETURN A pointer to a <code>dx_size</code> variable.
 /// @param SELF A pointer to this _dx_impl object.
 /// @success <code>*RETURN</code> was assigned the free capacity.
-/// @default-runtime-calling-convention
+/// @method-call
 /// @error #DX_ERROR_INVALID_ARGUMENT @a RETURN is a null pointer
 /// @error #DX_ERROR_INVALID_ARGUMENT @a SELF is a null pointer
 static dx_result _dx_impl_get_free_capacity(dx_size* RETURN, _dx_impl const* SELF);
@@ -94,7 +94,7 @@ static dx_result _dx_impl_get_free_capacity(dx_size* RETURN, _dx_impl const* SEL
 /// @brief Increase the capacity.
 /// @param SELF A pointer to this _dx_impl object.
 /// @param required_additional_capacity The amount to increase the capacity by.
-/// @default-runtime-calling-convention
+/// @method-call
 /// @error #DX_ERROR_INVALID_ARGUMENT @a self is a null pointer
 /// @error #DX_ERROR_ALLOCATION_FAILED @a additional_capacity is too big
 /// @error #DX_ERROR_ALLOCATION_FAILED an allocation failed
@@ -104,7 +104,7 @@ static dx_result _dx_impl_increase_capacity(_dx_impl* SELF, dx_size required_add
 /// @brief Ensure the free capacity is greater than or equal to a specified value.
 /// @param SELF A pointer to this _dx_impl object.
 /// @param required_free_capacity The required free capacity.
-/// @default-runtime-calling-convention
+/// @method-call
 /// @error #DX_ERROR_INVALID_ARGUMENT @a SELF is a null pointer
 /// @error #DX_ERROR_ALLOCATION_FAILED @a required_free_capacity is too big
 /// @error #DX_ERROR_ALLOCATION_FAILED an allocation failed
@@ -113,14 +113,14 @@ static dx_result _dx_impl_ensure_free_capacity(_dx_impl* SELF, dx_size required_
 
 /// @brief Remove all elements.
 /// @param SELF A pointer to this _dx_impl object.
-/// @default-runtime-calling-convention
+/// @method-call
 /// @error #DX_ERROR_INVALID_ARGUMENT @a SELF is a null pointer
 static dx_result _dx_impl_clear(_dx_impl* SELF);
 
 /// @brief Append an element.
 /// @param SELF A pointer to this _dx_impl object.
 /// @param pointer The element.
-/// @default-runtime-calling-convention
+/// @method-call
 /// @error #DX_ERROR_INVALID_ARGUMENT @a self is a null pointer
 /// @error #DX_ERROR_ALLOCATION_FAILED an allocation failed
 static dx_result _dx_impl_push_back(_dx_impl* SELF, dx_inline_pointer_deque_element pointer);
@@ -128,7 +128,7 @@ static dx_result _dx_impl_push_back(_dx_impl* SELF, dx_inline_pointer_deque_elem
 /// @brief Prepend an element.
 /// @param SELF A pointer to this _dx_impl object.
 /// @param pointer The element.
-/// @default-runtime-calling-convention
+/// @method-call
 /// @error #DX_ERROR_INVALID_ARGUMENT @a SELF is a null pointer
 /// @error #DX_ERROR_ALLOCATION_FAILED an allocation failed
 static dx_result _dx_impl_push_front(_dx_impl* SELF, dx_inline_pointer_deque_element pointer);
@@ -137,7 +137,7 @@ static dx_result _dx_impl_push_front(_dx_impl* SELF, dx_inline_pointer_deque_ele
 /// @param SELF A pointer to this _dx_impl object.
 /// @param pointer The element.
 /// @param index The index.
-/// @default-runtime-calling-convention
+/// @method-call
 /// @error #DX_ERROR_INVALID_ARGUMENT @a SELF is a null pointer
 /// @error #DX_ERROR_INVALID_ARGUMENT @a index is greater than the size of this _dx_impl object
 /// @error #DX_ERROR_ALLOCATION_FAILED an allocation failed
@@ -148,7 +148,7 @@ static dx_result _dx_impl_insert(_dx_impl* SELF, dx_inline_pointer_deque_element
 /// @param SELF A pointer to this _dx_impl object.
 /// @param index The index.
 /// @success <code>*RETURN</code> was assigned the pointer at the specified index.
-/// @default-runtime-calling-convention
+/// @method-call
 /// @error #DX_ERROR_INVALID_ARGUMENT @a RETURN is a null pointer
 /// @error #DX_ERROR_INVALID_ARGUMENT @a SELF is a null pointer
 /// @error #DX_ERROR_INVALID_ARGUMENT @a index is greater than the size of this _dx_impl object
@@ -159,7 +159,7 @@ static dx_result _dx_impl_get_at(dx_inline_pointer_deque_element* RETURN, _dx_im
 /// @param SELF A pointer to the _dx_impl object.
 /// @param steal The "removed" callback is not invoked if this is @a true.
 /// @param index The index.
-/// @default-runtime-calling-convention
+/// @method-call
 /// @error #DX_ERROR_INVALID_ARGUMENT @a RETURN is a null pointer
 /// @error #DX_ERROR_INVALID_ARGUMENT @a SELF is a null pointer
 /// @error #DX_ERROR_INVALID_ARGUMENT @a index is greater than or equal to the size of this _dx_impl object

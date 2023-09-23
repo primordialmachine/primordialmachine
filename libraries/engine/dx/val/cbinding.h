@@ -33,35 +33,35 @@ struct dx_val_cbinding_dispatch {
 /// @param self A pointer to this constant binding.
 /// @param name The name of the variable.
 /// @param v The value of the variable.
-/// @default-runtime-calling-convention
+/// @method-call
 dx_result dx_val_cbinding_set_vec3(dx_val_cbinding* SELF, char const* name, DX_VEC3 const* value);
 
 /// @brief Assign a variable of the specified name the specified value.
 /// @param self A pointer to this constant binding.
 /// @param name The name of the variable.
 /// @param v The value of the variable.
-/// @default-runtime-calling-convention
+/// @method-call
 dx_result dx_val_cbinding_set_vec4(dx_val_cbinding* SELF, char const* name, DX_VEC4 const* value);
 
 /// @brief Assign a variable of the specified name the specified value.
 /// @param self A pointer to this constant binding.
 /// @param name The name of the variable.
 /// @param v The value of the variable.
-/// @default-runtime-calling-convention
+/// @method-call
 dx_result dx_val_cbinding_set_mat4(dx_val_cbinding* SELF, char const* name, DX_MAT4 const* value);
 
 /// @brief Assign a variable of the specified name the specified value.
 /// @param self A pointer to this constant binding.
 /// @param name The name of the variable.
 /// @param v The value of the variable.
-/// @default-runtime-calling-convention
+/// @method-call
 dx_result dx_val_cbinding_set_rgba_f32(dx_val_cbinding* SELF, char const* name, DX_RGBA_F32 const* value);
 
 /// @brief Assign a variable of the specified name the specified value.
 /// @param self A pointer to this constant binding.
 /// @param name The name of the variable.
 /// @param v The value of the variable.
-/// @default-runtime-calling-convention
+/// @method-call
 dx_result dx_val_cbinding_set_texture_index(dx_val_cbinding* SELF, char const* name, dx_size value);
 
 dx_result dx_val_cbinding_construct(dx_val_cbinding* self);

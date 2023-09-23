@@ -15,7 +15,7 @@
 #elif (DX_COMPILER_C == DX_COMPILER_C_MSVC) && !defined(DOXYGEN)
   #define DX_THREAD_LOCAL() __declspec(thread) /**< @hideinitializer */
 #else
-  #error("C compiler not supported")
+  #error("C compiler not (yet) supported")
 #endif
 
 /// @ingroup Core_Annotations
@@ -28,7 +28,7 @@
 #elif (DX_COMPILER_C == DX_COMPILER_C_MSVC) && !defined(DOXYGEN)
   #define DX_NO_RETURN() __declspec(noreturn) /**< @hideinitializer */
 #else
-  #error("C compiler not supported")
+  #error("C compiler not (yet) supported")
 #endif
 
 /// @ingroup Core_Annotations

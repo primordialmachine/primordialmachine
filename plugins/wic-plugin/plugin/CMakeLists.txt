@@ -6,9 +6,13 @@ cmake_minimum_required(VERSION 3.20)
 
 
 set(name "wic-plugin")
+set(${name}.languages "C")
+set(${name}.kind "dynamic-library")
+set(${name}.private_include_directories ${CMAKE_CURRENT_SOURCE_DIR}/implementation)
+set(${name}.source_directory "${CMAKE_CURRENT_SOURCE_DIR}")
+set(${name}.doxygen_enabled OFF)
 
-set (${name}.sources "")
-set (${name}.headers "")
+dx_begin_project(${name})
 
 list(APPEND ${name}.sources "implementation/read-image.c")
 list(APPEND ${name}.sources "implementation/write-image.c")
@@ -19,11 +23,4 @@ list(APPEND ${name}.headers "implementation/wic-plugin.h")
 
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${${name}.sources} ${${name}.headers})
 
-project(${name} LANGUAGES C)
-
-add_library(${name} MODULE ${${name}.sources} ${${name}.headers})
-
-# See ${CMAKE_SOURCE_DIR_DIR}/CMakeLibrary.cmake for more information.
-dx_configure_warnings(${name})
-
-target_include_directories(${name} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/implementation)
+dx_end_project(${name})

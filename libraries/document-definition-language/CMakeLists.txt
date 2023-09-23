@@ -6,21 +6,25 @@ cmake_minimum_required(VERSION 3.20)
 
 
 set(name "dailies.document-definition-language")
+set(${name}.kind "static-library")
+set(${name}.languages "C")
+set(${name}.public_include_directories "${CMAKE_CURRENT_SOURCE_DIR}")
+set(${name}.private_include_directories "${CMAKE_CURRENT_SOURCE_DIR}")
+set(${name}.source_directory "${CMAKE_CURRENT_SOURCE_DIR}")
 dx_begin_project(${name})
-project(${name} LANGUAGES C)
 
 # "README.md"
 list(APPEND ${name}.readmes "README.md")
 
-# "dx/text/configuration.(c|h)"
+# "dx/document_definition_language/configuration.(c|h)"
 list(APPEND ${name}.sources "dx/document_definition_language/configuration.c")
 list(APPEND ${name}.headers "dx/document_definition_language/configuration.h")
 
-# "text.(c|h)"
+# "document_definition_language.(c|h)"
 list(APPEND ${name}.sources "dx/document_definition_language.c")
 list(APPEND ${name}.headers "dx/document_definition_language.h")
 
-# "text" folder
+# "document_definition_language" folder
 list(APPEND ${name}.sources "dx/document_definition_language/scanner.c")
 list(APPEND ${name}.headers "dx/document_definition_language/scanner.h")
 list(APPEND ${name}.sources "dx/document_definition_language/word_kind.c")
@@ -33,11 +37,6 @@ function(add_files file_list expression)
   set(${file_list} ${${file_list}} ${temporary} PARENT_SCOPE)
 endfunction()
 
-add_library(${name} ${${name}.sources} ${${name}.headers} ${${name}.readmes} ${${name}.inlays} ${${name}.asms})
-
-target_include_directories(${name} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
-target_include_directories(${name} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+dx_end_project(${name})
 
 target_link_libraries(${name} "dailies.core")
-
-dx_end_project(${name})

@@ -46,7 +46,7 @@
   #if defined(_WIN32)
     #define DX_OPERATING_SYSTEM DX_OPERATING_SYSTEM_WINDOWS
   #else
-    #error("operating system not supported")
+    #error("operating system not (yet) supported")
   #endif
 #endif
 
@@ -76,7 +76,6 @@
 /// @brief Symbolic constant for the "CLANG" CPP compiler.
 #define DX_COMPILER_CPP_CLANG (6)
 
-
 /// @ingroup core
 /// @brief Symbolic constant indicating the C compiler.
 /// It is defined to a value of one of the DX_COMPILER_C_* symbolic constants.
@@ -88,10 +87,9 @@
   #elif defined(__clang__)
     #define DX_COMPILER_C DX_COMPILER_C_CLANG
   #else
-    #error("C compiler not supported")
+    #error("C compiler not (yet) supported")
   #endif
 #endif
-
 
 /// @ingroup core
 /// @brief Symbolic constant indicating the CPP compiler.
@@ -104,19 +102,29 @@
   #elif defined(__clang__)
     #define DX_COMPILER_CPP DX_COMPILER_CPP_CLANG
   #else
-    #error("CPP compiler not supported")
+    #error("CPP compiler not (yet) supported")
   #endif
 #endif
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-#define DX_CONFIGURATION_VISUALS_DIRECT3D (1)
+#define DX_VISUALS_DIRECT3D12 (1)
 
-#define DX_CONFIGURATION_VISUALS_OPENGL (2)
+#define DX_VISUALS_OPENGL4 (2)
 
-#define DX_CONFIGURATION_VISUALS_VULKAN3D (3)
+#define DX_VISUALS_VULKAN3D (3)
 
-#define DX_CONFIGURATION_VISUALS DX_CONFIGURATION_VISUALS_OPENGL
+/// @brief Symbolic constant indicating the visuals backend.
+/// It is defined to a value of one of the DX_VISUALS_* symbolic constants.
+#define DX_VISUALS DX_VISUALS_OPENGL4
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+#define DX_AUDIALS_OPENAL (1)
+
+/// @brief Symbolic constant indicating the audials backend.
+/// It is defined to a value of one of the DX_AUDIALS_* symbolic constants.
+#define DX_AUDIALS DX_AUDIALS_OPENAL
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 

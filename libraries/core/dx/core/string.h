@@ -56,7 +56,7 @@ dx_result dx_string_create(dx_string** RETURN, char const* bytes, dx_size number
 /// @param SELF A pointer to this string.
 /// @success <code>*RETURN</code> was assigned pointer to the Bytes.
 /// @error #DX_ERROR_INVALID_ARGUMENT @a RETURN is a null pointer.
-/// @default-runtime-calling-convention
+/// @method-call
 dx_result dx_string_get_bytes(void const** RETURN, dx_string* SELF);
 
 /// @brief Get the number of Bytes of this string.
@@ -64,7 +64,7 @@ dx_result dx_string_get_bytes(void const** RETURN, dx_string* SELF);
 /// @param SELF A pointer to this string.
 /// @success <code>*RETURN</code> was assigned the number of Bytes.
 /// @error #DX_ERROR_INVALID_ARGUMENT @a RETURN is a null pointer.
-/// @default-runtime-calling-convention
+/// @method-call
 dx_result dx_string_get_number_of_bytes(dx_size* RETURN, dx_string* SELF);
 
 /// @brief Get if the string contains an UTF-8 symbol.

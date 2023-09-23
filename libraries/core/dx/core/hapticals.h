@@ -101,18 +101,17 @@ static inline dx_input_msg* DX_INPUT_MSG(void* p) {
 /// - dx_modifier_rshift
 /// - dx_modifier_lctrl
 /// - dx_modifier_lctrl
-/// @default-return
-/// @default-failure
+/// @method-call
 dx_result dx_input_msg_construct(dx_input_msg* SELF, dx_input_msg_kind kind, uint8_t modifiers);
 
 /// @brief Get the kind of this "input" message.
-/// @param SELF A poiner to this "input" message.
+/// @param SELF A poiner to this "input" message object.
 /// @return The kind of this "input" message.
 dx_input_msg_kind dx_input_msg_get_kind(dx_input_msg* SELF);
 
 /// @brief Get the modifiers of this "input" message.
 /// @param RETURN A pointer to a <code>uint8_t</code> variable.
-/// @param SELF A pointer to this "input" message.
+/// @param SELF A pointer to this "input" message object.
 /// @success <code>*RETURN</code> was assigned the modifiers of this "input" message..
 /// @default-return
 /// @default-failure
@@ -130,11 +129,15 @@ struct dx_input_msg_dispatch {
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-/// @todo Should be an enumeration element.
-#define DX_KEYBOARD_KEY_ACTION_PRESSED (1)
+DX_DECLARE_ENUMERATION_TYPE("dx.keyboard_key_action",
+                            dx_keyboard_key_action);
 
-/// @todo Should be an enumeration element.
-#define DX_KEYBOARD_KEY_ACTION_RELEASED (2)
+enum dx_keyboard_key_action {
+  DX_KEYBOARD_KEY_ACTION_PRESSED = 1,
+  DX_KEYBOARD_KEY_ACTION_RELEASED = 2,
+};
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 /// @brief The opaque type of a "keyboard key" message.
 DX_DECLARE_OBJECT_TYPE("dx.keyboard_key_msg",
@@ -149,24 +152,35 @@ static inline dx_keyboard_key_msg* DX_KEYBOARD_KEY_MSG(void* p) {
 /// @param SELF A pointer to this "keyboard key" message object.
 /// @param action The action of the key. Must be #DX_KEYBOARD_KEY_ACTION_PRESSED or #DX_KEYBOARD_KEY_ACTION_RELEASED.
 /// @param key The key.
-/// @default-return
-/// @default-failure
-dx_result dx_keyboard_key_msg_construct(dx_keyboard_key_msg* SELF, uint8_t action, dx_keyboard_key key, uint8_t modifiers);
+/// @method-call
+dx_result dx_keyboard_key_msg_construct(dx_keyboard_key_msg* SELF, dx_keyboard_key_action action, dx_keyboard_key key, uint8_t modifiers);
 
-uint8_t dx_keyboard_key_msg_get_action(dx_keyboard_key_msg* SELF);
+/// @brief Get the action.
+/// @param RETURN A pointer to a <code>dx_keyboard_key_action</code> variable.
+/// @param SELF A pointer to this "keyboard key" message object.
+/// @success <code>*RETURN</code> was assigned the action.
+/// @method-call
+dx_result dx_keyboard_key_msg_get_action(dx_keyboard_key_action* RETURN, dx_keyboard_key_msg* SELF);
 
-dx_keyboard_key dx_keyboard_key_msg_get_key(dx_keyboard_key_msg* SELF);
+/// @brief Get the key.
+/// @param RETURN A pointer to a <code>dx_keyboard_key</code> variable.
+/// @param SELF A pointer to this "keyboard key" message object.
+/// @success <code>*RETURN</code> was assigned the keyboard key.
+/// @method-call
+dx_result dx_keyboard_key_msg_get_key(dx_keyboard_key* RETURN, dx_keyboard_key_msg* SELF);
 
 /// @brief Create a "keyboard key" message.
+/// @param RETURN A pointer to a code <code>dx_keyboard_key_msg*</code> variable.
 /// @param action The action of the key. Must be #DX_KEYBOARD_KEY_ACTION_PRESSED or #DX_KEYBOARD_KEY_ACTION_RELEASED.
 /// @param key The key.
 /// @param modifiers The modifiers.
-/// @return A pointer to the message on success. The null pointer on failure.
-dx_keyboard_key_msg* dx_keyboard_key_msg_create(uint8_t action, dx_keyboard_key key, uint8_t modifiers);
+/// @success <code>*RETURN</code> was assigned a pointer to the "keyboard key" message object.
+/// @procedure-call
+dx_result dx_keyboard_key_msg_create(dx_keyboard_key_msg** RETURN, dx_keyboard_key_action action, dx_keyboard_key key, uint8_t modifiers);
 
 struct dx_keyboard_key_msg {
   dx_input_msg _parent;
-  uint8_t action;
+  dx_keyboard_key_action action;
   dx_keyboard_key key;
 };
 
@@ -176,11 +190,15 @@ struct dx_keyboard_key_msg_dispatch {
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-/// @todo Should be an enumeration element.
-#define DX_MOUSE_BUTTON_ACTION_PRESSED (1)
+DX_DECLARE_ENUMERATION_TYPE("dx.mouse_button_action",
+                            dx_mouse_button_action);
 
-/// @todo Should be an enumeration element.
-#define DX_MOUSE_BUTTON_ACTION_RELEASED (2)
+enum dx_mouse_button_action {
+  DX_MOUSE_BUTTON_ACTION_PRESSED = 1,
+  DX_MOUSE_BUTTON_ACTION_RELEASED = 2,
+};
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 /// @brief The opaque type of a "mouse button" message.
 DX_DECLARE_OBJECT_TYPE("dx.mouse_button_msg",
@@ -196,24 +214,29 @@ static inline dx_mouse_button_msg* DX_MOUSE_BUTTON_MSG(void* p) {
 /// @param action The action of the button. Must be #DX_MOUSE_BUTTON_ACTION_PRESSED or #DX_MOUSE_BUTTON_ACTION_RELEASED.
 /// @param button The button.
 /// @param modifiers The modifiers.
-/// @param x,y The position of the mouse pointer.
-/// The origin is at the left/top of the canvas. The positive x-axis is pointing right, the positive y-axis is pointing down.
-/// @default-return
-/// @default-failure
-dx_result dx_mouse_button_msg_construct(dx_mouse_button_msg* SELF, uint8_t action, dx_mouse_button button, uint8_t modifiers, dx_f32 x, dx_f32 y);
+/// @param x, y
+/// The position of the mouse pointer.
+/// The origin is at the left/top of the canvas.
+/// The positive x-axis is pointing right, the positive y-axis is pointing down.
+/// @method-call
+dx_result dx_mouse_button_msg_construct(dx_mouse_button_msg* SELF, dx_mouse_button_action action, dx_mouse_button button, uint8_t modifiers, dx_f32 x, dx_f32 y);
 
-uint8_t dx_mouse_button_msg_get_action(dx_mouse_button_msg* SELF);
+dx_mouse_button_action dx_mouse_button_msg_get_action(dx_mouse_button_msg* SELF);
 
 dx_mouse_button dx_mouse_button_msg_get_button(dx_mouse_button_msg* SELF);
 
 /// @brief Create a "mouse button" message.
+/// @param RETURN A pointer to a code <code>dx_mouse_button_msg*</code> variable.
 /// @param action The action of the button. Must be #DX_MOUSE_BUTTON_ACTION_PRESSED or #DX_MOUSE_BUTTON_ACTION_RELEASED.
 /// @param button The button.
 /// @param modifiers The modifiers.
-/// @param x,y The position of the mouse pointer.
-/// The origin is at the left/top of the canvas. The positive x-axis is pointing right, the positive y-axis is pointing down.
-/// @return A pointer to the message on success. The null pointer on failure.
-dx_mouse_button_msg* dx_mouse_button_msg_create(uint8_t action, dx_mouse_button button, uint8_t modifiers, dx_f32 x, dx_f32 y);
+/// @param x, y
+/// The position of the mouse pointer.
+/// The origin is at the left/top of the canvas.
+/// The positive x-axis is pointing right, the positive y-axis is pointing down.
+/// @success <code>*RETURN</code> was assigned a pointer to the "mouse button" message object.
+/// @procedure-call
+dx_result dx_mouse_button_msg_create(dx_mouse_button_msg** RETURN, dx_mouse_button_action action, dx_mouse_button button, uint8_t modifiers, dx_f32 x, dx_f32 y);
 
 struct dx_mouse_button_msg {
   dx_input_msg _parent;
@@ -228,14 +251,16 @@ struct dx_mouse_button_msg_dispatch {
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-/// @todo Should be an enumeration element.
-#define DX_MOUSE_POINTER_ACTION_MOVED (1)
+DX_DECLARE_ENUMERATION_TYPE("dx.mouse_pointer_action",
+                            dx_mouse_pointer_action);
 
-/// @todo Should be an enumeration element.
-#define DX_MOUSE_POINTER_ACTION_ENTERED (2)
+enum dx_mouse_pointer_action {
+  DX_MOUSE_POINTER_ACTION_MOVED = 1,
+  DX_MOUSE_POINTER_ACTION_ENTERED = 2,
+  DX_MOUSE_POINTER_ACTION_EXITED = 3,
+};
 
-/// @todo Should be an enumeration element.
-#define DX_MOUSE_POINTER_ACTION_EXITED (3)
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 /// @brief The opaque type of a "mouse pointer" message.
 DX_DECLARE_OBJECT_TYPE("dx.mouse_pointer_msg",
@@ -252,19 +277,25 @@ static inline dx_mouse_pointer_msg* DX_MOUSE_POINTER_MSG(void* p) {
 /// @param modifiers The modifiers.
 /// @param x,y The position of the mouse pointer.
 /// The origin is at the left/top of the canvas. The positive x-axis is pointing right, the positive y-axis is pointing down.
-/// @default-return
-/// @default-failure
-dx_result dx_mouse_pointer_msg_construct(dx_mouse_pointer_msg* SELF, uint8_t action, uint8_t modifiers, dx_f32 x, dx_f32 y);
+/// @method-call
+dx_result dx_mouse_pointer_msg_construct(dx_mouse_pointer_msg* SELF, dx_mouse_pointer_action action, uint8_t modifiers, dx_f32 x, dx_f32 y);
 
-uint8_t dx_mouse_pointer_msg_get_action(dx_mouse_pointer_msg* SELF);
+/// @brief Get the action.
+/// @param RETURN A pointer to a <code>dx_mouse_pointer_action</code> variable.
+/// @param SELF A pointer to this "mouse pointer key" message object.
+/// @success <code>*RETURN</code> was assigned the action.
+/// @method-call
+dx_result dx_mouse_pointer_msg_get_action(dx_mouse_pointer_action* RETURN, dx_mouse_pointer_msg* SELF);
 
 /// @brief Create a "mouse pointer" message.
+/// @param RETURN A pointer to a <code>dx_mouse_pointer_msg*</code> variable.
 /// @param action The action of the mouse pointer. Must be #DX_MOUSE_POINTER_ACTION_MOVED, DX_MOUSE_POINTER_ACTION_ENTERED, or DX_MOUSE_POINTER_ACTION_EXITED.
 /// @param modifiers The modifiers.
 /// @param x,y The position of the mouse pointer.
 /// The origin is at the left/top of the canvas. The positive x-axis is pointing right, the positive y-axis is pointing down.
-/// @return A pointer to the message on success. The null pointer on failure.
-dx_mouse_pointer_msg* dx_mouse_pointer_msg_create(uint8_t action, uint8_t modifiers, dx_f32 x, dx_f32 y);
+/// @success <code>*RETURN</code> was assigned a pointer to the "mouse pointer" message object.
+/// @procedure-call
+dx_result dx_mouse_pointer_msg_create(dx_mouse_pointer_msg** RETURN, dx_mouse_pointer_action action, uint8_t modifiers, dx_f32 x, dx_f32 y);
 
 struct dx_mouse_pointer_msg {
   dx_input_msg _parent;

@@ -2,7 +2,7 @@
 // @author Michael Heilmann (michaelheilmann@primordialmachine.com)
 // @copyright Copyright (c) 2023 Michael Heilmann. All rights reserved.
 
-#include "font_loader_plugin.h"
+#include "font-loader-plugin.h"
 
 #include "dx/core.h"
 

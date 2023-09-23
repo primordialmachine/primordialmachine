@@ -5,23 +5,132 @@
 #include "dx/val/command.h"
 #include "dx/val/texture.h"
 
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+DX_DEFINE_OBJECT_TYPE("dx.glyph_atlas",
+                      dx_glyph_atlas,
+                      dx_object);
+
+static void dx_glyph_atlas_destruct(dx_glyph_atlas* SELF) {
+  DX_UNREFERENCE(SELF->rectangle_presenter);
+  SELF->rectangle_presenter = NULL;
+
+  DX_UNREFERENCE(SELF->font_manager);
+  SELF->font_manager = NULL;
+
+  DX_UNREFERENCE(SELF->val_context);
+  SELF->val_context = NULL;
+}
+
+static void dx_glyph_atlas_dispatch_construct(dx_glyph_atlas_dispatch* SELF)
+{/*Intentionally empty.*/}
+
+dx_result dx_glyph_atlas_construct(dx_glyph_atlas* SELF, dx_font_manager* font_manager, dx_rectangle_presenter* rectangle_presenter, dx_val_context* val_context) {
+  dx_rti_type* TYPE = dx_glyph_atlas_get_type();
+  if (!TYPE) {
+    return DX_FAILURE;
+  }
+  //
+  if (!font_manager) {
+    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
+    return DX_FAILURE;
+  }
+  SELF->font_manager = font_manager;
+  DX_REFERENCE(font_manager);
+  //
+  if (!rectangle_presenter) {
+    DX_UNREFERENCE(SELF->font_manager);
+    SELF->font_manager = NULL;
+
+    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
+    return DX_FAILURE;
+  }
+  SELF->rectangle_presenter = rectangle_presenter;
+  DX_REFERENCE(rectangle_presenter);
+  //
+  if (!val_context) {
+    DX_UNREFERENCE(SELF->rectangle_presenter);
+    SELF->rectangle_presenter = NULL;
+
+    DX_UNREFERENCE(SELF->font_manager);
+    SELF->font_manager = NULL;
+
+    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
+    return DX_FAILURE;
+  }
+  SELF->val_context = val_context;
+  DX_REFERENCE(SELF->val_context);
+  //
+  DX_OBJECT(SELF)->type = TYPE;
+  //
+  return DX_SUCCESS;
+}
+
+dx_result dx_glyph_atlas_create(dx_glyph_atlas** RETURN, dx_font_manager* font_manager, dx_rectangle_presenter* rectangle_presenter, dx_val_context* val_context) {
+  dx_glyph_atlas* SELF = DX_GLYPH_ATLAS_PRESENTER(dx_object_alloc(sizeof(dx_glyph_atlas)));
+  if (!SELF) {
+    return DX_FAILURE;
+  }
+  if (dx_glyph_atlas_construct(SELF, font_manager, rectangle_presenter, val_context)) {
+    DX_UNREFERENCE(SELF);
+    SELF = NULL;
+    return DX_FAILURE;
+  }
+  *RETURN = SELF;
+  return DX_SUCCESS;
+}
+
+dx_result dx_glyph_atlas_get_texture(dx_glyph_atlas* SELF, dx_font_glyph *glyph, dx_val_texture** val_texture, DX_RECT2_F32* texture_coordinates) {
+  DX_RECT2_F32 texture_coordinates_1;
+  if (dx_font_glyph_get_texture_coordinates(glyph, &texture_coordinates_1.left,
+                                                   &texture_coordinates_1.bottom,
+                                                   &texture_coordinates_1.right,
+                                                   &texture_coordinates_1.top)) {
+    return DX_FAILURE;
+  }
+  dx_asset_texture* asset_texture;
+  if (dx_assets_extensions_create_texture_from_glyph(&asset_texture, glyph)) {
+    return DX_FAILURE;
+  }
+  dx_val_texture* val_texture_1 = NULL;
+  if (dx_val_context_create_texture(&val_texture_1, SELF->val_context)) {
+    DX_UNREFERENCE(asset_texture);
+    asset_texture = NULL;
+    return DX_FAILURE;
+  }
+  if (dx_val_texture_set_data(val_texture_1, asset_texture)) {
+    DX_UNREFERENCE(val_texture_1);
+    val_texture_1 = NULL;
+    DX_UNREFERENCE(asset_texture);
+    asset_texture = NULL;
+    return DX_FAILURE;
+  }
+  if (dx_val_texture_set_texture_address_mode_u(val_texture_1, DX_TEXTURE_ADDRESS_MODE_CLAMP_TO_BORDER) ||
+      dx_val_texture_set_texture_address_mode_v(val_texture_1, DX_TEXTURE_ADDRESS_MODE_CLAMP_TO_BORDER) ||
+      dx_val_texture_set_texture_minification_filter(val_texture_1, DX_TEXTURE_MINIFICATION_FILTER_LINEAR) ||
+      dx_val_texture_set_texture_magnification_filter(val_texture_1, DX_TEXTURE_MAGNIFICATION_FILTER_LINEAR)) {
+    DX_UNREFERENCE(val_texture_1);
+    val_texture_1 = NULL;
+    DX_UNREFERENCE(asset_texture);
+    asset_texture = NULL;
+    return DX_FAILURE;
+  }
+  DX_VEC4 border_color = { .e[0] = 0.f, .e[1] = 0.f, .e[2] = 0.f, .e[3] = 0.f };
+  if (dx_val_texture_set_texture_border_color(val_texture_1, &border_color)) {
+    DX_UNREFERENCE(val_texture_1);
+    val_texture_1 = NULL;
+    DX_UNREFERENCE(asset_texture);
+    asset_texture = NULL;
+    return DX_FAILURE;
+  }
+  *texture_coordinates = texture_coordinates_1;
+  *val_texture = val_texture_1;
+  return DX_SUCCESS;
+}
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
 static dx_result create_font(dx_font** RETURN, dx_font_presenter* SELF, char const* path);
-
-// if @a texture_coordinate_rectangle is null, then left = 0, bottom = 0, right = 1, and top = 1 are used.
-static dx_result
-present_rectangle
-  (
-    dx_font_presenter* SELF,
-    DX_RECT2_F32 const* target_rectangle,
-    dx_f32 target_depth,
-    DX_RECT2_F32 const* texture_coordinate_rectangle,
-    dx_val_texture* texture,
-    DX_RGBA_F32 const* color
-  );
-
-static dx_result create_text_bounds_presenter(dx_font_presenter* SELF);
-
-static void destroy_text_bounds_presenter(dx_font_presenter* SELF);
 
 static dx_result create_text_presenter(dx_font_presenter* SELF);
 
@@ -58,48 +167,31 @@ present_glyph
     DX_RGBA_F32 const* color
   )
 {
+  if (!texture || !texture_coordinate_rectangle) {
+    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
+    return DX_FAILURE;
+  }
   // configure constant binding
   dx_val_cbinding_set_rgba_f32(SELF->val_cbinding, "vs_text_color", color);
-  if (texture) {
-    dx_val_cbinding_set_texture_index(SELF->val_cbinding, "texture_sampler", 0);
-  }
-
+  dx_val_cbinding_set_texture_index(SELF->val_cbinding, "texture_sampler", 0);
+  
   dx_val_command* command;
 
   dx_val_command_list_clear(SELF->val_command_list);
 
-  if (texture) {
-    DX_RECT2_F32 t = { .left = 0.f, .right = 1.f, .bottom = 0.f, .top = 1.f };
-    if (texture_coordinate_rectangle) {
-      t = *texture_coordinate_rectangle;
-    }
-    struct {
-      DX_VEC3 xyz;
-      DX_VEC2 uv;
-    } vertices[] = {
-        { target_rectangle->left,  target_rectangle->bottom, target_depth, t.left,  t.left, },
-        { target_rectangle->right, target_rectangle->bottom, target_depth, t.right, t.left, },
-        { target_rectangle->right, target_rectangle->top,    target_depth, t.right, t.right, },
+  struct {
+    DX_VEC3 xyz;
+    DX_VEC2 uv;
+  } vertices[] = {
+      { target_rectangle->left,  target_rectangle->bottom, target_depth, texture_coordinate_rectangle->left,  texture_coordinate_rectangle->left, },
+      { target_rectangle->right, target_rectangle->bottom, target_depth, texture_coordinate_rectangle->right, texture_coordinate_rectangle->left, },
+      { target_rectangle->right, target_rectangle->top,    target_depth, texture_coordinate_rectangle->right, texture_coordinate_rectangle->right, },
 
-        { target_rectangle->right, target_rectangle->top,    target_depth, t.right, t.right, },
-        { target_rectangle->left,  target_rectangle->top,    target_depth, t.left,  t.right, },
-        { target_rectangle->left,  target_rectangle->bottom, target_depth, t.left,  t.left, },
-    };
-    dx_val_buffer_set_data(SELF->val_buffer, &vertices, sizeof(vertices));
-  } else {
-    struct {
-      DX_VEC3 xyz;
-    } vertices[] = {
-        { target_rectangle->left,  target_rectangle->bottom, target_depth, },
-        { target_rectangle->right, target_rectangle->bottom, target_depth, },
-        { target_rectangle->right, target_rectangle->top,    target_depth, },
-
-        { target_rectangle->right, target_rectangle->top,    target_depth, },
-        { target_rectangle->left,  target_rectangle->top,    target_depth, },
-        { target_rectangle->left,  target_rectangle->bottom, target_depth, },
-    };
-    dx_val_buffer_set_data(SELF->val_buffer, &vertices, sizeof(vertices));
-  }
+      { target_rectangle->right, target_rectangle->top,    target_depth, texture_coordinate_rectangle->right, texture_coordinate_rectangle->right, },
+      { target_rectangle->left,  target_rectangle->top,    target_depth, texture_coordinate_rectangle->left,  texture_coordinate_rectangle->right, },
+      { target_rectangle->left,  target_rectangle->bottom, target_depth, texture_coordinate_rectangle->left,  texture_coordinate_rectangle->left, },
+  };
+  dx_val_buffer_set_data(SELF->val_buffer, &vertices, sizeof(vertices));
 
   // pipeline state command
   if (dx_val_command_create_pipeline_state(&command, DX_CULL_MODE_BACK, DX_DEPTH_TEST_FUNCTION_ALWAYS, DX_FALSE)) {
@@ -114,14 +206,8 @@ present_glyph
   command = NULL;
 
   // draw command
-  if (texture) {
-    if (dx_val_command_create_draw(&command, SELF->text.val_vbinding, texture, SELF->val_cbinding, SELF->text.val_program, 0, 6)) {
-      return DX_FAILURE;
-    }
-  } else {
-    if (dx_val_command_create_draw(&command, SELF->text_bounds.val_vbinding, NULL, SELF->val_cbinding, SELF->text_bounds.val_program, 0, 6)) {
-      return DX_FAILURE;
-    }
+  if (dx_val_command_create_draw(&command, SELF->text.val_vbinding, texture, SELF->val_cbinding, SELF->text.val_program, 0, 6)) {
+    return DX_FAILURE;
   }
   if (dx_val_command_list_append(SELF->val_command_list, command)) {
     DX_UNREFERENCE(command);
@@ -136,118 +222,6 @@ present_glyph
     return DX_FAILURE;
   }
   return DX_SUCCESS;
-}
-
-static dx_result
-present_rectangle
-  (
-    dx_font_presenter* SELF,
-    DX_RECT2_F32 const* target_rectangle,
-    dx_f32 target_depth,
-    DX_RECT2_F32 const* texture_coordinate_rectangle,
-    dx_val_texture* texture,
-    DX_RGBA_F32 const* color
-  )
-{
-  // configure constant binding
-  dx_val_cbinding_set_rgba_f32(SELF->val_cbinding, "vs_rgba", color);
-  if (texture) {
-    dx_val_cbinding_set_texture_index(SELF->val_cbinding, "texture_sampler", 0);
-  }
-
-  dx_val_command* command;
-
-  dx_val_command_list_clear(SELF->val_command_list);
-
-  if (texture) {
-    DX_RECT2_F32 t = { .left = 0.f, .right = 1.f, .bottom = 0.f, .top = 1.f };
-    if (texture_coordinate_rectangle) {
-      t = *texture_coordinate_rectangle;
-    }
-    struct {
-      DX_VEC3 xyz;
-      DX_VEC2 uv;
-    } vertices[] = {
-        { target_rectangle->left,  target_rectangle->bottom, target_depth, t.left,  t.left, },
-        { target_rectangle->right, target_rectangle->bottom, target_depth, t.right, t.left, },
-        { target_rectangle->right, target_rectangle->top,    target_depth, t.right, t.right, },
-
-        { target_rectangle->right, target_rectangle->top,    target_depth, t.right, t.right, },
-        { target_rectangle->left,  target_rectangle->top,    target_depth, t.left,  t.right, },
-        { target_rectangle->left,  target_rectangle->bottom, target_depth, t.left,  t.left, },
-    };
-    dx_val_buffer_set_data(SELF->val_buffer, &vertices, sizeof(vertices));
-  } else {
-    struct {
-      DX_VEC3 xyz;
-    } vertices[] = {
-        { target_rectangle->left,  target_rectangle->bottom, target_depth, },
-        { target_rectangle->right, target_rectangle->bottom, target_depth, },
-        { target_rectangle->right, target_rectangle->top,    target_depth, },
-
-        { target_rectangle->right, target_rectangle->top,    target_depth, },
-        { target_rectangle->left,  target_rectangle->top,    target_depth, },
-        { target_rectangle->left,  target_rectangle->bottom, target_depth, },
-    };
-    dx_val_buffer_set_data(SELF->val_buffer, &vertices, sizeof(vertices));
-  }
-
-  // pipeline state command
-  if (dx_val_command_create_pipeline_state(&command, DX_CULL_MODE_BACK, DX_DEPTH_TEST_FUNCTION_ALWAYS, DX_FALSE)) {
-    return DX_FAILURE;
-  }
-  if (dx_val_command_list_append(SELF->val_command_list, command)) {
-    DX_UNREFERENCE(command);
-    command = NULL;
-    return DX_FAILURE;
-  }
-  DX_UNREFERENCE(command);
-  command = NULL;
-
-  // draw command
-  if (texture) {
-    if (dx_val_command_create_draw(&command, SELF->text.val_vbinding, texture, SELF->val_cbinding, SELF->text.val_program, 0, 6)) {
-      return DX_FAILURE;
-    }
-  } else {
-    if (dx_val_command_create_draw(&command, SELF->text_bounds.val_vbinding, NULL, SELF->val_cbinding, SELF->text_bounds.val_program, 0, 6)) {
-      return DX_FAILURE;
-    }
-  }
-  if (dx_val_command_list_append(SELF->val_command_list, command)) {
-    DX_UNREFERENCE(command);
-    command = NULL;
-    return DX_FAILURE;
-  }
-  DX_UNREFERENCE(command);
-  command = NULL;
-
-  // execute the commands
-  if (dx_val_context_execute_commands(SELF->val_context, SELF->val_command_list)) {
-    return DX_FAILURE;
-  }
-  return DX_SUCCESS;
-}
-
-static dx_result create_text_bounds_presenter(dx_font_presenter* SELF) {
-  if (dx_engine_utilities_2d_create_program(&SELF->text_bounds.val_program, SELF->val_context, "assets/gl", "rectangle")) {
-    return DX_FAILURE;
-  }
-  if (dx_val_context_create_vbinding(&SELF->text_bounds.val_vbinding, SELF->val_context, DX_VERTEX_FORMAT_POSITION_XYZ, SELF->val_buffer)) {
-    //
-    DX_UNREFERENCE(SELF->text_bounds.val_program);
-    SELF->text_bounds.val_program = NULL;
-    //
-    return DX_FAILURE;
-  }
-  return DX_SUCCESS;
-}
-
-static void destroy_text_bounds_presenter(dx_font_presenter* SELF) {
-  DX_UNREFERENCE(SELF->text_bounds.val_vbinding);
-  SELF->text_bounds.val_vbinding = NULL;
-  DX_UNREFERENCE(SELF->text_bounds.val_program);
-  SELF->text_bounds.val_program = NULL;
 }
 
 static dx_result create_text_presenter(dx_font_presenter* SELF) {
@@ -282,7 +256,6 @@ static void dx_font_presenter_destruct(dx_font_presenter* SELF) {
   SELF->val_cbinding = NULL;
 
   destroy_text_presenter(SELF);
-  destroy_text_bounds_presenter(SELF);
 
   DX_UNREFERENCE(SELF->val_buffer);
   SELF->val_buffer = NULL;
@@ -349,25 +322,7 @@ dx_result dx_font_presenter_construct(dx_font_presenter* SELF, dx_font_manager* 
     //
     return DX_FAILURE;
   }
-  if (create_text_bounds_presenter(SELF)) {
-    //
-    DX_UNREFERENCE(SELF->val_buffer);
-    SELF->val_buffer = NULL;
-    //
-    DX_UNREFERENCE(SELF->val_context);
-    SELF->val_context = NULL;
-    //
-    DX_UNREFERENCE(SELF->rectangle_presenter);
-    SELF->rectangle_presenter = NULL;
-    //
-    DX_UNREFERENCE(SELF->font_manager);
-    SELF->font_manager = NULL;
-    //
-    return DX_FAILURE;
-  }
   if (create_text_presenter(SELF)) {
-    //
-    destroy_text_bounds_presenter(SELF);
     //
     DX_UNREFERENCE(SELF->val_buffer);
     SELF->val_buffer = NULL;
@@ -388,8 +343,6 @@ dx_result dx_font_presenter_construct(dx_font_presenter* SELF, dx_font_manager* 
   if (!SELF->val_cbinding) {
     //
     destroy_text_presenter(SELF);
-    //
-    destroy_text_bounds_presenter(SELF);
     //
     DX_UNREFERENCE(SELF->val_buffer);
     SELF->val_buffer = NULL;
@@ -412,8 +365,6 @@ dx_result dx_font_presenter_construct(dx_font_presenter* SELF, dx_font_manager* 
     SELF->val_cbinding = NULL;
     //
     destroy_text_presenter(SELF);
-    //
-    destroy_text_bounds_presenter(SELF);
     //
     DX_UNREFERENCE(SELF->val_buffer);
     SELF->val_buffer = NULL;
@@ -440,8 +391,6 @@ dx_result dx_font_presenter_construct(dx_font_presenter* SELF, dx_font_manager* 
       SELF->val_cbinding = NULL;
       //
       destroy_text_presenter(SELF);
-      //
-      destroy_text_bounds_presenter(SELF);
       //
       DX_UNREFERENCE(SELF->val_buffer);
       SELF->val_buffer = NULL;
@@ -495,23 +444,124 @@ dx_result dx_font_presenter_render_line_string(dx_font_presenter* SELF, dx_f32 l
   return DX_SUCCESS;
 }
 
-dx_result dx_font_presenter_render_line_string_iterator(dx_font_presenter* SELF, DX_VEC2 const *position, dx_string_iterator* string_iterator, DX_RGBA_F32 const* text_color, dx_font* font) {
-  uint8_t unknown_symbol_policy = dx_font_presenter_unknown_symbol_policy_error;
-  //uint8_t presentation_policy = 0;
-  uint8_t presentation_policy = 0
-                            /*| dx_font_presenter_presentation_policy_ascender_descener*/
-                              | dx_font_presenter_presentation_policy_glyph;
-  // the distance from the baseline to the maximal extend of any symbol above the baseline.
+static dx_result on_render_code_point(dx_font_presenter* SELF, DX_VEC2* position, uint32_t code_point, dx_font* font, DX_RGBA_F32 const* text_color, uint8_t presentation_policy, uint8_t unknown_symbol_policy) {
+  // The colors "red" and "green".
+  // @todo Cache those.
+  DX_RGBA_F32 red, green;
+  dx_rgb_n8_to_rgba_f32(&dx_colors_red, 1.f, &red);
+  dx_rgb_n8_to_rgba_f32(&dx_colors_green, 1.f, &green);
+
+  dx_font_glyph* glyph = NULL;
+  if (dx_font_glyph_create(&glyph, code_point, font)) {
+    if (DX_ERROR_NOT_FOUND == dx_get_error() && unknown_symbol_policy == dx_font_presenter_unknown_symbol_policy_placeholder) {
+      dx_set_error(DX_NO_ERROR);
+      if (dx_font_glyph_create(&glyph, (uint32_t)'_', font)) {
+        return DX_FAILURE;
+      }
+    } else {
+      return DX_FAILURE;
+    }
+  }
+  dx_f32 _advance_x, _advance_y;
+  if (dx_font_glyph_get_glyph_advance(glyph, &_advance_x, &_advance_y)) {
+    DX_UNREFERENCE(glyph);
+    glyph = NULL;
+    return DX_FAILURE;
+  }
+  dx_f32 _bearing_x, _bearing_y;
+  if (dx_font_glyph_get_glyph_bearing(glyph, &_bearing_x, &_bearing_y)) {
+    DX_UNREFERENCE(glyph);
+    glyph = NULL;
+    return DX_FAILURE;
+  }
+  uint32_t char_size_x_n32, char_size_y_n32;
+  if (dx_font_glyph_get_size(glyph, &char_size_x_n32, &char_size_y_n32)) {
+    DX_UNREFERENCE(glyph);
+    glyph = NULL;
+    return DX_FAILURE;
+  }
+  dx_f32 char_width = char_size_x_n32;
+  dx_f32 char_height = char_size_y_n32;
+  //
+  if (dx_font_presenter_presentation_policy_ascender_descener == (presentation_policy & dx_font_presenter_presentation_policy_ascender_descener)) {
+    DX_RECT2_F32 target_rectangle;
+
+    target_rectangle = (DX_RECT2_F32){
+      .left = position->e[0] + _bearing_x,
+      .bottom = position->e[1],
+      .right = position->e[0] + _bearing_x + char_width,
+      .top = position->e[1] + _bearing_y,
+    };
+    dx_rectangle_presenter_stroke_rectangle(SELF->rectangle_presenter, &target_rectangle, 0.f, &red);
+
+    target_rectangle = (DX_RECT2_F32){
+      .left = position->e[0] + _bearing_x,
+      .bottom = position->e[1] - (char_height - _bearing_y),
+      .right = position->e[0] + _bearing_x + char_width,
+      .top = position->e[1],
+    };
+    dx_rectangle_presenter_stroke_rectangle(SELF->rectangle_presenter, &target_rectangle, 0.f, &green);
+  }
+  if (dx_font_presenter_presentation_policy_glyph == (presentation_policy & dx_font_presenter_presentation_policy_glyph)) {
+    dx_glyph_atlas* glyph_atlas = NULL;
+    if (dx_glyph_atlas_create(&glyph_atlas, SELF->font_manager, SELF->rectangle_presenter, SELF->val_context)) {
+      DX_UNREFERENCE(glyph);
+      glyph = NULL;
+      return DX_FAILURE;
+    }
+    dx_val_texture* texture;
+    DX_RECT2_F32 texture_coordinates;
+    if (dx_glyph_atlas_get_texture(glyph_atlas, glyph, &texture, &texture_coordinates)) {
+      DX_UNREFERENCE(glyph_atlas);
+      glyph_atlas = NULL;
+      DX_UNREFERENCE(glyph);
+      glyph = NULL;
+      return DX_FAILURE;
+    }
+    DX_UNREFERENCE(glyph_atlas);
+    glyph_atlas = NULL;
+
+    DX_RECT2_F32 target_rectangle;
+    target_rectangle = (DX_RECT2_F32){
+      .left = position->e[0] + _bearing_x,
+      .bottom = position->e[1] - (char_height - _bearing_y),
+      .right = position->e[0] + _bearing_x + char_width,
+      .top = position->e[1] + _bearing_y,
+    };
+    present_glyph(SELF,
+      &target_rectangle,
+      0.f,
+      &texture_coordinates,
+      texture,
+      text_color);
+    DX_UNREFERENCE(texture);
+    texture = NULL;
+  }
+  position->e[0] += _advance_x; // advance
+  DX_UNREFERENCE(glyph);
+  glyph = NULL;
+  return DX_SUCCESS;
+}
+
+// the bounds are the position of no glyphs are rendered.
+// otherwise the bounds are the smallest rectangle enclosing all the glyphs.
+dx_result dx_font_presenter_render_line_string_iterator(dx_font_presenter* SELF, DX_VEC2 const* position, dx_string_iterator* string_iterator, DX_RGBA_F32 const* text_color, dx_font* font) {
+  uint8_t unknown_symbol_policy = 0;
+  unknown_symbol_policy = dx_font_presenter_unknown_symbol_policy_error;
+  uint8_t presentation_policy = 0;
+  presentation_policy |= dx_font_presenter_presentation_policy_ascender_descener;
+  presentation_policy |= dx_font_presenter_presentation_policy_glyph;
+  // The distance from the baseline to the maximal extend of any symbol above the baseline.
   dx_f32 ascender;
   dx_font_get_ascender(&ascender, font);
-  // the distance from the baseline to the maximal extend of any symbol below the baseline.
+  // The distance from the baseline to the maximal extend of any symbol below the baseline.
   dx_f32 descender;
   dx_font_get_descender(&descender, font);
 
   DX_RGBA_F32 red, green;
   dx_rgb_n8_to_rgba_f32(&dx_colors_red, 1.f, &red);
   dx_rgb_n8_to_rgba_f32(&dx_colors_green, 1.f, &green);
-  dx_f32 startx = position->e[0];
+  DX_VEC2 pos = *position;
 
   dx_bool has_value;
   if (dx_string_iterator_has_value(&has_value, string_iterator)) {
@@ -522,119 +572,9 @@ dx_result dx_font_presenter_render_line_string_iterator(dx_font_presenter* SELF,
     if (dx_string_iterator_get_value(&code_point, string_iterator)) {
       return DX_FAILURE;
     }
-    dx_font_glyph* glyph = NULL;
-    if (dx_font_glyph_create(&glyph, code_point, font)) {
-      if (DX_ERROR_NOT_FOUND == dx_get_error() && unknown_symbol_policy == dx_font_presenter_unknown_symbol_policy_placeholder) {
-        dx_set_error(DX_NO_ERROR);
-        if (dx_font_glyph_create(&glyph, (uint32_t)'_', font)) {
-          return DX_FAILURE;
-        }
-      } else {
-        return DX_FAILURE;
-      }
-    }
-    dx_f32 _advance_x, _advance_y;
-    if (dx_font_glyph_get_glyph_advance(glyph, &_advance_x, &_advance_y)) {
-      DX_UNREFERENCE(glyph);
-      glyph = NULL;
+    if (on_render_code_point(SELF, &pos, code_point, font, text_color, presentation_policy, unknown_symbol_policy)) {
       return DX_FAILURE;
     }
-    dx_f32 _bearing_x, _bearing_y;
-    if (dx_font_glyph_get_glyph_bearing(glyph, &_bearing_x, &_bearing_y)) {
-      DX_UNREFERENCE(glyph);
-      glyph = NULL;
-      return DX_FAILURE;
-    }
-    DX_RECT2_F32 texture_coordinates;
-    if (dx_font_glyph_get_texture_coordinates(glyph, &texture_coordinates.left, &texture_coordinates.bottom, &texture_coordinates.right, &texture_coordinates.top)) {
-      DX_UNREFERENCE(glyph);
-      glyph = NULL;
-      return DX_FAILURE;
-    }
-    //
-    dx_asset_texture* asset_texture;
-    if (dx_assets_extensions_create_texture_from_glyph(&asset_texture, glyph)) {
-      DX_UNREFERENCE(glyph);
-      glyph = NULL;
-      return DX_FAILURE;
-    }
-    dx_val_texture* texture = NULL;
-    if (dx_val_context_create_texture(&texture, SELF->val_context)) {
-      DX_UNREFERENCE(asset_texture);
-      asset_texture = NULL;
-      DX_UNREFERENCE(glyph);
-      glyph = NULL;
-      return DX_FAILURE;
-    }
-    if (dx_val_texture_set_data(texture, asset_texture)) {
-      DX_UNREFERENCE(texture);
-      texture = NULL;
-      DX_UNREFERENCE(asset_texture);
-      asset_texture = NULL;
-      DX_UNREFERENCE(glyph);
-      glyph = NULL;
-      return DX_FAILURE;
-    }
-    dx_val_texture_set_texture_address_mode_u(texture, DX_TEXTURE_ADDRESS_MODE_CLAMP_TO_BORDER);
-    dx_val_texture_set_texture_address_mode_v(texture, DX_TEXTURE_ADDRESS_MODE_CLAMP_TO_BORDER);
-    dx_val_texture_set_texture_minification_filter(texture, DX_TEXTURE_MINIFICATION_FILTER_LINEAR);
-    dx_val_texture_set_texture_magnification_filter(texture, DX_TEXTURE_MAGNIFICATION_FILTER_LINEAR);
-    DX_VEC4 border_color = { .e[0] = 0.f, .e[1] = 0.f, .e[2] = 0.f, .e[3] = 0.f };
-    dx_val_texture_set_texture_border_color(texture, &border_color);
-    dx_f32 char_width = DX_ASSET_IMAGE(asset_texture->image_reference->object)->width;
-    dx_f32 char_height = DX_ASSET_IMAGE(asset_texture->image_reference->object)->height;
-    //
-    if (dx_font_presenter_presentation_policy_ascender_descener == (presentation_policy & dx_font_presenter_presentation_policy_ascender_descener)) {
-      DX_RECT2_F32 target_rectangle;
-
-      target_rectangle = (DX_RECT2_F32){
-        .left = startx + _bearing_x,
-        .bottom = position->e[1],
-        .right = startx + _bearing_x + char_width,
-        .top = position->e[1] + _bearing_y,
-      };
-      present_rectangle(SELF,
-                        &target_rectangle,
-                        0.f,
-                        NULL,
-                        NULL,
-                        &red);
-
-      target_rectangle = (DX_RECT2_F32){
-        .left = startx + _bearing_x,
-        .bottom = position->e[1] - (char_height - _bearing_y),
-        .right = startx + _bearing_x + char_width,
-        .top = position->e[1],
-      };
-      present_rectangle(SELF,
-                        &target_rectangle,
-                        0.f,
-                        NULL,
-                        NULL,
-                        &green);
-    }
-    if (dx_font_presenter_presentation_policy_glyph == (presentation_policy & dx_font_presenter_presentation_policy_glyph)) {
-      DX_RECT2_F32 target_rectangle;
-      target_rectangle = (DX_RECT2_F32){
-        .left = startx + _bearing_x,
-        .bottom = position->e[1] - (char_height - _bearing_y),
-        .right = startx + _bearing_x + char_width,
-        .top = position->e[1] + _bearing_y,
-      };
-      present_glyph(SELF,
-                    &target_rectangle,
-                    0.f,
-                    &texture_coordinates,
-                    texture,
-                    text_color);
-    }
-    startx += _advance_x; // advance
-    DX_UNREFERENCE(texture);
-    texture = NULL;
-    DX_UNREFERENCE(asset_texture);
-    asset_texture = NULL;
-    DX_UNREFERENCE(glyph);
-    glyph = NULL;
     if (dx_string_iterator_next(string_iterator)) {
       return DX_FAILURE;
     }

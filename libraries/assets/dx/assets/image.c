@@ -32,14 +32,14 @@ static void _fill_ln8(void* pixels, OFFSET2 fill_offset, EXTEND2 fill_extend, EX
 /// @brief Swap two columns.
 /// @param SELF A pointer to this image.
 /// @param i, j The indices of the columns.
-/// @default-runtime-calling-convention
+/// @method-call
 /// @remark This is a non-primitive operation.
 static dx_result _swap_columns(dx_asset_image* SELF, dx_size i, dx_size j);
 
 /// @brief Swap two rows.
 /// @param SELF A pointer to this image.
 /// @param i, j The indices of the rows.
-/// @default-runtime-calling-convention
+/// @method-call
 /// @remark This is a non-primitive operation.
 static dx_result _swap_rows(dx_asset_image* SELF, dx_size i, dx_size j);
 

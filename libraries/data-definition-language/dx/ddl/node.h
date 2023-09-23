@@ -45,7 +45,7 @@ struct dx_ddl_node_dispatch {
 /// - #dx_ddl_node_kind_number: the zero integer number
 /// - #dx_ddl_node_kind_map: the empty map
 /// - #dx_ddl_node_kind_list: the empty list
-/// @default-runtime-calling-convention
+/// @method-call
 dx_result dx_ddl_node_construct(dx_ddl_node* SELF, dx_ddl_node_kind kind);
 
 /// @brief Create this DDL node with the specified type.
@@ -56,7 +56,7 @@ dx_result dx_ddl_node_construct(dx_ddl_node* SELF, dx_ddl_node_kind kind);
 /// The node was assigned default values for the specified type.
 /// See dx_ddl_node_construct for details.
 /// @error RETURN is a null pointer
-/// @default-runtime-calling-convention
+/// @method-call
 dx_result dx_ddl_node_create(dx_ddl_node** RETURN, dx_ddl_node_kind kind);
 
 /// @brief Get the node kind of this DDL node.
@@ -64,7 +64,7 @@ dx_result dx_ddl_node_create(dx_ddl_node** RETURN, dx_ddl_node_kind kind);
 /// @param SELF A pointer to this DDL node.
 /// @success <code>*RETURN</code> was assigned the kind of this DDL node.
 /// @error RETURN is a null pointer
-/// @default-runtime-calling-convention
+/// @method-call
 dx_result dx_ddl_node_get_kind(dx_ddl_node_kind* RETURN, dx_ddl_node const* SELF);
 
 /// @brief Add or update the mapping from name to value in this DDL map node.
@@ -75,7 +75,7 @@ dx_result dx_ddl_node_get_kind(dx_ddl_node_kind* RETURN, dx_ddl_node const* SELF
 /// @error #DX_ERROR_INVALID_ARGUMENT @a name is a null pointer
 /// @error #DX_ERROR_INVALID_ARGUMENT @a value is a null pointer
 /// @error #DX_ERROR_INVALID_OPERATION this node is not of node kind #dx_ddl_node_kind_map.
-/// @default-runtime-calling-convention
+/// @method-call
 dx_result dx_ddl_node_map_set(dx_ddl_node* SELF, dx_string* name, dx_ddl_node* value);
 
 /// @brief Get a mapping from a name to a value in this DDL map node.
@@ -179,7 +179,7 @@ dx_string* dx_ddl_node_get_string(dx_ddl_node const* SELF);
 /// @error #DX_ERROR_INVALID_ARGUMENT @a string is a null pointer
 /// @error #DX_ERROR_INVALID_OPERATION this node is not of node kind #dx_ddl_node_kind_string.
 /// @undefined The string is not well-formatted.
-/// @default-runtime-calling-convention
+/// @method-call
 int dx_ddl_node_set_string(dx_ddl_node* SELF, dx_string* string);
 
 /// @brief Get the number value of this DDL node.

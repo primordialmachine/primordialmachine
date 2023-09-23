@@ -28,7 +28,7 @@ struct dx_object_array_dispatch {
 /// @brief Initialize this dx_object_array object.
 /// @param SELF A pointer to this dx_object_array object.
 /// @param initial_capacity The initialc capacity.
-/// @default-runtime-calling-convention
+/// @method-call
 /// @error #DX_ERROR_INVALID_ARGUMENT @a SELF is a null pointer
 /// @error #DX_ERROR_ALLOCATION_FAILED @a initial_capacity is too big
 /// @error #DX_ERROR_ALLOCATION_FAILED an allocation failed
@@ -39,7 +39,7 @@ dx_result dx_object_array_create(dx_object_array** RETURN, dx_size initial_capac
 /// @brief Increase the capacity.
 /// @param SELF A pointer to this dx_object_array object.
 /// @param additional_capacity The amount to increase the capacity by.
-///// @default-runtime-calling-convention
+///// @method-call
 /// @error #DX_ERROR_INVALID_ARGUMENT @a SELF is a null pointer
 /// @error #DX_ERROR_ALLOCATION_FAILED @a additional_capacity is too big
 /// @error #DX_ERROR_ALLOCATION_FAILED an allocation failed
@@ -55,7 +55,7 @@ static inline dx_result dx_object_array_increase_capacity(dx_object_array* SELF,
 /// @brief Ensure the free capacity is greater than or equal to a specified value.
 /// @param SELF A pointer to this dx_object_array object.
 /// @param required_free_capacitiy The required free capacity.
-/// @default-runtime-calling-convention
+/// @method-call
 /// @error #DX_ERROR_INVALID_ARGUMENT @a SELF is a null pointer
 /// @error #DX_ERROR_ALLOCATION_FAILED @a required_free_capacity is too big
 /// @errpr #DX_ERROR_ALLOCATION_FAILED an allocation failed
@@ -70,7 +70,7 @@ static inline dx_result dx_object_array_ensure_free_capacity(dx_object_array* SE
 /// @brief Append an element.
 /// @param SELF A pointer to this dx_object_array object.
 /// @param pointer The element.
-/// @default-runtime-calling-convention
+/// @method-call
 /// @error #DX_ERROR_INVALID_ARGUMENT @a SELF is a null pointer
 /// @error #DX_ERROR_INVALID_ARGUMENT @a pointer is a null pointer
 /// @error #DX_ERROR_ALLOCATION_FAILED an allocation failed
@@ -85,7 +85,7 @@ static inline dx_result dx_object_array_append(dx_object_array* SELF, dx_object*
 /// @brief Prepend an element.
 /// @param SELF A pointer to this dx_object_array object.
 /// @param pointer The element.
-/// @default-runtime-calling-convention
+/// @method-call
 /// @error #DX_ERROR_INVALID_ARGUMENT @a SELF is a null pointer
 /// @error #DX_ERROR_INVALID_ARGUMENT @a pointer is a null pointer
 /// @error #DX_ERROR_ALLOCATION_FAILED an allocation failed
@@ -101,7 +101,7 @@ static inline dx_result dx_object_array_prepend(dx_object_array* SELF, dx_object
 /// @param SELF A pointer to this dx_object_array object.
 /// @param pointer A pointer to the object.
 /// @param index The index.
-/// @default-runtime-calling-convention
+/// @method-call
 /// @error #DX_ERROR_INVALID_ARGUMENT @a SELF is a null pointer
 /// @error #DX_ERROR_INVALID_ARGUMENT @a pointer is a null pointer
 /// @error #DX_ERROR_INVALID_ARGUMENT @a index is greater than the size of this dx_object_array object
@@ -119,7 +119,7 @@ static inline dx_result dx_object_array_insert(dx_object_array* SELF, dx_object*
 /// @param SELF A pointer to this dx_object_array object.
 /// @param index The index.
 /// @success <code>*RETURN</code> was assigned a pointer to the object
-/// @default-runtime-calling-convention
+/// @method-call
 /// @error #DX_ERROR_INVALID_ARGUMENT @a RETURN is a null pointer
 /// @error #DX_ERROR_INVALID_ARGUMENT @a SELF is a null pointer
 static inline dx_result dx_object_array_get_at(dx_object** RETURN, dx_object_array const* SELF, dx_size index) {
@@ -134,7 +134,7 @@ static inline dx_result dx_object_array_get_at(dx_object** RETURN, dx_object_arr
 /// @param RETURN A pointer to a dx_size variable.
 /// @param SELF A pointer to this dx_object_array object.
 /// @success <code>*RETURN</code> was assigned the size.
-/// @default-runtime-calling-convention
+/// @method-call
 /// @error #DX_ERROR_INVALID_ARGUMENT @a RETURN is a null pointer
 /// @error #DX_ERROR_INVALID_ARGUMENT @a SELF is a null pointer
 static inline dx_result dx_object_array_get_size(dx_size* RETURN, dx_object_array const* SELF) {
@@ -149,7 +149,7 @@ static inline dx_result dx_object_array_get_size(dx_size* RETURN, dx_object_arra
 /// @param RETURN A pointer to a dx_size variable.
 /// @param SELF A pointer to this dx_object_array object.
 /// @success <code>*RETURN</code> was assigned the capacity.
-/// @default-runtime-calling-convention
+/// @method-call
 /// @error #DX_ERROR_INVALID_ARGUMENT @a RETURN is a null pointer
 /// @error #DX_ERROR_INVALID_ARGUMENT @a SELF is a null pointer
 static inline dx_result dx_object_array_get_capacity(dx_size* RETURN, dx_object_array const* SELF) {
@@ -164,7 +164,7 @@ static inline dx_result dx_object_array_get_capacity(dx_size* RETURN, dx_object_
 /// @param RETURN A pointer to a dx_size variable.
 /// @param SELF A pointer to this dx_object_array object.
 /// @success <code>*RETURN</code> was assigned the free capacity.
-/// @default-runtime-calling-convention
+/// @method-call
 /// @error #DX_ERROR_INVALID_ARGUMENT @a RETURN is a null pointer
 static inline dx_result dx_object_array_get_free_capacity(dx_size* RETURN, dx_object_array const* SELF) {
   if (!SELF) {
@@ -177,7 +177,7 @@ static inline dx_result dx_object_array_get_free_capacity(dx_size* RETURN, dx_ob
 /// @brief Remove the specified number of elements.
 /// @param SELF A pointer to this dx_object_array object.
 /// @param n The number of objects to remove.
-/// @default-runtime-calling-convention
+/// @method-call
 /// @remarks If this function fails, no elements were removed.
 /// @error #DX_ERROR_INVALID_ARGUMENT @a n is greater than the size of the dx_object_array object.
 static inline dx_result dx_object_array_pop_back_n(dx_object_array* SELF, dx_size n) {
@@ -190,7 +190,7 @@ static inline dx_result dx_object_array_pop_back_n(dx_object_array* SELF, dx_siz
 
 /// @brief Remove all elements.
 /// @param SELF A pointer to this dx_object_array object.
-/// @default-runtime-calling-convention
+/// @method-call
 /// @error #DX_ERROR_INVALID_ARGUMENT @a SELF is a null pointer
 static inline dx_result dx_object_array_clear(dx_object_array* SELF) {
   if (!SELF) {

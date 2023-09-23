@@ -158,7 +158,7 @@ static inline dx_result dx_val_context_leave_frame(dx_val_context* SELF) {
 /// @param SELF A pointer to this context.
 /// @param width A pointer to a <code>dx_i32</code> variable.
 /// @param height A pointer to a <code>dx_i32</code> variable.
-/// @default-runtime-calling-convention
+/// @method-call
 /// @success
 /// <code>*width</code> was assigned the width of the canvas.
 /// <code>*height</code> was assigned the height of the canvas.
@@ -169,7 +169,7 @@ static inline dx_result dx_val_context_get_canvas_size(dx_val_context* SELF, dx_
 /// @brief Set if VSYNC is enabled.
 /// @param SELF A pointer to this context.
 /// @param vsync_enabled #DX_TRUE enables VSYNC. #DX_FALSE disables VSYNC.
-/// @default-runtime-calling-convention
+/// @method-call
 static inline dx_result dx_val_context_set_vsync_enabled(dx_val_context* SELF, dx_bool vsync_enabled) {
   DX_OBJECT_VIRTUALCALL(dx_val_context, set_vsync_enabled, SELF, vsync_enabled);
 }
@@ -178,7 +178,7 @@ static inline dx_result dx_val_context_set_vsync_enabled(dx_val_context* SELF, d
 /// @param RETURN A pointer to a <code>dx_bool</code> variable.
 /// @param SELF a pointer to this context.
 /// @success <code>*RETURN</code> was assigned #DX_TRUE if VSYNC is enabled and was assigned #DX_FALSE if VSYNC is disabled.
-/// @default-runtime-calling-convention
+/// @method-call
 /// @error #DX_ERROR_INVALID_ARGUMENT @a RETURN is a null pointer
 static inline dx_result dx_val_context_get_vsync_enabled(dx_bool* RETURN, dx_val_context* SELF) {
   DX_OBJECT_VIRTUALCALL(dx_val_context, get_vsync_enabled, RETURN, SELF);
@@ -188,7 +188,7 @@ static inline dx_result dx_val_context_get_vsync_enabled(dx_bool* RETURN, dx_val
 /// @param SELF a pointer to this context.
 /// @param x A pointer to a <code>dx_n32</code> variable.
 /// @param y A pointer to a <code>dx_n32</code> variable.
-/// @default-runtime-calling-convention
+/// @method-call
 /// @success
 /// <code>*x</code> was assigned the DPI along the x-axis.
 /// <code>*y</code> was assigned the DPI along the y-axis.

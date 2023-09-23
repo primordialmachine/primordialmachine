@@ -327,7 +327,7 @@ DX_DEFINE_OBJECT_TYPE("dx.default_console",
 
 /// @brief Execute the prompt.
 /// @param SELF A pointer to this console.
-/// @default-runtime-calling-convention
+/// @method-call
 static dx_result on_execute_prompt(dx_default_console* SELF);
 
 static dx_result on_keyboard_key_message(dx_default_console* SELF, dx_keyboard_key_msg* keyboard_key_message);
@@ -394,11 +394,15 @@ static dx_result on_execute_prompt(dx_default_console* SELF) {
 }
 
 static dx_result on_keyboard_key_message(dx_default_console* SELF, dx_keyboard_key_msg* keyboard_key_message) {
-  if (DX_KEYBOARD_KEY_ACTION_RELEASED == dx_keyboard_key_msg_get_action(keyboard_key_message)) {
-    dx_keyboard_key keyboard_key = dx_keyboard_key_msg_get_key(keyboard_key_message);
-    if (dx_keyboard_key_return == dx_keyboard_key_msg_get_key(keyboard_key_message)) {
+  dx_keyboard_key_action action;
+  dx_keyboard_key key;
+  if (dx_keyboard_key_msg_get_action(&action, keyboard_key_message) || dx_keyboard_key_msg_get_key(&key, keyboard_key_message)) {
+    return DX_FAILURE;
+  }
+  if (DX_KEYBOARD_KEY_ACTION_RELEASED == action) {
+    if (dx_keyboard_key_return == key) {
       return on_execute_prompt(SELF);
-    } else if (dx_keyboard_key_backspace == dx_keyboard_key_msg_get_key(keyboard_key_message)) {
+    } else if (dx_keyboard_key_backspace == key) {
       dx_size number_of_bytes;
       if (dx_string_buffer_get_number_of_bytes(&number_of_bytes, SELF->prompt)) {
         return DX_FAILURE;
@@ -408,43 +412,43 @@ static dx_result on_keyboard_key_message(dx_default_console* SELF, dx_keyboard_k
       } else {
         return DX_SUCCESS;
       }
-    } else if (dx_keyboard_key_space == keyboard_key) {
+    } else if (dx_keyboard_key_space == key) {
       char symbol = ' ';
       return dx_string_buffer_append_bytes(SELF->prompt, &symbol, 1);
-    } else if (dx_keyboard_key_less == keyboard_key) {
+    } else if (dx_keyboard_key_less == key) {
       char symbol;
       uint8_t modifiers = 0;
       if (dx_input_msg_get_modifiers(&modifiers, DX_INPUT_MSG(keyboard_key_message))) {
         return DX_FAILURE;
       }
-      if (dx_keyboard_key_less == keyboard_key) {
+      if (dx_keyboard_key_less == key) {
         symbol = modifiers & (DX_MODIFIER_LSHIFT | DX_MODIFIER_RSHIFT) ? '>' : '<';
       } else {
         dx_set_error(DX_ERROR_ENVIRONMENT_FAILED); // should not happen
         return DX_FAILURE;
       }
       return dx_string_buffer_append_bytes(SELF->prompt, &symbol, 1);
-    } else if (dx_keyboard_key_minus == keyboard_key || dx_keyboard_key_plus == keyboard_key || dx_keyboard_key_comma == keyboard_key ||
-      dx_keyboard_key_period == keyboard_key) {
+    } else if (dx_keyboard_key_minus == key || dx_keyboard_key_plus == key || dx_keyboard_key_comma == key ||
+               dx_keyboard_key_period == key) {
       char symbol;
       uint8_t modifiers = 0;
       if (dx_input_msg_get_modifiers(&modifiers, DX_INPUT_MSG(keyboard_key_message))) {
         return DX_FAILURE;
       }
-      if (dx_keyboard_key_minus == keyboard_key) {
+      if (dx_keyboard_key_minus == key) {
         symbol = modifiers & (DX_MODIFIER_LSHIFT | DX_MODIFIER_RSHIFT) ? '_' : '-';
-      } else if (dx_keyboard_key_plus == keyboard_key) {
+      } else if (dx_keyboard_key_plus == key) {
         symbol = modifiers & (DX_MODIFIER_LSHIFT | DX_MODIFIER_RSHIFT) ? '*' : '+';
-      } else if (dx_keyboard_key_comma == keyboard_key) {
+      } else if (dx_keyboard_key_comma == key) {
         symbol = modifiers & (DX_MODIFIER_LSHIFT | DX_MODIFIER_RSHIFT) ? ';' : ',';
-      } else if (dx_keyboard_key_period == keyboard_key) {
+      } else if (dx_keyboard_key_period == key) {
         symbol = modifiers & (DX_MODIFIER_LSHIFT | DX_MODIFIER_RSHIFT) ? ':' : '.';
       } else {
         dx_set_error(DX_ERROR_ENVIRONMENT_FAILED); // should not happen
         return DX_FAILURE;
       }
       return dx_string_buffer_append_bytes(SELF->prompt, &symbol, 1);
-    } else if (dx_keyboard_key__0 <= keyboard_key && keyboard_key <= dx_keyboard_key__9) {
+    } else if (dx_keyboard_key__0 <= key && key <= dx_keyboard_key__9) {
       static char MAP[] = {
         '0',
         '1',
@@ -475,13 +479,13 @@ static dx_result on_keyboard_key_message(dx_default_console* SELF, dx_keyboard_k
         return DX_FAILURE;
       }
       if (modifiers & (DX_MODIFIER_LSHIFT | DX_MODIFIER_RSHIFT)) {
-        symbol = SHIFT_MAP[keyboard_key - dx_keyboard_key__0];
+        symbol = SHIFT_MAP[key - dx_keyboard_key__0];
         return dx_string_buffer_append_bytes(SELF->prompt, &symbol, 1);
       } else {
-        symbol = MAP[keyboard_key - dx_keyboard_key__0];
+        symbol = MAP[key - dx_keyboard_key__0];
         return dx_string_buffer_append_bytes(SELF->prompt, &symbol, 1);
       }
-    } else if (dx_keyboard_key_a <= keyboard_key && keyboard_key <= dx_keyboard_key_z) {
+    } else if (dx_keyboard_key_a <= key && key <= dx_keyboard_key_z) {
       static char MAP[] = {
         'a',
         'b',
@@ -544,10 +548,10 @@ static dx_result on_keyboard_key_message(dx_default_console* SELF, dx_keyboard_k
         return DX_FAILURE;
       }
       if (modifiers & (DX_MODIFIER_LSHIFT | DX_MODIFIER_RSHIFT)) {
-        symbol = SHIFT_MAP[keyboard_key - dx_keyboard_key_a];
+        symbol = SHIFT_MAP[key - dx_keyboard_key_a];
         return dx_string_buffer_append_bytes(SELF->prompt, &symbol, 1);
       } else {
-        symbol = MAP[keyboard_key - dx_keyboard_key_a];
+        symbol = MAP[key - dx_keyboard_key_a];
         return dx_string_buffer_append_bytes(SELF->prompt, &symbol, 1);
       }
     } else {

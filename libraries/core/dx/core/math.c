@@ -7,6 +7,39 @@
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
+void dx_rgb_f32_lerp(DX_RGB_F32 const* a, DX_RGB_F32 const* b, dx_f32 t, DX_RGB_F32* c) {
+  t = dx_clamp(t);
+  if (t == 0.f) {
+    *c = *a;
+  } else if (t == 1.f) {
+    *c = *b;
+  } else {
+    dx_f32 s = 1.f - t;
+    c->r = s * (a->r) + t * (b->r);
+    c->g = s * (a->g) + t * (b->g);
+    c->b = s * (a->b) + t * (b->b);
+  }
+}
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+void dx_rgba_f32_lerp(DX_RGBA_F32 const* a, DX_RGBA_F32 const* b, dx_f32 t, DX_RGBA_F32* c) {
+  t = dx_clamp(t);
+  if (t == 0.f) {
+    *c = *a;
+  } else if (t == 1.f) {
+    *c = *b;
+  } else {
+    dx_f32 s = 1.f - t;
+    c->r = s * (a->r) + t * (b->r);
+    c->g = s * (a->g) + t * (b->g);
+    c->b = s * (a->b) + t * (b->b);
+    c->a = s * (a->a) + t * (b->a);
+  }
+}
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
 void dx_rgb_u8_lerp(DX_RGB_N8 const* a, DX_RGB_N8 const* b, dx_f32 t, DX_RGB_N8* c) {
   t = dx_clamp(t);
   if (t == 0.f) {
@@ -14,9 +47,10 @@ void dx_rgb_u8_lerp(DX_RGB_N8 const* a, DX_RGB_N8 const* b, dx_f32 t, DX_RGB_N8*
   } else if (t == 1.f) {
     *c = *b;
   } else {
-    c->r = (1.f - t) * ((dx_f32)a->r) + t * ((dx_f32)b->r);
-    c->g = (1.f - t) * ((dx_f32)a->g) + t * ((dx_f32)b->g);
-    c->b = (1.f - t) * ((dx_f32)a->b) + t * ((dx_f32)b->b);
+    dx_f32 s = 1.f - t;
+    c->r = s * ((dx_f32)a->r) + t * ((dx_f32)b->r);
+    c->g = s * ((dx_f32)a->g) + t * ((dx_f32)b->g);
+    c->b = s * ((dx_f32)a->b) + t * ((dx_f32)b->b);
   }
 }
 

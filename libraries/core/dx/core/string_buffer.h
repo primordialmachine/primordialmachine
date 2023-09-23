@@ -43,7 +43,7 @@ dx_result dx_string_buffer_to_string(dx_string** RETURN, dx_string_buffer* SELF)
 /// @brief Append a string.
 /// @param SELF A pointer to this string buffer.
 /// @param string A pointer to the string.
-/// @default-runtime-calling-convention
+/// @method-call
 dx_result dx_string_buffer_append_string(dx_string_buffer* SELF, dx_string* string);
 
 /// @brief Append Bytes.
@@ -51,7 +51,7 @@ dx_result dx_string_buffer_append_string(dx_string_buffer* SELF, dx_string* stri
 /// @param p A pointer to the Bytes.
 /// @param n The number of Bytes.
 /// @remark The function checks if the specified sequence of Bytes is a UTF-8 sequence.
-/// @default-runtime-calling-convention
+/// @method-call
 dx_result dx_string_buffer_append_bytes(dx_string_buffer* SELF, char const* p, dx_size n);
 
 /// @brief Prepend Bytes.
@@ -59,7 +59,7 @@ dx_result dx_string_buffer_append_bytes(dx_string_buffer* SELF, char const* p, d
 /// @param p A pointer to the Bytes.
 /// @param n The number of Bytes.
 /// @remark The function checks if the specified sequence of Bytes is a UTF-8 sequence.
-/// @default-runtime-calling-convention
+/// @method-call
 dx_result dx_string_buffer_prepend_bytes(dx_string_buffer* SELF, char const* p, dx_size n);
 
 /// @brief Append a string. The string is can have format specifiers. Each format specifier is replaced by its correspnding arguments in the string.
@@ -80,7 +80,7 @@ dx_result dx_string_buffer_prepend_bytes(dx_string_buffer* SELF, char const* p, 
 /// - `${n64}` a dx_n8 value.
 /// - `${r32}` a dx_f32 value.
 /// - `${r64}` a dx_f64 value.
-/// @default-runtime-calling-convention
+/// @method-call
 dx_result dx_string_buffer_append_fv(dx_string_buffer* SELF, dx_string* format, va_list arguments);
 
 /// @brief Append a string. The string is can have format specifiers. Each format specifier is replaced by its correspnding arguments in the string.
@@ -88,14 +88,14 @@ dx_result dx_string_buffer_append_fv(dx_string_buffer* SELF, dx_string* format, 
 /// @param format A pointer to the string.
 /// @param arguments The variadic arguments.
 /// @see See dx_string_buffer_appendfv for a description of the format specifiers.
-/// @default-runtime-calling-convention
+/// @method-call
 dx_result dx_string_buffer_append_f(dx_string_buffer* SELF, dx_string* format, ...);
 
 dx_result dx_string_buffer_remove_last(dx_string_buffer* SELF);
 
 /// @brief Clear this string buffer.
 /// @param SELF A pointer to this string buffer.
-/// @default-runtime-calling-convention
+/// @method-call
 dx_result dx_string_buffer_clear(dx_string_buffer* SELF);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/

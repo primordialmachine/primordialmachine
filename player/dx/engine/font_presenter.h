@@ -8,6 +8,51 @@
 #include "dx/val/viewer.h"
 #include "dx/engine/rectangle_presenter.h"
 
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+/// @brief Base of a glyph atlas for texture fonts.
+/// A glyph atlas returns for a font and Unicode codepoint
+/// - a texture containing the glyph as a subtexture and
+/// - the texture coordinates for the subtexture.
+DX_DECLARE_OBJECT_TYPE("dx.glyph_atlas",
+                       dx_glyph_atlas,
+                       dx_object);
+
+static inline dx_glyph_atlas* DX_GLYPH_ATLAS_PRESENTER(void* p) {
+  return (dx_glyph_atlas*)p;
+}
+
+struct dx_glyph_atlas {
+  dx_object _parent;
+  // the rectangle presenter
+  dx_rectangle_presenter* rectangle_presenter;
+  // the font manager
+  dx_font_manager* font_manager;
+  // the context to render the font
+  dx_val_context* val_context;
+};
+
+static inline dx_glyph_atlas_dispatch* DX_GLYPH_ATLAS_DISPATCH(void* p) {
+  return (dx_glyph_atlas_dispatch*)p;
+}
+
+struct dx_glyph_atlas_dispatch {
+  dx_object_dispatch _parent;
+};
+
+/// @brief Construct this glyph atlas.
+/// @param SELf A pointer to this glyph atlas.
+/// @param font_manager A pointer to the font manager.
+/// @param rectangle_presenter A pointer to the rectangle presenter.
+/// @param val_context A pointer to the VAL context.
+dx_result dx_glyph_atlas_construct(dx_glyph_atlas* SELF, dx_font_manager* font_manager, dx_rectangle_presenter* rectangle_presenter, dx_val_context* val_context);
+
+dx_result dx_glyph_atlas_create(dx_glyph_atlas** RETURN, dx_font_manager* font_manager, dx_rectangle_presenter* rectangle_presenter, dx_val_context* val_context);
+
+dx_result dx_glyph_atlas_get_texture(dx_glyph_atlas* SELF, dx_font_glyph* glyph, dx_val_texture** val_texture, DX_RECT2_F32 *texture_coordinates);
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
 DX_DECLARE_OBJECT_TYPE("dx.font_presenter",
                        dx_font_presenter,
                        dx_object);
@@ -38,12 +83,6 @@ struct dx_font_presenter {
     // the variable binding to render the text
     dx_val_vbinding* val_vbinding;
   } text;
-  struct {
-    // the program to render the text bounds
-    dx_val_program* val_program;
-    // the variable binding to render the text bounds7
-    dx_val_vbinding* val_vbinding;
-  } text_bounds;
 };
 
 static inline dx_font_presenter_dispatch* DX_FONT_RENDERER_DISPATCH(void* p) {
@@ -76,7 +115,7 @@ dx_result dx_font_presenter_create(dx_font_presenter** RETURN, dx_font_manager* 
 /// A pointer to the string to be rendered.
 /// Newline codepoints are replaced by a placeholder symbol. Unprintable codepoints are replaced by a placeholder symbol.
 /// @param font The font to be used.
-/// @default-runtime-calling-convention
+/// @method-call
 dx_result dx_font_presenter_render_line_string(dx_font_presenter* SELF, dx_f32 left, dx_f32 bottom, dx_string* string, DX_RGBA_F32 const* text_color, dx_font* font);
 
 /// @brief 
@@ -86,7 +125,7 @@ dx_result dx_font_presenter_render_line_string(dx_font_presenter* SELF, dx_f32 l
 /// A pointer to the string iterator of the string to be rendered.
 /// Newline codepoints are replaced by a placeholder symbol. Unprintable codepoints are replaced by a placeholder symbol.
 /// @param font The font to render the text with.
-/// @default-runtime-calling-convention
+/// @method-call
 dx_result dx_font_presenter_render_line_string_iterator(dx_font_presenter* SELF, DX_VEC2 const* position, dx_string_iterator* string_iterator, DX_RGBA_F32 const* text_color, dx_font* font);
 
 #endif // DX_FONT_PRESENTER_H_INCLUDED

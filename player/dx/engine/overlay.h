@@ -44,7 +44,7 @@ dx_result dx_overlay_create(dx_overlay** RETURN, dx_font_presenter* font_present
 
 /// @brief Render this overlay.
 /// @param SELF A pointer to this overlay.
-/// @default-runtime-calling-convention
+/// @method-call
 dx_result dx_overlay_render(dx_overlay* SELF, dx_f32 delta_seconds, dx_i32 canvas_width, dx_i32 canvas_height);
 
 dx_result dx_overlay_add_message(dx_overlay* SELF, dx_string* message);

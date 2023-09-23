@@ -13,7 +13,7 @@ dx_val_context* dx_val_context_get();
 /// @success
 /// <code>*RETURN</code> was assigned a pointer to the <code>dx_application_presenter</code> singleton object.
 /// The caller acquired a reference to that object.
-/// @default-runtime-calling-convention
+/// @method-call
 /// @warning
 /// The application presenter holds references to many engine objects.
 /// If such an object acquires a reference to the application presenter, then this yields a reference counting cycle.

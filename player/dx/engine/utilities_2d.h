@@ -226,9 +226,13 @@ static inline dx_result dx_assets_extensions_create_texture_from_pixels(dx_asset
 }
 
 static inline dx_result dx_assets_extensions_create_texture_from_glyph(dx_asset_texture** RETURN, dx_font_glyph* glyph) {
+  uint32_t width = 0,
+           height = 0;
+  if (dx_font_glyph_get_size(glyph, &width, &height)) {
+    return DX_FAILURE;
+  }
   void* pixels = NULL;
-  uint32_t width, height;
-  if (dx_font_glyph_get_pixels(glyph, &pixels, &width, &height)) {
+  if (dx_font_glyph_get_pixels(glyph, &pixels)) {
     return DX_FAILURE;
   }
   dx_asset_texture* texture = NULL;

@@ -142,7 +142,7 @@ struct dx_asset_mesh_dispatch {
 /// - "quadriliteral" a quadriliteral mesh
 /// - "cube" a cube mesh
 /// - "empty" an empty mesh
-/// @default-runtime-calling-convention
+/// @method-call
 dx_result dx_asset_mesh_create(dx_asset_mesh** RETURN, dx_string* name, dx_string* specifier, DX_VERTEX_FORMAT vertex_format, dx_asset_reference* material_reference);
 
 /// @brief Pack the mesh data into a single stream of the specified format.

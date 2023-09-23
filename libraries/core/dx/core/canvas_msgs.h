@@ -51,7 +51,7 @@ struct dx_canvas_msg_dispatch {
 /// @brief Construct this canvas message.
 /// @param SELF A pointer to this canvas message object.
 /// @param kind The kind of this canvas message.
-/// @default-runtime-calling-convention
+/// @method-call
 dx_result dx_canvas_msg_construct(dx_canvas_msg* SELF, dx_canvas_msg_kind kind);
 
 dx_result dx_canvas_msg_create(dx_canvas_msg** RETURN, dx_canvas_msg_kind kind);
@@ -59,7 +59,8 @@ dx_result dx_canvas_msg_create(dx_canvas_msg** RETURN, dx_canvas_msg_kind kind);
 /// @brief Get the kind of this canvas message.
 /// @param RETURN A pointer to a <code>dx_canvas_msg_kind</code> variable.
 /// @param SELF A pointer to this canvas message object.
-/// @default-runtime-calling-convention
+/// @success <code>*RETURN</code> was assigned the kind.
+/// @method-call
 dx_result dx_canvas_msg_get_kind(dx_canvas_msg_kind* RETURN, dx_canvas_msg* SELF);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/

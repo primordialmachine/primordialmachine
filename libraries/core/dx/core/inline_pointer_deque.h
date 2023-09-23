@@ -44,7 +44,7 @@ struct dx_inline_pointer_deque {
 /// @param SELF A pointer to this dx_inline_pointer_deque object.
 /// @param initial_capacity The initial capacity.
 /// @param configuration A pointer to the configuration.
-/// @default-runtime-calling-convention
+/// @method-call
 /// @error #DX_INVALID_ARGUMENT @a SELF is a null pointer
 /// @error #DX_ALLOCATION_FAILED @a initial_capacity is too big
 /// @error #DX_ALLOCATION_FAILED an allocation failed
@@ -57,7 +57,7 @@ void dx_inline_pointer_deque_uninitialize(dx_inline_pointer_deque* SELF);
 /// @brief Increase the capacity.
 /// @param SELF A pointer to this dx_inline_pointer_deque object.
 /// @param required_additional_capacity The amount to increase the capacity by.
-/// @default-runtime-calling-convention
+/// @method-call
 /// @error #DX_INVALID_ARGUMENT @a SELF is a null pointer
 /// @error #DX_ALLOCATION_FAILED @a additional_capacity is too big
 /// @error #DX_ALLOCATION_FAILED an allocation failed
@@ -67,7 +67,7 @@ dx_result dx_inline_pointer_deque_increase_capacity(dx_inline_pointer_deque* SEL
 /// @brief Ensure the free capacity is greater than or equal to a specified value.
 /// @param SELF A pointer to this dx_inline_pointer_deque object.
 /// @param required_free_capacity The required free capacity.
-/// @default-runtime-calling-convention
+/// @method-call
 /// @error #DX_ERROR_INVALID_ARGUMENT @a self is a null pointer
 /// @error #DX_ERROR_ALLOCATION_FAILED @a required_free_capacity is too big
 /// @error #DX_ERROR_ALLOCATION_FAILED an allocation failed
@@ -78,7 +78,7 @@ dx_result dx_inline_pointer_deque_ensure_free_capacity(dx_inline_pointer_deque* 
 /// @param RETURN A pointer to a <code>dx_size</code> variable.
 /// @param SELF A pointer to this dx_inline_pointer_deque object.
 /// @success <code>*RETURN</code> was assigned the size.
-/// @default-runtime-calling-convention
+/// @method-call
 /// @error #DX_ERROR_INVALID_ARGUMENT @a RETURN is a null pointer
 /// @error #DX_ERROR_INVALID_ARGUMENT @a SELF is a null pointer
 dx_result dx_inline_pointer_deque_get_size(dx_size* RETURN, dx_inline_pointer_deque const* SELF);
@@ -87,7 +87,7 @@ dx_result dx_inline_pointer_deque_get_size(dx_size* RETURN, dx_inline_pointer_de
 /// @param RETURN A pointer to a <code>dx_size</code> variable.
 /// @param SELF A pointer to this dx_inline_pointer_deque object.
 /// @success <code>*RETURN</code> was assigned the capacity.
-/// @default-runtime-calling-convention
+/// @method-call
 /// @error #DX_ERROR_INVALID_ARGUMENT @a RETURN is a null pointer
 /// @error #DX_ERROR_INVALID_ARGUMENT @a SELF is a null pointer
 dx_result dx_inline_pointer_deque_get_capacity(dx_size* RETURN, dx_inline_pointer_deque const* SELF);
@@ -96,21 +96,21 @@ dx_result dx_inline_pointer_deque_get_capacity(dx_size* RETURN, dx_inline_pointe
 /// @param RETURN A pointer to a <code>dx_size</code> variable.
 /// @param SELF A pointer to this dx_inline_pointer_deque object.
 /// @success <code>*RETURN</code> was assigned the free capacity.
-/// @default-runtime-calling-convention
+/// @method-call
 /// @error #DX_ERROR_INVALID_ARGUMENT @a RETURN is a null pointer
 /// @error #DX_ERROR_INVALID_ARGUMENT @a SELF is a null pointer
 dx_result dx_inline_pointer_deque_get_free_capacity(dx_size* RETURN, dx_inline_pointer_deque const* SELF);
 
 /// @brief Remove all elements.
 /// @param SELF A pointer to this dx_inline_pointer_deque object.
-/// @default-runtime-calling-convention
+/// @method-call
 /// @error #DX_ERROR_INVALID_ARGUMENT @a SELF is a null pointer
 dx_result dx_inline_pointer_deque_clear(dx_inline_pointer_deque* SELF);
 
 /// @brief Append an element.
 /// @param SELF A pointer to this dx_inline_pointer_deque object.
 /// @param pointer The element.
-/// @default-runtime-calling-convention
+/// @method-call
 /// @error #DX_ERROR_INVALID_ARGUMENT @a SELF is a null pointer
 /// @error #DX_ERROR_ALLOCATION_FAILED an allocation failed
 dx_result dx_inline_pointer_deque_push_back(dx_inline_pointer_deque* SELF, dx_inline_pointer_deque_element pointer);
@@ -118,7 +118,7 @@ dx_result dx_inline_pointer_deque_push_back(dx_inline_pointer_deque* SELF, dx_in
 /// @brief Prepend an element.
 /// @param SELF A pointer to this dx_inline_pointer_deque object.
 /// @param pointer The element.
-/// @default-runtime-calling-convention
+/// @method-call
 /// @error #DX_ERROR_INVALID_ARGUMENT @a SELF is a null pointer
 /// @error #DX_ERROR_ALLOCATION_FAILED an allocation failed
 dx_result dx_inline_pointer_deque_push_front(dx_inline_pointer_deque* SELF, dx_inline_pointer_deque_element pointer);
@@ -127,7 +127,7 @@ dx_result dx_inline_pointer_deque_push_front(dx_inline_pointer_deque* SELF, dx_i
 /// @param SELF A pointer to this dx_inline_pointer_deque object.
 /// @param pointer The element.
 /// @param index The index.
-/// @default-runtime-calling-convention
+/// @method-call
 /// @error #DX_ERROR_INVALID_ARGUMENT @a SELF is a null pointer
 /// @error #DX_ERROR_INVALID_ARGUMENT @a index is greater than the size of this dx_inline_pointer_deque object
 /// @error #DX_ERROR_ALLOCATION_FAILED an allocation failed
@@ -149,7 +149,7 @@ dx_result dx_inline_pointer_deque_get_at(dx_inline_pointer_deque_element* RETURN
 /// @param steal The "removed" callback is not invoked if this is @a true.
 /// @param index The index.
 /// @success <code>*RETURN</code> was assigned the pointer at the specified index.
-/// @default-runtime-calling-convention
+/// @method-call
 /// @error #DX_ERROR_INVALID_ARGUMENT @a RETURN is a null pointer
 /// @error #DX_ERROR_INVALID_ARGUMENT @a SELF is a null pointer
 /// @error #DX_ERROR_INVALID_ARGUMENT @a index is greater than or equal to the size of this dx_inline_pointer_deque object

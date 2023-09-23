@@ -36,7 +36,7 @@ struct dx_scanner_dispatch {
 
 /// @brief Construct this dx_scanner object.
 /// @param SELF A pointer to this scanner.
-/// @default-runtime-calling-convention
+/// @method-call
 /// @success The scanner was assigned the empty input and is in the start state w.r.t. the specified input.
 dx_result dx_scanner_construct(dx_scanner* SELF);
 
@@ -45,7 +45,7 @@ dx_result dx_scanner_construct(dx_scanner* SELF);
 /// @param bytes A pointer to an array of @a number_of_bytes Bytes.
 /// @param number_of_bytes The number of Bytes in the array pointed to by @a bytes.
 /// @success The scanner was assigned the input and is in the start state w.r.t. the specified input.
-/// @default-runtime-calling-convention
+/// @method-call
 static inline dx_result dx_scanner_set(dx_scanner* SELF, char const* bytes, dx_size number_of_bytes) {
   DX_OBJECT_VIRTUALCALL(dx_scanner, set, SELF, bytes, number_of_bytes);
 }
@@ -55,7 +55,7 @@ static inline dx_result dx_scanner_set(dx_scanner* SELF, char const* bytes, dx_s
 /// @remarks The scanner does not advance if it has
 /// - the current word is the end of the input word
 /// - the current word is an error word
-/// @default-runtime-calling-convention
+/// @method-call
 static inline dx_result dx_scanner_step(dx_scanner* SELF) {
   DX_OBJECT_VIRTUALCALL(dx_scanner, step, SELF);
 }
@@ -64,7 +64,7 @@ static inline dx_result dx_scanner_step(dx_scanner* SELF) {
 /// @param RETURN A pointer to a <code>char const*</code> variable.
 /// @param SELF A pointer to this scanner.
 /// @success <code>*RETURN</code> was assigned pointer to the Bytes of the word text.
-/// @default-runtime-calling-convention
+/// @method-call
 static inline dx_result dx_scanner_get_word_text_bytes(char const** RETURN, dx_scanner* SELF) {
   DX_OBJECT_VIRTUALCALL(dx_scanner, get_word_text_bytes, RETURN, SELF);
 }
@@ -73,7 +73,7 @@ static inline dx_result dx_scanner_get_word_text_bytes(char const** RETURN, dx_s
 /// @param RETURN A pointer to a <code>dx_size</code> variable.
 /// @param SELF A pointer to this scanner.
 /// @success <code>*RETURN</code> was assigned the number of Bytes of the word text.
-/// @default-runtime-calling-convention
+/// @method-call
 static inline dx_result dx_scanner_get_word_text_number_of_bytes(dx_size* RETURN, dx_scanner* SELF) {
   DX_OBJECT_VIRTUALCALL(dx_scanner, get_word_text_number_of_bytes, RETURN, SELF);
 }
@@ -82,7 +82,7 @@ static inline dx_result dx_scanner_get_word_text_number_of_bytes(dx_size* RETURN
 /// @param RETURN A pointer to a <code>dx_size</code> variable.
 /// @param SELF A pointer to this scanner.
 /// @success <code>*RETURN</code> was assigned the start offset of the current word.
-/// @default-runtime-calling-convention
+/// @method-call
 static inline dx_result dx_scanner_get_word_start_offset(dx_size* RETURN, dx_scanner* SELF) {
   DX_OBJECT_VIRTUALCALL(dx_scanner, get_word_start_offset, RETURN, SELF);
 }
@@ -91,7 +91,7 @@ static inline dx_result dx_scanner_get_word_start_offset(dx_size* RETURN, dx_sca
 /// @param RETURN A pointer to a <code>dx_size</code> variable.
 /// @param SELF A pointer to this scanner.
 /// @success <code>*RETURN</code> was assigned the start offset of the current word.
-/// @default-runtime-calling-convention
+/// @method-call
 static inline dx_result dx_scanner_get_word_end_offset(dx_size* RETURN, dx_scanner* SELF) {
   DX_OBJECT_VIRTUALCALL(dx_scanner, get_word_end_offset, RETURN, SELF);
 }

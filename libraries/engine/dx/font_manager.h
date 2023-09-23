@@ -3,7 +3,6 @@
 
 #include "dx/core.h"
 #include "dx/val/context.h"
-#include "font_loader_plugin.h"
 typedef struct dx_font dx_font;
 typedef struct dx_font_key dx_font_key;
 typedef struct dx_font_manager dx_font_manager;
@@ -54,7 +53,7 @@ static inline dx_font_glyph* DX_FONT_GLYPH(void* p) {
 struct dx_font_glyph {
   dx_object _parent;
   uint32_t code_point;
-  dx_font_loader_plugin_glyph* glyph;
+  void* glyph_pimpl;
   dx_font* font;
 };
 
@@ -74,7 +73,9 @@ dx_result dx_font_glyph_get_glyph_advance(dx_font_glyph* SELF, dx_f32* advance_x
 
 dx_result dx_font_glyph_get_glyph_bearing(dx_font_glyph* SELF, dx_f32* bearing_x, dx_f32* bearing_y);
 
-dx_result dx_font_glyph_get_pixels(dx_font_glyph* SELF, void** pixels, uint32_t *width, uint32_t *height);
+dx_result dx_font_glyph_get_size(dx_font_glyph* SELF, uint32_t* size_x, uint32_t* size_y);
+
+dx_result dx_font_glyph_get_pixels(dx_font_glyph* SELF, void** pixels);
 
 dx_result dx_font_glyph_get_texture_coordinates(dx_font_glyph* SELF, dx_f32* left, dx_f32* bottom, dx_f32* right, dx_f32* top);
 
@@ -92,7 +93,7 @@ struct dx_font {
   dx_object _parent;
   dx_font_key* key;
   dx_font_manager* font_manager;
-  dx_font_loader_plugin_font* font;
+  void* font_pimpl;
 };
 
 static inline dx_font_dispatch* DX_FONT_DISPATCH(void* p) {
@@ -128,22 +129,9 @@ static inline dx_font_manager* DX_FONT_MANAGER(void* p) {
 
 struct dx_font_manager {
   dx_object _parent;
-  
-  void* library;
-  DX_FONT_LOADER_PLUGIN_REFERENCE_FONT_PROC* plugin_reference_font;
-  DX_FONT_LOADER_PLUGIN_UNREFERENCE_FONT_PROC* plugin_unreference_font;
-  DX_FONT_LOADER_PLUGIN_CREATE_FONT_PROC* plugin_create_font;
-  DX_FONT_LOADER_PLUGIN_GET_BASELINE_DISTANCE_PROC* plugin_get_baseline_distance;
-  DX_FONT_LOADER_PLUGIN_GET_FONT_SIZE_PROC* plugin_get_font_size;
-  DX_FONT_LOADER_PLUGIN_REFERENCE_GLYPH_PROC* plugin_reference_glyph;
-  DX_FONT_LOADER_PLUGIN_UNREFERENCE_GLYPH_PROC* plugin_unreference_glyph;
-  DX_FONT_LOADER_PLUGIN_GET_GLYPH_PROC* plugin_get_glyph;
-  DX_FONT_LOADER_PLUGIN_GET_GLYPH_PIXELS_PROC* plugin_get_glyph_pixels;
-  DX_FONT_LOADER_PLUGIN_GET_GLYPH_ADVANCE_PROC* plugin_get_glyph_advance;
-  DX_FONT_LOADER_PLUGIN_GET_GLYPH_BEARING_PROC* plugin_get_glyph_bearing;
-  DX_FONT_LOADER_PLUGIN_GET_ASCENDER_PROC* plugin_get_ascender;
-  DX_FONT_LOADER_PLUGIN_GET_DESCENDER_PROC* plugin_get_descender;
-
+  /// @brief The hidden implementation.
+  void* pimpl;
+  /// @brief The VAL context.
   dx_val_context* context;
   /// @brief Map from names to font objects.
   dx_inline_pointer_hashmap fonts;

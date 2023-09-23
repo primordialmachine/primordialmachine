@@ -44,7 +44,7 @@ struct dx_ddl_parser_dispatch {
 /// @param diagnostics A pointer to the underlaying diagnostics.
 /// @success
 /// The parser was assigned the empty input and is in the start state w.r.t. the specified input.
-/// @default-runtime-calling-convention
+/// @method-call
 dx_result dx_ddl_parser_construct(dx_ddl_parser* SELF, dx_data_definition_language_scanner* scanner, dx_data_definition_language_diagnostics* diagnostics);
 
 /// @brief Create this parser with an empty input.
@@ -55,7 +55,7 @@ dx_result dx_ddl_parser_construct(dx_ddl_parser* SELF, dx_data_definition_langua
 /// @success
 /// <code>*RETURN</code> was assigned a pointer to the parser.
 /// The parser was assigned the empty input and is in the start state w.r.t. the specified input.
-/// @default-runtime-calling-convention
+/// @method-call
 dx_result dx_ddl_parser_create(dx_ddl_parser** RETURN, dx_data_definition_language_scanner* scanner, dx_data_definition_language_diagnostics* diagnostics);
 
 /// @brief Set the input to this parser.
@@ -63,28 +63,28 @@ dx_result dx_ddl_parser_create(dx_ddl_parser** RETURN, dx_data_definition_langua
 /// @param p A pointer to an array of @a l Bytes.
 /// @param l The number of Bytes in the array pointed to by @a p.
 /// @success The parser was assigned the input and is in the start state w.r.t. the specified input.
-/// @default-runtime-calling-convention
+/// @method-call
 dx_result dx_ddl_parser_set(dx_ddl_parser* SELF, char const* p, dx_size l);
 
 /// @brief Get if the current word is of the specified word type.
 /// @param SELF A pointer to this parser.
 /// @param word_kind The word type.
 /// @return @a true if the current word is of the specified word type. @a false if it is not. @a false is also returned on failure.
-/// @default-runtime-calling-convention
+/// @method-call
 bool dx_ddl_parser_is_word_kind(dx_ddl_parser const* SELF, dx_ddl_word_kind word_kind);
 
 /// @internal
 /// @brief Get the word type of the current word.
 /// @param SELF A pointer to this parser.
 /// @return The word type. This may be #dx_ddl_word_kind_error. #dx_ddl_word_kind_error is also returned on failure.
-/// @default-runtime-calling-convention
+/// @method-call
 dx_result dx_ddl_parser_get_word_kind(dx_ddl_word_kind* RETURN, dx_ddl_parser const* SELF);
 
 /// @brief Run this parser.
 /// @param RETURN A pointer to a <code>dx_ddl_node*</code> variable.
 /// @param SELF A pointer to this parser.
 /// @success <code>*RETURN</code> was assigned a pointer to the <code>dx_ddl_node</code> of the run.
-/// @default-runtime-calling-convention
+/// @method-call
 dx_result dx_ddl_parser_run(dx_ddl_node** RETURN, dx_ddl_parser* SELF);
 
 #if defined(DX_DATA_DEFINITION_LANGUAGE_PARSER_WITH_TESTS) && DX_DATA_DEFINITION_LANGUAGE_PARSER_WITH_TESTS

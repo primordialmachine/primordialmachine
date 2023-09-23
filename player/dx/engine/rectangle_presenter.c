@@ -12,6 +12,20 @@ DX_DEFINE_OBJECT_TYPE("dx.rectangle_presenter",
                       dx_rectangle_presenter,
                       dx_object);
 
+static dx_result append_rect(DX_VEC3* array, dx_size* index, DX_RECT2_F32 const* xy, dx_f32 z) {
+  dx_vec3_set(array + *index + 0, xy->left, xy->bottom, z);
+  dx_vec3_set(array + *index + 1, xy->right, xy->bottom, z);
+  dx_vec3_set(array + *index + 2, xy->right, xy->top, z);
+
+  dx_vec3_set(array + *index + 3, xy->right, xy->top, z);
+  dx_vec3_set(array + *index + 4, xy->left, xy->top, z);
+  dx_vec3_set(array + *index + 5, xy->left, xy->bottom, z);
+
+  *index = *index + 6;
+
+  return DX_SUCCESS;
+}
+
 static dx_result fill_rectangle(dx_rectangle_presenter* SELF, DX_RECT2_F32 const* target_rectangle, dx_f32 target_depth, DX_RGBA_F32 const* color) {
   dx_val_command* command;
 
@@ -22,15 +36,9 @@ static dx_result fill_rectangle(dx_rectangle_presenter* SELF, DX_RECT2_F32 const
   dx_val_command_list_clear(SELF->val_command_list);
 
   {
-    DX_VEC3 vertices[] = {
-        { target_rectangle->left,  target_rectangle->bottom, target_depth, },
-        { target_rectangle->right, target_rectangle->bottom, target_depth, },
-        { target_rectangle->right, target_rectangle->top,    target_depth, },
-
-        { target_rectangle->right, target_rectangle->top,    target_depth, },
-        { target_rectangle->left,  target_rectangle->top,    target_depth, },
-        { target_rectangle->left,  target_rectangle->bottom, target_depth, },
-    };
+    DX_VEC3 vertices[6];
+    dx_size index = 0;
+    append_rect(vertices, &index, target_rectangle, target_depth);
     dx_val_buffer_set_data(SELF->val_buffer, &vertices, sizeof(vertices));
   }
 
@@ -74,18 +82,41 @@ static dx_result stroke_rectangle(dx_rectangle_presenter* SELF, DX_RECT2_F32 con
 
   dx_val_command_list_clear(SELF->val_command_list);
 
+  DX_VEC3 vertex_data[24];
+  dx_size vertex_index = 0;
+  // left
   {
-    DX_VEC3 vertices[] = {
-        { target_rectangle->left,  target_rectangle->bottom, target_depth, },
-        { target_rectangle->right, target_rectangle->bottom, target_depth, },
-        { target_rectangle->right, target_rectangle->top,    target_depth, },
-
-        { target_rectangle->right, target_rectangle->top,    target_depth, },
-        { target_rectangle->left,  target_rectangle->top,    target_depth, },
-        { target_rectangle->left,  target_rectangle->bottom, target_depth, },
-    };
-    dx_val_buffer_set_data(SELF->val_buffer, &vertices, sizeof(vertices));
+    DX_RECT2_F32 rectangle = { .left = target_rectangle->left,
+                               .top = target_rectangle->top,
+                               .right = target_rectangle->left + 2.f,
+                               .bottom = target_rectangle->bottom };
+    append_rect(vertex_data, &vertex_index, &rectangle, target_depth);
   }
+  // right
+  {
+    DX_RECT2_F32 rectangle = { .left = target_rectangle->right - 2.f,
+                               .top = target_rectangle->top,
+                               .right = target_rectangle->right,
+                               .bottom = target_rectangle->bottom };
+    append_rect(vertex_data, &vertex_index, &rectangle, target_depth);
+  }
+  // top
+  {
+    DX_RECT2_F32 rectangle = { .left = target_rectangle->left,
+                               .top = target_rectangle->top,
+                               .right = target_rectangle->right,
+                               .bottom = target_rectangle->top - 2.f };
+    append_rect(vertex_data, &vertex_index, &rectangle, target_depth);
+  }
+  // bottom
+  {
+    DX_RECT2_F32 rectangle = { .left = target_rectangle->left,
+                               .top = target_rectangle->bottom + 2.f,
+                               .right = target_rectangle->right,
+                               .bottom = target_rectangle->bottom };
+    append_rect(vertex_data, &vertex_index, &rectangle, target_depth);
+  }
+  dx_val_buffer_set_data(SELF->val_buffer, &vertex_data, sizeof(vertex_data));
 
   // pipeline state command
   if (dx_val_command_create_pipeline_state(&command, DX_CULL_MODE_BACK, DX_DEPTH_TEST_FUNCTION_ALWAYS, DX_FALSE)) {
@@ -100,7 +131,7 @@ static dx_result stroke_rectangle(dx_rectangle_presenter* SELF, DX_RECT2_F32 con
   command = NULL;
 
   // draw command
-  if (dx_val_command_create_draw(&command, SELF->val_vbinding, /*SELF->val_material ? SELF->val_material->ambient_texture :*/ NULL, SELF->val_cbinding, SELF->val_program, 0, 6)) {
+  if (dx_val_command_create_draw(&command, SELF->val_vbinding, /*SELF->val_material ? SELF->val_material->ambient_texture :*/ NULL, SELF->val_cbinding, SELF->val_program, 0, 24)) {
     return DX_FAILURE;
   }
   if (dx_val_command_list_append(SELF->val_command_list, command)) {

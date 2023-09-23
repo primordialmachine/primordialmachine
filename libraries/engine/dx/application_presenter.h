@@ -50,26 +50,26 @@ struct dx_application_presenter_dispatch {
 
 /// @brief Construct this application.
 /// @param SELF A pointer to this application presenter.
-/// @default-runtime-calling-convention
+/// @method-call
 dx_result dx_application_presenter_construct(dx_application_presenter* SELF);
 
 /// @brief Callback. Invoked by the application execution environment.
 /// @param SELF A pointer to this application presenter.
-/// @default-runtime-calling-convention
+/// @method-call
 static inline dx_result dx_application_presenter_startup(dx_application_presenter* SELF) {
   DX_OBJECT_VIRTUALCALL(dx_application_presenter, startup, SELF);
 }
 
 /// @brief Callback. Invoked by the application execution environment.
 /// @param SELF A pointer to this application presenter.
-/// @default-runtime-calling-convention
+/// @method-call
 static inline dx_result dx_application_presenter_run(dx_application_presenter* SELF) {
   DX_OBJECT_VIRTUALCALL(dx_application_presenter, run, SELF);
 }
 
 /// @brief Callback. Invoked by the application execution environment.
 /// @param SELF A pointer to this application presenter.
-/// @default-runtime-calling-convention
+/// @method-call
 static inline dx_result dx_application_presenter_shutdown(dx_application_presenter* SELF) {
   DX_OBJECT_VIRTUALCALL(dx_application_presenter, shutdown, SELF);
 }
@@ -79,7 +79,7 @@ static inline dx_result dx_application_presenter_shutdown(dx_application_present
 /// @param SELF A pointer to this application presenter.
 /// @success <code>*RETURN</code> was assigned a reference to the VAL context object.
 /// The caller acquired a reference to that object.
-/// @default-runtime-calling-convention
+/// @method-call
 static inline dx_result dx_application_presenter_get_val_context(dx_val_context** RETURN, dx_application_presenter* SELF) {
   DX_OBJECT_VIRTUALCALL(dx_application_presenter, get_val_context, RETURN, SELF);
 }
@@ -89,7 +89,7 @@ static inline dx_result dx_application_presenter_get_val_context(dx_val_context*
 /// @param SELF A pointer to this application presenter.
 /// @success <code>*RETURN</code> was assigned a reference to the console object.
 /// The caller acquired a reference to that object.
-/// @default-runtime-calling-convention
+/// @method-call
 static inline dx_result dx_application_presenter_get_console(dx_console** RETURN, dx_application_presenter* SELF) {
   DX_OBJECT_VIRTUALCALL(dx_application_presenter, get_console, RETURN, SELF);
 }
@@ -99,21 +99,21 @@ static inline dx_result dx_application_presenter_get_console(dx_console** RETURN
 /// @param SELF A pointer to this application presenter.
 /// @success <code>*RETURN</code> was assigned a reference to the CL interpreter object.
 /// The caller acquired a reference to that object.
-/// @default-runtime-calling-convention
+/// @method-call
 static inline dx_result dx_application_presenter_get_cl_interpreter(dx_cl_interpreter** RETURN, dx_application_presenter* SELF) {
   DX_OBJECT_VIRTUALCALL(dx_application_presenter, get_cl_interpreter, RETURN, SELF);
 }
 
 /// @brief Request the application to quit.
 /// @param SELF A pointer to this application presenter.
-/// @default-runtime-calling-convention
+/// @method-call
 static inline dx_result dx_application_presenter_request_quit(dx_application_presenter* SELF) {
   DX_OBJECT_VIRTUALCALL(dx_application_presenter, request_quit, SELF);
 }
 
 /// @brief Get if the application was requested to quit.
 /// @param RETURN A pointer to a <code>dx_bool</code> variable.
-/// @default-runtime-calling-convention
+/// @method-call
 static inline dx_result dx_application_presenter_quit_requested(dx_bool* RETURN, dx_application_presenter* SELF) {
   DX_OBJECT_VIRTUALCALL(dx_application_presenter, quit_requested, RETURN, SELF);
 }

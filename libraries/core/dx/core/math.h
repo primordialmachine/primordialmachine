@@ -8,7 +8,24 @@
 
 typedef struct DX_VEC3 DX_VEC3;
 typedef struct DX_VEC4 DX_VEC4;
+typedef struct DX_RGB_F32 DX_RGB_F32;
 typedef struct DX_RGBA_F32 DX_RGBA_F32;
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+typedef struct DX_RGB_F32 {
+  dx_f32 r;
+  dx_f32 g;
+  dx_f32 b;
+} DX_RGB_F32;
+
+static inline void dx_rgb_f32_set(DX_RGB_F32* c, dx_f32 r, dx_f32 g, dx_f32 b) {
+  c->r = r;
+  c->g = g;
+  c->b = b;
+}
+
+void dx_rgb_f32_lerp(DX_RGB_F32 const* a, DX_RGB_F32 const* b, dx_f32 t, DX_RGB_F32* c);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
@@ -18,6 +35,15 @@ typedef struct DX_RGBA_F32 {
   dx_f32 b;
   dx_f32 a;
 } DX_RGBA_F32;
+
+static inline void dx_rgba_f32_set(DX_RGBA_F32* c, dx_f32 r, dx_f32 g, dx_f32 b, dx_f32 a) {
+  c->r = r;
+  c->g = g;
+  c->b = b;
+  c->a = a;
+}
+
+void dx_rgba_f32_lerp(DX_RGBA_F32 const* a, DX_RGBA_F32 const* b, dx_f32 t, DX_RGBA_F32* c);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
@@ -33,23 +59,25 @@ static inline void dx_bgr_n8_set(DX_BGR_N8* c, dx_n8 b, dx_n8 g, dx_n8 r) {
   c->r = r;
 }
 
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
 typedef struct DX_RGB_N8 {
   dx_n8 r;
   dx_n8 g;
   dx_n8 b;
 } DX_RGB_N8;
 
+static inline void dx_rgb_u8_set(DX_RGB_N8* c, dx_n8 r, dx_n8 g, dx_n8 b) {
+  c->r = r;
+  c->g = g;
+  c->b = b;
+}
+
 static inline void dx_rgb_n8_to_rgba_f32(DX_RGB_N8 const* source, dx_f32 a, DX_RGBA_F32* target) {
   target->r = ((dx_f32)source->r) / 255.f;
   target->g = ((dx_f32)source->g) / 255.f;
   target->b = ((dx_f32)source->b) / 255.f;
   target->a = a;
-}
-
-static inline void dx_rgb_u8_set(DX_RGB_N8* c, dx_n8 r, dx_n8 g, dx_n8 b) {
-  c->r = r;
-  c->g = g;
-  c->b = b;
 }
 
 void dx_rgb_u8_lerp(DX_RGB_N8 const* a, DX_RGB_N8 const* b, dx_f32 t, DX_RGB_N8* c);

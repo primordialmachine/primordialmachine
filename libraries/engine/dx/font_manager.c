@@ -1,5 +1,114 @@
 #include "dx/font_manager.h"
 
+#include <malloc.h>
+
+#if DX_OPERATING_SYSTEM_WINDOWS == DX_OPERATING_SYSTEM
+
+  #define WIN32_LEAN_AND_MEAN
+  #include <Windows.h>
+
+  #include "font-loader-plugin.h"
+
+  #define LIBRARY_FILENAME "./" "freetype-plugin" ".dll"
+
+  static void* load_library(char const* path) {
+    return (void*)LoadLibraryA(path);
+  }
+
+  static void unload_library(void* handle) {
+    FreeLibrary((HMODULE)handle);
+  }
+
+  static void* link_function(void* library, char const* name) {
+    return GetProcAddress(library, name);
+  }
+
+#else
+
+  #error("environment not (yet) supported")
+
+#endif
+
+typedef struct _backend_impl {
+  void* library;
+  DX_FONT_LOADER_PLUGIN_REFERENCE_FONT_PROC* plugin_reference_font;
+  DX_FONT_LOADER_PLUGIN_UNREFERENCE_FONT_PROC* plugin_unreference_font;
+  DX_FONT_LOADER_PLUGIN_CREATE_FONT_PROC* plugin_create_font;
+  DX_FONT_LOADER_PLUGIN_GET_BASELINE_DISTANCE_PROC* plugin_get_baseline_distance;
+  DX_FONT_LOADER_PLUGIN_GET_FONT_SIZE_PROC* plugin_get_font_size;
+  DX_FONT_LOADER_PLUGIN_REFERENCE_GLYPH_PROC* plugin_reference_glyph;
+  DX_FONT_LOADER_PLUGIN_UNREFERENCE_GLYPH_PROC* plugin_unreference_glyph;
+  DX_FONT_LOADER_PLUGIN_GET_GLYPH_PROC* plugin_get_glyph;
+  DX_FONT_LOADER_PLUGIN_GET_GLYPH_SIZE_PROC* plugin_get_glyph_size;
+  DX_FONT_LOADER_PLUGIN_GET_GLYPH_PIXELS_PROC* plugin_get_glyph_pixels;
+  DX_FONT_LOADER_PLUGIN_GET_GLYPH_ADVANCE_PROC* plugin_get_glyph_advance;
+  DX_FONT_LOADER_PLUGIN_GET_GLYPH_BEARING_PROC* plugin_get_glyph_bearing;
+  DX_FONT_LOADER_PLUGIN_GET_ASCENDER_PROC* plugin_get_ascender;
+  DX_FONT_LOADER_PLUGIN_GET_DESCENDER_PROC* plugin_get_descender;
+} _backend_impl;
+
+static dx_result _backend_impl_uninitialize(_backend_impl* SELF) {
+
+#define LINK(V,F) \
+  (SELF)->V = NULL;
+
+  LINK(plugin_reference_font, DX_FONT_LOADER_PLUGIN_REFERENCE_FONT_PROC);
+  LINK(plugin_unreference_font, DX_FONT_LOADER_PLUGIN_UNREFERENCE_FONT_PROC);
+  LINK(plugin_create_font, DX_FONT_LOADER_PLUGIN_CREATE_FONT_PROC);
+  LINK(plugin_get_baseline_distance, DX_FONT_LOADER_PLUGIN_GET_BASELINE_DISTANCE_PROC);
+  LINK(plugin_get_font_size, DX_FONT_LOADER_PLUGIN_GET_FONT_SIZE_PROC);
+  LINK(plugin_reference_glyph, DX_FONT_LOADER_PLUGIN_REFERENCE_GLYPH_PROC);
+  LINK(plugin_unreference_glyph, DX_FONT_LOADER_PLUGIN_UNREFERENCE_GLYPH_PROC);
+  LINK(plugin_get_glyph, DX_FONT_LOADER_PLUGIN_GET_GLYPH_PROC);
+  LINK(plugin_get_glyph_pixels, DX_FONT_LOADER_PLUGIN_GET_GLYPH_PIXELS_PROC);
+  LINK(plugin_get_glyph_advance, DX_FONT_LOADER_PLUGIN_GET_GLYPH_ADVANCE_PROC);
+  LINK(plugin_get_glyph_bearing, DX_FONT_LOADER_PLUGIN_GET_GLYPH_BEARING_PROC);
+  LINK(plugin_get_ascender, DX_FONT_LOADER_PLUGIN_GET_ASCENDER_PROC);
+  LINK(plugin_get_descender, DX_FONT_LOADER_PLUGIN_GET_DESCENDER_PROC);
+
+#undef LINK
+
+  unload_library(SELF->library);
+  SELF->library = NULL;
+
+  return DX_SUCCESS;
+}
+
+static dx_result _backend_impl_initialize(_backend_impl* SELF) {
+
+  SELF->library = load_library(LIBRARY_FILENAME);
+  if (!SELF->library) {
+    return DX_FAILURE;
+  }
+
+#define LINK(V,F) \
+  (SELF)->V = (F*)link_function(SELF->library, F##_NAME); \
+  if (!(SELF)->V) { \
+    unload_library(SELF->library); \
+    SELF->library = NULL; \
+    return DX_FAILURE; \
+  }
+
+  LINK(plugin_reference_font, DX_FONT_LOADER_PLUGIN_REFERENCE_FONT_PROC);
+  LINK(plugin_unreference_font, DX_FONT_LOADER_PLUGIN_UNREFERENCE_FONT_PROC);
+  LINK(plugin_create_font, DX_FONT_LOADER_PLUGIN_CREATE_FONT_PROC);
+  LINK(plugin_get_baseline_distance, DX_FONT_LOADER_PLUGIN_GET_BASELINE_DISTANCE_PROC);
+  LINK(plugin_get_font_size, DX_FONT_LOADER_PLUGIN_GET_FONT_SIZE_PROC);
+  LINK(plugin_reference_glyph, DX_FONT_LOADER_PLUGIN_REFERENCE_GLYPH_PROC);
+  LINK(plugin_unreference_glyph, DX_FONT_LOADER_PLUGIN_UNREFERENCE_GLYPH_PROC);
+  LINK(plugin_get_glyph, DX_FONT_LOADER_PLUGIN_GET_GLYPH_PROC);
+  LINK(plugin_get_glyph_size, DX_FONT_LOADER_PLUGIN_GET_GLYPH_SIZE_PROC);
+  LINK(plugin_get_glyph_pixels, DX_FONT_LOADER_PLUGIN_GET_GLYPH_PIXELS_PROC);
+  LINK(plugin_get_glyph_advance, DX_FONT_LOADER_PLUGIN_GET_GLYPH_ADVANCE_PROC);
+  LINK(plugin_get_glyph_bearing, DX_FONT_LOADER_PLUGIN_GET_GLYPH_BEARING_PROC);
+  LINK(plugin_get_ascender, DX_FONT_LOADER_PLUGIN_GET_ASCENDER_PROC);
+  LINK(plugin_get_descender, DX_FONT_LOADER_PLUGIN_GET_DESCENDER_PROC)
+
+#undef LINK
+
+  return DX_SUCCESS;
+}
+
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 DX_DEFINE_OBJECT_TYPE("dx.font_key",
@@ -72,8 +181,9 @@ DX_DEFINE_OBJECT_TYPE("dx.font_glyph",
                       dx_object);
 
 static void dx_font_glyph_destruct(dx_font_glyph* SELF) {
-  SELF->font->font_manager->plugin_unreference_glyph(SELF->glyph);
-  SELF->glyph = NULL;
+  _backend_impl* pimpl = (_backend_impl*)SELF->font->font_manager->pimpl;
+  pimpl->plugin_unreference_glyph((dx_font_loader_plugin_glyph*)SELF->glyph_pimpl);
+  SELF->glyph_pimpl = NULL;
   DX_UNREFERENCE(SELF->font);
   SELF->font = NULL;
 }
@@ -92,7 +202,8 @@ dx_result dx_font_glyph_construct(dx_font_glyph* SELF, uint32_t code_point, dx_f
   SELF->font = font;
   DX_REFERENCE(font);
 
-  if (SELF->font->font_manager->plugin_get_glyph(&SELF->glyph, SELF->font->font, SELF->code_point)) {
+  _backend_impl* pimpl = (_backend_impl*)SELF->font->font_manager->pimpl;
+  if (pimpl->plugin_get_glyph(&SELF->glyph_pimpl, (dx_font_loader_plugin_font*)SELF->font->font_pimpl, SELF->code_point)) {
     DX_UNREFERENCE(SELF->font);
     SELF->font = NULL;
     return DX_FAILURE;
@@ -117,8 +228,8 @@ dx_result dx_font_glyph_create(dx_font_glyph** RETURN, uint32_t code_point, dx_f
 }
 
 dx_result dx_font_glyph_get_glyph_advance(dx_font_glyph* SELF, dx_f32* advance_x, dx_f32* advance_y) {
-  dx_font_manager* font_manager = SELF->font->font_manager;
-  if (font_manager->plugin_get_glyph_advance(SELF->glyph, advance_x, advance_y)) {
+  _backend_impl* pimpl = (_backend_impl*)SELF->font->font_manager->pimpl;
+  if (pimpl->plugin_get_glyph_advance((dx_font_loader_plugin_glyph*)SELF->glyph_pimpl, advance_x, advance_y)) {
     dx_set_error(DX_ERROR_ENVIRONMENT_FAILED);
     return DX_FAILURE;
   }
@@ -126,17 +237,27 @@ dx_result dx_font_glyph_get_glyph_advance(dx_font_glyph* SELF, dx_f32* advance_x
 }
 
 dx_result dx_font_glyph_get_glyph_bearing(dx_font_glyph* SELF, dx_f32* bearing_x, dx_f32* bearing_y) {
-  dx_font_manager* font_manager = SELF->font->font_manager;
-  if (font_manager->plugin_get_glyph_bearing(SELF->glyph, bearing_x, bearing_y)) {
+  _backend_impl* pimpl = (_backend_impl*)SELF->font->font_manager->pimpl;
+  if (pimpl->plugin_get_glyph_bearing((dx_font_loader_plugin_glyph*)SELF->glyph_pimpl, bearing_x, bearing_y)) {
     dx_set_error(DX_ERROR_ENVIRONMENT_FAILED);
     return DX_FAILURE;
   }
   return DX_SUCCESS;
 }
 
-dx_result dx_font_glyph_get_pixels(dx_font_glyph* SELF, void** pixels, uint32_t* width, uint32_t* height) {
-  dx_font_manager* font_manager = SELF->font->font_manager;
-  if (font_manager->plugin_get_glyph_pixels(SELF->glyph, pixels, width, height)) {
+dx_result dx_font_glyph_get_size(dx_font_glyph* SELF, uint32_t* size_x, uint32_t* size_y) {
+  _backend_impl* pimpl = (_backend_impl*)SELF->font->font_manager->pimpl;
+  if (pimpl->plugin_get_glyph_size((dx_font_loader_plugin_glyph*)SELF->glyph_pimpl, size_x, size_y)) {
+    dx_set_error(DX_ERROR_ENVIRONMENT_FAILED);
+    return DX_FAILURE;
+  }
+  return DX_SUCCESS;
+}
+
+
+dx_result dx_font_glyph_get_pixels(dx_font_glyph* SELF, void** pixels) {
+  _backend_impl* pimpl = (_backend_impl*)SELF->font->font_manager->pimpl;
+  if (pimpl->plugin_get_glyph_pixels((dx_font_loader_plugin_glyph*)SELF->glyph_pimpl, pixels)) {
     dx_set_error(DX_ERROR_ENVIRONMENT_FAILED);
     return DX_FAILURE;
   }
@@ -160,8 +281,9 @@ DX_DEFINE_OBJECT_TYPE("dx.font",
 static void dx_font_destruct(dx_font* SELF) {
   dx_inline_pointer_hashmap_remove(&SELF->font_manager->fonts, SELF->key);
   
-  SELF->font_manager->plugin_unreference_font(SELF->font);
-  SELF->font = NULL;
+  _backend_impl* pimpl = (_backend_impl*)SELF->font_manager->pimpl;
+  pimpl->plugin_unreference_font((dx_font_loader_plugin_font*)SELF->font_pimpl);
+  SELF->font_pimpl = NULL;
 
   DX_UNREFERENCE(SELF->key);
   SELF->key = NULL;
@@ -172,8 +294,6 @@ static void dx_font_destruct(dx_font* SELF) {
 
 static void dx_font_dispatch_construct(dx_font_dispatch* SELF)
 {/*Intentionally empty.*/}
-
-#include <malloc.h>
 
 static void* allocate_callback(void* context, size_t number_of_bytes) {
   return malloc(number_of_bytes > 0 ? number_of_bytes : 1);
@@ -219,7 +339,8 @@ dx_result dx_font_construct(dx_font* SELF, dx_font_key* key, dx_font_manager* fo
     path = NULL;
     return DX_FAILURE;
   }
-  if (font_manager->plugin_create_font(&SELF->font, path_bytes, key->font_size, NULL, &allocate_callback, &deallocate_callback)) {
+  _backend_impl* pimpl = (_backend_impl*)font_manager->pimpl;
+  if (pimpl->plugin_create_font((dx_font_loader_plugin_font**)&SELF->font_pimpl, path_bytes, key->font_size, NULL, &allocate_callback, &deallocate_callback)) {
     DX_UNREFERENCE(path);
     path = NULL;
     return DX_FAILURE;
@@ -252,8 +373,8 @@ dx_result dx_font_create(dx_font** RETURN, dx_font_key* key, dx_font_manager* fo
 }
 
 dx_result dx_font_get_baseline_distance(dx_f32* RETURN, dx_font* SELF) {
-  dx_font_manager* font_manager = SELF->font_manager;
-  if (font_manager->plugin_get_baseline_distance(RETURN, SELF->font)) {
+  _backend_impl* pimpl = (_backend_impl*)SELF->font_manager->pimpl;
+  if (pimpl->plugin_get_baseline_distance(RETURN, (dx_font_loader_plugin_font*)SELF->font_pimpl)) {
     dx_set_error(DX_ERROR_ENVIRONMENT_FAILED);
     return DX_FAILURE;
   }
@@ -261,8 +382,8 @@ dx_result dx_font_get_baseline_distance(dx_f32* RETURN, dx_font* SELF) {
 }
 
 dx_result dx_font_get_ascender(dx_f32* RETURN, dx_font* SELF) {
-  dx_font_manager* font_manager = SELF->font_manager;
-  if (font_manager->plugin_get_ascender(RETURN, SELF->font)) {
+  _backend_impl* pimpl = (_backend_impl*)SELF->font_manager->pimpl;
+  if (pimpl->plugin_get_ascender(RETURN, (dx_font_loader_plugin_font*)SELF->font_pimpl)) {
     dx_set_error(DX_ERROR_ENVIRONMENT_FAILED);
     return DX_FAILURE;
   }
@@ -270,8 +391,8 @@ dx_result dx_font_get_ascender(dx_f32* RETURN, dx_font* SELF) {
 }
 
 dx_result dx_font_get_descender(dx_f32* RETURN, dx_font* SELF) {
-  dx_font_manager* font_manager = SELF->font_manager;
-  if (font_manager->plugin_get_descender(RETURN, SELF->font)) {
+  _backend_impl* pimpl = (_backend_impl*)SELF->font_manager->pimpl;
+  if (pimpl->plugin_get_descender(RETURN, (dx_font_loader_plugin_font*)SELF->font_pimpl)) {
     dx_set_error(DX_ERROR_ENVIRONMENT_FAILED);
     return DX_FAILURE;
   }
@@ -279,23 +400,6 @@ dx_result dx_font_get_descender(dx_f32* RETURN, dx_font* SELF) {
 }
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-
-#if DX_CONFIGURATION_SYSTEM == DX_CONFIGURATION_SYSTEM_WINDOWS
-  #define WIN32_LEAN_AND_MEAN
-  #include <Windows.h>
-  #define LIBRARY_FILENAME "./" "freetype-plugin" ".dll"
-  void* load_library(char const* path) {
-    return (void*)LoadLibraryA(path);
-  }
-  void unload_library(void* handle) {
-    FreeLibrary((HMODULE)handle);
-  }
-  void* link_function(void *library, char const* name) {
-    return GetProcAddress(library, name);
-  }
-#else
-  #error("environment not (yet) supported")
-#endif
 
 static dx_font_manager* g_font_manager = NULL;
 
@@ -305,27 +409,9 @@ DX_DEFINE_OBJECT_TYPE("dx.font_manager",
 
 static void dx_font_manager_destruct(dx_font_manager* SELF) {
 
-#define LINK(V,F) \
-  (SELF)->V = NULL;
-
-  LINK(plugin_reference_font, DX_FONT_LOADER_PLUGIN_REFERENCE_FONT_PROC);
-  LINK(plugin_unreference_font, DX_FONT_LOADER_PLUGIN_UNREFERENCE_FONT_PROC);
-  LINK(plugin_create_font, DX_FONT_LOADER_PLUGIN_CREATE_FONT_PROC);
-  LINK(plugin_get_baseline_distance, DX_FONT_LOADER_PLUGIN_GET_BASELINE_DISTANCE_PROC);
-  LINK(plugin_get_font_size, DX_FONT_LOADER_PLUGIN_GET_FONT_SIZE_PROC);
-  LINK(plugin_reference_glyph, DX_FONT_LOADER_PLUGIN_REFERENCE_GLYPH_PROC);
-  LINK(plugin_unreference_glyph, DX_FONT_LOADER_PLUGIN_UNREFERENCE_GLYPH_PROC);
-  LINK(plugin_get_glyph, DX_FONT_LOADER_PLUGIN_GET_GLYPH_PROC);
-  LINK(plugin_get_glyph_pixels, DX_FONT_LOADER_PLUGIN_GET_GLYPH_PIXELS_PROC);
-  LINK(plugin_get_glyph_advance, DX_FONT_LOADER_PLUGIN_GET_GLYPH_ADVANCE_PROC);
-  LINK(plugin_get_glyph_bearing, DX_FONT_LOADER_PLUGIN_GET_GLYPH_BEARING_PROC);
-  LINK(plugin_get_ascender, DX_FONT_LOADER_PLUGIN_GET_ASCENDER_PROC);
-  LINK(plugin_get_descender, DX_FONT_LOADER_PLUGIN_GET_DESCENDER_PROC);
-
-#undef LINK
-
-  unload_library(SELF->library);
-  SELF->library = NULL;
+  _backend_impl_uninitialize((_backend_impl*)SELF->pimpl);
+  free(SELF->pimpl);
+  SELF->pimpl = NULL;
 
   DX_UNREFERENCE(SELF->context);
   SELF->context = NULL;
@@ -357,11 +443,6 @@ dx_result dx_font_manager_construct(dx_font_manager* SELF, dx_val_context* conte
   if (!TYPE) {
     return DX_FAILURE;
   }
-  
-  SELF->library = load_library(LIBRARY_FILENAME);
-  if (!SELF->library) {
-    return DX_FAILURE;
-  }
 
   DX_INLINE_POINTER_HASHMAP_CONFIGURATION configuration = {
     .compare_keys_callback = (dx_inline_pointer_hashmap_compare_keys_callback*) & compare_font_key,
@@ -372,35 +453,21 @@ dx_result dx_font_manager_construct(dx_font_manager* SELF, dx_val_context* conte
     .value_removed_callback = NULL,
   };
   if (dx_inline_pointer_hashmap_initialize(&SELF->fonts, &configuration)) {
-    unload_library(SELF->library);
-    SELF->library = NULL;
     return DX_FAILURE;
   }
 
-#define LINK(V,F) \
-  (SELF)->V = (F*)link_function(SELF->library, F##_NAME); \
-  if (!(SELF)->V) { \
-    unload_library(SELF->library); \
-    SELF->library = NULL; \
-    dx_inline_pointer_hashmap_uninitialize(&SELF->fonts); \
-    return DX_FAILURE; \
+  SELF->pimpl = malloc(sizeof(_backend_impl));
+  if (!SELF->pimpl) {
+    dx_inline_pointer_hashmap_uninitialize(&SELF->fonts);
+    dx_set_error(DX_ERROR_ALLOCATION_FAILED);
+    return DX_FAILURE;
   }
-  
-  LINK(plugin_reference_font, DX_FONT_LOADER_PLUGIN_REFERENCE_FONT_PROC);
-  LINK(plugin_unreference_font, DX_FONT_LOADER_PLUGIN_UNREFERENCE_FONT_PROC);
-  LINK(plugin_create_font, DX_FONT_LOADER_PLUGIN_CREATE_FONT_PROC);
-  LINK(plugin_get_baseline_distance, DX_FONT_LOADER_PLUGIN_GET_BASELINE_DISTANCE_PROC);
-  LINK(plugin_get_font_size, DX_FONT_LOADER_PLUGIN_GET_FONT_SIZE_PROC);
-  LINK(plugin_reference_glyph, DX_FONT_LOADER_PLUGIN_REFERENCE_GLYPH_PROC);
-  LINK(plugin_unreference_glyph, DX_FONT_LOADER_PLUGIN_UNREFERENCE_GLYPH_PROC);
-  LINK(plugin_get_glyph, DX_FONT_LOADER_PLUGIN_GET_GLYPH_PROC);
-  LINK(plugin_get_glyph_pixels, DX_FONT_LOADER_PLUGIN_GET_GLYPH_PIXELS_PROC);
-  LINK(plugin_get_glyph_advance, DX_FONT_LOADER_PLUGIN_GET_GLYPH_ADVANCE_PROC);
-  LINK(plugin_get_glyph_bearing, DX_FONT_LOADER_PLUGIN_GET_GLYPH_BEARING_PROC);
-  LINK(plugin_get_ascender, DX_FONT_LOADER_PLUGIN_GET_ASCENDER_PROC);
-  LINK(plugin_get_descender, DX_FONT_LOADER_PLUGIN_GET_DESCENDER_PROC)
-
-#undef LINK
+  if (_backend_impl_initialize((_backend_impl*)SELF->pimpl)) {
+    free(SELF->pimpl);
+    SELF->pimpl = NULL;
+    dx_inline_pointer_hashmap_uninitialize(&SELF->fonts);
+    return DX_FAILURE;
+  }
 
   SELF->context = context;
   DX_REFERENCE(context);

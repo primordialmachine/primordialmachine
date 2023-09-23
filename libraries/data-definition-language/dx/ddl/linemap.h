@@ -47,7 +47,7 @@ struct dx_ddl_linemap_dispatch {
 
 /// @brief Construct this linemap.
 /// @param SELF A pointer to this linemap.
-/// @default-runtime-calling-convention
+/// @method-call
 dx_result dx_ddl_linemap_construct(dx_ddl_linemap* SELF, char const* start, char const* end);
 
 /// @brief Create this linemap.
@@ -55,7 +55,7 @@ dx_result dx_ddl_linemap_construct(dx_ddl_linemap* SELF, char const* start, char
 /// @param start A pointer to the beginning of the first Byte of the input.
 /// @param end A pointer to the end of the last Byte of the input.
 /// @success <code>*RETURN</code> was assigned a pointer to the linemap.
-/// @default-runtime-calling-convention
+/// @method-call
 dx_result dx_ddl_linemap_create(dx_ddl_linemap** RETURN, char const* start, char const* end);
 
 /// @brief Given the index of a Byte, get the index of the line the Byte is on.
@@ -64,7 +64,7 @@ dx_result dx_ddl_linemap_create(dx_ddl_linemap** RETURN, char const* start, char
 /// @param SELF A pointer to this line map.
 /// @param byte_index The index of the Byte.
 /// @success <code>*RETURN</code> was assigned the of the index of the line the Byte is on.
-/// @default-runtime-calling-convention
+/// @method-call
 /// @error #DX_INVALID_ARGUMENT byte_index is greater than or equal to the number of Bytes.
 dx_result dx_ddl_linemap_get_line_index(dx_size* RETURN, dx_ddl_linemap* SELF, dx_size byte_index);
 
@@ -73,7 +73,7 @@ dx_result dx_ddl_linemap_get_line_index(dx_size* RETURN, dx_ddl_linemap* SELF, d
 /// @param SELF A pointer to this line map.
 /// @param byte_index The index of the Byte.
 /// @success <code>*RETURN</code> was assigned the of the column the Byte is on.
-/// @default-runtime-calling-convention
+/// @method-call
 dx_result dx_ddl_linemap_get_column_index(dx_size* RETURN, dx_ddl_linemap* SELF, dx_size byte_index);
 
 #if defined(DX_DATA_DEFINITION_LANGUAGE_LINEMAP_WITH_TESTS) && DX_DATA_DEFINITION_LANGUAGE_LINEMAP_WITH_TESTS

@@ -27,7 +27,7 @@ struct dx_asset_image_operations_mirror_vertical_dispatch {
 
 /// @brief Construct this dx_asset_image_operations_mirror_vertical object with default values.
 /// @param SELF A pointer to this dx_asset_image_operations_mirror_vertical object.
-/// @default-runtime-calling-convention
+/// @method-call
 dx_result dx_asset_image_operations_mirror_vertical_construct(dx_asset_image_operations_mirror_vertical* SELF);
 
 dx_asset_image_operations_mirror_vertical* dx_asset_image_operations_mirror_vertical_create();

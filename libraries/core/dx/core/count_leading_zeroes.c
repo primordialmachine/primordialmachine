@@ -72,6 +72,6 @@ dx_size dx_count_leading_zeroes_sz(dx_size x) {
 #elif defined(_M_IX86)
   return dx_count_leading_zeroes_n32(x);
 #else
-  #error("environment not supported")
+  #error("environment not (yet) supported")
 #endif
 }

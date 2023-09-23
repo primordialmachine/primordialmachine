@@ -8,13 +8,20 @@
 
 #include "dx/data_definition_language.h"
 
-#if defined(_WIN32) && defined(DX_CONFIGURATION_VISUALS_OPENGL)
+#if defined(_WIN32)
   // GetTickCount64
   #define WIN32_LEAN_AND_MEAN
   #include <Windows.h>
-  #include "dx/gl/wgl/wm.h"
 #else
   #error("environment not (yet) supported")
+#endif
+
+#if DX_VISUALS_OPENGL4 == DX_VISUALS
+  #include "dx/val/gl.h"
+#elif DX_VISUALS_DIRECT3D12 == DX_VISUALS
+  #include "dx/val/dx12.h"
+#else
+  #error ("environment not (yet) supported")
 #endif
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
@@ -37,21 +44,67 @@
   #define LEAVE(FUNCTION_NAME)
 #endif
 
+static dx_result dx_player_create_application(dx_application** RETURN, dx_msg_queue* msg_queue);
+
+#if DX_VISUALS_OPENGL4 == DX_VISUALS
+  #include "dx/val/gl.h"
+#else
+  #error("environment not (yet) supported")
+#endif
+
+#if DX_AUDIALS_OPENAL == DX_AUDIALS
+  #include "dx/aal/al/system_factory.h"
+#else
+  #error("environment not (yet) supported")
+#endif
+
+static dx_result dx_player_create_application(dx_application** RETURN, dx_msg_queue* msg_queue) {
+#if DX_VISUALS_OPENGL4 == DX_VISUALS && DX_OPERATING_SYSTEM_WINDOWS == DX_OPERATING_SYSTEM
+  dx_val_system_factory* val_system_factory = NULL;
+  if (dx_val_gl_wgl_system_factory_create((dx_val_gl_wgl_system_factory**)&val_system_factory)) {
+    return DX_FAILURE;
+  }
+#else
+  #error("environment not (yet) supported")
+#endif
+#if DX_AUDIALS_OPENAL == DX_AUDIALS
+  dx_aal_system_factory* aal_system_factory = NULL;
+  if (dx_aal_al_system_factory_create((dx_aal_al_system_factory**)&aal_system_factory)) {
+    DX_UNREFERENCE(val_system_factory);
+    val_system_factory = NULL;
+    return DX_FAILURE;
+  }
+#else
+  #error("environment not (yet) supported")
+#endif
+  dx_application* temporary = NULL;
+  if (dx_application_create(&temporary, val_system_factory, aal_system_factory, msg_queue)) {
+    DX_UNREFERENCE(aal_system_factory);
+    aal_system_factory = NULL;
+    DX_UNREFERENCE(val_system_factory);
+    val_system_factory = NULL;
+    return DX_FAILURE;
+  }
+  DX_UNREFERENCE(aal_system_factory);
+  aal_system_factory = NULL;
+  DX_UNREFERENCE(val_system_factory);
+  val_system_factory = NULL;
+  *RETURN = temporary;
+  return DX_SUCCESS;
+}
+
+
 /// @brief Create an application with the specified message queue.
 /// @param msg_queue A pointer to the message queue.
 /// @return A pointer to the application on success. The null pointer on failure. 
 static dx_application* create_application(dx_msg_queue* msg_queue);
 
 static dx_application* create_application(dx_msg_queue* msg_queue) {
-#if DX_CONFIGURATION_SYSTEM == DX_CONFIGURATION_SYSTEM_WINDOWS && DX_CONFIGURATION_VISUALS == DX_CONFIGURATION_VISUALS_OPENGL
-  dx_gl_wgl_application* application = NULL;
-  if (dx_gl_wgl_application_create(&application, msg_queue)) {
+  dx_application* application = NULL;
+  if (dx_player_create_application(&application, msg_queue)) {
     return NULL;
   }
   return DX_APPLICATION(application);
-#else
-  #error("environment not (yet) supported")
-#endif
 }
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
@@ -81,11 +134,11 @@ static dx_result shutdown();
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 dx_val_context* dx_val_context_get() {
-  dx_gl_wgl_context* temporary = NULL;
-  if (dx_val_gl_wgl_get_context(&temporary)) {
+  dx_val_context* temporary = NULL;
+  if (dx_application_get_val_context(&temporary, g_application)) {
     return NULL;
   }
-  return DX_VAL_CONTEXT(temporary);
+  return temporary;
 }
 
 dx_result dx_application_presenter_get(dx_application_presenter** RETURN) {
@@ -271,8 +324,7 @@ static dx_result startup() {
   if (dx_rti_initialize()) {
     return DX_FAILURE;
   }
-  g_msg_queue = dx_msg_queue_create();
-  if (!g_msg_queue) {
+  if (dx_msg_queue_create(&g_msg_queue)) {
     dx_rti_unintialize();
     LEAVE(DX_C_FUNCTION_NAME);
     return DX_FAILURE;
@@ -285,7 +337,7 @@ static dx_result startup() {
     LEAVE(DX_C_FUNCTION_NAME);
     return DX_FAILURE;
   }
-  if (dx_val_gl_wgl_startup(g_msg_queue)) {
+  if (dx_application_startup_systems(g_application)) {
     DX_UNREFERENCE(g_application);
     g_application = NULL;
     dx_msg_queue_destroy(g_msg_queue);
@@ -295,7 +347,7 @@ static dx_result startup() {
     return DX_FAILURE;
   }
   if (startup_managers()) {
-    dx_val_gl_wgl_shutdown();
+    dx_application_shutdown_systems(g_application);
     DX_UNREFERENCE(g_application);
     g_application = NULL;
     dx_msg_queue_destroy(g_msg_queue);
@@ -307,7 +359,7 @@ static dx_result startup() {
   dx_val_context* val_context = dx_val_context_get();
   if (!val_context) {
     shutdown_managers();
-    dx_val_gl_wgl_shutdown();
+    dx_application_shutdown_systems(g_application);
     DX_UNREFERENCE(g_application);
     g_application = NULL;
     dx_msg_queue_destroy(g_msg_queue);
@@ -327,7 +379,7 @@ static dx_result startup() {
     val_context = NULL;
 
     shutdown_managers();
-    dx_val_gl_wgl_shutdown();
+    dx_application_shutdown_systems(g_application);
     DX_UNREFERENCE(g_application);
     g_application = NULL;
     dx_msg_queue_destroy(g_msg_queue);
@@ -347,7 +399,7 @@ static dx_result shutdown() {
   DX_UNREFERENCE(g_application_presenter);
   g_application_presenter = NULL;
   shutdown_managers();
-  dx_val_gl_wgl_shutdown();
+  dx_application_shutdown_systems(g_application);
   DX_UNREFERENCE(g_application);
   g_application = NULL;
   dx_msg_queue_destroy(g_msg_queue);

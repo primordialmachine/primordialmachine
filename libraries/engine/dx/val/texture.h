@@ -65,7 +65,7 @@ static inline dx_result dx_val_texture_set_texture_address_mode_u(dx_val_texture
 /// @param RETURN A pointer to a <code>DX_TEXTURE_ADDRESS_MODE</code> variable.
 /// @param SELF A pointer to this texture.
 /// @success <code>*RETURN</code> was assigned texture address mode for the u coordinates.
-/// @default-runtime-calling-convention
+/// @method-call
 static inline dx_result dx_val_texture_get_texture_address_mode_u(DX_TEXTURE_ADDRESS_MODE* RETURN, dx_val_texture* SELF) {
   DX_OBJECT_VIRTUALCALL(dx_val_texture, get_texture_address_mode_u, RETURN, SELF);
 }
@@ -75,7 +75,7 @@ static inline dx_result dx_val_texture_get_texture_address_mode_u(DX_TEXTURE_ADD
 /// @brief Set the texture address mode for the v coordinates.
 /// @param SELF A pointer to this texture.
 /// @param texture_address_mode_v The texture address mode.
-/// @default-runtime-calling-convention
+/// @method-call
 static inline dx_result dx_val_texture_set_texture_address_mode_v(dx_val_texture* SELF, DX_TEXTURE_ADDRESS_MODE texture_address_mode_v) {
   DX_OBJECT_VIRTUALCALL(dx_val_texture, set_texture_address_mode_v, SELF, texture_address_mode_v);
 }
@@ -84,7 +84,7 @@ static inline dx_result dx_val_texture_set_texture_address_mode_v(dx_val_texture
 /// @param RETURN A pointer to a <code>DX_TEXTURE_ADDRESS_MODE</code> variable.
 /// @param SELF A pointer to this texture.
 /// @success <code>*RETURN</code> was assigned texture address mode for the v coordinates.
-/// @default-runtime-calling-convention
+/// @method-call
 static inline dx_result dx_val_texture_get_texture_address_mode_v(DX_TEXTURE_ADDRESS_MODE* RETURN, dx_val_texture* SELF) {
   DX_OBJECT_VIRTUALCALL(dx_val_texture, get_texture_address_mode_v, RETURN, SELF);
 }
@@ -94,7 +94,7 @@ static inline dx_result dx_val_texture_get_texture_address_mode_v(DX_TEXTURE_ADD
 /// @brief Set the texture border color.
 /// @param SELF A pointer to this texture.
 /// @param texture_border_color A pointer to the texture border color.
-/// @default-runtime-calling-convention
+/// @method-call
 static inline dx_result dx_val_texture_set_texture_border_color(dx_val_texture* SELF, DX_VEC4 const* texture_border_color) {
   DX_OBJECT_VIRTUALCALL(dx_val_texture, set_texture_border_color, SELF, texture_border_color);
 }
@@ -103,7 +103,7 @@ static inline dx_result dx_val_texture_set_texture_border_color(dx_val_texture* 
 /// @param RETURN A pointer to a <code>DX_VEC4</code> variable.
 /// @param SELF A pointer to this texture.
 /// @success <code>*RETURN</code> was assigned the texture border color.
-/// @default-runtime-calling-convention
+/// @method-call
 static inline dx_result dx_val_texture_get_texture_border_color(DX_VEC4* RETURN, dx_val_texture* SELF) {
   DX_OBJECT_VIRTUALCALL(dx_val_texture, get_texture_border_color, RETURN, SELF);
 }

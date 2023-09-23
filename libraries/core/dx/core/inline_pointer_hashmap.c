@@ -1,6 +1,8 @@
 #include "dx/core/inline_pointer_hashmap.h"
 
 #include "dx/core/memory.h"
+#include "dx/core/safe_mul_nx.h"
+#include "dx/core/inline_pointer_array.h"
 #include "dx/core/_get_best_array_size.h"
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
@@ -50,7 +52,7 @@ static inline dx_result _dx_impl_set(_dx_impl* SELF, dx_inline_pointer_hashmap_k
 /// @param SELF A pointer to this hashmap.
 /// @param key The key.
 /// @success <code>*RETURN</code> was assigned a pointer to the value.
-/// @default-runtime-calling-convention
+/// @method-call
 /// @error #DX_ERROR_NOT_FOUND no entry for the specified key was found
 /// @error #DX_ERROR_INVALID_ARGUMENT @a SELF was a null pointer
 static inline dx_result _dx_impl_get(dx_inline_pointer_hashmap_value* RETURN, _dx_impl* SELF, dx_inline_pointer_hashmap_key key);
@@ -58,7 +60,7 @@ static inline dx_result _dx_impl_get(dx_inline_pointer_hashmap_value* RETURN, _d
 /// @brief Remove an entry from this hashmap.
 /// @param self A pointer to this hashmap.
 /// @param key The key.
-/// @default-runtime-calling-convention
+/// @method-call
 /// @error #DX_ERROR_NOT_FOUND no entry for the specified key was found
 /// @error #DX_ERROR_INVALID_ARGUMENT @a self was a null pointer.
 static inline dx_result _dx_impl_remove(_dx_impl* SELF, dx_inline_pointer_hashmap_key key);
@@ -67,7 +69,7 @@ static inline dx_result _dx_impl_remove(_dx_impl* SELF, dx_inline_pointer_hashma
 /// @param RETURN A pointer to a dx_size variable.
 /// @param SELF A pointer to this hashmap.
 /// @success <code>*RETURN</code> was assigned the size.
-/// @default-runtime-calling-convention
+/// @method-call
 /// @error #DX_ERROR_INVALID_ARGUMENT @a RETURN was a null pointer.
 /// @error #DX_ERROR_INVALID_ARGUMENT @a SELF was a null pointer.
 static inline dx_result _dx_impl_get_size(dx_size* RETURN, _dx_impl const* SELF);
@@ -76,7 +78,7 @@ static inline dx_result _dx_impl_get_size(dx_size* RETURN, _dx_impl const* SELF)
 /// @param RETURN A pointer to a dx_size variable.
 /// @param SELF A pointer to this hashmap.
 /// @success <code>*RETURN</code> was assigned the capacity.
-/// @default-runtime-calling-convention
+/// @method-call
 /// @error #DX_ERROR_INVALID_ARGUMENT @a RETURN was a null pointer.
 /// @error #DX_ERROR_INVALID_ARGUMENT @a SELF was a null pointer.
 static inline dx_result _dx_impl_get_capacity(dx_size* RETURN, _dx_impl const* SELF);
@@ -85,7 +87,7 @@ static inline dx_result _dx_impl_get_capacity(dx_size* RETURN, _dx_impl const* S
 /// @param RETURN A pointer to a dx_size variable.
 /// @param SELF A pointer to this hashmap.
 /// @success <code>*RETURN</code> was assigned the free capacity.
-/// @default-runtime-calling-convention
+/// @method-call
 /// @error #DX_ERROR_INVALID_ARGUMENT @a RETURN was a null pointer.
 /// @error #DX_ERROR_INVALID_ARGUMENT @a SELF was a null pointer.
 static inline dx_result _dx_impl_get_free_capacity(dx_size* RETURN, _dx_impl const* SELF);

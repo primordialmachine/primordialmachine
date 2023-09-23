@@ -181,7 +181,7 @@ typedef float dx_f32;
   /// @brief The least integer such that <code>2</code> raised to that power is a normalized @a dx_f32 value.
   #define DX_F32_LEAST_2_EXP (FLT_MIN_EXP)
 #else
-  #error("target environment not supported")
+  #error("environment not (yet) supported")
 #endif
 
 /// @ingroup Core_BuiltinTypes
@@ -218,7 +218,7 @@ typedef double dx_f64;
   /// @brief The least integer such that <code>2</code> raised to that power is a normalized @a dx_f64 value.
   #define DX_F64_LEAST_2_EXP (DBL_MIN_EXP)
 #else
-  #error("target environment not supported")
+  #error("environment not (yet) supported")
 #endif
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/

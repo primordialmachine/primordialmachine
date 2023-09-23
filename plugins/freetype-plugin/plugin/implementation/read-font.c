@@ -3,7 +3,7 @@
 // @copyright Copyright (c) 2023 Michael Heilmann. All rights reserved.
 
 #include "common.h"
-#include "font_loader_plugin.h"
+#include "font-loader-plugin.h"
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
@@ -190,12 +190,14 @@ typedef struct GLYPH {
   
   FONT* font;
   
-  /// @brief A pointer to an array of width*height pixels where width is the width, in pixels, of the bitmap and height is the height, in pixels, of the bitmap.
+  /// @brief A pointer to an array of a*b pixels where
+  /// - a is the size, in pixels, of the glyph along the x-axis as specified by GLYPH::size_x.
+  /// - b is the size, in pixels, of the glyph along the y-axis as specified by GLYPH::size_y.
   void* pixels;
-  /// @brief The width, in pixels, of the bitmap.
-  uint32_t width;
-  /// @brief The height, in pixels, of the bitmap.
-  uint32_t height;
+  /// @brief The size, in pixels, of the glyph along the x-axis.
+  uint32_t size_x;
+  /// @brief The size, in pixels, of the glyph along the y-axis.
+  uint32_t size_y;
 
   /// @brief Unicode code point.
   uint32_t codepoint;
@@ -261,8 +263,8 @@ get_glyph
   glyph_impl->advancey = f_26_6_to_f(font_impl->face->glyph->advance.y);
   glyph_impl->bearingx = font_impl->face->glyph->bitmap_left;
   glyph_impl->bearingy = font_impl->face->glyph->bitmap_top;
-  glyph_impl->width = font_impl->face->glyph->bitmap.width;
-  glyph_impl->height = font_impl->face->glyph->bitmap.rows;
+  glyph_impl->size_x = font_impl->face->glyph->bitmap.width;
+  glyph_impl->size_y = font_impl->face->glyph->bitmap.rows;
   
   // if (NOT (a == 0 || a * b <= M))
   // if (NOT (a == 0 || b <= M / a))
@@ -296,18 +298,28 @@ get_glyph
 }
 
 __declspec(dllexport) dx_font_loader_plugin_result
+get_glyph_size
+  (
+    dx_font_loader_plugin_glyph* glyph,
+    uint32_t* size_x,
+    uint32_t* size_y
+  )
+{
+  GLYPH* glyph_impl = (GLYPH*)glyph;
+  *size_x = glyph_impl->size_x;
+  *size_y = glyph_impl->size_y;
+  return DX_FONT_LOADER_PLUGIN_SUCCESS;
+}
+
+__declspec(dllexport) dx_font_loader_plugin_result
 get_glyph_pixels
   (
     dx_font_loader_plugin_glyph* glyph,
-    void** pixels,
-    uint32_t *width,
-    uint32_t *height
+    void** pixels
   )
 {
   GLYPH* glyph_impl = (GLYPH*)glyph;
   *pixels = glyph_impl->pixels;
-  *width = glyph_impl->width;
-  *height = glyph_impl->height;
   return DX_FONT_LOADER_PLUGIN_SUCCESS;
 }
 

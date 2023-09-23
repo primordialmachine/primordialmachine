@@ -7,6 +7,7 @@
 #include "dx/data_definition_language.h"
 #include "dx/document_definition_language.h"
 #include "dx/engine.h"
+#include <string.h>
 
 static dx_result print_library_info(dx_application_presenter* application_presenter, char const* name, dx_n64 major_version, dx_n64 minor_version) {
   dx_string* format_string = NULL,

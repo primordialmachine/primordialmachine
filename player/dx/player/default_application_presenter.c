@@ -8,11 +8,10 @@
 #include "dx/scenes/default_scene_presenter.h"
 #include <stdio.h>
 
-#if defined(_WIN32) && defined(DX_CONFIGURATION_VISUALS_OPENGL)
+#if DX_OPERATING_SYSTEM_WINDOWS == DX_OPERATING_SYSTEM
   // GetTickCount64
   #define WIN32_LEAN_AND_MEAN
   #include <Windows.h>
-  #include "dx/gl/wgl/wm.h"
 #else
   #error("environment not (yet) supported")
 #endif
@@ -83,23 +82,33 @@ static dx_result on_msg(dx_default_application_presenter* SELF, dx_msg* msg) {
         }
         if (temporary) {
           // if the circumflex key is released, we close the console.
-          if (DX_KEYBOARD_KEY_ACTION_RELEASED == dx_keyboard_key_msg_get_action(keyboard_key_msg) && dx_keyboard_key_dead_circumflex == dx_keyboard_key_msg_get_key(keyboard_key_msg)) {
+          dx_keyboard_key_action action;
+          dx_keyboard_key key;
+          if (dx_keyboard_key_msg_get_action(&action, keyboard_key_msg) || dx_keyboard_key_msg_get_key(&key, keyboard_key_msg)) {
+            return DX_FAILURE;
+          }
+          if (DX_KEYBOARD_KEY_ACTION_RELEASED == action && dx_keyboard_key_dead_circumflex == key) {
             dx_console_toggle(SELF->console);
           } else {
             dx_console_on_keyboard_key_message(SELF->console, keyboard_key_msg);
           }
         } else {
-          if (DX_KEYBOARD_KEY_ACTION_RELEASED == dx_keyboard_key_msg_get_action(keyboard_key_msg) && dx_keyboard_key_return == dx_keyboard_key_msg_get_key(keyboard_key_msg)) {
+          dx_keyboard_key_action action;
+          dx_keyboard_key key;
+          if (dx_keyboard_key_msg_get_action(&action, keyboard_key_msg) || dx_keyboard_key_msg_get_key(&key, keyboard_key_msg)) {
+            return DX_FAILURE;
+          }
+          if (DX_KEYBOARD_KEY_ACTION_RELEASED == action && dx_keyboard_key_return == key) {
             dx_size n;
             if (dx_inline_object_array_get_size(&n, SELF->scene_presenters)) {
               return DX_FAILURE;
             }
             SELF->scene_index = (SELF->scene_index + 1) % n;
           }
-          if (DX_KEYBOARD_KEY_ACTION_RELEASED == dx_keyboard_key_msg_get_action(keyboard_key_msg) && dx_keyboard_key_dead_circumflex == dx_keyboard_key_msg_get_key(keyboard_key_msg)) {
+          if (DX_KEYBOARD_KEY_ACTION_RELEASED == action && dx_keyboard_key_dead_circumflex == key) {
             dx_console_open(SELF->console);
           }
-          if (DX_KEYBOARD_KEY_ACTION_RELEASED == dx_keyboard_key_msg_get_action(keyboard_key_msg) && dx_keyboard_key_escape == dx_keyboard_key_msg_get_key(keyboard_key_msg)) {
+          if (DX_KEYBOARD_KEY_ACTION_RELEASED == action && dx_keyboard_key_escape == key) {
             dx_msg* msg = DX_MSG(dx_quit_msg_create());
             if (!msg) {
               return DX_FAILURE;
@@ -270,7 +279,7 @@ static dx_result run(dx_default_application_presenter* SELF) {
     }
     do {
       dx_msg* msg;
-      if (dx_msg_queue_pop(SELF->message_queue, &msg)) {
+      if (dx_msg_queue_pop(&msg, SELF->message_queue)) {
         return DX_FAILURE;
       }
       if (msg) {

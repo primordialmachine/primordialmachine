@@ -6,8 +6,12 @@ cmake_minimum_required(VERSION 3.20)
 
 
 set(name "dailies.core")
+set(${name}.kind "static-library")
+set(${name}.languages "C" "ASM_MASM") # Enable C and MASM.
+set(${name}.public_include_directories "${CMAKE_CURRENT_SOURCE_DIR}")
+set(${name}.private_include_directories "${CMAKE_CURRENT_SOURCE_DIR}")
+set(${name}.source_directory "${CMAKE_CURRENT_SOURCE_DIR}")
 dx_begin_project(${name})
-project(${name} LANGUAGES C)
 
 # "README.md".
 list(APPEND ${name}.readmes "README.md")
@@ -95,9 +99,6 @@ list(APPEND ${name}.headers "dx/core/object.h")
 list(APPEND ${name}.sources "dx/core/msgs.c")
 list(APPEND ${name}.headers "dx/core/msgs.h")
 
-# "core/asm" folder.
-enable_language(ASM_MASM) # Enable ASM provided by MASM.
-
 # Small utility function to find files by expression and append them to the specified list.
 function(add_files file_list expression)
   file(GLOB_RECURSE temporary ${expression})
@@ -105,15 +106,15 @@ function(add_files file_list expression)
 endfunction()
 
 #
-add_files( ${name}.inlays "dx/core/asm/${infix}/_umul*.i")
+add_files( ${name}.inlays  "dx/core/asm/${infix}/_umul*.i")
 add_files( ${name}.sources "dx/core/asm/${infix}/_umul*.c" )
 add_files( ${name}.headers "dx/core/asm/${infix}/_umul*.h" )
-add_files( ${name}.asms "dx/core/asm/${infix}/_umul*.asm" )
+add_files( ${name}.asms    "dx/core/asm/${infix}/_umul*.asm" )
 #
-add_files( ${name}.inlays "dx/core/asm/${infix}/_imul*.i")
+add_files( ${name}.inlays  "dx/core/asm/${infix}/_imul*.i")
 add_files( ${name}.sources "dx/core/asm/${infix}/_imul*.c" )
 add_files( ${name}.headers "dx/core/asm/${infix}/_imul*.h" )
-add_files( ${name}.asms "dx/core/asm/${infix}/_imul*.asm" )
+add_files( ${name}.asms    "dx/core/asm/${infix}/_imul*.asm" )
 #
 if( CMAKE_SIZEOF_VOID_P EQUAL 4 )
   set_source_files_properties(
@@ -122,10 +123,5 @@ if( CMAKE_SIZEOF_VOID_P EQUAL 4 )
       COMPILE_FLAGS "/safeseh"
   )
 endif()
-
-add_library(${name} ${${name}.sources} ${${name}.headers} ${${name}.readmes} ${${name}.inlays} ${${name}.asms})
-
-target_include_directories(${name} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
-target_include_directories(${name} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
 dx_end_project(${name})

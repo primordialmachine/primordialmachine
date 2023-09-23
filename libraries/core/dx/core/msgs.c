@@ -193,47 +193,47 @@ typedef struct dx_msg_queue {
   dx_inline_pointer_deque deque;
 } dx_msg_queue;
 
-int dx_msg_queue_push(dx_msg_queue* msg_queue, dx_msg* msg) {
+dx_result dx_msg_queue_push(dx_msg_queue* SELF, dx_msg* msg) {
   TRACE("enter: dx_msg_queue_push\n");
-  if (!msg_queue || !msg) {
+  if (!SELF || !msg) {
     dx_set_error(DX_ERROR_INVALID_ARGUMENT);
     TRACE("leave: dx_msg_queue_push\n");
-    return 1;
+    return DX_FAILURE;
   }
-  if (dx_inline_pointer_deque_push_back(&msg_queue->deque, msg)) {
+  if (dx_inline_pointer_deque_push_back(&SELF->deque, msg)) {
     TRACE("leave: dx_msg_queue_push\n");
-    return 1;
+    return DX_FAILURE;
   }
   TRACE("leave: dx_msg_queue_push (success)\n");
-  return 0;
+  return DX_SUCCESS;
 }
 
-int dx_msg_queue_pop(dx_msg_queue* msg_queue, dx_msg** msg) {
+dx_result dx_msg_queue_pop(dx_msg** RETURN, dx_msg_queue* SELF) {
   TRACE("enter: dx_msg_queue_pop\n");
-  dx_msg* msg1 = NULL;
-  if (dx_inline_pointer_deque_pop_front(&msg1, &msg_queue->deque, true)) {
+  dx_msg* msg = NULL;
+  if (dx_inline_pointer_deque_pop_front(&msg, &SELF->deque, true)) {
     if (dx_get_error() != DX_ERROR_IS_EMPTY) {
       TRACE("leave: dx_msg_queue_pop (failure)\n");
-      return 1;
+      return DX_FAILURE;
     } else {
       dx_set_error(DX_NO_ERROR);
-      *msg = NULL;
+      *RETURN = NULL;
       TRACE("leave: dx_msg_queue_pop (success)\n");
-      return 0;
+      return DX_SUCCESS;
     }
   }
-  *msg = msg1;
+  *RETURN = msg;
   TRACE("leave: dx_msg_queue_pop (success)\n");
-  return 0;
+  return DX_SUCCESS;
 }
 
-dx_msg_queue* dx_msg_queue_create() {
+dx_result dx_msg_queue_create(dx_msg_queue** RETURN) {
   TRACE("enter: dx_msg_queue_create\n");
   dx_msg_queue* msg_queue = NULL;
   if (dx_memory_allocate(&msg_queue, sizeof(dx_msg_queue))) {
     dx_log("allocation failed\n", sizeof("allocation failed\n"));
     TRACE("leave: dx_msg_queue_create\n");
-    return NULL;
+    return DX_FAILURE;
   }
   DX_INLINE_POINTER_DEQUE_CONFIGURATION configuration = {
     .added_callback = &added,
@@ -241,10 +241,11 @@ dx_msg_queue* dx_msg_queue_create() {
   };
   if (dx_inline_pointer_deque_initialize(&msg_queue->deque, 0, &configuration)) {
     TRACE("leave: dx_msg_queue_create (failure)\n");
-    return NULL;
+    return DX_FAILURE;
   }
   TRACE("leave: dx_msg_queue_create (success)\n");
-  return msg_queue;
+  *RETURN = msg_queue;
+  return DX_SUCCESS;
 }
 
 void dx_msg_queue_destroy(dx_msg_queue* msg_queue) {

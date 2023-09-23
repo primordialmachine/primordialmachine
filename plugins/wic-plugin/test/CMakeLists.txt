@@ -6,14 +6,19 @@ cmake_minimum_required(VERSION 3.20)
 
 
 set(name "wic-plugin-test")
+set(${name}.languages "C")
+set(${name}.kind "executable")
+set(${name}.private_include_directories "${CMAKE_CURRENT_SOURCE_DIR}")
+set(${name}.doxygen_enabled OFF)
+set(${name}.source_directory "${CMAKE_CURRENT_SOURCE_DIR}")
+
+dx_begin_project(${name})
 
 set(${name}.sources "main.c")
 set(${name}.headers "wic-plugin.h")
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${${name}.sources} ${${name}.headers})
 
-project(${name} LANGUAGES C)
-
-add_executable(${name} ${${name}.sources} ${${name}.headers})
+dx_end_project(${name})
 
 # DLL plugins.
 add_dependencies(${name} wic-plugin)
@@ -22,9 +27,4 @@ add_custom_command(TARGET ${name} POST_BUILD
                    ${CMAKE_CURRENT_BINARY_DIR}/../plugin/$<CONFIG>/wic-plugin.dll $<TARGET_FILE_DIR:${name}>
                    COMMAND_EXPAND_LISTS)
 
-# See ${CMAKE_SOURCE_DIR_DIR}/CMakeLibrary.cmake for more information.
-dx_configure_warnings(${name})
-
 target_link_libraries(${name} "dailies.core")
-
-target_include_directories(${name} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})

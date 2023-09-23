@@ -156,7 +156,7 @@ dx_size dx_next_power_of_two_gt_sz(dx_size x) {
 #elif defined(_M_IX86)
   return dx_next_power_of_two_gt_n64(x);
 #else
-  #error("environment not supported")
+  #error("environment not (yet) supported")
 #endif
 }
 
@@ -166,7 +166,7 @@ dx_size dx_next_power_of_two_gte_sz(dx_size x) {
 #elif defined(_M_IX86)
   return dx_next_power_of_two_gte_n64(x);
 #else
-#error("environment not supported")
+  #error("environment not (yet) supported")
 #endif
 }
 

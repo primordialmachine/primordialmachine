@@ -6,8 +6,12 @@ cmake_minimum_required(VERSION 3.20)
 
 
 set(name "dailies.player")
+set(${name}.kind "executable")
+set(${name}.languages "C")
+set(${name}.private_include_directories "${CMAKE_CURRENT_SOURCE_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}/external")
+set(${name}.source_directory "${CMAKE_CURRENT_SOURCE_DIR}")
+
 dx_begin_project(${name})
-project(${name} LANGUAGES C)
 
 # "README.md".
 set(${name}.readmes "README.md")
@@ -38,7 +42,7 @@ list(APPEND ${name}.headers "dx/engine/utilities_2d.h")
 list(APPEND ${name}.sources "dx/engine/console_commands.c")
 list(APPEND ${name}.headers "dx/engine/console_commands.h")
 
-add_executable(${name} ${${name}.sources} ${${name}.headers} ${${name}.readmes} ${${name}.inlays} ${${name}.asms})
+dx_end_project(${name})
 
 # DLL plugins.
 add_dependencies(${name} wic-plugin)
@@ -52,12 +56,9 @@ add_custom_command(TARGET ${name} POST_BUILD
                    ${CMAKE_CURRENT_BINARY_DIR}/../plugins/freetype-plugin/plugin/$<CONFIG>/freetype-plugin.dll $<TARGET_FILE_DIR:${name}>
                    COMMAND_EXPAND_LISTS)
 
-# include directories
-target_include_directories(${name} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/external) # "external" header files
-target_include_directories(${name} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
-
 target_link_libraries(${name} dailies.engine)
 target_link_libraries(${name} dailies.val.gl)
+target_link_libraries(${name} dailies.aal.al)
 
 # Copy the assets to the current binary directory.
 file(GLOB_RECURSE files_to_copy RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/assets" "${CMAKE_CURRENT_SOURCE_DIR}/assets/*.*" )
@@ -71,4 +72,3 @@ foreach (file_to_copy ${files_to_copy})
   )
 endforeach()
 
-dx_end_project(${name})

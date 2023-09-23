@@ -41,7 +41,7 @@ dx_result dx_ddl_word_construct(dx_ddl_word* SELF, dx_ddl_word_kind kind, dx_str
 /// @param kind The kind of the word.
 /// @param text The text of the word.
 /// @success <code>*RETURN</code> was assigned a pointer to the dx_data_definition_language_word object.
-/// @default-runtime-calling-convention
+/// @method-call
 dx_result dx_ddl_word_create(dx_ddl_word** RETURN, dx_ddl_word_kind kind, dx_string* text);
 
 #endif // DX_DATA_DEFINITION_LANGUAGE_WORD_H_INCLUDED

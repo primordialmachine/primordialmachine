@@ -261,7 +261,8 @@ ALIASES                = "error=@par Error^^" \
                          "success=@par On Success^^" \
                          "default-failure=@failure This function has set the error variable to a non-zero value." \
                          "default-return=@return #DX_SUCCESS on success. #DX_FAILURE on failure." \
-                         "default-runtime-calling-convention=@default-failure^^@default-return^^@error #DX_INVALID_ARGUMENT @a SELF is a null pointer"
+                         "procedure-call=@default-failure^^@default-return"
+                         "method-call=@default-failure^^@default-return^^@error #DX_ERROR_INVALID_ARGUMENT @a SELF is a null pointer"
 
 # Set the OPTIMIZE_OUTPUT_FOR_C tag to YES if your project consists of C sources
 # only. Doxygen will then generate output that is more tailored for C. For

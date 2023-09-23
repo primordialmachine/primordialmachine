@@ -6,8 +6,13 @@ cmake_minimum_required(VERSION 3.20)
 
 
 set(name "dailies.engine")
+set(${name}.kind "static-library")
+set(${name}.languages "C")
+set(${name}.public_include_directories "${CMAKE_CURRENT_SOURCE_DIR}")
+# "external contains the "wic-plugins" and "font-loader-plugin" header files.
+set(${name}.private_include_directories "${CMAKE_CURRENT_SOURCE_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}/external")
+set(${name}.source_directory "${CMAKE_CURRENT_SOURCE_DIR}")
 dx_begin_project(${name})
-project(${name} LANGUAGES C)
 
 # "README.md".
 list(APPEND ${name}.readmes "README.md")
@@ -16,9 +21,22 @@ list(APPEND ${name}.readmes "README.md")
 list(APPEND ${name}.sources "dx/engine.c")
 list(APPEND ${name}.headers "dx/engine.h")
 
+# "dx/aal.(c|h)"
+list(APPEND ${name}.sources "dx/aal.c")
+list(APPEND ${name}.headers "dx/aal.h")
+
+# "dx/val.(c|h)"
+list(APPEND ${name}.sources "dx/val.c")
+list(APPEND ${name}.headers "dx/val.h")
+
 # "dx/console.(c|h)"
 list(APPEND ${name}.sources "dx/console.c")
 list(APPEND ${name}.headers "dx/console.h")
+
+list(APPEND ${name}.sources "dx/system.c")
+list(APPEND ${name}.headers "dx/system.h")
+list(APPEND ${name}.sources "dx/system_factory.c")
+list(APPEND ${name}.headers "dx/system_factory.h")
 
 # "dx/cl_interpreter.(c|h)"
 list(APPEND ${name}.sources "dx/cl_interpreter.c")
@@ -48,15 +66,26 @@ list(APPEND ${name}.headers "dx/application.h")
 list(APPEND ${name}.sources "dx/fps_counter.c")
 list(APPEND ${name}.headers "dx/fps_counter.h")
 
+# "aal" folder.
+list(APPEND ${name}.sources "dx/aal/system.c")
+list(APPEND ${name}.headers "dx/aal/system.h")
+list(APPEND ${name}.sources "dx/aal/system_factory.c")
+list(APPEND ${name}.headers "dx/aal/system_factory.h")
+list(APPEND ${name}.sources "dx/aal/context.c")
+list(APPEND ${name}.headers "dx/aal/context.h")
+
 # "val" folder.
+list(APPEND ${name}.sources "dx/val/system.c")
+list(APPEND ${name}.headers "dx/val/system.h")
+list(APPEND ${name}.sources "dx/val/system_factory.c")
+list(APPEND ${name}.headers "dx/val/system_factory.h")
+list(APPEND ${name}.sources "dx/val/context.c")
+list(APPEND ${name}.headers "dx/val/context.h")
+
 list(APPEND ${name}.sources "dx/val/texture.c" "dx/val/material.c" "dx/val/mesh.c" "dx/val/mesh_instance.c" "dx/val/viewer.c")
 list(APPEND ${name}.headers "dx/val/texture.h" "dx/val/material.h" "dx/val/mesh.h" "dx/val/mesh_instance.h" "dx/val/viewer.h")
-list(APPEND ${name}.sources "dx/val/program_text.c" "dx/val/command.c" "dx/val/program.c" "dx/val/context.c" "dx/val/cbinding.c" "dx/val/vbinding.c" "dx/val/buffer.c")
-list(APPEND ${name}.headers "dx/val/program_text.h" "dx/val/command.h" "dx/val/program.h" "dx/val/context.h" "dx/val/cbinding.h" "dx/val/vbinding.h" "dx/val/buffer.h")
-
-# "sal" folder.
-list(APPEND ${name}.sources "dx/sal/context.c")
-list(APPEND ${name}.headers "dx/sal/context.h")
+list(APPEND ${name}.sources "dx/val/program_text.c" "dx/val/command.c" "dx/val/program.c" "dx/val/cbinding.c" "dx/val/vbinding.c" "dx/val/buffer.c")
+list(APPEND ${name}.headers "dx/val/program_text.h" "dx/val/command.h" "dx/val/program.h" "dx/val/cbinding.h" "dx/val/vbinding.h" "dx/val/buffer.h")
 
 # "adl.(c|h)" include.
 list(APPEND ${name}.sources "dx/adl.c")
@@ -125,13 +154,6 @@ function(add_files file_list expression)
   set(${file_list} ${${file_list}} ${temporary} PARENT_SCOPE)
 endfunction()
 
-add_library(${name} ${${name}.sources} ${${name}.headers} ${${name}.readmes} ${${name}.inlays} ${${name}.asms})
-
-# include directories
-target_include_directories(${name} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/external) # "external" header files
-target_include_directories(${name} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
-target_include_directories(${name} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+dx_end_project(${name})
 
 target_link_libraries(${name} "dailies.core" "dailies.assets" "dailies.data-definition-language" "dailies.document-definition-language")
-
-dx_end_project(${name})

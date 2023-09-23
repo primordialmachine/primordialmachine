@@ -37,7 +37,7 @@ static inline dx_result dx_val_program_activate(dx_val_program* SELF) {
 /// @brief Apply the specified constant binding to this program.
 /// @param SELF A pointer to this program.
 /// @param binding A pointer to the specified constant binding.
-/// @default-runtime-calling-convention
+/// @method-call
 static inline dx_result dx_val_program_bind(dx_val_program* SELF, dx_val_cbinding* cbinding) {
   DX_OBJECT_VIRTUALCALL(dx_val_program, bind, SELF, cbinding);
 }
