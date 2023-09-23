@@ -41,4 +41,5 @@ To specifically choose one generator, enter `cmake -A x64 <source>` for x64 and 
 Turn off the documentation building by specifying the `-DBUILD_DOCUMENTATION=OFF` option.
 
 ## CI/CD
-[![master branch build status](https://ci.appveyor.com/api/projects/status/x7jiybp3h9v65vkf/branch/master?svg=true)](https://ci.appveyor.com/project/primordialmachine/primordialmachine/branch/master)
+[![master branch build status](https://ci.appveyor.com/api/projects/status/x7jiybp3h9v65vkf/branch/master?svg=true)](https://ci.appveyor.com/project/primordialmachine/primordialmachine-develop/branch/master)
+[![develop branch build status](https://ci.appveyor.com/api/projects/status/x7jiybp3h9v65vkf/branch/develop?svg=true)](https://ci.appveyor.com/project/primordialmachine/primordialmachine-develop/branch/develop)

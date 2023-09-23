@@ -4,10 +4,10 @@ clone_depth: 1
 # Build worker image (VM template).
 image: Visual Studio 2022
 
-# Build on pushes to "develop" branches.
+# Build on pushes to "develop" and "master" branches.
 branches:
   only:
-    #- master
+    - master
     - develop
 
 # Do not build on tag pushes.
@@ -22,8 +22,8 @@ platform:
 configuration:
     - Release
     - Debug
-    #- MinSizeRel
-    #- RelWithDebInfo
+    - MinSizeRel
+    - RelWithDebInfo
 
 install:
     # Download and install CMake.
