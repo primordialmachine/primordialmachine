@@ -57,6 +57,7 @@ before_build:
         } else {
           throw "unsupported platform ${env:PLATFORM}";
         }
+        
         ${env:ZIP_FILENAME}="${env:ZIP_FILENAME}-v$(${env:APPVEYOR_BUILD_VERSION}.ToLower())";
         ${env:ZIP_FILENAME}="${env:ZIP_FILENAME}.zip";
         

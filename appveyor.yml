@@ -41,17 +41,18 @@ before_build:
         ${env:CMAKE_GENERATOR_NAME}="";
         # The name of the CMake architecture, for example "Win32" or "x64".
         ${env:CMAKE_ARCHITECTURE_NAME}="";
-        # The name of the zip file, for example "primordialmachine-x86-10.1.9.zip".
+        # The name of the zip file, for example "primordialmachine-develop-windows-x86-10.1.9.zip".
         ${env:ZIP_FILENAME}="";
-        # The name of the release, for example "primordialmachine-10.1.9".
+        # The name of the release, for example "primordialmachine-develop-10.1.9".
         ${env:RELEASE_NAME}="";
-
-        ${env:ZIP_FILENAME}="player";
-        ${env:RELEASE_NAME}="primordialmachine-develop-$(${env:CONFIGURATION}.ToLower())"
         
-        ${env:CMAKE_GENERATOR_NAME}="";
-        ${env:CMAKE_ARCHITECTURE_NAME}="";
+        ${env:ZIP_FILENAME}="primordialmachine-develop";
+        ${env:ZIP_FILENAME}="${env:ZIP_FILENAME}-windows";
         
+        ${env:RELEASE_NAME}="primordialmachine-develop-$(${env:APPVEYOR_BUILD_VERSION}.ToLower())"
+        
+        ${env:CMAKE_ARCHITECTURE_NAME}=${env:PLATFORM}
+        ${env:CMAKE_GENERATOR_NAME}="Visual Studio 17 2022"     
         
         if (${env:CONFIGURATION} -eq 'Debug') {
           ${env:ZIP_FILENAME}="${env:ZIP_FILENAME}-$(${env:CONFIGURATION}.ToLower())"
@@ -64,20 +65,18 @@ before_build:
         } else {
           throw "unsupported configuration ${env:CONFIGURATION}";
         }
-
-        ${env:CMAKE_GENERATOR_NAME}="Visual Studio 17 2022"
-        ${env:CMAKE_ARCHITECTURE_NAME}=${env:PLATFORM}
+        
         if (${env:PLATFORM} -eq 'Win32') {
           ${env:ZIP_FILENAME}="${env:ZIP_FILENAME}-x86"
-          ${env:RELEASE_NAME}="${env:RELEASE_NAME}-x86"
         } elseif(${env:PLATFORM} -eq 'x64') {
           ${env:ZIP_FILENAME}="${env:ZIP_FILENAME}-x64"
-          ${env:RELEASE_NAME}="${env:RELEASE_NAME}-x64"
         } else {
           throw "unsupported platform ${env:PLATFORM}";
         }
         
-        ${env:ZIP_FILENAME}="${env:ZIP_FILENAME}.zip"
+        ${env:ZIP_FILENAME}="${env:ZIP_FILENAME}-v$(${env:APPVEYOR_BUILD_VERSION}.ToLower())";
+        ${env:ZIP_FILENAME}="${env:ZIP_FILENAME}.zip";
+        
         Write-Host "Release Name:           ${env:RELEASE_NAME}";
         Write-Host "AppVeyor Platform:      ${env:PLATFORM}";
         Write-Host "AppVeyor Configuration: ${env:CONFIGURATION}";
