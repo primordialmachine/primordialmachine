@@ -95,12 +95,12 @@ dx_result dx_overlay_render(dx_overlay* SELF, dx_f32 delta_seconds, dx_i32 canva
   // the position of the console along the y-axis.
   dx_f32 console_position_y = canvas_size_vertical - console_height;
 
-  DX_VEC2 temporary;
+  DX_VEC2_F32 temporary;
   {
-    dx_vec2_set(&temporary, dpi_horizontal, dpi_vertical);
+    dx_vec2_f32_set(&temporary, dpi_horizontal, dpi_vertical);
     dx_ui_manager_set_canvas_dpi(SELF->ui_manager, &temporary);
 
-    dx_vec2_set(&temporary, canvas_size_horizontal, canvas_size_vertical);
+    dx_vec2_f32_set(&temporary, canvas_size_horizontal, canvas_size_vertical);
     dx_ui_manager_set_canvas_resolution(SELF->ui_manager, &temporary);
 
     dx_ui_manager_enter_render(SELF->ui_manager);
@@ -109,7 +109,7 @@ dx_result dx_overlay_render(dx_overlay* SELF, dx_f32 delta_seconds, dx_i32 canva
   {
     dx_f32 starty = console_position_y + console_height - insets_y - ascender;
     dx_f32 startx = console_position_x + insets_x;
-    dx_vec2_set(&temporary, startx, starty);
+    dx_vec2_f32_set(&temporary, startx, starty);
     dx_ui_widget_set_relative_position(DX_UI_WIDGET(SELF->text), &temporary);
     dx_ui_text_set_background_color(SELF->text, &TEXT_UI_BACKGROUND_COLOR);
     dx_ui_text_set_text_color(SELF->text, &TEXT_UI_TEXT_COLOR);

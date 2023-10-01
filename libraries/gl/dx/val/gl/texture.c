@@ -286,8 +286,8 @@ static void dx_val_gl_texture_dispatch_construct(dx_val_gl_texture_dispatch* sel
 }
 
 static dx_result fill_amber(dx_asset_image* image_value) {
-  dx_asset_color_rgb_n8* color_value = NULL;
-  if (dx_asset_color_rgb_n8_create(&color_value, &dx_colors_amber)) {
+  dx_assets_color_rgb_n8* color_value = NULL;
+  if (dx_assets_color_rgb_n8_create(&color_value, &dx_colors_amber)) {
     return DX_FAILURE;
   }
   dx_asset_image_operations_color_fill* image_operation_value = NULL;

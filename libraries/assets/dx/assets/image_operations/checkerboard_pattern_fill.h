@@ -24,8 +24,11 @@ struct dx_asset_image_operations_checkerboard_pattern_fill {
   dx_size checker_size_horizontal;
   dx_size checker_size_vertical;
 
-  dx_asset_color_rgb_n8* first_checker_color;
-  dx_asset_color_rgb_n8* second_checker_color;
+  /// @brief dx_asset_color_rgb_n8 if resolved.
+  dx_asset_reference* first_checker_color;
+
+  /// @brief dx_asset_color_rgb_n8 if resolved.
+  dx_asset_reference* second_checker_color;
 };
 
 struct dx_asset_image_operations_checkerboard_pattern_fill_dispatch {
@@ -98,7 +101,7 @@ dx_result dx_asset_image_operations_checkerboard_pattern_fill_get_checker_size_v
 /// @param SELF A pointer to this dx_asset_image_operations_checkerboard_pattern_fill object.
 /// @param first_checker_color A pointer to the DX_RGB_U8 color object providing the color values.
 /// @method-call
-dx_result dx_asset_image_operations_checkerboard_pattern_fill_set_first_checker_color(dx_asset_image_operations_checkerboard_pattern_fill* SELF, dx_asset_color_rgb_n8* first_checker_color);
+dx_result dx_asset_image_operations_checkerboard_pattern_fill_set_first_checker_color(dx_asset_image_operations_checkerboard_pattern_fill* SELF, dx_assets_color_rgb_n8* first_checker_color);
 
 /// @brief Get the first checker color.
 /// @param RETURN A pointer to the DX_RGB_U8 color object receiving the color values.
@@ -113,7 +116,7 @@ dx_result dx_asset_image_operations_checkerboard_pattern_fill_get_first_checker_
 /// @param SELF A pointer to this dx_asset_image_operations_checkerboard_pattern_fill object.
 /// @param second_checker_color A pointer to the DX_RGB_U8 color object providing the color values.
 /// @method-call
-dx_result dx_asset_image_operations_checkerboard_pattern_fill_set_second_checker_color(dx_asset_image_operations_checkerboard_pattern_fill* SELF, dx_asset_color_rgb_n8* second_checker_color);
+dx_result dx_asset_image_operations_checkerboard_pattern_fill_set_second_checker_color(dx_asset_image_operations_checkerboard_pattern_fill* SELF, dx_assets_color_rgb_n8* second_checker_color);
 
 /// @brief Get the first checker color.
 /// @param RETURN A pointer to the DX_RGB_U8 color object receiving the color values.

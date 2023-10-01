@@ -6,6 +6,14 @@ DX_DEFINE_OBJECT_TYPE("dx.ddl.parser",
                       dx_ddl_parser,
                       dx_object);
 
+/// @brief Get if the current word is of the specified word type.
+/// @param SELF A pointer to this parser.
+/// @param word_kind The word type.
+/// @return @a true if the current word is of the specified word type. @a false if it is not. @a false is also returned on failure.
+/// @method-call
+/// @internal
+static bool dx_ddl_parser_is_word_kind(dx_ddl_parser const* SELF, dx_ddl_word_kind word_kind);
+
 /// @code
 /// value := STRING | NUMBER | map | list
 /// @endcode
@@ -37,6 +45,18 @@ static dx_ddl_node* dx_ddl_parser_on_list(dx_ddl_parser* p);
 static int dx_ddl_parser_on_list_0(dx_ddl_parser* p, dx_ddl_node* list_node);
 
 static dx_result dx_ddl_parser_next(dx_ddl_parser* SELF);
+
+static bool dx_ddl_parser_is_word_kind(dx_ddl_parser const* SELF, dx_ddl_word_kind word_kind) {
+  if (!SELF) {
+    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
+    return false;
+  }
+  dx_ddl_word_kind word_kind_received;
+  if (dx_ddl_parser_get_word_kind(&word_kind_received, SELF)) {
+    return false;
+  }
+  return dx_get_error() ? false : word_kind_received == word_kind;
+}
 
 static dx_ddl_node* dx_ddl_parser_on_value(dx_ddl_parser* p) {
   dx_ddl_word_kind word_kind;
@@ -394,18 +414,6 @@ dx_result dx_ddl_parser_create(dx_ddl_parser** RETURN, dx_data_definition_langua
 
 dx_result dx_ddl_parser_set(dx_ddl_parser* SELF, char const* p, dx_size l) {
   return dx_scanner_set(DX_SCANNER(SELF->scanner), p, l);
-}
-
-bool dx_ddl_parser_is_word_kind(dx_ddl_parser const* SELF, dx_ddl_word_kind word_kind) {
-  if (!SELF) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return false;
-  }
-  dx_ddl_word_kind word_kind_received;
-  if (dx_ddl_parser_get_word_kind(&word_kind_received, SELF)) {
-    return false;
-  }
-  return dx_get_error() ? false : word_kind_received == word_kind;
 }
 
 dx_result dx_ddl_parser_get_word_kind(dx_ddl_word_kind* RETURN, dx_ddl_parser const* SELF) {

@@ -1,17 +1,17 @@
 #include "dx/assets/color_rgb_n8.h"
 
-DX_DEFINE_OBJECT_TYPE("dx.asset.color_rgb_n8",
-                      dx_asset_color_rgb_n8,
+DX_DEFINE_OBJECT_TYPE("dx.assets.color_rgb_n8",
+                      dx_assets_color_rgb_n8,
                       dx_object);
 
-static void dx_asset_color_rgb_n8_destruct(dx_asset_color_rgb_n8* SELF)
+static void dx_assets_color_rgb_n8_destruct(dx_assets_color_rgb_n8* SELF)
 {/*Intentionally empty.*/}
 
-static void dx_asset_color_rgb_n8_dispatch_construct(dx_asset_color_rgb_n8_dispatch* SELF)
+static void dx_assets_color_rgb_n8_dispatch_construct(dx_assets_color_rgb_n8_dispatch* SELF)
 {/*Intentionally empty.*/}
 
-dx_result dx_asset_color_rgb_n8_construct(dx_asset_color_rgb_n8* SELF, DX_RGB_N8 const* value) {
-  dx_rti_type* TYPE = dx_asset_color_rgb_n8_get_type();
+dx_result dx_assets_color_rgb_n8_construct(dx_assets_color_rgb_n8* SELF, DX_RGB_N8 const* value) {
+  dx_rti_type* TYPE = dx_assets_color_rgb_n8_get_type();
   if (!TYPE) {
     return DX_FAILURE;
   }
@@ -24,9 +24,9 @@ dx_result dx_asset_color_rgb_n8_construct(dx_asset_color_rgb_n8* SELF, DX_RGB_N8
   return DX_SUCCESS;
 }
 
-dx_result dx_asset_color_rgb_n8_create(dx_asset_color_rgb_n8** RESULT, DX_RGB_N8 const* value) {
-  DX_CREATE_PREFIX(dx_asset_color_rgb_n8)
-  if (dx_asset_color_rgb_n8_construct(SELF, value)) {
+dx_result dx_assets_color_rgb_n8_create(dx_assets_color_rgb_n8** RESULT, DX_RGB_N8 const* value) {
+  DX_CREATE_PREFIX(dx_assets_color_rgb_n8)
+  if (dx_assets_color_rgb_n8_construct(SELF, value)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
     return DX_FAILURE;
@@ -35,10 +35,11 @@ dx_result dx_asset_color_rgb_n8_create(dx_asset_color_rgb_n8** RESULT, DX_RGB_N8
   return DX_SUCCESS;
 }
 
-DX_RGB_N8 const* dx_asset_color_rgb_n8_get_value(dx_asset_color_rgb_n8* SELF) {
-  if (!SELF) {
+dx_result dx_assets_color_rgb_n8_get_value(DX_RGB_N8* RETURN, dx_assets_color_rgb_n8* SELF) {
+  if (!RETURN || !SELF) {
     dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return NULL;
+    return DX_FAILURE;
   }
-  return &SELF->value;
+  *RETURN = SELF->value;
+  return DX_SUCCESS;
 }

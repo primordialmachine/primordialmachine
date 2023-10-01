@@ -12,29 +12,29 @@ typedef struct _dx_impl_node _dx_impl_node;
 typedef struct _dx_impl _dx_impl;
 
 /// @brief Set the capacity of this implemenation.
-/// @param self A pointer to this implementation.
+/// @param SELF A pointer to this implementation.
 /// @param new_capacity The new capacity. Must not be @a 0.
 /// @return The zero value on success. A non-zero value on failure.
 /// @failure The function has set the error variable. In particular, the following error codes are set:
 /// @error #DX_ERROR_INVALID_ARGUMENT @a self is a null pointer.
 /// @error #DX_ERROR_INVALID_ARGUMENT @a new_capacity is smaller than @a 1 or greater than the greatest capacity.
 /// @error #DX_ERROR_ALLOCATION_FAILED an allocation failed.
-static dx_result _dx_impl_set_capacity(_dx_impl* self, dx_size new_capacity);
+static dx_result _dx_impl_set_capacity(_dx_impl* SELF, dx_size new_capacity);
 
-static dx_result _dx_impl_maybe_resize(_dx_impl* self);
+static dx_result _dx_impl_maybe_resize(_dx_impl* SELF);
 
 /// @brief Initialize this implementation.
-/// @param self A pointer to an uninitialized _dx_impl object.
+/// @param SELF A pointer to an uninitialized _dx_impl object.
 /// @param configuration A pointer to a DX_POINTER_HASHMAP_CONFIGURATION object.
 /// @return #DX_SUCCESS on success. #DX_FAILURE on failure.
-static inline dx_result _dx_impl_initialize(_dx_impl* self, DX_INLINE_POINTER_HASHMAP_CONFIGURATION const* configuration);
+static inline dx_result _dx_impl_initialize(_dx_impl* SELF, DX_INLINE_POINTER_HASHMAP_CONFIGURATION const* configuration);
 
 /// @brief Uninitialize this implementation.
-/// @param self A pointer to an initialized _dx_impl object.
+/// @param SELF A pointer to an initialized _dx_impl object.
 static inline void _dx_impl_uninitialize(_dx_impl* self);
 
 /// @brief Clear this implementation.
-/// @param self A pointer to this implementation.
+/// @param SELF A pointer to this implementation.
 /// @return #DX_SUCCESS on success. #DX_FAILURE on failure.
 static inline dx_result _dx_impl_clear(_dx_impl* self);
 
@@ -58,7 +58,7 @@ static inline dx_result _dx_impl_set(_dx_impl* SELF, dx_inline_pointer_hashmap_k
 static inline dx_result _dx_impl_get(dx_inline_pointer_hashmap_value* RETURN, _dx_impl* SELF, dx_inline_pointer_hashmap_key key);
 
 /// @brief Remove an entry from this hashmap.
-/// @param self A pointer to this hashmap.
+/// @param SELF A pointer to this hashmap.
 /// @param key The key.
 /// @method-call
 /// @error #DX_ERROR_NOT_FOUND no entry for the specified key was found
@@ -152,13 +152,13 @@ static _dx_impl_node** _dx_impl_allocate_bucket_array(dx_size n) {
   return buckets;
 }
 
-static dx_result _dx_impl_set_capacity(_dx_impl* self, dx_size new_capacity) {
-  if (!self || !new_capacity) {
+static dx_result _dx_impl_set_capacity(_dx_impl* SELF, dx_size new_capacity) {
+  if (!SELF || !new_capacity) {
     dx_set_error(DX_ERROR_INVALID_ARGUMENT);
     return DX_FAILURE;
   }
-  dx_size old_capacity = self->capacity;
-  _dx_impl_bucket* old_buckets = self->buckets;
+  dx_size old_capacity = SELF->capacity;
+  _dx_impl_bucket* old_buckets = SELF->buckets;
   _dx_impl_bucket* new_buckets = _dx_impl_allocate_bucket_array(new_capacity);
   if (!new_buckets) {
     dx_set_error(DX_ERROR_ALLOCATION_FAILED);
@@ -175,50 +175,50 @@ static dx_result _dx_impl_set_capacity(_dx_impl* self, dx_size new_capacity) {
     }
   }
   dx_memory_deallocate(old_buckets);
-  self->capacity = new_capacity;
-  self->buckets = new_buckets;
+  SELF->capacity = new_capacity;
+  SELF->buckets = new_buckets;
   return DX_SUCCESS;
 }
 
-static dx_result _dx_impl_maybe_resize(_dx_impl* self) {
-  if (self->size > self->capacity) {
+static dx_result _dx_impl_maybe_resize(_dx_impl* SELF) {
+  if (SELF->size > SELF->capacity) {
     dx_size new_capacity;
-    if (dx_get_best_array_size(&new_capacity, self->capacity, 1, _DX_IMPL_LEAST_CAPACITY, _DX_IMPL_GREATEST_CAPACITY, true)) {
+    if (dx_get_best_array_size(&new_capacity, SELF->capacity, 1, _DX_IMPL_LEAST_CAPACITY, _DX_IMPL_GREATEST_CAPACITY, true)) {
       return DX_FAILURE;
     }
-    return _dx_impl_set_capacity(self, new_capacity);
+    return _dx_impl_set_capacity(SELF, new_capacity);
   }
   return DX_SUCCESS;
 }
 
-static inline dx_result _dx_impl_initialize(_dx_impl* self, DX_INLINE_POINTER_HASHMAP_CONFIGURATION const* configuration) {
-  if (!self || !configuration) {
+static inline dx_result _dx_impl_initialize(_dx_impl* SELF, DX_INLINE_POINTER_HASHMAP_CONFIGURATION const* configuration) {
+  if (!SELF || !configuration) {
     dx_set_error(DX_ERROR_INVALID_ARGUMENT);
     return DX_FAILURE;
   }
   static dx_size const INITIAL_CAPACITY = 8;
-  self->buckets = _dx_impl_allocate_bucket_array(INITIAL_CAPACITY);
-  if (!self->buckets) {
+  SELF->buckets = _dx_impl_allocate_bucket_array(INITIAL_CAPACITY);
+  if (!SELF->buckets) {
     return DX_FAILURE;
   }
-  self->size = 0;
-  self->capacity = INITIAL_CAPACITY;
-  self->key_added_callback = configuration->key_added_callback;
-  self->key_removed_callback = configuration->key_removed_callback;
-  self->hash_key_callback = configuration->hash_key_callback;
-  self->compare_keys_callback = configuration->compare_keys_callback;
+  SELF->size = 0;
+  SELF->capacity = INITIAL_CAPACITY;
+  SELF->key_added_callback = configuration->key_added_callback;
+  SELF->key_removed_callback = configuration->key_removed_callback;
+  SELF->hash_key_callback = configuration->hash_key_callback;
+  SELF->compare_keys_callback = configuration->compare_keys_callback;
   
-  self->value_added_callback = configuration->value_added_callback;
-  self->value_removed_callback = configuration->value_removed_callback;
+  SELF->value_added_callback = configuration->value_added_callback;
+  SELF->value_removed_callback = configuration->value_removed_callback;
   return DX_SUCCESS;
 }
 
-static inline void _dx_impl_uninitialize(_dx_impl* self) {
-  DX_DEBUG_ASSERT(NULL != self);
-  _dx_impl_clear(self);
-  DX_DEBUG_ASSERT(NULL != self->buckets);
-  dx_memory_deallocate(self->buckets);
-  self->buckets = NULL;
+static inline void _dx_impl_uninitialize(_dx_impl* SELF) {
+  DX_DEBUG_ASSERT(NULL != SELF);
+  _dx_impl_clear(SELF);
+  DX_DEBUG_ASSERT(NULL != SELF->buckets);
+  dx_memory_deallocate(SELF->buckets);
+  SELF->buckets = NULL;
 }
 
 static inline dx_result _dx_impl_clear(_dx_impl* self) {
@@ -394,18 +394,18 @@ static inline _dx_impl* _DX_IMPL(void* p) {
   return (_dx_impl*)p;
 }
 
-dx_result dx_inline_pointer_hashmap_initialize(dx_inline_pointer_hashmap* self, DX_INLINE_POINTER_HASHMAP_CONFIGURATION const* configuration) {
-  if (!self || !configuration) {
+dx_result dx_inline_pointer_hashmap_initialize(dx_inline_pointer_hashmap* SELF, DX_INLINE_POINTER_HASHMAP_CONFIGURATION const* configuration) {
+  if (!SELF || !configuration) {
     dx_set_error(DX_ERROR_INVALID_ARGUMENT);
     return DX_FAILURE;
   }
-  self->pimpl = NULL;
-  if (dx_memory_allocate(&self->pimpl, sizeof(_dx_impl))) {
+  SELF->pimpl = NULL;
+  if (dx_memory_allocate(&SELF->pimpl, sizeof(_dx_impl))) {
     return DX_FAILURE;
   }
-  if (_dx_impl_initialize(_DX_IMPL(self->pimpl), configuration)) {
-    dx_memory_deallocate(self->pimpl);
-    self->pimpl = NULL;
+  if (_dx_impl_initialize(_DX_IMPL(SELF->pimpl), configuration)) {
+    dx_memory_deallocate(SELF->pimpl);
+    SELF->pimpl = NULL;
     return DX_FAILURE;
   }
   return DX_SUCCESS;
@@ -435,12 +435,12 @@ dx_result dx_inline_pointer_hashmap_set(dx_inline_pointer_hashmap* SELF, dx_inli
   return _dx_impl_set(_DX_IMPL(SELF->pimpl), key, value, false);
 }
 
-dx_result dx_inline_pointer_hashmap_get(dx_inline_pointer_hashmap_value* RETURN, dx_inline_pointer_hashmap const* self, dx_inline_pointer_hashmap_key key) {
-  if (!self) {
+dx_result dx_inline_pointer_hashmap_get(dx_inline_pointer_hashmap_value* RETURN, dx_inline_pointer_hashmap const* SELF, dx_inline_pointer_hashmap_key key) {
+  if (!SELF) {
     dx_set_error(DX_ERROR_INVALID_ARGUMENT);
     return DX_FAILURE;
   }
-  return _dx_impl_get(RETURN, _DX_IMPL(self->pimpl), key);
+  return _dx_impl_get(RETURN, _DX_IMPL(SELF->pimpl), key);
 }
 
 dx_result dx_inline_pointer_hashmap_remove(dx_inline_pointer_hashmap* SELF, dx_inline_pointer_hashmap_key key) {

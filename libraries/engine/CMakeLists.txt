@@ -21,10 +21,6 @@ list(APPEND ${name}.readmes "README.md")
 list(APPEND ${name}.sources "dx/engine.c")
 list(APPEND ${name}.headers "dx/engine.h")
 
-# "dx/aal.(c|h)"
-list(APPEND ${name}.sources "dx/aal.c")
-list(APPEND ${name}.headers "dx/aal.h")
-
 # "dx/val.(c|h)"
 list(APPEND ${name}.sources "dx/val.c")
 list(APPEND ${name}.headers "dx/val.h")
@@ -86,67 +82,6 @@ list(APPEND ${name}.headers "dx/val/texture.h" "dx/val/material.h" "dx/val/mesh.
 list(APPEND ${name}.sources "dx/val/program_text.c" "dx/val/command.c" "dx/val/program.c" "dx/val/cbinding.c" "dx/val/vbinding.c" "dx/val/buffer.c")
 list(APPEND ${name}.headers "dx/val/program_text.h" "dx/val/command.h" "dx/val/program.h" "dx/val/cbinding.h" "dx/val/vbinding.h" "dx/val/buffer.h")
 
-# "adl.(c|h)" include.
-list(APPEND ${name}.sources "dx/adl.c")
-list(APPEND ${name}.headers "dx/adl.h")
-
-# "adl" folder.
-list(APPEND ${name}.sources "dx/adl/diagnostics.c")
-list(APPEND ${name}.headers "dx/adl/diagnostics.h")
-
-# symbols.
-list(APPEND ${name}.sources "dx/adl/symbols.c")
-list(APPEND ${name}.headers "dx/adl/symbols.h")
-
-# phases.
-list(APPEND ${name}.sources "dx/adl/enter.c" "dx/adl/resolve.c")
-list(APPEND ${name}.headers "dx/adl/enter.h" "dx/adl/resolve.h")
-
-list(APPEND ${name}.sources "dx/adl/type_handler.c")
-list(APPEND ${name}.headers "dx/adl/type_handler.h")
-list(APPEND ${name}.sources "dx/adl/context.c")
-list(APPEND ${name}.headers "dx/adl/context.h")
-
-list(APPEND ${name}.sources "dx/adl/names.c")
-list(APPEND ${name}.headers "dx/adl/names.h")
-list(APPEND ${name}.inlays  "dx/adl/names.i")
-list(APPEND ${name}.sources "dx/adl/read.c")
-list(APPEND ${name}.headers "dx/adl/read.h")
-
-list(APPEND ${name}.sources "dx/adl/type_handlers/viewer.c")
-list(APPEND ${name}.headers "dx/adl/type_handlers/viewer.h")
-list(APPEND ${name}.sources "dx/adl/type_handlers/viewer_instance.c")
-list(APPEND ${name}.headers "dx/adl/type_handlers/viewer_instance.h")
-list(APPEND ${name}.sources "dx/adl/type_handlers/viewer_controllers.c")
-list(APPEND ${name}.headers "dx/adl/type_handlers/viewer_controllers.h")
-
-list(APPEND ${name}.sources "dx/adl/type_handlers/material.c")
-list(APPEND ${name}.headers "dx/adl/type_handlers/material.h")
-list(APPEND ${name}.sources "dx/adl/type_handlers/material_controllers.c")
-list(APPEND ${name}.headers "dx/adl/type_handlers/material_controllers.h")
-
-list(APPEND ${name}.sources "dx/adl/type_handlers/texture.c")
-list(APPEND ${name}.headers "dx/adl/type_handlers/texture.h")
-list(APPEND ${name}.sources "dx/adl/type_handlers/mesh.c")
-list(APPEND ${name}.headers "dx/adl/type_handlers/mesh.h")
-list(APPEND ${name}.sources "dx/adl/type_handlers/image.c")
-list(APPEND ${name}.headers "dx/adl/type_handlers/image.h")
-list(APPEND ${name}.sources "dx/adl/type_handlers/mesh_instance.c")
-list(APPEND ${name}.headers "dx/adl/type_handlers/mesh_instance.h")
-list(APPEND ${name}.sources "dx/adl/type_handlers/mesh_operations.c")
-list(APPEND ${name}.headers "dx/adl/type_handlers/mesh_operations.h")
-
-list(APPEND ${name}.sources "dx/adl/type_handlers/color.c")
-list(APPEND ${name}.headers "dx/adl/type_handlers/color.h")
-
-list(APPEND ${name}.sources "dx/adl/type_handlers/image_operations_checkerboard_pattern_fill.c")
-list(APPEND ${name}.headers "dx/adl/type_handlers/image_operations_checkerboard_pattern_fill.h")
-list(APPEND ${name}.sources "dx/adl/type_handlers/image_operations_color_fill.c")
-list(APPEND ${name}.headers "dx/adl/type_handlers/image_operations_color_fill.h")
-
-list(APPEND ${name}.sources "dx/adl/type_handlers/optics.c")
-list(APPEND ${name}.headers "dx/adl/type_handlers/optics.h")
-
 #
 list(APPEND ${name}.sources "dx/ui/widget.c")
 list(APPEND ${name}.headers "dx/ui/widget.h")
@@ -172,4 +107,4 @@ endfunction()
 
 dx_end_project(${name})
 
-target_link_libraries(${name} "dailies.core" "dailies.assets" "dailies.data-definition-language" "dailies.document-definition-language")
+target_link_libraries(${name} "dailies.core" "dailies.assets" "dailies.asset-definition-language" "dailies.data-definition-language" "dailies.document-definition-language")

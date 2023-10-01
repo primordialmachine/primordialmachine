@@ -19,19 +19,19 @@ struct dx_data_definition_language_diagnostics {
   dx_object _parent;
 };
 
+static inline dx_data_definition_language_diagnostics_dispatch* DX_DATA_DEFINITION_LANGUAGE_DIAGNOSTICS_DISPATCH(void* p) {
+  return (dx_data_definition_language_diagnostics_dispatch*)p;
+}
+
 struct dx_data_definition_language_diagnostics_dispatch {
   dx_object_dispatch _parent;
 };
 
 /// @brief Construct this diagnostics object.
-/// @param SELF A pointer to this diagnostics object.
-/// @method-call
+/// @constructor{dx_data_definition_language_diagnostics}
 dx_result dx_data_definition_language_diagnostics_construct(dx_data_definition_language_diagnostics* SELF);
 
-/// @brief Construct a diagnostics object.
-/// @param RETURN A pointer to a <code>dx_data_definition_language_diagnostics*</code> variable.
-/// @success <code>*RETURN</code> was assigned a pointer to the diagnostics object.
-/// @method-call
+/// @create-operator{dx_data_definition_language_diagnostics}
 dx_result dx_data_definition_language_diagnostics_create(dx_data_definition_language_diagnostics** RETURN);
 
 /// @method-call

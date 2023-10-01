@@ -84,6 +84,12 @@ list(APPEND ${name}.headers "dx/assets/viewer_controller.h")
 
 list(APPEND ${name}.sources "dx/assets/image.c")
 list(APPEND ${name}.headers "dx/assets/image.h")
+
+
+list(APPEND ${name}.sources "dx/assets/matrix_4x4_f32.c")
+list(APPEND ${name}.headers "dx/assets/matrix_4x4_f32.h")
+list(APPEND ${name}.sources "dx/assets/vector_3_f32.c")
+list(APPEND ${name}.headers "dx/assets/vector_3_f32.h")
 list(APPEND ${name}.sources "dx/assets/color_rgb_n8.c")
 list(APPEND ${name}.headers "dx/assets/color_rgb_n8.h")
 

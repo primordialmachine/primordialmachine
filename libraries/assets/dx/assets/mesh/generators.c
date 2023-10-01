@@ -13,7 +13,7 @@ dx_result dx_asset_mesh_append_triangle(dx_asset_mesh* mesh) {
     { 1.f, 1.f, 1.f, 1.f },
     { 1.f, 1.f, 1.f, 1.f },
   };
-  static DX_VEC2 const ambient_uv[] = {
+  static DX_VEC2_F32 const ambient_uv[] = {
     { 0.f, 0.f, },
     { 1.f, 0.f, },
     { 0.f, 1.f, },
@@ -31,20 +31,20 @@ dx_result dx_asset_mesh_append_quadriliteral(dx_asset_mesh* mesh) {
   static dx_f32 const b = +0.5f;
 
   DX_VEC3 p[4];
-  DX_VEC2 t[4];
+  DX_VEC2_F32 t[4];
   DX_VEC4 c[4];
 
   p[0] = (DX_VEC3){ a, a, 0.f }; // left, bottom
-  t[0] = (DX_VEC2){ 0.f, 0.f };
+  t[0] = (DX_VEC2_F32){ 0.f, 0.f };
   c[0] = (DX_VEC4){ 1.f, 1.f, 1.f, 1.f };
   p[1] = (DX_VEC3){ b, a, 0.f }; // right, bottom
-  t[1] = (DX_VEC2){ 1.f, 0.f };
+  t[1] = (DX_VEC2_F32){ 1.f, 0.f };
   c[1] = (DX_VEC4){ 1.f, 1.f, 1.f, 1.f };
   p[2] = (DX_VEC3){ b, b, 0.f }; // right, top
-  t[2] = (DX_VEC2){ 1.f, 1.f };
+  t[2] = (DX_VEC2_F32){ 1.f, 1.f };
   c[2] = (DX_VEC4){ 1.f, 1.f, 1.f, 1.f };
   p[3] = (DX_VEC3){ a, b, 0.f }; // left, top
-  t[3] = (DX_VEC2){ 0.f, 1.f };
+  t[3] = (DX_VEC2_F32){ 0.f, 1.f };
   c[3] = (DX_VEC4){ 1.f, 1.f, 1.f, 1.f };
 
   // triangle #1
@@ -176,13 +176,13 @@ dx_result dx_asset_mesh_on_octahedron(dx_asset_mesh* mesh) {
   static DX_VEC4 const WHITE = { 1.f, 1.f, 1.f, 1.f };
 
   static DX_VEC3 const top = { 0.f, +0.5f, 0.f };
-  static DX_VEC2 const top_uv = { 0.5f, 1.f };
+  static DX_VEC2_F32 const top_uv = { 0.5f, 1.f };
 
   static DX_VEC3 const bottom = { 0.f, -0.5f, 0.f };
-  static DX_VEC2 const bottom_uv = { 0.5f, 0.f };
+  static DX_VEC2_F32 const bottom_uv = { 0.5f, 0.f };
 
   static DX_VEC3 const left = { -0.5f, 0.f, 0.f };
-  static DX_VEC2 const left_uv = { 0.f, 0.5f };
+  static DX_VEC2_F32 const left_uv = { 0.f, 0.5f };
 
   static DX_VEC3 const right = { +0.5f, 0.f, 0.f };
   static DX_VEC3 const right_uv = { 1.f, 0.5f };
@@ -195,17 +195,17 @@ dx_result dx_asset_mesh_on_octahedron(dx_asset_mesh* mesh) {
   // left front top
   {
     DX_VEC3 xyz = { -1.f, 0, 0 };
-    DX_VEC2 uv = { 0, 0 };
+    DX_VEC2_F32 uv = { 0, 0 };
     dx_asset_mesh_append_vertex(mesh, &xyz, &rgba, &uv);
   }
   {
     DX_VEC3 xyz = { 0, 0, 1.f };
-    DX_VEC2 uv = { 1, 0 };
+    DX_VEC2_F32 uv = { 1, 0 };
     dx_asset_mesh_append_vertex(mesh, &xyz, &rgba, &uv);
   }
   {
     DX_VEC3 xyz = { 0, 1.f, 0 };
-    DX_VEC2 uv = { 0.5, 1 };
+    DX_VEC2_F32 uv = { 0.5, 1 };
     dx_asset_mesh_append_vertex(mesh, &xyz, &rgba, &uv);
   }
   // right front

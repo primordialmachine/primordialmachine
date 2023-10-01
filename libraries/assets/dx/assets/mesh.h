@@ -114,7 +114,7 @@ struct dx_asset_mesh {
     DX_VEC4* ambient_rgba;
     /// Pointer to an array of number_of_vertices DX_VEC2 objects.
     /// These objects are the per-vertex ambient "uv" values.
-    DX_VEC2* ambient_uv;
+    DX_VEC2_F32* ambient_uv;
   } vertices;
 
   /// @brief The operations that eventually create the mesh.
@@ -172,7 +172,7 @@ int dx_asset_mesh_transform_range(dx_asset_mesh* SELF, DX_MAT4 const* a, dx_size
 int dx_asset_mesh_append_vertex(dx_asset_mesh* SELF,
                                 DX_VEC3 const* xyz,
                                 DX_VEC4 const* ambient_rgba,
-                                DX_VEC2 const* ambient_uv);
+                                DX_VEC2_F32 const* ambient_uv);
 
 /// @brief Remove all vertices.
 /// @param SELF A pointer to this mesh.

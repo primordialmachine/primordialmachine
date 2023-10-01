@@ -291,8 +291,8 @@ static inline void DX_UNREFERENCE(void *p) {
 ///   dx_bar* (*create_bar)(dx_foo*, dx_quu*);
 /// };
 /// 
-/// static inline dx_bar* dx_foo_create_bar(dx_foo* self, dx_quu* quu) {
-///   DX_OBJECT_VIRTUALCALL(dx_foo, create_bar, self, quu);
+/// static inline dx_bar* dx_foo_create_bar(dx_foo* SELF, dx_quu* quu) {
+///   DX_OBJECT_VIRTUALCALL(dx_foo, create_bar, SELF, quu);
 /// }
 /// 
 /// @endcode

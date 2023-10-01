@@ -175,7 +175,7 @@ present_glyph
 
   struct {
     DX_VEC3 xyz;
-    DX_VEC2 uv;
+    DX_VEC2_F32 uv;
   } vertices[] = {
       { dx_rect2_f32_get_left(target_rectangle),  dx_rect2_f32_get_bottom(target_rectangle), target_depth, dx_rect2_f32_get_left(texture_coordinate_rectangle),  dx_rect2_f32_get_left(texture_coordinate_rectangle), },
       { dx_rect2_f32_get_right(target_rectangle), dx_rect2_f32_get_bottom(target_rectangle), target_depth, dx_rect2_f32_get_right(texture_coordinate_rectangle), dx_rect2_f32_get_left(texture_coordinate_rectangle), },
@@ -413,8 +413,8 @@ dx_result dx_font_presenter_render_line_string(dx_font_presenter* SELF, dx_f32 l
   if (dx_string_iterator_impl_create((dx_string_iterator_impl**)&string_iterator, string)) {
     return DX_FAILURE;
   }
-  DX_VEC2 position;
-  dx_vec2_set(&position, left, bottom);
+  DX_VEC2_F32 position;
+  dx_vec2_f32_set(&position, left, bottom);
   if (dx_font_presenter_render_line_string_iterator(SELF, &position, string_iterator, text_color, font, presentation_policy, unknown_symbol_policy)) {
     DX_UNREFERENCE(string_iterator);
     string_iterator = NULL;
@@ -425,7 +425,7 @@ dx_result dx_font_presenter_render_line_string(dx_font_presenter* SELF, dx_f32 l
   return DX_SUCCESS;
 }
 
-static dx_result on_render_code_point(dx_font_presenter* SELF, DX_VEC2* position, uint32_t code_point, dx_font* font, DX_RGBA_F32 const* text_color, uint8_t presentation_policy, uint8_t unknown_symbol_policy) {
+static dx_result on_render_code_point(dx_font_presenter* SELF, DX_VEC2_F32* position, uint32_t code_point, dx_font* font, DX_RGBA_F32 const* text_color, uint8_t presentation_policy, uint8_t unknown_symbol_policy) {
   // The colors "red" and "green".
   // @todo Cache those.
   DX_RGBA_F32 red, green;
@@ -512,7 +512,7 @@ static dx_result on_render_code_point(dx_font_presenter* SELF, DX_VEC2* position
   return DX_SUCCESS;
 }
 
-dx_result dx_font_presenter_render_line_string_iterator(dx_font_presenter* SELF, DX_VEC2 const* position, dx_string_iterator* string_iterator, DX_RGBA_F32 const* text_color, dx_font* font,
+dx_result dx_font_presenter_render_line_string_iterator(dx_font_presenter* SELF, DX_VEC2_F32 const* position, dx_string_iterator* string_iterator, DX_RGBA_F32 const* text_color, dx_font* font,
                                                         uint8_t presentation_policy, uint8_t unknown_symbol_policy) {
 
   // The distance from the baseline to the maximal extend of any symbol above the baseline.
@@ -525,7 +525,7 @@ dx_result dx_font_presenter_render_line_string_iterator(dx_font_presenter* SELF,
   DX_RGBA_F32 red, green;
   dx_rgb_n8_to_rgba_f32(&dx_colors_red, 1.f, &red);
   dx_rgb_n8_to_rgba_f32(&dx_colors_green, 1.f, &green);
-  DX_VEC2 pos = *position;
+  DX_VEC2_F32 pos = *position;
 
   dx_bool has_value;
   if (dx_string_iterator_has_value(&has_value, string_iterator)) {

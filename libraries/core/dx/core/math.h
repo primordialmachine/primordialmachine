@@ -155,11 +155,11 @@ static inline void dx_lerp(dx_f32 *result, dx_f32 start, dx_f32 end, dx_f32 t) {
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-typedef struct DX_VEC2 {
+typedef struct DX_VEC2_F32 {
   dx_f32 e[2];
-} DX_VEC2;
+} DX_VEC2_F32;
 
-static inline void dx_vec2_set(DX_VEC2* v, dx_f32 x, dx_f32 y) {
+static inline void dx_vec2_f32_set(DX_VEC2_F32* v, dx_f32 x, dx_f32 y) {
   v->e[0] = x;
   v->e[1] = y;
 }
@@ -173,7 +173,7 @@ static inline void dx_vec2_set(DX_VEC2* v, dx_f32 x, dx_f32 y) {
 /// The object's values represent the addend (aka the 2nd operand).
 /// @remarks @a w, @a u, and @a v all may refer to the same object.
 /// @post <code>*w/<code> was assigned the values of the sum vector.
-void dx_vec2_add3(DX_VEC2* w, DX_VEC2 const* u, DX_VEC2 const* v);
+void dx_vec2_f32_add3(DX_VEC2_F32* w, DX_VEC2_F32 const* u, DX_VEC2_F32 const* v);
 
 /// @ingroup math
 /// @brief Compute the difference of two vectors.
@@ -184,7 +184,7 @@ void dx_vec2_add3(DX_VEC2* w, DX_VEC2 const* u, DX_VEC2 const* v);
 /// The object's values represent hte vector that is the the subtrahend (aka the 2nd operand).
 /// @remarks @a w, @a u, and @a v all may refer to the same object.
 /// @post <code>*w/<code> was assigned the values of the difference vector.
-void dx_vec2_sub3(DX_VEC2* w, DX_VEC2 const* u, DX_VEC2 const* v);
+void dx_vec2_f32_sub3(DX_VEC2_F32* w, DX_VEC2_F32 const* u, DX_VEC2_F32 const* v);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 

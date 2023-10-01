@@ -79,7 +79,7 @@ dx_result dx_emit_msg_construct(dx_emit_msg* SELF, char const* p, dx_size n);
 /// @procedure-call
 dx_result dx_emit_msg_create(dx_emit_msg** RETURN, char const* p, dx_size n);
 
-int dx_emit_msg_get(dx_emit_msg* emit_msg, char const** p, dx_size* n);
+dx_result dx_emit_msg_get(dx_emit_msg* SELF, char const** p, dx_size* n);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 

@@ -25,8 +25,8 @@ struct dx_asset_optics_dispatch {
   dx_object _parent;
 };
 
-/// @todo Fixme 
-int dx_asset_optics_construct(dx_asset_optics* SELF);
+/// @constructor{dx_asset_optics}
+dx_result dx_asset_optics_construct(dx_asset_optics* SELF);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 

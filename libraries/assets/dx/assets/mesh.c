@@ -204,15 +204,15 @@ static int resize_vertex_arrays(dx_asset_mesh* SELF, dx_bool shrink, dx_size num
   }
   dx_memory_copy(ambient_rgba, SELF->vertices.ambient_rgba, dx_min_sz(SELF->number_of_vertices, number_of_vertices) * sizeof(DX_VEC4));
 
-  DX_VEC2* ambient_uv = NULL;
-  if (dx_memory_allocate(&ambient_uv, number_of_vertices * sizeof(DX_VEC2))) {
+  DX_VEC2_F32* ambient_uv = NULL;
+  if (dx_memory_allocate(&ambient_uv, number_of_vertices * sizeof(DX_VEC2_F32))) {
     dx_memory_deallocate(xyz);
     xyz = NULL;
     dx_memory_deallocate(ambient_rgba);
     ambient_rgba = NULL;
     return 1;
   }
-  dx_memory_copy(ambient_uv, SELF->vertices.ambient_uv, dx_min_sz(SELF->number_of_vertices, number_of_vertices) * sizeof(DX_VEC2));
+  dx_memory_copy(ambient_uv, SELF->vertices.ambient_uv, dx_min_sz(SELF->number_of_vertices, number_of_vertices) * sizeof(DX_VEC2_F32));
 
   SELF->vertices.xyz = xyz;
   SELF->vertices.ambient_rgba = ambient_rgba;
@@ -328,6 +328,15 @@ SELECT_GENERATOR(octahedron)
     SELF->vertices.xyz = NULL;
     return DX_FAILURE;
   }
+  if (!material_reference) {
+    dx_memory_deallocate(SELF->vertices.ambient_uv);
+    SELF->vertices.ambient_uv = NULL;
+    dx_memory_deallocate(SELF->vertices.ambient_rgba);
+    SELF->vertices.ambient_rgba = NULL;
+    dx_memory_deallocate(SELF->vertices.xyz);
+    SELF->vertices.xyz = NULL;
+    return DX_FAILURE;
+  }
   SELF->material_reference = material_reference;
   DX_REFERENCE(SELF->material_reference);
 
@@ -413,18 +422,18 @@ int dx_asset_mesh_format(dx_asset_mesh* SELF, dx_vertex_format vertex_format, vo
   } break;
   case dx_vertex_format_position_xyz_ambient_uv: {
     void* p = NULL;
-    if (dx_memory_allocate(&p, SELF->number_of_vertices * (sizeof(DX_VEC3) + sizeof(DX_VEC2)))) {
+    if (dx_memory_allocate(&p, SELF->number_of_vertices * (sizeof(DX_VEC3) + sizeof(DX_VEC2_F32)))) {
       return 1;
     }
     char* q = (char*)p;
     for (dx_size i = 0, n = SELF->number_of_vertices; i < n; ++i) {
       *((DX_VEC3*)q) = SELF->vertices.xyz[i];
       q += sizeof(DX_VEC3);
-      *((DX_VEC2*)q) = SELF->vertices.ambient_uv[i];
-      q += sizeof(DX_VEC2);
+      *((DX_VEC2_F32*)q) = SELF->vertices.ambient_uv[i];
+      q += sizeof(DX_VEC2_F32);
     }
     *bytes = p;
-    *number_of_bytes = SELF->number_of_vertices * (sizeof(DX_VEC3) + sizeof(DX_VEC2));
+    *number_of_bytes = SELF->number_of_vertices * (sizeof(DX_VEC3) + sizeof(DX_VEC2_F32));
     return 0;
   } break;
   default: {
@@ -452,7 +461,7 @@ int dx_asset_mesh_transform_range(dx_asset_mesh* SELF, DX_MAT4 const* a, dx_size
 int dx_asset_mesh_append_vertex(dx_asset_mesh* SELF,
                                 DX_VEC3 const* xyz,
                                 DX_VEC4 const* ambient_rgba,
-                                DX_VEC2 const* ambient_uv)
+                                DX_VEC2_F32 const* ambient_uv)
 {
   dx_size i = SELF->number_of_vertices;
   if (resize_vertex_arrays(SELF, false, i + 1)) {

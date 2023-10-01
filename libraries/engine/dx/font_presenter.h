@@ -125,7 +125,7 @@ dx_result dx_font_presenter_render_line_string(dx_font_presenter* SELF, dx_f32 l
 /// Newline codepoints are replaced by a placeholder symbol. Unprintable codepoints are replaced by a placeholder symbol.
 /// @param font The font to render the text with.
 /// @method-call
-dx_result dx_font_presenter_render_line_string_iterator(dx_font_presenter* SELF, DX_VEC2 const* position, dx_string_iterator* string_iterator, DX_RGBA_F32 const* text_color, dx_font* font,
+dx_result dx_font_presenter_render_line_string_iterator(dx_font_presenter* SELF, DX_VEC2_F32 const* position, dx_string_iterator* string_iterator, DX_RGBA_F32 const* text_color, dx_font* font,
                                                         uint8_t presentation_policy, uint8_t unknown_symbol_policy);
 
 #endif // DX_FONT_PRESENTER_H_INCLUDED

@@ -309,21 +309,21 @@ static dx_result render(dx_default_console* SELF, dx_f32 delta_seconds, dx_i32 c
     dx_lerp(&console_position_y, console_position_y_min, console_position_y_max, SELF->cs);
 
     {
-      DX_VEC2 temporary;
+      DX_VEC2_F32 temporary;
 
-      dx_vec2_set(&temporary, dpi_horizontal, dpi_vertical);
+      dx_vec2_f32_set(&temporary, dpi_horizontal, dpi_vertical);
       dx_ui_manager_set_canvas_dpi(SELF->ui_manager, &temporary);
       
-      dx_vec2_set(&temporary, canvas_size_horizontal, canvas_size_vertical);
+      dx_vec2_f32_set(&temporary, canvas_size_horizontal, canvas_size_vertical);
       dx_ui_manager_set_canvas_resolution(SELF->ui_manager, &temporary);
 
       dx_ui_manager_enter_render(SELF->ui_manager);
     }
     {
-      DX_VEC2 v;
-      dx_vec2_set(&v, console_position_x, console_position_y);
+      DX_VEC2_F32 v;
+      dx_vec2_f32_set(&v, console_position_x, console_position_y);
       dx_ui_widget_set_relative_position(DX_UI_WIDGET(SELF->ui_group), &v);
-      dx_vec2_set(&v, console_width, console_height);
+      dx_vec2_f32_set(&v, console_width, console_height);
       dx_ui_widget_set_relative_size(DX_UI_WIDGET(SELF->ui_group), & v);
       dx_ui_group_set_background_color(SELF->ui_group, &CONSOLE_BACKGROUND_COLOR);
       //
@@ -354,8 +354,8 @@ static dx_result render(dx_default_console* SELF, dx_f32 delta_seconds, dx_i32 c
         DX_UNREFERENCE(string_buffer);
         string_buffer = NULL;
         {
-          DX_VEC2 p;
-          dx_vec2_set(&p, startx, starty);
+          DX_VEC2_F32 p;
+          dx_vec2_f32_set(&p, startx, starty);
           dx_ui_widget_set_relative_position(DX_UI_WIDGET(SELF->ui_input_field), &p);
           dx_ui_text_set_text(SELF->ui_input_field, string);
           dx_ui_text_set_text_color(SELF->ui_input_field, &TEXT_COLOR);
@@ -367,8 +367,8 @@ static dx_result render(dx_default_console* SELF, dx_f32 delta_seconds, dx_i32 c
         startx = console_position_x + insets_x;
         starty += baseline_distance;
         {
-          DX_VEC2 p;
-          dx_vec2_set(&p, startx, starty);
+          DX_VEC2_F32 p;
+          dx_vec2_f32_set(&p, startx, starty);
           dx_ui_widget_set_relative_position(DX_UI_WIDGET(SELF->ui_output_field), &p);
         }
       }

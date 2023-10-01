@@ -102,10 +102,10 @@ dx_result dx_emit_msg_create(dx_emit_msg** RETURN, char const* p, dx_size n) {
   return DX_SUCCESS;
 }
 
-int dx_emit_msg_get(dx_emit_msg* self, char const** p, dx_size* n) {
-  *p = self->p;
-  *n = self->n;
-  return 0;
+dx_result dx_emit_msg_get(dx_emit_msg* SELF, char const** p, dx_size* n) {
+  *p = SELF->p;
+  *n = SELF->n;
+  return DX_SUCCESS;
 }
 
 #undef TRACE

@@ -111,7 +111,7 @@ deploy:
     description: 'Primordial Machine Develop v$(APPVEYOR_BUILD_VERSION)'
     provider: GitHub
     auth_token:
-        secure: NPrtXEjMD8sb39W2ObCrJDNA3ejA/vqHurZKUjnBBnLkaDjgZn9ERjg69rhcfF7R # encrypted token from GitHub
+        secure: iTg7jon0UCvoGT5y2flVxMBnUNS4MqtEwd5GpKq50GOLBXMZSHaObgm9N09IJwrWwbxYddP1bLV0DAQbcSOKUN7p0JF6pspR+jFu7Kg5S5x/kFcEqmFIqjTfNIuhdOdB # encrypted token from GitHub
         artifact: $(ZIP_FILENAME)                                                # upload the artifact
     draft: true
     prerelease: false

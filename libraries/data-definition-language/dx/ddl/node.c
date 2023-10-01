@@ -149,141 +149,157 @@ dx_result dx_ddl_node_map_set(dx_ddl_node* SELF, dx_string* name, dx_ddl_node* v
   return dx_inline_pointer_hashmap_set(&SELF->map, name, value);
 }
 
-dx_ddl_node* dx_ddl_node_map_get(dx_ddl_node const* self, dx_string* name) {
-  if (!self || !name) {
+dx_ddl_node* dx_ddl_node_map_get(dx_ddl_node const* SELF, dx_string* name) {
+  if (!SELF || !name) {
     dx_set_error(DX_ERROR_INVALID_ARGUMENT);
     return NULL;
   }
-  if (self->kind != dx_ddl_node_kind_map) {
+  if (SELF->kind != dx_ddl_node_kind_map) {
     dx_set_error(DX_ERROR_INVALID_OPERATION);
     return NULL;
   }
   dx_ddl_node* temporary = NULL;
-  if (dx_inline_pointer_hashmap_get(&temporary, &self->map, name)) {
+  if (dx_inline_pointer_hashmap_get(&temporary, &SELF->map, name)) {
     return NULL;
   }
   return temporary;
 }
 
-int dx_ddl_node_list_append(dx_ddl_node* self, dx_ddl_node* value) {
-  if (!self || !value) {
+dx_result dx_ddl_node_list_append(dx_ddl_node* SELF, dx_ddl_node* value) {
+  if (!SELF || !value) {
     dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return 1;
+    return DX_FAILURE;
   }
-  if (self->kind != dx_ddl_node_kind_list) {
+  if (SELF->kind != dx_ddl_node_kind_list) {
     dx_set_error(DX_ERROR_INVALID_OPERATION);
-    return 1;
+    return DX_FAILURE;
   }
-  return dx_inline_pointer_array_append(&self->list, (void*)value);
+  return dx_inline_pointer_array_append(&SELF->list, (void*)value);
 }
 
-int dx_ddl_node_list_prepend(dx_ddl_node* self, dx_ddl_node* value) {
-  if (!self || !value) {
+dx_result dx_ddl_node_list_prepend(dx_ddl_node* SELF, dx_ddl_node* value) {
+  if (!SELF || !value) {
     dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return 1;
+    return DX_FAILURE;
   }
-  if (self->kind != dx_ddl_node_kind_list) {
+  if (SELF->kind != dx_ddl_node_kind_list) {
     dx_set_error(DX_ERROR_INVALID_OPERATION);
-    return 1;
+    return DX_FAILURE;
   }
-  return dx_inline_pointer_array_prepend(&self->list, (void*)value);
+  return dx_inline_pointer_array_prepend(&SELF->list, (void*)value);
 }
 
-int dx_ddl_node_list_insert(dx_ddl_node* self, dx_ddl_node* value, dx_size index) {
-  if (!self || !value) {
+dx_result dx_ddl_node_list_insert(dx_ddl_node* SELF, dx_ddl_node* value, dx_size index) {
+  if (!SELF || !value) {
     dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return 1;
+    return DX_FAILURE;
   }
-  if (self->kind != dx_ddl_node_kind_list) {
+  if (SELF->kind != dx_ddl_node_kind_list) {
     dx_set_error(DX_ERROR_INVALID_OPERATION);
-    return 1;
+    return DX_FAILURE;
   }
-  return dx_inline_pointer_array_insert(&self->list, (void*)value, index);
+  return dx_inline_pointer_array_insert(&SELF->list, (void*)value, index);
 }
 
-dx_ddl_node* dx_ddl_node_list_get(dx_ddl_node* self, dx_size index) {
-  if (!self) {
+dx_result dx_ddl_node_list_get(dx_ddl_node** RETURN, dx_ddl_node* SELF, dx_size index) {
+  if (!RETURN || !SELF) {
     dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return NULL;
+    return DX_FAILURE;
   }
-  if (self->kind != dx_ddl_node_kind_list) {
+  if (SELF->kind != dx_ddl_node_kind_list) {
     dx_set_error(DX_ERROR_INVALID_OPERATION);
-    return NULL;
+    return DX_FAILURE;
   }
   dx_ddl_node* temporary = NULL;
-  if (dx_inline_pointer_array_get_at(&temporary, &self->list, index)) {
-    return NULL;
+  if (dx_inline_pointer_array_get_at(&temporary, &SELF->list, index)) {
+    return DX_FAILURE;
   }
-  return temporary;
+  *RETURN = temporary;
+  return DX_SUCCESS;
 }
 
-dx_size dx_ddl_node_list_get_size(dx_ddl_node* self) {
-  if (!self) {
+dx_result dx_ddl_node_list_get_size(dx_size* RETURN, dx_ddl_node* SELF) {
+  if (!RETURN || !SELF) {
     dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return 0;
+    return DX_FAILURE;
   }
-  if (self->kind != dx_ddl_node_kind_list) {
+  if (SELF->kind != dx_ddl_node_kind_list) {
     dx_set_error(DX_ERROR_INVALID_OPERATION);
-    return 0;
+    return DX_FAILURE;
   }
   dx_size temporary;
-  if (dx_inline_pointer_array_get_size(&temporary, &self->list)) {
-    return 0;
+  if (dx_inline_pointer_array_get_size(&temporary, &SELF->list)) {
+    return DX_FAILURE;
   }
-  return temporary;
+  *RETURN = temporary;
+  return DX_SUCCESS;
 }
 
-dx_string* dx_ddl_node_get_string(dx_ddl_node const* self) {
-  if (!self) {
+dx_string* dx_ddl_node_get_string(dx_ddl_node const* SELF) {
+  if (!SELF) {
     dx_set_error(DX_ERROR_INVALID_ARGUMENT);
     return NULL;
   }
-  if (self->kind != dx_ddl_node_kind_string) {
+  if (SELF->kind != dx_ddl_node_kind_string) {
     dx_set_error(DX_ERROR_INVALID_OPERATION);
     return NULL;
   }
-  DX_REFERENCE(self->string);
-  return self->string;
+  DX_REFERENCE(SELF->string);
+  return SELF->string;
 }
 
-int dx_ddl_node_set_string(dx_ddl_node* self, dx_string* string) {
-  if (!self || !string) {
+dx_result dx_ddl_node_get_string_2(dx_string** RETURN, dx_ddl_node const* SELF) {
+  if (!RETURN || !SELF) {
     dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return 1;
+    return DX_FAILURE;
   }
-  if (self->kind != dx_ddl_node_kind_string) {
+  if (SELF->kind != dx_ddl_node_kind_string) {
     dx_set_error(DX_ERROR_INVALID_OPERATION);
-    return 1;
+    return DX_FAILURE;
+  }
+  DX_REFERENCE(SELF->string);
+  *RETURN = SELF->string;
+  return DX_SUCCESS;
+}
+
+dx_result dx_ddl_node_set_string(dx_ddl_node* SELF, dx_string* string) {
+  if (!SELF || !string) {
+    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
+    return DX_FAILURE;
+  }
+  if (SELF->kind != dx_ddl_node_kind_string) {
+    dx_set_error(DX_ERROR_INVALID_OPERATION);
+    return DX_FAILURE;
   }
   DX_REFERENCE(string);
-  DX_UNREFERENCE(self->string);
-  self->string = string;
-  return 0;
+  DX_UNREFERENCE(SELF->string);
+  SELF->string = string;
+  return DX_SUCCESS;
 }
 
-dx_string* dx_ddl_node_get_number(dx_ddl_node const* self) {
-  if (!self) {
+dx_string* dx_ddl_node_get_number(dx_ddl_node const* SELF) {
+  if (!SELF) {
     dx_set_error(DX_ERROR_INVALID_ARGUMENT);
     return NULL;
   }
-  if (self->kind != dx_ddl_node_kind_number) {
+  if (SELF->kind != dx_ddl_node_kind_number) {
     dx_set_error(DX_ERROR_INVALID_OPERATION);
     return NULL;
   }
-  return self->number;
+  return SELF->number;
 }
 
-int dx_ddl_node_set_number(dx_ddl_node* self, dx_string* number) {
-  if (!self || !number) {
+int dx_ddl_node_set_number(dx_ddl_node* SELF, dx_string* number) {
+  if (!SELF || !number) {
     dx_set_error(DX_ERROR_INVALID_ARGUMENT);
     return 1;
   }
-  if (self->kind != dx_ddl_node_kind_number) {
+  if (SELF->kind != dx_ddl_node_kind_number) {
     dx_set_error(DX_ERROR_INVALID_OPERATION);
     return 1;
   }
   DX_REFERENCE(number);
-  DX_UNREFERENCE(self->number);
-  self->number = number;
+  DX_UNREFERENCE(SELF->number);
+  SELF->number = number;
   return 0;
 }

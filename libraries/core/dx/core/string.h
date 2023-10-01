@@ -68,24 +68,24 @@ dx_result dx_string_get_bytes(void const** RETURN, dx_string* SELF);
 dx_result dx_string_get_number_of_bytes(dx_size* RETURN, dx_string* SELF);
 
 /// @brief Get if the string contains an UTF-8 symbol.
-/// @param self A pointer to this string.
+/// @param SELF A pointer to this string.
 /// @param symbol The UTF-8 symbol.
 /// @return @a true if the string contains the symbol. @a false if the string does not contain the symbol or an error occurred.
 /// @default-failure
-bool dx_string_contains_symbol(dx_string const* self, uint32_t symbol);
+bool dx_string_contains_symbol(dx_string const* SELF, uint32_t symbol);
 
 /// @brief Get if this string is equal to another string.
-/// @param self A pointer to this string.
+/// @param SELF A pointer to this string.
 /// @param other A pointer to the other string.
 /// @return @a true if this string is equal to the other string. @a false otherwise. @a false is also returned on failure.
 /// @default-failure
-bool dx_string_is_equal_to(dx_string const* self, dx_string const* other);
+bool dx_string_is_equal_to(dx_string const* SELF, dx_string const* other);
 
 /// @brief Get the hash value of this string.
-/// @param self A pointer to this string.
+/// @param SELF A pointer to this string.
 /// @return The hash value of this string. This may be @a 0. @a 0 is also returned on failure.
 /// @default-failure
-dx_size dx_string_get_hash_value(dx_string const* self);
+dx_size dx_string_get_hash_value(dx_string const* SELF);
 
 struct dx_string {
   dx_object _parent;

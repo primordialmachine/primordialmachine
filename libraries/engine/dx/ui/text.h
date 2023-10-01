@@ -16,9 +16,9 @@ static dx_ui_text* DX_UI_TEXT(void* p) {
 struct dx_ui_text {
   dx_ui_widget _parent;
   /// @brief The relative position of this UI text.
-  DX_VEC2 relative_position;
+  DX_VEC2_F32 relative_position;
   /// @brief The relative size of this UI text.
-  DX_VEC2 relative_size;
+  DX_VEC2_F32 relative_size;
   /// @brief The background color of this UI text.
   DX_RGBA_F32 background_color;
   /// @brief The text color of this UI text.

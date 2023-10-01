@@ -25,7 +25,7 @@ static dx_result on_scene_asset_object(dx_default_scene_presenter* SELF, dx_val_
       return DX_FAILURE;
     }
     dx_val_mesh_instance* mesh_instance = NULL;
-    if (dx_val_mesh_instance_create(&mesh_instance, asset_mesh_instance->world_matrix, mesh)) {
+    if (dx_val_mesh_instance_create(&mesh_instance, asset_mesh_instance->world_matrix->value, mesh)) {
       DX_UNREFERENCE(mesh);
       mesh = NULL;
       return DX_FAILURE;
@@ -51,8 +51,6 @@ static dx_result on_scene_asset_object(dx_default_scene_presenter* SELF, dx_val_
       asset_material = NULL;
       return DX_FAILURE;
     }
-    DX_UNREFERENCE(asset_material);
-    asset_material = NULL;
     return DX_NO_ERROR != dx_get_error() ? DX_FAILURE : DX_SUCCESS;
   }
   // viewer instance
@@ -174,7 +172,7 @@ static dx_result tick2(dx_default_scene_presenter* SELF, dx_f32 delta_seconds, d
     if (dx_inline_object_array_get_at((dx_object**)&mesh_instance, &SELF->mesh_instances, i)) {
       return DX_FAILURE;
     }
-    DX_RGB_N8 a = mesh_instance->mesh->material->asset_material->ambient_color->value;
+    DX_RGB_N8 a = DX_ASSETS_COLOR_RGB_N8(mesh_instance->mesh->material->asset_material->ambient_color->object)->value;
     dx_rgb_n8_to_rgba_f32(&a, 1.f, &mesh_instance->mesh->material->ambient_color);
   }
   return DX_SUCCESS;

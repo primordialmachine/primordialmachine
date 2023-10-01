@@ -111,33 +111,47 @@ static inline dx_result dx_engine_utilities_2d_create_program(dx_val_program** R
   return DX_SUCCESS;
 }
 
+/// @todo Asset materials must be created via the assets manager.
 static inline dx_result dx_engine_utilities_2d_create_material(dx_val_material** RETURN, dx_val_context* context, char const* name) {
-  dx_string* name1 = NULL;
-  if (dx_string_create(&name1, name, strlen(name))) {
+  // create the asset material
+  dx_string* name_string = NULL;
+  if (dx_string_create(&name_string, name, strlen(name))) {
     return DX_FAILURE;
   }
   dx_asset_material* asset_material = NULL;
-  if (dx_asset_material_create(&asset_material, name1)) {
-    DX_UNREFERENCE(name1);
-    name1 = NULL;
+  if (dx_asset_material_create(&asset_material, name_string)) {
+    DX_UNREFERENCE(name_string);
+    name_string = NULL;
     return DX_FAILURE;
   }
-  DX_UNREFERENCE(name1);
-  name1 = NULL;
-#if 0
-  if (!asset_material) {
+  DX_UNREFERENCE(name_string);
+  name_string = NULL;
+  dx_assets_color_rgb_n8* ambient_color = NULL;
+  DX_RGB_N8 WHITE = { .r = 255, .g = 255, .b = 255 };
+  if (dx_assets_color_rgb_n8_create(&ambient_color, &WHITE)) {
+    DX_UNREFERENCE(asset_material);
+    asset_material = NULL;
     return DX_FAILURE;
   }
-#endif
-  dx_val_material* material = NULL;
-  if (dx_val_material_create(&material, context, asset_material)) {
+  if (dx_asset_material_set_ambient_color(asset_material, ambient_color)) {
+    DX_UNREFERENCE(ambient_color);
+    ambient_color = NULL;
+    DX_UNREFERENCE(asset_material);
+    asset_material = NULL;
+    return DX_FAILURE;
+  }
+  DX_UNREFERENCE(ambient_color);
+  ambient_color = NULL;
+  // create the val material
+  dx_val_material* val_material = NULL;
+  if (dx_val_material_create(&val_material, context, asset_material)) {
     DX_UNREFERENCE(asset_material);
     asset_material = NULL;
     return DX_FAILURE;
   }
   DX_UNREFERENCE(asset_material);
   asset_material = NULL;
-  *RETURN = material;
+  *RETURN = val_material;
   return DX_SUCCESS;
 }
 

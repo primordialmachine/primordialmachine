@@ -17,8 +17,8 @@ static inline dx_ui_manager* DX_UI_MANAGER(void* p) {
 struct dx_ui_manager {
   dx_object _parent;
   dx_ui_widget* root;
-  DX_VEC2 dpi;
-  DX_VEC2 resolution;
+  DX_VEC2_F32 dpi;
+  DX_VEC2_F32 resolution;
 
   /// @brief The command list for setting the viewport.
   dx_val_command_list* command_list;
@@ -43,13 +43,13 @@ dx_result dx_ui_manager_create(dx_ui_manager** RETURN, dx_font_presenter* font_p
 /// @param SELF A pointer to this UI manager.
 /// @param dpi A pointer to a <code>DX_VEC2</code> variable.
 /// @method-call
-dx_result dx_ui_manager_set_canvas_dpi(dx_ui_manager* SELF, DX_VEC2 const* dpi);
+dx_result dx_ui_manager_set_canvas_dpi(dx_ui_manager* SELF, DX_VEC2_F32 const* dpi);
 
 /// @brief Set the canvas resolution.
 /// @param SELF A pointer to this UI manager.
 /// @param resolution A pointer to a <code>DX_VEC2</code> variable.
 /// @method-call
-dx_result dx_ui_manager_set_canvas_resolution(dx_ui_manager* SELF, DX_VEC2 const* resolution);
+dx_result dx_ui_manager_set_canvas_resolution(dx_ui_manager* SELF, DX_VEC2_F32 const* resolution);
 
 /// @brief Set the root.
 /// @param SELF A pointer to this UI manager.

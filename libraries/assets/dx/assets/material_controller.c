@@ -54,7 +54,7 @@ static int dx_asset_material_controllers_ambient_color_update(dx_asset_material_
   DX_RGB_N8 end = dx_colors_amber;
   DX_RGB_N8 current;
   dx_rgb_u8_lerp(&start, &end, t, &SELF->current);
-  material->ambient_color->value = SELF->current;
+  DX_ASSETS_COLOR_RGB_N8(material->ambient_color->object)->value = SELF->current;
   return 0;
 }
 

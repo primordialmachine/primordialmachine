@@ -477,7 +477,7 @@ static dx_result on_color_fill_image_operation(dx_asset_image* SELF, OFFSET2 off
   switch (SELF->pixel_format) {
   case dx_pixel_format_rn8_gn8_bn8: {
     EXTEND2 image_size = { .width = SELF->width, .height = SELF->height };
-    _fill_rn8_gn8_bn8(SELF->pixels, offset, extend, image_size, &(image_operation->color));
+    _fill_rn8_gn8_bn8(SELF->pixels, offset, extend, image_size, &(DX_ASSETS_COLOR_RGB_N8(image_operation->color->object)->value));
   } break;
   default: {
     dx_set_error(DX_ERROR_INVALID_ARGUMENT);

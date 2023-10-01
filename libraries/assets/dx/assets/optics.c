@@ -6,19 +6,19 @@ DX_DEFINE_OBJECT_TYPE("dx.asset.optics",
                       dx_asset_optics,
                       dx_object);
 
-static void dx_asset_optics_destruct(dx_asset_optics* self)
+static void dx_asset_optics_destruct(dx_asset_optics* SELF)
 {/*Intentionally empty.*/}
 
-static void dx_asset_optics_dispatch_construct(dx_asset_optics_dispatch* self)
+static void dx_asset_optics_dispatch_construct(dx_asset_optics_dispatch* SELF)
 {/*Intentionally empty.*/}
 
-int dx_asset_optics_construct(dx_asset_optics* self) {
-  dx_rti_type* _type = dx_asset_optics_get_type();
-  if (!_type) {
-    return 1;
+dx_result dx_asset_optics_construct(dx_asset_optics* SELF) {
+  dx_rti_type* TYPE = dx_asset_optics_get_type();
+  if (!TYPE) {
+    return DX_FAILURE;
   }
-  DX_OBJECT(self)->type = _type;
-  return 0;
+  DX_OBJECT(SELF)->type = TYPE;
+  return DX_SUCCESS;
 }
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
@@ -27,22 +27,22 @@ DX_DEFINE_OBJECT_TYPE("dx.asset.optics_orthographic",
                       dx_asset_optics_orthographic,
                       dx_asset_optics)
 
-static void dx_asset_optics_orthographic_destruct(dx_asset_optics_orthographic* self) {
-  if (self->scale_y) {
-    dx_memory_deallocate(self->scale_y);
-    self->scale_y = NULL;
+static void dx_asset_optics_orthographic_destruct(dx_asset_optics_orthographic* SELF) {
+  if (SELF->scale_y) {
+    dx_memory_deallocate(SELF->scale_y);
+    SELF->scale_y = NULL;
   }
-  if (self->scale_x) {
-    dx_memory_deallocate(self->scale_x);
-    self->scale_x = NULL;
+  if (SELF->scale_x) {
+    dx_memory_deallocate(SELF->scale_x);
+    SELF->scale_x = NULL;
   }
-  if (self->aspect_ratio) {
-    dx_memory_deallocate(self->aspect_ratio);
-    self->aspect_ratio = NULL;
+  if (SELF->aspect_ratio) {
+    dx_memory_deallocate(SELF->aspect_ratio);
+    SELF->aspect_ratio = NULL;
   }
 }
 
-static void dx_asset_optics_orthographic_dispatch_construct(dx_asset_optics_orthographic_dispatch* self)
+static void dx_asset_optics_orthographic_dispatch_construct(dx_asset_optics_orthographic_dispatch* SELF)
 {/*Intentionally empty.*/}
 
 dx_result dx_asset_optics_orthographic_construct(dx_asset_optics_orthographic* SELF) {

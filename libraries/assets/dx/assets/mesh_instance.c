@@ -5,6 +5,8 @@ DX_DEFINE_OBJECT_TYPE("dx.asset.mesh_instance",
                       dx_object);
 
 static void dx_asset_mesh_instance_destruct(dx_asset_mesh_instance* SELF) {
+  DX_UNREFERENCE(SELF->world_matrix);
+  SELF->world_matrix = NULL;
   DX_UNREFERENCE(SELF->mesh_reference);
   SELF->mesh_reference = NULL;
 }
@@ -29,7 +31,13 @@ dx_result dx_asset_mesh_instance_construct(dx_asset_mesh_instance* SELF, dx_asse
   SELF->mesh_reference = mesh_reference;
   DX_REFERENCE(SELF->mesh_reference);
 
-  dx_mat4_set_identity(&SELF->world_matrix);
+  DX_MAT4 temporary;
+  dx_mat4_set_identity(&temporary);
+  if (dx_assets_matrix_4x4_f32_create(&SELF->world_matrix, &temporary)) {
+    DX_UNREFERENCE(SELF->mesh_reference);
+    SELF->mesh_reference = NULL;
+    return DX_FAILURE;
+  }
 
   DX_OBJECT(SELF)->type = TYPE;
   return DX_SUCCESS;

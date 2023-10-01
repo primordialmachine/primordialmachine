@@ -116,7 +116,7 @@ dx_result dx_inline_pointer_hashmap_set(dx_inline_pointer_hashmap* SELF, dx_inli
 /// @method-call
 /// @error #DX_ERROR_NOT_FOUND no entry for the specified key was found
 /// @error #DX_ERROR_INVALID_ARGUMENT @a self was a null pointer
-dx_result dx_inline_pointer_hashmap_get(dx_inline_pointer_hashmap_value* RETURN, dx_inline_pointer_hashmap const* self, dx_inline_pointer_hashmap_key key);
+dx_result dx_inline_pointer_hashmap_get(dx_inline_pointer_hashmap_value* RETURN, dx_inline_pointer_hashmap const* SELF, dx_inline_pointer_hashmap_key key);
 
 /// @ingroup Core_Aggregates
 /// @brief Remove an entry from this hashmap.

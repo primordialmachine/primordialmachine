@@ -19,8 +19,7 @@ struct dx_asset_material {
   /// @brief A pointer to the ADL name of this material.
   dx_string* name;
   /// @brief The ambient color of this material.
-  /// @default The color of format "RN8_GN8_BN8" with value "white" / "(255, 255, 255)".
-  dx_asset_color_rgb_n8* ambient_color;
+  dx_asset_reference* ambient_color;
   /// @brief Pointer to the ambient texture of this material or the null pointer.
   /// @default The null pointer.
   dx_asset_reference* ambient_texture_reference;
@@ -52,7 +51,7 @@ dx_result dx_asset_material_create(dx_asset_material** RETURN, dx_string* name);
 /// @param ambient_color A pointer to color.
 /// @error #DX_ERROR_INVALID_ARGUMENT @a value is a null pointer
 /// @method{dx_asset_material}
-dx_result dx_asset_material_set_ambient_color(dx_asset_material* SELF, dx_asset_color_rgb_n8* ambient_color);
+dx_result dx_asset_material_set_ambient_color(dx_asset_material* SELF, dx_assets_color_rgb_n8* ambient_color);
 
 /// @brief Set the ambient texture.
 /// @param ambient_texture_reference A pointer to the ambient_texture_reference or the null pointer.

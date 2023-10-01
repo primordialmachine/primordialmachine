@@ -185,9 +185,9 @@ int y_utf8_decode(y_utf8_it* it, dx_size* n, uint32_t* p) {
   return 0;
 }
 
-bool dx_string_contains_symbol(dx_string const* self, uint32_t symbol) {
-  y_utf8_it it = { .current = (uint8_t*)self->bytes,
-                   .end = (uint8_t*)self->bytes + self->number_of_bytes,
+bool dx_string_contains_symbol(dx_string const* SELF, uint32_t symbol) {
+  y_utf8_it it = { .current = (uint8_t*)SELF->bytes,
+                   .end = (uint8_t*)SELF->bytes + SELF->number_of_bytes,
                    .error = false };
   uint32_t p;
   dx_size n;
@@ -199,23 +199,23 @@ bool dx_string_contains_symbol(dx_string const* self, uint32_t symbol) {
   return false;
 }
 
-bool dx_string_is_equal_to(dx_string const* self, dx_string const* other) {
-  if (!self || !other) {
+bool dx_string_is_equal_to(dx_string const* SELF, dx_string const* other) {
+  if (!SELF || !other) {
     dx_set_error(DX_ERROR_INVALID_ARGUMENT);
     return false;
   }
-  if (self->number_of_bytes != other->number_of_bytes) {
+  if (SELF->number_of_bytes != other->number_of_bytes) {
     return false;
   }
-  return !dx_memory_compare(self->bytes, other->bytes, self->number_of_bytes);
+  return !dx_memory_compare(SELF->bytes, other->bytes, SELF->number_of_bytes);
 }
 
-dx_size dx_string_get_hash_value(dx_string const* self) {
-  if (!self) {
+dx_size dx_string_get_hash_value(dx_string const* SELF) {
+  if (!SELF) {
     dx_set_error(DX_ERROR_INVALID_ARGUMENT);
     return 0;
   }
-  return dx_hash_bytes(self->bytes, self->number_of_bytes);
+  return dx_hash_bytes(SELF->bytes, SELF->number_of_bytes);
 }
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/

@@ -84,12 +84,12 @@ dx_f64 dx_floor_f64(dx_f64 x) {
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-void dx_vec2_add3(DX_VEC2* w, DX_VEC2 const* u, DX_VEC2 const* v) {
+void dx_vec2_f32_add3(DX_VEC2_F32* w, DX_VEC2_F32 const* u, DX_VEC2_F32 const* v) {
   w->e[0] = u->e[0] + v->e[0];
   w->e[1] = u->e[1] + v->e[1];
 }
 
-void dx_vec2_sub3(DX_VEC2* w, DX_VEC2 const* u, DX_VEC2 const* v) {
+void dx_vec2_f32_sub3(DX_VEC2_F32* w, DX_VEC2_F32 const* u, DX_VEC2_F32 const* v) {
   w->e[0] = u->e[0] - v->e[0];
   w->e[1] = u->e[1] - v->e[1];
 }

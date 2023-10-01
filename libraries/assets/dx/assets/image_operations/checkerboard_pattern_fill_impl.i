@@ -11,8 +11,8 @@ static dx_result on_checkerboard_pattern_fill_image_operation(dx_asset_image* SE
     return DX_FAILURE;
   }
 
-  if (dx_asset_image_operations_color_fill_set_color(first, image_operation->first_checker_color) ||
-      dx_asset_image_operations_color_fill_set_color(second, image_operation->second_checker_color)) {
+  if (dx_asset_image_operations_color_fill_set_color(first, DX_ASSETS_COLOR_RGB_N8(image_operation->first_checker_color->object)) ||
+      dx_asset_image_operations_color_fill_set_color(second, DX_ASSETS_COLOR_RGB_N8(image_operation->second_checker_color->object))) {
     DX_UNREFERENCE(first);
     first = NULL;
     return DX_FAILURE;

@@ -56,9 +56,9 @@ dx_result dx_ui_manager_construct(dx_ui_manager* SELF, dx_font_presenter* font_p
   SELF->rectangle_presenter = rectangle_presenter;
   DX_REFERENCE(rectangle_presenter);
   
-  dx_vec2_set(&SELF->dpi, 96.f, 96.f);
+  dx_vec2_f32_set(&SELF->dpi, 96.f, 96.f);
   
-  dx_vec2_set(&SELF->resolution, 640, 480);
+  dx_vec2_f32_set(&SELF->resolution, 640, 480);
   
   DX_OBJECT(SELF)->type = TYPE;
   return DX_SUCCESS;
@@ -75,12 +75,12 @@ dx_result dx_ui_manager_create(dx_ui_manager** RETURN, dx_font_presenter* font_p
   return DX_SUCCESS;
 }
 
-dx_result dx_ui_manager_set_canvas_dpi(dx_ui_manager* SELF, DX_VEC2 const* dpi) {
+dx_result dx_ui_manager_set_canvas_dpi(dx_ui_manager* SELF, DX_VEC2_F32 const* dpi) {
   SELF->dpi = *dpi;
   return DX_SUCCESS;
 }
 
-dx_result dx_ui_manager_set_canvas_resolution(dx_ui_manager* SELF, DX_VEC2 const* resolution) {
+dx_result dx_ui_manager_set_canvas_resolution(dx_ui_manager* SELF, DX_VEC2_F32 const* resolution) {
   SELF->resolution = *resolution;
   return DX_SUCCESS;
 }

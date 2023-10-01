@@ -51,7 +51,7 @@ dx_result dx_val_material_construct(dx_val_material* SELF, dx_val_context* conte
   SELF->context = context;
   SELF->asset_material = asset_material;
   DX_REFERENCE(asset_material);
-  dx_rgb_n8_to_rgba_f32(&asset_material->ambient_color->value, 1.f, &SELF->ambient_color);
+  dx_rgb_n8_to_rgba_f32(&DX_ASSETS_COLOR_RGB_N8(asset_material->ambient_color->object)->value, 1.f, &SELF->ambient_color);
   SELF->ambient_texture = NULL;
   if (add_to_backend(SELF)) {
     DX_UNREFERENCE(SELF->asset_material);

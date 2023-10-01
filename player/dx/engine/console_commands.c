@@ -125,7 +125,7 @@ dx_result dx_console_commands_register_all(dx_cl_interpreter* cl_interpreter) {
   DEFINE("dataDefinitionLanguageLibrary.printInfo", command_data_definition_language_library_print_info);
   DEFINE("documentDefinitionLanguageLibrary.printInfo", command_document_definition_language_library_print_info);
   DEFINE("engineLibrary.printInfo", command_engine_library_print_info);
-  DEFINE("application.requestQuit", command_application_request_quit);
+  DEFINE("application.request_quit", command_application_request_quit);
 #undef DEFINE
   return DX_SUCCESS;
 }

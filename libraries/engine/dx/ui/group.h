@@ -14,8 +14,8 @@ static dx_ui_group* DX_UI_GROUP(void* p) {
 struct dx_ui_group {
   dx_ui_widget _parent;
   dx_object_array* children;
-  DX_VEC2 relative_position;
-  DX_VEC2 relative_size;
+  DX_VEC2_F32 relative_position;
+  DX_VEC2_F32 relative_size;
   DX_RGBA_F32 background_color;
 };
 
