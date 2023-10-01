@@ -18,8 +18,8 @@ DX_DEFINE_OBJECT_TYPE("dx.overlay",
                       dx_object);
 
 static void dx_overlay_destruct(dx_overlay* SELF) {
-  DX_UNREFERENCE(SELF->text);
-  SELF->text = NULL;
+  DX_UNREFERENCE(SELF->text_field);
+  SELF->text_field = NULL;
 
   DX_UNREFERENCE(SELF->ui_manager);
   SELF->ui_manager = NULL;
@@ -37,7 +37,7 @@ dx_result dx_overlay_construct(dx_overlay* SELF, dx_font_presenter* font_present
   if (dx_ui_manager_create(&SELF->ui_manager, font_presenter, rectangle_presenter)) {
     return DX_FAILURE;
   }
-  if (dx_ui_text_create(&SELF->text, SELF->ui_manager)) {
+  if (dx_ui_text_field_create(&SELF->text_field, SELF->ui_manager)) {
     DX_UNREFERENCE(SELF->ui_manager);
     SELF->ui_manager = NULL;
     return DX_FAILURE;
@@ -58,7 +58,7 @@ dx_result dx_overlay_create(dx_overlay** RETURN, dx_font_presenter* font_present
 }
 
 dx_result dx_overlay_add_message(dx_overlay* SELF, dx_string* message) {
-  return dx_ui_text_append_text(SELF->text, message);
+  return dx_ui_text_field_append_text(SELF->text_field, message);
 }
 
 dx_result dx_overlay_clear_messages(dx_overlay* SELF) {
@@ -66,7 +66,7 @@ dx_result dx_overlay_clear_messages(dx_overlay* SELF) {
   if (dx_string_create(&text, "", strlen(""))) {
     return DX_FAILURE;
   }
-  if (dx_ui_text_set_text(SELF->text, text)) {
+  if (dx_ui_text_field_set_text(SELF->text_field, text)) {
     DX_UNREFERENCE(text);
     text = NULL;
     return DX_FAILURE;
@@ -82,7 +82,7 @@ dx_result dx_overlay_render(dx_overlay* SELF, dx_f32 delta_seconds, dx_i32 canva
   }
   // the distance from the baseline to the maximal extend of any symbol above the baseline.
   dx_f32 ascender;
-  dx_font_get_ascender(&ascender, SELF->text->font);
+  dx_font_get_ascender(&ascender, SELF->text_field->font);
   dx_f32 insets_x = 16.f;
   dx_f32 insets_y = 16.f;
 
@@ -110,12 +110,12 @@ dx_result dx_overlay_render(dx_overlay* SELF, dx_f32 delta_seconds, dx_i32 canva
     dx_f32 starty = console_position_y + console_height - insets_y - ascender;
     dx_f32 startx = console_position_x + insets_x;
     dx_vec2_f32_set(&temporary, startx, starty);
-    dx_ui_widget_set_relative_position(DX_UI_WIDGET(SELF->text), &temporary);
-    dx_ui_text_set_background_color(SELF->text, &TEXT_UI_BACKGROUND_COLOR);
-    dx_ui_text_set_text_color(SELF->text, &TEXT_UI_TEXT_COLOR);
+    dx_ui_widget_set_relative_position(DX_UI_WIDGET(SELF->text_field), &temporary);
+    dx_ui_text_field_set_background_color(SELF->text_field, &TEXT_UI_BACKGROUND_COLOR);
+    dx_ui_text_field_set_text_color(SELF->text_field, &TEXT_UI_TEXT_COLOR);
   }
   // render
-  dx_ui_manager_set_root(SELF->ui_manager, DX_UI_WIDGET(SELF->text));
+  dx_ui_manager_set_root(SELF->ui_manager, DX_UI_WIDGET(SELF->text_field));
   dx_ui_manager_leave_render(SELF->ui_manager);
   dx_ui_manager_set_root(SELF->ui_manager, NULL);
 

@@ -77,14 +77,26 @@ static dx_result dx_player_create_application(dx_application** RETURN, dx_msg_qu
 #else
   #error("environment not (yet) supported")
 #endif
-  dx_application* temporary = NULL;
-  if (dx_application_create(&temporary, val_system_factory, aal_system_factory, msg_queue)) {
+  dx_assets_system_factory* assets_system_factory = NULL;
+  if (dx_assets_system_factory_create(&assets_system_factory)) {
     DX_UNREFERENCE(aal_system_factory);
     aal_system_factory = NULL;
     DX_UNREFERENCE(val_system_factory);
     val_system_factory = NULL;
     return DX_FAILURE;
   }
+  dx_application* temporary = NULL;
+  if (dx_application_create(&temporary, val_system_factory, aal_system_factory, assets_system_factory, msg_queue)) {
+    DX_UNREFERENCE(assets_system_factory);
+    assets_system_factory = NULL;
+    DX_UNREFERENCE(aal_system_factory);
+    aal_system_factory = NULL;
+    DX_UNREFERENCE(val_system_factory);
+    val_system_factory = NULL;
+    return DX_FAILURE;
+  }
+  DX_UNREFERENCE(assets_system_factory);
+  assets_system_factory = NULL;
   DX_UNREFERENCE(aal_system_factory);
   aal_system_factory = NULL;
   DX_UNREFERENCE(val_system_factory);
@@ -133,22 +145,6 @@ static dx_result shutdown();
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-dx_val_context* dx_val_context_get() {
-  dx_val_context* temporary = NULL;
-  if (dx_application_get_val_context(&temporary, g_application)) {
-    return NULL;
-  }
-  return temporary;
-}
-
-dx_aal_context* dx_aal_context_get() {
-  dx_aal_context* temporary = NULL;
-  if (dx_application_get_aal_context(&temporary, g_application)) {
-    return NULL;
-  }
-  return temporary;
-}
-
 dx_result dx_application_presenter_get(dx_application_presenter** RETURN) {
   if (!RETURN) {
     dx_set_error(DX_ERROR_INVALID_ARGUMENT);
@@ -162,12 +158,12 @@ dx_result dx_application_presenter_get(dx_application_presenter** RETURN) {
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 static dx_result startup_managers() {
-  dx_val_context* val_context = dx_val_context_get();
-  if (!val_context) {
+  dx_val_context* val_context = NULL;
+  if (dx_application_get_val_context(&val_context, g_application)) {
     return DX_FAILURE;
   }
-  dx_aal_context* aal_context = dx_aal_context_get();
-  if (!aal_context) {
+  dx_aal_context* aal_context = NULL;
+  if (dx_application_get_aal_context(&aal_context, g_application)) {
     DX_UNREFERENCE(val_context);
     val_context = NULL;
     return DX_FAILURE;
@@ -245,13 +241,16 @@ static void shutdown_managers() {
 
 static dx_result run() {
   ENTER(DX_C_FUNCTION_NAME);
-  dx_val_context* ctx = dx_val_context_get();
+  dx_val_context* val_context = NULL;
+  if (dx_application_get_val_context(&val_context, g_application)) {
+    return DX_FAILURE;
+  }
   {
     dx_msg* msg = NULL;
     //
     if (dx_emit_msg_create((dx_emit_msg**)&msg, "Engine version: 0.1\n", sizeof("Engine: version 0.1\n") - 1)) {
-      DX_UNREFERENCE(ctx);
-      ctx = NULL;
+      DX_UNREFERENCE(val_context);
+      val_context = NULL;
       LEAVE(DX_C_FUNCTION_NAME);
       return DX_FAILURE;
     }
@@ -259,8 +258,8 @@ static dx_result run() {
     if (dx_msg_queue_push(g_msg_queue, msg)) {
       DX_UNREFERENCE(msg);
       msg = NULL;
-      DX_UNREFERENCE(ctx);
-      ctx = NULL;
+      DX_UNREFERENCE(val_context);
+      val_context = NULL;
       LEAVE(DX_C_FUNCTION_NAME);
       return DX_FAILURE;
     }
@@ -271,10 +270,10 @@ static dx_result run() {
   {
     dx_msg* msg = NULL;
     //
-    dx_string* information = dx_val_context_get_information(ctx);
+    dx_string* information = dx_val_context_get_information(val_context);
     if (!information) {
-      DX_UNREFERENCE(ctx);
-      ctx = NULL;
+      DX_UNREFERENCE(val_context);
+      val_context = NULL;
       LEAVE(DX_C_FUNCTION_NAME);
       return DX_FAILURE;
     }
@@ -282,8 +281,8 @@ static dx_result run() {
     if (dx_emit_msg_create((dx_emit_msg**)&msg, information->bytes, information->number_of_bytes)) {
       DX_UNREFERENCE(information);
       information = NULL;
-      DX_UNREFERENCE(ctx);
-      ctx = NULL;
+      DX_UNREFERENCE(val_context);
+      val_context = NULL;
       LEAVE(DX_C_FUNCTION_NAME);
       return DX_FAILURE;
     }
@@ -293,8 +292,8 @@ static dx_result run() {
     if (dx_msg_queue_push(g_msg_queue, msg)) {
       DX_UNREFERENCE(msg);
       msg = NULL;
-      DX_UNREFERENCE(ctx);
-      ctx = NULL;
+      DX_UNREFERENCE(val_context);
+      val_context = NULL;
       LEAVE(DX_C_FUNCTION_NAME);
       return DX_FAILURE;
     }
@@ -303,20 +302,20 @@ static dx_result run() {
     msg = NULL;
   }
   if (dx_application_presenter_startup(g_application_presenter)) {
-    DX_UNREFERENCE(ctx);
-    ctx = NULL;
+    DX_UNREFERENCE(val_context);
+    val_context = NULL;
     LEAVE(DX_C_FUNCTION_NAME);
     return DX_FAILURE;
   }
   if (dx_application_presenter_run(g_application_presenter)) {
-    DX_UNREFERENCE(ctx);
-    ctx = NULL;
+    DX_UNREFERENCE(val_context);
+    val_context = NULL;
     LEAVE(DX_C_FUNCTION_NAME);
     return DX_FAILURE;
   }
   dx_application_presenter_shutdown(g_application_presenter);
-  DX_UNREFERENCE(ctx);
-  ctx = NULL;
+  DX_UNREFERENCE(val_context);
+  val_context = NULL;
   LEAVE(DX_C_FUNCTION_NAME);
   return DX_SUCCESS;
 }
@@ -358,8 +357,8 @@ static dx_result startup() {
     LEAVE(DX_C_FUNCTION_NAME);
     return DX_FAILURE;
   }
-  dx_val_context* val_context = dx_val_context_get();
-  if (!val_context) {
+  dx_val_context* val_context = NULL;
+  if (dx_application_get_val_context(&val_context, g_application)) {
     shutdown_managers();
     dx_application_shutdown_systems(g_application);
     DX_UNREFERENCE(g_application);

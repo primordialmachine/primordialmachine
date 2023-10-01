@@ -22,6 +22,8 @@ list(APPEND ${name}.sources "dx/assets.c")
 list(APPEND ${name}.headers "dx/assets.h")
 
 # "assets" folder.
+list(APPEND ${name}.sources "dx/assets/context.c")
+list(APPEND ${name}.headers "dx/assets/context.h")
 list(APPEND ${name}.sources "dx/assets/system.c")
 list(APPEND ${name}.headers "dx/assets/system.h")
 list(APPEND ${name}.sources "dx/assets/system_factory.c")
@@ -84,7 +86,6 @@ list(APPEND ${name}.headers "dx/assets/viewer_controller.h")
 
 list(APPEND ${name}.sources "dx/assets/image.c")
 list(APPEND ${name}.headers "dx/assets/image.h")
-
 
 list(APPEND ${name}.sources "dx/assets/matrix_4x4_f32.c")
 list(APPEND ${name}.headers "dx/assets/matrix_4x4_f32.h")

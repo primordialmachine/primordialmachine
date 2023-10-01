@@ -3,6 +3,7 @@
 
 
 #include "dx/assets/color_rgb_n8.h"
+#include "dx/assets/context.h"
 #include "dx/assets/image.h"
 #include "dx/assets/image_operation.h"
 #include "dx/assets/image_operations/color_fill.h"
@@ -16,8 +17,10 @@
 #include "dx/assets/mesh_operations/set_vertex_colors.h"
 #include "dx/assets/optics.h"
 #include "dx/assets/reference.h"
-#include "dx/assets/texture.h"
 #include "dx/assets/scene.h"
+#include "dx/assets/system.h"
+#include "dx/assets/system_factory.h"
+#include "dx/assets/texture.h"
 #include "dx/assets/vector_3_f32.h"
 #include "dx/assets/viewer.h"
 #include "dx/assets/viewer_instance.h"

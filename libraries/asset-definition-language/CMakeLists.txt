@@ -18,8 +18,8 @@ dx_begin_project(${name})
 list(APPEND ${name}.readmes "README.md")
 
 # "adl.(c|h)" include.
-list(APPEND ${name}.sources "dx/adl.c")
-list(APPEND ${name}.headers "dx/adl.h")
+list(APPEND ${name}.sources "dx/asset_definition_language.c")
+list(APPEND ${name}.headers "dx/asset_definition_language.h")
 
 # "adl" folder.
 list(APPEND ${name}.sources "dx/adl/diagnostics.c")
@@ -48,8 +48,8 @@ list(APPEND ${name}.sources "dx/adl/type_handlers/viewer.c")
 list(APPEND ${name}.headers "dx/adl/type_handlers/viewer.h")
 list(APPEND ${name}.sources "dx/adl/type_handlers/viewer_instance.c")
 list(APPEND ${name}.headers "dx/adl/type_handlers/viewer_instance.h")
-list(APPEND ${name}.sources "dx/adl/type_handlers/viewer_controllers.c")
-list(APPEND ${name}.headers "dx/adl/type_handlers/viewer_controllers.h")
+list(APPEND ${name}.sources "dx/adl/type_handlers/viewer_controllers_rotate_y.c")
+list(APPEND ${name}.headers "dx/adl/type_handlers/viewer_controllers_rotate_y.h")
 
 list(APPEND ${name}.sources "dx/adl/type_handlers/material.c")
 list(APPEND ${name}.headers "dx/adl/type_handlers/material.h")
@@ -75,8 +75,10 @@ list(APPEND ${name}.headers "dx/adl/type_handlers/image_operations_checkerboard_
 list(APPEND ${name}.sources "dx/adl/type_handlers/image_operations_color_fill.c")
 list(APPEND ${name}.headers "dx/adl/type_handlers/image_operations_color_fill.h")
 
-list(APPEND ${name}.sources "dx/adl/type_handlers/optics.c")
-list(APPEND ${name}.headers "dx/adl/type_handlers/optics.h")
+list(APPEND ${name}.sources "dx/adl/type_handlers/optics_perspective.c")
+list(APPEND ${name}.headers "dx/adl/type_handlers/optics_perspective.h")
+list(APPEND ${name}.sources "dx/adl/type_handlers/optics_orthographic.c")
+list(APPEND ${name}.headers "dx/adl/type_handlers/optics_orthographic.h")
 
 # Small utility function to find files by expression and append them to the specified list.
 function(add_files file_list expression)

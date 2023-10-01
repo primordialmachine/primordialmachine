@@ -151,7 +151,7 @@ static dx_result help(dx_application_presenter* application_presenter) {
     NEWLINE = NULL;
     return DX_FAILURE;
   }
-  if (dx_console_append_text(console, text)) {
+  if (dx_console_append_output_text(console, text)) {
     DX_UNREFERENCE(text);
     text = NULL;
     DX_UNREFERENCE(procedures);
@@ -191,7 +191,7 @@ static dx_result help(dx_application_presenter* application_presenter) {
       NEWLINE = NULL;
       return DX_FAILURE;
     }
-    if (dx_console_append_text(console, INDENT)) {
+    if (dx_console_append_output_text(console, INDENT)) {
       DX_UNREFERENCE(procedures);
       procedures = NULL;
       DX_UNREFERENCE(console);
@@ -202,7 +202,7 @@ static dx_result help(dx_application_presenter* application_presenter) {
       NEWLINE = NULL;
       return DX_FAILURE;
     }
-    if (dx_console_append_text(console, p->name)) {
+    if (dx_console_append_output_text(console, p->name)) {
       DX_UNREFERENCE(procedures);
       procedures = NULL;
       DX_UNREFERENCE(console);
@@ -213,7 +213,7 @@ static dx_result help(dx_application_presenter* application_presenter) {
       NEWLINE = NULL;
       return DX_FAILURE;
     }
-    if (dx_console_append_text(console, NEWLINE)) {
+    if (dx_console_append_output_text(console, NEWLINE)) {
       DX_UNREFERENCE(procedures);
       procedures = NULL;
       DX_UNREFERENCE(console);

@@ -13,68 +13,152 @@ static inline dx_string* _get_name(dx_adl_names* names, dx_size index) {
 
 #define NAME(name) _get_name(context->names, dx_adl_name_index_##name)
 
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+static void _on_expected_key_key_added(void** a);
 
-static dx_result _read_image(dx_asset_image** RETURN, dx_ddl_node* node, dx_adl_context* context);
+static void _on_expected_key_key_removed(void** a);
 
-static dx_result _read_texture(dx_asset_texture** RETURN, dx_ddl_node* node, dx_adl_context* context);
+static dx_result _on_hash_expected_key_key(dx_size* RETURN, void** a);
 
-static dx_result resolve(dx_adl_type_handlers_texture* SELF,
-                         dx_adl_symbol* symbol,
-                         dx_adl_context* context);
+static dx_result _on_compare_expected_key_keys(dx_bool* RETURN, void** a, void** b);
 
-static dx_result read(dx_object** RETURN,
-                      dx_adl_type_handlers_texture* SELF,
-                      dx_ddl_node* node,
-                      dx_adl_context* context);
+static dx_result _initialize_expected_keys(dx_adl_type_handlers_texture* SELF);
+
+static dx_result _uninitialize_expected_keys(dx_adl_type_handlers_texture* SELF);
+
+static dx_result _check_keys(dx_adl_type_handlers_texture* SELF, dx_ddl_node* node);
+
+static dx_result _parse_texture(dx_assets_texture** RETURN, dx_ddl_node* node, dx_adl_context* context);
+
+static dx_result _parse(dx_object** RETURN,
+                        dx_adl_type_handlers_texture* SELF,
+                        dx_ddl_node* node,
+                        dx_adl_context* context);
+
+static dx_result _resolve(dx_adl_type_handlers_texture* SELF,
+                          dx_adl_symbol* symbol,
+                          dx_adl_context* context);
 
 DX_DEFINE_OBJECT_TYPE("dx.adl.type_handlers.texture",
                       dx_adl_type_handlers_texture,
                       dx_adl_type_handler);
 
-static dx_result _read_image(dx_asset_image** RETURN, dx_ddl_node* node, dx_adl_context* context) {
-  dx_string* received_type = dx_adl_semantical_read_type(node, context);
-  if (!received_type) {
-    return DX_FAILURE;
-  }
-  if (dx_string_is_equal_to(received_type, NAME(image_type))) {
-    dx_adl_type_handler* type_handler = NULL;
-    if (dx_inline_pointer_hashmap_get(&type_handler, &context->type_handlers, received_type)) {
-      DX_UNREFERENCE(received_type);
-      received_type = NULL;
-      return DX_FAILURE;
-    }
-    DX_UNREFERENCE(received_type);
-    received_type = NULL;
-    return dx_adl_type_handler_read((dx_object**)RETURN, type_handler, node, context);
-  } else {
-    DX_UNREFERENCE(received_type);
-    received_type = NULL;
-    dx_set_error(DX_ERROR_SEMANTICAL_ERROR);
-    return DX_FAILURE;
-  }
+static void _on_expected_key_key_added(void** a) {
+  DX_REFERENCE(*a);
 }
 
-static dx_result _read_texture(dx_asset_texture** RETURN, dx_ddl_node* node, dx_adl_context* context) {
-  // name
-  dx_string* name_value = NULL;
-  {
-    if (dx_adl_semantical_read_name(&name_value, node, context)) {
+static void _on_expected_key_key_removed(void** a) {
+  DX_UNREFERENCE(*a);
+}
+
+static dx_result _on_hash_expected_key_key(dx_size* RETURN, void** a) {
+  *RETURN = dx_string_get_hash_value(DX_STRING(*a));
+  return DX_SUCCESS;
+}
+
+static dx_result _on_compare_expected_key_keys(dx_bool* RETURN, void** a, void** b) {
+  *RETURN = dx_string_is_equal_to(DX_STRING(*a), DX_STRING(*b));
+  return DX_SUCCESS;
+}
+
+static dx_result _uninitialize_expected_keys(dx_adl_type_handlers_texture* SELF) {
+  dx_inline_pointer_hashmap_uninitialize(&SELF->expected_keys);
+  return DX_SUCCESS;
+}
+
+static dx_result _initialize_expected_keys(dx_adl_type_handlers_texture* SELF) {
+  DX_INLINE_POINTER_HASHMAP_CONFIGURATION cfg = {
+    .key_added_callback = &_on_expected_key_key_added,
+    .key_removed_callback = &_on_expected_key_key_removed,
+    .value_added_callback = NULL,
+    .value_removed_callback = NULL,
+    .hash_key_callback = &_on_hash_expected_key_key,
+    .compare_keys_callback = &_on_compare_expected_key_keys,
+  };
+  if (dx_inline_pointer_hashmap_initialize(&SELF->expected_keys, &cfg)) {
+    return DX_FAILURE;
+  }
+
+#define DEFINE(EXPECTED_KEY) \
+  { \
+    dx_string* expected_key = NULL; \
+    if (dx_string_create(&expected_key, EXPECTED_KEY, sizeof(EXPECTED_KEY)-1)) { \
+      dx_inline_pointer_hashmap_uninitialize(&SELF->expected_keys); \
+      return DX_FAILURE; \
+    } \
+    if (dx_inline_pointer_hashmap_set(&SELF->expected_keys, expected_key, expected_key)) {\
+      DX_UNREFERENCE(expected_key); \
+      expected_key = NULL; \
+      dx_inline_pointer_hashmap_uninitialize(&SELF->expected_keys); \
+      return DX_FAILURE; \
+    } \
+    DX_UNREFERENCE(expected_key); \
+    expected_key = NULL; \
+  }
+  DEFINE("type");
+  DEFINE("name");
+  DEFINE("image");
+#undef DEFINE
+  return DX_SUCCESS;
+}
+
+static void on_received_key_added(void** p) {
+  DX_REFERENCE(*p);
+}
+
+static void on_received_key_removed(void** p) {
+  DX_UNREFERENCE(*p);
+}
+
+static dx_result _check_keys(dx_adl_type_handlers_texture* SELF, dx_ddl_node* node) {
+  DX_INLINE_POINTER_ARRAY_CONFIGURATION configuration = {
+    .added_callback = &on_received_key_added,
+    .removed_callback = &on_received_key_removed,
+  };
+  dx_inline_pointer_array received_keys;
+  if (dx_inline_pointer_array_initialize(&received_keys, 0, &configuration)) {
+    return DX_FAILURE;
+  }
+  if (dx_inline_pointer_hashmap_get_keys(&node->map, &received_keys)) {
+    dx_inline_pointer_array_uninitialize(&received_keys);
+    return DX_FAILURE;
+  }
+  dx_size number_of_received_keys = 0;
+  if (dx_inline_pointer_array_get_size(&number_of_received_keys, &received_keys)) {
+    dx_inline_pointer_array_uninitialize(&received_keys);
+    return DX_FAILURE;
+  }
+  for (dx_size i = 0, n = number_of_received_keys; i < n; ++i) {
+    dx_string* received_key = NULL;
+    if (dx_inline_pointer_array_get_at(&received_key, &received_keys, i)) {
+      dx_inline_pointer_array_uninitialize(&received_keys);
       return DX_FAILURE;
     }
+    dx_string* expected_key = NULL;
+    if (dx_inline_pointer_hashmap_get(&expected_key, &SELF->expected_keys, received_key)) {
+      dx_inline_pointer_array_uninitialize(&received_keys);
+      return DX_FAILURE;
+    }
+  }
+  dx_inline_pointer_array_uninitialize(&received_keys);
+  return DX_SUCCESS;
+}
+
+static dx_result _parse_texture(dx_assets_texture** RETURN, dx_ddl_node* node, dx_adl_context* context) {
+  // name
+  dx_string* name_value = NULL;
+  if (dx_asset_definition_language_parser_parse_name(&name_value, node, context)) {
+    return DX_FAILURE;
   }
   // image
   dx_asset_reference* image_reference_value = NULL;
-  {
-    if (dx_asset_definition_language_parser_parse_image_instance_field(&image_reference_value, node, false, NAME(image_key), context)) {
-      DX_UNREFERENCE(name_value);
-      name_value = NULL;
-      return DX_FAILURE;
-    }
+  if (dx_asset_definition_language_parser_parse_image_instance_field(&image_reference_value, node, false, NAME(image_key), context)) {
+    DX_UNREFERENCE(name_value);
+    name_value = NULL;
+    return DX_FAILURE;
   }
   //
-  dx_asset_texture* texture_value = NULL;
-  if (dx_asset_texture_create(&texture_value, name_value, image_reference_value)) {
+  dx_assets_texture* texture_value = NULL;
+  if (dx_assets_texture_create(&texture_value, name_value, image_reference_value)) {
     DX_UNREFERENCE(image_reference_value);
     image_reference_value = NULL;
     DX_UNREFERENCE(name_value);
@@ -85,34 +169,47 @@ static dx_result _read_texture(dx_asset_texture** RETURN, dx_ddl_node* node, dx_
   image_reference_value = NULL;
   DX_UNREFERENCE(name_value);
   name_value = NULL;
+  //
   *RETURN = texture_value;
+  //
   return DX_SUCCESS;
 }
 
-static dx_result resolve(dx_adl_type_handlers_texture* SELF, dx_adl_symbol* symbol, dx_adl_context* context) {
+static dx_result _parse(dx_object** RETURN, dx_adl_type_handlers_texture* SELF, dx_ddl_node* node, dx_adl_context* context) {
+  if (!node) {
+    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
+    return DX_FAILURE;
+  }
+  if (_check_keys(SELF, node)) {
+    return DX_FAILURE;
+  }
+  return _parse_texture((dx_assets_texture**)RETURN, node, context);
+}
+
+static dx_result _resolve(dx_adl_type_handlers_texture* SELF, dx_adl_symbol* symbol, dx_adl_context* context) {
   if (symbol->resolved) {
     return DX_SUCCESS;
   }
-  dx_asset_texture* texture = DX_ASSET_TEXTURE(symbol->asset);
+  dx_assets_texture* texture = DX_ASSETS_TEXTURE(symbol->asset);
   if (texture->image_reference->object) {
     symbol->resolved = true;
     return DX_SUCCESS;
   }
-  dx_adl_symbol* referenced_symbol = dx_asset_definitions_get(context->definitions, texture->image_reference->name);
-  if (!referenced_symbol) {
+  dx_adl_symbol* referenced_symbol = NULL;
+  if (dx_asset_definitions_get(&referenced_symbol, context->definitions, texture->image_reference->name)) {
+    return DX_FAILURE;
+  }
+  if (!referenced_symbol->asset) {
+    DX_UNREFERENCE(referenced_symbol);
+    referenced_symbol = NULL;
     return DX_FAILURE;
   }
   texture->image_reference->object = referenced_symbol->asset;
-  if (!texture->image_reference->object) {
-    return DX_FAILURE;
-  }
   DX_REFERENCE(texture->image_reference->object);
+  DX_UNREFERENCE(referenced_symbol);
+  referenced_symbol = NULL;
   symbol->resolved = true;
   return DX_SUCCESS;
-}
-
-static dx_result read(dx_object** RETURN, dx_adl_type_handlers_texture* SELF, dx_ddl_node* node, dx_adl_context* context) {
-  return _read_texture((dx_asset_texture**)RETURN, node, context);
 }
 
 dx_result dx_adl_type_handlers_texture_construct(dx_adl_type_handlers_texture* SELF) {
@@ -123,17 +220,21 @@ dx_result dx_adl_type_handlers_texture_construct(dx_adl_type_handlers_texture* S
   if (dx_adl_type_handler_construct(DX_ADL_TYPE_HANDLER(SELF))) {
     return DX_FAILURE;
   }
+  if (_initialize_expected_keys(SELF)) {
+    return DX_FAILURE;
+  }
   DX_OBJECT(SELF)->type = TYPE;
   return DX_SUCCESS;
 }
 
-static void dx_adl_type_handlers_texture_destruct(dx_adl_type_handlers_texture* SELF)
-{/*Intentionally empty.*/}
+static void dx_adl_type_handlers_texture_destruct(dx_adl_type_handlers_texture* SELF) {
+  _initialize_expected_keys(SELF);
+}
 
 static void dx_adl_type_handlers_texture_dispatch_construct(dx_adl_type_handlers_texture_dispatch* SELF) {
-  DX_ADL_TYPE_HANDLER_DISPATCH(SELF)->read = (dx_result (*)(dx_object**, dx_adl_type_handler*, dx_ddl_node*, dx_adl_context*)) & read;
+  DX_ADL_TYPE_HANDLER_DISPATCH(SELF)->read = (dx_result (*)(dx_object**, dx_adl_type_handler*, dx_ddl_node*, dx_adl_context*)) & _parse;
   /// @todo Fixme.
-  DX_ADL_TYPE_HANDLER_DISPATCH(SELF)->resolve = (dx_result(*)(dx_adl_type_handler*, dx_adl_symbol*, dx_adl_context*)) & resolve;
+  DX_ADL_TYPE_HANDLER_DISPATCH(SELF)->resolve = (dx_result(*)(dx_adl_type_handler*, dx_adl_symbol*, dx_adl_context*)) & _resolve;
 }
 
 dx_result dx_adl_type_handlers_texture_create(dx_adl_type_handlers_texture** RETURN) {

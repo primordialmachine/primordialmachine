@@ -5,22 +5,23 @@
 #define DX_ASSET_VIEWER_H_INCLUDED
 
 #include "dx/core.h"
-typedef struct dx_asset_optics dx_asset_optics;
-typedef struct dx_asset_viewer_controller dx_asset_viewer_controller;
+typedef struct dx_assets_optics dx_assets_optics;
+typedef struct dx_assets_viewer_controller dx_assets_viewer_controller;
 
-DX_DECLARE_OBJECT_TYPE("dx.asset.viewer",
-                       dx_asset_viewer,
+/// @brief A viewer asset.
+DX_DECLARE_OBJECT_TYPE("dx.assets.viewer",
+                       dx_assets_viewer,
                        dx_object);
 
-static inline dx_asset_viewer* DX_ASSET_VIEWER(void* p) {
-  return (dx_asset_viewer*)p;
+static inline dx_assets_viewer* DX_ASSETS_VIEWER(void* p) {
+  return (dx_assets_viewer*)p;
 }
 
-struct dx_asset_viewer {
+struct dx_assets_viewer {
   dx_object _parent;
   /// @brief A pointer to the optics of this viewer.
-  /// @default dx_asset_optics_perspective with default values.
-  dx_asset_optics* optics;
+  /// @default dx_assets_optics_perspective with default values.
+  dx_assets_optics* optics;
   /// @brief A pointer to the ADL name of this viewer.
   dx_string* name;
   /// @brief The up vector.
@@ -30,23 +31,25 @@ struct dx_asset_viewer {
   /// @brief The target position.
   DX_VEC3 target;
   /// @brief A pointer to the viewer controller or a null pointer.
-  dx_asset_viewer_controller* controller;
+  dx_assets_viewer_controller* controller;
 };
 
-struct dx_asset_viewer_dispatch {
+static inline dx_assets_viewer_dispatch* DX_ASSETS_VIEWER_DISPATCH(void* p) {
+  return (dx_assets_viewer_dispatch*)p;
+}
+
+struct dx_assets_viewer_dispatch {
   dx_object_dispatch _parent;
 };
 
-/// @brief Construct this viewer with default values.
-/// @param SELF A pointer to this viewer object.
-/// @param name A pointer to the ADL name of this viewer object.
-/// @return The zero value on success. A non-zero value on failure.
-/// @remarks The default values are up <code>(0,1,0)</code>, source <code>(0,0,0)</code>, and target <code>(0,0,-1)</code>.
-/// @default-failure
-/// @tood Fixme.
-int dx_asset_viewer_construct(dx_asset_viewer* SELF, dx_string* name);
+/// @default
+/// The object is constructed with default values.
+/// The default values are up <code>(0,1,0)</code>, source <code>(0,0,0)</code>, and target <code>(0,0,-1)</code>.
+/// @param name A pointer to the "Asset Definition Language" name of this viewer object.
+/// @constructor{dx_assets_viewer}
+dx_result dx_assets_viewer_construct(dx_assets_viewer* SELF, dx_string* name);
 
-/// @create-operator{dx_asset_viewer}
-dx_result dx_asset_viewer_create(dx_asset_viewer** RETURN, dx_string* name);
+/// @create-operator{dx_assets_viewer}
+dx_result dx_assets_viewer_create(dx_assets_viewer** RETURN, dx_string* name);
 
-#endif // DX_ASSET_VIEWER_H_INCLUDED
+#endif // DX_ASSETS_VIEWER_H_INCLUDED

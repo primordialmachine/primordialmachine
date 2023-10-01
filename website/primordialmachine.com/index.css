@@ -1,0 +1,18 @@
+/* Copyright (c) 2023 Michael Heilmann. All rights reserved. */
+
+div.news-item {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 64px;
+}
+
+div.news-item-header {
+  margin-right: 16px;
+}
+
+div.news-item-body {
+}
+
+div.news-item-body p:first-child {
+  margin-top: 0.25rem;
+}

@@ -21,7 +21,7 @@ static dx_result on_scene_asset_object(dx_default_scene_presenter* SELF, dx_val_
   if (dx_rti_type_is_leq(asset_object->type, dx_asset_mesh_instance_get_type())) {
     dx_asset_mesh_instance* asset_mesh_instance = DX_ASSET_MESH_INSTANCE(asset_object);
     dx_val_mesh* mesh = NULL;
-    if (dx_val_mesh_create(&mesh, context, DX_ASSET_MESH(asset_mesh_instance->mesh_reference->object))) {
+    if (dx_val_mesh_create(&mesh, context, DX_ASSETS_MESH(asset_mesh_instance->mesh_reference->object))) {
       return DX_FAILURE;
     }
     dx_val_mesh_instance* mesh_instance = NULL;
@@ -44,20 +44,20 @@ static dx_result on_scene_asset_object(dx_default_scene_presenter* SELF, dx_val_
   if (dx_get_error()) {
     return DX_FAILURE;
   }
-  if (dx_rti_type_is_leq(asset_object->type, dx_asset_material_get_type())) {
-    dx_asset_material* asset_material = DX_ASSET_MATERIAL(asset_object);
-    if (dx_inline_object_array_append(&SELF->asset_material_objects, DX_OBJECT(asset_material))) {
-      DX_UNREFERENCE(asset_material);
-      asset_material = NULL;
+  if (dx_rti_type_is_leq(asset_object->type, dx_assets_material_get_type())) {
+    dx_assets_material* material_asset = DX_ASSETS_MATERIAL(asset_object);
+    if (dx_inline_object_array_append(&SELF->material_assets, DX_OBJECT(material_asset))) {
+      DX_UNREFERENCE(material_asset);
+      material_asset = NULL;
       return DX_FAILURE;
     }
     return DX_NO_ERROR != dx_get_error() ? DX_FAILURE : DX_SUCCESS;
   }
   // viewer instance
-  if (dx_rti_type_is_leq(asset_object->type, dx_asset_viewer_instance_get_type())) {
-    dx_asset_viewer_instance* asset_viewer_instance = DX_ASSET_VIEWER_INSTANCE(asset_object);
+  if (dx_rti_type_is_leq(asset_object->type, dx_assets_viewer_instance_get_type())) {
+    dx_assets_viewer_instance* viewer_instance_asset = DX_ASSETS_VIEWER_INSTANCE(asset_object);
     dx_val_viewer* viewer;
-    if (dx_val_viewer_create(&viewer, asset_viewer_instance)) {
+    if (dx_val_viewer_create(&viewer, viewer_instance_asset)) {
       return DX_FAILURE;
     }
     if (dx_inline_object_array_append(&SELF->viewers, DX_OBJECT(viewer))) {
@@ -76,7 +76,7 @@ static dx_result on_scene_asset_object(dx_default_scene_presenter* SELF, dx_val_
   return DX_SUCCESS;
 }
 
-static dx_result mesh_instance_on_startup(dx_default_scene_presenter* SELF, dx_val_context* context, dx_asset_scene* asset_scene) {
+static dx_result mesh_instance_on_startup(dx_default_scene_presenter* SELF, dx_val_context* context, dx_assets_scene* asset_scene) {
   if (dx_inline_object_array_initialize(&SELF->mesh_instances, 0)) {
     return DX_FAILURE;
   }
@@ -84,7 +84,7 @@ static dx_result mesh_instance_on_startup(dx_default_scene_presenter* SELF, dx_v
     dx_inline_object_array_uninitialize(&SELF->mesh_instances);
     return DX_FAILURE;
   }
-  if (dx_inline_object_array_initialize(&SELF->asset_material_objects, 0)) {
+  if (dx_inline_object_array_initialize(&SELF->material_assets, 0)) {
     dx_inline_object_array_uninitialize(&SELF->viewers);
     dx_inline_object_array_uninitialize(&SELF->mesh_instances);
     return DX_FAILURE;
@@ -96,13 +96,13 @@ static dx_result mesh_instance_on_startup(dx_default_scene_presenter* SELF, dx_v
   for (dx_size i = 0; i < n; ++i) {
     dx_object* asset_object = NULL;
     if(dx_inline_object_array_get_at(&asset_object, &asset_scene->assets, i)) {
-      dx_inline_object_array_uninitialize(&SELF->asset_material_objects);
+      dx_inline_object_array_uninitialize(&SELF->material_assets);
       dx_inline_object_array_uninitialize(&SELF->viewers);
       dx_inline_object_array_uninitialize(&SELF->mesh_instances);
       return DX_FAILURE;
     }
     if (on_scene_asset_object(SELF, context, asset_object)) {
-      dx_inline_object_array_uninitialize(&SELF->asset_material_objects);
+      dx_inline_object_array_uninitialize(&SELF->material_assets);
       dx_inline_object_array_uninitialize(&SELF->viewers);
       dx_inline_object_array_uninitialize(&SELF->mesh_instances);
       return DX_FAILURE;
@@ -112,7 +112,7 @@ static dx_result mesh_instance_on_startup(dx_default_scene_presenter* SELF, dx_v
 }
 
 static void mesh_instance_on_shutdown(dx_default_scene_presenter* SELF) {
-  dx_inline_object_array_uninitialize(&SELF->asset_material_objects);
+  dx_inline_object_array_uninitialize(&SELF->material_assets);
   dx_inline_object_array_uninitialize(&SELF->viewers);
   dx_inline_object_array_uninitialize(&SELF->mesh_instances);
 }
@@ -147,16 +147,16 @@ static dx_result tick2(dx_default_scene_presenter* SELF, dx_f32 delta_seconds, d
   //
   {
     dx_size n;
-    if (dx_inline_object_array_get_size(&n, &SELF->asset_material_objects)) {
+    if (dx_inline_object_array_get_size(&n, &SELF->material_assets)) {
       return DX_FAILURE;
     }
     for (dx_size i = 0; i < n; ++i) {
-      dx_asset_material* asset_material = NULL;
-      if (dx_inline_object_array_get_at((dx_object**)&asset_material, &SELF->asset_material_objects, i)) {
+      dx_assets_material* material_asset = NULL;
+      if (dx_inline_object_array_get_at((dx_object**)&material_asset, &SELF->material_assets, i)) {
         return DX_FAILURE;
       }
-      if (asset_material->controller) {
-        if (dx_asset_material_controller_update(asset_material->controller, asset_material, delta_seconds)) {
+      if (material_asset->controller) {
+        if (dx_assets_material_controller_update(material_asset->controller, material_asset, delta_seconds)) {
           return DX_FAILURE;
         }
       }
@@ -172,7 +172,7 @@ static dx_result tick2(dx_default_scene_presenter* SELF, dx_f32 delta_seconds, d
     if (dx_inline_object_array_get_at((dx_object**)&mesh_instance, &SELF->mesh_instances, i)) {
       return DX_FAILURE;
     }
-    DX_RGB_N8 a = DX_ASSETS_COLOR_RGB_N8(mesh_instance->mesh->material->asset_material->ambient_color->object)->value;
+    DX_RGB_N8 a = DX_ASSETS_COLOR_RGB_N8(mesh_instance->mesh->material->material_asset->ambient_color->object)->value;
     dx_rgb_n8_to_rgba_f32(&a, 1.f, &mesh_instance->mesh->material->ambient_color);
   }
   return DX_SUCCESS;
@@ -191,10 +191,10 @@ static dx_result tick(dx_default_scene_presenter* SELF, dx_f32 delta_seconds) {
   if (dx_inline_object_array_get_at((dx_object**) &val_viewer, & SELF->viewers, n - 1)) {
     return DX_FAILURE;
   }
-  dx_asset_viewer* asset_viewer = DX_ASSET_VIEWER(val_viewer->asset_viewer_instance->viewer_reference->object);
-  if (asset_viewer->controller) {
-    dx_asset_viewer_controller* asset_viewer_controller = asset_viewer->controller;
-    if (dx_asset_viewer_controller_update(asset_viewer_controller, asset_viewer, delta_seconds)) {
+  dx_assets_viewer* viewer_asset = DX_ASSETS_VIEWER(val_viewer->asset_viewer_instance->viewer_reference->object);
+  if (viewer_asset->controller) {
+    dx_assets_viewer_controller* viewer_controller_asset = viewer_asset->controller;
+    if (dx_assets_viewer_controller_update(viewer_controller_asset, viewer_asset, delta_seconds)) {
       return DX_FAILURE;
     }
   }
@@ -210,11 +210,11 @@ static dx_result update_viewer(dx_default_scene_presenter* SELF, dx_i32 canvas_w
   if (dx_inline_object_array_get_at((dx_object**)&val_viewer, &SELF->viewers, n - 1)) {
     return DX_FAILURE;
   }
-  dx_asset_viewer* asset_viewer = DX_ASSET_VIEWER(val_viewer->asset_viewer_instance->viewer_reference->object);
-  if (asset_viewer) {
-    val_viewer->up = asset_viewer->up;
-    val_viewer->target = asset_viewer->target;
-    val_viewer->source = asset_viewer->source;
+  dx_assets_viewer* viewer_asset = DX_ASSETS_VIEWER(val_viewer->asset_viewer_instance->viewer_reference->object);
+  if (viewer_asset) {
+    val_viewer->up = viewer_asset->up;
+    val_viewer->target = viewer_asset->target;
+    val_viewer->source = viewer_asset->source;
   }
   return DX_SUCCESS;
 }
@@ -277,10 +277,7 @@ static dx_result make_commands_1(dx_val_command_list* commands) {
 }
 
 static dx_result dx_default_scene_presenter_startup(dx_default_scene_presenter* SELF, dx_val_context* context) {
-  {
-    SELF->asset_scene = _create_scene_from_file(SELF->path);
-  }
-  if (!SELF->asset_scene) {
+  if (_create_scene_from_file(&SELF->asset_scene, SELF->path)) {
     return DX_FAILURE;
   }
   //

@@ -1,32 +1,32 @@
-#if !defined(DX_ASSET_OPTICS_H_INCLUDED)
-#define DX_ASSET_OPTICS_H_INCLUDED
+#if !defined(DX_ASSETS_OPTICS_H_INCLUDED)
+#define DX_ASSETS_OPTICS_H_INCLUDED
 
 #include "dx/core.h"
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-DX_DECLARE_OBJECT_TYPE("dx.asset.optics",
-                       dx_asset_optics,
+DX_DECLARE_OBJECT_TYPE("dx.assets.optics",
+                       dx_assets_optics,
                        dx_object);
 
-static inline dx_asset_optics* DX_ASSET_OPTICS(void* p) {
-  return (dx_asset_optics*)p;
+static inline dx_assets_optics* DX_ASSETS_OPTICS(void* p) {
+  return (dx_assets_optics*)p;
 }
 
-struct dx_asset_optics {
+struct dx_assets_optics {
   dx_object _parent;
 };
 
-static inline dx_asset_optics_dispatch* DX_ASSET_OPTICS_DISPATCH(void* p) {
-  return (dx_asset_optics_dispatch*)p;
+static inline dx_assets_optics_dispatch* DX_ASSETS_OPTICS_DISPATCH(void* p) {
+  return (dx_assets_optics_dispatch*)p;
 }
 
-struct dx_asset_optics_dispatch {
+struct dx_assets_optics_dispatch {
   dx_object _parent;
 };
 
-/// @constructor{dx_asset_optics}
-dx_result dx_asset_optics_construct(dx_asset_optics* SELF);
+/// @constructor{dx_assets_optics}
+dx_result dx_assets_optics_construct(dx_assets_optics* SELF);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
@@ -46,7 +46,7 @@ static inline dx_asset_optics_orthographic* DX_ASSET_OPTICS_ORTHOGRAPHIC(void* p
 #endif
 
 struct dx_asset_optics_orthographic {
-  dx_asset_optics _parent;
+  dx_assets_optics _parent;
   /// @brief The aspect ratio.
   /// The default value is NULL.
   dx_f32* aspect_ratio;
@@ -74,10 +74,10 @@ static inline dx_asset_optics_orthographic_dispatch* DX_ASSET_OPTICS_ORTHOGRAPHI
 }
 
 struct dx_asset_optics_orthographic_dispatch {
-  dx_asset_optics_dispatch _parent;
+  dx_assets_optics_dispatch _parent;
 };
 
-/// @todo Fixme 
+/// @constructor{dx_asset_optics_orthographic}
 dx_result dx_asset_optics_orthographic_construct(dx_asset_optics_orthographic* SELF);
 
 /// @create-operator{dx_asset_optics_orthographic}
@@ -101,7 +101,7 @@ static inline dx_asset_optics_perspective* DX_ASSET_OPTICS_PERSPECTIVE(void* p) 
 #endif
 
 struct dx_asset_optics_perspective {
-  dx_asset_optics _parent;
+  dx_assets_optics _parent;
   /// @brief The aspect ratio (the quotient of the width and the height of near plane).
   /// The default is 4:3 = 1.33... .
   /// If not provided, it is computed from the actual width and the actual height of the viewport.
@@ -128,10 +128,10 @@ static inline dx_asset_optics_perspective_dispatch* DX_ASSET_OPTICS_PERSPECTIVE_
 }
 
 struct dx_asset_optics_perspective_dispatch {
-  dx_asset_optics_dispatch _parent;
+  dx_assets_optics_dispatch _parent;
 };
 
-/// @todo Fixme
+/// @constructor{dx_asset_optics_perspective}
 dx_result dx_asset_optics_perspective_construct(dx_asset_optics_perspective* SELF);
 
 /// @create-operator{dx_asset_optics_perspective}
@@ -139,4 +139,4 @@ dx_result dx_asset_optics_perspective_create(dx_asset_optics_perspective** RETUR
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-#endif // DX_ASSET_OPTICS_H_INCLUDED
+#endif // DX_ASSETS_OPTICS_H_INCLUDED

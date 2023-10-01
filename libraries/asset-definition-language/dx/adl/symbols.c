@@ -130,33 +130,36 @@ dx_result dx_asset_definitions_create(dx_asset_definitions** RETURN) {
   return DX_SUCCESS;
 }
 
-dx_adl_symbol* dx_asset_definitions_get(dx_asset_definitions const* self, dx_string* name) {
-  if (!self || !name) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return NULL;
-  }
-  dx_adl_symbol* temporary = NULL;
-  if (dx_inline_pointer_hashmap_get(&temporary, &self->map, name)) {
-    return NULL;
-  }
-  return temporary;
-}
-
-dx_result dx_asset_definitions_set(dx_asset_definitions* self, dx_string* name, dx_adl_symbol* value) {
-  if (!self || !name || !value) {
+dx_result dx_asset_definitions_get(dx_adl_symbol** RETURN, dx_asset_definitions const* SELF, dx_string* name) {
+  if (!RETURN || !SELF || !name) {
     dx_set_error(DX_ERROR_INVALID_ARGUMENT);
     return DX_FAILURE;
   }
-  if (dx_inline_pointer_hashmap_set(&self->map, name, value)) {
+  dx_adl_symbol* temporary = NULL;
+  if (dx_inline_pointer_hashmap_get(&temporary, &SELF->map, name)) {
+    return DX_FAILURE;
+  }
+  DX_REFERENCE(temporary);
+  *RETURN = temporary;
+  return DX_SUCCESS;
+}
+
+
+dx_result dx_asset_definitions_set(dx_asset_definitions* SELF, dx_string* name, dx_adl_symbol* value) {
+  if (!SELF || !name || !value) {
+    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
+    return DX_FAILURE;
+  }
+  if (dx_inline_pointer_hashmap_set(&SELF->map, name, value)) {
     return DX_FAILURE;
   }
   return DX_SUCCESS;
 }
 
-dx_result dx_asset_definitions_dump(dx_asset_definitions* self) {
+dx_result dx_asset_definitions_dump(dx_asset_definitions* SELF) {
   dx_log("{\n", sizeof("{\n") - 1);
   dx_inline_pointer_hashmap_iterator iterator;
-  dx_inline_pointer_hashmap_iterator_initialize(&iterator, &self->map);
+  dx_inline_pointer_hashmap_iterator_initialize(&iterator, &SELF->map);
   dx_bool has_entry = false;
   if (dx_inline_pointer_hashmap_iterator_has_entry(&has_entry, &iterator)) {
     dx_inline_pointer_hashmap_iterator_uninitialize(&iterator);

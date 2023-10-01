@@ -26,21 +26,18 @@ struct dx_val_gl_system_dispatch {
   dx_result(*get_window)(dx_val_gl_window**, dx_val_gl_system*);
 };
 
-/// @brief Construct this VAL GL system.
-/// @param SELF A pointer to this VAL GL system.
 /// @param msg_queue A pointer to the message queue.
-/// @method-call
+/// @constructor{dx_val_gl_system}
 dx_result dx_val_gl_system_construct(dx_val_gl_system* SELF, dx_msg_queue* msg_queue);
 
 /// @brief Get the VAL GL window.
 /// @param RETURN A pointer to a <code>dx_val_gl_window*</code> variable.
-/// @param SELF A pointer to this VAL GL system.
 /// @success
 /// <code>*RETURN</code> was assigned a pointer to the VAL GL window object.
 /// The caller acquired a reference to that object.
 /// @warning
 /// This function fails if this VAL GL system is not started.
-/// @method-call
+/// @method{dx_val_gl_system}
 static inline dx_result dx_val_gl_system_get_window(dx_val_gl_window** RETURN, dx_val_gl_system* SELF) {
   DX_OBJECT_VIRTUALCALL(dx_val_gl_system, get_window, RETURN, SELF);
 }

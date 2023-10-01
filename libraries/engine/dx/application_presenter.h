@@ -41,79 +41,60 @@ struct dx_application_presenter_dispatch {
   dx_result(*startup)(dx_application_presenter* SELF);
   dx_result(*run)(dx_application_presenter* SELF);
   dx_result(*shutdown)(dx_application_presenter* SELF);
-  dx_result(*get_val_context)(dx_val_context**, dx_application_presenter* SELF);
   dx_result(*get_console)(dx_console**, dx_application_presenter* SELF);
   dx_result(*get_cl_interpreter)(dx_cl_interpreter**, dx_application_presenter* SELF);
   dx_result(*request_quit)(dx_application_presenter* SELF);
   dx_result(*quit_requested)(dx_bool* RETURN, dx_application_presenter* SELF);
 };
 
-/// @brief Construct this application.
-/// @param SELF A pointer to this application presenter.
-/// @method-call
+/// @constructor{dx_application_presenter}
 dx_result dx_application_presenter_construct(dx_application_presenter* SELF);
 
 /// @brief Callback. Invoked by the application execution environment.
-/// @param SELF A pointer to this application presenter.
-/// @method-call
+/// @method{dx_application_presenter}
 static inline dx_result dx_application_presenter_startup(dx_application_presenter* SELF) {
   DX_OBJECT_VIRTUALCALL(dx_application_presenter, startup, SELF);
 }
 
 /// @brief Callback. Invoked by the application execution environment.
-/// @param SELF A pointer to this application presenter.
-/// @method-call
+/// @method{dx_application_presenter}
 static inline dx_result dx_application_presenter_run(dx_application_presenter* SELF) {
   DX_OBJECT_VIRTUALCALL(dx_application_presenter, run, SELF);
 }
 
 /// @brief Callback. Invoked by the application execution environment.
-/// @param SELF A pointer to this application presenter.
-/// @method-call
+/// @method{dx_application_presenter}
 static inline dx_result dx_application_presenter_shutdown(dx_application_presenter* SELF) {
   DX_OBJECT_VIRTUALCALL(dx_application_presenter, shutdown, SELF);
 }
 
-/// @brief Acquire a reference to the VAL context object.
-/// @param RETURN A pointer to a <code>dx_val_context*</code> variable.
-/// @param SELF A pointer to this application presenter.
-/// @success <code>*RETURN</code> was assigned a reference to the VAL context object.
-/// The caller acquired a reference to that object.
-/// @method-call
-static inline dx_result dx_application_presenter_get_val_context(dx_val_context** RETURN, dx_application_presenter* SELF) {
-  DX_OBJECT_VIRTUALCALL(dx_application_presenter, get_val_context, RETURN, SELF);
-}
-
 /// @brief Acquire a reference to the console object.
 /// @param RETURN A pointer to a <code>dx_context*</code> variable.
-/// @param SELF A pointer to this application presenter.
 /// @success <code>*RETURN</code> was assigned a reference to the console object.
 /// The caller acquired a reference to that object.
-/// @method-call
+/// @method{dx_application_presenter}
 static inline dx_result dx_application_presenter_get_console(dx_console** RETURN, dx_application_presenter* SELF) {
   DX_OBJECT_VIRTUALCALL(dx_application_presenter, get_console, RETURN, SELF);
 }
 
 /// @brief Acquire a reference to the CL interpreter object.
 /// @param RETURN A pointer to a <code>dx_cl_interpreter*</code> variable.
-/// @param SELF A pointer to this application presenter.
 /// @success <code>*RETURN</code> was assigned a reference to the CL interpreter object.
 /// The caller acquired a reference to that object.
-/// @method-call
+/// @method{dx_application_presenter}
 static inline dx_result dx_application_presenter_get_cl_interpreter(dx_cl_interpreter** RETURN, dx_application_presenter* SELF) {
   DX_OBJECT_VIRTUALCALL(dx_application_presenter, get_cl_interpreter, RETURN, SELF);
 }
 
 /// @brief Request the application to quit.
-/// @param SELF A pointer to this application presenter.
-/// @method-call
+/// @method{dx_application_presenter}
 static inline dx_result dx_application_presenter_request_quit(dx_application_presenter* SELF) {
   DX_OBJECT_VIRTUALCALL(dx_application_presenter, request_quit, SELF);
 }
 
 /// @brief Get if the application was requested to quit.
 /// @param RETURN A pointer to a <code>dx_bool</code> variable.
-/// @method-call
+/// @method{dx_application_presenter}
 static inline dx_result dx_application_presenter_quit_requested(dx_bool* RETURN, dx_application_presenter* SELF) {
   DX_OBJECT_VIRTUALCALL(dx_application_presenter, quit_requested, RETURN, SELF);
 }

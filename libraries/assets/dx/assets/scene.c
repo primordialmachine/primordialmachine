@@ -2,32 +2,32 @@
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-DX_DEFINE_OBJECT_TYPE("dx.asset.scene",
-                      dx_asset_scene,
-                      dx_object)
+DX_DEFINE_OBJECT_TYPE("dx.assets.scene",
+                      dx_assets_scene,
+                      dx_object);
 
-static void dx_asset_scene_destruct(dx_asset_scene* SELF) {
+static void dx_assets_scene_destruct(dx_assets_scene* SELF) {
   dx_inline_object_array_uninitialize(&SELF->assets);
 }
 
-static void dx_asset_scene_dispatch_construct(dx_asset_scene_dispatch* self)
+static void dx_assets_scene_dispatch_construct(dx_assets_scene_dispatch* self)
 {/*Intentionally empty.*/}
 
-int dx_asset_scene_construct(dx_asset_scene* SELF) {
-  dx_rti_type* _type = dx_asset_scene_get_type();
-  if (!_type) {
-    return 1;
+dx_result dx_assets_scene_construct(dx_assets_scene* SELF) {
+  dx_rti_type* TYPE = dx_assets_scene_get_type();
+  if (!TYPE) {
+    return DX_FAILURE;
   }
   if (dx_inline_object_array_initialize(&SELF->assets, 0)) {
-      return 1;
+      return DX_FAILURE;
   }
-  DX_OBJECT(SELF)->type = _type;
-  return 0;
+  DX_OBJECT(SELF)->type = TYPE;
+  return DX_SUCCESS;
 }
 
-dx_result dx_asset_scene_create(dx_asset_scene** RETURN) {
-  DX_CREATE_PREFIX(dx_asset_scene)
-  if (dx_asset_scene_construct(SELF)) {
+dx_result dx_assets_scene_create(dx_assets_scene** RETURN) {
+  DX_CREATE_PREFIX(dx_assets_scene)
+  if (dx_assets_scene_construct(SELF)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
     return DX_FAILURE;

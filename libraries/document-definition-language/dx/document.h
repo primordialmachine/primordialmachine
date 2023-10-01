@@ -56,12 +56,29 @@ struct dx_text_document_dispatch {
   dx_object_dispatch _parent;
 };
 
+/// @constructor{dx_text_document}
 dx_result dx_text_document_construct(dx_text_document* SELF);
 
+/// @create-operator{dx_text_document}
 dx_result dx_text_document_create(dx_text_document** RETURN);
 
-dx_result dx_text_document_set_text(dx_text_document* SELF, dx_string* text);
+/// @brief Set the contents of this document from the specified string.
+/// @param string A pointer to the string.
+/// @method{dx_text_document}
+dx_result dx_text_document_set_text(dx_text_document* SELF, dx_string* string);
 
+/// @brief Get the contents of this document as a string.
+/// @param RETURN A pointer to a <code>dx_string*</code> variable.
+/// @success <code>*RETURN</code> was assigned a pointer to the string object.
+/// The caller acquired a reference to that string object.
+/// @method{dx_text_document}
+dx_result dx_text_document_get_text(dx_string** RETURN, dx_text_document* SELF);
+
+/// @brief Append text to this text document.
+/// @param text The text.
+/// @brief Append a string to the contents of this document.
+/// @param string A pointer to the string.
+/// @method{dx_text_document}
 dx_result dx_text_document_append_text(dx_text_document* SELF, dx_string* text);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/

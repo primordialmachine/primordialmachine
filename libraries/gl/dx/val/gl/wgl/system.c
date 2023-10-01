@@ -45,14 +45,6 @@ static dx_result gl_wgl_open_window();
 
 static dx_result gl_wgl_close_window();
 
-static dx_result gl_wgl_startup();
-
-static dx_result gl_wgl_shutdown();
-
-static dx_result gl_wgl_get_context(dx_gl_wgl_context** RETURN);
-
-static dx_result gl_wgl_get_window(dx_val_gl_wgl_window** RETURN);
-
 static dx_val_gl_wgl_window* g_window = NULL;
 
 static dx_gl_wgl_context* g_context = NULL;
@@ -227,44 +219,6 @@ static dx_result gl_wgl_init_wgl_v1(dx_val_gl_wgl_window* window, dx_val_gl_wgl_
   return DX_SUCCESS;
 }
 
-static dx_result gl_wgl_startup() {
-  if (gl_wgl_open_window()) {
-    return DX_FAILURE;
-  }
-  if (dx_gl_wgl_context_create(&g_context, g_window)) {
-    gl_wgl_close_window();
-    return DX_FAILURE;
-  }
-  return DX_SUCCESS;
-}
-
-static dx_result gl_wgl_shutdown() {
-  DX_UNREFERENCE(g_context);
-  g_context = NULL;
-  gl_wgl_close_window();
-  return DX_SUCCESS;
-}
-
-static dx_result gl_wgl_get_context(dx_gl_wgl_context** RETURN) {
-  if (!g_context) {
-    dx_set_error(DX_ERROR_NOT_INITIALIZED);
-    return DX_FAILURE;
-  }
-  DX_REFERENCE(g_context);
-  *RETURN = g_context;
-  return DX_SUCCESS;
-}
-
-static dx_result gl_wgl_get_window(dx_val_gl_wgl_window** RETURN) {
-  if (!g_window) {
-    dx_set_error(DX_ERROR_NOT_INITIALIZED);
-    return DX_FAILURE;
-  }
-  DX_REFERENCE(g_window);
-  *RETURN = g_window;
-  return DX_SUCCESS;
-}
-
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 DX_DEFINE_OBJECT_TYPE("dx.val.gl.wgl.system",
@@ -277,7 +231,7 @@ DX_DEFINE_OBJECT_TYPE("dx.val.gl.wgl.system",
 /// @aram msg The msg value of the message.
 /// @param wparam The wparam value of the message.
 /// @param lparam The lparam value of the message.
-/// @procedure-call
+/// @procedure
 /// @error #DX_ERROR_NOT_FOUND if the button is not is not supported.
 static dx_result map_mouse_button(dx_mouse_button* RETURN, dx_val_gl_wgl_system* SELF, UINT msg, WPARAM wparam, LPARAM lparam);
 
@@ -287,7 +241,7 @@ static dx_result map_mouse_button(dx_mouse_button* RETURN, dx_val_gl_wgl_system*
 /// @aram msg The msg value of the message.
 /// @param wparam The wparam value of the message.
 /// @param lparam The lparam value of the message.
-/// @procedure-call
+/// @procedure
 /// @error #DX_ERROR_NOT_FOUND if the key is not supported.
 static dx_result map_keyboard_key(dx_keyboard_key* RETURN, dx_val_gl_wgl_system* SELF, UINT msg, WPARAM wparam, LPARAM lparam);
 
@@ -728,26 +682,6 @@ dx_result dx_val_gl_wgl_system_create(dx_val_gl_wgl_system** RETURN, dx_msg_queu
     return DX_FAILURE;
   }
   *RETURN = SELF;
-  return DX_SUCCESS;
-}
-
-dx_result dx_val_gl_wgl_system_get_context(dx_gl_wgl_context** RETURN, dx_val_gl_wgl_system* SELF) {
-  if (!g_context) {
-    dx_set_error(DX_ERROR_NOT_INITIALIZED);
-    return DX_FAILURE;
-  }
-  DX_REFERENCE(g_context);
-  *RETURN = g_context;
-  return DX_SUCCESS;
-}
-
-dx_result dx_val_gl_wgl_system_get_window(dx_val_gl_wgl_window** RETURN, dx_val_gl_wgl_system* SELF) {
-  if (!g_window) {
-    dx_set_error(DX_ERROR_NOT_INITIALIZED);
-    return DX_FAILURE;
-  }
-  DX_REFERENCE(g_window);
-  *RETURN = g_window;
   return DX_SUCCESS;
 }
 

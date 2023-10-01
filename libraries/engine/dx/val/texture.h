@@ -24,7 +24,7 @@ static inline dx_val_texture_dispatch* DX_VAL_TEXTURE_DISPATCH(void* p) {
 
 struct dx_val_texture_dispatch {
   dx_object_dispatch _parent;
-  dx_result(*set_data)(dx_val_texture*, dx_asset_texture*);
+  dx_result(*set_data)(dx_val_texture*, dx_assets_texture*);
   dx_result(*set_texture_address_mode_u)(dx_val_texture*, dx_texture_address_mode);
   dx_result(*get_texture_address_mode_u)(dx_texture_address_mode*, dx_val_texture*);
   dx_result(*set_texture_address_mode_v)(dx_val_texture*, dx_texture_address_mode);
@@ -46,7 +46,7 @@ dx_result dx_val_texture_construct(dx_val_texture* SELF, dx_val_context* context
 /// @param texture A pointer to the texture asset.
 /// @default-failure
 /// @default-return
-static inline dx_result dx_val_texture_set_data(dx_val_texture* SELF, dx_asset_texture* texture) {
+static inline dx_result dx_val_texture_set_data(dx_val_texture* SELF, dx_assets_texture* texture) {
   DX_OBJECT_VIRTUALCALL(dx_val_texture, set_data, SELF, texture);
 }
 

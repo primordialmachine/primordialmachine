@@ -20,6 +20,8 @@ static dx_result get_absolute_position(DX_VEC2_F32* RETURN, dx_ui_group* SELF);
 
 static dx_result get_absolute_size(DX_VEC2_F32* RETURN, dx_ui_group* SELF);
 
+static dx_result get_child_by_name(dx_ui_widget** RETURN, dx_ui_group* SELF, dx_string* name);
+
 static dx_result render(dx_ui_group* SELF, dx_f32 canvas_horizontal_size, dx_f32 canvas_vertical_size, dx_f32 dpi_horizontal, dx_f32 dpi_vertical);
 
 static void dx_ui_group_destruct(dx_ui_group* SELF) {
@@ -35,6 +37,7 @@ static void dx_ui_group_dispatch_construct(dx_ui_group_dispatch* SELF) {
   DX_UI_WIDGET_DISPATCH(SELF)->set_relative_size = (dx_result(*)(dx_ui_widget*,DX_VEC2_F32 const*)) & set_relative_size;
   DX_UI_WIDGET_DISPATCH(SELF)->get_absolute_position = (dx_result(*)(DX_VEC2_F32*, dx_ui_widget*)) & get_absolute_position;
   DX_UI_WIDGET_DISPATCH(SELF)->get_absolute_size = (dx_result(*)(DX_VEC2_F32*, dx_ui_widget*)) & get_absolute_size;
+  DX_UI_WIDGET_DISPATCH(SELF)->get_child_by_name = (dx_result(*)(dx_ui_widget**, dx_ui_widget*, dx_string*)) & get_child_by_name;
 }
 
 dx_result dx_ui_group_construct(dx_ui_group* SELF, dx_ui_manager* manager) {
@@ -56,7 +59,7 @@ dx_result dx_ui_group_construct(dx_ui_group* SELF, dx_ui_manager* manager) {
 }
 
 dx_result dx_ui_group_create(dx_ui_group** RETURN, dx_ui_manager* manager) {
-  DX_CREATE_PREFIX(dx_ui_group)
+  DX_CREATE_PREFIX(dx_ui_group);
   if (dx_ui_group_construct(SELF, manager)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
@@ -93,7 +96,7 @@ static dx_result set_relative_size(dx_ui_group* SELF, DX_VEC2_F32 const* relativ
   return DX_SUCCESS;
 }
 
-static dx_result get_relative_size(DX_VEC2_F32 *RETURN, dx_ui_group* SELF) {
+static dx_result get_relative_size(DX_VEC2_F32* RETURN, dx_ui_group* SELF) {
   if (!RETURN || !SELF) {
     dx_set_error(DX_ERROR_INVALID_ARGUMENT);
     return DX_FAILURE;
@@ -135,6 +138,28 @@ static dx_result get_absolute_size(DX_VEC2_F32* RETURN, dx_ui_group* SELF) {
   return DX_SUCCESS;
 }
 
+static dx_result get_child_by_name(dx_ui_widget** RETURN, dx_ui_group* SELF, dx_string* name) {
+  dx_size n;
+  if (dx_object_array_get_size(&n, SELF->children)) {
+    return DX_FAILURE;
+  }
+  for (dx_size i = 0; i < n; ++i) {
+    dx_ui_widget* child = NULL;
+    if (dx_object_array_get_at((dx_object**)&child, SELF->children, i)) {
+      return DX_FAILURE;
+    }
+    if (child->name) {
+      if (dx_string_is_equal_to(child->name, name)) {
+        DX_REFERENCE(child);
+        *RETURN = child;
+        return DX_SUCCESS;
+      }
+    }
+  }
+  dx_set_error(DX_ERROR_NOT_FOUND);
+  return DX_FAILURE;
+}
+
 dx_result dx_ui_group_set_background_color(dx_ui_group* SELF, DX_RGBA_F32 const* background_color) {
   if (!SELF || !background_color) {
     dx_set_error(DX_ERROR_INVALID_ARGUMENT);
@@ -154,23 +179,10 @@ dx_result dx_ui_group_get_background_color(DX_RGBA_F32* RETURN, dx_ui_group* SEL
 }
 
 static dx_result render(dx_ui_group* SELF, dx_f32 canvas_horizontal_size, dx_f32 canvas_vertical_size, dx_f32 dpi_horizontal, dx_f32 dpi_vertical) {
-  DX_MAT4 world_matrix;
-  dx_mat4_set_identity(&world_matrix);
-  dx_val_cbinding_set_mat4(DX_UI_WIDGET(SELF)->manager->rectangle_presenter->val_cbinding, "vs_matrices.world_matrix", &world_matrix);
-  
-  DX_MAT4 view_matrix;
-  dx_mat4_set_identity(&view_matrix);
-  dx_val_cbinding_set_mat4(DX_UI_WIDGET(SELF)->manager->rectangle_presenter->val_cbinding, "vs_matrices.view_matrix", &view_matrix);
-  
-  DX_MAT4 projection_matrix;
-  dx_mat4_set_ortho(&projection_matrix, 0, canvas_horizontal_size, 0, canvas_vertical_size, -1, +1);
-  dx_val_cbinding_set_mat4(DX_UI_WIDGET(SELF)->manager->rectangle_presenter->val_cbinding, "vs_matrices.projection_matrix", &projection_matrix);
-
   DX_RECT2_F32 target_rectangle;
-  dx_rect2_f32_set(&target_rectangle, SELF->relative_position.e[0],
-                                      SELF->relative_position.e[1],
-                                      SELF->relative_position.e[0] + SELF->relative_size.e[0],
-                                      SELF->relative_position.e[1] + SELF->relative_size.e[1]);
+  if (dx_ui_widget_get_absolute_rectangle(&target_rectangle, DX_UI_WIDGET(SELF))) {
+    return DX_FAILURE;
+  }
   if (dx_rectangle_presenter_fill_rectangle(DX_UI_WIDGET(SELF)->manager->rectangle_presenter,
                                             &target_rectangle,
                                             0.f,

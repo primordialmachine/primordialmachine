@@ -14,14 +14,14 @@ static void dx_val_viewer_destruct(dx_val_viewer* SELF) {
 static void dx_val_viewer_dispatch_construct(dx_val_viewer_dispatch* SELF)
 {/*Intentionally empty.*/}
 
-dx_result dx_val_viewer_construct(dx_val_viewer* SELF, dx_asset_viewer_instance* asset_viewer_instance) {
+dx_result dx_val_viewer_construct(dx_val_viewer* SELF, dx_assets_viewer_instance* asset_viewer_instance) {
   dx_rti_type* TYPE = dx_val_viewer_get_type();
   if (!TYPE) {
     return DX_FAILURE;
   }
-  SELF->source = DX_ASSET_VIEWER(asset_viewer_instance->viewer_reference->object)->source;
-  SELF->target = DX_ASSET_VIEWER(asset_viewer_instance->viewer_reference->object)->target;
-  SELF->up = DX_ASSET_VIEWER(asset_viewer_instance->viewer_reference->object)->up;
+  SELF->source = DX_ASSETS_VIEWER(asset_viewer_instance->viewer_reference->object)->source;
+  SELF->target = DX_ASSETS_VIEWER(asset_viewer_instance->viewer_reference->object)->target;
+  SELF->up = DX_ASSETS_VIEWER(asset_viewer_instance->viewer_reference->object)->up;
   SELF->asset_viewer_instance = asset_viewer_instance;
   dx_mat4_set_identity(&SELF->view_matrix);
   dx_mat4_set_identity(&SELF->projection_matrix);
@@ -30,7 +30,7 @@ dx_result dx_val_viewer_construct(dx_val_viewer* SELF, dx_asset_viewer_instance*
   return DX_SUCCESS;
 }
 
-dx_result dx_val_viewer_create(dx_val_viewer** RETURN, dx_asset_viewer_instance* asset_viewer_instance) {
+dx_result dx_val_viewer_create(dx_val_viewer** RETURN, dx_assets_viewer_instance* asset_viewer_instance) {
   DX_CREATE_PREFIX(dx_val_viewer)
   if (dx_val_viewer_construct(SELF, asset_viewer_instance)) {
     DX_UNREFERENCE(SELF);
@@ -46,7 +46,7 @@ dx_result dx_val_viewer_get_projection_matrix(DX_MAT4* RETURN, dx_val_viewer* SE
     dx_set_error(DX_ERROR_INVALID_ARGUMENT);
     return DX_FAILURE;
   }
-  dx_asset_optics* optics = DX_ASSET_VIEWER(SELF->asset_viewer_instance->viewer_reference->object)->optics;
+  dx_assets_optics* optics = DX_ASSETS_VIEWER(SELF->asset_viewer_instance->viewer_reference->object)->optics;
   if (!optics) {
     return DX_FAILURE;
   }

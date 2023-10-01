@@ -63,7 +63,11 @@ static dx_result quit_requested(dx_bool* RETURN, dx_default_application_presente
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 static dx_result on_msg(dx_default_application_presenter* SELF, dx_msg* msg) {
-  switch (dx_msg_get_flags(msg)) {
+  dx_n32 msg_flags;
+  if (dx_msg_get_flags(&msg_flags, msg)) {
+    return DX_FAILURE;
+  }
+  switch (msg_flags) {
     case DX_MSG_TYPE_EMIT: {
       dx_emit_msg* emit_msg = DX_EMIT_MSG(msg);
       char const* p; dx_size n;
@@ -135,20 +139,6 @@ static dx_result on_msg(dx_default_application_presenter* SELF, dx_msg* msg) {
   return DX_SUCCESS;
 }
 
-static dx_result get_val_context(dx_val_context** RETURN, dx_default_application_presenter* SELF) {
-  if (!RETURN) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
-  }
-  if (!SELF) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
-  }
-  DX_REFERENCE(SELF->val_context);
-  *RETURN = SELF->val_context;
-  return DX_SUCCESS;
-}
-
 static dx_result get_console(dx_console** RETURN, dx_default_application_presenter* SELF) {
   if (!RETURN) {
     dx_set_error(DX_ERROR_INVALID_ARGUMENT);
@@ -202,7 +192,7 @@ static dx_result print_info(dx_default_application_presenter* SELF) {
   if (dx_string_create(&f, "enter `help` to find out more about the console\n", sizeof("enter `help` to find out more about the console\n") - 1)) {
     return DX_FAILURE;
   }
-  if (dx_console_append_text(SELF->console, f)) {
+  if (dx_console_append_output_text(SELF->console, f)) {
     DX_UNREFERENCE(f);
     f = NULL;
     return DX_FAILURE;
@@ -423,7 +413,6 @@ static void dx_default_application_presenter_destruct(dx_default_application_pre
 }
 
 static void dx_default_application_presenter_dispatch_construct(dx_default_application_presenter_dispatch* SELF) {
-  DX_APPLICATION_PRESENTER_DISPATCH(SELF)->get_val_context = (dx_result(*)(dx_val_context**, dx_application_presenter*)) & get_val_context;
   DX_APPLICATION_PRESENTER_DISPATCH(SELF)->run = (dx_result(*)(dx_application_presenter*)) & run;
   DX_APPLICATION_PRESENTER_DISPATCH(SELF)->shutdown = (dx_result(*)(dx_application_presenter*)) &shutdown;
   DX_APPLICATION_PRESENTER_DISPATCH(SELF)->startup = (dx_result(*)(dx_application_presenter*)) &startup;

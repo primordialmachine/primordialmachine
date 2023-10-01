@@ -118,8 +118,8 @@ static inline dx_result dx_engine_utilities_2d_create_material(dx_val_material**
   if (dx_string_create(&name_string, name, strlen(name))) {
     return DX_FAILURE;
   }
-  dx_asset_material* asset_material = NULL;
-  if (dx_asset_material_create(&asset_material, name_string)) {
+  dx_assets_material* material_asset = NULL;
+  if (dx_assets_material_create(&material_asset, name_string)) {
     DX_UNREFERENCE(name_string);
     name_string = NULL;
     return DX_FAILURE;
@@ -129,28 +129,28 @@ static inline dx_result dx_engine_utilities_2d_create_material(dx_val_material**
   dx_assets_color_rgb_n8* ambient_color = NULL;
   DX_RGB_N8 WHITE = { .r = 255, .g = 255, .b = 255 };
   if (dx_assets_color_rgb_n8_create(&ambient_color, &WHITE)) {
-    DX_UNREFERENCE(asset_material);
-    asset_material = NULL;
+    DX_UNREFERENCE(material_asset);
+    material_asset = NULL;
     return DX_FAILURE;
   }
-  if (dx_asset_material_set_ambient_color(asset_material, ambient_color)) {
+  if (dx_assets_material_set_ambient_color(material_asset, ambient_color)) {
     DX_UNREFERENCE(ambient_color);
     ambient_color = NULL;
-    DX_UNREFERENCE(asset_material);
-    asset_material = NULL;
+    DX_UNREFERENCE(material_asset);
+    material_asset = NULL;
     return DX_FAILURE;
   }
   DX_UNREFERENCE(ambient_color);
   ambient_color = NULL;
   // create the val material
   dx_val_material* val_material = NULL;
-  if (dx_val_material_create(&val_material, context, asset_material)) {
-    DX_UNREFERENCE(asset_material);
-    asset_material = NULL;
+  if (dx_val_material_create(&val_material, context, material_asset)) {
+    DX_UNREFERENCE(material_asset);
+    material_asset = NULL;
     return DX_FAILURE;
   }
-  DX_UNREFERENCE(asset_material);
-  asset_material = NULL;
+  DX_UNREFERENCE(material_asset);
+  material_asset = NULL;
   *RETURN = val_material;
   return DX_SUCCESS;
 }
@@ -165,7 +165,7 @@ static inline dx_result dx_engine_utilities_2d_create_material(dx_val_material**
 /// @param h The height of the pixel rectangle.
 /// @default-return
 /// @defaut-failure
-static inline dx_result dx_assets_extensions_create_texture_from_pixels(dx_asset_texture** RETURN, void* pixels, dx_pixel_format pixel_format, dx_n32 width, dx_n32 height) {
+static inline dx_result dx_assets_extensions_create_texture_from_pixels(dx_assets_texture** RETURN, void* pixels, dx_pixel_format pixel_format, dx_n32 width, dx_n32 height) {
   if (width > DX_SIZE_GREATEST || height > DX_SIZE_GREATEST) {
     dx_set_error(DX_ERROR_INVALID_ARGUMENT);
     return DX_FAILURE;
@@ -175,8 +175,8 @@ static inline dx_result dx_assets_extensions_create_texture_from_pixels(dx_asset
   if (dx_string_create(&image_name, "<temporary>", sizeof("<temporary>") - 1)) {
     return DX_FAILURE;
   }
-  dx_asset_image* image = NULL;
-  if (dx_asset_image_create(&image, image_name, pixel_format, width, height)) {
+  dx_assets_image* image = NULL;
+  if (dx_assets_image_create(&image, image_name, pixel_format, width, height)) {
     DX_UNREFERENCE(image_name);
     image_name = NULL;
     return DX_FAILURE;
@@ -228,8 +228,8 @@ static inline dx_result dx_assets_extensions_create_texture_from_pixels(dx_asset
     image_reference = NULL;
     return DX_FAILURE;
   }
-  dx_asset_texture* texture = NULL;
-  if (dx_asset_texture_create(&texture, texture_name, image_reference)) {
+  dx_assets_texture* texture = NULL;
+  if (dx_assets_texture_create(&texture, texture_name, image_reference)) {
     DX_UNREFERENCE(texture_name);
     texture_name = NULL;
     DX_UNREFERENCE(image_reference);
@@ -246,7 +246,7 @@ static inline dx_result dx_assets_extensions_create_texture_from_pixels(dx_asset
   return DX_SUCCESS;
 }
 
-static inline dx_result dx_assets_extensions_create_texture_from_glyph(dx_asset_texture** RETURN, dx_font_glyph* glyph) {
+static inline dx_result dx_assets_extensions_create_texture_from_glyph(dx_assets_texture** RETURN, dx_font_glyph* glyph) {
   uint32_t width = 0,
            height = 0;
   if (dx_font_glyph_get_size(glyph, &width, &height)) {
@@ -256,7 +256,7 @@ static inline dx_result dx_assets_extensions_create_texture_from_glyph(dx_asset_
   if (dx_font_glyph_get_pixels(glyph, &pixels)) {
     return DX_FAILURE;
   }
-  dx_asset_texture* texture = NULL;
+  dx_assets_texture* texture = NULL;
   if (dx_assets_extensions_create_texture_from_pixels(&texture, pixels, dx_pixel_format_ln8, width, height)) {
     return DX_FAILURE;
   }

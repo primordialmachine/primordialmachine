@@ -1,10 +1,10 @@
 #include "dx/assets/material.h"
 
-DX_DEFINE_OBJECT_TYPE("dx.asset.material",
-                      dx_asset_material,
+DX_DEFINE_OBJECT_TYPE("dx.assets.material",
+                      dx_assets_material,
                       dx_object);
 
-static void dx_asset_material_destruct(dx_asset_material* SELF) {
+static void dx_assets_material_destruct(dx_assets_material* SELF) {
   if (SELF->ambient_color) {
     DX_UNREFERENCE(SELF->ambient_color);
     SELF->ambient_color = NULL;
@@ -23,15 +23,15 @@ static void dx_asset_material_destruct(dx_asset_material* SELF) {
   }
 }
 
-static void dx_asset_material_dispatch_construct(dx_asset_material_dispatch* self)
+static void dx_assets_material_dispatch_construct(dx_assets_material_dispatch* self)
 {/*Intentionally empty.*/}
 
-dx_result dx_asset_material_construct(dx_asset_material* SELF, dx_string* name) {
+dx_result dx_assets_material_construct(dx_assets_material* SELF, dx_string* name) {
   if (!SELF) {
     dx_set_error(DX_ERROR_INVALID_ARGUMENT);
     return DX_FAILURE;
   }
-  dx_rti_type* TYPE = dx_asset_material_get_type();
+  dx_rti_type* TYPE = dx_assets_material_get_type();
   if (!TYPE) {
     return DX_FAILURE;
   }
@@ -53,9 +53,9 @@ dx_result dx_asset_material_construct(dx_asset_material* SELF, dx_string* name) 
   return DX_SUCCESS;
 }
 
-dx_result dx_asset_material_create(dx_asset_material** RETURN, dx_string* name) {
-  DX_CREATE_PREFIX(dx_asset_material)
-  if (dx_asset_material_construct(SELF, name)) {
+dx_result dx_assets_material_create(dx_assets_material** RETURN, dx_string* name) {
+  DX_CREATE_PREFIX(dx_assets_material)
+  if (dx_assets_material_construct(SELF, name)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
     return DX_FAILURE;
@@ -64,7 +64,7 @@ dx_result dx_asset_material_create(dx_asset_material** RETURN, dx_string* name) 
   return DX_SUCCESS;
 }
 
-dx_result dx_asset_material_set_ambient_color(dx_asset_material* SELF, dx_assets_color_rgb_n8* ambient_color) {
+dx_result dx_assets_material_set_ambient_color(dx_assets_material* SELF, dx_assets_color_rgb_n8* ambient_color) {
   if (!SELF || !ambient_color) {
     dx_set_error(DX_ERROR_INVALID_ARGUMENT);
     return DX_FAILURE;
@@ -90,7 +90,7 @@ dx_result dx_asset_material_set_ambient_color(dx_asset_material* SELF, dx_assets
   return DX_SUCCESS;
 }
 
-dx_result dx_asset_material_set_ambient_texture(dx_asset_material* SELF, dx_asset_reference* ambient_texture_reference) {
+dx_result dx_assets_material_set_ambient_texture(dx_assets_material* SELF, dx_asset_reference* ambient_texture_reference) {
   if (!SELF) {
     dx_set_error(DX_ERROR_INVALID_ARGUMENT);
     return DX_FAILURE;

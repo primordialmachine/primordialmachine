@@ -1,0 +1,177 @@
+/* Copyright (c) 2023 Michael Heilmann. All rights reserved. */
+
+/**
+ * @copyright Copyright (c) 2023 Michael Heilmann. All rights reserved
+ * @author Michael Heilmann
+ * @description Structural properties (as opposed to colors, typography and decorations).
+ */
+
+main > div.container
+{
+  display: block;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: right; /**@todo Shouldn't this be center?*/
+
+  width: 100%;
+  max-width: 100%;
+
+  align-items: stretch;
+  height: 100%;
+}
+
+main > div.container > div.left-column {
+  display: block;
+  max-width: 164px;
+  min-width: 164px;
+  width: 164px;
+
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+}
+
+main > div.container > div.right-column
+{
+  display: block;
+
+  max-width: 20%;
+  min-width: 200px;
+}
+
+main > div.container > div.center-column
+{
+  display: block;
+
+  min-width: 400px;
+
+  margin-left: 32px;
+  margin-right: 32px;
+
+
+  margin-top: 64px;
+  margin-bottom: 16px;
+
+  flex-grow: 1;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+
+  min-width: 800px;
+  width: 100vw;
+  height: 100vh;
+}
+
+header, footer {
+  min-height: 96px;
+}
+
+header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+
+  padding: 16px;
+}
+
+/*
+ * The first child of the header contains the logo.
+ * The third child of the header contains the nagivation.
+ * The second child grows and shrinks dynamically. 
+ */
+header > div:nth-child(1) {
+  /*background-color: red;*/
+  flex-grow: 0;
+  flex-shrink: 0;
+}
+
+header > div:nth-child(2) {
+  /*background-color: green;*/
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+
+header > div:nth-child(3) {
+  /*background-color: blue;*/
+  flex-grow: 0;
+  flex-shrink: 0;
+}
+
+main {
+  /*
+   * header and footer do not grow vertically
+   * main grows vertically
+   */
+  flex-grow: 1;
+}
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/* navigation menu level 1 */
+
+.nav-menu-level-1 {
+  display: flex;
+  flex-direction: row;
+  list-style: none;  
+}
+
+li.nav-menu-element-level-1 > a,
+li.nav-menu-element-level-1 > a:hover,
+li.nav-menu-element-level-1 > a:visited {
+  background-color: black;
+  border-style: solid;
+  border-width: 1.25px;
+  border-color: white;
+  border-radius: 0.25rem;
+  
+  text-decoration: none;
+  
+  padding: 0.25rem;
+  
+  white-space: nowrap;
+}
+
+li.nav-menu-element-level-1 {  
+  margin-left: 1rem;
+}
+
+li.nav-menu-element-level-1:first {
+  margin-left: 0;
+}
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/* navigation menu level 2 */
+
+li.nav-menu-element-level-2 a,
+li.nav-menu-element-level-2 a:hover,
+li.nav-menu-element-level-2 a:visited {
+  text-decoration: none;
+  
+  padding: 0.25rem;
+  
+  white-space: nowrap;
+}
+
+.nav-menu-level-2 {
+  z-index: 1000; /*really on top of everything :D */
+  position: absolute;
+
+  background-color: black;
+  border-style: solid;
+  border-width: 1.25px;
+  border-color: white;
+  border-radius: 0.25rem;
+  
+  margin-top: 1rem;
+}
+
+.nav-menu-level-2.opened {
+  display: block;
+}
+
+.nav-menu-level-2.closed {
+  display: none;
+}

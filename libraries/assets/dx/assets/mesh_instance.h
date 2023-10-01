@@ -10,7 +10,7 @@
 /// @brief A mesh instance asset.
 DX_DECLARE_OBJECT_TYPE("dx.asset.mesh_instance",
                        dx_asset_mesh_instance,
-                       dx_object)
+                       dx_object);
 
 static inline dx_asset_mesh_instance* DX_ASSET_MESH_INSTANCE(void* p) {
     return (dx_asset_mesh_instance*)p;

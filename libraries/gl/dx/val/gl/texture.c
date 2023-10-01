@@ -9,21 +9,21 @@ DX_DEFINE_OBJECT_TYPE("dx.val.gl.texture",
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-static dx_result dx_val_gl_texture_set_data(dx_val_gl_texture* SELF, dx_asset_texture* texture) {
+static dx_result dx_val_gl_texture_set_data(dx_val_gl_texture* SELF, dx_assets_texture* texture) {
   dx_val_gl_context* context = DX_VAL_GL_CONTEXT(DX_VAL_TEXTURE(SELF)->context);
-  switch (DX_ASSET_IMAGE(texture->image_reference->object)->pixel_format) {
+  switch (DX_ASSETS_IMAGE(texture->image_reference->object)->pixel_format) {
   case dx_pixel_format_ln8: {
     context->glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     context->glBindTexture(GL_TEXTURE_2D, SELF->id);
     context->glTexImage2D(GL_TEXTURE_2D,
                           0,
                           GL_RED,
-                          DX_ASSET_IMAGE(texture->image_reference->object)->width,
-                          DX_ASSET_IMAGE(texture->image_reference->object)->height,
+                          DX_ASSETS_IMAGE(texture->image_reference->object)->width,
+                          DX_ASSETS_IMAGE(texture->image_reference->object)->height,
                           0,
                           GL_RED,
                           GL_UNSIGNED_BYTE,
-                          DX_ASSET_IMAGE(texture->image_reference->object)->pixels);
+                          DX_ASSETS_IMAGE(texture->image_reference->object)->pixels);
   } break;
   case dx_pixel_format_rn8_gn8_bn8: {
     context->glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
@@ -31,12 +31,12 @@ static dx_result dx_val_gl_texture_set_data(dx_val_gl_texture* SELF, dx_asset_te
     context->glTexImage2D(GL_TEXTURE_2D,
                           0,
                           GL_RGB,
-                          DX_ASSET_IMAGE(texture->image_reference->object)->width,
-                          DX_ASSET_IMAGE(texture->image_reference->object)->height,
+                          DX_ASSETS_IMAGE(texture->image_reference->object)->width,
+                          DX_ASSETS_IMAGE(texture->image_reference->object)->height,
                           0,
                           GL_RGB,
                           GL_UNSIGNED_BYTE,
-                          DX_ASSET_IMAGE(texture->image_reference->object)->pixels);
+                          DX_ASSETS_IMAGE(texture->image_reference->object)->pixels);
   } break;
   case dx_pixel_format_bn8_gn8_rn8: {
     context->glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
@@ -44,11 +44,11 @@ static dx_result dx_val_gl_texture_set_data(dx_val_gl_texture* SELF, dx_asset_te
     context->glTexImage2D(GL_TEXTURE_2D,
                           0,
                           GL_RGB,
-                          DX_ASSET_IMAGE(texture->image_reference->object)->width,
-                          DX_ASSET_IMAGE(texture->image_reference->object)->height, 0,
+                          DX_ASSETS_IMAGE(texture->image_reference->object)->width,
+                          DX_ASSETS_IMAGE(texture->image_reference->object)->height, 0,
                           GL_BGR,
                           GL_UNSIGNED_BYTE,
-                          DX_ASSET_IMAGE(texture->image_reference->object)->pixels);
+                          DX_ASSETS_IMAGE(texture->image_reference->object)->pixels);
   } break;
   default: {
     dx_set_error(DX_ERROR_ENVIRONMENT_FAILED);
@@ -267,7 +267,7 @@ static void dx_val_gl_texture_destruct(dx_val_gl_texture* SELF) {
 }
 
 static void dx_val_gl_texture_dispatch_construct(dx_val_gl_texture_dispatch* self) {
-  DX_VAL_TEXTURE_DISPATCH(self)->set_data = (dx_result(*)(dx_val_texture*, dx_asset_texture*)) & dx_val_gl_texture_set_data;
+  DX_VAL_TEXTURE_DISPATCH(self)->set_data = (dx_result(*)(dx_val_texture*, dx_assets_texture*)) & dx_val_gl_texture_set_data;
 
   DX_VAL_TEXTURE_DISPATCH(self)->set_texture_address_mode_u = (dx_result(*)(dx_val_texture*, dx_texture_address_mode)) & dx_val_gl_texture_set_texture_address_mode_u;
   DX_VAL_TEXTURE_DISPATCH(self)->get_texture_address_mode_u = (dx_result(*)(dx_texture_address_mode*, dx_val_texture*)) & dx_val_gl_texture_get_texture_address_mode_u;
@@ -285,18 +285,18 @@ static void dx_val_gl_texture_dispatch_construct(dx_val_gl_texture_dispatch* sel
   DX_VAL_TEXTURE_DISPATCH(self)->get_texture_border_color = (dx_result(*)(DX_VEC4*, dx_val_texture*)) & dx_val_gl_texture_get_texture_border_color;
 }
 
-static dx_result fill_amber(dx_asset_image* image_value) {
+static dx_result fill_amber(dx_assets_image* image_value) {
   dx_assets_color_rgb_n8* color_value = NULL;
   if (dx_assets_color_rgb_n8_create(&color_value, &dx_colors_amber)) {
     return DX_FAILURE;
   }
-  dx_asset_image_operations_color_fill* image_operation_value = NULL;
-  if (dx_asset_image_operations_color_fill_create(&image_operation_value)) {
+  dx_assets_image_operations_color_fill* image_operation_value = NULL;
+  if (dx_assets_image_operations_color_fill_create(&image_operation_value)) {
     DX_UNREFERENCE(color_value);
     color_value = NULL;
     return DX_FAILURE;
   }
-  if (dx_asset_image_operations_color_fill_set_color(image_operation_value, color_value)) {
+  if (dx_assets_image_operations_color_fill_set_color(image_operation_value, color_value)) {
     DX_UNREFERENCE(image_operation_value);
     image_operation_value = NULL;
     DX_UNREFERENCE(color_value);
@@ -305,7 +305,7 @@ static dx_result fill_amber(dx_asset_image* image_value) {
   }
   DX_UNREFERENCE(color_value);
   color_value = NULL;
-  if (dx_asset_image_apply(image_value, 0, 0, image_value->width, image_value->height, DX_ASSET_IMAGE_OPERATION(image_operation_value))) {
+  if (dx_assets_image_apply(image_value, 0, 0, image_value->width, image_value->height, DX_ASSETS_IMAGE_OPERATION(image_operation_value))) {
     DX_UNREFERENCE(image_operation_value);
     image_operation_value = NULL;
     return DX_FAILURE;
@@ -355,8 +355,8 @@ dx_result dx_val_gl_texture_construct(dx_val_gl_texture* SELF, dx_val_gl_context
     SELF->id = 0;
     return DX_FAILURE;
   }
-  dx_asset_image* image = NULL;
-  if (dx_asset_image_create(&image, name, dx_pixel_format_rn8_gn8_bn8, 8, 8)) {
+  dx_assets_image* image = NULL;
+  if (dx_assets_image_create(&image, name, dx_pixel_format_rn8_gn8_bn8, 8, 8)) {
     DX_UNREFERENCE(name);
     name = NULL;
     context->glDeleteTextures(1, &SELF->id);

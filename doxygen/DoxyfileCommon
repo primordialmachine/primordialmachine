@@ -261,7 +261,7 @@ ALIASES                = "error=@par Error^^" \
                          "success=@par On Success^^" \
                          "default-failure=@failure This function has set the error variable to a non-zero value." \
                          "default-return=@return #DX_SUCCESS on success. #DX_FAILURE on failure." \
-                         "procedure-call=@default-failure^^@default-return" \
+                         "procedure=@default-failure^^@default-return" \
                          "method-call=@default-failure^^@default-return^^@error #DX_ERROR_INVALID_ARGUMENT @a SELF is a null pointer"
 
 ALIASES += method{1}="@param SELF A pointer to this \1 object.^^@default-failure^^@default-return^^@error #DX_ERROR_INVALID_ARGUMENT @a SELF is a null pointer"

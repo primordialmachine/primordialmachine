@@ -13,6 +13,10 @@ static inline dx_adl_type_handlers_mesh_instance* DX_ADL_TYPE_HANDLERS_MESH_INST
 
 struct dx_adl_type_handlers_mesh_instance {
   dx_adl_type_handler _parent;
+  /// @brief
+  /// Set of expected keys.
+  /// If a key is not in that set, then this is a semantical error.
+  dx_inline_pointer_hashmap expected_keys;
 };
 
 static inline dx_adl_type_handlers_mesh_instance_dispatch* DX_ADL_TYPE_HANDLERS_MESH_INSTANCE_DISPATCH(void* p) {

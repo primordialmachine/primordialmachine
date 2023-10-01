@@ -1,19 +1,19 @@
-#if !defined(DX_ASSET_TEXTURE_H_INCLUDED)
-#define DX_ASSET_TEXTURE_H_INCLUDED
+#if !defined(DX_ASSETS_TEXTURE_H_INCLUDED)
+#define DX_ASSETS_TEXTURE_H_INCLUDED
 
 #include "dx/assets/image.h"
 #include "dx/assets/reference.h"
 
 /// @brief A texture asset.
-DX_DECLARE_OBJECT_TYPE("dx.asset.texture",
-                       dx_asset_texture,
-                       dx_object)
+DX_DECLARE_OBJECT_TYPE("dx.assets.texture",
+                       dx_assets_texture,
+                       dx_object);
 
-static inline dx_asset_texture* DX_ASSET_TEXTURE(void* p) {
-  return (dx_asset_texture*)p;
+static inline dx_assets_texture* DX_ASSETS_TEXTURE(void* p) {
+  return (dx_assets_texture*)p;
 }
 
-struct dx_asset_texture {
+struct dx_assets_texture {
   dx_object _parent;
   /// @brief A pointer to the ADL name of this texture.
   dx_string* name;
@@ -21,18 +21,19 @@ struct dx_asset_texture {
   dx_asset_reference* image_reference;
 };
 
-struct dx_asset_texture_dispatch {
+static inline dx_assets_texture_dispatch* DX_ASSETS_TEXTURE_DISPATCH(void* p) {
+  return (dx_assets_texture_dispatch*)p;
+}
+
+struct dx_assets_texture_dispatch {
   dx_object _parent;
 };
 
-/// @brief Construct this dx_asset_texture object.
-/// @param SELF A pointer to this dx_asset_material object.
 /// @param name A pointer to the ADL name of the texture.
 /// @param image_reference The image reference of this texture.
-/// @default-return
-/// @default-failure
-dx_result dx_asset_texture_construct(dx_asset_texture* SELF, dx_string* name, dx_asset_reference* image_reference);
+/// @constructor{dx_assets_texture}
+dx_result dx_assets_texture_construct(dx_assets_texture* SELF, dx_string* name, dx_asset_reference* image_reference);
 
-dx_result dx_asset_texture_create(dx_asset_texture** RETURN, dx_string* name, dx_asset_reference* image_reference);
+dx_result dx_assets_texture_create(dx_assets_texture** RETURN, dx_string* name, dx_asset_reference* image_reference);
 
-#endif // DX_ASSET_TEXTURE_H_INCLUDED
+#endif // DX_ASSETS_TEXTURE_H_INCLUDED

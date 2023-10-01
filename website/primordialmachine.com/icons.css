@@ -1,0 +1,52 @@
+/* Copyright (c) 2023 Michael Heilmann. All rights reserved. */
+
+/**
+ * @copyright Copyright (c) 2023 Michael Heilmann. All rights reserved
+ * @author Michael Heilmann
+ * @description Icons for social media platforms (Twitter, Facebook, etc.) and application lifecycle management platforms (GitHub, GitLab, Bitbucket, etc.).
+ */
+
+:root {
+  --icon-size: 64px;
+}
+
+a.icon-bitbucket {
+  background-image: url('bitbucket.svg');
+  background-repeat: no-repeat;
+  display: block;
+  width: var(--icon-size);
+  height: var(--icon-size);
+}
+
+a.icon-gitlab {
+  background-image: url('gitlab.svg');
+  background-repeat: no-repeat;
+  display: block;
+  width: var(--icon-size);
+  height: var(--icon-size);
+}
+
+a.icon-github {
+  background-image: url('github.svg');
+  background-repeat: no-repeat;
+  display: block;
+  width: var(--icon-size);
+  height: var(--icon-size);
+}
+
+ul.social-icons {
+  list-style: none;
+
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  row-gap: 64px;
+  column-gap: 64px;
+
+  align-items: center;
+
+  margin-right: 38px;
+  margin-left: 38px;
+
+  width: 100%;
+}

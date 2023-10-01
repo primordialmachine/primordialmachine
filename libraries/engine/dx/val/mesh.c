@@ -6,7 +6,7 @@
 
 DX_DEFINE_OBJECT_TYPE("dx.val.mesh",
                       dx_val_mesh,
-                      dx_object)
+                      dx_object);
 
 /// @brief See shader program source code for details.
 #define DX_PROGRAM_WITH_MESH_AMBIENT_RGBA (1)
@@ -33,13 +33,13 @@ DX_DEFINE_OBJECT_TYPE("dx.val.mesh",
 // The shaders can be adjusted at load time via the @a flags.
 static dx_val_program_text* load_program(dx_string* path, dx_string* filename, uint8_t flags);
 
-static dx_result add_material_to_backend(dx_val_mesh* self);
+static dx_result add_material_to_backend(dx_val_mesh* SELF);
 
-static void remove_material_from_backend(dx_val_mesh* self);
+static void remove_material_from_backend(dx_val_mesh* SELF);
 
-static dx_result add_to_backend(dx_val_mesh* self);
+static dx_result add_to_backend(dx_val_mesh* SELF);
 
-static void remove_from_backend(dx_val_mesh* self);
+static void remove_from_backend(dx_val_mesh* SELF);
 
 static dx_val_program_text* load_program(dx_string* path, dx_string* filename, uint8_t flags) {
   dx_val_program_text* vertex_program = NULL, * fragment_program = NULL;
@@ -180,24 +180,24 @@ on_error:
   return NULL;
 }
 
-static dx_result add_material_to_backend(dx_val_mesh* self) {
-  if (self->asset_mesh->material_reference && self->asset_mesh->material_reference->object) {
-    if (dx_val_material_create(&self->material, self->context, DX_ASSET_MATERIAL(self->asset_mesh->material_reference->object))) {
+static dx_result add_material_to_backend(dx_val_mesh* SELF) {
+  if (SELF->mesh_asset->material_reference && SELF->mesh_asset->material_reference->object) {
+    if (dx_val_material_create(&SELF->material, SELF->context, DX_ASSETS_MATERIAL(SELF->mesh_asset->material_reference->object))) {
       return DX_FAILURE;
     }
   }
   return DX_SUCCESS;
 }
 
-static void remove_material_from_backend(dx_val_mesh* self) {
-  if (self->material) {
-    DX_UNREFERENCE(self->material);
-    self->material = NULL;
+static void remove_material_from_backend(dx_val_mesh* SELF) {
+  if (SELF->material) {
+    DX_UNREFERENCE(SELF->material);
+    SELF->material = NULL;
   }
 }
 
 static dx_result add_to_backend(dx_val_mesh* SELF) {
-  dx_vertex_format vertex_format = SELF->asset_mesh->vertex_format;
+  dx_vertex_format vertex_format = SELF->mesh_asset->vertex_format;
 
   // create buffer
   if (dx_val_context_create_buffer(&SELF->buffer, SELF->context)) {
@@ -206,7 +206,7 @@ static dx_result add_to_backend(dx_val_mesh* SELF) {
 
   // upload data to buffer
   void* bytes; dx_size number_of_bytes;
-  if (dx_asset_mesh_format(SELF->asset_mesh, vertex_format, &bytes, &number_of_bytes)) {
+  if (dx_assets_mesh_format(SELF->mesh_asset, vertex_format, &bytes, &number_of_bytes)) {
     return DX_FAILURE;
   }
   if (dx_val_buffer_set_data(SELF->buffer, bytes, number_of_bytes)) {
@@ -235,7 +235,7 @@ static dx_result add_to_backend(dx_val_mesh* SELF) {
   } break;
   case dx_vertex_format_position_xyz_ambient_uv: {
    flags |= DX_PROGRAM_WITH_VERTEX_AMBIENT_UV;
-   if (SELF->material->asset_material->ambient_texture_reference && SELF->material->asset_material->ambient_texture_reference->object) {
+   if (SELF->material->material_asset->ambient_texture_reference && SELF->material->material_asset->ambient_texture_reference->object) {
       flags |= DX_PROGRAM_WITH_MATERIAL_AMBIENT_TEXTURE;
     }
   } break;
@@ -301,33 +301,33 @@ static void remove_from_backend(dx_val_mesh* SELF) {
 static void dx_val_mesh_destruct(dx_val_mesh* SELF) {
   remove_material_from_backend(SELF);
   remove_from_backend(SELF);
-  DX_UNREFERENCE(SELF->asset_mesh);
-  SELF->asset_mesh = NULL;
+  DX_UNREFERENCE(SELF->mesh_asset);
+  SELF->mesh_asset = NULL;
 }
 
 static void dx_val_mesh_dispatch_construct(dx_val_mesh_dispatch* SELF)
 {/*Intentionally empty.*/}
 
-dx_result dx_val_mesh_construct(dx_val_mesh* SELF, dx_val_context* context, dx_asset_mesh* asset_mesh) {
+dx_result dx_val_mesh_construct(dx_val_mesh* SELF, dx_val_context* context, dx_assets_mesh* mesh_asset) {
   dx_rti_type* TYPE = dx_val_mesh_get_type();
   if (!TYPE) {
     return DX_FAILURE;
   }
 
-  SELF->asset_mesh = asset_mesh;
-  DX_REFERENCE(asset_mesh);
+  SELF->mesh_asset = mesh_asset;
+  DX_REFERENCE(mesh_asset);
 
   SELF->context = context;
 
   if (add_material_to_backend(SELF)) {
-    DX_UNREFERENCE(SELF->asset_mesh);
-    SELF->asset_mesh = NULL;
+    DX_UNREFERENCE(SELF->mesh_asset);
+    SELF->mesh_asset = NULL;
   }
 
   if (add_to_backend(SELF)) {
     remove_material_from_backend(SELF);
-    DX_UNREFERENCE(SELF->asset_mesh);
-    SELF->asset_mesh = NULL;
+    DX_UNREFERENCE(SELF->mesh_asset);
+    SELF->mesh_asset = NULL;
     return DX_FAILURE;
   }
 
@@ -335,9 +335,9 @@ dx_result dx_val_mesh_construct(dx_val_mesh* SELF, dx_val_context* context, dx_a
   return DX_SUCCESS;
 }
 
-dx_result dx_val_mesh_create(dx_val_mesh** RETURN, dx_val_context* context, dx_asset_mesh* asset_mesh) {
+dx_result dx_val_mesh_create(dx_val_mesh** RETURN, dx_val_context* context, dx_assets_mesh* mesh_asset) {
   DX_CREATE_PREFIX(dx_val_mesh)
-  if (dx_val_mesh_construct(SELF, context, asset_mesh)) {
+  if (dx_val_mesh_construct(SELF, context, mesh_asset)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
     return DX_FAILURE;

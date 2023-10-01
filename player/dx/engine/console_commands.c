@@ -39,7 +39,7 @@ static dx_result print_library_info(dx_application_presenter* application_presen
     message_string = NULL;
     return DX_FAILURE;
   }
-  if (dx_console_append_text(console, message_string)) {
+  if (dx_console_append_output_text(console, message_string)) {
     DX_UNREFERENCE(console);
     console = NULL;
     DX_UNREFERENCE(message_string);

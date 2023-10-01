@@ -1,6 +1,5 @@
 #include "dx/aal/al/system_factory.h"
 
-#include "dx/application.h"
 #include "dx/aal/al/system.h"
 
 DX_DEFINE_OBJECT_TYPE("dx.aal.al.system_factory",

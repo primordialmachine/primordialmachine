@@ -2,18 +2,18 @@
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-DX_DEFINE_OBJECT_TYPE("dx.asset.optics",
-                      dx_asset_optics,
+DX_DEFINE_OBJECT_TYPE("dx.assets.optics",
+                      dx_assets_optics,
                       dx_object);
 
-static void dx_asset_optics_destruct(dx_asset_optics* SELF)
+static void dx_assets_optics_destruct(dx_assets_optics* SELF)
 {/*Intentionally empty.*/}
 
-static void dx_asset_optics_dispatch_construct(dx_asset_optics_dispatch* SELF)
+static void dx_assets_optics_dispatch_construct(dx_assets_optics_dispatch* SELF)
 {/*Intentionally empty.*/}
 
-dx_result dx_asset_optics_construct(dx_asset_optics* SELF) {
-  dx_rti_type* TYPE = dx_asset_optics_get_type();
+dx_result dx_assets_optics_construct(dx_assets_optics* SELF) {
+  dx_rti_type* TYPE = dx_assets_optics_get_type();
   if (!TYPE) {
     return DX_FAILURE;
   }
@@ -25,7 +25,7 @@ dx_result dx_asset_optics_construct(dx_asset_optics* SELF) {
 
 DX_DEFINE_OBJECT_TYPE("dx.asset.optics_orthographic",
                       dx_asset_optics_orthographic,
-                      dx_asset_optics)
+                      dx_assets_optics)
 
 static void dx_asset_optics_orthographic_destruct(dx_asset_optics_orthographic* SELF) {
   if (SELF->scale_y) {
@@ -48,6 +48,9 @@ static void dx_asset_optics_orthographic_dispatch_construct(dx_asset_optics_orth
 dx_result dx_asset_optics_orthographic_construct(dx_asset_optics_orthographic* SELF) {
   dx_rti_type* TYPE = dx_asset_optics_orthographic_get_type();
   if (!TYPE) {
+    return DX_FAILURE;
+  }
+  if (dx_assets_optics_construct(DX_ASSETS_OPTICS(SELF))) {
     return DX_FAILURE;
   }
   SELF->aspect_ratio = NULL;
@@ -87,7 +90,7 @@ dx_result dx_asset_optics_orthographic_create(dx_asset_optics_orthographic** RET
 
 DX_DEFINE_OBJECT_TYPE("dx.asset.optics_perspective",
                       dx_asset_optics_perspective,
-                      dx_asset_optics);
+                      dx_assets_optics);
 
 static void dx_asset_optics_perspective_destruct(dx_asset_optics_perspective* SELF) {
   if (SELF->aspect_ratio) {
@@ -102,6 +105,9 @@ static void dx_asset_optics_perspective_dispatch_construct(dx_asset_optics_persp
 dx_result dx_asset_optics_perspective_construct(dx_asset_optics_perspective* SELF) {
   dx_rti_type* TYPE = dx_asset_optics_perspective_get_type();
   if (!TYPE) {
+    return DX_FAILURE;
+  }
+  if (dx_assets_optics_construct(DX_ASSETS_OPTICS(SELF))) {
     return DX_FAILURE;
   }
   if (dx_memory_allocate(&SELF->aspect_ratio, sizeof(dx_f32))) {

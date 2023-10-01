@@ -2,11 +2,11 @@
 
 #include "dx/assets/optics.h"
 
-DX_DEFINE_OBJECT_TYPE("dx.asset.viewer",
-                      dx_asset_viewer,
+DX_DEFINE_OBJECT_TYPE("dx.assets.viewer",
+                      dx_assets_viewer,
                       dx_object);
 
-static void dx_asset_viewer_destruct(dx_asset_viewer* self) {
+static void dx_assets_viewer_destruct(dx_assets_viewer* self) {
   if (self->controller) {
     DX_UNREFERENCE(self->controller);
     self->controller = NULL;
@@ -19,15 +19,15 @@ static void dx_asset_viewer_destruct(dx_asset_viewer* self) {
   self->name = NULL;
 }
 
-static void dx_asset_viewer_dispatch_construct(dx_asset_viewer_dispatch* self)
+static void dx_assets_viewer_dispatch_construct(dx_assets_viewer_dispatch* self)
 {/*Intentionally empty.*/}
 
-int dx_asset_viewer_construct(dx_asset_viewer* SELF, dx_string* name) {
+dx_result dx_assets_viewer_construct(dx_assets_viewer* SELF, dx_string* name) {
   if (!SELF) {
     dx_set_error(DX_ERROR_INVALID_ARGUMENT);
     return DX_FAILURE;
   }
-  dx_rti_type* TYPE = dx_asset_viewer_get_type();
+  dx_rti_type* TYPE = dx_assets_viewer_get_type();
   if (!TYPE) {
     return DX_FAILURE;
   }
@@ -56,9 +56,9 @@ int dx_asset_viewer_construct(dx_asset_viewer* SELF, dx_string* name) {
   return DX_SUCCESS;
 }
 
-dx_result dx_asset_viewer_create(dx_asset_viewer** RETURN, dx_string* name) {
-  DX_CREATE_PREFIX(dx_asset_viewer)
-  if (dx_asset_viewer_construct(SELF, name)) {
+dx_result dx_assets_viewer_create(dx_assets_viewer** RETURN, dx_string* name) {
+  DX_CREATE_PREFIX(dx_assets_viewer)
+  if (dx_assets_viewer_construct(SELF, name)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
     return DX_FAILURE;

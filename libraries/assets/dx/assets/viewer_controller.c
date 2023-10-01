@@ -5,18 +5,18 @@
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-DX_DEFINE_OBJECT_TYPE("dx.asset.viewer_controller",
-                      dx_asset_viewer_controller,
+DX_DEFINE_OBJECT_TYPE("dx.assets.viewer_controller",
+                      dx_assets_viewer_controller,
                       dx_object);
 
-static void dx_asset_viewer_controller_destruct(dx_asset_viewer_controller* SELF)
+static void dx_assets_viewer_controller_destruct(dx_assets_viewer_controller* SELF)
 {/*Intentionally empty.*/}
 
-static void dx_asset_viewer_controller_dispatch_construct(dx_asset_viewer_controller_dispatch* SELF)
+static void dx_assets_viewer_controller_dispatch_construct(dx_assets_viewer_controller_dispatch* SELF)
 {/*Intentionally empty.*/}
 
-dx_result dx_asset_viewer_controller_construct(dx_asset_viewer_controller* SELF) {
-  dx_rti_type* TYPE = dx_asset_viewer_controller_get_type();
+dx_result dx_assets_viewer_controller_construct(dx_assets_viewer_controller* SELF) {
+  dx_rti_type* TYPE = dx_assets_viewer_controller_get_type();
   if (!TYPE) {
     return DX_FAILURE;
   }
@@ -25,7 +25,7 @@ dx_result dx_asset_viewer_controller_construct(dx_asset_viewer_controller* SELF)
   return DX_SUCCESS;
 }
 
-dx_result dx_asset_viewer_controller_update(dx_asset_viewer_controller* SELF, dx_asset_viewer* viewer, dx_f32 delta_seconds) {
+dx_result dx_assets_viewer_controller_update(dx_assets_viewer_controller* SELF, dx_assets_viewer* viewer, dx_f32 delta_seconds) {
   return SELF->update(SELF, viewer, delta_seconds);
 }
 
@@ -33,9 +33,9 @@ dx_result dx_asset_viewer_controller_update(dx_asset_viewer_controller* SELF, dx
 
 DX_DEFINE_OBJECT_TYPE("dx.asset.viewer_controllers.rotate_y",
                       dx_asset_viewer_controllers_rotate_y,
-                      dx_asset_viewer_controller);
+                      dx_assets_viewer_controller);
 
-static dx_result dx_asset_viewer_controllers_rotate_y_update(dx_asset_viewer_controllers_rotate_y* SELF, dx_asset_viewer* viewer, dx_f32 delta_seconds) {
+static dx_result dx_asset_viewer_controllers_rotate_y_update(dx_asset_viewer_controllers_rotate_y* SELF, dx_assets_viewer* viewer, dx_f32 delta_seconds) {
   dx_f32 degrees = SELF->degrees_per_second * delta_seconds;
   SELF->degrees = fmodf(SELF->degrees + degrees, 360.f);
   DX_MAT4 a;
@@ -55,7 +55,7 @@ dx_result dx_asset_viewer_controllers_rotate_y_construct(dx_asset_viewer_control
   if (!TYPE) {
     return DX_FAILURE;
   }
-  if (dx_asset_viewer_controller_construct(DX_ASSET_VIEWER_CONTROLLER(SELF))) {
+  if (dx_assets_viewer_controller_construct(DX_ASSETS_VIEWER_CONTROLLER(SELF))) {
     return DX_FAILURE;
   }
   dx_vec3_set(&SELF->target, 0.f, 0.f, 0.f);
@@ -63,7 +63,7 @@ dx_result dx_asset_viewer_controllers_rotate_y_construct(dx_asset_viewer_control
   dx_vec3_set(&SELF->up, 0.f, 1.f, 0.f);
   SELF->degrees_per_second = 16.f;
   SELF->degrees = 0.f;
-  DX_ASSET_VIEWER_CONTROLLER(SELF)->update = (dx_result(*)(dx_asset_viewer_controller*,dx_asset_viewer*, dx_f32))&dx_asset_viewer_controllers_rotate_y_update;
+  DX_ASSETS_VIEWER_CONTROLLER(SELF)->update = (dx_result(*)(dx_assets_viewer_controller*,dx_assets_viewer*, dx_f32))&dx_asset_viewer_controllers_rotate_y_update;
   DX_OBJECT(SELF)->type = TYPE;
   return DX_SUCCESS;
 }

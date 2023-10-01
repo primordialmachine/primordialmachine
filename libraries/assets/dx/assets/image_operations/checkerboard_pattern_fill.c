@@ -1,11 +1,10 @@
 #include "dx/assets/image_operations/checkerboard_pattern_fill.h"
 
+DX_DEFINE_OBJECT_TYPE("dx.assets.image_operations.checkerboard_pattern_fill",
+                      dx_assets_image_operations_checkerboard_pattern_fill,
+                      dx_assets_image_operation);
 
-DX_DEFINE_OBJECT_TYPE("dx.asset.image_operations.checkerboard_pattern_fill",
-                      dx_asset_image_operations_checkerboard_pattern_fill,
-                      dx_asset_image_operation);
-
-static void dx_asset_image_operations_checkerboard_pattern_fill_destruct(dx_asset_image_operations_checkerboard_pattern_fill* SELF) {
+static void dx_assets_image_operations_checkerboard_pattern_fill_destruct(dx_assets_image_operations_checkerboard_pattern_fill* SELF) {
   if (SELF->second_checker_color) {
     DX_UNREFERENCE(SELF->second_checker_color);
     SELF->second_checker_color = NULL;
@@ -16,15 +15,15 @@ static void dx_asset_image_operations_checkerboard_pattern_fill_destruct(dx_asse
   }
 }
 
-static void dx_asset_image_operations_checkerboard_pattern_fill_dispatch_construct(dx_asset_image_operations_checkerboard_pattern_fill_dispatch* SELF)
+static void dx_assets_image_operations_checkerboard_pattern_fill_dispatch_construct(dx_assets_image_operations_checkerboard_pattern_fill_dispatch* SELF)
 {/*Intentionally empty.*/}
 
-dx_result dx_asset_image_operations_checkerboard_pattern_fill_construct(dx_asset_image_operations_checkerboard_pattern_fill* SELF) {
-  dx_rti_type* TYPE = dx_asset_image_operations_checkerboard_pattern_fill_get_type();
+dx_result dx_assets_image_operations_checkerboard_pattern_fill_construct(dx_assets_image_operations_checkerboard_pattern_fill* SELF) {
+  dx_rti_type* TYPE = dx_assets_image_operations_checkerboard_pattern_fill_get_type();
   if (!TYPE) {
     return DX_FAILURE;
   }
-  if (dx_asset_image_operation_construct(DX_ASSET_IMAGE_OPERATION(SELF))) {
+  if (dx_assets_image_operation_construct(DX_ASSETS_IMAGE_OPERATION(SELF))) {
     return DX_FAILURE;
   }
   SELF->first_checker_color = NULL;
@@ -33,9 +32,9 @@ dx_result dx_asset_image_operations_checkerboard_pattern_fill_construct(dx_asset
   return DX_SUCCESS;
 }
 
-dx_result dx_asset_image_operations_checkerboard_pattern_fill_create(dx_asset_image_operations_checkerboard_pattern_fill** RETURN) {
-  DX_CREATE_PREFIX(dx_asset_image_operations_checkerboard_pattern_fill)
-  if (dx_asset_image_operations_checkerboard_pattern_fill_construct(SELF)) {
+dx_result dx_assets_image_operations_checkerboard_pattern_fill_create(dx_assets_image_operations_checkerboard_pattern_fill** RETURN) {
+  DX_CREATE_PREFIX(dx_assets_image_operations_checkerboard_pattern_fill)
+  if (dx_assets_image_operations_checkerboard_pattern_fill_construct(SELF)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
     return DX_FAILURE;
@@ -54,12 +53,12 @@ dx_result dx_asset_image_operations_checkerboard_pattern_fill_create(dx_asset_im
     return DX_SUCCESS; \
   }
 
-PROPERTY(dx_asset_image_operations_checkerboard_pattern_fill, dx_size, number_of_checkers_horizontal)
-PROPERTY(dx_asset_image_operations_checkerboard_pattern_fill, dx_size, number_of_checkers_vertical)
-PROPERTY(dx_asset_image_operations_checkerboard_pattern_fill, dx_size, checker_size_horizontal)
-PROPERTY(dx_asset_image_operations_checkerboard_pattern_fill, dx_size, checker_size_vertical)
+PROPERTY(dx_assets_image_operations_checkerboard_pattern_fill, dx_size, number_of_checkers_horizontal)
+PROPERTY(dx_assets_image_operations_checkerboard_pattern_fill, dx_size, number_of_checkers_vertical)
+PROPERTY(dx_assets_image_operations_checkerboard_pattern_fill, dx_size, checker_size_horizontal)
+PROPERTY(dx_assets_image_operations_checkerboard_pattern_fill, dx_size, checker_size_vertical)
 
-dx_result dx_asset_image_operations_checkerboard_pattern_fill_set_first_checker_color(dx_asset_image_operations_checkerboard_pattern_fill* SELF, dx_assets_color_rgb_n8* first_checker_color) {
+dx_result dx_assets_image_operations_checkerboard_pattern_fill_set_first_checker_color(dx_assets_image_operations_checkerboard_pattern_fill* SELF, dx_assets_color_rgb_n8* first_checker_color) {
   if (!SELF->first_checker_color) {
     dx_string* name = NULL;
     if (dx_string_create(&name, "<anonymous>", sizeof("<anonymous") - 1)) {
@@ -81,14 +80,14 @@ dx_result dx_asset_image_operations_checkerboard_pattern_fill_set_first_checker_
   return DX_SUCCESS;
 }
 
-dx_result dx_asset_image_operations_checkerboard_pattern_fill_get_first_checker_color(DX_RGB_N8* RETURN, dx_asset_image_operations_checkerboard_pattern_fill* SELF) {
+dx_result dx_assets_image_operations_checkerboard_pattern_fill_get_first_checker_color(DX_RGB_N8* RETURN, dx_assets_image_operations_checkerboard_pattern_fill* SELF) {
   *RETURN = DX_ASSETS_COLOR_RGB_N8(SELF->first_checker_color->object)->value;
   return DX_SUCCESS;
 }
 
 #undef PROPERTY
 
-dx_result dx_asset_image_operations_checkerboard_pattern_fill_set_second_checker_color(dx_asset_image_operations_checkerboard_pattern_fill* SELF, dx_assets_color_rgb_n8* second_checker_color) {
+dx_result dx_assets_image_operations_checkerboard_pattern_fill_set_second_checker_color(dx_assets_image_operations_checkerboard_pattern_fill* SELF, dx_assets_color_rgb_n8* second_checker_color) {
   if (!SELF->second_checker_color) {
     dx_string* name = NULL;
     if (dx_string_create(&name, "<anonymous>", sizeof("<anonymous") - 1)) {
@@ -110,7 +109,7 @@ dx_result dx_asset_image_operations_checkerboard_pattern_fill_set_second_checker
   return DX_SUCCESS;
 }
 
-dx_result dx_asset_image_operations_checkerboard_pattern_fill_get_second_checker_color(DX_RGB_N8* RETURN, dx_asset_image_operations_checkerboard_pattern_fill* SELF) {
+dx_result dx_assets_image_operations_checkerboard_pattern_fill_get_second_checker_color(DX_RGB_N8* RETURN, dx_assets_image_operations_checkerboard_pattern_fill* SELF) {
   *RETURN = DX_ASSETS_COLOR_RGB_N8(SELF->second_checker_color)->value;
   return DX_SUCCESS;
 }

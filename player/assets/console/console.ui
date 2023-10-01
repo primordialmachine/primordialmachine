@@ -1,0 +1,15 @@
+{
+  type : "Group",
+  name : "console",
+  children : [
+    {
+      type : "TextField",
+      name : "outputField",
+    },
+    
+    {
+      type : "TextField",
+      name : "inputField",
+    },
+  ]
+}

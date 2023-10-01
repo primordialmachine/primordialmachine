@@ -9,7 +9,7 @@ DX_DEFINE_ENUMERATION_TYPE("dx.asset.mesh_operation_kind",
 
 DX_DEFINE_OBJECT_TYPE("dx.asset.mesh_operation",
                       dx_asset_mesh_operation,
-                      dx_object)
+                      dx_object);
 
 static void dx_asset_mesh_operation_destruct(dx_asset_mesh_operation* SELF)
 {/*Intentionally empty.*/}

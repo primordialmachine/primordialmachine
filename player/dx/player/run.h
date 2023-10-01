@@ -3,11 +3,6 @@
 
 #include "dx/player/default_application_presenter.h"
 
-/// @brief Get the singleton VAL context object.
-/// @return A pointer to the VAL context on success. The null pointer on failure.
-/// @success The caller acquired a reference to the context.
-dx_val_context* dx_val_context_get();
-
 /// @brief Get the singleton application presenter object.
 /// @param RETURN A pointer to a <code>dx_application_presenter*</code> object.
 /// @success
@@ -26,7 +21,7 @@ dx_result dx_application_presenter_get(dx_application_presenter** RETURN);
 /// @brief Run the engine with the specified command-line arguments. Does not return until the application terminates.
 /// @param argc The number of command-line arguments.
 /// @param argv A pointer to an array of @a argc pointers to C strings representing the command-line arguments.
-/// @return The zero value on success. A non-zero value on failure.
+/// @procedure
 dx_result dx_run(int argc, char** argv);
 
 #endif // DX_RUN_H_INCLUDED

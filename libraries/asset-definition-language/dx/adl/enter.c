@@ -32,10 +32,6 @@ DX_DEFINE_OBJECT_TYPE("dx.dx_asset_definition_language.enter",
                       dx_asset_definition_language_enter,
                       dx_object);
 
-static dx_adl_symbol* get_symbol(dx_asset_definition_language_enter* SELF, dx_string* name) {
-  return dx_asset_definitions_get(SELF->context->definitions, name);
-}
-
 static dx_result add_symbol(dx_asset_definition_language_enter* SELF, dx_string* type, dx_string* name, dx_ddl_node* node) {
   dx_adl_symbol* symbol = NULL;
   if (dx_adl_symbol_create(&symbol, type, name)) {
@@ -104,18 +100,9 @@ static bool is_of_type(dx_ddl_node* source, dx_string* expected_type, dx_adl_con
   if (!source || dx_ddl_node_kind_map != source->kind) {
     return false;
   }
-  dx_string* received_type = dx_adl_semantical_read_type(source, context);
-  if (!received_type) {
-    if (DX_ERROR_NOT_FOUND == dx_get_error()) {
-      DX_UNREFERENCE(received_type);
-      received_type = NULL;
-      dx_set_error(DX_NO_ERROR);
-      return false;
-    } else {
-      DX_UNREFERENCE(received_type);
-      received_type = NULL;
-      return false;
-    }
+  dx_string* received_type = NULL;
+  if (dx_asset_definition_language_parser_parse_type(&received_type, source, context)) {
+    return false;
   }
   if (!dx_string_is_equal_to(received_type, expected_type)) {
     DX_UNREFERENCE(received_type);
@@ -133,15 +120,13 @@ dx_result dx_asset_definition_language_enter_run(dx_asset_definition_language_en
 
 dx_result dx_asset_definition_language_enter_on_scene_element(dx_asset_definition_language_enter* SELF, dx_ddl_node* source, dx_adl_context* context) {
   // type
-  dx_string* received_type = dx_adl_semantical_read_type(source, context);
-  if (!received_type) {
-    if (DX_ERROR_NOT_FOUND != dx_get_error()) {
-      return DX_FAILURE;
-    } else {
+  dx_string* received_type = NULL;
+  if (dx_asset_definition_language_parser_parse_type(&received_type, source, context)) {
+    if (DX_ERROR_NOT_FOUND == dx_get_error()) {
       dx_log("the definition is issing the type field", sizeof("the definition is missing the type field") - 1);
       dx_set_error(DX_ERROR_SEMANTICAL_ERROR);
-      return DX_FAILURE;
     }
+    return DX_FAILURE;
   }
   //
   CASEOF(color_type, color);
@@ -159,7 +144,10 @@ dx_result dx_asset_definition_language_enter_on_scene_element(dx_asset_definitio
 
 dx_result dx_asset_definition_language_enter_on_color(dx_asset_definition_language_enter* SELF, dx_ddl_node* source, dx_adl_context* context) {
   // type
-  dx_string* received_type = dx_adl_semantical_read_type(source, context);
+  dx_string* received_type = NULL;
+  if (dx_asset_definition_language_parser_parse_type(&received_type, source, context)) {
+    return DX_FAILURE;
+  }
   if (!dx_string_is_equal_to(received_type, NAME(color_type))) {
     DX_UNREFERENCE(received_type);
     received_type = NULL;
@@ -167,7 +155,7 @@ dx_result dx_asset_definition_language_enter_on_color(dx_asset_definition_langua
   }
   // name
   dx_string* name = NULL;
-  if (dx_adl_semantical_read_name(&name, source, context)) {
+  if (dx_asset_definition_language_parser_parse_name(&name, source, context)) {
     DX_UNREFERENCE(received_type);
     received_type = NULL;
     return DX_FAILURE;
@@ -199,37 +187,53 @@ dx_result dx_asset_definition_language_enter_on_color(dx_asset_definition_langua
 
 dx_result dx_asset_definition_language_enter_on_scene(dx_asset_definition_language_enter* SELF, dx_ddl_node* source, dx_adl_context* context) {
   // type
-  dx_string* received_type = dx_adl_semantical_read_type(source, context);
+  dx_string* received_type = NULL;
+  if (dx_asset_definition_language_parser_parse_type(&received_type, source, context)) {
+    return DX_FAILURE;
+  }
   if (!dx_string_is_equal_to(received_type, NAME(scene_type))) {
     DX_UNREFERENCE(received_type);
     received_type = NULL;
     return DX_FAILURE;
   }
   // elements?
-  dx_ddl_node* child_source = dx_ddl_node_map_get(source, NAME(elements_key));
+  dx_ddl_node* child_source = NULL;
+  if (dx_ddl_node_map_get(&child_source, source, NAME(elements_key))) {
+    if (dx_get_error() != DX_ERROR_NOT_FOUND) {
+      return DX_FAILURE;
+    } else {
+      dx_set_error(DX_NO_ERROR);
+    }
+  }
   if (child_source) {
     dx_size n;
     if (dx_ddl_node_list_get_size(&n, child_source)) {
+      DX_UNREFERENCE(child_source);
+      child_source = NULL;
+      DX_UNREFERENCE(received_type);
+      received_type = NULL;
       return DX_FAILURE;
     }
     for (dx_size i = 0; i < n; ++i) {
       dx_ddl_node* temporary;
       if (dx_ddl_node_list_get(&temporary, child_source, i)) {
+        DX_UNREFERENCE(child_source);
+        child_source = NULL;
         DX_UNREFERENCE(received_type);
         received_type = NULL;
         return DX_FAILURE;
       }
       if (dx_asset_definition_language_enter_on_scene_element(SELF, temporary, context)) {
+        DX_UNREFERENCE(temporary);
+        temporary = NULL;
+        DX_UNREFERENCE(child_source);
+        child_source = NULL;
         DX_UNREFERENCE(received_type);
         received_type = NULL;
         return DX_FAILURE;
       }
-    }
-  } else {
-    if (DX_ERROR_NOT_FOUND != dx_get_error()) {
-      DX_UNREFERENCE(received_type);
-      received_type = NULL;
-      return DX_FAILURE;
+      DX_UNREFERENCE(temporary);
+      temporary = NULL;
     }
   }
   //
@@ -241,7 +245,10 @@ dx_result dx_asset_definition_language_enter_on_scene(dx_asset_definition_langua
 
 dx_result dx_asset_definition_language_enter_on_image(dx_asset_definition_language_enter* SELF, dx_ddl_node* source, dx_adl_context* context) {
   // type
-  dx_string* received_type = dx_adl_semantical_read_type(source, context);
+  dx_string* received_type = NULL;
+  if (dx_asset_definition_language_parser_parse_type(&received_type, source, context)) {
+    return DX_FAILURE;
+  }
   if (!dx_string_is_equal_to(received_type, NAME(image_type))) {
     DX_UNREFERENCE(received_type);
     received_type = NULL;
@@ -249,7 +256,7 @@ dx_result dx_asset_definition_language_enter_on_image(dx_asset_definition_langua
   }
   // name
   dx_string* name = NULL;
-  if (dx_adl_semantical_read_name(&name, source, context)) {
+  if (dx_asset_definition_language_parser_parse_name(&name, source, context)) {
     DX_UNREFERENCE(received_type);
     received_type = NULL;
     return DX_FAILURE;
@@ -281,7 +288,10 @@ dx_result dx_asset_definition_language_enter_on_image(dx_asset_definition_langua
 
 dx_result dx_asset_definition_language_enter_on_mesh(dx_asset_definition_language_enter* SELF, dx_ddl_node* source, dx_adl_context* context) {
   // type
-  dx_string* received_type = dx_adl_semantical_read_type(source, context);
+  dx_string* received_type = NULL;
+  if (dx_asset_definition_language_parser_parse_type(&received_type, source, context)) {
+    return DX_FAILURE;
+  }
   if (!dx_string_is_equal_to(received_type, NAME(mesh_type))) {
     DX_UNREFERENCE(received_type);
     received_type = NULL;
@@ -289,7 +299,7 @@ dx_result dx_asset_definition_language_enter_on_mesh(dx_asset_definition_languag
   }
   // name
   dx_string* name = NULL;
-  if (dx_adl_semantical_read_name(&name, source, context)) {
+  if (dx_asset_definition_language_parser_parse_name(&name, source, context)) {
     DX_UNREFERENCE(received_type);
     received_type = NULL;
     return DX_FAILURE;
@@ -321,7 +331,10 @@ dx_result dx_asset_definition_language_enter_on_mesh(dx_asset_definition_languag
 
 dx_result dx_asset_definition_language_enter_on_mesh_instance(dx_asset_definition_language_enter* SELF, dx_ddl_node* source, dx_adl_context* context) {
   // type
-  dx_string* received_type = dx_adl_semantical_read_type(source, context);
+  dx_string* received_type = NULL;
+  if (dx_asset_definition_language_parser_parse_type(&received_type, source, context)) {
+    return DX_FAILURE;
+  }
   if (!dx_string_is_equal_to(received_type, NAME(mesh_instance_type))) {
     DX_UNREFERENCE(received_type);
     received_type = NULL;
@@ -356,7 +369,10 @@ dx_result dx_asset_definition_language_enter_on_mesh_instance(dx_asset_definitio
 
 dx_result dx_asset_definition_language_enter_on_material(dx_asset_definition_language_enter* SELF, dx_ddl_node* source, dx_adl_context* context) {
   // type
-  dx_string* received_type = dx_adl_semantical_read_type(source, context);
+  dx_string* received_type = NULL;
+  if (dx_asset_definition_language_parser_parse_type(&received_type, source, context)) {
+    return DX_FAILURE;
+  }
   if (!dx_string_is_equal_to(received_type, NAME(material_type))) {
     DX_UNREFERENCE(received_type);
     received_type = NULL;
@@ -364,7 +380,7 @@ dx_result dx_asset_definition_language_enter_on_material(dx_asset_definition_lan
   }
   // name
   dx_string* name = NULL;
-  if (dx_adl_semantical_read_name(&name, source, context)) {
+  if (dx_asset_definition_language_parser_parse_name(&name, source, context)) {
     DX_UNREFERENCE(received_type);
     received_type = NULL;
     return DX_FAILURE;
@@ -396,7 +412,10 @@ dx_result dx_asset_definition_language_enter_on_material(dx_asset_definition_lan
 
 dx_result dx_asset_definition_language_enter_on_viewer_instance(dx_asset_definition_language_enter* SELF, dx_ddl_node* source, dx_adl_context* context) {
   // type
-  dx_string* received_type = dx_adl_semantical_read_type(source, context);
+  dx_string* received_type = NULL;
+  if (dx_asset_definition_language_parser_parse_type(&received_type, source, context)) {
+    return DX_FAILURE;
+  }
   if (!dx_string_is_equal_to(received_type, NAME(viewer_instance_type))) {
     DX_UNREFERENCE(received_type);
     received_type = NULL;
@@ -431,7 +450,10 @@ dx_result dx_asset_definition_language_enter_on_viewer_instance(dx_asset_definit
 
 dx_result dx_asset_definition_language_enter_on_viewer(dx_asset_definition_language_enter* SELF, dx_ddl_node* source, dx_adl_context* context) {
   // type
-  dx_string* received_type = dx_adl_semantical_read_type(source, context);
+  dx_string* received_type = NULL;
+  if (dx_asset_definition_language_parser_parse_type(&received_type, source, context)) {
+    return DX_FAILURE;
+  }
   if (!dx_string_is_equal_to(received_type, NAME(viewer_type))) {
     DX_UNREFERENCE(received_type);
     received_type = NULL;
@@ -439,7 +461,7 @@ dx_result dx_asset_definition_language_enter_on_viewer(dx_asset_definition_langu
   }
   // name
   dx_string* name = NULL;
-  if (dx_adl_semantical_read_name(&name, source, context)) {
+  if (dx_asset_definition_language_parser_parse_name(&name, source, context)) {
     DX_UNREFERENCE(received_type);
     received_type = NULL;
     return DX_FAILURE;
@@ -471,7 +493,10 @@ dx_result dx_asset_definition_language_enter_on_viewer(dx_asset_definition_langu
 
 dx_result dx_asset_definition_language_enter_on_texture(dx_asset_definition_language_enter* SELF, dx_ddl_node* source, dx_adl_context* context) {
   // type
-  dx_string* received_type = dx_adl_semantical_read_type(source, context);
+  dx_string* received_type = NULL;
+  if (dx_asset_definition_language_parser_parse_type(&received_type, source, context)) {
+    return DX_FAILURE;
+  }
   if (!dx_string_is_equal_to(received_type, NAME(texture_type))) {
     DX_UNREFERENCE(received_type);
     received_type = NULL;
@@ -479,7 +504,7 @@ dx_result dx_asset_definition_language_enter_on_texture(dx_asset_definition_lang
   }
   // name
   dx_string* name = NULL;
-  if (dx_adl_semantical_read_name(&name, source, context)) {
+  if (dx_asset_definition_language_parser_parse_name(&name, source, context)) {
     DX_UNREFERENCE(received_type);
     received_type = NULL;
     return DX_FAILURE;

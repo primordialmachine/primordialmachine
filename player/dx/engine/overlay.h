@@ -3,7 +3,7 @@
 
 #include "dx/font_presenter.h"
 #include "dx/rectangle_presenter.h"
-#include "dx/ui/text.h"
+#include "dx/ui/text_field.h"
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
@@ -20,7 +20,7 @@ struct dx_overlay {
   /// @brief The UI manager.
   dx_ui_manager* ui_manager;
   /// @brief The UI text field for overlay text.
-  dx_ui_text* text;
+  dx_ui_text_field* text_field;
   /// If the overlay is visible or not.
   dx_bool visible;
 };

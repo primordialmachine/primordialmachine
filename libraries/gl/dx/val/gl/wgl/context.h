@@ -2,7 +2,7 @@
 #define DX_GL_WGL_CONTEXT_H_INCLUDED
 
 #include "dx/val/gl/context.h"
-#include <GL/wglext.h> /// @todo Should be removed. This is about GL not WGL.
+#include <GL/wglext.h>
 typedef struct dx_val_gl_wgl_window dx_val_gl_wgl_window;
 
 DX_DECLARE_OBJECT_TYPE("dx.gl.wgl.context",
@@ -29,8 +29,12 @@ struct dx_gl_wgl_context_dispatch {
   dx_val_gl_context_dispatch _parent;
 };
 
+/// @constructor{dx_gl_wgl_context}
+/// @todo Make private to package.
 dx_result dx_gl_wgl_context_construct(dx_gl_wgl_context* SELF, dx_val_gl_wgl_window* window);
 
+/// @create-operator{dx_gl_wgl_context}
+/// @todo Scope to package. That is, move to "context.package.h".
 dx_result dx_gl_wgl_context_create(dx_gl_wgl_context** RETURN, dx_val_gl_wgl_window * window);
 
 #endif // DX_GL_WGL_CONTEXT_H_INCLUDED

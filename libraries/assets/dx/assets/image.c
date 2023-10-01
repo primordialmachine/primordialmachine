@@ -5,8 +5,8 @@
 #include "dx/assets/image_operations/color_fill.h"
 #include "dx/assets/image_operations/checkerboard_pattern_fill.h"
 
-DX_DEFINE_OBJECT_TYPE("dx.asset.image",
-                      dx_asset_image,
+DX_DEFINE_OBJECT_TYPE("dx.assets.image",
+                      dx_assets_image,
                       dx_object);
 
 typedef struct EXTEND2 {
@@ -22,7 +22,7 @@ typedef struct OFFSET2 {
 static const DX_RGB_N8 black = { 0, 0, 0 };
 
 // primitive operation
-static dx_result _swap_pixels(dx_asset_image* SELF, dx_size source_x, dx_size source_y, dx_size target_x, dx_size target_y, dx_pixel_format pixel_format);
+static dx_result _swap_pixels(dx_assets_image* SELF, dx_size source_x, dx_size source_y, dx_size target_x, dx_size target_y, dx_pixel_format pixel_format);
 
 // primitive operation
 static void _fill_bn8_gn8_rn8(void* pixels, OFFSET2 fill_offset, EXTEND2 fill_extend, EXTEND2 image_extend, DX_BGR_N8 const* color);
@@ -34,16 +34,16 @@ static void _fill_ln8(void* pixels, OFFSET2 fill_offset, EXTEND2 fill_extend, EX
 /// @param i, j The indices of the columns.
 /// @method-call
 /// @remark This is a non-primitive operation.
-static dx_result _swap_columns(dx_asset_image* SELF, dx_size i, dx_size j);
+static dx_result _swap_columns(dx_assets_image* SELF, dx_size i, dx_size j);
 
 /// @brief Swap two rows.
 /// @param SELF A pointer to this image.
 /// @param i, j The indices of the rows.
 /// @method-call
 /// @remark This is a non-primitive operation.
-static dx_result _swap_rows(dx_asset_image* SELF, dx_size i, dx_size j);
+static dx_result _swap_rows(dx_assets_image* SELF, dx_size i, dx_size j);
 
-static dx_result on_color_fill_image_operation(dx_asset_image* SELF, OFFSET2 offset, EXTEND2 extend, dx_asset_image_operations_color_fill* image_operation);
+static dx_result on_color_fill_image_operation(dx_assets_image* SELF, OFFSET2 offset, EXTEND2 extend, dx_assets_image_operations_color_fill* image_operation);
 
 static inline void _swap_bytes(uint8_t* a, uint8_t* b) {
   uint8_t t = *a;
@@ -51,7 +51,7 @@ static inline void _swap_bytes(uint8_t* a, uint8_t* b) {
   *b = t;
 }
 
-static dx_result _swap_pixels(dx_asset_image* SELF, dx_size source_x, dx_size source_y, dx_size target_x, dx_size target_y, dx_pixel_format pixel_format) {
+static dx_result _swap_pixels(dx_assets_image* SELF, dx_size source_x, dx_size source_y, dx_size target_x, dx_size target_y, dx_pixel_format pixel_format) {
   if (!SELF) {
     dx_set_error(DX_ERROR_INVALID_ARGUMENT);
     return DX_FAILURE;
@@ -197,7 +197,7 @@ static void _fill_ln8(void* pixels, OFFSET2 fill_offset, EXTEND2 fill_extend, EX
   }
 }
 
-static dx_result _swap_columns(dx_asset_image* SELF, dx_size i, dx_size j) {
+static dx_result _swap_columns(dx_assets_image* SELF, dx_size i, dx_size j) {
   if (!SELF) {
     dx_set_error(DX_ERROR_INVALID_ARGUMENT);
     return DX_FAILURE;
@@ -228,7 +228,7 @@ static dx_result _swap_columns(dx_asset_image* SELF, dx_size i, dx_size j) {
   return DX_SUCCESS;
 }
 
-static dx_result _swap_rows(dx_asset_image* SELF, dx_size i, dx_size j) {
+static dx_result _swap_rows(dx_assets_image* SELF, dx_size i, dx_size j) {
   if (!SELF) {
     dx_set_error(DX_ERROR_INVALID_ARGUMENT);
     return DX_FAILURE;
@@ -258,7 +258,7 @@ static dx_result _swap_rows(dx_asset_image* SELF, dx_size i, dx_size j) {
   return DX_SUCCESS;
 }
 
-static void dx_asset_image_destruct(dx_asset_image* SELF) {
+static void dx_assets_image_destruct(dx_assets_image* SELF) {
   dx_inline_object_array_uninitialize(&SELF->operations);
   DX_UNREFERENCE(SELF->name);
   SELF->name = NULL;
@@ -266,15 +266,15 @@ static void dx_asset_image_destruct(dx_asset_image* SELF) {
   SELF->pixels = NULL;
 }
 
-static void dx_asset_image_dispatch_construct(dx_asset_image_dispatch* SELF)
+static void dx_assets_image_dispatch_construct(dx_assets_image_dispatch* SELF)
 {/*Intentionally empty.*/}
 
-dx_result dx_asset_image_construct(dx_asset_image* SELF,
-                                   dx_string* name,
-                                   dx_pixel_format pixel_format,
-                                   dx_size width,
-                                   dx_size height) {
-  dx_rti_type* TYPE = dx_asset_image_get_type();
+dx_result dx_assets_image_construct(dx_assets_image* SELF,
+                                    dx_string* name,
+                                    dx_pixel_format pixel_format,
+                                    dx_size width,
+                                    dx_size height) {
+  dx_rti_type* TYPE = dx_assets_image_get_type();
   if (!TYPE) {
     return DX_FAILURE;
   }
@@ -342,13 +342,13 @@ dx_result dx_asset_image_construct(dx_asset_image* SELF,
   return DX_SUCCESS;
 }
 
-dx_result dx_asset_image_create(dx_asset_image** RETURN,
-                                dx_string* name, 
-                                dx_pixel_format pixel_format,
-                                dx_size width,
-                                dx_size height) {
-  DX_CREATE_PREFIX(dx_asset_image)
-  if (dx_asset_image_construct(SELF, name, pixel_format, width, height)) {
+dx_result dx_assets_image_create(dx_assets_image** RETURN,
+                                 dx_string* name, 
+                                 dx_pixel_format pixel_format,
+                                 dx_size width,
+                                 dx_size height) {
+  DX_CREATE_PREFIX(dx_assets_image)
+  if (dx_assets_image_construct(SELF, name, pixel_format, width, height)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
     return DX_FAILURE;
@@ -377,8 +377,8 @@ static void read_image_deallocate(void* context, void* p) {
   }
 }
 
-dx_result dx_asset_image_construct_path(dx_asset_image* SELF, dx_string* name, dx_string* path) {
-  dx_rti_type* TYPE = dx_asset_image_get_type();
+dx_result dx_assets_image_construct_path(dx_assets_image* SELF, dx_string* name, dx_string* path) {
+  dx_rti_type* TYPE = dx_assets_image_get_type();
   if (!TYPE) {
     return DX_FAILURE;
   }
@@ -462,9 +462,9 @@ dx_result dx_asset_image_construct_path(dx_asset_image* SELF, dx_string* name, d
   return DX_SUCCESS;
 }
 
-dx_result dx_asset_image_create_path(dx_asset_image** RETURN, dx_string* name, dx_string* path) {
-  DX_CREATE_PREFIX(dx_asset_image)
-  if (dx_asset_image_construct_path(SELF, name, path)) {
+dx_result dx_assets_image_create_path(dx_assets_image** RETURN, dx_string* name, dx_string* path) {
+  DX_CREATE_PREFIX(dx_assets_image)
+  if (dx_assets_image_construct_path(SELF, name, path)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
     return DX_FAILURE;
@@ -473,7 +473,7 @@ dx_result dx_asset_image_create_path(dx_asset_image** RETURN, dx_string* name, d
   return DX_SUCCESS;
 }
 
-static dx_result on_color_fill_image_operation(dx_asset_image* SELF, OFFSET2 offset, EXTEND2 extend, dx_asset_image_operations_color_fill* image_operation) {
+static dx_result on_color_fill_image_operation(dx_assets_image* SELF, OFFSET2 offset, EXTEND2 extend, dx_assets_image_operations_color_fill* image_operation) {
   switch (SELF->pixel_format) {
   case dx_pixel_format_rn8_gn8_bn8: {
     EXTEND2 image_size = { .width = SELF->width, .height = SELF->height };
@@ -491,24 +491,24 @@ static dx_result on_color_fill_image_operation(dx_asset_image* SELF, OFFSET2 off
 #include "dx/assets/image_operations/mirror_horizontal_impl.i"
 #include "dx/assets/image_operations/mirror_vertical_impl.i"
 
-dx_result dx_asset_image_apply(dx_asset_image* SELF,
-                               dx_size left,
-                               dx_size top,
-                               dx_size width,
-                               dx_size height,
-                               dx_asset_image_operation* image_operation) {
-  if (dx_rti_type_is_leq(DX_OBJECT(image_operation)->type, dx_asset_image_operations_color_fill_get_type())) {
+dx_result dx_assets_image_apply(dx_assets_image* SELF,
+                                dx_size left,
+                                dx_size top,
+                                dx_size width,
+                                dx_size height,
+                                dx_assets_image_operation* image_operation) {
+  if (dx_rti_type_is_leq(DX_OBJECT(image_operation)->type, dx_assets_image_operations_color_fill_get_type())) {
     OFFSET2 offset = { .left = left, .top = top };
     EXTEND2 extend = { .width = width, .height = height };
-    return on_color_fill_image_operation(SELF, offset, extend, DX_ASSET_IMAGE_OPERATIONS_COLOR_FILL(image_operation));
+    return on_color_fill_image_operation(SELF, offset, extend, DX_ASSETS_IMAGE_OPERATIONS_COLOR_FILL(image_operation));
   }
   if (dx_get_error()) {
     return DX_FAILURE;
   }
-  if (dx_rti_type_is_leq(DX_OBJECT(image_operation)->type, dx_asset_image_operations_checkerboard_pattern_fill_get_type())) {
+  if (dx_rti_type_is_leq(DX_OBJECT(image_operation)->type, dx_assets_image_operations_checkerboard_pattern_fill_get_type())) {
     OFFSET2 offset = { .left = left, .top = top };
     EXTEND2 extend = { .width = width, .height = height };
-    return on_checkerboard_pattern_fill_image_operation(SELF, offset, extend, DX_ASSET_IMAGE_OPERATIONS_CHECKERBOARD_PATTERN_FILL(image_operation));
+    return on_checkerboard_pattern_fill_image_operation(SELF, offset, extend, DX_ASSETS_IMAGE_OPERATIONS_CHECKERBOARD_PATTERN_FILL(image_operation));
   }
   if (dx_get_error()) {
     return DX_FAILURE;

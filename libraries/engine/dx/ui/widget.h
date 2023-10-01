@@ -16,6 +16,8 @@ static dx_ui_widget* DX_UI_WIDGET(void* p) {
 
 struct dx_ui_widget {
   dx_object _parent;
+  /// @brief A pointer to the name.
+  dx_string* name;
   /// @brief A pointer to the UI manager.
   dx_ui_manager* manager;
   /// @brief A pointer to the parent widget or the null pointer.
@@ -28,84 +30,170 @@ static dx_ui_widget_dispatch* DX_UI_WIDGET_DISPATCH(void* p) {
 
 struct dx_ui_widget_dispatch {
   dx_object_dispatch _parent;
-  dx_result (*set_relative_position)(dx_ui_widget*,DX_VEC2_F32 const*);
-  dx_result (*get_relative_position)(DX_VEC2_F32*,dx_ui_widget*);
-  dx_result (*set_relative_size)(dx_ui_widget*,DX_VEC2_F32 const*);
-  dx_result (*get_relative_size)(DX_VEC2_F32*,dx_ui_widget*);
-  dx_result (*get_absolute_position)(DX_VEC2_F32*,dx_ui_widget*);
-  dx_result (*get_absolute_size)(DX_VEC2_F32*,dx_ui_widget*);
+  dx_result(*set_name)(dx_ui_widget*, dx_string*);
+  dx_result(*get_name)(dx_string**, dx_ui_widget*);
+  
+  dx_result(*set_relative_position)(dx_ui_widget*,DX_VEC2_F32 const*);
+  dx_result(*get_relative_position)(DX_VEC2_F32*,dx_ui_widget*);
+  
+  dx_result(*set_relative_size)(dx_ui_widget*,DX_VEC2_F32 const*);
+  dx_result(*get_relative_size)(DX_VEC2_F32*,dx_ui_widget*);
+  
+  dx_result(*set_relative_rectangle)(dx_ui_widget*, DX_RECT2_F32 const*);
+  dx_result(*get_relative_rectangle)(DX_RECT2_F32*, dx_ui_widget*);
+  
+  dx_result(*get_absolute_position)(DX_VEC2_F32*,dx_ui_widget*);
+  dx_result(*get_absolute_size)(DX_VEC2_F32*,dx_ui_widget*);
+  dx_result(*get_absolute_rectangle)(DX_RECT2_F32*, dx_ui_widget*);
+
   dx_result(*render)(dx_ui_widget*,dx_f32,dx_f32,dx_f32,dx_f32);
+  dx_result(*get_child_by_name)(dx_ui_widget**, dx_ui_widget*, dx_string*);
 };
 
-/// @brief Construct this UI widget.
-/// @param SELF A pointer to this UI widget.
-/// @param manager A pointer to the UI manager.
-/// @method-call
-/// @remarks The UI widget retains a reference to the UI manager.
+/// @param manager
+/// A pointer to the UI manager.
+/// @remarks
+/// The UI widget retains a reference to the UI manager.
 /// That is, the UI manager is not destroyed before the last UI widget or derived type object is destroyed.
+/// @constructor{dx_ui_widget}
 dx_result dx_ui_widget_construct(dx_ui_widget* SELF, dx_ui_manager* manager);
 
-/// @brief Set the relative position.
-/// @param SELF A pointer to this widget.
-/// @param position A pointer to a <code>DX_VEC2</code> variable.
-/// @method-call 
+/// @brief
+/// Set the name of this widget.
+/// @param name
+/// A pointer to the name.
+/// @method{dx_ui_widget}
+static inline dx_result dx_ui_widget_set_name(dx_ui_widget* SELF, dx_string* name) {
+  DX_OBJECT_VIRTUALCALL(dx_ui_widget, set_name, SELF, name);
+}
+
+/// @brief
+/// Get the name of this widget.
+/// @param RETURN
+/// A pointer to a <code>dx_string*</code> variable.
+/// @method{dx_ui_widget}
+static inline dx_result dx_ui_widget_get_name(dx_string** RETURN, dx_ui_widget* SELF) {
+  DX_OBJECT_VIRTUALCALL(dx_ui_widget, get_name, RETURN, SELF);
+}
+
+/// @brief
+/// Set the relative position.
+/// @param position
+/// A pointer to a <code>DX_VEC2_F32</code> variable.
+/// @method{dx_ui_widget}
 static inline dx_result dx_ui_widget_set_relative_position(dx_ui_widget* SELF, DX_VEC2_F32 const* relative_position) {
   DX_OBJECT_VIRTUALCALL(dx_ui_widget, set_relative_position, SELF, relative_position);
 }
 
-/// @brief Get the relative position.
-/// @param RETURN A pointer to a DX_VEC2 variable.
-/// @param SELF A pointer to this widget.
-/// @succes <code>*RETURN</code> was assigned the relative position.
-/// @method-call
+/// @brief
+/// Get the relative position.
+/// @param RETURN
+/// A pointer to a <code>DX_VEC2_F32</code> variable.
+/// @success
+/// <code>*RETURN</code> was assigned the relative position.
+/// @method{dx_ui_widget}
 static inline dx_result dx_ui_widget_get_relative_position(DX_VEC2_F32* RETURN, dx_ui_widget* SELF) {
   DX_OBJECT_VIRTUALCALL(dx_ui_widget, get_relative_position, RETURN, SELF);
 }
 
-/// @brief Set the relative size.
-/// @param SELF A pointer to this widget.
-/// @param size A pointer to a <code>DX_VEC2</code> variable.
-/// @method-call
+/// @brief
+/// Set the relative size.
+/// @param size
+/// A pointer to a <code>DX_VEC2_F32</code> variable.
+/// @method{dx_ui_widget}
 static inline dx_result dx_ui_widget_set_relative_size(dx_ui_widget* SELF, DX_VEC2_F32 const* relative_size) {
   DX_OBJECT_VIRTUALCALL(dx_ui_widget, set_relative_size, SELF, relative_size);
 }
 
-/// @brief Get the relative size.
-/// @param RETURN A pointer to a DX_VEC2 variable.
-/// @param SELF A pointer to this widget.
-/// @succes <code>*RETURN</code> was assigned the relative size.
-/// @method-call
+/// @brief
+/// Get the relative size.
+/// @param RETURN
+/// A pointer to a <code>DX_VEC2_F32</code> variable.
+/// @success
+/// <code>*RETURN</code> was assigned the relative size.
+/// @method{dx_ui_widget}
 static inline dx_result dx_ui_widget_get_relative_size(DX_VEC2_F32* RETURN, dx_ui_widget* SELF) {
   DX_OBJECT_VIRTUALCALL(dx_ui_widget, get_relative_size, RETURN, SELF);
 }
 
-/// @brief Get the absolute position.
-/// @param RETURN A pointer to a DX_VEC2 variable.
-/// @param SELF A pointer to this widget.
-/// @succes <code>*RETURN</code> was assigned the absolute position.
-/// @method-call
+/// @brief
+/// Set the relative rectangle.
+/// @param rectangle
+/// A pointer to a <code>DX_RECT2_F32</code> variable.
+/// @method{dx_ui_widget}
+static inline dx_result dx_ui_widget_set_relative_rectangle(dx_ui_widget* SELF, DX_RECT2_F32 const* rectangle) {
+  DX_OBJECT_VIRTUALCALL(dx_ui_widget, set_relative_rectangle, SELF, rectangle);
+}
+
+/// @brief 
+/// Get the relative rectangle.
+/// @param RETURN
+/// A pointer to a <code>_DX_RECT2_F32</code> variable.
+/// @method{dx_ui_widget}
+static inline dx_result dx_ui_widget_get_relative_rectangle(DX_RECT2_F32* RETURN, dx_ui_widget* SELF) {
+  DX_OBJECT_VIRTUALCALL(dx_ui_widget, get_relative_rectangle, RETURN, SELF);
+}
+
+/// @brief
+/// Get the absolute position.
+/// @param RETURN
+/// A pointer to a <code>DX_VEC2_F32</code> variable.
+/// @success
+/// <code>*RETURN</code> was assigned the absolute position.
+/// @method{dx_ui_widget}
 static inline dx_result dx_ui_widget_get_absolute_position(DX_VEC2_F32* RETURN, dx_ui_widget* SELF) {
   DX_OBJECT_VIRTUALCALL(dx_ui_widget, get_absolute_position, RETURN, SELF);
 }
 
-/// @brief Get the absolute size.
-/// @param RETURN A pointer to a DX_VEC2 variable.
-/// @param SELF A pointer to this widget.
-/// @succes <code>*RETURN</code> was assigned the absolute size.
-/// @method-call
+/// @brief
+/// Get the absolute size.
+/// @param RETURN
+/// A pointer to a DX_VEC2_F32 variable.
+/// @success
+/// <code>*RETURN</code> was assigned the absolute size.
+/// @method{dx_ui_widget}
 static inline dx_result dx_ui_widget_get_absolute_size(DX_VEC2_F32* RETURN, dx_ui_widget* SELF) {
   DX_OBJECT_VIRTUALCALL(dx_ui_widget, get_absolute_size, RETURN, SELF);
 }
 
+/// @brief
+/// Get the absolute rectangle.
+/// @param RETURN
+/// A pointer to a <code>DX_RECT2_F32</code> variable.
+/// @method{dx_ui_widget}
+static inline dx_result dx_ui_widget_get_absolute_rectangle(DX_RECT2_F32* RETURN, dx_ui_widget* SELF) {
+  DX_OBJECT_VIRTUALCALL(dx_ui_widget, get_absolute_rectangle, RETURN, SELF);
+}
 
-/// @brief Render this group.
-/// @param SELF A pointer to this group.
-/// @param canvas_width The width, in pixels, of the canvas.
-/// @param canvas_height The height, in pixels, of the canvas.
-/// @param rectangle_presenter A pointer to the rectangle presenter.
-/// @method-call
+/// @brief
+/// Render this widget.
+/// @param canvas_width
+/// The width, in pixels, of the canvas.
+/// @param canvas_height
+/// The height, in pixels, of the canvas.
+/// @param rectangle_presenter
+/// A pointer to the rectangle presenter.
+/// @method{dx_ui_widget}
 static inline dx_result dx_ui_widget_render(dx_ui_widget* SELF, dx_f32 canvas_horizontal_size, dx_f32 canvas_vertical_size, dx_f32 dpi_horizontal, dx_f32 dpi_vertical) {
   DX_OBJECT_VIRTUALCALL(dx_ui_widget, render, SELF, canvas_horizontal_size, canvas_vertical_size, dpi_horizontal, dpi_vertical)
+}
+
+/// @brief
+/// Get a child by its name.
+/// @param RETURN
+/// A pointer to a <code>dx_ui_widget*</code> variable.
+/// @param name
+/// A pointer to the name string.
+/// @success
+/// <code>*RETURN</code> received a pointer to the child.
+/// The caller acquired a reference to that child.
+/// @method{dx_ui_widget}
+/// @error
+/// DX_ERROR_NOT_FOUND if the child was not found.
+/// @remarks
+/// If a child has no name, then it cannot be get by its name.
+static inline dx_result dx_ui_widget_get_child_by_name(dx_ui_widget** RETURN, dx_ui_widget* SELF, dx_string* name) {
+  DX_OBJECT_VIRTUALCALL(dx_ui_widget, get_child_by_name, RETURN, SELF, name);
 }
 
 #endif // DX_UI_WIDGET_H_INCLUDED

@@ -18,7 +18,7 @@ static inline dx_val_viewer* DX_VAL_VIEWER(void* p) {
 struct dx_val_viewer {
   dx_object _parent;
   /// @brief The asset viewer instance this viewer is based on.
-  dx_asset_viewer_instance* asset_viewer_instance;
+  dx_assets_viewer_instance* asset_viewer_instance;
   /// @brief The view matrix of this viewer.
   DX_MAT4 view_matrix;
   /// @brief The projection matrix of this viewer.
@@ -39,9 +39,9 @@ struct dx_val_viewer_dispatch {
   dx_object_dispatch _parent;
 };
 
-dx_result dx_val_viewer_construct(dx_val_viewer* SELF, dx_asset_viewer_instance* asset_viewer_instance);
+dx_result dx_val_viewer_construct(dx_val_viewer* SELF, dx_assets_viewer_instance* asset_viewer_instance);
 
-dx_result dx_val_viewer_create(dx_val_viewer** RETURN, dx_asset_viewer_instance* asset_viewer_instance);
+dx_result dx_val_viewer_create(dx_val_viewer** RETURN, dx_assets_viewer_instance* asset_viewer_instance);
 
 dx_result dx_val_viewer_get_projection_matrix(DX_MAT4* RETURN, dx_val_viewer* SELF, dx_i32 canvas_width, dx_i32 canvas_height);
 

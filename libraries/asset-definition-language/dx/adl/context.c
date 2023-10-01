@@ -9,11 +9,12 @@
 #include "dx/adl/type_handlers/mesh_instance.h"
 #include "dx/adl/type_handlers/mesh_operations.h"
 #include "dx/adl/type_handlers/mesh.h"
-#include "dx/adl/type_handlers/optics.h"
+#include "dx/adl/type_handlers/optics_orthographic.h"
+#include "dx/adl/type_handlers/optics_perspective.h"
 #include "dx/adl/type_handlers/texture.h"
 #include "dx/adl/type_handlers/viewer.h"
 #include "dx/adl/type_handlers/viewer_instance.h"
-#include "dx/adl/type_handlers/viewer_controllers.h"
+#include "dx/adl/type_handlers/viewer_controllers_rotate_y.h"
 
 #include "dx/adl/diagnostics.h"
 #include "dx/adl/parser.h"
@@ -147,13 +148,13 @@ static dx_result initialize_type_handlers(dx_adl_context* SELF) {
   DEFINE2(material_controllers_ambient_color, dx_adl_type_handlers_material_controllers)
   DEFINE1(mesh)
   DEFINE1(mesh_instance)
-  DEFINE2(optics_orthographic, dx_adl_type_handlers_optics)
-  DEFINE2(optics_perspective, dx_adl_type_handlers_optics)
+  DEFINE1(optics_orthographic)
+  DEFINE1(optics_perspective)
   DEFINE1(texture)
   DEFINE2(mesh_operations_set_vertex_colors, dx_adl_type_handlers_mesh_operations)
   DEFINE1(viewer)
   DEFINE1(viewer_instance)
-  DEFINE2(viewer_controllers_rotate_y, dx_adl_type_handlers_viewer_controllers)
+  DEFINE2(viewer_controllers_rotate_y, dx_adl_type_handlers_viewer_controllers_rotate_y)
 
   #undef DEFINE2
   #undef DEFINE1

@@ -4,7 +4,7 @@
 #include "dx/player/run.h"
 #include "dx/document_definition_language.h"
 #include "dx/ui/group.h"
-#include "dx/ui/text.h"
+#include "dx/ui/text_field.h"
 #include "dx/ui/manager.h"
 // strlen
 #include <string.h>
@@ -28,8 +28,7 @@ DX_DEFINE_OBJECT_TYPE("dx.default_console",
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 /// @brief Execute the prompt.
-/// @param SELF A pointer to this console.
-/// @method-call
+/// @method{dx_default_console}
 static dx_result on_execute_prompt(dx_default_console* SELF);
 
 static dx_result on_keyboard_key_message(dx_default_console* SELF, dx_keyboard_key_msg* keyboard_key_message);
@@ -46,7 +45,13 @@ static dx_result is_open(dx_bool* RETURN, dx_default_console* SELF);
 
 static dx_result is_closed(dx_bool* RETURN, dx_default_console* SELF);
 
-static dx_result append_text(dx_default_console* SELF, dx_string* text);
+static dx_result append_output_text(dx_default_console* SELF, dx_string* text);
+
+static dx_result get_wigdget_by_name(dx_ui_widget** RETURN, dx_default_console* SELF, const char* name);
+
+static dx_result on_layout(dx_default_console* SELF, dx_f32 console_x, dx_f32 console_y, dx_f32 console_w, dx_f32 console_h);
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 static dx_result on_execute_prompt(dx_default_console* SELF) {
   dx_string* string = NULL;
@@ -67,7 +72,7 @@ static dx_result on_execute_prompt(dx_default_console* SELF) {
     string = NULL;
     return DX_FAILURE;
   }
-  dx_console_append_text(DX_CONSOLE(SELF), string);
+  dx_console_append_output_text(DX_CONSOLE(SELF), string);
   dx_string* newline = NULL;
   if (dx_string_create(&newline, "\n", sizeof("\n") - 1)) {
     DX_UNREFERENCE(string);
@@ -78,7 +83,7 @@ static dx_result on_execute_prompt(dx_default_console* SELF) {
     string = NULL;
     return DX_FAILURE;
   }
-  dx_console_append_text(DX_CONSOLE(SELF), newline);
+  dx_console_append_output_text(DX_CONSOLE(SELF), newline);
   DX_UNREFERENCE(newline);
   newline = NULL;
 
@@ -263,6 +268,11 @@ static dx_result on_keyboard_key_message(dx_default_console* SELF, dx_keyboard_k
   return DX_SUCCESS;
 }
 
+// this layouter
+// - it applies a margin to the group box containing the input field and the output field
+// - sets the size of the input field to one line
+// - sets the size of the output field to canvas height minus the size of the input field
+// - places the output field above the input field
 static dx_result render(dx_default_console* SELF, dx_f32 delta_seconds, dx_i32 canvas_size_horizontal, dx_i32 canvas_size_vertical, dx_i32 dpi_horizontal, dx_i32 dpi_vertical) {
   if (SELF->cs < SELF->ts) {
     SELF->cs += OPEN_CLOSE_SPEED * delta_seconds;
@@ -320,11 +330,7 @@ static dx_result render(dx_default_console* SELF, dx_f32 delta_seconds, dx_i32 c
       dx_ui_manager_enter_render(SELF->ui_manager);
     }
     {
-      DX_VEC2_F32 v;
-      dx_vec2_f32_set(&v, console_position_x, console_position_y);
-      dx_ui_widget_set_relative_position(DX_UI_WIDGET(SELF->ui_group), &v);
-      dx_vec2_f32_set(&v, console_width, console_height);
-      dx_ui_widget_set_relative_size(DX_UI_WIDGET(SELF->ui_group), & v);
+      on_layout(SELF, console_position_x, console_position_y, console_width, console_height);
       dx_ui_group_set_background_color(SELF->ui_group, &CONSOLE_BACKGROUND_COLOR);
       //
       {
@@ -333,8 +339,7 @@ static dx_result render(dx_default_console* SELF, dx_f32 delta_seconds, dx_i32 c
           return DX_FAILURE;
         }
 
-        dx_f32 startx,
-               starty;
+        dx_f32 startx, starty;
 
         // console input
         startx = console_position_x + insets_x;
@@ -354,11 +359,19 @@ static dx_result render(dx_default_console* SELF, dx_f32 delta_seconds, dx_i32 c
         DX_UNREFERENCE(string_buffer);
         string_buffer = NULL;
         {
-          DX_VEC2_F32 p;
-          dx_vec2_f32_set(&p, startx, starty);
-          dx_ui_widget_set_relative_position(DX_UI_WIDGET(SELF->ui_input_field), &p);
-          dx_ui_text_set_text(SELF->ui_input_field, string);
-          dx_ui_text_set_text_color(SELF->ui_input_field, &TEXT_COLOR);
+          dx_ui_text_field_set_text_color(SELF->ui_input_field, &TEXT_COLOR);
+          DX_RGBA_F32 bgc;
+          dx_rgba_f32_set(&bgc, 0.f, 0.f, 0.f, 1.f);
+          dx_rgba_f32_set(&bgc, 1.f, 0.f, 0.f, 1.f);
+          dx_ui_text_field_set_background_color(SELF->ui_input_field, &bgc);
+          SELF->ui_input_field->vertical_text_anchor = dx_text_anchor_vertical_center;
+        }
+        {
+        }
+        {
+        }
+        {
+          dx_ui_text_field_set_text(SELF->ui_input_field, string);
         }
         DX_UNREFERENCE(string);
         string = NULL;
@@ -410,10 +423,65 @@ static dx_result is_closed(dx_bool* RETURN, dx_default_console* SELF) {
   return DX_SUCCESS;
 }
 
-static dx_result append_text(dx_default_console* SELF, dx_string* text) {
-  if (dx_text_document_append_text(SELF->ui_output_field->text, text)) {
+static dx_result append_output_text(dx_default_console* SELF, dx_string* text) {
+  if (dx_ui_text_field_append_text(SELF->ui_output_field, text)) {
     return DX_FAILURE;
   }
+  return DX_SUCCESS;
+}
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+static dx_result get_wigdget_by_name(dx_ui_widget** RETURN, dx_default_console* SELF, const char* name) {
+  dx_string* name1 = NULL;
+  if (dx_string_create(&name1, name, strlen(name))) {
+    return DX_FAILURE;
+  }
+  dx_ui_widget* widget1 = NULL;
+  if (dx_ui_widget_get_child_by_name(&widget1, DX_UI_WIDGET(SELF->ui_group), name1)) {
+    return DX_FAILURE;
+  }
+  *RETURN = widget1;
+  return DX_SUCCESS;
+}
+
+static dx_result on_layout(dx_default_console* SELF, dx_f32 console_x, dx_f32 console_y, dx_f32 console_w, dx_f32 console_h) {
+  // positive y axis is going up
+
+  // the insets on the left side of the "console" group.
+  dx_f32 insets_l = 16.f;
+  // the insets on the top side of the "console" group.
+  dx_f32 insets_t = 16.f;
+  // the insets on the bottom side of the "console" group.
+  dx_f32 insets_b = 16.f;
+  // the insets on the right side of the "console" group.
+  dx_f32 insets_r = 16.f;
+
+  // set the position and the size of the "console" group.
+  DX_VEC2_F32 v;
+  dx_vec2_f32_set(&v, console_x, console_y);
+  dx_ui_widget_set_relative_position(DX_UI_WIDGET(SELF->ui_group), &v);
+  dx_vec2_f32_set(&v, console_w, console_h);
+  dx_ui_widget_set_relative_size(DX_UI_WIDGET(SELF->ui_group), &v);
+  // set the position and the size of the "output" text.
+
+  // set the position and the size of the "input" text.
+  {
+    DX_VEC2_F32 p;
+    dx_vec2_f32_set(&p, console_x + insets_l, console_y + insets_b);
+    dx_ui_widget_set_relative_position(DX_UI_WIDGET(SELF->ui_input_field), &p);
+  }
+  {
+    dx_f32 baseline_distance;
+    dx_font_get_baseline_distance(&baseline_distance, SELF->ui_input_field->font);
+    baseline_distance *= 1.5f;
+
+    DX_VEC2_F32 s;
+    dx_vec2_f32_set(&s, console_w - insets_l - insets_r,
+                        baseline_distance);
+    dx_ui_widget_set_relative_size(DX_UI_WIDGET(SELF->ui_input_field), &s);
+  }
+
   return DX_SUCCESS;
 }
 
@@ -445,15 +513,7 @@ static void dx_default_console_dispatch_construct(dx_default_console_dispatch* S
   DX_CONSOLE_DISPATCH(SELF)->toggle = (dx_result(*)(dx_console*)) & toggle;
   DX_CONSOLE_DISPATCH(SELF)->is_open = (dx_result(*)(dx_bool*,dx_console*)) & is_open;
   DX_CONSOLE_DISPATCH(SELF)->is_closed = (dx_result(*)(dx_bool*,dx_console*)) & is_closed;
-  DX_CONSOLE_DISPATCH(SELF)->append_text = (dx_result(*)(dx_console*, dx_string*)) & append_text;
-}
-
-static void line_added_callback(dx_string** element) {
-  DX_REFERENCE(*element);
-}
-
-static void line_removed_callback(dx_string** element) {
-  DX_UNREFERENCE(*element);
+  DX_CONSOLE_DISPATCH(SELF)->append_output_text = (dx_result(*)(dx_console*, dx_string*)) & append_output_text;
 }
 
 dx_result dx_default_console_construct(dx_default_console* SELF, dx_font_presenter* font_presenter, dx_rectangle_presenter* rectangle_presenter) {
@@ -467,41 +527,33 @@ dx_result dx_default_console_construct(dx_default_console* SELF, dx_font_present
   if (dx_ui_manager_create(&SELF->ui_manager, font_presenter, rectangle_presenter)) {
     return DX_FAILURE;
   }
-  if (dx_ui_group_create(&SELF->ui_group, SELF->ui_manager)) {
-    DX_UNREFERENCE(SELF->ui_manager);
-    SELF->ui_manager = NULL;
-    return DX_FAILURE;
+  {
+    dx_string* path = NULL;
+    if (dx_string_create(&path, "./assets/console/console.ui", sizeof("./assets/console/console.ui") - 1)) {
+      DX_UNREFERENCE(SELF->ui_manager);
+      SELF->ui_manager = NULL;
+      return DX_FAILURE;
+    }
+    dx_ui_widget* temporary = NULL;
+    if (dx_ui_manager_load(&temporary, SELF->ui_manager, path)) {
+      DX_UNREFERENCE(path);
+      path = NULL;
+      DX_UNREFERENCE(SELF->ui_manager);
+      SELF->ui_manager = NULL;
+      return DX_FAILURE;
+    }
+    SELF->ui_group = DX_UI_GROUP(temporary);
+    DX_UNREFERENCE(path);
+    path = NULL;
   }
-  if (dx_ui_text_create(&SELF->ui_input_field, SELF->ui_manager)) {
+  if (get_wigdget_by_name((dx_ui_widget**) & SELF->ui_input_field, SELF, "inputField")) {
     DX_UNREFERENCE(SELF->ui_group);
     SELF->ui_group = NULL;
     DX_UNREFERENCE(SELF->ui_manager);
     SELF->ui_manager = NULL;
     return DX_FAILURE;
   }
-  if (dx_ui_text_create(&SELF->ui_output_field, SELF->ui_manager)) {
-    DX_UNREFERENCE(SELF->ui_input_field);
-    SELF->ui_input_field = NULL;
-    DX_UNREFERENCE(SELF->ui_group);
-    SELF->ui_group = NULL;
-    DX_UNREFERENCE(SELF->ui_manager);
-    SELF->ui_manager = NULL;
-    return DX_FAILURE;
-  }
-  if (dx_ui_group_append_child(SELF->ui_group, DX_UI_WIDGET(SELF->ui_output_field))) {
-    DX_UNREFERENCE(SELF->ui_output_field);
-    SELF->ui_output_field = NULL;
-    DX_UNREFERENCE(SELF->ui_input_field);
-    SELF->ui_input_field = NULL;
-    DX_UNREFERENCE(SELF->ui_group);
-    SELF->ui_group = NULL;
-    DX_UNREFERENCE(SELF->ui_manager);
-    SELF->ui_manager = NULL;
-    return DX_FAILURE;
-  }
-  if (dx_ui_group_append_child(SELF->ui_group, DX_UI_WIDGET(SELF->ui_input_field))) {
-    DX_UNREFERENCE(SELF->ui_output_field);
-    SELF->ui_output_field = NULL;
+  if (get_wigdget_by_name((dx_ui_widget**) & SELF->ui_output_field, SELF, "outputField")) {
     DX_UNREFERENCE(SELF->ui_input_field);
     SELF->ui_input_field = NULL;
     DX_UNREFERENCE(SELF->ui_group);

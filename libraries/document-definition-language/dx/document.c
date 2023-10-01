@@ -300,6 +300,10 @@ dx_result dx_text_document_set_text(dx_text_document* SELF, dx_string* text) {
   return DX_SUCCESS;
 }
 
+dx_result dx_text_document_get_text(dx_string** RETURN, dx_text_document* SELF) {
+  return dx_string_buffer_to_string(RETURN, SELF->text);
+}
+
 dx_result dx_text_document_append_text(dx_text_document* SELF, dx_string* text) {
   // Get the start offset.
   dx_size start_offset;

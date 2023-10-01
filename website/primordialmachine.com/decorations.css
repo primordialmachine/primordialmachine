@@ -1,0 +1,38 @@
+/* Copyright (c) 2023 Michael Heilmann. All rights reserved. */
+
+/**
+ * @author Michael Heilmann
+ * @description Provide classes that add box shadows to elements.
+ */
+
+.box-shadow-left {
+  /*
+   * the expression is interpreted as follows:
+   * <color>, <insets-x>, <insets-y>, <blur radius>, <spread radius>
+   */
+  box-shadow: rgba(0, 0, 0, 0.45) -2px 0px 4px -1px;
+}
+
+.box-shadow-right {
+  /*
+   * the expression is interpreted as follows:
+   * <color>, <insets-x>, <insets-y>, <blur radius>, <spread radius>
+   */
+  box-shadow: rgba(0, 0, 0, 0.45) 2px 0px 4px -1px;
+}
+
+.box-shadow-top {
+  /*
+   * the expression is interpreted as follows:
+   * <color>, <insets-x>, <insets-y>, <blur radius>, <spread radius>
+   */
+  box-shadow: rgba(0, 0, 0, 0.45) 0px -2px 4px -1px;
+}
+
+.box-shadow-bottom {
+  /*
+   * the expression is interpreted as follows:
+   * <color>, <insets-x>, <insets-y>, <blur radius>, <spread radius>
+   */
+  box-shadow: rgba(0, 0, 0, 0.45) 0px 2px 4px -1px;
+}

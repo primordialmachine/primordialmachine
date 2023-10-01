@@ -64,10 +64,10 @@ dx_result dx_asset_definitions_construct(dx_asset_definitions* SELF);
 /// @create-operator{dx_asset_definitions}
 dx_result dx_asset_definitions_create(dx_asset_definitions** RETURN);
 
-dx_adl_symbol* dx_asset_definitions_get(dx_asset_definitions const* self, dx_string* name);
+dx_result dx_asset_definitions_get(dx_adl_symbol** RETURN, dx_asset_definitions const* SELF, dx_string* name);
 
-dx_result dx_asset_definitions_set(dx_asset_definitions* self, dx_string* name, dx_adl_symbol* symbol);
+dx_result dx_asset_definitions_set(dx_asset_definitions* SELF, dx_string* name, dx_adl_symbol* symbol);
 
-dx_result dx_asset_definitions_dump(dx_asset_definitions* self);
+dx_result dx_asset_definitions_dump(dx_asset_definitions* SELF);
 
 #endif // DX_ADL_SYMBOLS_H_INCLUDED

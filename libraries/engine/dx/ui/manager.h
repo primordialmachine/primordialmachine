@@ -16,7 +16,12 @@ static inline dx_ui_manager* DX_UI_MANAGER(void* p) {
 
 struct dx_ui_manager {
   dx_object _parent;
+
+  /// @brief Map from type names (e.g., "Text" or "Group"/dx_string) to type handlers (dx_ui_type_handler). 
+  dx_inline_pointer_hashmap type_handlers;
+
   dx_ui_widget* root;
+  
   DX_VEC2_F32 dpi;
   DX_VEC2_F32 resolution;
 
@@ -66,5 +71,7 @@ dx_result dx_ui_manager_enter_render(dx_ui_manager* SELF);
 /// @param SELF A pointer to this UI manager.
 /// @method-call
 dx_result dx_ui_manager_leave_render(dx_ui_manager* SELF);
+
+dx_result dx_ui_manager_load(dx_ui_widget** RETURN, dx_ui_manager* SELF, dx_string* path);
 
 #endif // DX_UI_MANAGER_H_INCLUDED

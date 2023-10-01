@@ -22,7 +22,7 @@ struct dx_adl_context {
   /// @brief The definitions being loaded.
   dx_asset_definitions* definitions;
   /// @brief The scene being loaded.
-  dx_asset_scene* scene;
+  dx_assets_scene* scene;
 
   /// @brief Map from names (dx_string) to type handlers (dx_adl_type_handler).
   dx_inline_pointer_hashmap type_handlers;

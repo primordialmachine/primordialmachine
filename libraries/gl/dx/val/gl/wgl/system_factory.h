@@ -23,11 +23,10 @@ struct dx_val_gl_wgl_system_factory_dispatch {
   dx_val_gl_system_factory_dispatch _parent;
 };
 
-/// @brief Construct this VAL GL/WGL system factory.
-/// @param SELF A pointer to this VAL GL/WGL system factory.
-/// @method-call
+/// @constructor{dx_val_gl_wgl_system_factory}
 dx_result dx_val_gl_wgl_system_factory_construct(dx_val_gl_wgl_system_factory* SELF);
 
+/// @create-operator{dx_val_gl_wgl_system_factory}
 dx_result dx_val_gl_wgl_system_factory_create(dx_val_gl_wgl_system_factory** RETURN);
 
 #endif // DX_VAL_GL_WGL_SYSTEM_FACTORY_H_INCLUDED

@@ -13,85 +13,146 @@ static inline dx_string* _get_name(dx_adl_names* names, dx_size index) {
 
 #define NAME(name) _get_name(context->names, dx_adl_name_index_##name)
 
-static dx_result resolve(dx_adl_type_handlers_material_controllers* SELF, dx_adl_symbol* symbol, dx_adl_context* context);
+static void _on_expected_key_key_added(void** a);
 
-static dx_result read(dx_object** RETURN, dx_adl_type_handlers_material_controllers* SELF, dx_ddl_node* node, dx_adl_context* context);
+static void _on_expected_key_key_removed(void** a);
+
+static dx_result _on_hash_expected_key_key(dx_size* RETURN, void** a);
+
+static dx_result _on_compare_expected_key_keys(dx_bool* RETURN, void** a, void** b);
+
+static dx_result _initialize_expected_keys(dx_adl_type_handlers_material_controllers* SELF);
+
+static dx_result _uninitialize_expected_keys(dx_adl_type_handlers_material_controllers* SELF);
+
+static dx_result _check_keys(dx_adl_type_handlers_material_controllers* SELF, dx_ddl_node* node);
+
+static dx_result _parse(dx_object** RETURN, dx_adl_type_handlers_material_controllers* SELF, dx_ddl_node* node, dx_adl_context* context);
+
+static dx_result _resolve(dx_adl_type_handlers_material_controllers* SELF, dx_adl_symbol* symbol, dx_adl_context* context);
 
 DX_DEFINE_OBJECT_TYPE("dx.adl.type_handlers.material_controllers",
                       dx_adl_type_handlers_material_controllers,
                       dx_adl_type_handler);
 
-static dx_result resolve(dx_adl_type_handlers_material_controllers* SELF, dx_adl_symbol* symbol, dx_adl_context* context) {
-  if (symbol->resolved) {
-    return DX_SUCCESS;
-  }
-  symbol->resolved = true;
+static void _on_expected_key_key_added(void** a) {
+  DX_REFERENCE(*a);
+}
+
+static void _on_expected_key_key_removed(void** a) {
+  DX_UNREFERENCE(*a);
+}
+
+static dx_result _on_hash_expected_key_key(dx_size* RETURN, void** a) {
+  *RETURN = dx_string_get_hash_value(DX_STRING(*a));
   return DX_SUCCESS;
 }
 
-static dx_result read(dx_object** RETURN, dx_adl_type_handlers_material_controllers* SELF, dx_ddl_node* node, dx_adl_context* context) {
-  dx_string* received_type = dx_adl_semantical_read_type(node, context);
-  if (!received_type) {
+static dx_result _on_compare_expected_key_keys(dx_bool* RETURN, void** a, void** b) {
+  *RETURN = dx_string_is_equal_to(DX_STRING(*a), DX_STRING(*b));
+  return DX_SUCCESS;
+}
+
+static dx_result _uninitialize_expected_keys(dx_adl_type_handlers_material_controllers* SELF) {
+  dx_inline_pointer_hashmap_uninitialize(&SELF->expected_keys);
+  return DX_SUCCESS;
+}
+
+static dx_result _initialize_expected_keys(dx_adl_type_handlers_material_controllers* SELF) {
+  DX_INLINE_POINTER_HASHMAP_CONFIGURATION cfg = {
+    .key_added_callback = &_on_expected_key_key_added,
+    .key_removed_callback = &_on_expected_key_key_removed,
+    .value_added_callback = NULL,
+    .value_removed_callback = NULL,
+    .hash_key_callback = &_on_hash_expected_key_key,
+    .compare_keys_callback = &_on_compare_expected_key_keys,
+  };
+  if (dx_inline_pointer_hashmap_initialize(&SELF->expected_keys, &cfg)) {
+    return DX_FAILURE;
+  }
+
+#define DEFINE(EXPECTED_KEY) \
+  { \
+    dx_string* expected_key = NULL; \
+    if (dx_string_create(&expected_key, EXPECTED_KEY, sizeof(EXPECTED_KEY)-1)) { \
+      dx_inline_pointer_hashmap_uninitialize(&SELF->expected_keys); \
+      return DX_FAILURE; \
+    } \
+    if (dx_inline_pointer_hashmap_set(&SELF->expected_keys, expected_key, expected_key)) {\
+      DX_UNREFERENCE(expected_key); \
+      expected_key = NULL; \
+      dx_inline_pointer_hashmap_uninitialize(&SELF->expected_keys); \
+      return DX_FAILURE; \
+    } \
+    DX_UNREFERENCE(expected_key); \
+    expected_key = NULL; \
+  }
+  DEFINE("type");
+#undef DEFINE
+  return DX_SUCCESS;
+}
+
+static void on_received_key_added(void** p) {
+  DX_REFERENCE(*p);
+}
+
+static void on_received_key_removed(void** p) {
+  DX_UNREFERENCE(*p);
+}
+
+static dx_result _check_keys(dx_adl_type_handlers_material_controllers* SELF, dx_ddl_node* node) {
+  DX_INLINE_POINTER_ARRAY_CONFIGURATION configuration = {
+    .added_callback = &on_received_key_added,
+    .removed_callback = &on_received_key_removed,
+  };
+  dx_inline_pointer_array received_keys;
+  if (dx_inline_pointer_array_initialize(&received_keys, 0, &configuration)) {
+    return DX_FAILURE;
+  }
+  if (dx_inline_pointer_hashmap_get_keys(&node->map, &received_keys)) {
+    dx_inline_pointer_array_uninitialize(&received_keys);
+    return DX_FAILURE;
+  }
+  dx_size number_of_received_keys = 0;
+  if (dx_inline_pointer_array_get_size(&number_of_received_keys, &received_keys)) {
+    dx_inline_pointer_array_uninitialize(&received_keys);
+    return DX_FAILURE;
+  }
+  for (dx_size i = 0, n = number_of_received_keys; i < n; ++i) {
+    dx_string* received_key = NULL;
+    if (dx_inline_pointer_array_get_at(&received_key, &received_keys, i)) {
+      dx_inline_pointer_array_uninitialize(&received_keys);
+      return DX_FAILURE;
+    }
+    dx_string* expected_key = NULL;
+    if (dx_inline_pointer_hashmap_get(&expected_key, &SELF->expected_keys, received_key)) {
+      dx_inline_pointer_array_uninitialize(&received_keys);
+      return DX_FAILURE;
+    }
+  }
+  dx_inline_pointer_array_uninitialize(&received_keys);
+  return DX_SUCCESS;
+}
+
+static dx_result _parse(dx_object** RETURN, dx_adl_type_handlers_material_controllers* SELF, dx_ddl_node* node, dx_adl_context* context) {
+  if (!node) {
+    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
+    return DX_FAILURE;
+  }
+  if (_check_keys(SELF, node)) {
+    return DX_FAILURE;
+  }
+  dx_string* received_type = NULL;
+  if (dx_asset_definition_language_parser_parse_type(&received_type, node, context)) {
     return DX_FAILURE;
   }
   if (dx_string_is_equal_to(received_type, NAME(material_controllers_ambient_color_type))) {
     DX_UNREFERENCE(received_type);
     received_type = NULL;
-  #if 0
-    // start
-    {
-      start = dx_adl_semantical_read_color_instance_field(node, NAME(start_key), context);
-      if (!start) {
-        return NULL;
-      }
-    }
-    // target
-    {
-      target = dx_adl_semantical_read_vector_3_field(node, NAME(target_key), context);
-      if (!target) {
-        dx_memory_deallocate(source);
-        return NULL;
-      }
-    }
-    // up
-    {
-      up = dx_adl_semantical_read_vector_3_field(node, NAME(up_key), context);
-      if (!up) {
-        dx_memory_deallocate(target);
-        dx_memory_deallocate(source);
-        return NULL;
-      }
-    }
-    // degrees per second
-    {
-      if (dx_adl_semantical_read_f32(node, NAME(degrees_per_second_key), &degrees_per_second)) {
-        dx_memory_deallocate(up);
-        dx_memory_deallocate(target);
-        dx_memory_deallocate(source);
-        return NULL;
-      }
-    }
-  #endif
-    dx_asset_material_controllers_ambient_color* asset = NULL;
-    if (dx_asset_material_controllers_ambient_color_create(&asset)) {
+    dx_assets_material_controllers_ambient_color* asset = NULL;
+    if (dx_assets_material_controllers_ambient_color_create(&asset)) {
       return DX_FAILURE;
     }
-  #if 0
-    if (!asset) {
-    #if 0
-      dx_memory_deallocate(up);
-      dx_memory_deallocate(target);
-      dx_memory_deallocate(source);
-    #endif
-      return NULL;
-    }
-  #endif
-  #if 0
-    asset->source = *source;
-    asset->target = *target;
-    asset->up = *up;
-    asset->degrees_per_second = degrees_per_second;
-  #endif
     *RETURN = DX_OBJECT(asset);
     return DX_SUCCESS;
   } else {
@@ -102,6 +163,14 @@ static dx_result read(dx_object** RETURN, dx_adl_type_handlers_material_controll
   }
 }
 
+static dx_result _resolve(dx_adl_type_handlers_material_controllers* SELF, dx_adl_symbol* symbol, dx_adl_context* context) {
+  if (symbol->resolved) {
+    return DX_SUCCESS;
+  }
+  symbol->resolved = true;
+  return DX_SUCCESS;
+}
+
 dx_result dx_adl_type_handlers_material_controllers_construct(dx_adl_type_handlers_material_controllers* SELF) {
   dx_rti_type* TYPE = dx_adl_type_handlers_material_controllers_get_type();
   if (!TYPE) {
@@ -110,17 +179,20 @@ dx_result dx_adl_type_handlers_material_controllers_construct(dx_adl_type_handle
   if (dx_adl_type_handler_construct(DX_ADL_TYPE_HANDLER(SELF))) {
     return DX_FAILURE;
   }
+  if (_initialize_expected_keys(SELF)) {
+    return DX_FAILURE;
+  }
   DX_OBJECT(SELF)->type = TYPE;
   return DX_SUCCESS;
 }
 
-static void dx_adl_type_handlers_material_controllers_destruct(dx_adl_type_handlers_material_controllers* SELF)
-{/*Intentionally empty.*/}
+static void dx_adl_type_handlers_material_controllers_destruct(dx_adl_type_handlers_material_controllers* SELF) {
+  _uninitialize_expected_keys(SELF);
+}
 
 static void dx_adl_type_handlers_material_controllers_dispatch_construct(dx_adl_type_handlers_material_controllers_dispatch* SELF) {
-  DX_ADL_TYPE_HANDLER_DISPATCH(SELF)->read = (dx_result (*)(dx_object**, dx_adl_type_handler*, dx_ddl_node*, dx_adl_context*)) & read;
-  /// @todo Fixme.
-  DX_ADL_TYPE_HANDLER_DISPATCH(SELF)->resolve = (dx_result(*)(dx_adl_type_handler*, dx_adl_symbol*, dx_adl_context*)) & resolve;
+  DX_ADL_TYPE_HANDLER_DISPATCH(SELF)->read = (dx_result (*)(dx_object**, dx_adl_type_handler*, dx_ddl_node*, dx_adl_context*)) & _parse;
+  DX_ADL_TYPE_HANDLER_DISPATCH(SELF)->resolve = (dx_result(*)(dx_adl_type_handler*, dx_adl_symbol*, dx_adl_context*)) & _resolve;
 }
 
 dx_result dx_adl_type_handlers_material_controllers_create(dx_adl_type_handlers_material_controllers** RETURN) {

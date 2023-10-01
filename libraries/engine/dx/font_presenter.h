@@ -95,37 +95,143 @@ dx_result dx_font_presenter_construct(dx_font_presenter* SELf, dx_font_manager* 
 
 dx_result dx_font_presenter_create(dx_font_presenter** RETURN, dx_font_manager* font_manager, dx_rectangle_presenter* rectangle_presenter);
 
-/// replace an unknown symbol by a placeholder symbol
-#define dx_font_presenter_unknown_symbol_policy_placeholder (0)
-/// raise an error when encountering an unknown symbol
-#define dx_font_presenter_unknown_symbol_policy_error (1)
+/// @brief Enumeration of policies for not available glyphs.
+typedef enum DX_GLYH_NOT_AVAILABLE_POLICY {
 
-/// visualize the bounds of a glyph above and below the base.
-#define dx_font_presenter_presentation_policy_ascender_descender (1)
-/// print characters
-#define dx_font_presenter_presentation_policy_glyph (4)
+  /// @brief If a glyph is not available, raise an error.
+  DX_GLYPH_NOT_AVAILABLE_POLICY_ERROR = 0,
+
+  /// @brief If a glyph is not available, replace its code point by a placeholder code point.
+  DX_GLYPH_NOT_AVAILABLE_POLICY_PLACEHOLDER = 1,
+
+  /// @brief If a glyph is not available, skip its code point.
+  DX_GLYPH_NOT_AVAILABLE_POLICY_SKIP = 2,
+
+} DX_GLYPH_NOT_AVAILABLE_POLICY;
+
+/// @brief Enumeration of policies for not presentable code points.
+typedef enum DX_CODE_POINT_NOT_PRESENTABLE_POLICY {
+
+  /// @brief If a code point is not presentable, raise an error.
+  DX_CODE_POINT_NOT_PRESENTABLE_POLICY_ERROR = 0,
+  
+  /// @brief If a code point is not presentable, reaplce that code point by a placeholder code point.
+  DX_CODE_POINT_NOT_PRESENTABLE_POLICY_PLACEHOLDER = 1,
+  
+  /// @brief If a code point is not presentable, skip that code point.
+  DX_CODE_POINT_NOT_PRESENTABLE_POLICY_SKIP = 2,
+
+} DX_CODE_POINT_NOT_PRESENTABLE_POLICY;
+
+/// @brief Opions for measuring text.
+typedef struct DX_TEXT_MEASUREMENT_OPTIONS {
+
+  /// @brief Policy for not available glyphs.
+  DX_GLYPH_NOT_AVAILABLE_POLICY glyph_not_availabe_policy;
+
+  /// @brief Policy for not presentable code points.
+  DX_CODE_POINT_NOT_PRESENTABLE_POLICY code_point_not_presentable_policy;
+
+  /// @brief The vertical anchor to be used.
+  dx_text_anchor_vertical vertical_anchor;
+
+  /// @brief The text bounds type to be used.
+  dx_text_bounds_type text_bounds_type;
+
+} DX_TEXT_MEASUREMENT_OPTIONS;
+
+typedef struct DX_TEXT_PRESENTATION_OPTIONS {
+
+  /// @brief Policy for not available glyphs.
+  DX_GLYPH_NOT_AVAILABLE_POLICY glyph_not_availabe_policy;
+
+  /// @brief Policy for not presentable code points.
+  DX_CODE_POINT_NOT_PRESENTABLE_POLICY code_point_not_presentable_policy;
+
+  /// @brief If a glyph's descender shall be presented.
+  dx_bool present_glyph_descender;
+
+  /// @brief If a glyph's ascender shall be presented.
+  dx_bool present_glyph_ascender;
+
+  /// @brief If the glyph shall be presented.
+  dx_bool present_glyph;
+
+  /// @brief The vertical anchor to be used.
+  dx_text_anchor_vertical vertical_anchor;
+
+} DX_TEXT_PRESENTATION_OPTIONS;
 
 /// @brief 
-/// @param SELF A pointer to this font presenter.
-/// @param left The position along the x-axis. 
-/// @param bottom The position along the y-axis.
+/// @param position
+/// The position at which to render the text.
+/// This is the left/bottom position of the baseline of the first line.
 /// @param string
 /// A pointer to the string to be rendered.
 /// Newline codepoints are replaced by a placeholder symbol. Unprintable codepoints are replaced by a placeholder symbol.
+/// @param color The color to be used.
 /// @param font The font to be used.
-/// @method-call
-dx_result dx_font_presenter_render_line_string(dx_font_presenter* SELF, dx_f32 left, dx_f32 bottom, dx_string* string, DX_RGBA_F32 const* text_color, dx_font* font,
-                                               uint8_t presentation_policy, uint8_t unknown_symbol_policy);
+/// @param options A pointer to the options.
+/// @method{dx_font_presenter}
+dx_result dx_font_presenter_render_line_string(dx_font_presenter* SELF,
+                                               DX_VEC2_F32 const* position,
+                                               dx_string* string,
+                                               DX_RGBA_F32 const* text_color,
+                                               dx_font* font,
+                                               DX_TEXT_PRESENTATION_OPTIONS const* options);
 
 /// @brief 
-/// @param SELF A pointer to this font presenter.
-/// @param position The left/bottom position of the baseline.
+/// @param position
+/// The position at which to measure the text.
+/// This is the left/bottom position of the baseline of the first line.
+/// @param string
+/// A pointer to the string to measured.
+/// Newline codepoints are replaced by a placeholder symbol. Unprintable codepoints are replaced by a placeholder symbol.
+/// @param color The color to be used.
+/// @param font The font to be used.
+/// @param options A pointer to the options.
+/// @method{dx_font_presenter}
+dx_result dx_font_presenter_measure_line_string(dx_font_presenter* SELF,
+                                                DX_VEC2_F32 const* position,
+                                                dx_string* string,
+                                                dx_font* font,
+                                                DX_TEXT_MEASUREMENT_OPTIONS const* options,
+                                                DX_RECT2_F32* bounds);
+
+/// @brief 
+/// @param position
+/// The position at which to render the text.
+/// This is the left/bottom position of the baseline of the text line.
 /// @param string_iterator The string iterator.
 /// A pointer to the string iterator of the string to be rendered.
 /// Newline codepoints are replaced by a placeholder symbol. Unprintable codepoints are replaced by a placeholder symbol.
-/// @param font The font to render the text with.
-/// @method-call
-dx_result dx_font_presenter_render_line_string_iterator(dx_font_presenter* SELF, DX_VEC2_F32 const* position, dx_string_iterator* string_iterator, DX_RGBA_F32 const* text_color, dx_font* font,
-                                                        uint8_t presentation_policy, uint8_t unknown_symbol_policy);
+/// @param color The color to be used.
+/// @param font The font to be used.
+/// @param options A pointer to the options.
+/// @method{dx_font_presenter}
+dx_result dx_font_presenter_render_line_string_iterator(dx_font_presenter* SELF,
+                                                        DX_VEC2_F32 const* position,
+                                                        dx_string_iterator* string_iterator,
+                                                        DX_RGBA_F32 const* text_color,
+                                                        dx_font* font,
+                                                        DX_TEXT_PRESENTATION_OPTIONS const* options);
+
+/// @brief 
+/// @param position
+/// The position at which to measure the text.
+/// This is the left/bottom position of the baseline of the text line.
+/// @param string_iterator The string iterator.
+/// A pointer to the string iterator of the string to be rendered.
+/// Newline codepoints are replaced by a placeholder symbol. Unprintable codepoints are replaced by a placeholder symbol.
+/// @param color The color to be used.
+/// @param font The font to be used.
+/// @param options A pointer to the options.
+/// @method{dx_font_presenter}
+dx_result dx_font_presenter_measure_line_string_iterator(dx_font_presenter* SELF,
+                                                         DX_VEC2_F32 const* position,
+                                                         dx_string_iterator* string_iterator,
+                                                         dx_font* font,
+                                                         DX_TEXT_MEASUREMENT_OPTIONS const* options,
+                                                         DX_RECT2_F32* bounds);
 
 #endif // DX_FONT_PRESENTER_H_INCLUDED

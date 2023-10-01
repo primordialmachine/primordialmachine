@@ -7,6 +7,6 @@
 /// @brief Create a scene asset.
 /// @param path A path to an ADL program text file describing the scene asset.
 /// @return A pointer to the scene asset on success. The null pointer on failure.
-dx_asset_scene* _create_scene_from_file(dx_string* path);
+dx_result _create_scene_from_file(dx_assets_scene** RETURN, dx_string* path);
 
 #endif // DX_SCENES_CREATE_ASSETS_H_INCLUDED

@@ -15,14 +15,14 @@ typedef struct dx_val_vbinding dx_val_vbinding;
 
 DX_DECLARE_OBJECT_TYPE("dx.val.context",
                        dx_val_context,
-                       dx_object);
+                       dx_context);
 
 static inline dx_val_context* DX_VAL_CONTEXT(void* p) {
   return (dx_val_context*)p;
 }
 
 struct dx_val_context {
-  dx_object _parent;
+  dx_context _parent;
 };
 
 static inline dx_val_context_dispatch* DX_VAL_CONTEXT_DISPATCH(void* p) {
@@ -30,7 +30,7 @@ static inline dx_val_context_dispatch* DX_VAL_CONTEXT_DISPATCH(void* p) {
 }
 
 struct dx_val_context_dispatch {
-  dx_object_dispatch _parent;
+  dx_context_dispatch _parent;
   dx_result (*bind_texture)(dx_val_context*, dx_size, dx_val_texture*);
   dx_result (*create_buffer)(dx_val_buffer**,dx_val_context*);
   dx_result (*create_cbinding)(dx_val_cbinding**,dx_val_context*);

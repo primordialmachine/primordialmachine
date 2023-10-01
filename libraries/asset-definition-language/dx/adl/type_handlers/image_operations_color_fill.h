@@ -13,6 +13,10 @@ static inline dx_adl_type_handlers_image_operations_color_fill* DX_ADL_TYPE_HAND
 
 struct dx_adl_type_handlers_image_operations_color_fill {
   dx_adl_type_handler _parent;
+  /// @brief
+  /// Set of expected keys.
+  /// If a key is not in that set, then this is a semantical error.
+  dx_inline_pointer_hashmap expected_keys;
 };
 
 static inline dx_adl_type_handlers_image_operations_color_fill_dispatch* DX_ADL_TYPE_HANDLERS_IMAGE_OPERATIONS_COLOR_FILL_DISPATCH(void* p) {

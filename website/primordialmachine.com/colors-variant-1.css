@@ -1,0 +1,28 @@
+/** Copyright (c) 2023 Michael Heilmann. All rights reserved. */
+
+html {
+  /*#007FFF;*/ /*"azure"*/
+  background-color: #fefefe; /*"light sky blue"*/
+}
+
+header, footer {
+  color: white;
+  background-color: black;
+}
+
+header a, header a:visited, header a:hover {
+  color: white;
+}
+
+main > div.container > div.left-column {
+  background-color: black;
+  color: white;
+}
+
+main > div.container > div.left-column a, main > div.container > div.left-column a:visited, main > div.container > div.left-column a:hover {
+  color: white;
+}
+
+main > div.container > div.center-column a, main > div.container > div.center-column a:visited, main > div.container > div.center-column a:hover {
+  color: black;
+}

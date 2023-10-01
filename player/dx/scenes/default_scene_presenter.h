@@ -21,15 +21,15 @@ static inline dx_default_scene_presenter* DX_DEFAULT_SCENE_PRESENTER(void *p) {
 struct dx_default_scene_presenter {
   dx_scene_presenter _parent;
   /// @brief A pointer to the dx_asset_scene.
-  dx_asset_scene* asset_scene;
+  dx_assets_scene* asset_scene;
   /// @brief A pointer to an UTF-8 C string. The path of the ADL file to load.
   dx_string* path;
   /// @brief List of dx_val_mesh_instance objects to render.
   dx_inline_object_array mesh_instances;
   /// @brief List of dx_val_viewer objects.
   dx_inline_object_array viewers;
-  /// @brief List of dx_asset_matrial objects.
-  dx_inline_object_array asset_material_objects;
+  /// @brief List of dx_assets_material objects.
+  dx_inline_object_array material_assets;
   /// @brief The commands to be executed when entering a frame.
   dx_val_command_list* commands;
 };

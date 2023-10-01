@@ -13,6 +13,10 @@ static inline dx_adl_type_handlers_image_operations_checkerboard_pattern_fill* D
 
 struct dx_adl_type_handlers_image_operations_checkerboard_pattern_fill {
   dx_adl_type_handler _parent;
+  /// @brief
+  /// Set of expected keys.
+  /// If a key is not in that set, then this is a semantical error.
+  dx_inline_pointer_hashmap expected_keys;
 };
 
 static inline dx_adl_type_handlers_image_operations_checkerboard_pattern_fill_dispatch* DX_ADL_TYPE_HANDLERS_IMAGE_OPERATIONS_CHECKERBOARD_PATTERN_FILL_DISPATCH(void* p) {

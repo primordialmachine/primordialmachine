@@ -12,7 +12,7 @@ static inline dx_aal_context* DX_AAL_CONTEXT(void* p) {
 }
 
 struct dx_aal_context {
-  dx_object _parent;
+  dx_context _parent;
 };
 
 static inline dx_aal_context_dispatch* DX_AAL_CONTEXT_DISPATCH(void* p) {
@@ -20,7 +20,7 @@ static inline dx_aal_context_dispatch* DX_AAL_CONTEXT_DISPATCH(void* p) {
 }
 
 struct dx_aal_context_dispatch {
-  dx_object_dispatch _parent;
+  dx_context_dispatch _parent;
   dx_result(*start)(dx_aal_context* SELF);
   dx_result(*stop)(dx_aal_context* SELF);
 };

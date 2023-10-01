@@ -4,7 +4,7 @@
 #include "dx/document.h"
 #include "dx/console.h"
 #include "dx/val/context.h"
-#include "dx/ui/text.h"
+#include "dx/ui/text_field.h"
 #include "dx/ui/group.h"
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
@@ -21,10 +21,10 @@ struct dx_default_console {
   dx_console _parent;
   /// @brief The UI manager.
   dx_ui_manager* ui_manager;
-  /// @brief The UI text for the input of this console.
-  dx_ui_text* ui_input_field;
-  /// @brief The UI text for the output of this console.
-  dx_ui_text* ui_output_field;
+  /// @brief The UI text field for the input of this console.
+  dx_ui_text_field* ui_input_field;
+  /// @brief The UI text field for the output of this console.
+  dx_ui_text_field* ui_output_field;
   /// @brief The UI group of this console.
   dx_ui_group* ui_group;
   // t indicates the current state.

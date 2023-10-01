@@ -90,7 +90,7 @@ dx_result dx_document_definition_language_scanner_construct(dx_document_definiti
 dx_result dx_document_definition_language_scanner_create(dx_document_definition_language_scanner** RETURN);
 
 /// @brief Get the type of the current word.
-/// @param RETURN A pointer to a <code>dx_ddl_word_kind</code> variable.
+/// @param RETURN A pointer to a <code>dx_data_definition_language_word_kind</code> variable.
 /// @param SELF a pointer to this scanner.
 /// @success <code>*RETURN</code> was assigned the word kind.
 /// @method-call

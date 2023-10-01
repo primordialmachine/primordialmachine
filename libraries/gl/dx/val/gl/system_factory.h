@@ -23,9 +23,7 @@ struct dx_val_gl_system_factory_dispatch {
   dx_val_system_factory_dispatch _parent;
 };
 
-/// @brief Construct this VAL GL system factory.
-/// @param SELF A pointer to this VAL GL system factory.
-/// @method-call
+/// @constructor{dx_val_gl_system_factory}
 dx_result dx_val_gl_system_factory_construct(dx_val_gl_system_factory* SELF);
 
 #endif // DX_VAL_GL_SYSTEM_FACTORY_H_INCLUDED

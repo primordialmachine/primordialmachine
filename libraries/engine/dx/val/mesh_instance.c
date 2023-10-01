@@ -35,7 +35,7 @@ static dx_result add_to_backend(dx_val_mesh_instance* self) {
                                            cbinding,
                                            self->mesh->program,
                                            0,
-                                           self->mesh->asset_mesh->number_of_vertices)) {
+                                           self->mesh->mesh_asset->number_of_vertices)) {
     DX_UNREFERENCE(cbinding);
     cbinding = NULL;
     DX_UNREFERENCE(self->commands);

@@ -34,36 +34,37 @@ dx_result dx_asset_definition_language_parser_construct(dx_asset_definition_lang
 
 dx_result dx_asset_definition_language_parser_create(dx_asset_definition_language_parser** RETURN, dx_asset_definition_language_diagnostics* diagnostics);
 
-/// @brief Read a type.
+/// @brief Read a type (name string)
 /// @code
 /// { type : <string> }
 /// @endcode
-/// @param RETURN A pointer to a <code>dx_string**</code> variable.
-/// @param node A pointer to the node.
-/// @param names A pointer to the names object.
-/// @return A pointer to the type on success. The null pointer on failure.
-/// @success
-/// <code>*RETURN</code> was assigned a pointer to the name.
-/// The caller acquired a reference to the string object returned.
-/// @procedure-call
-dx_string* dx_adl_semantical_read_type(dx_ddl_node* node, dx_adl_context* context);
-
-/// @brief Parse
-/// @code
-/// { name : <string> }
-/// @endcode
+/// @param RETURN A pointer to a <code>dx_string*</code> variable.
 /// @param node A pointer to the node.
 /// @param context A pointer to the context.
 /// @success
-/// <code>*RETURN</code> was assigned a pointer to the name object.
+/// <code>*RETURN</code> was assigned a pointer to the type (name string).
 /// The caller acquired a reference to the string object returned.
 /// @method{dx_asset_definition_language_parser}
-dx_result dx_adl_semantical_read_name(dx_string** RETURN, dx_ddl_node* node, dx_adl_context* context);
+dx_result dx_asset_definition_language_parser_parse_type(dx_string** RETURN, dx_ddl_node* node, dx_adl_context* context);
+
+/// @brief Parse a name (string)
+/// @code
+/// { name : <string> }
+/// @endcode
+/// @param RETURN A pointer to a <code>dx_string*</code> variable.
+/// @param node A pointer to the node.
+/// @param context A pointer to the context.
+/// @success
+/// <code>*RETURN</code> was assigned a pointer to the name (string).
+/// The caller acquired a reference to the string object returned.
+/// @method{dx_asset_definition_language_parser}
+dx_result dx_asset_definition_language_parser_parse_name(dx_string** RETURN, dx_ddl_node* node, dx_adl_context* context);
 
 /// @brief Parse
 /// @code
 /// <ADL.Translation> : { type : 'Translation', x : <number>, y : <number>, z : <number> }
 /// @endcode
+/// @param RETURN A pointer to a <code>dx_assets_matrix_4x4_f32*</code> variable.
 /// @param node A pointer to the node.
 /// @param context A pointer to the context.
 /// @success
@@ -71,6 +72,19 @@ dx_result dx_adl_semantical_read_name(dx_string** RETURN, dx_ddl_node* node, dx_
 /// The caller acquired a reference to the string object returned.
 /// @method{dx_asset_definition_language_parser}
 dx_result dx_asset_definition_language_parser_parse_translation(dx_assets_matrix_4x4_f32** RETURN, dx_ddl_node* node, dx_adl_context* context);
+
+/// @brief Parse
+/// @code
+/// <ADL.ColorInstance> : { ... type : 'ColorInstance', reference : <name> ... }
+/// @endcode
+/// @param RETURN A pointer to a <code>dx_asset_reference*</code> variable.
+/// @param node A pointer to the node.
+/// @param context A pointer to the context.
+/// @success
+/// <code>*RETURN</code> was assigned a pointer to the asset reference object.
+/// The caller acquired a reference to the asset reference object returned.
+/// @method{dx_asset_definition_language_parser}
+dx_result dx_asset_definition_language_parser_parse_color_instance(dx_asset_reference** RETURN, dx_ddl_node* node, dx_adl_context* context);
 
 /// @brief Parse
 /// @code
@@ -88,8 +102,10 @@ dx_result dx_asset_definition_language_parser_parse_vector_3_f32(dx_assets_vecto
 /// @code
 /// <key> : <ADL.Vector3>
 /// @endcode
+/// @param RETURN A pointer to a <code>dx_assets_vector_3_f32*</code> variable.
 /// @param node A pointer to the node.
 /// @param context A pointer to the context.
+/// @param key A pointer to the key (string).
 /// @success
 /// <code>*RETURN</code> was assigned a pointer to the vector object.
 /// The caller acquired a reference to the string object returned.
@@ -98,11 +114,11 @@ dx_result dx_asset_definition_language_parser_parse_vector_3_f32_field(dx_assets
 
 /// @brief Parse
 /// @code
-/// <name> ':' <number>
+/// <key> ':' <number>
 /// @endcode
 /// @param [out] RETURN A pointer to a <code>dx_n8</code> variable.
 /// @param node A pointer to a map node.
-/// @param key The key.
+/// @param key A pointer to the key (string).
 /// @method{dx_asset_definition_language_parser}
 dx_result dx_adl_semantical_read_n8(dx_n8* RETURN, dx_ddl_node* node, dx_string* key);
 
@@ -148,17 +164,6 @@ dx_result dx_adl_semantical_read_f64(dx_f64* RETURN, dx_ddl_node* node, dx_strin
 /// @success The caller acquired a reference to the string object returned.
 /// @default-failure
 dx_string* dx_adl_semantical_read_string_field(dx_ddl_node* node, dx_string* key, dx_adl_names* names);
-
-dx_result dx_adl_semantical_read_color_instance_0(dx_assets_color_rgb_n8** RETURN, dx_ddl_node* node, dx_adl_context* context);
-
-dx_assets_color_rgb_n8* dx_adl_semantical_read_color_instance_field_0(dx_ddl_node* node, bool optional, dx_string* key, dx_adl_context* context);
-
-/// @brief Parse
-/// @code
-/// <ADL.ColorInstance> : { ... type : 'ColorInstance', reference : <name> ... }
-/// @param node A pointer to the node.
-/// @method{dx_asset_definition_language_parser}
-dx_result dx_adl_semantical_read_color_instance(dx_asset_reference** RETURN, dx_ddl_node* node, dx_adl_context* context);
 
 /// @brief Parse
 /// @code

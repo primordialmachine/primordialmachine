@@ -1,9 +1,9 @@
 #include "dx/assets/image_operations/mirror_horizontal.h"
 
 
-DX_DEFINE_OBJECT_TYPE("dx.asset.image_operations.mirror_horizontal",
+DX_DEFINE_OBJECT_TYPE("dx.assets.image_operations.mirror_horizontal",
                       dx_asset_image_operations_mirror_horizontal,
-                      dx_asset_image_operation)
+                      dx_assets_image_operation)
 
 static void dx_asset_image_operations_mirror_horizontal_destruct(dx_asset_image_operations_mirror_horizontal* SELF)
 {/*Intentionally empty.*/}
@@ -16,7 +16,7 @@ dx_result dx_asset_image_operations_mirror_horizontal_construct(dx_asset_image_o
   if (!TYPE) {
     return DX_FAILURE;
   }
-  if (dx_asset_image_operation_construct(DX_ASSET_IMAGE_OPERATION(SELF))) {
+  if (dx_assets_image_operation_construct(DX_ASSETS_IMAGE_OPERATION(SELF))) {
     return DX_FAILURE;
   }
   DX_OBJECT(SELF)->type = TYPE;

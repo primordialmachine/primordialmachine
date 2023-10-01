@@ -1,0 +1,204 @@
+/* Copyright (c) 2023 Michael Heilmann. All rights reserved. */
+
+/**
+ * @author Michael Heilmann
+ * @description Typographic flavor.
+ */
+
+/*
+ * Changelog:
+ *  2023-10-24
+ *  - for code:                    "Inconsolat Thin"
+ *  - for all texts:               "Montserrat" was replaced by "Noto Sans Display".
+ *
+ *  2023-10-23
+ *  - for body text:               "Montserrat Thin 100" was deemed to be too thin "too thin".
+ *                                 It was replaced by "Montserrat ExtraLight 200".
+ *  2023-10-10:
+ *  Initial selection of fonts:
+ *  - for headlines:               "Gelasio Regular 400" (as a replacement for Georgia).
+ *  - for subtitles and bold text: "Montserrat Regular 400" (as a replacement for Avenir, which is commercial).
+ *  - for body text:               "Montserrat Thin 100" (as a replacement for Avenir Light, which is commercial).
+ *
+ */
+
+/*"Gelasio Regular 400" on Google Fonts.*/
+@import url('https://fonts.googleapis.com/css2?family=Gelasio&display=swap');
+/*"Montserrat ExtraLight 200" on Google Fonts.*/
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@200&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Display:wght@200&display=swap');
+
+/*"Montserrat ExtraLight 200 Italic" on Google Fonts.*/
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@1,200&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Display:ital,wght@1,200&display=swap');
+
+/*"Montserrat Regular 400" on Google Fonts.*/
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Display:wght@400&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@300&family=Noto+Sans+Display&display=swap');
+
+
+:root {
+  --default-font-size: default;
+  --default-font-family: /*'Montserrat',*/'Noto Sans Display', sans-serif;
+  --default-font-weight: 200;
+
+  --logo-font-family: 'Gelasio', serif;
+  --logo-font-weight: 400;
+
+  --code-font-family: 'Inconsolata', monospace;
+  --code-font-weight: 300;
+
+  --body-font-family: /*'Montserrat',*/'Noto Sans Display', sans-serif;
+  --body-font-weight: 200;
+
+  --headline-font-family: 'Gelasio', serif;
+  --headline-font-weight: 400;
+}
+
+
+* {
+  font-size: var(--default-font-size);
+  font-family: var(--default-font-family);
+  font-weight: var(--default-font-weight);
+}
+
+html {
+  font-size: var(--default-font-size);
+  font-family: var(--default-font-family);
+  font-weight: var(--default-font-weight);
+}
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+p {
+  font-family: var(--body-font-family);
+  font-weight: var(--body-font-weight);
+
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
+em {
+  font-family: var(--body-font-family);
+  font-weight: var(--body-font-weight);
+  font-style: italic;
+}
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*Headlines*/
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--headline-font-family);
+  font-weight: var(--headline-font-weight);
+  margin-bottom: .5rem;
+  line-height: 1.2;
+}
+
+h1 {
+  font-size: 2.5rem;
+}
+
+h2 {
+  font-size: 2rem;
+}
+
+h3 {
+  font-size: 1.75rem;
+}
+
+h4 {
+  font-size: 1.5rem;
+}
+
+h5 {
+  font-size: 1.25rem;
+}
+
+h6 {
+  font-size: 1rem;
+}
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+code {
+  font-family: var(--code-font-family);
+  font-weight: var(--code-font-weight);
+  font-size: 80%;
+}
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+table {
+  font-family: var(--body-font-family);
+  font-weight: var(--body-font-weight);
+
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th, td {
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even){background-color: #f2f2f2}
+
+th {
+  background-color: #04AA6D;
+  color: white;
+}
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*Definition Lists*/
+
+dl, ul {
+  font-weight: 200;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
+dl > dt {
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+dl > dd {
+  margin: 0;
+  padding: 0 0 0.5em 0;
+}
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+ul.p-list {
+  font-family: var(--body-font-family);
+  list-style: square !important;
+}
+
+ul.p-list > li {
+  margin-left: 1rem;
+}
+
+div.section {
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+div.logo {
+  font-family: var(--logo-font-family);
+  font-weight: var(--logo-font-weight);
+  font-size: 400%;
+}
+
+div.logo a,
+div.logo a:visited,
+div.logo a:hover {
+  text-decoration: none;
+}

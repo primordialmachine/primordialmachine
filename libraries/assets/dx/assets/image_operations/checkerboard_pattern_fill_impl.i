@@ -1,18 +1,18 @@
 
-static dx_result on_checkerboard_pattern_fill_image_operation(dx_asset_image* SELF, OFFSET2 offset, EXTEND2 extend, dx_asset_image_operations_checkerboard_pattern_fill* image_operation) {
-  dx_asset_image_operations_color_fill* first = NULL;
-  if (dx_asset_image_operations_color_fill_create(&first)) {
+static dx_result on_checkerboard_pattern_fill_image_operation(dx_assets_image* SELF, OFFSET2 offset, EXTEND2 extend, dx_assets_image_operations_checkerboard_pattern_fill* image_operation) {
+  dx_assets_image_operations_color_fill* first = NULL;
+  if (dx_assets_image_operations_color_fill_create(&first)) {
     return DX_FAILURE;
   }
-  dx_asset_image_operations_color_fill* second = NULL;
-  if (dx_asset_image_operations_color_fill_create(&second)) {
+  dx_assets_image_operations_color_fill* second = NULL;
+  if (dx_assets_image_operations_color_fill_create(&second)) {
     DX_UNREFERENCE(first);
     first = NULL;
     return DX_FAILURE;
   }
 
-  if (dx_asset_image_operations_color_fill_set_color(first, DX_ASSETS_COLOR_RGB_N8(image_operation->first_checker_color->object)) ||
-      dx_asset_image_operations_color_fill_set_color(second, DX_ASSETS_COLOR_RGB_N8(image_operation->second_checker_color->object))) {
+  if (dx_assets_image_operations_color_fill_set_color(first, DX_ASSETS_COLOR_RGB_N8(image_operation->first_checker_color->object)) ||
+      dx_assets_image_operations_color_fill_set_color(second, DX_ASSETS_COLOR_RGB_N8(image_operation->second_checker_color->object))) {
     DX_UNREFERENCE(first);
     first = NULL;
     return DX_FAILURE;
@@ -45,9 +45,9 @@ static dx_result on_checkerboard_pattern_fill_image_operation(dx_asset_image* SE
       int even_x = x % 2 == 0;
       int even_y = y % 2 == 0;
       if (even_x != even_y) {
-        dx_asset_image_apply(SELF, l, t, w, h, DX_ASSET_IMAGE_OPERATION(first));
+        dx_assets_image_apply(SELF, l, t, w, h, DX_ASSETS_IMAGE_OPERATION(first));
       } else {
-        dx_asset_image_apply(SELF, l, t, w, h, DX_ASSET_IMAGE_OPERATION(second));
+        dx_assets_image_apply(SELF, l, t, w, h, DX_ASSETS_IMAGE_OPERATION(second));
       }
     }
   }
