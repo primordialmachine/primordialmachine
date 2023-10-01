@@ -49,10 +49,7 @@ dx_result dx_asset_texture_construct(dx_asset_texture* SELF, dx_string* name, dx
 }
 
 dx_result dx_asset_texture_create(dx_asset_texture** RETURN, dx_string* name, dx_asset_reference* image_reference) {
-  dx_asset_texture* SELF = DX_ASSET_TEXTURE(dx_object_alloc(sizeof(dx_asset_texture)));
-  if (!SELF) {
-    return DX_FAILURE;
-  }
+  DX_CREATE_PREFIX(dx_asset_texture)
   if (dx_asset_texture_construct(SELF, name, image_reference)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;

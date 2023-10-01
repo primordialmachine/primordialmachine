@@ -33,14 +33,13 @@ list(APPEND ${name}.headers "dx/val.h")
 list(APPEND ${name}.sources "dx/console.c")
 list(APPEND ${name}.headers "dx/console.h")
 
-list(APPEND ${name}.sources "dx/system.c")
-list(APPEND ${name}.headers "dx/system.h")
-list(APPEND ${name}.sources "dx/system_factory.c")
-list(APPEND ${name}.headers "dx/system_factory.h")
-
 # "dx/cl_interpreter.(c|h)"
 list(APPEND ${name}.sources "dx/cl_interpreter.c")
 list(APPEND ${name}.headers "dx/cl_interpreter.h")
+
+# "dx/presenter.(c|h)"
+list(APPEND ${name}.sources "dx/presenter.c")
+list(APPEND ${name}.headers "dx/presenter.h")
 
 # "dx/scene_presenter.(c|h)"
 list(APPEND ${name}.sources "dx/scene_presenter.c")
@@ -147,6 +146,23 @@ list(APPEND ${name}.headers "dx/adl/type_handlers/image_operations_color_fill.h"
 
 list(APPEND ${name}.sources "dx/adl/type_handlers/optics.c")
 list(APPEND ${name}.headers "dx/adl/type_handlers/optics.h")
+
+#
+list(APPEND ${name}.sources "dx/ui/widget.c")
+list(APPEND ${name}.headers "dx/ui/widget.h")
+list(APPEND ${name}.sources "dx/ui/group.c")
+list(APPEND ${name}.headers "dx/ui/group.h")
+list(APPEND ${name}.sources "dx/ui/text.c")
+list(APPEND ${name}.headers "dx/ui/text.h")
+list(APPEND ${name}.sources "dx/ui/manager.c")
+list(APPEND ${name}.headers "dx/ui/manager.h")
+
+list(APPEND ${name}.sources "dx/font_presenter.c")
+list(APPEND ${name}.headers "dx/font_presenter.h")
+list(APPEND ${name}.sources "dx/rectangle_presenter.c")
+list(APPEND ${name}.headers "dx/rectangle_presenter.h")
+list(APPEND ${name}.sources "dx/utilities_2d.c")
+list(APPEND ${name}.headers "dx/utilities_2d.h")
 
 # Small utility function to find files by expression and append them to the specified list.
 function(add_files file_list expression)

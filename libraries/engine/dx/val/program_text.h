@@ -56,14 +56,14 @@ struct dx_val_program_text_dispatch {
 /// @param path The path to the file to load the program text from.
 /// @default-failure
 /// @default-return
-dx_result dx_val_program_text_construct_from_file(dx_val_program_text* self, dx_val_program_text_type type, dx_string* path);
+dx_result dx_val_program_text_construct_from_file(dx_val_program_text* SELF, dx_val_program_text_type type, dx_string* path);
 
 /// @param SELF A pointer to this program text object.
 /// @param vertex_program_text Pointer to a program text object of type DX_VAL_PROGRAM_SOURCE_TYPE_VERTEX.
 /// @param fragment_program_text Pointer to a program text object of type DX_VAL_PROGRAM_SOURCE_TYPE_FRAGMENT.
 /// @default-failure
 /// @default-return
-dx_result dx_val_program_text_construct(dx_val_program_text* self, dx_val_program_text *vertex_program_text, dx_val_program_text* fragment_program_text);
+dx_result dx_val_program_text_construct(dx_val_program_text* SELF, dx_val_program_text *vertex_program_text, dx_val_program_text* fragment_program_text);
 
 dx_result dx_val_program_text_create_from_file(dx_val_program_text** RETURN, dx_val_program_text_type type, dx_string* path);
 

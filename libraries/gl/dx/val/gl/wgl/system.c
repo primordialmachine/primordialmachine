@@ -721,10 +721,7 @@ dx_result dx_val_gl_wgl_system_construct(dx_val_gl_wgl_system* SELF, dx_msg_queu
 }
 
 dx_result dx_val_gl_wgl_system_create(dx_val_gl_wgl_system** RETURN, dx_msg_queue* msg_queue) {
-  dx_val_gl_wgl_system* SELF = DX_VAL_GL_WGL_SYSTEM(dx_object_alloc(sizeof(dx_val_gl_wgl_system)));
-  if (!SELF) {
-    return DX_FAILURE;
-  }
+  DX_CREATE_PREFIX(dx_val_gl_wgl_system)
   if (dx_val_gl_wgl_system_construct(SELF, msg_queue)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;

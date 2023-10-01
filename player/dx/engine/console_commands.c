@@ -54,22 +54,78 @@ static dx_result print_library_info(dx_application_presenter* application_presen
   return DX_SUCCESS;
 }
 
-dx_result dx_console_commands_print_core_info(dx_application_presenter* application_presenter) {
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+static dx_result command_core_library_print_info(dx_application_presenter* application_presenter);
+
+static dx_result command_assets_library_print_info(dx_application_presenter* application_presenter);
+
+static dx_result command_engine_library_print_info(dx_application_presenter* application_presenter);
+
+static dx_result command_data_definition_language_library_print_info(dx_application_presenter* application_presenter);
+
+static dx_result command_document_definition_language_library_print_info(dx_application_presenter* application_presenter);
+
+static dx_result command_application_request_quit(dx_application_presenter* application_presenter);
+
+static dx_result command_core_library_print_info(dx_application_presenter* application_presenter) {
   return print_library_info(application_presenter, DX_CORE_LIBRARY_NAME, DX_CORE_LIBRARY_MAJOR_VERSION, DX_CORE_LIBRARY_MINOR_VERSION);
 }
 
-dx_result dx_console_commands_print_assets_info(dx_application_presenter* application_presenter) {
+static dx_result command_assets_library_print_info(dx_application_presenter* application_presenter) {
   return print_library_info(application_presenter, DX_ASSETS_LIBRARY_NAME, DX_ASSETS_LIBRARY_MAJOR_VERSION, DX_ASSETS_LIBRARY_MINOR_VERSION);
 }
 
-dx_result dx_console_commands_print_engine_info(dx_application_presenter* application_presenter) {
+static dx_result command_engine_library_print_info(dx_application_presenter* application_presenter) {
   return print_library_info(application_presenter, DX_ENGINE_LIBRARY_NAME, DX_ENGINE_LIBRARY_MAJOR_VERSION, DX_ENGINE_LIBRARY_MINOR_VERSION);
 }
 
-dx_result dx_console_commands_print_data_definition_language_info(dx_application_presenter* application_presenter) {
+static dx_result command_data_definition_language_library_print_info(dx_application_presenter* application_presenter) {
   return print_library_info(application_presenter, DX_DATA_DEFINITION_LANGUAGE_LIBRARY_NAME, DX_DATA_DEFINITION_LANGUAGE_LIBRARY_MAJOR_VERSION, DX_DATA_DEFINITION_LANGUAGE_LIBRARY_MINOR_VERSION);
 }
 
-dx_result dx_console_commands_print_document_definition_language_info(dx_application_presenter* application_presenter) {
+static dx_result command_document_definition_language_library_print_info(dx_application_presenter* application_presenter) {
   return print_library_info(application_presenter, DX_DOCUMENT_DEFINITION_LANGUAGE_LIBRARY_NAME, DX_DOCUMENT_DEFINITION_LANGUAGE_LIBRARY_MAJOR_VERSION, DX_DOCUMENT_DEFINITION_LANGUAGE_LIBRARY_MINOR_VERSION);
+}
+
+static dx_result command_application_request_quit(dx_application_presenter* application_presenter) {
+  dx_application* application = NULL;
+  if (dx_application_get(&application)) { 
+    return DX_FAILURE;
+  }
+  if (dx_application_emit_quit_msg(application)) {
+    DX_UNREFERENCE(application);
+    application = NULL;
+    return DX_FAILURE;
+  }
+  DX_UNREFERENCE(application);
+  application = NULL;
+  return DX_SUCCESS;
+}
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+dx_result dx_console_commands_register_all(dx_cl_interpreter* cl_interpreter) {
+#define DEFINE(CEL_NAME, CXX_NAME) \
+  { \
+    dx_string* cel_name = NULL; \
+    if (dx_string_create(&cel_name, CEL_NAME, strlen(CEL_NAME))) { \
+      return DX_FAILURE; \
+    } \
+    if (dx_cl_interpreter_register_function(cl_interpreter, cel_name, &CXX_NAME)) { \
+      DX_UNREFERENCE(cel_name); \
+      cel_name = NULL; \
+      return DX_FAILURE; \
+    } \
+    DX_UNREFERENCE(cel_name); \
+    cel_name = NULL; \
+  }
+  DEFINE("assetLibrary.printInfo", command_assets_library_print_info);
+  DEFINE("coreLibrary.printInfo", command_core_library_print_info);
+  DEFINE("dataDefinitionLanguageLibrary.printInfo", command_data_definition_language_library_print_info);
+  DEFINE("documentDefinitionLanguageLibrary.printInfo", command_document_definition_language_library_print_info);
+  DEFINE("engineLibrary.printInfo", command_engine_library_print_info);
+  DEFINE("application.requestQuit", command_application_request_quit);
+#undef DEFINE
+  return DX_SUCCESS;
 }

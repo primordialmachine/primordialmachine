@@ -18,8 +18,8 @@ dx_result dx_get_best_array_size(dx_size* RETURN, dx_size current, dx_size addit
   }
   new = current + additional;
   {
-    dx_size temporary = dx_next_power_of_two_gte_sz(new);
-    if (dx_get_error()) {
+    dx_size temporary;
+    if (dx_next_power_of_two_gte_sz(&temporary, new)) {
       // no power of two equal to or greater than new is found
       // new is not a power of two and there is no next power of two greater than new
       dx_set_error(old_error);

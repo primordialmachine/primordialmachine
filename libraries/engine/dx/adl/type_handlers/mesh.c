@@ -22,17 +22,17 @@ static int _read_mesh_operation(dx_ddl_node* node, dx_adl_symbol* symbol, dx_adl
 
 static int _read_mesh_operations(dx_ddl_node* node, dx_adl_symbol* symbol, dx_adl_context* context);
 
-static int _read_vertex_format(dx_ddl_node* node, dx_adl_context* context, DX_VERTEX_FORMAT* vertex_format);
+static int _read_vertex_format(dx_ddl_node* node, dx_adl_context* context, dx_vertex_format* vertex_format);
 
 static dx_asset_mesh* _read_mesh(dx_ddl_node* node, dx_adl_context* context);
 
-static int resolve(dx_adl_type_handlers_mesh* self,
+static int resolve(dx_adl_type_handlers_mesh* SELF,
                    dx_adl_symbol *symbol,
                    dx_adl_context* context);
 
-static dx_object* read(dx_adl_type_handlers_mesh* self,
-                       dx_ddl_node* node,
-                       dx_adl_context* context);
+static dx_result read(dx_object** RETURN, dx_adl_type_handlers_mesh* SELF,
+                      dx_ddl_node* node,
+                      dx_adl_context* context);
 
 DX_DEFINE_OBJECT_TYPE("dx.adl.type_handlers.mesh",
                       dx_adl_type_handlers_mesh,
@@ -51,8 +51,7 @@ static dx_asset_material* _read_material(dx_ddl_node* node, dx_adl_context* cont
     if (dx_inline_pointer_hashmap_get(&reader, &context->readers, NAME(material_type))) {
       return NULL;
     }
-    asset = DX_ASSET_MATERIAL(dx_adl_type_handler_read(reader, node, context));
-    if (!asset) {
+    if (dx_adl_type_handler_read((dx_object**)&asset, reader, node, context)) {
       goto END;
     }
   } else {
@@ -87,8 +86,8 @@ static int _read_mesh_operation(dx_ddl_node* node, dx_adl_symbol* symbol, dx_adl
     return 1;
   }
 
-  dx_adl_symbol* reader_symbol = dx_adl_symbol_create(received_type, dx_adl_names_create_unique_name(context->names));
-  if (!reader_symbol) {
+  dx_adl_symbol* reader_symbol = NULL;
+  if (dx_adl_symbol_create(&reader_symbol, received_type, dx_adl_names_create_unique_name(context->names))) {
     DX_UNREFERENCE(received_type);
     received_type = NULL;
     return 1;
@@ -114,8 +113,8 @@ static int _read_mesh_operation(dx_ddl_node* node, dx_adl_symbol* symbol, dx_adl
   }
   DX_UNREFERENCE(received_type);
   received_type = NULL;
-  dx_asset_mesh_operation* operation = DX_ASSET_MESH_OPERATION(dx_adl_type_handler_read(reader, node, context));
-  if (!operation) {
+  dx_asset_mesh_operation* operation = NULL;
+  if (dx_adl_type_handler_read((dx_object**)&operation, reader, node, context)) {
     DX_UNREFERENCE(reader_symbol);
     reader_symbol = NULL;
     return 1;
@@ -156,7 +155,7 @@ static int _read_mesh_operations(dx_ddl_node* node, dx_adl_symbol* symbol, dx_ad
   return 0;
 }
 
-static int _read_vertex_format(dx_ddl_node* node, dx_adl_context* context, DX_VERTEX_FORMAT* vertex_format) {
+static int _read_vertex_format(dx_ddl_node* node, dx_adl_context* context, dx_vertex_format* vertex_format) {
   if (!node) {
     dx_set_error(DX_ERROR_INVALID_ARGUMENT);
     return 1;
@@ -165,22 +164,22 @@ static int _read_vertex_format(dx_ddl_node* node, dx_adl_context* context, DX_VE
     dx_set_error(DX_ERROR_SEMANTICAL_ERROR);
     return 1;
   }
-  DX_VERTEX_FORMAT vertex_format_1 = 0;
+  dx_vertex_format vertex_format_1 = 0;
   for (dx_size i = 0, n = dx_ddl_node_list_get_size(node); i < n; ++i) {
     dx_ddl_node* child_node = dx_ddl_node_list_get(node, i);
     dx_string* received_value = dx_ddl_node_get_string(child_node);
     if (dx_string_is_equal_to(received_value, NAME(position_xyz_string))) {
       DX_UNREFERENCE(received_value);
       received_value = NULL;
-      vertex_format_1 |= DX_VERTEX_FORMAT_POSITION_XYZ;
+      vertex_format_1 |= dx_vertex_format_position_xyz;
     } else if (dx_string_is_equal_to(received_value, NAME(ambient_rgba_string))) {
       DX_UNREFERENCE(received_value);
       received_value = NULL;
-      vertex_format_1 |= DX_VERTEX_FORMAT_AMBIENT_RGBA;
+      vertex_format_1 |= dx_vertex_format_ambient_rgba;
     } else if (dx_string_is_equal_to(received_value, NAME(ambient_uv_string))) {
       DX_UNREFERENCE(received_value);
       received_value = NULL;
-      vertex_format_1 |= DX_VERTEX_FORMAT_AMBIENT_UV;
+      vertex_format_1 |= dx_vertex_format_ambient_uv;
     } else {
       dx_set_error(DX_ERROR_SEMANTICAL_ERROR);
       DX_UNREFERENCE(received_value);
@@ -222,7 +221,7 @@ static dx_asset_mesh* _read_mesh(dx_ddl_node* node, dx_adl_context* context) {
     }
   }
   // vertexFormat
-  DX_VERTEX_FORMAT vertex_format_value = DX_VERTEX_FORMAT_POSITION_XYZ_AMBIENT_RGBA_AMBIENT_UV;
+  dx_vertex_format vertex_format_value = dx_vertex_format_position_xyz_ambient_rgba_ambient_uv;
   {
     dx_string* name = NAME(vertex_format_key);
     dx_ddl_node* child_node = dx_ddl_node_map_get(node, name);
@@ -273,7 +272,7 @@ END:
   return mesh_value;
 }
 
-static int resolve(dx_adl_type_handlers_mesh* self, dx_adl_symbol* symbol, dx_adl_context* context) {
+static int resolve(dx_adl_type_handlers_mesh* SELF, dx_adl_symbol* symbol, dx_adl_context* context) {
   if (symbol->resolved) {
     return 0;
   }
@@ -314,39 +313,43 @@ static int resolve(dx_adl_type_handlers_mesh* self, dx_adl_symbol* symbol, dx_ad
   return 0;
 }
 
-static dx_object* read(dx_adl_type_handlers_mesh* self, dx_ddl_node* node, dx_adl_context* context) {
-  return DX_OBJECT(_read_mesh(node, context));
+static dx_result read(dx_object** RETURN, dx_adl_type_handlers_mesh* SELF, dx_ddl_node* node, dx_adl_context* context) {
+  dx_object* temporary = DX_OBJECT(_read_mesh(node, context));
+  if (!temporary) {
+    return DX_FAILURE;
+  }
+  *RETURN = temporary;
+  return DX_SUCCESS;
 }
 
-int dx_adl_type_handlers_mesh_construct(dx_adl_type_handlers_mesh* self) {
-  dx_rti_type* _type = dx_adl_type_handlers_mesh_get_type();
-  if (!_type) {
-    return 1;
+dx_result dx_adl_type_handlers_mesh_construct(dx_adl_type_handlers_mesh* SELF) {
+  dx_rti_type* TYPE = dx_adl_type_handlers_mesh_get_type();
+  if (!TYPE) {
+    return DX_FAILURE;
   }
-  if (dx_adl_type_handler_construct(DX_ADL_TYPE_HANDLER(self))) {
-    return 1;
+  if (dx_adl_type_handler_construct(DX_ADL_TYPE_HANDLER(SELF))) {
+    return DX_FAILURE;
   }
-  DX_ADL_TYPE_HANDLER(self)->resolve = (int(*)(dx_adl_type_handler*, dx_adl_symbol*, dx_adl_context*))&resolve;
-  DX_ADL_TYPE_HANDLER(self)->read = (dx_object*(*)(dx_adl_type_handler*, dx_ddl_node*, dx_adl_context*))&read;
-  DX_OBJECT(self)->type = _type;
-  return 0;
+  // @todo Fixme.
+  DX_ADL_TYPE_HANDLER(SELF)->resolve = (int(*)(dx_adl_type_handler*, dx_adl_symbol*, dx_adl_context*))&resolve;
+  DX_OBJECT(SELF)->type = TYPE;
+  return DX_SUCCESS;
 }
 
-static void dx_adl_type_handlers_mesh_destruct(dx_adl_type_handlers_mesh* self)
+static void dx_adl_type_handlers_mesh_destruct(dx_adl_type_handlers_mesh* SELF)
 {/*Intentionally empty.*/}
 
-static void dx_adl_type_handlers_mesh_dispatch_construct(dx_adl_type_handlers_mesh_dispatch* self)
-{/*Intentionally empty.*/}
+static void dx_adl_type_handlers_mesh_dispatch_construct(dx_adl_type_handlers_mesh_dispatch* SELF) {
+  DX_ADL_TYPE_HANDLER_DISPATCH(SELF)->read = (dx_result (*)(dx_object**, dx_adl_type_handler*, dx_ddl_node*, dx_adl_context*)) & read;
+}
 
-dx_adl_type_handlers_mesh* dx_adl_type_handlers_mesh_create() {
-  dx_adl_type_handlers_mesh* self = DX_ADL_TYPE_HANDLERS_MESH(dx_object_alloc(sizeof(dx_adl_type_handlers_mesh)));
-  if (!self) {
-    return NULL;
+dx_result dx_adl_type_handlers_mesh_create(dx_adl_type_handlers_mesh** RETURN) {
+  DX_CREATE_PREFIX(dx_adl_type_handlers_mesh)
+  if (dx_adl_type_handlers_mesh_construct(SELF)) {
+    DX_UNREFERENCE(SELF);
+    SELF = NULL;
+    return DX_FAILURE;
   }
-  if (dx_adl_type_handlers_mesh_construct(self)) {
-    DX_UNREFERENCE(self);
-    self = NULL;
-    return NULL;
-  }
-  return self;
+  *RETURN = SELF;
+  return DX_SUCCESS;
 }

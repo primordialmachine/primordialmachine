@@ -107,6 +107,20 @@ dx_result dx_inline_byte_array_remove(dx_inline_byte_array* SELF, dx_size index,
   return DX_SUCCESS;
 }
 
+dx_result dx_inline_byte_array_set(dx_inline_byte_array* SELF, char const* bytes, dx_size number_of_bytes) {
+  if (!SELF || !bytes) {
+    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
+    return DX_FAILURE;
+  }
+  SELF->size = 0;
+  if (dx_inline_byte_array_ensure_free_capacity(SELF, number_of_bytes)) {
+    return DX_FAILURE;
+  }
+  dx_memory_copy(SELF->elements, bytes, number_of_bytes);
+  SELF->size = number_of_bytes;
+  return DX_SUCCESS;
+}
+
 dx_result dx_inline_byte_array_prepend(dx_inline_byte_array* SELF, char const* bytes, dx_size number_of_bytes) {
   return dx_inline_byte_array_insert(SELF, 0, bytes, number_of_bytes);
 }

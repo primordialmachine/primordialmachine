@@ -73,10 +73,7 @@ dx_result dx_val_gl_wgl_window_construct(dx_val_gl_wgl_window* SELF, dx_gl_wgl_a
 }
 
 dx_result dx_gl_wgl_window_create(dx_val_gl_wgl_window** RETURN, dx_gl_wgl_application* application) {
-  dx_val_gl_wgl_window* SELF = DX_VAL_GL_WGL_WINDOW(dx_object_alloc(sizeof(dx_val_gl_wgl_window)));
-  if (!SELF) {
-    return DX_FAILURE;
-  }
+  DX_CREATE_PREFIX(dx_val_gl_wgl_window)
   if (dx_val_gl_wgl_window_construct(SELF, application)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;

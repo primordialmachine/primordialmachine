@@ -17,48 +17,42 @@ DX_DEFINE_OBJECT_TYPE("dx.adl.resolve",
                       dx_adl_resolve,
                       dx_object);
 
-static void dx_adl_resolve_destruct(dx_adl_resolve* self) {
-  dx_inline_pointer_array_uninitialize(&self->queue);
+static void dx_adl_resolve_destruct(dx_adl_resolve* SELF) {
+  dx_inline_pointer_array_uninitialize(&SELF->queue);
 }
 
-static void dx_adl_resolve_dispatch_construct(dx_adl_resolve_dispatch* self)
+static void dx_adl_resolve_dispatch_construct(dx_adl_resolve_dispatch* SELF)
 {/*Intentionally empty.*/}
 
-int dx_adl_resolve_construct(dx_adl_resolve* self, dx_adl_context* context) {
-  dx_rti_type* _type = dx_adl_resolve_get_type();
-  if (!_type) {
+dx_result dx_adl_resolve_construct(dx_adl_resolve* SELF, dx_adl_context* context) {
+  dx_rti_type* TYPE = dx_adl_resolve_get_type();
+  if (!TYPE) {
     return DX_FAILURE;
   }
-  if (!self) {
+  if (!SELF) {
     dx_set_error(DX_ERROR_INVALID_ARGUMENT);
     return DX_FAILURE;
   }
   DX_INLINE_POINTER_ARRAY_CONFIGURATION configuration;
   configuration.added_callback = NULL;
   configuration.removed_callback = NULL;
-  if (dx_inline_pointer_array_initialize(&self->queue, 0, &configuration)) {
+  if (dx_inline_pointer_array_initialize(&SELF->queue, 0, &configuration)) {
     return DX_FAILURE;
   }
-  self->context = context;
-  DX_OBJECT(self)->type = _type;
+  SELF->context = context;
+  DX_OBJECT(SELF)->type = TYPE;
   return DX_SUCCESS;
 }
 
-dx_adl_resolve* dx_adl_resolve_create(dx_adl_context* context) {
-  dx_rti_type* _type = dx_adl_resolve_get_type();
-  if (!_type) {
-    return NULL;
+dx_result dx_adl_resolve_create(dx_adl_resolve** RETURN, dx_adl_context* context) {
+  DX_CREATE_PREFIX(dx_adl_resolve)
+  if (dx_adl_resolve_construct(SELF, context)) {
+    DX_UNREFERENCE(SELF);
+    SELF = NULL;
+    return DX_FAILURE;
   }
-  dx_adl_resolve* self = DX_ADL_RESOLVE(dx_object_alloc(sizeof(dx_adl_resolve)));
-  if (!self) {
-    return NULL;
-  }
-  if (dx_adl_resolve_construct(self, context)) {
-    DX_UNREFERENCE(self);
-    self = NULL;
-    return NULL;
-  }
-  return self;
+  *RETURN = SELF;
+  return DX_SUCCESS;
 }
 
 static int setup_queue(dx_adl_resolve* self, bool include_unloaded, bool include_unresolved) {
@@ -113,8 +107,7 @@ int dx_adl_resolve_run(dx_adl_resolve* self) {
       if (dx_inline_pointer_hashmap_get(&reader, &self->context->readers, symbol->type)) {
         return 1;
       }
-      symbol->asset = dx_adl_type_handler_read(reader, symbol->node, self->context);
-      if (!symbol->asset) {
+      if (dx_adl_type_handler_read(&symbol->asset, reader, symbol->node, self->context)) {
         return 1;
       } // if
     } //if
@@ -141,8 +134,7 @@ int dx_adl_resolve_run(dx_adl_resolve* self) {
         continue;/*Proceed with speculative (the program is invalid) execution.*/
       }
       if (!symbol->asset) {
-        symbol->asset = dx_adl_type_handler_read(reader, symbol->node, self->context);
-        if (!symbol->asset) {
+        if (dx_adl_type_handler_read(&symbol->asset, reader, symbol->node, self->context)) {
           return 1;
         }
       }

@@ -29,12 +29,14 @@ struct dx_asset_scene_dispatch {
 /// @default-failure
 /// - #DX_INVALID_ARGUMENT @a self is a null pointer
 /// - #DX_ALLOCATION_FAILED an allocation failed
+/// @todo Fixme.
 int dx_asset_scene_construct(dx_asset_scene* SELF);
 
 /// @brief Create a dx_asset_scene object with default values.
 /// @return A pointer to the dx_asset_material object on success. The null pointer failure.
 /// @default-failure
 /// - #DX_ALLOCATION_FAILED an allocation failed
-dx_asset_scene* dx_asset_scene_create();
+/// @todo Fixme.
+dx_result dx_asset_scene_create(dx_asset_scene** RETURN);
 
 #endif // DX_ASSET_SCENE_H_INCLUDED

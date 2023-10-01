@@ -32,14 +32,7 @@ dx_result dx_canvas_msg_construct(dx_canvas_msg* SELF, dx_canvas_msg_kind kind) 
 }
 
 dx_result dx_canvas_msg_create(dx_canvas_msg** RETURN, dx_canvas_msg_kind kind) {
-  dx_rti_type* TYPE = dx_canvas_msg_get_type();
-  if (!TYPE) {
-    return DX_FAILURE;
-  }
-  dx_canvas_msg* SELF = DX_CANVAS_MSG(dx_object_alloc(sizeof(dx_canvas_msg)));
-  if (!SELF) {
-    return DX_FAILURE;
-  }
+  DX_CREATE_PREFIX(dx_canvas_msg)
   if (dx_canvas_msg_construct(SELF, kind)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
@@ -81,10 +74,7 @@ dx_result dx_canvas_size_changed_msg_construct(dx_canvas_size_changed_msg* SELF,
 }
 
 dx_result dx_canvas_size_changed_msg_create(dx_canvas_size_changed_msg** RETURN, dx_f32 width, dx_f32 height) {
-  dx_canvas_size_changed_msg* SELF = DX_CANVAS_SIZE_CHANGED_MSG(dx_object_alloc(sizeof(dx_canvas_size_changed_msg)));
-  if (!SELF) {
-    return DX_FAILURE;
-  }
+  DX_CREATE_PREFIX(dx_canvas_size_changed_msg)
   if (dx_canvas_size_changed_msg_construct(SELF, width, height)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
@@ -121,10 +111,7 @@ dx_result dx_canvas_dpi_changed_msg_construct(dx_canvas_dpi_changed_msg* SELF, d
 }
 
 dx_result dx_canvas_dpi_changed_msg_create(dx_canvas_dpi_changed_msg** RETURN, dx_f32 horizontal_dpi, dx_f32 vertical_dpi) {
-  dx_canvas_dpi_changed_msg* SELF = DX_CANVAS_DPI_CHANGED_MSG(dx_object_alloc(sizeof(dx_canvas_dpi_changed_msg)));
-  if (!SELF) {
-    return DX_FAILURE;
-  }
+  DX_CREATE_PREFIX(dx_canvas_dpi_changed_msg)
   if (dx_canvas_dpi_changed_msg_construct(SELF, horizontal_dpi, vertical_dpi)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;

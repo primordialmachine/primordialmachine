@@ -37,7 +37,7 @@ struct dx_asset_mesh_operation_dispatch {
   int (*apply)(dx_asset_mesh_operation* SELF, dx_asset_mesh* mesh);
 };
 
-int dx_asset_mesh_operation_construct(dx_asset_mesh_operation* self, dx_asset_mesh_operation_kind kind);
+dx_result dx_asset_mesh_operation_construct(dx_asset_mesh_operation* SELF, dx_asset_mesh_operation_kind kind);
 
 static inline int dx_asset_mesh_operation_apply(dx_asset_mesh_operation* SELF, dx_asset_mesh* mesh) {
   DX_OBJECT_VIRTUALCALL(dx_asset_mesh_operation, apply, SELF, mesh);

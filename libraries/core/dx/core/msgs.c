@@ -91,21 +91,15 @@ dx_result dx_emit_msg_construct(dx_emit_msg* SELF, char const* p, dx_size n) {
   return DX_SUCCESS;
 }
 
-dx_emit_msg* dx_emit_msg_create(char const* p, dx_size n) {
-  TRACE("enter: dx_emit_msg_create\n");
-  dx_emit_msg* self = DX_EMIT_MSG(dx_object_alloc(sizeof(dx_emit_msg)));
-  if (!self) {
-    TRACE("leave: dx_emit_msg_create\n");
-    return NULL;
+dx_result dx_emit_msg_create(dx_emit_msg** RETURN, char const* p, dx_size n) {
+  DX_CREATE_PREFIX(dx_emit_msg)
+  if (dx_emit_msg_construct(SELF, p, n)) {
+    DX_UNREFERENCE(SELF);
+    SELF = NULL;
+    return DX_FAILURE;
   }
-  if (dx_emit_msg_construct(self, p, n)) {
-    DX_UNREFERENCE(self);
-    self = NULL;
-    TRACE("leave: dx_emit_msg_create\n");
-    return NULL;
-  }
-  TRACE("leave: dx_emit_msg_create\n");
-  return self;
+  *RETURN = SELF;
+  return DX_SUCCESS;
 }
 
 int dx_emit_msg_get(dx_emit_msg* self, char const** p, dx_size* n) {
@@ -130,43 +124,37 @@ DX_DEFINE_OBJECT_TYPE("dx.quit_msg",
                       dx_quit_msg,
                       dx_msg);
 
-static void dx_quit_msg_destruct(dx_quit_msg* self)
+static void dx_quit_msg_destruct(dx_quit_msg* SELF)
 {/*Intentionally empty.*/}
 
-static void dx_quit_msg_dispatch_construct(dx_quit_msg_dispatch* self)
+static void dx_quit_msg_dispatch_construct(dx_quit_msg_dispatch* SELF)
 {/*Intentionally empty.*/}
 
-int dx_quit_msg_construct(dx_quit_msg* self) {
+dx_result dx_quit_msg_construct(dx_quit_msg* SELF) {
   TRACE("enter: dx_quit_msg_construct\n");
-  dx_rti_type* _type = dx_quit_msg_get_type();
-  if (!_type) {
-    return 1;
+  dx_rti_type* TYPE = dx_quit_msg_get_type();
+  if (!TYPE) {
+    return DX_FAILURE;
   }
-  if (dx_msg_construct(DX_MSG(self))) {
+  if (dx_msg_construct(DX_MSG(SELF))) {
     TRACE("leave: dx_quit_msg_construct\n");
-    return 1;
+    return DX_FAILURE;
   }
-  DX_MSG(self)->flags = DX_MSG_TYPE_QUIT;
-  DX_OBJECT(self)->type = _type;
+  DX_MSG(SELF)->flags = DX_MSG_TYPE_QUIT;
+  DX_OBJECT(SELF)->type = TYPE;
   TRACE("leave: dx_quit_msg_construct\n");
-  return 0;
+  return DX_SUCCESS;
 }
 
-dx_quit_msg* dx_quit_msg_create() {
-  TRACE("enter: dx_quit_msg_create\n");
-  dx_quit_msg* self = DX_QUIT_MSG(dx_object_alloc(sizeof(dx_quit_msg)));
-  if (!self) {
-    TRACE("leave: dx_quit_msg_create\n");
-    return NULL;
+dx_result dx_quit_msg_create(dx_quit_msg** RETURN) {
+  DX_CREATE_PREFIX(dx_quit_msg)
+  if (dx_quit_msg_construct(SELF)) {
+    DX_UNREFERENCE(SELF);
+    SELF = NULL;
+    return DX_FAILURE;
   }
-  if (dx_quit_msg_construct(self)) {
-    DX_UNREFERENCE(self);
-    self = NULL;
-    TRACE("leave: dx_quit_msg_create\n");
-    return NULL;
-  }
-  TRACE("leave: dx_quit_msg_create\n");
-  return self;
+  *RETURN = SELF;
+  return DX_SUCCESS;
 }
 
 #undef TRACE

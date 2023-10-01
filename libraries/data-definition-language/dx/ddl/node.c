@@ -118,10 +118,7 @@ dx_result dx_ddl_node_construct(dx_ddl_node* SELF, dx_ddl_node_kind kind) {
 }
 
 dx_result dx_ddl_node_create(dx_ddl_node** RETURN, dx_ddl_node_kind kind) {
-  dx_ddl_node* SELF = DX_DDL_NODE(dx_object_alloc(sizeof(dx_ddl_node)));
-  if (!SELF) {
-    return DX_FAILURE;
-  }
+  DX_CREATE_PREFIX(dx_ddl_node)
   if (dx_ddl_node_construct(SELF, kind)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;

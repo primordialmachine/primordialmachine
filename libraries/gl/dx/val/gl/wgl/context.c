@@ -8,11 +8,11 @@ DX_DEFINE_OBJECT_TYPE("dx.gl.wgl.context",
 
 static void* link(char const* name);
 
-static dx_result enter_frame(dx_gl_wgl_context* self);
+static dx_result enter_frame(dx_gl_wgl_context* SELF);
 
-static dx_result leave_frame(dx_gl_wgl_context* self);
+static dx_result leave_frame(dx_gl_wgl_context* SELF);
 
-static dx_result get_canvas_size(dx_gl_wgl_context* self, dx_i32* width, dx_i32* height);
+static dx_result get_canvas_size(dx_gl_wgl_context* SELF, dx_i32* width, dx_i32* height);
 
 static void* link(char const* name) {
   void* p = (void*)wglGetProcAddress(name);
@@ -27,18 +27,18 @@ static void* link(char const* name) {
   return p;
 }
 
-static dx_result enter_frame(dx_gl_wgl_context* self) {
-  dx_rti_type* _parent_type = dx_rti_type_get_parent(DX_OBJECT(self)->type);
+static dx_result enter_frame(dx_gl_wgl_context* SELF) {
+  dx_rti_type* _parent_type = dx_rti_type_get_parent(DX_OBJECT(SELF)->type);
   dx_gl_wgl_context_dispatch* dispatch = (dx_gl_wgl_context_dispatch*)dx_rti_type_get_dispatch(_parent_type);
-  if (DX_VAL_CONTEXT_DISPATCH(dispatch)->enter_frame(DX_VAL_CONTEXT(self))) {
+  if (DX_VAL_CONTEXT_DISPATCH(dispatch)->enter_frame(DX_VAL_CONTEXT(SELF))) {
     return DX_FAILURE;
   }
   return DX_SUCCESS;
 }
 
-static dx_result leave_frame(dx_gl_wgl_context* self) {
-  DX_VAL_GL_CONTEXT(self)->glFlush();
-  SwapBuffers(self->window->dc);
+static dx_result leave_frame(dx_gl_wgl_context* SELF) {
+  DX_VAL_GL_CONTEXT(SELF)->glFlush();
+  SwapBuffers(SELF->window->dc);
   return DX_SUCCESS;
 }
 
@@ -111,10 +111,7 @@ static void dx_gl_wgl_context_dispatch_construct(dx_gl_wgl_context_dispatch* SEL
 }
 
 dx_result dx_gl_wgl_context_create(dx_gl_wgl_context** RETURN, dx_val_gl_wgl_window* window) {
-  dx_gl_wgl_context* SELF = DX_GL_WGL_CONTEXT(dx_object_alloc(sizeof(dx_gl_wgl_context)));
-  if (!SELF) {
-    return DX_FAILURE;
-  }
+  DX_CREATE_PREFIX(dx_gl_wgl_context)
   if (dx_gl_wgl_context_construct(SELF, window)) {
     DX_UNREFERENCE(SELF);
     return DX_FAILURE;

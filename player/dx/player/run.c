@@ -141,6 +141,14 @@ dx_val_context* dx_val_context_get() {
   return temporary;
 }
 
+dx_aal_context* dx_aal_context_get() {
+  dx_aal_context* temporary = NULL;
+  if (dx_application_get_aal_context(&temporary, g_application)) {
+    return NULL;
+  }
+  return temporary;
+}
+
 dx_result dx_application_presenter_get(dx_application_presenter** RETURN) {
   if (!RETURN) {
     dx_set_error(DX_ERROR_INVALID_ARGUMENT);
@@ -154,29 +162,41 @@ dx_result dx_application_presenter_get(dx_application_presenter** RETURN) {
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 static dx_result startup_managers() {
-  dx_val_context* context = dx_val_context_get();
-  if (!context) {
+  dx_val_context* val_context = dx_val_context_get();
+  if (!val_context) {
     return DX_FAILURE;
   }
-  if (dx_font_manager_create(&g_font_manager, context)) {
-    DX_UNREFERENCE(context);
-    context = NULL;
+  dx_aal_context* aal_context = dx_aal_context_get();
+  if (!aal_context) {
+    DX_UNREFERENCE(val_context);
+    val_context = NULL;
     return DX_FAILURE;
   }
-  if (dx_rectangle_presenter_create(&g_rectangle_presenter, context)) {
+  if (dx_font_manager_create(&g_font_manager, val_context)) {
+    DX_UNREFERENCE(aal_context);
+    aal_context = NULL;
+    DX_UNREFERENCE(val_context);
+    val_context = NULL;
+    return DX_FAILURE;
+  }
+  if (dx_rectangle_presenter_create(&g_rectangle_presenter, val_context, aal_context)) {
     DX_UNREFERENCE(g_font_manager);
     g_font_manager = NULL;
-    DX_UNREFERENCE(context);
-    context = NULL;
+    DX_UNREFERENCE(aal_context);
+    aal_context = NULL;
+    DX_UNREFERENCE(val_context);
+    val_context = NULL;
     return DX_FAILURE;
   }
-  if (dx_font_presenter_create(&g_font_presenter, g_font_manager, g_rectangle_presenter, context)) {
+  if (dx_font_presenter_create(&g_font_presenter, g_font_manager, g_rectangle_presenter)) {
     DX_UNREFERENCE(g_rectangle_presenter);
     g_rectangle_presenter = NULL;
     DX_UNREFERENCE(g_font_manager);
     g_font_manager = NULL;
-    DX_UNREFERENCE(context);
-    context = NULL;
+    DX_UNREFERENCE(aal_context);
+    aal_context = NULL;
+    DX_UNREFERENCE(val_context);
+    val_context = NULL;
     return DX_FAILURE;
   }
   if (dx_cl_interpreter_create(&g_cl_interpreter)) {
@@ -186,53 +206,29 @@ static dx_result startup_managers() {
     g_rectangle_presenter = NULL;
     DX_UNREFERENCE(g_font_manager);
     g_font_manager = NULL;
-    DX_UNREFERENCE(context);
-    context = NULL;
+    DX_UNREFERENCE(aal_context);
+    aal_context = NULL;
+    DX_UNREFERENCE(val_context);
+    val_context = NULL;
     return DX_FAILURE;
   }
-#define DEFINE(CEL_NAME, CXX_NAME) \
-  { \
-    dx_string* k = NULL; \
-    if (dx_string_create(&k, CEL_NAME, strlen(CEL_NAME))) { \
-      DX_UNREFERENCE(g_cl_interpreter); \
-      g_cl_interpreter = NULL; \
-      DX_UNREFERENCE(g_font_presenter); \
-      g_font_presenter = NULL; \
-      DX_UNREFERENCE(g_rectangle_presenter); \
-      g_rectangle_presenter = NULL; \
-      DX_UNREFERENCE(g_font_manager); \
-      g_font_manager = NULL; \
-      DX_UNREFERENCE(context); \
-      context = NULL; \
-      return DX_FAILURE; \
-    } \
-    if (dx_cl_interpreter_register_function(g_cl_interpreter, k, &CXX_NAME)) { \
-      DX_UNREFERENCE(k); \
-      k = NULL; \
-      DX_UNREFERENCE(g_cl_interpreter); \
-      g_cl_interpreter = NULL; \
-      DX_UNREFERENCE(g_font_presenter); \
-      g_font_presenter = NULL; \
-      DX_UNREFERENCE(g_rectangle_presenter); \
-      g_rectangle_presenter = NULL; \
-      DX_UNREFERENCE(g_font_manager); \
-      g_font_manager = NULL; \
-      DX_UNREFERENCE(context); \
-      context = NULL; \
-      return DX_FAILURE; \
-    } \
-    DX_UNREFERENCE(k); \
-    k = NULL; \
+  if (dx_console_commands_register_all(g_cl_interpreter)) {
+    DX_UNREFERENCE(g_font_presenter);
+    g_font_presenter = NULL;
+    DX_UNREFERENCE(g_rectangle_presenter);
+    g_rectangle_presenter = NULL;
+    DX_UNREFERENCE(g_font_manager);
+    g_font_manager = NULL;
+    DX_UNREFERENCE(aal_context);
+    aal_context = NULL;
+    DX_UNREFERENCE(val_context);
+    val_context = NULL;
+    return DX_FAILURE;
   }
-  DEFINE("assetLibrary.printInfo", dx_console_commands_print_assets_info);
-  DEFINE("coreLibrary.printInfo", dx_console_commands_print_core_info);
-  DEFINE("dataDefinitionLanguageLibrary.printInfo", dx_console_commands_print_data_definition_language_info);
-  DEFINE("documentDefinitionLanguageLibrary.printInfo", dx_console_commands_print_document_definition_language_info);
-  DEFINE("engineLibrary.printInfo", dx_console_commands_print_engine_info);
-#undef DEFINE
-
-  DX_UNREFERENCE(context);
-  context = NULL;
+  DX_UNREFERENCE(aal_context);
+  aal_context = NULL;
+  DX_UNREFERENCE(val_context);
+  val_context = NULL;
   return DX_SUCCESS;
 }
 
@@ -251,10 +247,9 @@ static dx_result run() {
   ENTER(DX_C_FUNCTION_NAME);
   dx_val_context* ctx = dx_val_context_get();
   {
-    dx_msg* msg;
+    dx_msg* msg = NULL;
     //
-    msg = DX_MSG(dx_emit_msg_create("Engine version: 0.1\n", sizeof("Engine: version 0.1\n") - 1));
-    if (!msg) {
+    if (dx_emit_msg_create((dx_emit_msg**)&msg, "Engine version: 0.1\n", sizeof("Engine: version 0.1\n") - 1)) {
       DX_UNREFERENCE(ctx);
       ctx = NULL;
       LEAVE(DX_C_FUNCTION_NAME);
@@ -274,7 +269,7 @@ static dx_result run() {
     msg = NULL;
   }
   {
-    dx_msg* msg;
+    dx_msg* msg = NULL;
     //
     dx_string* information = dx_val_context_get_information(ctx);
     if (!information) {
@@ -284,7 +279,14 @@ static dx_result run() {
       return DX_FAILURE;
     }
     //
-    msg = DX_MSG(dx_emit_msg_create(information->bytes, information->number_of_bytes));
+    if (dx_emit_msg_create((dx_emit_msg**)&msg, information->bytes, information->number_of_bytes)) {
+      DX_UNREFERENCE(information);
+      information = NULL;
+      DX_UNREFERENCE(ctx);
+      ctx = NULL;
+      LEAVE(DX_C_FUNCTION_NAME);
+      return DX_FAILURE;
+    }
     DX_UNREFERENCE(information);
     information = NULL;
     //
@@ -370,7 +372,7 @@ static dx_result startup() {
   }
   if (dx_default_application_presenter_create((dx_default_application_presenter**)&g_application_presenter,
                                               g_font_presenter,
-                                              g_font_manager,
+                                              g_rectangle_presenter,
                                               g_application,
                                               g_cl_interpreter,
                                               g_msg_queue,

@@ -4,10 +4,10 @@ DX_DEFINE_OBJECT_TYPE("dx.adl.diagnostics",
                       dx_adl_diagnostics,
                       dx_object)
 
-static void dx_adl_diagnostics_destruct(dx_adl_diagnostics* self)
+static void dx_adl_diagnostics_destruct(dx_adl_diagnostics* SELF)
 {/*Intentionally empty.*/}
 
-static void dx_adl_diagnostics_dispatch_construct(dx_adl_diagnostics_dispatch* self)
+static void dx_adl_diagnostics_dispatch_construct(dx_adl_diagnostics_dispatch* SELF)
 {/*Intentionally empty.*/}
 
 dx_result dx_adl_diagnostics_construct(dx_adl_diagnostics* SELF) {
@@ -19,17 +19,15 @@ dx_result dx_adl_diagnostics_construct(dx_adl_diagnostics* SELF) {
   return DX_SUCCESS;
 }
 
-dx_adl_diagnostics* dx_adl_diagnostics_create() {
-  dx_adl_diagnostics* self = DX_ADL_DIAGNOSTICS(dx_object_alloc(sizeof(dx_adl_diagnostics)));
-  if (!self) {
-    return NULL;
+dx_result dx_adl_diagnostics_create(dx_adl_diagnostics** RETURN) {
+  DX_CREATE_PREFIX(dx_adl_diagnostics)
+  if (dx_adl_diagnostics_construct(SELF)) {
+    DX_UNREFERENCE(SELF);
+    SELF = NULL;
+    return DX_FAILURE;
   }
-  if (dx_adl_diagnostics_construct(self)) {
-    DX_UNREFERENCE(self);
-    self = NULL;
-    return NULL;
-  }
-  return self;
+  *RETURN = SELF;
+  return DX_SUCCESS;
 }
 
 dx_result dx_adl_diagnostics_on_unclosed_list(dx_adl_diagnostics* SELF) {

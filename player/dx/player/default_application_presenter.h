@@ -53,8 +53,8 @@ struct dx_default_application_presenter_dispatch {
   dx_application_presenter_dispatch _parent;
 };
 
-dx_result dx_default_application_presenter_construct(dx_default_application_presenter* SELF, dx_font_presenter* font_presenter, dx_font_manager* font_manager, dx_application* application, dx_cl_interpreter* cl_interpreter, dx_msg_queue* message_queue, dx_val_context* val_context);
+dx_result dx_default_application_presenter_construct(dx_default_application_presenter* SELF, dx_font_presenter* font_presenter, dx_rectangle_presenter* rectangle_presenter, dx_application* application, dx_cl_interpreter* cl_interpreter, dx_msg_queue* message_queue, dx_val_context* val_context);
 
-dx_result dx_default_application_presenter_create(dx_default_application_presenter** RETURN, dx_font_presenter* font_presenter, dx_font_manager* font_manager, dx_application* application, dx_cl_interpreter* cl_interpreter, dx_msg_queue* message_queue, dx_val_context* val_context);
+dx_result dx_default_application_presenter_create(dx_default_application_presenter** RETURN, dx_font_presenter* font_presenter, dx_rectangle_presenter* rectangle_presenter, dx_application* application, dx_cl_interpreter* cl_interpreter, dx_msg_queue* message_queue, dx_val_context* val_context);
 
 #endif // DX_PLAYER_DEFAULT_APPLICATION_PRESENTER_H_INCLUDED

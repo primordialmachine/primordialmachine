@@ -32,9 +32,9 @@ struct dx_adl_names_dispatch {
   dx_object_dispatch _parent;
 };
 
-int dx_adl_names_construct(dx_adl_names* self);
+dx_result dx_adl_names_construct(dx_adl_names* SELF);
 
-dx_adl_names* dx_adl_names_create();
+dx_result dx_adl_names_create(dx_adl_names** RETURN);
 
 dx_string* dx_adl_names_create_unique_name(dx_adl_names* self);
 

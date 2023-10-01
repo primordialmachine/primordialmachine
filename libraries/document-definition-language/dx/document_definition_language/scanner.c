@@ -171,10 +171,7 @@ static dx_result dx_document_definition_language_scanner_skip_nls(dx_document_de
 }
 
 dx_result dx_document_definition_language_scanner_create(dx_document_definition_language_scanner** RETURN) {
-  dx_document_definition_language_scanner* SELF = DX_DOCUMENT_DEFINITION_LANGUAGE_SCANNER(dx_object_alloc(sizeof(dx_document_definition_language_scanner)));
-  if (!SELF) {
-    return DX_FAILURE;
-  }
+  DX_CREATE_PREFIX(dx_document_definition_language_scanner)
   if (dx_document_definition_language_scanner_construct(SELF)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;

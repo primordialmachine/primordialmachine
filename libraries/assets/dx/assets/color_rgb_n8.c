@@ -25,10 +25,7 @@ dx_result dx_asset_color_rgb_n8_construct(dx_asset_color_rgb_n8* SELF, DX_RGB_N8
 }
 
 dx_result dx_asset_color_rgb_n8_create(dx_asset_color_rgb_n8** RESULT, DX_RGB_N8 const* value) {
-  dx_asset_color_rgb_n8* SELF = DX_ASSET_COLOR_RGB_N8(dx_object_alloc(sizeof(dx_asset_color_rgb_n8)));
-  if (!SELF) {
-    return DX_FAILURE;
-  }
+  DX_CREATE_PREFIX(dx_asset_color_rgb_n8)
   if (dx_asset_color_rgb_n8_construct(SELF, value)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;

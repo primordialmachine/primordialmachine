@@ -261,8 +261,13 @@ ALIASES                = "error=@par Error^^" \
                          "success=@par On Success^^" \
                          "default-failure=@failure This function has set the error variable to a non-zero value." \
                          "default-return=@return #DX_SUCCESS on success. #DX_FAILURE on failure." \
-                         "procedure-call=@default-failure^^@default-return"
+                         "procedure-call=@default-failure^^@default-return" \
                          "method-call=@default-failure^^@default-return^^@error #DX_ERROR_INVALID_ARGUMENT @a SELF is a null pointer"
+
+ALIASES += method{1}="@param SELF A pointer to this \1 object.^^@default-failure^^@default-return^^@error #DX_ERROR_INVALID_ARGUMENT @a SELF is a null pointer"
+ALIASES += constructor{1}="@param SELF A pointer to this \1 object.^^@default-failure^^@default-return^^@error #DX_ERROR_INVALID_ARGUMENT @a SELF is a null pointer"
+
+ALIASES += create-operator{1}="@brief Create a \1 object.^^@param RETURN A pointer to a <code>\1</code> variable.^^@procedure-call^^@error #DX_ERROR_INVALID_ARGUMENT @a RETURN is a null pointer^^@error #DX_ERROR_ALLOCATION_FAILED an allocation failed^^@success <code>*RETURN</code> was assigned pointer to the created \1 object. The caller acquired a reference to that object."
 
 # Set the OPTIMIZE_OUTPUT_FOR_C tag to YES if your project consists of C sources
 # only. Doxygen will then generate output that is more tailored for C. For
@@ -1331,8 +1336,9 @@ HTML_STYLESHEET        =
 # documentation.
 # This tag requires that the tag GENERATE_HTML is set to YES.
 
-HTML_EXTRA_STYLESHEET  = doxygen-awesome-css/doxygen-awesome.css \
-                         doxygen-awesome-css/doxygen-awesome-sidebar-only.css
+HTML_EXTRA_STYLESHEET  =
+#doxygen-awesome-css/doxygen-awesome.css \
+#doxygen-awesome-css/doxygen-awesome-sidebar-only.css
 
 # The HTML_EXTRA_FILES tag can be used to specify one or more extra images or
 # other source files which should be copied to the HTML output directory. Note

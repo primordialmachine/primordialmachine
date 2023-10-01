@@ -23,7 +23,8 @@ struct dx_adl_diagnostics_dispatch {
 
 dx_result dx_adl_diagnostics_construct(dx_adl_diagnostics* SELF);
 
-dx_adl_diagnostics* dx_adl_diagnostics_create();
+/// @create-operator{dx_adl_diagnostics}
+dx_result dx_adl_diagnostics_create(dx_adl_diagnostics** RETURN);
 
 dx_result dx_adl_diagnostics_on_unclosed_list(dx_adl_diagnostics* SELF);
 

@@ -28,9 +28,9 @@ static void on_object_removed(dx_object** o);
 
 static dx_asset_image* _read_image(dx_ddl_node* node, dx_adl_context* context);
 
-static int resolve(dx_adl_type_handlers_image* self, dx_adl_symbol* symbol, dx_adl_context* context);
+static int resolve(dx_adl_type_handlers_image* SELF, dx_adl_symbol* symbol, dx_adl_context* context);
 
-static dx_object* read(dx_adl_type_handlers_image* self, dx_ddl_node* node, dx_adl_context* context);
+static dx_result read(dx_object** RETURN, dx_adl_type_handlers_image* SELF, dx_ddl_node* node, dx_adl_context* context);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
@@ -52,8 +52,8 @@ static int _read_image_operation(dx_ddl_node* node, dx_adl_symbol* symbol, dx_ad
     return 1;
   }
 
-  dx_adl_symbol* reader_symbol = dx_adl_symbol_create(received_type, dx_adl_names_create_unique_name(context->names));
-  if (!reader_symbol) {
+  dx_adl_symbol* reader_symbol = NULL;
+  if (dx_adl_symbol_create(&reader_symbol, received_type, dx_adl_names_create_unique_name(context->names))) {
     DX_UNREFERENCE(received_type);
     received_type = NULL;
     return 1;
@@ -77,8 +77,8 @@ static int _read_image_operation(dx_ddl_node* node, dx_adl_symbol* symbol, dx_ad
   DX_UNREFERENCE(received_type);
   received_type = NULL;
 
-  dx_asset_image_operation* operation = DX_ASSET_IMAGE_OPERATION(dx_adl_type_handler_read(reader, node, context));
-  if (!operation) {
+  dx_asset_image_operation* operation = NULL;
+  if (dx_adl_type_handler_read((dx_object**)&operation, reader, node, context)) {
     DX_UNREFERENCE(reader_symbol);
     reader_symbol = NULL;
     return 1;
@@ -149,11 +149,11 @@ static dx_asset_image* _read_image(dx_ddl_node* node, dx_adl_context* context) {
     if (!pixel_format_string) {
       goto END;
     }
-    DX_PIXEL_FORMAT pixel_format;
+    dx_pixel_format pixel_format;
     if (dx_string_is_equal_to(pixel_format_string, NAME(pixel_format_rn8_gn8_bn8_string))) {
-      pixel_format = DX_PIXEL_FORMAT_RN8_GN8_BN8;
+      pixel_format = dx_pixel_format_rn8_gn8_bn8;
     } else if (dx_string_is_equal_to(pixel_format_string, NAME(pixel_format_bn8_gn8_rn8_string))) {
-      pixel_format = DX_PIXEL_FORMAT_BN8_GN8_RN8;
+      pixel_format = dx_pixel_format_bn8_gn8_rn8;
     } else {
       dx_set_error(DX_ERROR_SEMANTICAL_ERROR);
       goto END;
@@ -209,7 +209,7 @@ END:
   return image_value;
 }
 
-static int resolve(dx_adl_type_handlers_image* self, dx_adl_symbol* symbol, dx_adl_context* context) {
+static int resolve(dx_adl_type_handlers_image* SELF, dx_adl_symbol* symbol, dx_adl_context* context) {
   if (symbol->resolved) {
     return 0;
   }
@@ -235,39 +235,43 @@ static int resolve(dx_adl_type_handlers_image* self, dx_adl_symbol* symbol, dx_a
   return 0;
 }
 
-static dx_object* read(dx_adl_type_handlers_image* self, dx_ddl_node* node, dx_adl_context* context) {
-  return DX_OBJECT(_read_image(node, context));
+static dx_result read(dx_object** RETURN, dx_adl_type_handlers_image* SELF, dx_ddl_node* node, dx_adl_context* context) {
+  dx_object* temporary = DX_OBJECT(_read_image(node, context));
+  if (!temporary) {
+    return DX_FAILURE;
+  }
+  *RETURN = temporary;
+  return DX_SUCCESS;
 }
 
-int dx_adl_type_handlers_image_construct(dx_adl_type_handlers_image* self) {
-  dx_rti_type* _type = dx_adl_type_handlers_image_get_type();
-  if (!_type) {
-    return 1;
+dx_result dx_adl_type_handlers_image_construct(dx_adl_type_handlers_image* SELF) {
+  dx_rti_type* TYPE = dx_adl_type_handlers_image_get_type();
+  if (!TYPE) {
+    return DX_FAILURE;
   }
-  if (dx_adl_type_handler_construct(DX_ADL_TYPE_HANDLER(self))) {
-    return 1;
+  if (dx_adl_type_handler_construct(DX_ADL_TYPE_HANDLER(SELF))) {
+    return DX_FAILURE;
   }
-  DX_ADL_TYPE_HANDLER(self)->resolve = (int(*)(dx_adl_type_handler*, dx_adl_symbol*, dx_adl_context*))&resolve;
-  DX_ADL_TYPE_HANDLER(self)->read = (dx_object*(*)(dx_adl_type_handler*, dx_ddl_node*, dx_adl_context*))&read;
-  DX_OBJECT(self)->type = _type;
-  return 0;
+  /// @todo Fixme.
+  DX_ADL_TYPE_HANDLER(SELF)->resolve = (int(*)(dx_adl_type_handler*, dx_adl_symbol*, dx_adl_context*))&resolve;
+  DX_OBJECT(SELF)->type = TYPE;
+  return DX_SUCCESS;
 }
 
-static void dx_adl_type_handlers_image_destruct(dx_adl_type_handlers_image* self)
+static void dx_adl_type_handlers_image_destruct(dx_adl_type_handlers_image* SELF)
 {/*Intentionally empty.*/}
 
-static void dx_adl_type_handlers_image_dispatch_construct(dx_adl_type_handlers_image_dispatch* self)
-{/*Intentionally empty.*/}
+static void dx_adl_type_handlers_image_dispatch_construct(dx_adl_type_handlers_image_dispatch* SELF) {
+  DX_ADL_TYPE_HANDLER_DISPATCH(SELF)->read = (dx_result (*)(dx_object**, dx_adl_type_handler*, dx_ddl_node*, dx_adl_context*)) & read;
+}
 
-dx_adl_type_handlers_image* dx_adl_type_handlers_image_create() {
-  dx_adl_type_handlers_image* self = DX_ADL_SEMANTICAL_IMAGE_READER(dx_object_alloc(sizeof(dx_adl_type_handlers_image)));
-  if (!self) {
-    return NULL;
+dx_result dx_adl_type_handlers_image_create(dx_adl_type_handlers_image** RETURN) {
+  DX_CREATE_PREFIX(dx_adl_type_handlers_image)
+  if (dx_adl_type_handlers_image_construct(SELF)) {
+    DX_UNREFERENCE(SELF);
+    SELF = NULL;
+    return DX_FAILURE;
   }
-  if (dx_adl_type_handlers_image_construct(self)) {
-    DX_UNREFERENCE(self);
-    self = NULL;
-    return NULL;
-  }
-  return self;
+  *RETURN = SELF;
+  return DX_SUCCESS;
 }

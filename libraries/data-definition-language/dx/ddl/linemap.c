@@ -82,10 +82,7 @@ dx_result dx_ddl_linemap_get_column_index(dx_size* RETURN, dx_ddl_linemap* SELF,
 }
 
 dx_result dx_ddl_linemap_create(dx_ddl_linemap** RETURN, char const* start, char const* end) {
-  dx_ddl_linemap* SELF = DX_DDL_LINEMAP(dx_object_alloc(sizeof(dx_ddl_linemap)));
-  if (!SELF) {
-    return DX_FAILURE;
-  }
+  DX_CREATE_PREFIX(dx_ddl_linemap)
   if (dx_ddl_linemap_construct(SELF, start, end)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;

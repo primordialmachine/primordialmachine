@@ -34,7 +34,7 @@ struct dx_val_context_dispatch {
   dx_result (*bind_texture)(dx_val_context*, dx_size, dx_val_texture*);
   dx_result (*create_buffer)(dx_val_buffer**,dx_val_context*);
   dx_result (*create_cbinding)(dx_val_cbinding**,dx_val_context*);
-  dx_result (*create_vbinding)(dx_val_vbinding**,dx_val_context*, DX_VERTEX_FORMAT, dx_val_buffer*);
+  dx_result (*create_vbinding)(dx_val_vbinding**,dx_val_context*, dx_vertex_format, dx_val_buffer*);
   dx_result (*create_program)(dx_val_program**,dx_val_context*, dx_val_program_text*);
   dx_result (*create_texture)(dx_val_texture**,dx_val_context*);
   dx_result (*execute_commands)(dx_val_context*, dx_val_command_list*);
@@ -100,7 +100,7 @@ static inline dx_result dx_val_context_create_cbinding(dx_val_cbinding** RETURN,
 /// The caller has acquired a reference to the returned object.
 /// @default-return
 /// @default-failure
-static inline dx_result dx_val_context_create_vbinding(dx_val_vbinding** RETURN, dx_val_context* SELF, DX_VERTEX_FORMAT vertex_format, dx_val_buffer* buffer) {
+static inline dx_result dx_val_context_create_vbinding(dx_val_vbinding** RETURN, dx_val_context* SELF, dx_vertex_format vertex_format, dx_val_buffer* buffer) {
   DX_OBJECT_VIRTUALCALL(dx_val_context, create_vbinding, RETURN, SELF, vertex_format, buffer);
 }
 

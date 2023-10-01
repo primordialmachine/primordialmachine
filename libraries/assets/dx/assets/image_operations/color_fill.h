@@ -30,7 +30,8 @@ struct dx_asset_image_operations_color_fill_dispatch {
 /// @method-call
 dx_result dx_asset_image_operations_color_fill_construct(dx_asset_image_operations_color_fill* SELF);
 
-dx_asset_image_operations_color_fill* dx_asset_image_operations_color_fill_create();
+/// @create-operator{dx_asset_image_operations_color_fill}
+dx_result dx_asset_image_operations_color_fill_create(dx_asset_image_operations_color_fill** RETURN);
 
 /// @brief Set the color.
 /// @param SELF A pointer to this dx_asset_image_operations_color_fill object.

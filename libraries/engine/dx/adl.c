@@ -57,40 +57,40 @@ static int _read_scene(dx_ddl_node* node, dx_adl_context* context) {
 }
 
 static int dx_adl_compiler_enter_phase(dx_ddl_node* node, dx_adl_context* context) {
-  dx_adl_enter* enter = dx_adl_enter_create(context);
-  if (!enter) {
-    return 1;
+  dx_adl_enter* enter = NULL;
+  if (dx_adl_enter_create(&enter, context)) {
+    return DX_FAILURE;
   }
   if (dx_adl_enter_run(enter, node, context)) {
     DX_UNREFERENCE(enter);
     enter = NULL;
-    return 1;
+    return DX_FAILURE;
   }
   DX_UNREFERENCE(enter);
   enter = NULL;
-  return 0;
+  return DX_SUCCESS;
 }
 
 static int dx_adl_compiler_resolve_phase(dx_adl_context* context) {
-  dx_adl_resolve* resolve = dx_adl_resolve_create(context);
-  if (!resolve) {
-    return 1;
+  dx_adl_resolve* resolve = NULL;
+  if (dx_adl_resolve_create(&resolve, context)) {
+    return DX_FAILURE;
   }
   if (dx_adl_resolve_run(resolve)) {
-    return 1;
+    return DX_FAILURE;
   }
   DX_UNREFERENCE(resolve);
   resolve = NULL;
-  return 0;
+  return DX_SUCCESS;
 }
 
 dx_asset_scene* dx_adl_compile(dx_ddl_node* node) {
-  dx_adl_context* context = dx_adl_context_create();
-  if (!context) {
+  dx_adl_context* context = NULL;
+  if (dx_adl_context_create(&context)) {
     return NULL;
   }
-  dx_asset_scene* scene = dx_asset_scene_create();
-  if (!scene) {
+  dx_asset_scene* scene = NULL;
+  if (dx_asset_scene_create(&scene)) {
     DX_UNREFERENCE(context);
     context = NULL;
     return NULL;

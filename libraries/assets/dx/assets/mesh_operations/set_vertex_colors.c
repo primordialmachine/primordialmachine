@@ -18,45 +18,39 @@ static DX_VEC4 const* get_color(dx_size index) {
   return &(colors[index % 6]);
 }
 
-static int apply(dx_asset_mesh_operations_set_vertex_colors* self, dx_asset_mesh* mesh) {
+static int apply(dx_asset_mesh_operations_set_vertex_colors* SELF, dx_asset_mesh* mesh) {
   for (dx_size i = 0, n = mesh->number_of_vertices; i < n; ++i) {
     mesh->vertices.ambient_rgba[i] = *get_color(i);
   }
   return 0;
 }
 
-int dx_asset_mesh_operations_set_vertex_colors_construct(dx_asset_mesh_operations_set_vertex_colors* self) {
-  dx_rti_type* _type = dx_asset_mesh_operations_set_vertex_colors_get_type();
-  if (!_type) {
-    return 1;
+dx_result dx_asset_mesh_operations_set_vertex_colors_construct(dx_asset_mesh_operations_set_vertex_colors* SELF) {
+  dx_rti_type* TYPE = dx_asset_mesh_operations_set_vertex_colors_get_type();
+  if (!TYPE) {
+    return DX_FAILURE;
   }
-  if (dx_asset_mesh_operation_construct(DX_ASSET_MESH_OPERATION(self), dx_asset_mesh_operation_kind_set_vertex_colors)) {
-    return 1;
+  if (dx_asset_mesh_operation_construct(DX_ASSET_MESH_OPERATION(SELF), dx_asset_mesh_operation_kind_set_vertex_colors)) {
+    return DX_FAILURE;
   }
-  DX_OBJECT(self)->type = _type;
-  return 0;
+  DX_OBJECT(SELF)->type = TYPE;
+  return DX_SUCCESS;
 }
 
-static void dx_asset_mesh_operations_set_vertex_colors_destruct(dx_asset_mesh_operations_set_vertex_colors* self)
+static void dx_asset_mesh_operations_set_vertex_colors_destruct(dx_asset_mesh_operations_set_vertex_colors* SELF)
 {/*Intentionally empty.*/}
 
-static void dx_asset_mesh_operations_set_vertex_colors_dispatch_construct(dx_asset_mesh_operations_set_vertex_colors_dispatch* self) {
-  DX_ASSET_MESH_OPERATION_DISPATCH(self)->apply = (int(*)(dx_asset_mesh_operation*, dx_asset_mesh*)) & apply;
+static void dx_asset_mesh_operations_set_vertex_colors_dispatch_construct(dx_asset_mesh_operations_set_vertex_colors_dispatch* SELF) {
+  DX_ASSET_MESH_OPERATION_DISPATCH(SELF)->apply = (int(*)(dx_asset_mesh_operation*, dx_asset_mesh*)) & apply;
 }
 
-dx_asset_mesh_operations_set_vertex_colors* dx_asset_mesh_operations_set_vertex_colors_create() {
-  dx_rti_type* _type = dx_asset_mesh_operations_set_vertex_colors_get_type();
-  if (!_type) {
-    return NULL;
+dx_result dx_asset_mesh_operations_set_vertex_colors_create(dx_asset_mesh_operations_set_vertex_colors** RETURN) {
+  DX_CREATE_PREFIX(dx_asset_mesh_operations_set_vertex_colors)
+  if (dx_asset_mesh_operations_set_vertex_colors_construct(SELF)) {
+    DX_UNREFERENCE(SELF);
+    SELF = NULL;
+    return DX_FAILURE;
   }
-  dx_asset_mesh_operations_set_vertex_colors* self = DX_ASSET_MESH_OPERATIONS_SET_VERTEX_COLORS(dx_object_alloc(sizeof(dx_asset_mesh_operations_set_vertex_colors)));
-  if (!self) {
-    return NULL;
-  }
-  if (dx_asset_mesh_operations_set_vertex_colors_construct(self)) {
-    DX_UNREFERENCE(self);
-    self = NULL;
-    return NULL;
-  }
-  return self;  
+  *RETURN = SELF;
+  return DX_SUCCESS;  
 }

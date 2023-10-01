@@ -32,10 +32,7 @@ dx_result dx_string_buffer_construct(dx_string_buffer* SELF) {
 }
 
 dx_result dx_string_buffer_create(dx_string_buffer** RETURN) {
-  dx_string_buffer * SELF = DX_STRING_BUFFER(dx_object_alloc(sizeof(dx_string_buffer)));
-  if (!SELF) {
-    return DX_FAILURE;
-  }
+  DX_CREATE_PREFIX(dx_string_buffer)
   if (dx_string_buffer_construct(SELF)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
@@ -80,6 +77,18 @@ dx_result dx_string_buffer_to_string(dx_string** RETURN, dx_string_buffer* SELF)
   return dx_string_create(RETURN, bytes, size);
 }
 
+dx_result dx_string_buffer_set_string(dx_string_buffer* SELF, dx_string* string) {
+  dx_size number_of_bytes = 0;
+  if (dx_string_get_number_of_bytes(&number_of_bytes, string)) {
+    return DX_FAILURE;
+  }
+  void const* bytes = NULL;
+  if (dx_string_get_bytes(&bytes, string)) {
+    return DX_FAILURE;
+  }
+  return dx_inline_byte_array_set(&SELF->backend, bytes, number_of_bytes);
+}
+
 dx_result dx_string_buffer_append_string(dx_string_buffer* SELF, dx_string* string) {
   dx_size number_of_bytes = 0;
   if (dx_string_get_number_of_bytes(&number_of_bytes, string)) {
@@ -90,6 +99,14 @@ dx_result dx_string_buffer_append_string(dx_string_buffer* SELF, dx_string* stri
     return DX_FAILURE;
   }
   return dx_inline_byte_array_append(&SELF->backend, bytes, number_of_bytes);
+}
+
+dx_result dx_string_buffer_set_bytes(dx_string_buffer* SELF, char const* p, dx_size n) {
+  if (!dx__is_utf8_sequence(p, n)) {
+    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
+    return DX_FAILURE;
+  }
+  return dx_inline_byte_array_set(&SELF->backend, p, n);
 }
 
 dx_result dx_string_buffer_append_bytes(dx_string_buffer* SELF, char const* p, dx_size n) {
@@ -216,14 +233,7 @@ dx_result dx_string_buffer_iterator_impl_construct(dx_string_buffer_iterator_imp
 }
 
 dx_result dx_string_buffer_iterator_impl_create(dx_string_buffer_iterator_impl** RETURN, dx_string_buffer* string_buffer) {
-  dx_rti_type* TYPE = dx_string_buffer_iterator_impl_get_type();
-  if (!TYPE) {
-    return DX_FAILURE;
-  }
-  dx_string_buffer_iterator_impl* SELF = DX_STRING_BUFFER_ITERATOR_IMPL(dx_object_alloc(sizeof(dx_string_buffer_iterator_impl)));
-  if (!SELF) {
-    return DX_FAILURE;
-  }
+  DX_CREATE_PREFIX(dx_string_buffer_iterator_impl)
   if (dx_string_buffer_iterator_impl_construct(SELF, string_buffer)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;

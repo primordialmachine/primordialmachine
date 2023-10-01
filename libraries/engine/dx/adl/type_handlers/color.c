@@ -20,7 +20,7 @@ static int _read_color_rgb_u8(dx_ddl_node* node, dx_adl_context* context, DX_RGB
 
 static int resolve(dx_adl_type_handlers_color* self, dx_adl_symbol* symbol, dx_adl_context* context);
 
-static dx_object* read(dx_adl_type_handlers_color* self, dx_ddl_node* node, dx_adl_context* context);
+static dx_result read(dx_object** RETURN, dx_adl_type_handlers_color* self, dx_ddl_node* node, dx_adl_context* context);
 
 DX_DEFINE_OBJECT_TYPE("dx.adl.type_handlers.color",
                       dx_adl_type_handlers_color,
@@ -52,51 +52,51 @@ static int resolve(dx_adl_type_handlers_color* self, dx_adl_symbol* symbol, dx_a
   return 0;
 }
 
-static dx_object* read(dx_adl_type_handlers_color* self, dx_ddl_node* node, dx_adl_context* context) {
+static dx_result read(dx_object** RETURN, dx_adl_type_handlers_color* self, dx_ddl_node* node, dx_adl_context* context) {
   if (!node) {
     dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return NULL;
+    return DX_FAILURE;
   }
   DX_RGB_N8 temporary;
   if (_read_color_rgb_u8(node, context, &temporary)) {
-    return NULL;
+    return DX_FAILURE;
   }
   dx_asset_color_rgb_n8* color = NULL;
   if (dx_asset_color_rgb_n8_create(&color, &temporary)) {
-    return NULL;
+    return DX_FAILURE;
   }
-  return DX_OBJECT(color);
+  *RETURN  = DX_OBJECT(color);
+  return DX_SUCCESS;
 }
 
-int dx_adl_type_handlers_color_construct(dx_adl_type_handlers_color* self) {
-  dx_rti_type* _type = dx_adl_type_handlers_color_get_type();
-  if (!_type) {
-    return 1;
+dx_result dx_adl_type_handlers_color_construct(dx_adl_type_handlers_color* SELF) {
+  dx_rti_type* TYPE = dx_adl_type_handlers_color_get_type();
+  if (!TYPE) {
+    return DX_FAILURE;
   }
-  if (dx_adl_type_handler_construct(DX_ADL_TYPE_HANDLER(self))) {
-    return 1;
+  if (dx_adl_type_handler_construct(DX_ADL_TYPE_HANDLER(SELF))) {
+    return DX_FAILURE;
   }
-  DX_ADL_TYPE_HANDLER(self)->resolve = (int(*)(dx_adl_type_handler*, dx_adl_symbol*, dx_adl_context*)) & resolve;
-  DX_ADL_TYPE_HANDLER(self)->read = (dx_object * (*)(dx_adl_type_handler*, dx_ddl_node*, dx_adl_context*)) & read;
-  DX_OBJECT(self)->type = _type;
-  return 0;
+  /// @todo Fixme.
+  DX_ADL_TYPE_HANDLER(SELF)->resolve = (int(*)(dx_adl_type_handler*, dx_adl_symbol*, dx_adl_context*)) & resolve;
+  DX_OBJECT(SELF)->type = TYPE;
+  return DX_SUCCESS;
 }
 
-static void dx_adl_type_handlers_color_destruct(dx_adl_type_handlers_color* self)
+static void dx_adl_type_handlers_color_destruct(dx_adl_type_handlers_color* SELF)
 {/*Intentionally empty.*/}
 
-static void dx_adl_type_handlers_color_dispatch_construct(dx_adl_type_handlers_color_dispatch* self)
-{/*Intentionally empty.*/}
+static void dx_adl_type_handlers_color_dispatch_construct(dx_adl_type_handlers_color_dispatch* SELF) {
+  DX_ADL_TYPE_HANDLER_DISPATCH(SELF)->read = (dx_result (*)(dx_object**, dx_adl_type_handler*, dx_ddl_node*, dx_adl_context*)) & read;
+}
 
-dx_adl_type_handlers_color* dx_adl_type_handlers_color_create() {
-  dx_adl_type_handlers_color* self = DX_ADL_SEMANTICAL_COLOR_READER(dx_object_alloc(sizeof(dx_adl_type_handlers_color)));
-  if (!self) {
-    return NULL;
+dx_result dx_adl_type_handlers_color_create(dx_adl_type_handlers_color** RETURN) {
+  DX_CREATE_PREFIX(dx_adl_type_handlers_color)
+  if (dx_adl_type_handlers_color_construct(SELF)) {
+    DX_UNREFERENCE(SELF);
+    SELF = NULL;
+    return DX_FAILURE;
   }
-  if (dx_adl_type_handlers_color_construct(self)) {
-    DX_UNREFERENCE(self);
-    self = NULL;
-    return NULL;
-  }
-  return self;
+  *RETURN = SELF;
+  return DX_SUCCESS;
 }

@@ -17,26 +17,30 @@ static inline dx_adl_type_handler* DX_ADL_TYPE_HANDLER(void* p) {
 
 struct dx_adl_type_handler {
   dx_object _parent;
-  int (*resolve)(dx_adl_type_handler* self,
-                dx_adl_symbol* symbol,
-                dx_adl_context* context);
-  dx_object* (*read)(dx_adl_type_handler* self,
-                    dx_ddl_node* node,
-                    dx_adl_context* context);
+  /// @todo Fixme.
+  int (*resolve)(dx_adl_type_handler* SELF,
+                 dx_adl_symbol* symbol,
+                 dx_adl_context* context);
 };
+
+static inline dx_adl_type_handler_dispatch* DX_ADL_TYPE_HANDLER_DISPATCH(void* p) {
+  return (dx_adl_type_handler_dispatch*)p;
+}
+
 
 struct dx_adl_type_handler_dispatch {
   dx_object_dispatch _parent;
+  dx_result(*read)(dx_object** RETURN, dx_adl_type_handler* SELF, dx_ddl_node* node, dx_adl_context* context);
 };
 
-int dx_adl_type_handler_construct(dx_adl_type_handler* self);
+dx_result dx_adl_type_handler_construct(dx_adl_type_handler* SELF);
 
-int dx_adl_type_handler_resolve(dx_adl_type_handler* self,
+int dx_adl_type_handler_resolve(dx_adl_type_handler* SELF,
                                 dx_adl_symbol* symbol,
                                 dx_adl_context* context);
 
-dx_object* dx_adl_type_handler_read(dx_adl_type_handler* self,
-                                    dx_ddl_node* node,
-                                    dx_adl_context* context);
+static inline dx_result dx_adl_type_handler_read(dx_object** RETURN, dx_adl_type_handler* SELF, dx_ddl_node* node, dx_adl_context* context) {
+  DX_OBJECT_VIRTUALCALL(dx_adl_type_handler, read, RETURN, SELF, node, context);
+}
 
 #endif // DX_ADL_TYPE_HANDLER_H_INCLUDED

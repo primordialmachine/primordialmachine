@@ -16,15 +16,15 @@ static inline dx_string* _get_name(dx_adl_names* names, dx_size index) {
 
 #define NAME(name) _get_name(context->names, dx_adl_name_index_##name)
 
-static int resolve(dx_adl_type_handlers_image_operations_checkerboard_pattern_fill* self, dx_adl_symbol* symbol, dx_adl_context* context);
+static int resolve(dx_adl_type_handlers_image_operations_checkerboard_pattern_fill* SELF, dx_adl_symbol* symbol, dx_adl_context* context);
 
-static dx_object* read(dx_adl_type_handlers_image_operations_checkerboard_pattern_fill* self, dx_ddl_node* node, dx_adl_context* context);
+static dx_result read(dx_object** RETURN, dx_adl_type_handlers_image_operations_checkerboard_pattern_fill* SELF, dx_ddl_node* node, dx_adl_context* context);
 
 DX_DEFINE_OBJECT_TYPE("dx.adl.type_handlers.image_operations.checkerboard_pattern_fill_reader",
                       dx_adl_type_handlers_image_operations_checkerboard_pattern_fill,
                       dx_adl_type_handler);
 
-static int resolve(dx_adl_type_handlers_image_operations_checkerboard_pattern_fill* self, dx_adl_symbol* symbol, dx_adl_context* context) {
+static int resolve(dx_adl_type_handlers_image_operations_checkerboard_pattern_fill* SELF, dx_adl_symbol* symbol, dx_adl_context* context) {
   if (symbol->resolved) {
     return 0;
   }
@@ -76,14 +76,14 @@ static int resolve(dx_adl_type_handlers_image_operations_checkerboard_pattern_fi
   return 0;
 }
 
-static dx_object* read(dx_adl_type_handlers_image_operations_checkerboard_pattern_fill* self, dx_ddl_node* node, dx_adl_context* context) {
+static dx_result read(dx_object** RETURN, dx_adl_type_handlers_image_operations_checkerboard_pattern_fill* SELF, dx_ddl_node* node, dx_adl_context* context) {
   if (!node) {
     dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return NULL;
+    return DX_FAILURE;
   }
-  dx_asset_image_operations_checkerboard_pattern_fill* image_operation = dx_asset_image_operations_checkerboard_pattern_fill_create();
-  if (!image_operation) {
-    return NULL;
+  dx_asset_image_operations_checkerboard_pattern_fill* image_operation = NULL;
+  if (dx_asset_image_operations_checkerboard_pattern_fill_create(&image_operation)) {
+    return DX_FAILURE;
   }
   // numberOfCheckers
   {
@@ -91,7 +91,7 @@ static dx_object* read(dx_adl_type_handlers_image_operations_checkerboard_patter
     if (dx_string_create(&child_name, "numberOfCheckers", sizeof("numberOfCheckers") - 1)) {
       DX_UNREFERENCE(image_operation);
       image_operation = NULL;
-      return NULL;
+      return DX_FAILURE;
     }
     dx_ddl_node* child_node = dx_ddl_node_map_get(node, child_name);
     DX_UNREFERENCE(child_name);
@@ -99,7 +99,7 @@ static dx_object* read(dx_adl_type_handlers_image_operations_checkerboard_patter
     if (!child_node) {
       DX_UNREFERENCE(image_operation);
       image_operation = NULL;
-      return NULL;
+      return DX_FAILURE;
     }
     // numberOfCheckers.horizontal
     {
@@ -107,12 +107,12 @@ static dx_object* read(dx_adl_type_handlers_image_operations_checkerboard_patter
       if (dx_adl_semantical_read_sz(child_node, NAME(horizontal_key), &value)) {
         DX_UNREFERENCE(image_operation);
         image_operation = NULL;
-        return NULL;
+        return DX_FAILURE;
       }
       if (dx_asset_image_operations_checkerboard_pattern_fill_set_number_of_checkers_horizontal(image_operation, value)) {
         DX_UNREFERENCE(image_operation);
         image_operation = NULL;
-        return NULL;
+        return DX_FAILURE;
       }
     }
     // numberOfCheckers.vertical
@@ -121,12 +121,12 @@ static dx_object* read(dx_adl_type_handlers_image_operations_checkerboard_patter
       if (dx_adl_semantical_read_sz(child_node, NAME(vertical_key), &value)) {
         DX_UNREFERENCE(image_operation);
         image_operation = NULL;
-        return NULL;
+        return DX_FAILURE;
       }
       if (dx_asset_image_operations_checkerboard_pattern_fill_set_number_of_checkers_vertical(image_operation, value)) {
         DX_UNREFERENCE(image_operation);
         image_operation = NULL;
-        return NULL;
+        return DX_FAILURE;
       }
     }
   }
@@ -136,7 +136,7 @@ static dx_object* read(dx_adl_type_handlers_image_operations_checkerboard_patter
     if (dx_string_create(&child_name, "checkerSize", sizeof("checkerSize") - 1)) {
       DX_UNREFERENCE(image_operation);
       image_operation = NULL;
-      return NULL;
+      return DX_FAILURE;
     }
     dx_ddl_node* child_node = dx_ddl_node_map_get(node, child_name);
     DX_UNREFERENCE(child_name);
@@ -144,7 +144,7 @@ static dx_object* read(dx_adl_type_handlers_image_operations_checkerboard_patter
     if (!child_node) {
       DX_UNREFERENCE(image_operation);
       image_operation = NULL;
-      return NULL;
+      return DX_FAILURE;
     }
     // checkerSize.horizontal
     {
@@ -152,12 +152,12 @@ static dx_object* read(dx_adl_type_handlers_image_operations_checkerboard_patter
       if (dx_adl_semantical_read_sz(child_node, NAME(horizontal_key), &value)) {
         DX_UNREFERENCE(image_operation);
         image_operation = NULL;
-        return NULL;
+        return DX_FAILURE;
       }
       if (dx_asset_image_operations_checkerboard_pattern_fill_set_checker_size_horizontal(image_operation, value)) {
         DX_UNREFERENCE(image_operation);
         image_operation = NULL;
-        return NULL;
+        return DX_FAILURE;
       }
     }
     // checkerSize.vertical
@@ -166,47 +166,47 @@ static dx_object* read(dx_adl_type_handlers_image_operations_checkerboard_patter
       if (dx_adl_semantical_read_sz(child_node, NAME(vertical_key), &value)) {
         DX_UNREFERENCE(image_operation);
         image_operation = NULL;
-        return NULL;
+        return DX_FAILURE;
       }
       if (dx_asset_image_operations_checkerboard_pattern_fill_set_checker_size_vertical(image_operation, value)) {
         DX_UNREFERENCE(image_operation);
         image_operation = NULL;
-        return NULL;
+        return DX_FAILURE;
       }
     }
   }
-  return DX_OBJECT(image_operation);
+  *RETURN = DX_OBJECT(image_operation);
+  return DX_SUCCESS;
 }
 
-int dx_adl_type_handlers_image_operations_checkerboard_pattern_fill_construct(dx_adl_type_handlers_image_operations_checkerboard_pattern_fill* self) {
-  dx_rti_type* _type = dx_adl_type_handlers_image_operations_checkerboard_pattern_fill_get_type();
-  if (!_type) {
-    return 1;
+dx_result dx_adl_type_handlers_image_operations_checkerboard_pattern_fill_construct(dx_adl_type_handlers_image_operations_checkerboard_pattern_fill* SELF) {
+  dx_rti_type* TYPE = dx_adl_type_handlers_image_operations_checkerboard_pattern_fill_get_type();
+  if (!TYPE) {
+    return DX_FAILURE;
   }
-  if (dx_adl_type_handler_construct(DX_ADL_TYPE_HANDLER(self))) {
-    return 1;
+  if (dx_adl_type_handler_construct(DX_ADL_TYPE_HANDLER(SELF))) {
+    return DX_FAILURE;
   }
-  DX_ADL_TYPE_HANDLER(self)->resolve = (int(*)(dx_adl_type_handler*, dx_adl_symbol*, dx_adl_context*)) & resolve;
-  DX_ADL_TYPE_HANDLER(self)->read = (dx_object * (*)(dx_adl_type_handler*, dx_ddl_node*, dx_adl_context*)) & read;
-  DX_OBJECT(self)->type = _type;
-  return 0;
+  /// @todo Fixme.
+  DX_ADL_TYPE_HANDLER(SELF)->resolve = (int(*)(dx_adl_type_handler*, dx_adl_symbol*, dx_adl_context*)) & resolve;
+  DX_OBJECT(SELF)->type = TYPE;
+  return DX_SUCCESS;
 }
 
-static void dx_adl_type_handlers_image_operations_checkerboard_pattern_fill_destruct(dx_adl_type_handlers_image_operations_checkerboard_pattern_fill* self)
+static void dx_adl_type_handlers_image_operations_checkerboard_pattern_fill_destruct(dx_adl_type_handlers_image_operations_checkerboard_pattern_fill* SELF)
 {/*Intentionally empty.*/}
 
-static void dx_adl_type_handlers_image_operations_checkerboard_pattern_fill_dispatch_construct(dx_adl_type_handlers_image_operations_checkerboard_pattern_fill_dispatch* self)
-{/*Intentionally empty.*/}
+static void dx_adl_type_handlers_image_operations_checkerboard_pattern_fill_dispatch_construct(dx_adl_type_handlers_image_operations_checkerboard_pattern_fill_dispatch* SELF) {
+  DX_ADL_TYPE_HANDLER_DISPATCH(SELF)->read = (dx_result (*)(dx_object**, dx_adl_type_handler*, dx_ddl_node*, dx_adl_context*)) & read;
+}
 
-dx_adl_type_handlers_image_operations_checkerboard_pattern_fill* dx_adl_type_handlers_image_operations_checkerboard_pattern_fill_create() {
-  dx_adl_type_handlers_image_operations_checkerboard_pattern_fill* self = DX_ADL_TYPE_HANDLERS_IMAGE_OPERATIONS_CHECKERBOARD_PATTERN_FILL(dx_object_alloc(sizeof(dx_adl_type_handlers_image_operations_checkerboard_pattern_fill)));
-  if (!self) {
-    return NULL;
+dx_result dx_adl_type_handlers_image_operations_checkerboard_pattern_fill_create(dx_adl_type_handlers_image_operations_checkerboard_pattern_fill** RETURN) {
+  DX_CREATE_PREFIX(dx_adl_type_handlers_image_operations_checkerboard_pattern_fill)
+  if (dx_adl_type_handlers_image_operations_checkerboard_pattern_fill_construct(SELF)) {
+    DX_UNREFERENCE(SELF);
+    SELF = NULL;
+    return DX_FAILURE;
   }
-  if (dx_adl_type_handlers_image_operations_checkerboard_pattern_fill_construct(self)) {
-    DX_UNREFERENCE(self);
-    self = NULL;
-    return NULL;
-  }
-  return self;
+  *RETURN = SELF;
+  return DX_SUCCESS;
 }

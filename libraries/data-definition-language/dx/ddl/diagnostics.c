@@ -20,10 +20,7 @@ dx_result dx_data_definition_language_diagnostics_construct(dx_data_definition_l
 }
 
 dx_result dx_data_definition_language_diagnostics_create(dx_data_definition_language_diagnostics** RETURN) {
-  dx_data_definition_language_diagnostics* SELF = DX_DATA_DEFINITION_LANGUAGE_DIAGNOSTICS(dx_object_alloc(sizeof(dx_data_definition_language_diagnostics)));
-  if (!SELF) {
-    return DX_FAILURE;
-  }
+  DX_CREATE_PREFIX(dx_data_definition_language_diagnostics)
   if (dx_data_definition_language_diagnostics_construct(SELF)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;

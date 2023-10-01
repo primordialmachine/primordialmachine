@@ -30,6 +30,7 @@ struct dx_asset_image_operations_mirror_vertical_dispatch {
 /// @method-call
 dx_result dx_asset_image_operations_mirror_vertical_construct(dx_asset_image_operations_mirror_vertical* SELF);
 
-dx_asset_image_operations_mirror_vertical* dx_asset_image_operations_mirror_vertical_create();
+/// @create-operator{dx_asset_image_operations_mirror_vertical}
+dx_result dx_asset_image_operations_mirror_vertical_create(dx_asset_image_operations_mirror_vertical** RETURN);
 
 #endif // DX_ASSET_IMAGE_OPERATIONS_MIRROR_VERTICAL_H_INCLUDED

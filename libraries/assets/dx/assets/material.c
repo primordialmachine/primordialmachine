@@ -22,73 +22,71 @@ static void dx_asset_material_destruct(dx_asset_material* self) {
 static void dx_asset_material_dispatch_construct(dx_asset_material_dispatch* self)
 {/*Intentionally empty.*/}
 
-int dx_asset_material_construct(dx_asset_material* self, dx_string* name) {
-  if (!self) {
+dx_result dx_asset_material_construct(dx_asset_material* SELF, dx_string* name) {
+  if (!SELF) {
     dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return 1;
+    return DX_FAILURE;
   }
-  dx_rti_type* _type = dx_asset_material_get_type();
-  if (!_type) {
-    return 1;
+  dx_rti_type* TYPE = dx_asset_material_get_type();
+  if (!TYPE) {
+    return DX_FAILURE;
   }
   
   if (!name) {
     dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return 1;
+    return DX_FAILURE;
   }
-  self->name = name;
-  DX_REFERENCE(self->name);
+  SELF->name = name;
+  DX_REFERENCE(SELF->name);
 
   DX_RGB_N8 WHITE = { .r = 255, .g = 255, .b = 255 };
-  if (dx_asset_color_rgb_n8_create(&self->ambient_color, &WHITE)) {
-    DX_UNREFERENCE(self->name);
-    self->name = NULL;
-    return 1;
+  if (dx_asset_color_rgb_n8_create(&SELF->ambient_color, &WHITE)) {
+    DX_UNREFERENCE(SELF->name);
+    SELF->name = NULL;
+    return DX_FAILURE;
   }
   
-  self->ambient_texture_reference = NULL;
+  SELF->ambient_texture_reference = NULL;
   
-  self->controller = NULL;
+  SELF->controller = NULL;
 
-  DX_OBJECT(self)->type = _type;
-  return 0;
+  DX_OBJECT(SELF)->type = TYPE;
+  return DX_SUCCESS;
 }
 
-dx_asset_material* dx_asset_material_create(dx_string* name) {
-  dx_asset_material* self = DX_ASSET_MATERIAL(dx_object_alloc(sizeof(dx_asset_material)));
-  if (!self) {
-    return NULL;
+dx_result dx_asset_material_create(dx_asset_material** RETURN, dx_string* name) {
+  DX_CREATE_PREFIX(dx_asset_material)
+  if (dx_asset_material_construct(SELF, name)) {
+    DX_UNREFERENCE(SELF);
+    SELF = NULL;
+    return DX_FAILURE;
   }
-  if (dx_asset_material_construct(self, name)) {
-    DX_UNREFERENCE(self);
-    self = NULL;
-    return NULL;
-  }
-  return self;
+  *RETURN = SELF;
+  return DX_SUCCESS;
 }
 
-int dx_asset_material_set_ambient_color(dx_asset_material* self, dx_asset_color_rgb_n8* ambient_color) {
-  if (!self || !ambient_color) {
+dx_result dx_asset_material_set_ambient_color(dx_asset_material* SELF, dx_asset_color_rgb_n8* ambient_color) {
+  if (!SELF || !ambient_color) {
     dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return 1;
+    return DX_FAILURE;
   }
   DX_REFERENCE(ambient_color);
-  DX_UNREFERENCE(self->ambient_color);
-  self->ambient_color = ambient_color;
-  return 0;
+  DX_UNREFERENCE(SELF->ambient_color);
+  SELF->ambient_color = ambient_color;
+  return DX_SUCCESS;
 }
 
-int dx_asset_material_set_ambient_texture(dx_asset_material* self, dx_asset_reference* ambient_texture_reference) {
-  if (!self) {
+dx_result dx_asset_material_set_ambient_texture(dx_asset_material* SELF, dx_asset_reference* ambient_texture_reference) {
+  if (!SELF) {
     dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return 1;
+    return DX_FAILURE;
   }
   if (ambient_texture_reference) {
     DX_REFERENCE(ambient_texture_reference);
   }
-  if (self->ambient_texture_reference) {
-    DX_UNREFERENCE(self->ambient_texture_reference);
+  if (SELF->ambient_texture_reference) {
+    DX_UNREFERENCE(SELF->ambient_texture_reference);
   }
-  self->ambient_texture_reference = ambient_texture_reference;
-  return 0;
+  SELF->ambient_texture_reference = ambient_texture_reference;
+  return DX_SUCCESS;
 }

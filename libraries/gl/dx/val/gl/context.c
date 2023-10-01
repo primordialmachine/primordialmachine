@@ -111,15 +111,10 @@ static dx_result create_buffer(dx_val_gl_buffer** RETURN, dx_val_gl_context* SEL
 }
 
 static dx_result create_cbinding(dx_val_cbinding** RETURN, dx_val_gl_context* SELF) {
-  dx_val_cbinding* cbinding = dx_val_cbinding_create();
-  if (!cbinding) {
-    return DX_FAILURE;
-  }
-  *RETURN = cbinding;
-  return DX_SUCCESS;
+  return dx_val_cbinding_create(RETURN);
 }
 
-static dx_result create_vbinding(dx_val_gl_vbinding** RETURN, dx_val_gl_context* SELF, DX_VERTEX_FORMAT vertex_format, dx_val_gl_buffer* buffer) {
+static dx_result create_vbinding(dx_val_gl_vbinding** RETURN, dx_val_gl_context* SELF, dx_vertex_format vertex_format, dx_val_gl_buffer* buffer) {
   return dx_val_gl_vbinding_create(RETURN, vertex_format, buffer);
 }
 
@@ -194,28 +189,28 @@ static dx_result execute_commands(dx_val_gl_context* SELF, dx_val_command_list* 
       SELF->glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
       SELF->glEnable(GL_DEPTH_TEST);
       switch (command->pipeline_state.depth_test_function) {
-        case DX_DEPTH_TEST_FUNCTION_ALWAYS: {
+        case dx_depth_test_function_always: {
           SELF->glDepthFunc(GL_ALWAYS);
         } break;
-        case DX_DEPTH_TEST_FUNCTION_NEVER: {
+        case dx_depth_test_function_never: {
           SELF->glDepthFunc(GL_NEVER);
         } break;
-        case DX_DEPTH_TEST_FUNCTION_LESS_THAN: {
+        case dx_depth_test_function_less_than: {
           SELF->glDepthFunc(GL_LESS);
         } break;
-        case DX_DEPTH_TEST_FUNCTION_LESS_THAN_OR_EQUAL_TO: {
+        case dx_depth_test_function_less_than_or_equal_to: {
           SELF->glDepthFunc(GL_LEQUAL);
         } break;
-        case DX_DEPTH_TEST_FUNCTION_GREATER_THAN: {
+        case dx_depth_test_function_greater_than: {
           SELF->glDepthFunc(GL_GREATER);
         } break;
-        case DX_DEPTH_TEST_FUNCTION_GREATER_THAN_OR_EQUAL_TO: {
+        case dx_depth_test_function_greater_than_or_equal_to: {
           SELF->glDepthFunc(GL_GEQUAL);
         } break;
-        case DX_DEPTH_TEST_FUNCTION_EQUAL: {
+        case dx_depth_test_function_equal: {
           SELF->glDepthFunc(GL_EQUAL);
         } break;
-        case DX_DEPTH_TEST_FUNCTION_NOT_EQUAL: {
+        case dx_depth_test_function_not_equal: {
           SELF->glDepthFunc(GL_NOTEQUAL);
         } break;
         default: {
@@ -225,18 +220,18 @@ static dx_result execute_commands(dx_val_gl_context* SELF, dx_val_command_list* 
       };
       SELF->glDepthMask(command->pipeline_state.depth_write_enabled ? GL_TRUE : GL_FALSE);
       switch (command->pipeline_state.cull_mode) {
-        case DX_CULL_MODE_NONE: {
+        case dx_cull_mode_none: {
           SELF->glDisable(GL_CULL_FACE);
         } break;
-        case DX_CULL_MODE_BACK: {
+        case dx_cull_mode_back: {
           SELF->glEnable(GL_CULL_FACE);
           SELF->glCullFace(GL_BACK);
         } break;
-        case DX_CULL_MODE_FRONT: {
+        case dx_cull_mode_front: {
           SELF->glEnable(GL_CULL_FACE);
           SELF->glCullFace(GL_FRONT);
         } break;
-        case DX_CULL_MODE_FRONT_AND_BACK: {
+        case dx_cull_mode_front_and_back: {
           SELF->glEnable(GL_CULL_FACE);
           SELF->glCullFace(GL_FRONT_AND_BACK);
         } break;
@@ -269,7 +264,7 @@ static void dx_val_gl_context_dispatch_construct(dx_val_gl_context_dispatch* SEL
   DX_VAL_CONTEXT_DISPATCH(SELF)->bind_texture = (dx_result(*)(dx_val_context*, dx_size, dx_val_texture*)) & bind_texture;
   DX_VAL_CONTEXT_DISPATCH(SELF)->create_buffer = (dx_result (*)(dx_val_buffer**, dx_val_context*)) & create_buffer;
   DX_VAL_CONTEXT_DISPATCH(SELF)->create_cbinding = (dx_result(*)(dx_val_cbinding**, dx_val_context*)) & create_cbinding;
-  DX_VAL_CONTEXT_DISPATCH(SELF)->create_vbinding = (dx_result (*)(dx_val_vbinding**, dx_val_context*, DX_VERTEX_FORMAT, dx_val_buffer*)) & create_vbinding;
+  DX_VAL_CONTEXT_DISPATCH(SELF)->create_vbinding = (dx_result (*)(dx_val_vbinding**, dx_val_context*, dx_vertex_format, dx_val_buffer*)) & create_vbinding;
   DX_VAL_CONTEXT_DISPATCH(SELF)->create_program = (dx_result (*)(dx_val_program**,dx_val_context*, dx_val_program_text*)) & create_program;
   DX_VAL_CONTEXT_DISPATCH(SELF)->create_texture = (dx_result (*)(dx_val_texture**, dx_val_context*)) & create_texture;
   DX_VAL_CONTEXT_DISPATCH(SELF)->execute_commands = (dx_result(*)(dx_val_context*, dx_val_command_list*)) & execute_commands;

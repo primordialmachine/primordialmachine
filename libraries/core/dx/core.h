@@ -53,6 +53,9 @@
 #include "dx/core/string_buffer.h"
 #include "dx/core/visuals.h"
 
+#include "dx/core/system.h"
+#include "dx/core/system_factory.h"
+
 // begin: dx/core/input
 #include "dx/core/hapticals.h"
 #include "dx/core/keyboard_state.h"

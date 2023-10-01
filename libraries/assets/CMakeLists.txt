@@ -22,6 +22,11 @@ list(APPEND ${name}.sources "dx/assets.c")
 list(APPEND ${name}.headers "dx/assets.h")
 
 # "assets" folder.
+list(APPEND ${name}.sources "dx/assets/system.c")
+list(APPEND ${name}.headers "dx/assets/system.h")
+list(APPEND ${name}.sources "dx/assets/system_factory.c")
+list(APPEND ${name}.headers "dx/assets/system_factory.h")
+
 list(APPEND ${name}.sources "dx/assets/mesh/generators.c")
 list(APPEND ${name}.headers "dx/assets/mesh/generators.h")
 

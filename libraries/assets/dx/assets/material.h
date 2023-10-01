@@ -37,36 +37,26 @@ struct dx_asset_material_dispatch {
 };
 
 /// @brief Construct this dx_asset_material object with default values.
-/// @param self A pointer to this dx_asset_material object.
 /// @param name A pointer to the ADL name of this material.
-/// @return The zero value on success. A non-zero value on failure.
-/// @default-failure
-/// - #DX_INVALID_ARGUMENT @a self is a null pointer
-/// - #DX_ALLOCATION_FAILED an allocation failed
-int dx_asset_material_construct(dx_asset_material* self, dx_string* name);
+/// @error #DX_ERROR_ALLOCATION_FAILED an allocation failed
+/// @constructor{dx_asset_material}
+dx_result dx_asset_material_construct(dx_asset_material* SELF, dx_string* name);
 
-/// @brief Create a dx_asset_material object with default values.
+/// @create-operator{dx_asset_material}
+/// @detail The object is created with default values.
 /// @param name A pointer to the ADL name of this material.
-/// @return A pointer to the dx_asset_material object on success. The null pointer failure.
-/// @default-failure
-/// - #DX_ALLOCATION_FAILED an allocation failed
-dx_asset_material* dx_asset_material_create(dx_string* name);
+/// @error #DX_ERROR_ALLOCATION_FAILED an allocation failed
+dx_result dx_asset_material_create(dx_asset_material** RETURN, dx_string* name);
 
 /// @brief Set the ambient color.
-/// @param self A pointer to this dx_asset_material object.
 /// @param ambient_color A pointer to color.
-/// @return The zero value on success. A non-zero value on failure.
-/// @default-failure
-/// - #DX_INVALID_ARGUMENT @a self is a null pointer
-/// - #DX_INVALID_ARGUMENT @a value is a null pointer
-int dx_asset_material_set_ambient_color(dx_asset_material* self, dx_asset_color_rgb_n8* ambient_color);
+/// @error #DX_ERROR_INVALID_ARGUMENT @a value is a null pointer
+/// @method{dx_asset_material}
+dx_result dx_asset_material_set_ambient_color(dx_asset_material* SELF, dx_asset_color_rgb_n8* ambient_color);
 
 /// @brief Set the ambient texture.
-/// @param self A pointer to this dx_asset_material object.
 /// @param ambient_texture_reference A pointer to the ambient_texture_reference or the null pointer.
-/// @return The zero value on success. A non-zero value on failure.
-/// @default-failure
-/// - #DX_INVALID_ARGUMENT @a self is a null pointer
-int dx_asset_material_set_ambient_texture(dx_asset_material* self, dx_asset_reference* ambient_texture_reference);
+/// @method{dx_asset_material}
+dx_result dx_asset_material_set_ambient_texture(dx_asset_material* SELF, dx_asset_reference* ambient_texture_reference);
 
 #endif // DX_ASSET_MATERIAL_H_INCLUDED

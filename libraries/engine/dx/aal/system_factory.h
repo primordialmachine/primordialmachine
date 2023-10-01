@@ -1,7 +1,7 @@
 #if !defined(DX_AAL_SYSTEM_FACTORY_H_INCLUDED)
 #define DX_AAL_SYSTEM_FACTORY_H_INCLUDED
 
-#include "dx/system_factory.h"
+#include "dx/core.h"
 
 DX_DECLARE_OBJECT_TYPE("dx.aal.system_factory",
                        dx_aal_system_factory,

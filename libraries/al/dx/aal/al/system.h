@@ -2,7 +2,10 @@
 #define DX_AAL_AL_SYSTEM_H_INCLUDED
 
 #include "dx/aal/system.h"
-#include "dx/aal/al/context.h"
+typedef struct dx_aal_al_context dx_aal_al_context;
+
+#define AL_LIBTYPE_STATIC
+#include <AL/alc.h>
 
 DX_DECLARE_OBJECT_TYPE("dx.aal.al.system",
                        dx_aal_al_system,
@@ -14,6 +17,7 @@ static inline dx_aal_al_system* DX_AAL_AL_SYSTEM(void* p) {
 
 struct dx_aal_al_system {
   dx_aal_system _parent;
+  ALCdevice* device;
 };
 
 static inline dx_aal_al_system_dispatch* DX_AAL_AL_SYSTEM_DISPATCH(void* p) {

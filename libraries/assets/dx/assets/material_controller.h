@@ -24,10 +24,12 @@ static inline dx_asset_material_controller_dispatch* DX_ASSET_MATERIAL_CONTROLLE
 
 struct dx_asset_material_controller_dispatch {
   dx_object_dispatch parent;
+  /// @todo Fixme.
   int (*update)(dx_asset_material_controller* SELF, dx_asset_material* material, dx_f32 delta_seconds);
 };
 
-int dx_asset_material_controller_construct(dx_asset_material_controller* SELF);
+/// @todo Fixme. 
+dx_result dx_asset_material_controller_construct(dx_asset_material_controller* SELF);
 
 static inline int dx_asset_material_controller_update(dx_asset_material_controller* SELF, dx_asset_material* material, dx_f32 delta_seconds) {
   DX_OBJECT_VIRTUALCALL(dx_asset_material_controller, update, SELF, material, delta_seconds);
@@ -61,12 +63,13 @@ struct dx_asset_material_controllers_ambient_color_dispatch {
 };
 
 /// @brief Construct this controller with default values.
-/// @param self A pointer to this controller.
+/// @param SELF A pointer to this controller.
 /// @remarks The default values are start <code>black</code>, end <code>white</code>, speed <code>0.1 per second</code>, and position <code>0</code>.
-/// @default-return
-int dx_asset_material_controllers_ambient_color_construct(dx_asset_material_controllers_ambient_color* self);
+/// @method-call
+dx_result dx_asset_material_controllers_ambient_color_construct(dx_asset_material_controllers_ambient_color* SELF);
 
-dx_asset_material_controllers_ambient_color* dx_asset_material_controllers_ambient_color_create();
+/// @create-operator{dx_asset_material_controllers_ambient_color}
+dx_result dx_asset_material_controllers_ambient_color_create(dx_asset_material_controllers_ambient_color** RETURN);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 

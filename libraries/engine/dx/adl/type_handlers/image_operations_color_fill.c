@@ -16,15 +16,15 @@ static inline dx_string* _get_name(dx_adl_names* names, dx_size index) {
 
 #define NAME(name) _get_name(context->names, dx_adl_name_index_##name)
 
-static int resolve(dx_adl_type_handlers_image_operations_color_fill* self, dx_adl_symbol* symbol, dx_adl_context* context);
+static int resolve(dx_adl_type_handlers_image_operations_color_fill* SELF, dx_adl_symbol* symbol, dx_adl_context* context);
 
-static dx_object* read(dx_adl_type_handlers_image_operations_color_fill* self, dx_ddl_node* node, dx_adl_context* context);
+static dx_result read(dx_object** RETURN, dx_adl_type_handlers_image_operations_color_fill* SELF, dx_ddl_node* node, dx_adl_context* context);
 
 DX_DEFINE_OBJECT_TYPE("dx.adl.type_handlers.image_operations.color_fill_reader",
                       dx_adl_type_handlers_image_operations_color_fill,
                       dx_adl_type_handler);
 
-static int resolve(dx_adl_type_handlers_image_operations_color_fill* self, dx_adl_symbol* symbol, dx_adl_context* context) {
+static int resolve(dx_adl_type_handlers_image_operations_color_fill* SELF, dx_adl_symbol* symbol, dx_adl_context* context) {
   if (symbol->resolved) {
     return DX_SUCCESS;
   }
@@ -49,19 +49,20 @@ static int resolve(dx_adl_type_handlers_image_operations_color_fill* self, dx_ad
   return DX_SUCCESS;
 }
 
-static dx_object* read(dx_adl_type_handlers_image_operations_color_fill* self, dx_ddl_node* node, dx_adl_context* context) {
+static dx_result read(dx_object** RETURN, dx_adl_type_handlers_image_operations_color_fill* SELF, dx_ddl_node* node, dx_adl_context* context) {
   if (!node) {
     dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return NULL;
+    return DX_FAILURE;
   }
-  dx_asset_image_operations_color_fill* image_operation = dx_asset_image_operations_color_fill_create();
-  if (!image_operation) {
-    return NULL;
+  dx_asset_image_operations_color_fill* image_operation = NULL;
+  if (dx_asset_image_operations_color_fill_create(&image_operation)) {
+    return DX_FAILURE;
   }
-  return DX_OBJECT(image_operation);
+  *RETURN = DX_OBJECT(image_operation);
+  return DX_SUCCESS;
 }
 
-int dx_adl_type_handlers_image_operations_color_fill_construct(dx_adl_type_handlers_image_operations_color_fill* SELF) {
+dx_result dx_adl_type_handlers_image_operations_color_fill_construct(dx_adl_type_handlers_image_operations_color_fill* SELF) {
   dx_rti_type* TYPE = dx_adl_type_handlers_image_operations_color_fill_get_type();
   if (!TYPE) {
     return DX_FAILURE;
@@ -69,27 +70,26 @@ int dx_adl_type_handlers_image_operations_color_fill_construct(dx_adl_type_handl
   if (dx_adl_type_handler_construct(DX_ADL_TYPE_HANDLER(SELF))) {
     return DX_FAILURE;
   }
+  /// @todo Fixm.e
   DX_ADL_TYPE_HANDLER(SELF)->resolve = (int(*)(dx_adl_type_handler*, dx_adl_symbol*, dx_adl_context*)) & resolve;
-  DX_ADL_TYPE_HANDLER(SELF)->read = (dx_object * (*)(dx_adl_type_handler*, dx_ddl_node*, dx_adl_context*)) & read;
   DX_OBJECT(SELF)->type = TYPE;
   return DX_SUCCESS;
 }
 
-static void dx_adl_type_handlers_image_operations_color_fill_destruct(dx_adl_type_handlers_image_operations_color_fill* self)
+static void dx_adl_type_handlers_image_operations_color_fill_destruct(dx_adl_type_handlers_image_operations_color_fill* SELF)
 {/*Intentionally empty.*/}
 
-static void dx_adl_type_handlers_image_operations_color_fill_dispatch_construct(dx_adl_type_handlers_image_operations_color_fill_dispatch* self)
-{/*Intentionally empty.*/}
+static void dx_adl_type_handlers_image_operations_color_fill_dispatch_construct(dx_adl_type_handlers_image_operations_color_fill_dispatch* SELF) {
+  DX_ADL_TYPE_HANDLER_DISPATCH(SELF)->read = (dx_result (*)(dx_object**, dx_adl_type_handler*, dx_ddl_node*, dx_adl_context*)) & read;
+}
 
-dx_adl_type_handlers_image_operations_color_fill* dx_adl_type_handlers_image_operations_color_fill_create() {
-  dx_adl_type_handlers_image_operations_color_fill* self = DX_ADL_TYPE_HANDLERS_IMAGE_OPERATIONS_COLOR_FILL(dx_object_alloc(sizeof(dx_adl_type_handlers_image_operations_color_fill)));
-  if (!self) {
-    return NULL;
+dx_result dx_adl_type_handlers_image_operations_color_fill_create(dx_adl_type_handlers_image_operations_color_fill** RETURN) {
+  DX_CREATE_PREFIX(dx_adl_type_handlers_image_operations_color_fill)
+  if (dx_adl_type_handlers_image_operations_color_fill_construct(SELF)) {
+    DX_UNREFERENCE(SELF);
+    SELF = NULL;
+    return DX_FAILURE;
   }
-  if (dx_adl_type_handlers_image_operations_color_fill_construct(self)) {
-    DX_UNREFERENCE(self);
-    self = NULL;
-    return NULL;
-  }
-  return self;
+  *RETURN = SELF;
+  return DX_SUCCESS;
 }

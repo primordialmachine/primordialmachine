@@ -25,6 +25,7 @@ struct dx_asset_optics_dispatch {
   dx_object _parent;
 };
 
+/// @todo Fixme 
 int dx_asset_optics_construct(dx_asset_optics* SELF);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
@@ -76,9 +77,11 @@ struct dx_asset_optics_orthographic_dispatch {
   dx_asset_optics_dispatch _parent;
 };
 
-int dx_asset_optics_orthographic_construct(dx_asset_optics_orthographic* SELF);
+/// @todo Fixme 
+dx_result dx_asset_optics_orthographic_construct(dx_asset_optics_orthographic* SELF);
 
-dx_asset_optics_orthographic* dx_asset_optics_orthographic_create();
+/// @create-operator{dx_asset_optics_orthographic}
+dx_result dx_asset_optics_orthographic_create(dx_asset_optics_orthographic** RETURN);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
@@ -128,9 +131,11 @@ struct dx_asset_optics_perspective_dispatch {
   dx_asset_optics_dispatch _parent;
 };
 
-int dx_asset_optics_perspective_construct(dx_asset_optics_perspective* SELF);
+/// @todo Fixme
+dx_result dx_asset_optics_perspective_construct(dx_asset_optics_perspective* SELF);
 
-dx_asset_optics_perspective* dx_asset_optics_perspective_create();
+/// @create-operator{dx_asset_optics_perspective}
+dx_result dx_asset_optics_perspective_create(dx_asset_optics_perspective** RETURN);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 

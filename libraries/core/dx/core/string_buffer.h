@@ -40,11 +40,15 @@ dx_result dx_string_buffer_get_number_of_bytes(dx_size* RETURN, dx_string_buffer
 
 dx_result dx_string_buffer_to_string(dx_string** RETURN, dx_string_buffer* SELF);
 
+dx_result dx_string_buffer_set_string(dx_string_buffer* SELF, dx_string* string);
+
 /// @brief Append a string.
 /// @param SELF A pointer to this string buffer.
 /// @param string A pointer to the string.
 /// @method-call
 dx_result dx_string_buffer_append_string(dx_string_buffer* SELF, dx_string* string);
+
+dx_result dx_string_buffer_set_bytes(dx_string_buffer* SELF, char const* p, dx_size n);
 
 /// @brief Append Bytes.
 /// @param SELF A pointer to this string buffer.

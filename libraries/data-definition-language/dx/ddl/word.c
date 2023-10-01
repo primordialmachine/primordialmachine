@@ -26,10 +26,7 @@ dx_result dx_ddl_word_construct(dx_ddl_word* SELF, dx_ddl_word_kind kind, dx_str
 }
 
 dx_result dx_ddl_word_create(dx_ddl_word** RETURN, dx_ddl_word_kind kind, dx_string* text) {
-  dx_ddl_word* SELF = DX_DDL_WORD(dx_object_alloc(sizeof(dx_ddl_word)));
-  if (!SELF) {
-    return DX_FAILURE;
-  }
+  DX_CREATE_PREFIX(dx_ddl_word)
   if (dx_ddl_word_construct(SELF, kind, text)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;

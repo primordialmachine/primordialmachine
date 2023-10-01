@@ -141,10 +141,7 @@ dx_result dx_font_key_construct(dx_font_key* SELF, dx_string* font_file, dx_n8 f
 }
 
 dx_result dx_font_key_create(dx_font_key** RETURN, dx_string* font_file, dx_n8 font_size) {
-  dx_font_key* SELF = DX_FONT_KEY(dx_object_alloc(sizeof(dx_font_key)));
-  if (!SELF) {
-    return DX_FAILURE;
-  }
+  DX_CREATE_PREFIX(dx_font_key)
   if (dx_font_key_construct(SELF, font_file, font_size)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
@@ -214,10 +211,7 @@ dx_result dx_font_glyph_construct(dx_font_glyph* SELF, uint32_t code_point, dx_f
 }
 
 dx_result dx_font_glyph_create(dx_font_glyph** RETURN, uint32_t code_point, dx_font* font) {
-  dx_font_glyph* SELF = DX_FONT_GLYPH(dx_object_alloc(sizeof(dx_font_glyph)));
-  if (!SELF) {
-    return DX_FAILURE;
-  }
+  DX_CREATE_PREFIX(dx_font_glyph)
   if (dx_font_glyph_construct(SELF, code_point, font)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
@@ -264,11 +258,8 @@ dx_result dx_font_glyph_get_pixels(dx_font_glyph* SELF, void** pixels) {
   return DX_SUCCESS;
 }
 
-dx_result dx_font_glyph_get_texture_coordinates(dx_font_glyph* SELF, dx_f32* left, dx_f32* bottom, dx_f32* right, dx_f32* top) {
-  *left = 0.f;
-  *right = 1.f;
-  *bottom = 0.f;
-  *top = 1.f;
+dx_result dx_font_glyph_get_texture_coordinates(dx_font_glyph* SELF, DX_RECT2_F32 *texture_coordinates) {
+  dx_rect2_f32_set(texture_coordinates, 0.f, 0.f, 1.f, 1.f);
   return DX_SUCCESS;
 }
 
@@ -359,10 +350,7 @@ dx_result dx_font_construct(dx_font* SELF, dx_font_key* key, dx_font_manager* fo
 }
 
 dx_result dx_font_create(dx_font** RETURN, dx_font_key* key, dx_font_manager* font_manager) {
-  dx_font* SELF = DX_FONT(dx_object_alloc(sizeof(dx_font)));
-  if (!SELF) {
-    return DX_FAILURE;
-  }
+  DX_CREATE_PREFIX(dx_font)
   if (dx_font_construct(SELF, key, font_manager)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
@@ -482,10 +470,7 @@ dx_result dx_font_manager_create(dx_font_manager** RETURN, dx_val_context* conte
     *RETURN = g_font_manager;
     return DX_SUCCESS;
   } else {
-    dx_font_manager* SELF = DX_FONT_MANAGER(dx_object_alloc(sizeof(dx_font_manager)));
-    if (!SELF) {
-      return DX_FAILURE;
-    }
+    DX_CREATE_PREFIX(dx_font_manager)
     if (dx_font_manager_construct(SELF, context)) {
       DX_UNREFERENCE(SELF);
       SELF = NULL;

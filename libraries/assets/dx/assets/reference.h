@@ -29,8 +29,8 @@ struct dx_asset_reference_dispatch {
   dx_object_dispatch _parent;
 };
 
-int dx_asset_reference_construct(dx_asset_reference* SELF, dx_string* name);
+dx_result dx_asset_reference_construct(dx_asset_reference* SELF, dx_string* name);
 
-dx_asset_reference* dx_asset_reference_create(dx_string* name);
+dx_result dx_asset_reference_create(dx_asset_reference** RETURN, dx_string* name);
 
 #endif // DX_ASSET_REFERENCE_H_INCLUDED

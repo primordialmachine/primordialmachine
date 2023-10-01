@@ -1,3 +1,6 @@
+/// @file dx/assets/mesh_instance.h
+/// @author Michael Heilmann (michaelheilmann@primordialmachine.com)
+/// @copyright Copyright (c) 2022-2023 Michael Heilmann. All rights reserved.
 #if !defined(DX_ASSET_MESH_INSTANCE_H_INCLUDED)
 #define DX_ASSET_MESH_INSTANCE_H_INCLUDED
 
@@ -28,22 +31,16 @@ struct dx_asset_mesh_instance_dispatch {
   dx_object_dispatch _parent;
 };
 
+/// @constructor{dx_asset_mesh_instance}
 /// @brief Construct this dx_asset_mesh_instance object.
-/// @param SELF A pointer to this dx_asset_mesh_instance object.
 /// @param mesh_reference A pointer to the mesh reference of this mesh instance.
-/// @return The zero value on success. A non-zero value on failure.
-/// @default-failure
-/// - #DX_INVALID_ARGUMENT @a self is a null pointer
-/// - #DX_INVALID_ARGUMENT @a mesh_reference is a null pointer
-/// - #DX_ALLOCATION_FAILED an allocation failed
-int dx_asset_mesh_instance_construct(dx_asset_mesh_instance* SELF, dx_asset_reference* mesh_reference);
+/// @error #DX_ERROR_INVALID_ARGUMENT @a mesh_reference is a null pointer
+/// @error #DX_ERROR_ALLOCATION_FAILED an allocation failed
+dx_result dx_asset_mesh_instance_construct(dx_asset_mesh_instance* SELF, dx_asset_reference* mesh_reference);
 
-/// @brief Create a dx_asset_mesh_instance object.
+/// @create-operator{dx_asset_mesh_instance}
 /// @param mesh_reference A pointer to the mesh reference of this mesh instance.
-/// @return A pointer to the dx_asset_mesh_instance object on success. The null pointer failure.
-/// @default-failure
-/// - #DX_INVALID_ARGUMENT @a mesh_reference is a null pointer
-/// - #DX_ALLOCATION_FAILED an allocation failed
-dx_asset_mesh_instance* dx_asset_mesh_instance_create(dx_asset_reference* mesh_reference);
+/// @error #DX_ERROR_INVALID_ARGUMENT @a mesh_reference is a null pointer
+dx_result dx_asset_mesh_instance_create(dx_asset_mesh_instance** RETURN, dx_asset_reference* mesh_reference);
 
 #endif // DX_ASSET_MESH_INSTANCE_H_INCLUDED

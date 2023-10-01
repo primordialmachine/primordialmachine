@@ -127,10 +127,7 @@ dx_result dx_keyboard_key_msg_get_key(dx_keyboard_key* RETURN, dx_keyboard_key_m
 }
 
 dx_result dx_keyboard_key_msg_create(dx_keyboard_key_msg** RETURN, dx_keyboard_key_action action, dx_keyboard_key key, uint8_t modifiers) {
-  dx_keyboard_key_msg* SELF = DX_KEYBOARD_KEY_MSG(dx_object_alloc(sizeof(dx_keyboard_key_msg)));
-  if (!SELF) {
-    return DX_FAILURE;
-  }
+  DX_CREATE_PREFIX(dx_keyboard_key_msg)
   if (dx_keyboard_key_msg_construct(SELF, action, key, modifiers)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
@@ -182,10 +179,7 @@ dx_mouse_button dx_mouse_button_msg_get_button(dx_mouse_button_msg* SELF) {
 }
 
 dx_result dx_mouse_button_msg_create(dx_mouse_button_msg** RETURN, dx_mouse_button_action action, dx_mouse_button button, uint8_t modifiers, dx_f32 x, dx_f32 y) {
-  dx_mouse_button_msg* SELF = DX_MOUSE_BUTTON_MSG(dx_object_alloc(sizeof(dx_mouse_button_msg)));
-  if (!SELF) {
-    return DX_FAILURE;
-  }
+  DX_CREATE_PREFIX(dx_mouse_button_msg)
   if (dx_mouse_button_msg_construct(SELF, action, button, modifiers, x, y)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
@@ -233,10 +227,7 @@ dx_result dx_mouse_pointer_msg_get_action(dx_mouse_pointer_action* RETURN, dx_mo
 }
 
 dx_result dx_mouse_pointer_msg_create(dx_mouse_pointer_msg** RETURN, dx_mouse_pointer_action action, uint8_t modifiers, dx_f32 x, dx_f32 y) {
-  dx_mouse_pointer_msg* SELF = DX_MOUSE_POINTER_MSG(dx_object_alloc(sizeof(dx_mouse_pointer_msg)));
-  if (!SELF) {
-    return DX_FAILURE;
-  }
+  DX_CREATE_PREFIX(dx_mouse_pointer_msg)
   if (dx_mouse_pointer_msg_construct(SELF, action, modifiers, x, y)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;

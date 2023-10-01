@@ -20,7 +20,7 @@ static dx_asset_material* _read_material(dx_ddl_node* node, dx_adl_context* cont
 
 static int resolve(dx_adl_type_handlers_material* self, dx_adl_symbol* symbol, dx_adl_context* context);
 
-static dx_object* read(dx_adl_type_handlers_material* self, dx_ddl_node* node, dx_adl_context* context);
+static dx_result read(dx_object** RETURN, dx_adl_type_handlers_material* SELF, dx_ddl_node* node, dx_adl_context* context);
 
 DX_DEFINE_OBJECT_TYPE("dx.adl.type_handlers.material",
                       dx_adl_type_handlers_material,
@@ -40,7 +40,11 @@ static dx_asset_material_controller* _read_material_controller(dx_ddl_node* node
     }
     DX_UNREFERENCE(received_type);
     received_type = NULL;
-    return DX_ASSET_MATERIAL_CONTROLLER(dx_adl_type_handler_read(reader, node, context));
+    dx_asset_material_controller* asset_material_controller = NULL;
+    if (dx_adl_type_handler_read((dx_object**)&asset_material_controller, reader, node, context)) {
+      return NULL;
+    }
+    return asset_material_controller;
   } else {
     DX_UNREFERENCE(received_type);
     received_type = NULL;
@@ -60,12 +64,14 @@ static dx_asset_material* _read_material(dx_ddl_node* node, dx_adl_context* cont
     }
   }
 
-  dx_asset_material* material_value_1 = dx_asset_material_create(name_value);
-  DX_UNREFERENCE(name_value);
-  name_value = NULL;
-  if (!material_value_1) {
+  dx_asset_material* material_value_1 = NULL;
+  if (dx_asset_material_create(&material_value_1, name_value)) {
+    DX_UNREFERENCE(name_value);
+    name_value = NULL;
     goto END;
   }
+  DX_UNREFERENCE(name_value);
+  name_value = NULL;
   // ambientColor?
   {
     dx_asset_color_rgb_n8* ambient_color = dx_adl_semantical_read_color_instance_field_0(node, true, NAME(ambient_color_key), context);
@@ -138,7 +144,7 @@ END:
   return material_value;
 }
 
-static int resolve(dx_adl_type_handlers_material* self, dx_adl_symbol* symbol, dx_adl_context* context) {
+static int resolve(dx_adl_type_handlers_material* SELF, dx_adl_symbol* symbol, dx_adl_context* context) {
   if (symbol->resolved) {
     return 0;
   }
@@ -163,39 +169,42 @@ static int resolve(dx_adl_type_handlers_material* self, dx_adl_symbol* symbol, d
   return 0;
 }
 
-static dx_object* read(dx_adl_type_handlers_material* self, dx_ddl_node* node, dx_adl_context* context) {
-  return DX_OBJECT(_read_material(node, context));
+static dx_result read(dx_object** RETURN, dx_adl_type_handlers_material* SELF, dx_ddl_node* node, dx_adl_context* context) {
+  dx_object* temporary = DX_OBJECT(_read_material(node, context));
+  if (!temporary) {
+    return DX_FAILURE;
+  }
+  *RETURN = temporary;
+  return DX_SUCCESS;
 }
 
-int dx_adl_type_handlers_material_construct(dx_adl_type_handlers_material* self) {
-  dx_rti_type* _type = dx_adl_type_handlers_material_get_type();
-  if (!_type) {
-    return 1;
+dx_result dx_adl_type_handlers_material_construct(dx_adl_type_handlers_material* SELF) {
+  dx_rti_type* TYPE = dx_adl_type_handlers_material_get_type();
+  if (!TYPE) {
+    return DX_FAILURE;
   }
-  if (dx_adl_type_handler_construct(DX_ADL_TYPE_HANDLER(self))) {
-    return 1;
+  if (dx_adl_type_handler_construct(DX_ADL_TYPE_HANDLER(SELF))) {
+    return DX_FAILURE;
   }
-  DX_ADL_TYPE_HANDLER(self)->resolve = (int (*)(dx_adl_type_handler*, dx_adl_symbol*, dx_adl_context*))&resolve;
-  DX_ADL_TYPE_HANDLER(self)->read = (dx_object*(*)(dx_adl_type_handler*, dx_ddl_node*, dx_adl_context*))&read;
-  DX_OBJECT(self)->type = _type;
-  return 0;
+  DX_ADL_TYPE_HANDLER(SELF)->resolve = (int (*)(dx_adl_type_handler*, dx_adl_symbol*, dx_adl_context*))&resolve;
+  DX_OBJECT(SELF)->type = TYPE;
+  return DX_SUCCESS;
 }
 
-static void dx_adl_type_handlers_material_destruct(dx_adl_type_handlers_material* self)
+static void dx_adl_type_handlers_material_destruct(dx_adl_type_handlers_material* SELF)
 {/*Intentionally empty.*/}
 
-static void dx_adl_type_handlers_material_dispatch_construct(dx_adl_type_handlers_material_dispatch* self)
-{/*Intentionally empty.*/}
+static void dx_adl_type_handlers_material_dispatch_construct(dx_adl_type_handlers_material_dispatch* SELF) {
+  DX_ADL_TYPE_HANDLER_DISPATCH(SELF)->read = (dx_result (*)(dx_object**, dx_adl_type_handler*, dx_ddl_node*, dx_adl_context*)) & read;
+}
 
-dx_adl_type_handlers_material* dx_adl_type_handlers_material_create() {
-  dx_adl_type_handlers_material* self = DX_ADL_TYPE_HANDLERS_MATERIAL(dx_object_alloc(sizeof(dx_adl_type_handlers_material)));
-  if (!self) {
-    return NULL;
+dx_result dx_adl_type_handlers_material_create(dx_adl_type_handlers_material** RETURN) {
+  DX_CREATE_PREFIX(dx_adl_type_handlers_material)
+  if (dx_adl_type_handlers_material_construct(SELF)) {
+    DX_UNREFERENCE(SELF);
+    SELF = NULL;
+    return DX_FAILURE;
   }
-  if (dx_adl_type_handlers_material_construct(self)) {
-    DX_UNREFERENCE(self);
-    self = NULL;
-    return NULL;
-  }
-  return self;
+  *RETURN = SELF;
+  return DX_SUCCESS;
 }

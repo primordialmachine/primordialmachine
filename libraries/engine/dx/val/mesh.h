@@ -38,8 +38,8 @@ struct dx_val_mesh_dispatch {
   dx_object_dispatch _parent;
 };
 
-dx_result dx_val_mesh_construct(dx_val_mesh* self, dx_val_context* context, dx_asset_mesh* asset_mesh);
+dx_result dx_val_mesh_construct(dx_val_mesh* SELF, dx_val_context* context, dx_asset_mesh* asset_mesh);
 
-dx_val_mesh* dx_val_mesh_create(dx_val_context* context, dx_asset_mesh* asset_mesh);
+dx_result dx_val_mesh_create(dx_val_mesh** RETURN, dx_val_context* context, dx_asset_mesh* asset_mesh);
 
 #endif // DX_VAL_MESH_H_INCLUDED

@@ -30,10 +30,7 @@ dx_result dx_cl_interpreter_procedure_construct(dx_cl_interpreter_procedure* SEL
 }
 
 dx_result dx_cl_interpreter_procedure_create(dx_cl_interpreter_procedure** RETURN, dx_string* name, dx_cl_function* pointer) {
-  dx_cl_interpreter_procedure* SELF = DX_CL_INTERPRETER_PROCEDURE(dx_object_alloc(sizeof(dx_cl_interpreter_procedure)));
-  if (!SELF) {
-    return DX_FAILURE;
-  }
+  DX_CREATE_PREFIX(dx_cl_interpreter_procedure)
   if (dx_cl_interpreter_procedure_construct(SELF, name, pointer)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
@@ -280,10 +277,7 @@ dx_result dx_cl_interpreter_construct(dx_cl_interpreter* SELF) {
 }
 
 dx_result dx_cl_interpreter_create(dx_cl_interpreter** RETURN) {
-  dx_cl_interpreter* SELF = DX_CL_INTERPRETER(dx_object_alloc(sizeof(dx_cl_interpreter)));
-  if (!SELF) {
-    return DX_FAILURE;
-  }
+  DX_CREATE_PREFIX(dx_cl_interpreter)
   if (dx_cl_interpreter_construct(SELF)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;

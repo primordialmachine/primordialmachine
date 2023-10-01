@@ -19,31 +19,31 @@
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 static char const* PATHNAMES[] = {
-  "./assets/day8-empty.adl",
+  "./assets/scenes/day1.empty.adl",
   //
-  "./assets/day11-quadriliteral.adl",
-  "./assets/day11-triangle.adl",
+  "./assets/scenes/day2.quadriliteral.adl",
+  "./assets/scenes/day2.triangle.adl",
   //
-  "./assets/day12-quadriliteral.adl",
-  "./assets/day12-triangle.adl",
+  "./assets/scenes/day3.quadriliteral.adl",
+  "./assets/scenes/day3.triangle.adl",
   //
-  "./assets/day13-quadriliteral.adl",
-  "./assets/day13-triangle.adl",
+  "./assets/scenes/day4.quadriliteral.adl",
+  "./assets/scenes/day4.triangle.adl",
   //
-  "./assets/day15-quadriliteral.adl",
-  "./assets/day15-triangle.adl",
+  "./assets/scenes/day5.quadriliteral.adl",
+  "./assets/scenes/day5.triangle.adl",
   //
-  "./assets/day16-quadriliteral.adl",
-  "./assets/day16-triangle.adl",
+  "./assets/scenes/day6.quadriliteral.adl",
+  "./assets/scenes/day6.triangle.adl",
   //
-  "./assets/day17-cube.adl",
-  "./assets/day17-octahedron.adl",
+  "./assets/scenes/day7.cube.adl",
+  "./assets/scenes/day7.octahedron.adl",
   //
-  "./assets/day18-cube.adl",
-  "./assets/day18-octahedron.adl",
+  "./assets/scenes/day8.cube.adl",
+  "./assets/scenes/day8.octahedron.adl",
   //
-  "./assets/day19-cube-loaded-texture.adl",
-  "./assets/day19-octahedron-loaded-texture.adl",
+  "./assets/scenes/day9.cube.loaded-texture.adl",
+  "./assets/scenes/day9.octahedron.loaded-texture.adl",
 };
 
 static dx_size const NUMBER_OF_PATHNAMES = sizeof(PATHNAMES) / sizeof(char const*);
@@ -109,8 +109,8 @@ static dx_result on_msg(dx_default_application_presenter* SELF, dx_msg* msg) {
             dx_console_open(SELF->console);
           }
           if (DX_KEYBOARD_KEY_ACTION_RELEASED == action && dx_keyboard_key_escape == key) {
-            dx_msg* msg = DX_MSG(dx_quit_msg_create());
-            if (!msg) {
+            dx_msg* msg = NULL;
+            if (dx_quit_msg_create((dx_quit_msg**)&msg)) {
               return DX_FAILURE;
             }
             if (dx_msg_queue_push(SELF->message_queue, msg)) {
@@ -296,12 +296,22 @@ static dx_result run(dx_default_application_presenter* SELF) {
     } while (true);
     dx_fps_counter_on_enter_frame(SELF->fps_counter);
     dx_val_context_enter_frame(SELF->val_context);
-    dx_i32 canvas_width, canvas_height;
-    if (dx_val_context_get_canvas_size(SELF->val_context, &canvas_width, &canvas_height)) {
+
+    // Get the canvas size.
+    dx_i32 canvas_size_horizontal, canvas_size_vertical;
+    if (dx_val_context_get_canvas_size(SELF->val_context, &canvas_size_horizontal, &canvas_size_vertical)) {
       dx_val_context_leave_frame(SELF->val_context);
       dx_fps_counter_on_leave_frame(SELF->fps_counter);
       return DX_FAILURE;
     }
+    // Get the DPI.
+    dx_i32 dpi_horizontal, dpi_vertical;
+    if (dx_val_context_get_dpi(SELF->val_context, &dpi_horizontal, &dpi_vertical)) {
+      dx_val_context_leave_frame(SELF->val_context);
+      dx_fps_counter_on_leave_frame(SELF->fps_counter);
+      return DX_FAILURE;
+    }
+
     dx_f32 delta_seconds = ((dx_f32)delta) / 1000.f;
     dx_size n;
     if (dx_inline_object_array_get_size(&n, SELF->scene_presenters)) {
@@ -314,7 +324,7 @@ static dx_result run(dx_default_application_presenter* SELF) {
         dx_fps_counter_on_leave_frame(SELF->fps_counter);
         return DX_FAILURE;
       }
-      if (dx_scene_presenter_render(scene_presenter, SELF->val_context, delta_seconds, canvas_width, canvas_height)) {
+      if (dx_scene_presenter_render(scene_presenter, SELF->val_context, delta_seconds, canvas_size_horizontal, canvas_size_vertical)) {
         dx_val_context_leave_frame(SELF->val_context);
         dx_fps_counter_on_leave_frame(SELF->fps_counter);
         return DX_FAILURE;
@@ -353,8 +363,8 @@ static dx_result run(dx_default_application_presenter* SELF) {
       msg = NULL;
     }
 
-    dx_console_render(SELF->console, delta_seconds, canvas_width, canvas_height);
-    dx_overlay_render(SELF->overlay, delta_seconds, canvas_width, canvas_height);
+    dx_console_render(SELF->console, delta_seconds, canvas_size_horizontal, canvas_size_vertical, dpi_horizontal, dpi_vertical);
+    dx_overlay_render(SELF->overlay, delta_seconds, canvas_size_horizontal, canvas_size_vertical, dpi_horizontal, dpi_vertical);
     dx_val_context_leave_frame(SELF->val_context);
     dx_fps_counter_on_leave_frame(SELF->fps_counter);
   }
@@ -423,7 +433,7 @@ static void dx_default_application_presenter_dispatch_construct(dx_default_appli
   DX_APPLICATION_PRESENTER_DISPATCH(SELF)->quit_requested = (dx_result(*)(dx_bool*, dx_application_presenter*)) & quit_requested;
 }
 
-dx_result dx_default_application_presenter_construct(dx_default_application_presenter* SELF, dx_font_presenter* font_presenter, dx_font_manager* font_manager, dx_application* application, dx_cl_interpreter* cl_interpreter, dx_msg_queue* message_queue, dx_val_context* val_context) {
+dx_result dx_default_application_presenter_construct(dx_default_application_presenter* SELF, dx_font_presenter* font_presenter, dx_rectangle_presenter* rectangle_presenter, dx_application* application, dx_cl_interpreter* cl_interpreter, dx_msg_queue* message_queue, dx_val_context* val_context) {
   dx_rti_type* TYPE = dx_default_application_presenter_get_type();
   if (!TYPE) {
     return DX_FAILURE;
@@ -448,7 +458,7 @@ dx_result dx_default_application_presenter_construct(dx_default_application_pres
     SELF->scene_presenters = NULL;
     return DX_FAILURE;
   }
-  if (dx_default_console_create((dx_default_console**)&SELF->console, font_presenter, font_manager, val_context)) {
+  if (dx_default_console_create((dx_default_console**)&SELF->console, font_presenter, rectangle_presenter)) {
     DX_UNREFERENCE(SELF->fps_counter);
     SELF->fps_counter = NULL;
     dx_inline_object_array_uninitialize(SELF->scene_presenters);
@@ -456,7 +466,7 @@ dx_result dx_default_application_presenter_construct(dx_default_application_pres
     SELF->scene_presenters = NULL;
     return DX_FAILURE;
   }
-  if (dx_overlay_create(&SELF->overlay, font_presenter, font_manager, val_context)) {
+  if (dx_overlay_create(&SELF->overlay, font_presenter, rectangle_presenter)) {
     DX_UNREFERENCE(SELF->console);
     SELF->console = NULL;
     DX_UNREFERENCE(SELF->fps_counter);
@@ -480,12 +490,9 @@ dx_result dx_default_application_presenter_construct(dx_default_application_pres
   return DX_SUCCESS;
 }
 
-dx_result dx_default_application_presenter_create(dx_default_application_presenter** RETURN, dx_font_presenter* font_presenter, dx_font_manager* font_manager, dx_application* application, dx_cl_interpreter* cl_interpreter, dx_msg_queue* message_queue, dx_val_context* val_context) {
-  dx_default_application_presenter* SELF = DX_DEFAULT_APPLICATION_PRESENTER(dx_object_alloc(sizeof(dx_default_application_presenter)));
-  if (!SELF) {
-    return DX_FAILURE;
-  }
-  if (dx_default_application_presenter_construct(SELF, font_presenter, font_manager, application, cl_interpreter, message_queue, val_context)) {
+dx_result dx_default_application_presenter_create(dx_default_application_presenter** RETURN, dx_font_presenter* font_presenter, dx_rectangle_presenter* rectangle_presenter, dx_application* application, dx_cl_interpreter* cl_interpreter, dx_msg_queue* message_queue, dx_val_context* val_context) {
+  DX_CREATE_PREFIX(dx_default_application_presenter)
+  if (dx_default_application_presenter_construct(SELF, font_presenter, rectangle_presenter, application, cl_interpreter, message_queue, val_context)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
     return DX_FAILURE;

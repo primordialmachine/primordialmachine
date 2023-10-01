@@ -28,10 +28,7 @@ dx_result dx_object_array_construct(dx_object_array* SELF, dx_size initial_capac
 }
 
 dx_result dx_object_array_create(dx_object_array** RETURN, dx_size initial_capacity) {
-  dx_object_array* SELF = DX_OBJECT_ARRAY(dx_object_alloc(sizeof(dx_object_array)));
-  if (!SELF) {
-    return DX_FAILURE;
-  }
+  DX_CREATE_PREFIX(dx_object_array)
   if (dx_object_array_construct(SELF, initial_capacity)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;

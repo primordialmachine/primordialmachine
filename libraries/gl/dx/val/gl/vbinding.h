@@ -16,7 +16,7 @@ static inline dx_val_gl_vbinding* DX_VAL_GL_VBINDING(void* p) {
 
 struct dx_val_gl_vbinding {
   dx_val_vbinding _parent;
-  DX_VERTEX_FORMAT vertex_format;
+  dx_vertex_format vertex_format;
   GLuint id;
 };
 
@@ -28,6 +28,6 @@ struct dx_val_gl_vbinding_dispatch {
   dx_val_vbinding_dispatch _parent;
 };
 
-dx_result dx_val_gl_vbinding_create(dx_val_gl_vbinding** RETURN, DX_VERTEX_FORMAT vertex_format, dx_val_gl_buffer* buffer);
+dx_result dx_val_gl_vbinding_create(dx_val_gl_vbinding** RETURN, dx_vertex_format vertex_format, dx_val_gl_buffer* buffer);
 
 #endif // DX_VAL_GL_VBINDING_H_INCLUDED

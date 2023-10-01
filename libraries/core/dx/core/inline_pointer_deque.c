@@ -50,7 +50,7 @@ typedef struct _dx_impl {
 } _dx_impl; // struct _dx_impl
 
 /// @brief Initialize this _dx_impl object.
-/// @param self A pointer to this _dx_impl object.
+/// @param SELF A pointer to this _dx_impl object.
 /// @param initial_capacity The initial capacity.
 /// @param configuration A pointer to the configuration.
 /// @default-return
@@ -58,11 +58,11 @@ typedef struct _dx_impl {
 /// @error #DX_ERROR_INVALID_ARGUMENT @a self is a null pointer
 /// @error #DX_ERROR_ALLOCATION_FAILED @a initial_capacity is too big
 /// @error #DX_ERROR_ALLOCATION_FAILED an allocation failed
-static dx_result _dx_impl_initialize(_dx_impl* self, dx_size initial_capacity, DX_INLINE_POINTER_DEQUE_CONFIGURATION const* configuration);
+static dx_result _dx_impl_initialize(_dx_impl* SELF, dx_size initial_capacity, DX_INLINE_POINTER_DEQUE_CONFIGURATION const* configuration);
 
 /// @brief Uninitialize this _dx_impl object.
-/// @param self A pointer to this _dx_impl object.
-static void _dx_impl_uninitialize(_dx_impl* self);
+/// @param SELF A pointer to this _dx_impl object.
+static void _dx_impl_uninitialize(_dx_impl* SELF);
 
 /// @brief Get the size, in elements.
 /// @param RETURN A pointer to a <code>dx_size</code> variable.
@@ -187,8 +187,8 @@ static dx_result _dx_impl_pop_front(dx_inline_pointer_deque_element* RETURN, _dx
 /// @error #DX_ERROR_INVALID_ARGUMENT the deque is empty
 static dx_result _dx_impl_pop_back(dx_inline_pointer_deque_element * RETURN, _dx_impl * SELF, dx_bool steal);
 
-static dx_result _dx_impl_initialize(_dx_impl* self, dx_size initial_capacity, DX_INLINE_POINTER_DEQUE_CONFIGURATION const* configuration) {
-  if (!self) {
+static dx_result _dx_impl_initialize(_dx_impl* SELF, dx_size initial_capacity, DX_INLINE_POINTER_DEQUE_CONFIGURATION const* configuration) {
+  if (!SELF) {
     dx_set_error(DX_ERROR_INVALID_ARGUMENT);
     return DX_FAILURE;
   }
@@ -202,12 +202,12 @@ static dx_result _dx_impl_initialize(_dx_impl* self, dx_size initial_capacity, D
   if (dx_memory_allocate(&elements, initial_capacity_bytes)) {
     return DX_FAILURE;
   }
-  self->read = 0;
-  self->size = 0;
-  self->elements = elements;
-  self->capacity = initial_capacity;
-  self->added_callback = configuration->added_callback;
-  self->removed_callback = configuration->removed_callback;
+  SELF->read = 0;
+  SELF->size = 0;
+  SELF->elements = elements;
+  SELF->capacity = initial_capacity;
+  SELF->added_callback = configuration->added_callback;
+  SELF->removed_callback = configuration->removed_callback;
   return DX_SUCCESS;
 }
 

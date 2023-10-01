@@ -296,10 +296,7 @@ dx_result dx_val_gl_program_create(dx_val_gl_program** RETURN,
                                    dx_string* vertex_program_text,
                                    dx_string* fragment_program_text)
 {
-  dx_val_gl_program* SELF = DX_VAL_GL_PROGRAM(dx_object_alloc(sizeof(dx_val_gl_program)));
-  if (!SELF) {
-    return DX_FAILURE;
-  }
+  DX_CREATE_PREFIX(dx_val_gl_program)
   if (dx_val_gl_program_construct(SELF, ctx, vertex_program_text, fragment_program_text)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;

@@ -1,7 +1,7 @@
 #if !defined(DX_AAL_SYSTEM_H_INCLUDED)
 #define DX_AAL_SYSTEM_H_INCLUDED
 
-#include "dx/system.h"
+#include "dx/core.h"
 #include "dx/aal/context.h"
 
 DX_DECLARE_OBJECT_TYPE("dx.val.system",

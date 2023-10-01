@@ -23,10 +23,10 @@ struct dx_val_gl_texture {
   dx_val_texture _parent;
   GLuint id;
   uint8_t flags;
-  DX_TEXTURE_MAGNIFICATION_FILTER texture_magnification_filter;
-  DX_TEXTURE_MINIFICATION_FILTER texture_minification_filter;
-  DX_TEXTURE_ADDRESS_MODE texture_address_mode_u;
-  DX_TEXTURE_ADDRESS_MODE texture_address_mode_v;
+  dx_texture_magnification_filter texture_magnification_filter;
+  dx_texture_minification_filter texture_minification_filter;
+  dx_texture_address_mode texture_address_mode_u;
+  dx_texture_address_mode texture_address_mode_v;
   /// @todo This should be DX_RGBA_F32.
   DX_VEC4 texture_border_color;
 };

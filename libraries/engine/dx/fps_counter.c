@@ -112,10 +112,7 @@ dx_result dx_default_fps_counter_construct(dx_default_fps_counter* SELF) {
 }
 
 dx_result dx_default_fps_counter_create(dx_default_fps_counter** RETURN) {
-  dx_default_fps_counter* SELF = DX_DEFAULT_FPS_COUNTER(dx_object_alloc(sizeof(dx_default_fps_counter)));
-  if (!SELF) {
-    return DX_FAILURE;
-  }
+  DX_CREATE_PREFIX(dx_default_fps_counter)
   if (dx_default_fps_counter_construct(SELF)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;

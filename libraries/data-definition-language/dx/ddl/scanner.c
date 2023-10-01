@@ -606,10 +606,7 @@ static dx_result dx_data_definition_language_scanner_skip_nls_and_ws(dx_data_def
 }
 
 dx_result dx_data_definition_language_scanner_create(dx_data_definition_language_scanner** RETURN, dx_data_definition_language_diagnostics* diagnostics) {
-  dx_data_definition_language_scanner* SELF = DX_DATA_DEFINITION_LANGUAGE_SCANNER(dx_object_alloc(sizeof(dx_data_definition_language_scanner)));
-  if (!SELF) {
-    return DX_FAILURE;
-  }
+  DX_CREATE_PREFIX(dx_data_definition_language_scanner)
   if (dx_data_definition_language_scanner_construct(SELF, diagnostics)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;

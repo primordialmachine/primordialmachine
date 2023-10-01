@@ -648,7 +648,6 @@ void dx_object_unreference(dx_object* object) {
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-
 DX_DEFINE_OBJECT_TYPE("dx.weak_reference",
                       dx_weak_reference,
                       dx_object);
@@ -712,10 +711,7 @@ dx_result dx_weak_reference_construct(dx_weak_reference* SELF, dx_object* object
 }
 
 dx_result dx_weak_reference_create(dx_weak_reference** RETURN, dx_object* object) {
-  dx_weak_reference* SELF = DX_WEAK_REFERENCE(dx_object_alloc(sizeof(dx_weak_reference)));
-  if (!SELF) {
-    return DX_FAILURE;
-  }
+  DX_CREATE_PREFIX(dx_weak_reference)
   if (dx_weak_reference_construct(SELF, object)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;

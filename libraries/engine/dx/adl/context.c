@@ -97,25 +97,23 @@ static void dx_adl_context_destruct(dx_adl_context* self) {
   }
 }
 
-static void dx_adl_context_dispatch_construct(dx_adl_context_dispatch* self)
+static void dx_adl_context_dispatch_construct(dx_adl_context_dispatch* SELF)
 {/*Intentionally empty.*/}
 
-int dx_adl_context_construct(dx_adl_context* self) {
-  dx_rti_type* _type = dx_adl_context_get_type();
-  if (!_type) {
-    return 1;
+dx_result dx_adl_context_construct(dx_adl_context* SELF) {
+  dx_rti_type* TYPE = dx_adl_context_get_type();
+  if (!TYPE) {
+    return DX_FAILURE;
   }
-  self->names = dx_adl_names_create();
-  if (!self->names) {
-    return 1;
+  if (dx_adl_names_create(&SELF->names)) {
+    return DX_FAILURE;
   }
-  self->scene = NULL;
+  SELF->scene = NULL;
   {
-    self->definitions = dx_asset_definitions_create();
-    if (!self->definitions) {
-      DX_UNREFERENCE(self->names);
-      self->names = NULL;
-      return 1;
+    if (dx_asset_definitions_create(&SELF->definitions)) {
+      DX_UNREFERENCE(SELF->names);
+      SELF->names = NULL;
+      return DX_FAILURE;
     }
   }
   {
@@ -127,106 +125,100 @@ int dx_adl_context_construct(dx_adl_context* self) {
       .value_added_callback = (dx_inline_pointer_hashmap_value_added_callback*)&value_added_callback,
       .value_removed_callback = (dx_inline_pointer_hashmap_value_removed_callback*)&value_removed_callback,
     };
-    if (dx_inline_pointer_hashmap_initialize(&self->readers, &configuration)) {
-      DX_UNREFERENCE(self->definitions);
-      self->definitions = NULL;
-      DX_UNREFERENCE(self->names);
-      self->names = NULL;
-      return 1;
+    if (dx_inline_pointer_hashmap_initialize(&SELF->readers, &configuration)) {
+      DX_UNREFERENCE(SELF->definitions);
+      SELF->definitions = NULL;
+      DX_UNREFERENCE(SELF->names);
+      SELF->names = NULL;
+      return DX_FAILURE;
     }
 
-    #define DEFINE2(NAME, TYPE) \
+  #define DEFINE1(NAME) \
     { \
-      dx_string* k = _get_name((self->names), dx_adl_name_index_##NAME##_type); \
-      dx_adl_type_handler* v = (dx_adl_type_handler*)TYPE##_create(); \
-      if (!v) { \
-        \
-          dx_inline_pointer_hashmap_uninitialize(&self->readers);  \
-          DX_UNREFERENCE(self->definitions); \
-          self->definitions = NULL; \
-          DX_UNREFERENCE(self->names); \
-          self->names = NULL; \
-          return 1; \
+      dx_string* k = _get_name((SELF->names), dx_adl_name_index_##NAME##_type); \
+      dx_adl_type_handler* v = NULL; \
+      if (dx_adl_type_handlers_##NAME##_create((dx_adl_type_handlers_##NAME**)&v)) { \
+        dx_inline_pointer_hashmap_uninitialize(&SELF->readers); \
+        DX_UNREFERENCE(SELF->definitions); \
+        SELF->definitions = NULL; \
+        DX_UNREFERENCE(SELF->names); \
+        SELF->names = NULL; \
+        return DX_FAILURE; \
       } \
-        if (dx_inline_pointer_hashmap_set(&self->readers, k, v)) { \
-          \
-            DX_UNREFERENCE(v); \
-            v = NULL; \
-            dx_inline_pointer_hashmap_uninitialize(&self->readers); \
-            DX_UNREFERENCE(self->definitions); \
-            self->definitions = NULL; \
-            DX_UNREFERENCE(self->names); \
-            self->names = NULL; \
-            return 1; \
-        } \
+      if (dx_inline_pointer_hashmap_set(&SELF->readers, k, v)) { \
         DX_UNREFERENCE(v); \
         v = NULL; \
-    }
-
-  #define DEFINE(NAME) \
-    { \
-      dx_string* k = _get_name((self->names), dx_adl_name_index_##NAME##_type); \
-      dx_adl_type_handler* v = (dx_adl_type_handler*)dx_adl_type_handlers_##NAME##_create(); \
-      if (!v) { \
-        dx_inline_pointer_hashmap_uninitialize(&self->readers); \
-        DX_UNREFERENCE(self->definitions); \
-        self->definitions = NULL; \
-        DX_UNREFERENCE(self->names); \
-        self->names = NULL; \
-        return 1; \
-      } \
-      if (dx_inline_pointer_hashmap_set(&self->readers, k, v)) { \
-        DX_UNREFERENCE(v); \
-        v = NULL; \
-        dx_inline_pointer_hashmap_uninitialize(&self->readers); \
-        DX_UNREFERENCE(self->definitions); \
-        self->definitions = NULL; \
-        DX_UNREFERENCE(self->names); \
-        self->names = NULL; \
-        return 1; \
+        dx_inline_pointer_hashmap_uninitialize(&SELF->readers); \
+        DX_UNREFERENCE(SELF->definitions); \
+        SELF->definitions = NULL; \
+        DX_UNREFERENCE(SELF->names); \
+        SELF->names = NULL; \
+        return DX_FAILURE; \
       } \
       DX_UNREFERENCE(v); \
       v = NULL; \
     }
 
-    DEFINE(color)
-    DEFINE(image)
-    DEFINE(image_operations_checkerboard_pattern_fill)
-    DEFINE(image_operations_color_fill)
-    DEFINE(material)
+  #define DEFINE2(NAME, TYPE) \
+    { \
+      dx_string* k = _get_name((SELF->names), dx_adl_name_index_##NAME##_type); \
+      dx_adl_type_handler* v = NULL; \
+      if (TYPE##_create((TYPE**)&v)) { \
+        \
+          dx_inline_pointer_hashmap_uninitialize(&SELF->readers);  \
+          DX_UNREFERENCE(SELF->definitions); \
+          SELF->definitions = NULL; \
+          DX_UNREFERENCE(SELF->names); \
+          SELF->names = NULL; \
+          return DX_FAILURE; \
+      } \
+        if (dx_inline_pointer_hashmap_set(&SELF->readers, k, v)) { \
+          \
+            DX_UNREFERENCE(v); \
+            v = NULL; \
+            dx_inline_pointer_hashmap_uninitialize(&SELF->readers); \
+            DX_UNREFERENCE(SELF->definitions); \
+            SELF->definitions = NULL; \
+            DX_UNREFERENCE(SELF->names); \
+            SELF->names = NULL; \
+            return DX_FAILURE; \
+        } \
+        DX_UNREFERENCE(v); \
+        v = NULL; \
+    }
+
+    DEFINE1(color)
+    DEFINE1(image)
+    DEFINE1(image_operations_checkerboard_pattern_fill)
+    DEFINE1(image_operations_color_fill)
+    DEFINE1(material)
     DEFINE2(material_controllers_ambient_color, dx_adl_type_handlers_material_controllers)
-    DEFINE(mesh)
-    DEFINE(mesh_instance)
+    DEFINE1(mesh)
+    DEFINE1(mesh_instance)
     DEFINE2(optics_orthographic, dx_adl_type_handlers_optics)
     DEFINE2(optics_perspective, dx_adl_type_handlers_optics)
-    DEFINE(texture)
+    DEFINE1(texture)
     DEFINE2(mesh_operations_set_vertex_colors, dx_adl_type_handlers_mesh_operations)
-    DEFINE(viewer)
-    DEFINE(viewer_instance)
+    DEFINE1(viewer)
+    DEFINE1(viewer_instance)
     DEFINE2(viewer_controllers_rotate_y, dx_adl_type_handlers_viewer_controllers)
 
     #undef DEFINE2
     #undef DEFINE
   }
-  DX_OBJECT(self)->type = _type;
-  return 0;
+  DX_OBJECT(SELF)->type = TYPE;
+  return DX_SUCCESS;
 }
 
-dx_adl_context* dx_adl_context_create() {
-  dx_rti_type* type = dx_adl_context_get_type();
-  if (!type) {
-    return NULL;
+dx_result dx_adl_context_create(dx_adl_context** RETURN) {
+  DX_CREATE_PREFIX(dx_adl_context)
+  if (dx_adl_context_construct(SELF)) {
+    DX_UNREFERENCE(SELF);
+    SELF = NULL;
+    return DX_FAILURE;
   }
-  dx_adl_context* self = DX_ADL_CONTEXT(dx_object_alloc(sizeof(dx_adl_context)));
-  if (!self) {
-    return NULL;
-  }
-  if (dx_adl_context_construct(self)) {
-    DX_UNREFERENCE(self);
-    self = NULL;
-    return NULL;
-  }
-  return self;
+  *RETURN = SELF;
+  return DX_SUCCESS;
 }
 
 int dx_adl_context_add_type_handler(dx_adl_context* self, dx_string* name, dx_adl_type_handler* type_handler) {

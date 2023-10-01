@@ -23,6 +23,6 @@ struct dx_asset_image_operation_dispatch {
   dx_object_dispatch _parent;
 };
 
-int dx_asset_image_operation_construct(dx_asset_image_operation* self);
+dx_result dx_asset_image_operation_construct(dx_asset_image_operation* SELF);
 
 #endif // DX_ASSET_IMAGE_OPERATION_H_INCLUDED

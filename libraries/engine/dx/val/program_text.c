@@ -92,10 +92,7 @@ dx_result dx_val_program_text_construct(dx_val_program_text* SELF, dx_val_progra
 }
 
 dx_result dx_val_program_text_create_from_file(dx_val_program_text** RETURN, dx_val_program_text_type type, dx_string* path) {
-  dx_val_program_text* SELF = DX_VAL_PROGRAM_TEXT(dx_object_alloc(sizeof(dx_val_program_text)));
-  if (!SELF) {
-    return DX_FAILURE;
-  }
+  DX_CREATE_PREFIX(dx_val_program_text)
   if (dx_val_program_text_construct_from_file(SELF, type, path)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
@@ -106,10 +103,7 @@ dx_result dx_val_program_text_create_from_file(dx_val_program_text** RETURN, dx_
 }
 
 dx_result dx_val_program_text_create(dx_val_program_text** RETURN, dx_val_program_text *vertex_program_text, dx_val_program_text* fragment_program_text) {
-  dx_val_program_text* SELF = DX_VAL_PROGRAM_TEXT(dx_object_alloc(sizeof(dx_val_program_text)));
-  if (!SELF) {
-    return DX_FAILURE;
-  }
+  DX_CREATE_PREFIX(dx_val_program_text)
   if (dx_val_program_text_construct(SELF, vertex_program_text, fragment_program_text)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;

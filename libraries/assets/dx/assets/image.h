@@ -20,7 +20,7 @@ struct dx_asset_image {
   dx_string* name;
   
   /// @brief The pixel format.
-  DX_PIXEL_FORMAT pixel_format;
+  dx_pixel_format pixel_format;
   
   /// @brief The width, in pixels.
   dx_size width;
@@ -66,13 +66,13 @@ struct dx_asset_image_dispatch {
 /// - DX_PIXEL_FORMAT_AN8_LN8 default is the color "OpaqueBlack" (255, 0)
 dx_result dx_asset_image_construct(dx_asset_image * SELF,
                                    dx_string* name,
-                                   DX_PIXEL_FORMAT pixel_format,
+                                   dx_pixel_format pixel_format,
                                    dx_size width,
                                    dx_size height);
 
 dx_result dx_asset_image_create(dx_asset_image** RETURN,
                                 dx_string* name,
-                                DX_PIXEL_FORMAT pixel_format,
+                                dx_pixel_format pixel_format,
                                 dx_size width,
                                 dx_size height);
 
@@ -92,11 +92,11 @@ dx_result dx_asset_image_create_path(dx_asset_image** RETURN,
 /// @param height The height of the area to fill.
 /// @param image_operation A pointer to the image operation.
 /// @return The zero value on success. A non-zero value on failure.
-int dx_asset_image_apply(dx_asset_image* SELF,
-                         dx_size left,
-                         dx_size top,
-                         dx_size width,
-                         dx_size height,
-                         dx_asset_image_operation* image_operation);
+dx_result dx_asset_image_apply(dx_asset_image* SELF,
+                               dx_size left,
+                               dx_size top,
+                               dx_size width,
+                               dx_size height,
+                               dx_asset_image_operation* image_operation);
 
 #endif // DX_ASSET_IMAGE_H_INCLUDED

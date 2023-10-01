@@ -16,11 +16,14 @@ DX_DEFINE_OBJECT_TYPE("dx.default_scene_presenter",
                       dx_default_scene_presenter,
                       dx_scene_presenter);
 
-static dx_result on_scene_asset_object(dx_default_scene_presenter* self, dx_val_context* context, dx_object* asset_object) {
+static dx_result on_scene_asset_object(dx_default_scene_presenter* SELF, dx_val_context* context, dx_object* asset_object) {
   // mesh instance
   if (dx_rti_type_is_leq(asset_object->type, dx_asset_mesh_instance_get_type())) {
     dx_asset_mesh_instance* asset_mesh_instance = DX_ASSET_MESH_INSTANCE(asset_object);
-    dx_val_mesh* mesh = dx_val_mesh_create(context, DX_ASSET_MESH(asset_mesh_instance->mesh_reference->object));
+    dx_val_mesh* mesh = NULL;
+    if (dx_val_mesh_create(&mesh, context, DX_ASSET_MESH(asset_mesh_instance->mesh_reference->object))) {
+      return DX_FAILURE;
+    }
     dx_val_mesh_instance* mesh_instance = NULL;
     if (dx_val_mesh_instance_create(&mesh_instance, asset_mesh_instance->world_matrix, mesh)) {
       DX_UNREFERENCE(mesh);
@@ -29,7 +32,7 @@ static dx_result on_scene_asset_object(dx_default_scene_presenter* self, dx_val_
     }
     DX_UNREFERENCE(mesh);
     mesh = NULL;
-    if (dx_inline_object_array_append(&self->mesh_instances, DX_OBJECT(mesh_instance))) {
+    if (dx_inline_object_array_append(&SELF->mesh_instances, DX_OBJECT(mesh_instance))) {
       DX_UNREFERENCE(mesh_instance);
       mesh_instance = NULL;
       return DX_FAILURE;
@@ -43,7 +46,7 @@ static dx_result on_scene_asset_object(dx_default_scene_presenter* self, dx_val_
   }
   if (dx_rti_type_is_leq(asset_object->type, dx_asset_material_get_type())) {
     dx_asset_material* asset_material = DX_ASSET_MATERIAL(asset_object);
-    if (dx_inline_object_array_append(&self->asset_material_objects, DX_OBJECT(asset_material))) {
+    if (dx_inline_object_array_append(&SELF->asset_material_objects, DX_OBJECT(asset_material))) {
       DX_UNREFERENCE(asset_material);
       asset_material = NULL;
       return DX_FAILURE;
@@ -59,7 +62,7 @@ static dx_result on_scene_asset_object(dx_default_scene_presenter* self, dx_val_
     if (dx_val_viewer_create(&viewer, asset_viewer_instance)) {
       return DX_FAILURE;
     }
-    if (dx_inline_object_array_append(&self->viewers, DX_OBJECT(viewer))) {
+    if (dx_inline_object_array_append(&SELF->viewers, DX_OBJECT(viewer))) {
       DX_UNREFERENCE(viewer);
       viewer = NULL;
       return DX_FAILURE;
@@ -261,7 +264,7 @@ static dx_result make_commands_1(dx_val_command_list* commands) {
   command = NULL;
 
   // pipeline state command
-  if (dx_val_command_create_pipeline_state(&command, DX_CULL_MODE_BACK, DX_DEPTH_TEST_FUNCTION_LESS_THAN, DX_TRUE)) {
+  if (dx_val_command_create_pipeline_state(&command, dx_cull_mode_back, dx_depth_test_function_less_than, DX_TRUE)) {
     return DX_FAILURE;
   }
   if (dx_val_command_list_append(commands, command)) {
@@ -275,53 +278,53 @@ static dx_result make_commands_1(dx_val_command_list* commands) {
   return DX_SUCCESS;
 }
 
-static dx_result dx_default_scene_presenter_startup(dx_default_scene_presenter* self, dx_val_context* context) {
+static dx_result dx_default_scene_presenter_startup(dx_default_scene_presenter* SELF, dx_val_context* context) {
   {
-    self->asset_scene = _create_scene_from_file(self->path);
+    SELF->asset_scene = _create_scene_from_file(SELF->path);
   }
-  if (!self->asset_scene) {
+  if (!SELF->asset_scene) {
     return DX_FAILURE;
   }
   //
-  if (mesh_instance_on_startup(self, context, self->asset_scene)) {
-    DX_UNREFERENCE(self->asset_scene);
-    self->asset_scene = NULL;
+  if (mesh_instance_on_startup(SELF, context, SELF->asset_scene)) {
+    DX_UNREFERENCE(SELF->asset_scene);
+    SELF->asset_scene = NULL;
     return DX_FAILURE;
   }
   //
-  update_viewer(self, 640, 480);
+  update_viewer(SELF, 640, 480);
   //
   {
     dx_val_command_list* commands = NULL;
     if (dx_val_command_list_create(&commands)) {
-      mesh_instance_on_shutdown(self);
-      DX_UNREFERENCE(self->asset_scene);
-      self->asset_scene = NULL;
+      mesh_instance_on_shutdown(SELF);
+      DX_UNREFERENCE(SELF->asset_scene);
+      SELF->asset_scene = NULL;
       return DX_FAILURE;
     }
     if (make_commands_1(commands)) {
       DX_UNREFERENCE(commands);
       commands = NULL;
-      mesh_instance_on_shutdown(self);
-      DX_UNREFERENCE(self->asset_scene);
-      self->asset_scene = NULL;
+      mesh_instance_on_shutdown(SELF);
+      DX_UNREFERENCE(SELF->asset_scene);
+      SELF->asset_scene = NULL;
       return DX_FAILURE;
     }
-    self->commands = commands;
+    SELF->commands = commands;
   }
   //
   return DX_SUCCESS;
 }
 
-static dx_result dx_default_scene_presenter_render(dx_default_scene_presenter* self, dx_val_context* context, dx_f32 delta_seconds, dx_i32 canvas_width, dx_i32 canvas_height) {
-  update_viewer(self, canvas_width, canvas_height);
-  tick2(self, delta_seconds, canvas_width, canvas_height);
-  tick(self, delta_seconds);
+static dx_result dx_default_scene_presenter_render(dx_default_scene_presenter* SELF, dx_val_context* context, dx_f32 delta_seconds, dx_i32 canvas_width, dx_i32 canvas_height) {
+  update_viewer(SELF, canvas_width, canvas_height);
+  tick2(SELF, delta_seconds, canvas_width, canvas_height);
+  tick(SELF, delta_seconds);
   {
     dx_val_command* command;
 
     // clear color command
-    command = dx_val_command_list_get_at(self->commands, 0);
+    command = dx_val_command_list_get_at(SELF->commands, 0);
     if (command->kind != DX_VAL_COMMAND_KIND_CLEAR_COLOR) {
       return DX_FAILURE;
     }
@@ -329,7 +332,7 @@ static dx_result dx_default_scene_presenter_render(dx_default_scene_presenter* s
     command->clear_color_command.rectangle.h = (dx_f32)canvas_height;
 
     // clear depth command
-    command = dx_val_command_list_get_at(self->commands, 1);
+    command = dx_val_command_list_get_at(SELF->commands, 1);
     if (command->kind != DX_VAL_COMMAND_KIND_CLEAR_DEPTH) {
       return DX_FAILURE;
     }
@@ -337,7 +340,7 @@ static dx_result dx_default_scene_presenter_render(dx_default_scene_presenter* s
     command->clear_depth_command.rectangle.h = (dx_f32)canvas_height;
 
     // viewport command
-    command = dx_val_command_list_get_at(self->commands, 2);
+    command = dx_val_command_list_get_at(SELF->commands, 2);
     if (command->kind != DX_VAL_COMMAND_KIND_VIEWPORT) {
       return DX_FAILURE;
     }
@@ -345,24 +348,24 @@ static dx_result dx_default_scene_presenter_render(dx_default_scene_presenter* s
     command->viewport_command.h = (dx_f32)canvas_height;
   }
   // the "on enter frame" commands.
-  if (dx_val_context_execute_commands(context, self->commands)) {
+  if (dx_val_context_execute_commands(context, SELF->commands)) {
     return DX_FAILURE;
   }
   // the "per mesh instance" commands.
   {
     dx_size n;
-    if (dx_inline_object_array_get_size(&n, &self->mesh_instances)) {
+    if (dx_inline_object_array_get_size(&n, &SELF->mesh_instances)) {
       return DX_FAILURE;
     }
     for (dx_size i = 0; i < n; ++i) {
       dx_val_mesh_instance* mesh_instance = NULL;
-      if (dx_inline_object_array_get_at((dx_object**) & mesh_instance, &self->mesh_instances, i)) {
+      if (dx_inline_object_array_get_at((dx_object**) & mesh_instance, &SELF->mesh_instances, i)) {
         return DX_FAILURE;
       }
       // update the constant binding
       dx_val_cbinding* cbinding = dx_val_mesh_instance_get_cbinding(mesh_instance);
       dx_val_mesh_instance_update_cbinding(mesh_instance, cbinding);
-      viewer_push_constants(self, cbinding, canvas_width, canvas_height);
+      viewer_push_constants(SELF, cbinding, canvas_width, canvas_height);
       if (dx_val_context_execute_commands(context, mesh_instance->commands)) {
         return DX_FAILURE;
       }
@@ -371,39 +374,39 @@ static dx_result dx_default_scene_presenter_render(dx_default_scene_presenter* s
   return DX_SUCCESS;
 }
 
-static dx_result dx_default_scene_presenter_shutdown(dx_default_scene_presenter* self, dx_val_context* context) {
-  mesh_instance_on_shutdown(self);
-  if (self->asset_scene) {
-    DX_UNREFERENCE(self->asset_scene);
-    self->asset_scene = NULL;
+static dx_result dx_default_scene_presenter_shutdown(dx_default_scene_presenter* SELF, dx_val_context* context) {
+  mesh_instance_on_shutdown(SELF);
+  if (SELF->asset_scene) {
+    DX_UNREFERENCE(SELF->asset_scene);
+    SELF->asset_scene = NULL;
   }
-  if (self->commands) {
-    DX_UNREFERENCE(self->commands);
-    self->commands = NULL;
+  if (SELF->commands) {
+    DX_UNREFERENCE(SELF->commands);
+    SELF->commands = NULL;
   }
   return DX_SUCCESS;
 }
 
-static void dx_default_scene_presenter_destruct(dx_default_scene_presenter* self) {
-  if (self->path) {
-    DX_UNREFERENCE(self->path);
-    self->path = NULL;
+static void dx_default_scene_presenter_destruct(dx_default_scene_presenter* SELF) {
+  if (SELF->path) {
+    DX_UNREFERENCE(SELF->path);
+    SELF->path = NULL;
   }
 }
 
-static void dx_default_scene_presenter_dispatch_construct(dx_default_scene_presenter_dispatch* self) {
-  DX_SCENE_PRESENTER_DISPATCH(self)->startup = (dx_result (*)(dx_scene_presenter*, dx_val_context*)) & dx_default_scene_presenter_startup;
-  DX_SCENE_PRESENTER_DISPATCH(self)->render = (dx_result(*)(dx_scene_presenter*, dx_val_context*, dx_f32, dx_i32, dx_i32)) & dx_default_scene_presenter_render;
-  DX_SCENE_PRESENTER_DISPATCH(self)->shutdown = (dx_result(*)(dx_scene_presenter*, dx_val_context*)) dx_default_scene_presenter_shutdown;
+static void dx_default_scene_presenter_dispatch_construct(dx_default_scene_presenter_dispatch* SELF) {
+  DX_SCENE_PRESENTER_DISPATCH(SELF)->startup = (dx_result (*)(dx_scene_presenter*, dx_val_context*)) & dx_default_scene_presenter_startup;
+  DX_SCENE_PRESENTER_DISPATCH(SELF)->render = (dx_result(*)(dx_scene_presenter*, dx_val_context*, dx_f32, dx_i32, dx_i32)) & dx_default_scene_presenter_render;
+  DX_SCENE_PRESENTER_DISPATCH(SELF)->shutdown = (dx_result(*)(dx_scene_presenter*, dx_val_context*)) dx_default_scene_presenter_shutdown;
 }
 
-dx_result dx_default_scene_presenter_construct(dx_default_scene_presenter* self, dx_string* path) {
+dx_result dx_default_scene_presenter_construct(dx_default_scene_presenter* SELF, dx_string* path) {
   dx_rti_type* TYPE = dx_default_scene_presenter_get_type();
   if (!TYPE) {
     return DX_FAILURE;
   }
 
-  if (dx_scene_presenter_construct(DX_SCENE_PRESENTER(self))) {
+  if (dx_scene_presenter_construct(DX_SCENE_PRESENTER(SELF))) {
     return DX_FAILURE;
   }
   
@@ -412,20 +415,17 @@ dx_result dx_default_scene_presenter_construct(dx_default_scene_presenter* self,
     return DX_FAILURE;
   }
   DX_REFERENCE(path);
-  self->path = path;
+  SELF->path = path;
 
-  self->asset_scene = NULL;
-  self->commands = NULL;
+  SELF->asset_scene = NULL;
+  SELF->commands = NULL;
 
-  DX_OBJECT(self)->type = _type;
+  DX_OBJECT(SELF)->type = TYPE;
   return DX_SUCCESS;
 }
 
 dx_result dx_default_scene_presenter_create(dx_default_scene_presenter** RETURN, dx_string* path) {
-  dx_default_scene_presenter* SELF = DX_DEFAULT_SCENE_PRESENTER(dx_object_alloc(sizeof(dx_default_scene_presenter)));
-  if (!SELF) {
-    return DX_FAILURE;
-  }
+  DX_CREATE_PREFIX(dx_default_scene_presenter)
   if (dx_default_scene_presenter_construct(SELF, path)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;

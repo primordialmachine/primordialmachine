@@ -22,7 +22,7 @@ typedef struct OFFSET2 {
 static const DX_RGB_N8 black = { 0, 0, 0 };
 
 // primitive operation
-static dx_result _swap_pixels(dx_asset_image* self, dx_size source_x, dx_size source_y, dx_size target_x, dx_size target_y, DX_PIXEL_FORMAT pixel_format);
+static dx_result _swap_pixels(dx_asset_image* SELF, dx_size source_x, dx_size source_y, dx_size target_x, dx_size target_y, dx_pixel_format pixel_format);
 
 // primitive operation
 static void _fill_bn8_gn8_rn8(void* pixels, OFFSET2 fill_offset, EXTEND2 fill_extend, EXTEND2 image_extend, DX_BGR_N8 const* color);
@@ -43,7 +43,7 @@ static dx_result _swap_columns(dx_asset_image* SELF, dx_size i, dx_size j);
 /// @remark This is a non-primitive operation.
 static dx_result _swap_rows(dx_asset_image* SELF, dx_size i, dx_size j);
 
-static dx_result on_color_fill_image_operation(dx_asset_image* self, OFFSET2 offset, EXTEND2 extend, dx_asset_image_operations_color_fill* image_operation);
+static dx_result on_color_fill_image_operation(dx_asset_image* SELF, OFFSET2 offset, EXTEND2 extend, dx_asset_image_operations_color_fill* image_operation);
 
 static inline void _swap_bytes(uint8_t* a, uint8_t* b) {
   uint8_t t = *a;
@@ -51,16 +51,16 @@ static inline void _swap_bytes(uint8_t* a, uint8_t* b) {
   *b = t;
 }
 
-static dx_result _swap_pixels(dx_asset_image* self, dx_size source_x, dx_size source_y, dx_size target_x, dx_size target_y, DX_PIXEL_FORMAT pixel_format) {
-  if (!self) {
+static dx_result _swap_pixels(dx_asset_image* SELF, dx_size source_x, dx_size source_y, dx_size target_x, dx_size target_y, dx_pixel_format pixel_format) {
+  if (!SELF) {
     dx_set_error(DX_ERROR_INVALID_ARGUMENT);
     return DX_FAILURE;
   }
-  if (source_x >= self->width || source_y >= self->height) {
+  if (source_x >= SELF->width || source_y >= SELF->height) {
     dx_set_error(DX_ERROR_INVALID_ARGUMENT); \
     return DX_FAILURE;
   }
-  if (target_x >= self->width || target_y >= self->height) {
+  if (target_x >= SELF->width || target_y >= SELF->height) {
     dx_set_error(DX_ERROR_INVALID_ARGUMENT); \
     return DX_FAILURE;
   }
@@ -73,17 +73,17 @@ static dx_result _swap_pixels(dx_asset_image* self, dx_size source_x, dx_size so
     return DX_FAILURE;
   }
 
-  dx_size source_offset_pixels = source_y * self->width + source_x;
+  dx_size source_offset_pixels = source_y * SELF->width + source_x;
   dx_size source_offset_bytes = source_offset_pixels * bytes_per_pixel;
 
-  dx_size target_offset_pixels = target_y * self->height + target_x;
+  dx_size target_offset_pixels = target_y * SELF->height + target_x;
   dx_size target_offset_bytes = target_offset_pixels * bytes_per_pixel;
 
   for (dx_size i = 0; i < bytes_per_pixel / 2; ++i) {
     // Two example for this loop:
     // - assume bytes_per_pixel = 4 then i = 0 is swapped with j = 3, i = 1 is swapped with j = 2 and the loop terminates.
     // - assume bytes_per_pixel = 3 then i = 0 is swapped with j = 2 and the loop terminates
-    _swap_bytes(((uint8_t*)self->pixels) + source_offset_bytes + i, ((uint8_t*)self->pixels) + target_offset_bytes + (bytes_per_pixel - i - 1));
+    _swap_bytes(((uint8_t*)SELF->pixels) + source_offset_bytes + i, ((uint8_t*)SELF->pixels) + target_offset_bytes + (bytes_per_pixel - i - 1));
   }
 
   return DX_SUCCESS;
@@ -113,7 +113,7 @@ static void _fill_bn8_gn8_rn8(void* pixels, OFFSET2 fill_offset, EXTEND2 fill_ex
     return;
   }
   dx_size bytes_per_pixel;
-  if (dx_pixel_format_get_number_of_bytes_per_pixel(&bytes_per_pixel, DX_PIXEL_FORMAT_RN8_GN8_BN8)) {
+  if (dx_pixel_format_get_number_of_bytes_per_pixel(&bytes_per_pixel, dx_pixel_format_rn8_gn8_bn8)) {
     return;
   }
   for (dx_size y = fill_offset.top; y < fill_bottom; ++y) {
@@ -149,7 +149,7 @@ static void _fill_rn8_gn8_bn8(void* pixels, OFFSET2 fill_offset, EXTEND2 fill_ex
     return;
   }
   dx_size bytes_per_pixel;
-  if (dx_pixel_format_get_number_of_bytes_per_pixel(&bytes_per_pixel, DX_PIXEL_FORMAT_RN8_GN8_BN8)) {
+  if (dx_pixel_format_get_number_of_bytes_per_pixel(&bytes_per_pixel, dx_pixel_format_rn8_gn8_bn8)) {
     return;
   }
   for (dx_size y = fill_offset.top; y < fill_bottom; ++y) {
@@ -185,7 +185,7 @@ static void _fill_ln8(void* pixels, OFFSET2 fill_offset, EXTEND2 fill_extend, EX
     return;
   }
   dx_size bytes_per_pixel;
-  if (dx_pixel_format_get_number_of_bytes_per_pixel(&bytes_per_pixel, DX_PIXEL_FORMAT_LN8)) {
+  if (dx_pixel_format_get_number_of_bytes_per_pixel(&bytes_per_pixel, dx_pixel_format_ln8)) {
     return;
   }
   for (dx_size y = fill_offset.top; y < fill_bottom; ++y) {
@@ -207,13 +207,13 @@ static dx_result _swap_columns(dx_asset_image* SELF, dx_size i, dx_size j) {
     return DX_FAILURE;
   }
   switch (SELF->pixel_format) {
-    case DX_PIXEL_FORMAT_LN8:
-    case DX_PIXEL_FORMAT_AN8_BN8_GN8_RN8:
-    case DX_PIXEL_FORMAT_AN8_RN8_GN8_BN8:
-    case DX_PIXEL_FORMAT_BN8_GN8_RN8:
-    case DX_PIXEL_FORMAT_BN8_GN8_RN8_AN8:
-    case DX_PIXEL_FORMAT_RN8_GN8_BN8:
-    case DX_PIXEL_FORMAT_RN8_GN8_BN8_AN8:
+    case dx_pixel_format_ln8:
+    case dx_pixel_format_an8_bn8_gn8_rn8:
+    case dx_pixel_format_an8_rn8_gn8_bn8:
+    case dx_pixel_format_bn8_gn8_rn8:
+    case dx_pixel_format_bn8_gn8_rn8_an8:
+    case dx_pixel_format_rn8_gn8_bn8:
+    case dx_pixel_format_rn8_gn8_bn8_an8:
     {
       // iterate over the y-axis
       for (dx_size y = 0; y < SELF->height; ++y) {
@@ -238,13 +238,13 @@ static dx_result _swap_rows(dx_asset_image* SELF, dx_size i, dx_size j) {
     return DX_FAILURE;
   }
   switch (SELF->pixel_format) {
-    case DX_PIXEL_FORMAT_LN8:
-    case DX_PIXEL_FORMAT_AN8_BN8_GN8_RN8:
-    case DX_PIXEL_FORMAT_AN8_RN8_GN8_BN8:
-    case DX_PIXEL_FORMAT_BN8_GN8_RN8:
-    case DX_PIXEL_FORMAT_BN8_GN8_RN8_AN8:
-    case DX_PIXEL_FORMAT_RN8_GN8_BN8:
-    case DX_PIXEL_FORMAT_RN8_GN8_BN8_AN8: {
+    case dx_pixel_format_ln8:
+    case dx_pixel_format_an8_bn8_gn8_rn8:
+    case dx_pixel_format_an8_rn8_gn8_bn8:
+    case dx_pixel_format_bn8_gn8_rn8:
+    case dx_pixel_format_bn8_gn8_rn8_an8:
+    case dx_pixel_format_rn8_gn8_bn8:
+    case dx_pixel_format_rn8_gn8_bn8_an8: {
       // iterate over the x-axis
       for (dx_size x = 0; x < SELF->width; ++x) {
         _swap_pixels(SELF, x, i, x, j, SELF->pixel_format);
@@ -271,7 +271,7 @@ static void dx_asset_image_dispatch_construct(dx_asset_image_dispatch* SELF)
 
 dx_result dx_asset_image_construct(dx_asset_image* SELF,
                                    dx_string* name,
-                                   DX_PIXEL_FORMAT pixel_format,
+                                   dx_pixel_format pixel_format,
                                    dx_size width,
                                    dx_size height) {
   dx_rti_type* TYPE = dx_asset_image_get_type();
@@ -299,13 +299,13 @@ dx_result dx_asset_image_construct(dx_asset_image* SELF,
     return DX_FAILURE;
   }
   switch (SELF->pixel_format) {
-    case DX_PIXEL_FORMAT_LN8: {
+    case dx_pixel_format_ln8: {
       OFFSET2 fill_offset = { .left = 0, .top = 0 };
       EXTEND2 fill_size = { .width = SELF->width, .height = SELF->height };
       EXTEND2 image_size = { .width = SELF->width, .height = SELF->height };
       _fill_ln8(SELF->pixels, fill_offset, fill_size, image_size, 0);
     } break;
-  case DX_PIXEL_FORMAT_BN8_GN8_RN8: {
+  case dx_pixel_format_bn8_gn8_rn8: {
     DX_BGR_N8 color = { .r = dx_colors_black.r,
                         .g = dx_colors_black.g,
                         .b = dx_colors_black.b, };
@@ -314,7 +314,7 @@ dx_result dx_asset_image_construct(dx_asset_image* SELF,
     EXTEND2 image_size = { .width = SELF->width, .height = SELF->height };
     _fill_bn8_gn8_rn8(SELF->pixels, fill_offset, fill_size, image_size, &color);
   } break;
-  case DX_PIXEL_FORMAT_RN8_GN8_BN8: {
+  case dx_pixel_format_rn8_gn8_bn8: {
     OFFSET2 fill_offset = { .left = 0, .top = 0 };
     EXTEND2 fill_size = { .width = SELF->width, .height = SELF->height };
     EXTEND2 image_size = { .width = SELF->width, .height = SELF->height };
@@ -344,17 +344,10 @@ dx_result dx_asset_image_construct(dx_asset_image* SELF,
 
 dx_result dx_asset_image_create(dx_asset_image** RETURN,
                                 dx_string* name, 
-                                DX_PIXEL_FORMAT pixel_format,
+                                dx_pixel_format pixel_format,
                                 dx_size width,
                                 dx_size height) {
-  dx_rti_type* TYPE = dx_asset_image_get_type();
-  if (!TYPE) {
-    return DX_FAILURE;
-  }
-  dx_asset_image* SELF = DX_ASSET_IMAGE(dx_object_alloc(sizeof(dx_asset_image)));
-  if (!SELF) {
-    return DX_FAILURE;
-  }
+  DX_CREATE_PREFIX(dx_asset_image)
   if (dx_asset_image_construct(SELF, name, pixel_format, width, height)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
@@ -441,10 +434,10 @@ dx_result dx_asset_image_construct_path(dx_asset_image* SELF, dx_string* name, d
   SELF->height = height;
   switch (pixel_format) {
     case DX_WIC_PLUGIN_PIXEL_FORMAT_BN8_GN8_RN8: {
-      SELF->pixel_format = DX_PIXEL_FORMAT_BN8_GN8_RN8;
+      SELF->pixel_format = dx_pixel_format_bn8_gn8_rn8;
     } break;
     case DX_WIC_PLUGIN_PIXEL_FORMAT_RN8_GN8_BN8: {
-      SELF->pixel_format = DX_PIXEL_FORMAT_RN8_GN8_BN8;
+      SELF->pixel_format = dx_pixel_format_rn8_gn8_bn8;
     } break;
     default: {
       dx_memory_deallocate(pixels);
@@ -470,14 +463,7 @@ dx_result dx_asset_image_construct_path(dx_asset_image* SELF, dx_string* name, d
 }
 
 dx_result dx_asset_image_create_path(dx_asset_image** RETURN, dx_string* name, dx_string* path) {
-  dx_rti_type* TYPE = dx_asset_image_get_type();
-  if (!TYPE) {
-    return DX_FAILURE;
-  }
-  dx_asset_image* SELF = DX_ASSET_IMAGE(dx_object_alloc(sizeof(dx_asset_image)));
-  if (!SELF) {
-    return DX_FAILURE;
-  }
+  DX_CREATE_PREFIX(dx_asset_image)
   if (dx_asset_image_construct_path(SELF, name, path)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
@@ -487,11 +473,11 @@ dx_result dx_asset_image_create_path(dx_asset_image** RETURN, dx_string* name, d
   return DX_SUCCESS;
 }
 
-static dx_result on_color_fill_image_operation(dx_asset_image* self, OFFSET2 offset, EXTEND2 extend, dx_asset_image_operations_color_fill* image_operation) {
-  switch (self->pixel_format) {
-  case DX_PIXEL_FORMAT_RN8_GN8_BN8: {
-    EXTEND2 image_size = { .width = self->width, .height = self->height };
-    _fill_rn8_gn8_bn8(self->pixels, offset, extend, image_size, &(image_operation->color));
+static dx_result on_color_fill_image_operation(dx_asset_image* SELF, OFFSET2 offset, EXTEND2 extend, dx_asset_image_operations_color_fill* image_operation) {
+  switch (SELF->pixel_format) {
+  case dx_pixel_format_rn8_gn8_bn8: {
+    EXTEND2 image_size = { .width = SELF->width, .height = SELF->height };
+    _fill_rn8_gn8_bn8(SELF->pixels, offset, extend, image_size, &(image_operation->color));
   } break;
   default: {
     dx_set_error(DX_ERROR_INVALID_ARGUMENT);
@@ -505,28 +491,28 @@ static dx_result on_color_fill_image_operation(dx_asset_image* self, OFFSET2 off
 #include "dx/assets/image_operations/mirror_horizontal_impl.i"
 #include "dx/assets/image_operations/mirror_vertical_impl.i"
 
-int dx_asset_image_apply(dx_asset_image* self,
-                         dx_size left,
-                         dx_size top,
-                         dx_size width,
-                         dx_size height,
-                         dx_asset_image_operation* image_operation) {
+dx_result dx_asset_image_apply(dx_asset_image* SELF,
+                               dx_size left,
+                               dx_size top,
+                               dx_size width,
+                               dx_size height,
+                               dx_asset_image_operation* image_operation) {
   if (dx_rti_type_is_leq(DX_OBJECT(image_operation)->type, dx_asset_image_operations_color_fill_get_type())) {
     OFFSET2 offset = { .left = left, .top = top };
     EXTEND2 extend = { .width = width, .height = height };
-    return on_color_fill_image_operation(self, offset, extend, DX_ASSET_IMAGE_OPERATIONS_COLOR_FILL(image_operation));
+    return on_color_fill_image_operation(SELF, offset, extend, DX_ASSET_IMAGE_OPERATIONS_COLOR_FILL(image_operation));
   }
   if (dx_get_error()) {
-    return 1;
+    return DX_FAILURE;
   }
   if (dx_rti_type_is_leq(DX_OBJECT(image_operation)->type, dx_asset_image_operations_checkerboard_pattern_fill_get_type())) {
     OFFSET2 offset = { .left = left, .top = top };
     EXTEND2 extend = { .width = width, .height = height };
-    return on_checkerboard_pattern_fill_image_operation(self, offset, extend, DX_ASSET_IMAGE_OPERATIONS_CHECKERBOARD_PATTERN_FILL(image_operation));
+    return on_checkerboard_pattern_fill_image_operation(SELF, offset, extend, DX_ASSET_IMAGE_OPERATIONS_CHECKERBOARD_PATTERN_FILL(image_operation));
   }
   if (dx_get_error()) {
-    return 1;
+    return DX_FAILURE;
   }
   dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-  return 1;
+  return DX_FAILURE;
 }

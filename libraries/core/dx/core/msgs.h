@@ -53,25 +53,33 @@ static inline dx_emit_msg* DX_EMIT_MSG(void* p) {
   return (dx_emit_msg*)p;
 }
 
-dx_result dx_emit_msg_construct(dx_emit_msg* SELF, char const* p, dx_size n);
-
-// Create an "emit" message.
-// @param p Pointer to an utf-8 string of @a n Bytes.
-// @param n the length of the utf-8 string in Bytes pointed to by @a p.
-// @return A pointer to the message on success. The null pointer on failure.
-dx_emit_msg* dx_emit_msg_create(char const* p, dx_size n);
-
-int dx_emit_msg_get(dx_emit_msg* emit_msg, char const** p, dx_size* n);
-
 struct dx_emit_msg {
   dx_msg _parent;
   char* p;
   dx_size n;
 };
 
+static inline dx_emit_msg_dispatch* DX_EMIT_MSG_DISPATCH(void* p) {
+  return (dx_emit_msg_dispatch*)p;
+}
+
 struct dx_emit_msg_dispatch {
   dx_msg_dispatch _parent;
 };
+
+dx_result dx_emit_msg_construct(dx_emit_msg* SELF, char const* p, dx_size n);
+
+/// @brief Create an "emit" message.
+/// @param RETURN A pointer to a <code>dx_emit_msg*</code> variable.
+/// @param p A pointer to an utf-8 string of @a n Bytes.
+/// @param n The length of the utf-8 string in Bytes pointed to by @a p.
+/// @success
+/// <code>*RETURN</code> was assigned a pointer to the "emit" message object.
+/// The caller acquired a reference to the returned object.
+/// @procedure-call
+dx_result dx_emit_msg_create(dx_emit_msg** RETURN, char const* p, dx_size n);
+
+int dx_emit_msg_get(dx_emit_msg* emit_msg, char const** p, dx_size* n);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
@@ -84,19 +92,27 @@ static inline dx_quit_msg* DX_QUIT_MSG(void* p) {
   return (dx_quit_msg*)p;
 }
 
-int dx_quit_msg_construct(dx_quit_msg* quit_msg);
-
-// Create a "quit" message
-// @return pointer to the message on success. null pointer on failure
-dx_quit_msg* dx_quit_msg_create();
-
 struct dx_quit_msg {
   dx_msg _parent;
 };
 
+static inline dx_quit_msg_dispatch* DX_QUIT_MSG_DISPATCH(void* p) {
+  return (dx_quit_msg_dispatch*)p;
+}
+
 struct dx_quit_msg_dispatch {
   dx_msg_dispatch _parent;
 };
+
+dx_result dx_quit_msg_construct(dx_quit_msg* SELF);
+
+/// @brief Create a "quit" message.
+/// @param RETURN A pointer to a <code>dx_quit_msg*</code> variable.
+/// @success
+/// <code>*RETURN</code> was assigned a pointer to the "quit" message object.
+/// The caller acquired a reference to the returned object.
+/// @procedure-call
+dx_result dx_quit_msg_create(dx_quit_msg** RETURN);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 

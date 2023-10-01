@@ -31,6 +31,10 @@ list(APPEND ${name}.sources "dx/document_definition_language/word_kind.c")
 list(APPEND ${name}.headers "dx/document_definition_language/word_kind.h")
 list(APPEND ${name}.inlays  "dx/document_definition_language/word_kind.i")
 
+# "document.(h|c)"
+list(APPEND ${name}.sources "dx/document.c")
+list(APPEND ${name}.headers "dx/document.h")
+
 # Small utility function to find files by expression and append them to the specified list.
 function(add_files file_list expression)
   file(GLOB_RECURSE temporary ${expression})

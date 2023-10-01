@@ -27,13 +27,17 @@ struct dx_adl_symbol {
   bool resolved;
 };
 
+static inline dx_adl_symbol_dispatch* DX_ADL_SYMBOL_DISPATCH(void* p) {
+  return (dx_adl_symbol_dispatch*)p;
+}
+
 struct dx_adl_symbol_dispatch {
   dx_object_dispatch _parent;
 };
 
-int dx_adl_symbol_construct(dx_adl_symbol* self, dx_string* type, dx_string* name);
+dx_result dx_adl_symbol_construct(dx_adl_symbol* SELF, dx_string* type, dx_string* name);
 
-dx_adl_symbol* dx_adl_symbol_create(dx_string* type, dx_string* name);
+dx_result dx_adl_symbol_create(dx_adl_symbol** RETURN, dx_string* type, dx_string* name);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
@@ -55,9 +59,10 @@ struct dx_asset_definitions_dispatch {
   dx_object_dispatch _parent;
 };
 
-int dx_asset_definitions_construct(dx_asset_definitions* self);
+dx_result dx_asset_definitions_construct(dx_asset_definitions* SELF);
 
-dx_asset_definitions* dx_asset_definitions_create();
+/// @create-operator{dx_asset_definitions}
+dx_result dx_asset_definitions_create(dx_asset_definitions** RETURN);
 
 dx_adl_symbol* dx_asset_definitions_get(dx_asset_definitions const* self, dx_string* name);
 

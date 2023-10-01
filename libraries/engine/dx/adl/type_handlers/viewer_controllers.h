@@ -15,12 +15,16 @@ struct dx_adl_type_handlers_viewer_controllers {
   dx_adl_type_handler _parent;
 };
 
+static inline dx_adl_type_handlers_viewer_controllers_dispatch* DX_ADL_TYPE_HANDLERS_VIEWER_CONTROLLERS_DISPATCH(void* p) {
+  return (dx_adl_type_handlers_viewer_controllers_dispatch*)p;
+}
+
 struct dx_adl_type_handlers_viewer_controllers_dispatch {
   dx_adl_type_handler_dispatch _parent;
 };
 
-int dx_adl_type_handlers_viewer_controllers_construct(dx_adl_type_handlers_viewer_controllers* self);
+dx_result dx_adl_type_handlers_viewer_controllers_construct(dx_adl_type_handlers_viewer_controllers* SELF);
 
-dx_adl_type_handlers_viewer_controllers* dx_adl_type_handlers_viewer_controllers_create();
+dx_result dx_adl_type_handlers_viewer_controllers_create(dx_adl_type_handlers_viewer_controllers** RETURN);
 
 #endif // DX_ADL_TYPE_HANDLERS_VIEWER_CONTROLLERS_H_INCLUDED

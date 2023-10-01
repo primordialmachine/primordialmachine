@@ -15,12 +15,16 @@ struct dx_adl_type_handlers_mesh_instance {
   dx_adl_type_handler _parent;
 };
 
+static inline dx_adl_type_handlers_mesh_instance_dispatch* DX_ADL_TYPE_HANDLERS_MESH_INSTANCE_DISPATCH(void* p) {
+  return (dx_adl_type_handlers_mesh_instance_dispatch*)p;
+}
+
 struct dx_adl_type_handlers_mesh_instance_dispatch {
   dx_adl_type_handler_dispatch _parent;
 };
 
-int dx_adl_type_handlers_mesh_instance_construct(dx_adl_type_handlers_mesh_instance* self);
+dx_result dx_adl_type_handlers_mesh_instance_construct(dx_adl_type_handlers_mesh_instance* SELF);
 
-dx_adl_type_handlers_mesh_instance* dx_adl_type_handlers_mesh_instance_create();
+dx_result dx_adl_type_handlers_mesh_instance_create(dx_adl_type_handlers_mesh_instance** RETURN);
 
 #endif // DX_ADL_TYPE_HANDLERS_MESH_INSTANCE_H_INCLUDED

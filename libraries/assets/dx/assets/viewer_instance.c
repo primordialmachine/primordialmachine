@@ -35,15 +35,13 @@ int dx_asset_viewer_instance_construct(dx_asset_viewer_instance* SELF, dx_asset_
   return 0;
 }
 
-dx_asset_viewer_instance* dx_asset_viewer_instance_create(dx_asset_reference* viewer_reference) {
-  dx_asset_viewer_instance* SELF = DX_ASSET_VIEWER_INSTANCE(dx_object_alloc(sizeof(dx_asset_viewer_instance)));
-  if (!SELF) {
-    return NULL;
-  }
+dx_result dx_asset_viewer_instance_create(dx_asset_viewer_instance** RETURN, dx_asset_reference* viewer_reference) {
+  DX_CREATE_PREFIX(dx_asset_viewer_instance)
   if (dx_asset_viewer_instance_construct(SELF, viewer_reference)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
-    return NULL;
+    return DX_FAILURE;
   }
-  return SELF;
+  *RETURN = SELF;
+  return DX_SUCCESS;
 }

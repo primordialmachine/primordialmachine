@@ -241,7 +241,12 @@ dx_asset_reference* dx_adl_semantical_read_color_instance(dx_ddl_node* node, dx_
   if (!value) {
     return NULL;
   }
-  dx_asset_reference* reference = dx_asset_reference_create(value);
+  dx_asset_reference* reference = NULL;
+  if (dx_asset_reference_create(&reference, value)) {
+    DX_UNREFERENCE(value);
+    value = NULL;
+    return NULL;
+  }
   DX_UNREFERENCE(value);
   value = NULL;
   return reference;
@@ -277,7 +282,12 @@ dx_asset_reference* dx_adl_semantical_read_instance(dx_ddl_node* node, dx_string
   if (!value) {
     return NULL;
   }
-  dx_asset_reference* reference = dx_asset_reference_create(value);
+  dx_asset_reference* reference = NULL;
+  if (dx_asset_reference_create(&reference, value)) {
+    DX_UNREFERENCE(value);
+    value = NULL;
+    return NULL;
+  }
   DX_UNREFERENCE(value);
   value = NULL;
   return reference;

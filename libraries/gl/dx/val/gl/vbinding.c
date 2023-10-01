@@ -15,7 +15,7 @@ static dx_result dx_val_gl_vbinding_activate(dx_val_gl_vbinding* SELF) {
   return DX_SUCCESS;
 }
 
-static dx_result dx_val_gl_vbinding_construct(dx_val_gl_vbinding* SELF, DX_VERTEX_FORMAT vertex_format, dx_val_gl_buffer* buffer) {
+static dx_result dx_val_gl_vbinding_construct(dx_val_gl_vbinding* SELF, dx_vertex_format vertex_format, dx_val_gl_buffer* buffer) {
   dx_rti_type* TYPE = dx_val_gl_vbinding_get_type();
   if (!TYPE) {
     return DX_FAILURE;
@@ -39,7 +39,7 @@ static dx_result dx_val_gl_vbinding_construct(dx_val_gl_vbinding* SELF, DX_VERTE
   // https://www.khronos.org/opengl/wiki/Vertex_Specification
   ctx->glBindBuffer(GL_ARRAY_BUFFER, buffer->id);
   switch (SELF->vertex_format) {
-  case DX_VERTEX_FORMAT_POSITION_XYZ: {
+  case dx_vertex_format_position_xyz: {
     dx_size stride = 3 * sizeof(dx_f32);
     dx_size offset = 0;
     
@@ -47,7 +47,7 @@ static dx_result dx_val_gl_vbinding_construct(dx_val_gl_vbinding* SELF, DX_VERTE
     ctx->glEnableVertexAttribArray(0);
     offset += 3 * sizeof(dx_f32);
   } break;
-  case DX_VERTEX_FORMAT_POSITION_XYZ_AMBIENT_RGBA: {
+  case dx_vertex_format_position_xyz_ambient_rgba: {
     dx_size stride = 3 * sizeof(dx_f32) + 4 * sizeof(dx_f32);
     dx_size offset = 0;
     
@@ -59,7 +59,7 @@ static dx_result dx_val_gl_vbinding_construct(dx_val_gl_vbinding* SELF, DX_VERTE
     ctx->glEnableVertexAttribArray(1);
     offset += 4 * sizeof(dx_f32);
   } break;
-  case DX_VERTEX_FORMAT_POSITION_XYZ_AMBIENT_UV: {
+  case dx_vertex_format_position_xyz_ambient_uv: {
     dx_size stride = 3 * sizeof(dx_f32) + 2 * sizeof(dx_f32);
     dx_size offset = 0;
 
@@ -71,7 +71,7 @@ static dx_result dx_val_gl_vbinding_construct(dx_val_gl_vbinding* SELF, DX_VERTE
     ctx->glEnableVertexAttribArray(1);
     offset += 2 * sizeof(dx_f32);
   } break;
-  case DX_VERTEX_FORMAT_AMBIENT_RGBA:
+  case dx_vertex_format_ambient_rgba:
   default: {
     dx_set_error(DX_ERROR_INVALID_ARGUMENT);
     ctx->glDeleteVertexArrays(1, &SELF->id);
@@ -101,11 +101,8 @@ static void dx_val_gl_vbinding_dispatch_construct(dx_val_gl_vbinding_dispatch* S
   DX_VAL_VBINDING_DISPATCH(SELF)->activate = (dx_result(*)(dx_val_vbinding*)) & dx_val_gl_vbinding_activate;
 }
 
-dx_result dx_val_gl_vbinding_create(dx_val_gl_vbinding** RETURN, DX_VERTEX_FORMAT vertex_format, dx_val_gl_buffer* buffer) {
-  dx_val_gl_vbinding* SELF = DX_VAL_GL_VBINDING(dx_object_alloc(sizeof(dx_val_gl_vbinding)));
-  if (!SELF) {
-    return DX_FAILURE;
-  }
+dx_result dx_val_gl_vbinding_create(dx_val_gl_vbinding** RETURN, dx_vertex_format vertex_format, dx_val_gl_buffer* buffer) {
+  DX_CREATE_PREFIX(dx_val_gl_vbinding)
   if (dx_val_gl_vbinding_construct(SELF, vertex_format, buffer)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;

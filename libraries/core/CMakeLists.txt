@@ -25,6 +25,11 @@ list(APPEND ${name}.sources "dx/core.c")
 list(APPEND ${name}.headers "dx/core.h")
 
 # "core" folder.
+list(APPEND ${name}.sources "dx/core/system.c")
+list(APPEND ${name}.headers "dx/core/system.h")
+list(APPEND ${name}.sources "dx/core/system_factory.c")
+list(APPEND ${name}.headers "dx/core/system_factory.h")
+
 list(APPEND ${name}.sources "dx/core/annotations.c")
 list(APPEND ${name}.headers "dx/core/annotations.h")
 list(APPEND ${name}.sources "dx/core/builtin_types.c")
@@ -98,6 +103,20 @@ list(APPEND ${name}.headers "dx/core/object.h")
 
 list(APPEND ${name}.sources "dx/core/msgs.c")
 list(APPEND ${name}.headers "dx/core/msgs.h")
+
+# Folder "dx/core/visuals".
+list(APPEND ${name}.sources "dx/core/visuals/cull_mode.c")
+list(APPEND ${name}.headers "dx/core/visuals/cull_mode.h")
+list(APPEND ${name}.sources "dx/core/visuals/depth_test_function.c")
+list(APPEND ${name}.headers "dx/core/visuals/depth_test_function.h")
+list(APPEND ${name}.sources "dx/core/visuals/pixel_format.c")
+list(APPEND ${name}.headers "dx/core/visuals/pixel_format.h")
+list(APPEND ${name}.sources "dx/core/visuals/texture_address_mode.c")
+list(APPEND ${name}.headers "dx/core/visuals/texture_address_mode.h")
+list(APPEND ${name}.sources "dx/core/visuals/vertex_format.c")
+list(APPEND ${name}.headers "dx/core/visuals/vertex_format.h")
+list(APPEND ${name}.sources "dx/core/visuals/winding_mode.c")
+list(APPEND ${name}.headers "dx/core/visuals/winding_mode.h")
 
 # Small utility function to find files by expression and append them to the specified list.
 function(add_files file_list expression)

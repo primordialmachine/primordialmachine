@@ -2,23 +2,22 @@
 
 DX_DEFINE_OBJECT_TYPE("dx.adl.type_handler",
                       dx_adl_type_handler,
-                      dx_object)
+                      dx_object);
 
-static void dx_adl_type_handler_destruct(dx_adl_type_handler* self)
+static void dx_adl_type_handler_destruct(dx_adl_type_handler* SELF)
 {/*Intentionally empty.*/}
 
-static void dx_adl_type_handler_dispatch_construct(dx_adl_type_handler_dispatch* self)
+static void dx_adl_type_handler_dispatch_construct(dx_adl_type_handler_dispatch* SELF)
 {/*Intentionally empty.*/}
 
-int dx_adl_type_handler_construct(dx_adl_type_handler* self) {
-  dx_rti_type* _type = dx_adl_type_handler_get_type();
-  if (!_type) {
-    return 1;
+dx_result dx_adl_type_handler_construct(dx_adl_type_handler* SELF) {
+  dx_rti_type* TYPE = dx_adl_type_handler_get_type();
+  if (!TYPE) {
+    return DX_FAILURE;
   }
-  self->resolve = NULL;
-  self->read = NULL;
-  DX_OBJECT(self)->type = _type;
-  return 0;
+  SELF->resolve = NULL;
+  DX_OBJECT(SELF)->type = TYPE;
+  return DX_SUCCESS;
 }
 
 int dx_adl_type_handler_resolve(dx_adl_type_handler* self,
@@ -28,13 +27,4 @@ int dx_adl_type_handler_resolve(dx_adl_type_handler* self,
   assert(NULL != self);
   assert(NULL != self->resolve);
   return self->resolve(self, symbol, context);
-}
-
-dx_object* dx_adl_type_handler_read(dx_adl_type_handler* self,
-                                    dx_ddl_node* node,
-                                    dx_adl_context* context)
-{
-  assert(NULL != self);
-  assert(NULL != self->read);
-  return self->read(self, node, context); 
 }

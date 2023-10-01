@@ -7,7 +7,6 @@
 
 #include "dx/val/system.h"
 #include "dx/aal/system.h"
-#include "dx/system_factory.h"
 
 static dx_application* g_application = NULL;
 
@@ -38,6 +37,7 @@ static void dx_application_dispatch_construct(dx_application_dispatch* SELF) {
   DX_APPLICATION_DISPATCH(SELF)->shutdown_systems = (dx_result(*)(dx_application*)) & shutdown_systems;
   DX_APPLICATION_DISPATCH(SELF)->update = (dx_result(*)(dx_application*))&update;
   DX_APPLICATION_DISPATCH(SELF)->get_val_context = (dx_result(*)(dx_val_context**, dx_application*)) & get_val_context;
+  DX_APPLICATION_DISPATCH(SELF)->get_aal_context = (dx_result(*)(dx_aal_context**, dx_application*)) & get_aal_context;
 }
 
 static dx_result update(dx_application* SELF) {
@@ -124,10 +124,7 @@ dx_result dx_application_construct(dx_application* SELF, dx_val_system_factory* 
 }
 
 dx_result dx_application_create(dx_application** RETURN, dx_val_system_factory* val_system_factory, dx_aal_system_factory* aal_system_factory, dx_msg_queue* msg_queue) {
-  dx_application* SELF = DX_APPLICATION(dx_object_alloc(sizeof(dx_application)));
-  if (!SELF) {
-    return DX_FAILURE;
-  }
+  DX_CREATE_PREFIX(dx_application)
   if (dx_application_construct(SELF, val_system_factory, aal_system_factory, msg_queue)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
@@ -139,8 +136,7 @@ dx_result dx_application_create(dx_application** RETURN, dx_val_system_factory* 
 
 dx_result dx_application_emit_quit_msg(dx_application* SELF) {
   dx_msg* msg = NULL;
-  msg = DX_MSG(dx_quit_msg_create());
-  if (!msg) {
+  if (dx_quit_msg_create((dx_quit_msg**)&msg)) {
     return DX_FAILURE;
   }
   if (dx_msg_queue_push(SELF->msg_queue, msg)) {

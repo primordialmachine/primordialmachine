@@ -15,7 +15,7 @@ static inline dx_string* _get_name(dx_adl_names* names, dx_size index) {
 
 #define CASEOF(_NAME, _DISPATCH) \
   if (dx_string_is_equal_to(received_type, NAME(_NAME))) { \
-    if (dx_adl_enter_on_##_DISPATCH(self, source, context)) { \
+    if (dx_adl_enter_on_##_DISPATCH(SELF, source, context)) { \
       DX_UNREFERENCE(received_type); \
       received_type = NULL; \
       return 1; \
@@ -32,20 +32,20 @@ DX_DEFINE_OBJECT_TYPE("dx.adl.enter",
                       dx_adl_enter,
                       dx_object)
 
-static dx_adl_symbol* get_symbol(dx_adl_enter* self, dx_string* name) {
-  return dx_asset_definitions_get(self->context->definitions, name);
+static dx_adl_symbol* get_symbol(dx_adl_enter* SELF, dx_string* name) {
+  return dx_asset_definitions_get(SELF->context->definitions, name);
 }
 
-static int add_symbol(dx_adl_enter* self, dx_string* type, dx_string* name, dx_ddl_node* node) {
-  dx_adl_symbol* symbol = dx_adl_symbol_create(type, name);
-  if (!symbol) {
+static int add_symbol(dx_adl_enter* SELF, dx_string* type, dx_string* name, dx_ddl_node* node) {
+  dx_adl_symbol* symbol = NULL;
+  if (dx_adl_symbol_create(&symbol, type, name)) {
     return 1;
   }
   if (node) {
     symbol->node = node;
     DX_REFERENCE(symbol->node);
   }
-  if (dx_asset_definitions_set(self->context->definitions, name, symbol)) {
+  if (dx_asset_definitions_set(SELF->context->definitions, name, symbol)) {
     DX_UNREFERENCE(symbol);
     symbol = NULL;
     return 1;
@@ -55,41 +55,35 @@ static int add_symbol(dx_adl_enter* self, dx_string* type, dx_string* name, dx_d
   return 0;
 }
 
-static void dx_adl_enter_destruct(dx_adl_enter* self)
+static void dx_adl_enter_destruct(dx_adl_enter* SELF)
 {/*Intentionally empty.*/}
 
-static void dx_adl_enter_dispatch_construct(dx_adl_enter_dispatch* self)
+static void dx_adl_enter_dispatch_construct(dx_adl_enter_dispatch* SELF)
 {/*Intentionally empty.*/}
 
-int dx_adl_enter_construct(dx_adl_enter* self, dx_adl_context* context) {
-  dx_rti_type* _type = dx_adl_enter_get_type();
-  if (!_type) {
-    return 1;
+dx_result dx_adl_enter_construct(dx_adl_enter* SELF, dx_adl_context* context) {
+  dx_rti_type* TYPE = dx_adl_enter_get_type();
+  if (!TYPE) {
+    return DX_FAILURE;
   }
-  if (!self) {
+  if (!SELF) {
     dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return 1;
+    return DX_FAILURE;
   }
-  self->context = context;
-  DX_OBJECT(self)->type = _type;
-  return 0;
+  SELF->context = context;
+  DX_OBJECT(SELF)->type = TYPE;
+  return DX_SUCCESS;
 }
 
-dx_adl_enter* dx_adl_enter_create(dx_adl_context* context) {
-  dx_rti_type* _type = dx_adl_enter_get_type();
-  if (!_type) {
-    return NULL;
+dx_result dx_adl_enter_create(dx_adl_enter** RETURN, dx_adl_context* context) {
+  DX_CREATE_PREFIX(dx_adl_enter)
+  if (dx_adl_enter_construct(SELF, context)) {
+    DX_UNREFERENCE(SELF);
+    SELF = NULL;
+    return DX_FAILURE;
   }
-  dx_adl_enter* self = DX_ADL_ENTER(dx_object_alloc(sizeof(dx_adl_enter)));
-  if (!self) {
-    return NULL;
-  }
-  if (dx_adl_enter_construct(self, context)) {
-    DX_UNREFERENCE(self);
-    self = NULL;
-    return NULL;
-  }
-  return self;
+  *RETURN = SELF;
+  return DX_SUCCESS;
 }
 
 static bool is_of_type(dx_ddl_node* source, dx_string* expected_type, dx_adl_context* context) {
@@ -122,11 +116,11 @@ static bool is_of_type(dx_ddl_node* source, dx_string* expected_type, dx_adl_con
   return true;
 }
 
-int dx_adl_enter_run(dx_adl_enter* self, dx_ddl_node* source, dx_adl_context* context) {
-  return dx_adl_enter_on_scene(self, source, context);
+int dx_adl_enter_run(dx_adl_enter* SELF, dx_ddl_node* source, dx_adl_context* context) {
+  return dx_adl_enter_on_scene(SELF, source, context);
 }
 
-int dx_adl_enter_on_scene_element(dx_adl_enter* self, dx_ddl_node* source, dx_adl_context* context) {
+int dx_adl_enter_on_scene_element(dx_adl_enter* SELF, dx_ddl_node* source, dx_adl_context* context) {
   // type
   dx_string* received_type = dx_adl_semantical_read_type(source, context);
   if (!received_type) {
@@ -152,7 +146,7 @@ int dx_adl_enter_on_scene_element(dx_adl_enter* self, dx_ddl_node* source, dx_ad
   return 0;
 }
 
-int dx_adl_enter_on_color(dx_adl_enter* self, dx_ddl_node* source, dx_adl_context* context) {
+int dx_adl_enter_on_color(dx_adl_enter* SELF, dx_ddl_node* source, dx_adl_context* context) {
   // type
   dx_string* received_type = dx_adl_semantical_read_type(source, context);
   if (!dx_string_is_equal_to(received_type, NAME(color_type))) {
@@ -168,7 +162,7 @@ int dx_adl_enter_on_color(dx_adl_enter* self, dx_ddl_node* source, dx_adl_contex
     return 1;
   }
   // enter
-  if (add_symbol(self, received_type, name, source)) {
+  if (add_symbol(SELF, received_type, name, source)) {
     if (DX_ERROR_EXISTS == dx_get_error()) {
       /// TODO: Emit positions.
       /// TODO: Use dx_adl_diagnostics.
@@ -192,7 +186,7 @@ int dx_adl_enter_on_color(dx_adl_enter* self, dx_ddl_node* source, dx_adl_contex
   return 0;
 }
 
-int dx_adl_enter_on_scene(dx_adl_enter* self, dx_ddl_node* source, dx_adl_context* context) {
+int dx_adl_enter_on_scene(dx_adl_enter* SELF, dx_ddl_node* source, dx_adl_context* context) {
   // type
   dx_string* received_type = dx_adl_semantical_read_type(source, context);
   if (!dx_string_is_equal_to(received_type, NAME(scene_type))) {
@@ -204,7 +198,7 @@ int dx_adl_enter_on_scene(dx_adl_enter* self, dx_ddl_node* source, dx_adl_contex
   dx_ddl_node* child_source = dx_ddl_node_map_get(source, NAME(elements_key));
   if (child_source) {
     for (dx_size i = 0, n = dx_ddl_node_list_get_size(child_source); i < n; ++i) {
-      if (dx_adl_enter_on_scene_element(self, dx_ddl_node_list_get(child_source, i), context)) {
+      if (dx_adl_enter_on_scene_element(SELF, dx_ddl_node_list_get(child_source, i), context)) {
         DX_UNREFERENCE(received_type);
         received_type = NULL;
         return 1;
@@ -224,7 +218,7 @@ int dx_adl_enter_on_scene(dx_adl_enter* self, dx_ddl_node* source, dx_adl_contex
   return 0;
 }
 
-int dx_adl_enter_on_image(dx_adl_enter* self, dx_ddl_node* source, dx_adl_context* context) {
+int dx_adl_enter_on_image(dx_adl_enter* SELF, dx_ddl_node* source, dx_adl_context* context) {
   // type
   dx_string* received_type = dx_adl_semantical_read_type(source, context);
   if (!dx_string_is_equal_to(received_type, NAME(image_type))) {
@@ -240,7 +234,7 @@ int dx_adl_enter_on_image(dx_adl_enter* self, dx_ddl_node* source, dx_adl_contex
     return 1;
   }
   //
-  if (add_symbol(self, received_type, name, source)) {
+  if (add_symbol(SELF, received_type, name, source)) {
     if (DX_ERROR_EXISTS == dx_get_error()) {
       /// TODO: Emit positions.
       /// TODO: Use dx_adl_diagnostics.
@@ -264,7 +258,7 @@ int dx_adl_enter_on_image(dx_adl_enter* self, dx_ddl_node* source, dx_adl_contex
   return 0;
 }
 
-int dx_adl_enter_on_mesh(dx_adl_enter* self, dx_ddl_node* source, dx_adl_context* context) {
+int dx_adl_enter_on_mesh(dx_adl_enter* SELF, dx_ddl_node* source, dx_adl_context* context) {
   // type
   dx_string* received_type = dx_adl_semantical_read_type(source, context);
   if (!dx_string_is_equal_to(received_type, NAME(mesh_type))) {
@@ -280,7 +274,7 @@ int dx_adl_enter_on_mesh(dx_adl_enter* self, dx_ddl_node* source, dx_adl_context
     return 1;
   }
   //
-  if (add_symbol(self, received_type, name, source)) {
+  if (add_symbol(SELF, received_type, name, source)) {
     if (DX_ERROR_EXISTS == dx_get_error()) {
       /// TODO: Emit positions.
       /// TODO: Use dx_adl_diagnostics.
@@ -304,7 +298,7 @@ int dx_adl_enter_on_mesh(dx_adl_enter* self, dx_ddl_node* source, dx_adl_context
   return 0;
 }
 
-int dx_adl_enter_on_mesh_instance(dx_adl_enter* self, dx_ddl_node* source, dx_adl_context* context) {
+int dx_adl_enter_on_mesh_instance(dx_adl_enter* SELF, dx_ddl_node* source, dx_adl_context* context) {
   // type
   dx_string* received_type = dx_adl_semantical_read_type(source, context);
   if (!dx_string_is_equal_to(received_type, NAME(mesh_instance_type))) {
@@ -315,7 +309,7 @@ int dx_adl_enter_on_mesh_instance(dx_adl_enter* self, dx_ddl_node* source, dx_ad
   // generated name
   dx_string* name = dx_adl_names_create_unique_name(context->names);
   // enter
-  if (add_symbol(self, received_type, name, source)) {
+  if (add_symbol(SELF, received_type, name, source)) {
     if (DX_ERROR_EXISTS == dx_get_error()) {
       /// TODO: Emit positions.
       /// TODO: Use dx_adl_diagnostics.
@@ -339,7 +333,7 @@ int dx_adl_enter_on_mesh_instance(dx_adl_enter* self, dx_ddl_node* source, dx_ad
   return 0;
 }
 
-int dx_adl_enter_on_material(dx_adl_enter* self, dx_ddl_node* source, dx_adl_context* context) {
+int dx_adl_enter_on_material(dx_adl_enter* SELF, dx_ddl_node* source, dx_adl_context* context) {
   // type
   dx_string* received_type = dx_adl_semantical_read_type(source, context);
   if (!dx_string_is_equal_to(received_type, NAME(material_type))) {
@@ -355,7 +349,7 @@ int dx_adl_enter_on_material(dx_adl_enter* self, dx_ddl_node* source, dx_adl_con
     return 1;
   }
   // enter
-  if (add_symbol(self, received_type, name, source)) {
+  if (add_symbol(SELF, received_type, name, source)) {
     if (DX_ERROR_EXISTS == dx_get_error()) {
       /// TODO: Emit positions.
       /// TODO: Use dx_adl_diagnostics.
@@ -379,7 +373,7 @@ int dx_adl_enter_on_material(dx_adl_enter* self, dx_ddl_node* source, dx_adl_con
   return 0;
 }
 
-int dx_adl_enter_on_viewer_instance(dx_adl_enter* self, dx_ddl_node* source, dx_adl_context* context) {
+int dx_adl_enter_on_viewer_instance(dx_adl_enter* SELF, dx_ddl_node* source, dx_adl_context* context) {
   // type
   dx_string* received_type = dx_adl_semantical_read_type(source, context);
   if (!dx_string_is_equal_to(received_type, NAME(viewer_instance_type))) {
@@ -390,7 +384,7 @@ int dx_adl_enter_on_viewer_instance(dx_adl_enter* self, dx_ddl_node* source, dx_
   // generated name
   dx_string* name = dx_adl_names_create_unique_name(context->names);
   // enter
-  if (add_symbol(self, received_type, name, source)) {
+  if (add_symbol(SELF, received_type, name, source)) {
     if (DX_ERROR_EXISTS == dx_get_error()) {
       /// TODO: Emit positions.
       /// TODO: Use dx_adl_diagnostics.
@@ -414,7 +408,7 @@ int dx_adl_enter_on_viewer_instance(dx_adl_enter* self, dx_ddl_node* source, dx_
   return 0;
 }
 
-int dx_adl_enter_on_viewer(dx_adl_enter* self, dx_ddl_node* source, dx_adl_context* context) {
+int dx_adl_enter_on_viewer(dx_adl_enter* SELF, dx_ddl_node* source, dx_adl_context* context) {
   // type
   dx_string* received_type = dx_adl_semantical_read_type(source, context);
   if (!dx_string_is_equal_to(received_type, NAME(viewer_type))) {
@@ -430,7 +424,7 @@ int dx_adl_enter_on_viewer(dx_adl_enter* self, dx_ddl_node* source, dx_adl_conte
     return 1;
   }
   //
-  if (add_symbol(self, received_type, name, source)) {
+  if (add_symbol(SELF, received_type, name, source)) {
     if (DX_ERROR_EXISTS == dx_get_error()) {
       /// TODO: Emit positions.
       /// TODO: Use dx_adl_diagnostics.
@@ -454,7 +448,7 @@ int dx_adl_enter_on_viewer(dx_adl_enter* self, dx_ddl_node* source, dx_adl_conte
   return 0;
 }
 
-int dx_adl_enter_on_texture(dx_adl_enter* self, dx_ddl_node* source, dx_adl_context* context) {
+int dx_adl_enter_on_texture(dx_adl_enter* SELF, dx_ddl_node* source, dx_adl_context* context) {
   // type
   dx_string* received_type = dx_adl_semantical_read_type(source, context);
   if (!dx_string_is_equal_to(received_type, NAME(texture_type))) {
@@ -470,7 +464,7 @@ int dx_adl_enter_on_texture(dx_adl_enter* self, dx_ddl_node* source, dx_adl_cont
     return 1;
   }
   //
-  if (add_symbol(self, received_type, name, source)) {
+  if (add_symbol(SELF, received_type, name, source)) {
     if (DX_ERROR_EXISTS == dx_get_error()) {
       /// TODO: Emit positions.
       /// TODO: Use dx_adl_diagnostics.

@@ -382,10 +382,7 @@ dx_result dx_ddl_parser_construct(dx_ddl_parser* SELF, dx_data_definition_langua
 }
 
 dx_result dx_ddl_parser_create(dx_ddl_parser** RETURN, dx_data_definition_language_scanner* scanner, dx_data_definition_language_diagnostics* diagnostics) {
-  dx_ddl_parser* SELF = DX_DATA_DEFINITION_LANGUAGE_PARSER(dx_object_alloc(sizeof(dx_ddl_parser)));
-  if (!SELF) {
-    return DX_FAILURE;
-  }
+  DX_CREATE_PREFIX(dx_ddl_parser)
   if (dx_ddl_parser_construct(SELF, scanner, diagnostics)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;

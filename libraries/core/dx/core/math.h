@@ -111,6 +111,18 @@ extern DX_RGB_N8 const dx_colors_blue;
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
+/// @brief Compute the largest integer value not greater than @a x.
+/// @param x The value.
+/// @return The largest integer value not greater than @a x.
+/// If @a x is positive infinity, negative infinity, or not a number, then @a x is returned unmodified.
+dx_f32 dx_floor_f32(dx_f32 x);
+
+/// @brief Compute the largest integer value not greater than @a x.
+/// @param x The value.
+/// @return The largest integer value not greater than @a x.
+/// If @a x is positive infinity, negative infinity, or not a number, then @a x is returned unmodified.
+dx_f64 dx_floor_f64(dx_f64 x);
+
 // Symbolic constant for the dx_f32 representation of PI.
 #define DX_PI_F32 3.1415926f
 
@@ -151,6 +163,28 @@ static inline void dx_vec2_set(DX_VEC2* v, dx_f32 x, dx_f32 y) {
   v->e[0] = x;
   v->e[1] = y;
 }
+
+/// @ingroup math
+/// @brief Compute the sum of two vectors.
+/// @param w Pointer to a DX_VEC2 object.
+/// @param u Pointer to a DX_VEC2 object.
+/// The object's values represent the augend (aka the 1st operand).
+/// @param v Pointer toa DX_VEC2 object.
+/// The object's values represent the addend (aka the 2nd operand).
+/// @remarks @a w, @a u, and @a v all may refer to the same object.
+/// @post <code>*w/<code> was assigned the values of the sum vector.
+void dx_vec2_add3(DX_VEC2* w, DX_VEC2 const* u, DX_VEC2 const* v);
+
+/// @ingroup math
+/// @brief Compute the difference of two vectors.
+/// @param w Pointer to a DX_VEC2 object.
+/// @param u Pointer to a DX_VEC2 object.
+/// The object's values represent the vector that is the minuend (aka the 1st operand).
+/// @param v Pointer to a DX_VEC2 object.
+/// The object's values represent hte vector that is the the subtrahend (aka the 2nd operand).
+/// @remarks @a w, @a u, and @a v all may refer to the same object.
+/// @post <code>*w/<code> was assigned the values of the difference vector.
+void dx_vec2_sub3(DX_VEC2* w, DX_VEC2 const* u, DX_VEC2 const* v);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
@@ -392,22 +426,90 @@ void dx_transform_point(DX_VEC3* u, DX_VEC3 const* v, DX_MAT4 const* m);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
+/// @brief An offset in 2D space.
+typedef struct DX_OFFSET2_F32 {
+  dx_f32 x;
+  dx_f32 y;
+} DX_OFFSET2_F32;
+
+static inline void dx_offset2_f32_set(DX_OFFSET2_F32* a, dx_f32 x, dx_f32 y) {
+  a->x = x;
+  a->y = y;
+}
+
+/// @brief An extend in 2D space.
+typedef struct DX_EXTEND2_F32 {
+  dx_f32 x;
+  dx_f32 y;
+} DX_EXTEND2_F32;
+
+static inline void dx_extend2_f32_set(DX_EXTEND2_F32* a, dx_f32 x, dx_f32 y) {
+  a->x = x;
+  a->y = y;
+}
+
 typedef struct DX_RECT2_F32 {
-  dx_f32 left;
-  dx_f32 bottom;
-  dx_f32 right;
-  dx_f32 top;
+  /// @brief An offset in 2D.
+  DX_OFFSET2_F32 offset;
+  /// @brief An extend in 2D.
+  DX_EXTEND2_F32 extend;
 } DX_RECT2_F32;
+
+static inline void dx_rect2_f32_set(DX_RECT2_F32* a, dx_f32 left, dx_f32 bottom, dx_f32 right, dx_f32 top) {
+  dx_offset2_f32_set(&a->offset, left, bottom);
+  dx_extend2_f32_set(&a->extend, right - left, top - bottom);
+}
+
+static inline void dx_rect2_f32_set2(DX_RECT2_F32* a, dx_f32 left, dx_f32 bottom, dx_f32 right, dx_f32 top) {
+  dx_offset2_f32_set(&a->offset, left, bottom);
+  dx_extend2_f32_set(&a->extend, right, top);
+}
+
+static inline dx_f32 dx_rect2_f32_get_left(DX_RECT2_F32 const* a) {
+  if (a->extend.x < 0.f) {
+    return a->offset.x + a->extend.x;
+  } else {
+    return a->offset.x;
+  }
+}
+
+static inline dx_f32 dx_rect2_f32_get_right(DX_RECT2_F32 const* a) {
+  if (a->extend.x > 0.f) {
+    return a->offset.x + a->extend.x;
+  } else {
+    return a->offset.x;
+  }
+}
+
+static inline dx_f32 dx_rect2_f32_get_bottom(DX_RECT2_F32 const* a) {
+  if (a->extend.y < 0.f) {
+    return a->offset.y + a->extend.y;
+  } else {
+    return a->offset.y;
+  }
+}
+
+static inline dx_f32 dx_rect2_f32_get_top(DX_RECT2_F32 const* a) {
+  if (a->extend.y > 0.f) {
+    return a->offset.y + a->extend.y;
+  } else {
+    return a->offset.y;
+  }
+}
 
 static inline void dx_rect2_f32_union(DX_RECT2_F32* a, DX_RECT2_F32 const* x, DX_RECT2_F32 const* y) {
 #pragma push_macro("MIN")
 #pragma push_macro("MAX")
 #define MIN(x,y) (x) < (y) ? (x) : (y)
 #define MAX(x,y) (x) > (y) ? (x) : (y)
-  a->left = MIN(x->left, y->left);
-  a->bottom = MIN(x->bottom, y->bottom);
-  a->right = MAX(x->right, y->right);
-  a->top = MAX(x->top, y->top);
+  dx_f32 l = MIN(dx_rect2_f32_get_left(x), dx_rect2_f32_get_left(y));
+  dx_f32 b = MIN(dx_rect2_f32_get_bottom(x), dx_rect2_f32_get_bottom(y));
+  a->offset.x = l;
+  a->offset.y = b;
+  a->extend.x = MAX(dx_rect2_f32_get_right(x), dx_rect2_f32_get_right(y))
+              - l;
+  a->extend.y = MAX(dx_rect2_f32_get_top(x), dx_rect2_f32_get_top(y))
+              - b;
 #undef MAX
 #undef MIN
 #pragma pop_macro("MAX")

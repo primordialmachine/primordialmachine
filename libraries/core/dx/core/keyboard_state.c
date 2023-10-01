@@ -23,10 +23,7 @@ dx_result dx_keyboard_state_construct(dx_keyboard_state* SELF) {
 }
 
 dx_result dx_keyboard_state_create(dx_keyboard_state** RETURN) {
-  dx_keyboard_state* SELF = DX_KEYBOARD_STATE(dx_object_alloc(sizeof(dx_keyboard_state)));
-  if (!SELF) {
-    return DX_FAILURE;
-  }
+  DX_CREATE_PREFIX(dx_keyboard_state)
   if (dx_keyboard_state_construct(SELF)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;

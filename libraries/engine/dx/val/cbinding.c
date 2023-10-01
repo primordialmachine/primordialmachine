@@ -63,10 +63,7 @@ dx_result dx_val_cbinding_node_construct(dx_val_cbinding_node* SELF, dx_string* 
 }
 
 dx_result dx_val_cbinding_node_create(dx_val_cbinding_node** RETURN, dx_string* name) {
-  dx_val_cbinding_node* SELF = DX_VAL_CBINDING_NODE(dx_object_alloc(sizeof(dx_val_cbinding_node)));
-  if (!SELF) {
-    return DX_FAILURE;
-  }
+  DX_CREATE_PREFIX(dx_val_cbinding_node)
   if (dx_val_cbinding_node_construct(SELF, name)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
@@ -242,42 +239,40 @@ dx_result dx_val_cbinding_construct(dx_val_cbinding* self) {
   return DX_SUCCESS;
 }
 
-dx_val_cbinding* dx_val_cbinding_create() {
-  dx_val_cbinding* self = DX_VAL_CBINDING(dx_object_alloc(sizeof(dx_val_cbinding)));
-  if (!self) {
-    return NULL;
+dx_result dx_val_cbinding_create(dx_val_cbinding** RETURN) {
+  DX_CREATE_PREFIX(dx_val_cbinding)
+  if (dx_val_cbinding_construct(SELF)) {
+    DX_UNREFERENCE(SELF);
+    SELF = NULL;
+    return DX_FAILURE;
   }
-  if (dx_val_cbinding_construct(self)) {
-    DX_UNREFERENCE(self);
-    self = NULL;
-    return NULL;
-  }
-  return self;
+  *RETURN = SELF;
+  return DX_SUCCESS;
 }
 
-int dx_val_cbinding_iter_initialize(dx_val_cbinding_iter* self, dx_val_cbinding* target) {
-  return dx_inline_pointer_hashmap_iterator_initialize(self,&target->kvs);
+int dx_val_cbinding_iter_initialize(dx_val_cbinding_iter* SELF, dx_val_cbinding* target) {
+  return dx_inline_pointer_hashmap_iterator_initialize(SELF,&target->kvs);
 }
 
-void dx_val_cbinding_iter_uninitialize(dx_val_cbinding_iter* self) {
-  dx_inline_pointer_hashmap_iterator_uninitialize(self);
+void dx_val_cbinding_iter_uninitialize(dx_val_cbinding_iter* SELF) {
+  dx_inline_pointer_hashmap_iterator_uninitialize(SELF);
 }
 
-int dx_val_cbinding_iter_next(dx_val_cbinding_iter* self) {
-  return dx_inline_pointer_hashmap_iterator_next(self);
+int dx_val_cbinding_iter_next(dx_val_cbinding_iter* SELF) {
+  return dx_inline_pointer_hashmap_iterator_next(SELF);
 }
 
-bool dx_val_cbinding_iter_has_entry(dx_val_cbinding_iter* self) {
+bool dx_val_cbinding_iter_has_entry(dx_val_cbinding_iter* SELF) {
   dx_bool temporary = false;
-  if (dx_inline_pointer_hashmap_iterator_has_entry(&temporary, self)) {
+  if (dx_inline_pointer_hashmap_iterator_has_entry(&temporary, SELF)) {
     return false;
   }
   return temporary;
 }
 
-uint8_t dx_val_cbinding_iter_get_tag(dx_val_cbinding_iter* self) {
+uint8_t dx_val_cbinding_iter_get_tag(dx_val_cbinding_iter* SELF) {
   dx_val_cbinding_node* node = NULL;
-  if (dx_inline_pointer_hashmap_iterator_get_value(&node, self)) {
+  if (dx_inline_pointer_hashmap_iterator_get_value(&node, SELF)) {
     return 0;
   }
   if (!node) {
@@ -286,9 +281,9 @@ uint8_t dx_val_cbinding_iter_get_tag(dx_val_cbinding_iter* self) {
   return node->tag;
 }
 
-dx_string* dx_val_cbinding_iter_get_name(dx_val_cbinding_iter* self) {
+dx_string* dx_val_cbinding_iter_get_name(dx_val_cbinding_iter* SELF) {
   dx_val_cbinding_node* node = NULL;
-  if (dx_inline_pointer_hashmap_iterator_get_value(&node, self)) {
+  if (dx_inline_pointer_hashmap_iterator_get_value(&node, SELF)) {
     return NULL;
   }
   if (!node) {
@@ -298,9 +293,9 @@ dx_string* dx_val_cbinding_iter_get_name(dx_val_cbinding_iter* self) {
   return node->name;
 }
 
-dx_result dx_val_cbinding_iter_get_vec3(dx_val_cbinding_iter* self, DX_VEC3* v) {
+dx_result dx_val_cbinding_iter_get_vec3(dx_val_cbinding_iter* SELF, DX_VEC3* v) {
   dx_val_cbinding_node* node = NULL;
-  if (dx_inline_pointer_hashmap_iterator_get_value(&node, self)) {
+  if (dx_inline_pointer_hashmap_iterator_get_value(&node, SELF)) {
     return DX_FAILURE;
   }
   if (!node || node->tag != DX_VAL_CBINDING_TYPE_VEC3) {
@@ -313,9 +308,9 @@ dx_result dx_val_cbinding_iter_get_vec3(dx_val_cbinding_iter* self, DX_VEC3* v) 
   return DX_SUCCESS;
 }
 
-dx_result dx_val_cbinding_iter_get_vec4(dx_val_cbinding_iter* self, DX_VEC4* v) {
+dx_result dx_val_cbinding_iter_get_vec4(dx_val_cbinding_iter* SELF, DX_VEC4* v) {
   dx_val_cbinding_node* node = NULL;
-  if (dx_inline_pointer_hashmap_iterator_get_value(&node, self)) {
+  if (dx_inline_pointer_hashmap_iterator_get_value(&node, SELF)) {
     return DX_FAILURE;
   }
   if (!node || node->tag != DX_VAL_CBINDING_TYPE_VEC4) {
@@ -328,9 +323,9 @@ dx_result dx_val_cbinding_iter_get_vec4(dx_val_cbinding_iter* self, DX_VEC4* v) 
   return DX_SUCCESS;
 }
 
-dx_result dx_val_cbinding_iter_get_mat4(dx_val_cbinding_iter* self, DX_MAT4* a) {
+dx_result dx_val_cbinding_iter_get_mat4(dx_val_cbinding_iter* SELF, DX_MAT4* a) {
   dx_val_cbinding_node* node = NULL;
-  if (dx_inline_pointer_hashmap_iterator_get_value(&node, self)) {
+  if (dx_inline_pointer_hashmap_iterator_get_value(&node, SELF)) {
     return DX_FAILURE;
   }
   if (!node || node->tag != DX_VAL_CBINDING_TYPE_MAT4) {
@@ -343,9 +338,9 @@ dx_result dx_val_cbinding_iter_get_mat4(dx_val_cbinding_iter* self, DX_MAT4* a) 
   return DX_SUCCESS;
 }
 
-dx_result dx_val_cbinding_iter_get_rgba_f32(dx_val_cbinding_iter* self, DX_RGBA_F32* c) {
+dx_result dx_val_cbinding_iter_get_rgba_f32(dx_val_cbinding_iter* SELF, DX_RGBA_F32* c) {
   dx_val_cbinding_node* node = NULL;
-  if (dx_inline_pointer_hashmap_iterator_get_value(&node, self)) {
+  if (dx_inline_pointer_hashmap_iterator_get_value(&node, SELF)) {
     return DX_FAILURE;
   }
   if (!node || node->tag != DX_VAL_CBINDING_TYPE_RGBA_F32) {
@@ -358,9 +353,9 @@ dx_result dx_val_cbinding_iter_get_rgba_f32(dx_val_cbinding_iter* self, DX_RGBA_
   return DX_SUCCESS;
 }
 
-dx_result dx_val_cbinding_iter_get_texture_index(dx_val_cbinding_iter* self, dx_size* i) {
+dx_result dx_val_cbinding_iter_get_texture_index(dx_val_cbinding_iter* SELF, dx_size* i) {
   dx_val_cbinding_node* node = NULL;
-  if (dx_inline_pointer_hashmap_iterator_get_value(&node, self)) {
+  if (dx_inline_pointer_hashmap_iterator_get_value(&node, SELF)) {
     return DX_FAILURE;
   }
   if (!node || node->tag != DX_VAL_CBINDING_TYPE_TEXTURE_INDEX) {

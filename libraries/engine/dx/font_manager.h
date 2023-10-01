@@ -77,7 +77,7 @@ dx_result dx_font_glyph_get_size(dx_font_glyph* SELF, uint32_t* size_x, uint32_t
 
 dx_result dx_font_glyph_get_pixels(dx_font_glyph* SELF, void** pixels);
 
-dx_result dx_font_glyph_get_texture_coordinates(dx_font_glyph* SELF, dx_f32* left, dx_f32* bottom, dx_f32* right, dx_f32* top);
+dx_result dx_font_glyph_get_texture_coordinates(dx_font_glyph* SELF, DX_RECT2_F32 *texture_coordinates);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 

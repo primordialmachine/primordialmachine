@@ -22,21 +22,15 @@ dx_result dx_asset_image_operations_color_fill_construct(dx_asset_image_operatio
   return DX_SUCCESS;
 }
 
-dx_asset_image_operations_color_fill* dx_asset_image_operations_color_fill_create() {
-  dx_rti_type* TYPE = dx_asset_image_operations_color_fill_get_type();
-  if (!TYPE) {
-    return NULL;
-  }
-  dx_asset_image_operations_color_fill* SELF = DX_ASSET_IMAGE_OPERATIONS_COLOR_FILL(dx_object_alloc(sizeof(dx_asset_image_operations_color_fill)));
-  if (!SELF) {
-    return NULL;
-  }
+dx_result dx_asset_image_operations_color_fill_create(dx_asset_image_operations_color_fill** RETURN) {
+  DX_CREATE_PREFIX(dx_asset_image_operations_color_fill)
   if (dx_asset_image_operations_color_fill_construct(SELF)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
-    return NULL;
+    return DX_FAILURE;
   }
-  return SELF;
+  *RETURN = SELF;
+  return DX_SUCCESS;
 }
 
 dx_result dx_asset_image_operations_color_fill_set_color(dx_asset_image_operations_color_fill* SELF, dx_asset_color_rgb_n8* color) {

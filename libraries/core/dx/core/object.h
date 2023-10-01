@@ -255,6 +255,16 @@ void DX_DEBUG_CHECK_OBJECT_DISPATCH_MAGIC_BYTES(void* p);
 /// The object is initialized such that <code>dx_object::destructor</code> is assigned a null pointer and <code>dx_object::reference_count</code> is assigned @a 1.
 dx_object* dx_object_alloc(dx_size size);
 
+#define DX_CREATE_PREFIX(_TYPE) \
+  dx_rti_type* TYPE = _TYPE##_get_type(); \
+  if (!TYPE) { \
+    return DX_FAILURE; \
+  } \
+  _TYPE* SELF = (_TYPE*)dx_object_alloc(sizeof(_TYPE)); \
+  if (!SELF) { \
+    return DX_FAILURE; \
+  }
+
 /// @brief
 /// Increment the reference count of a dx_object object by @a 1.
 /// @param object

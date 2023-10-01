@@ -22,19 +22,13 @@ dx_result dx_asset_image_operations_mirror_vertical_construct(dx_asset_image_ope
   return DX_SUCCESS;
 }
 
-dx_asset_image_operations_mirror_vertical* dx_asset_image_operations_mirror_vertical_create() {
-  dx_rti_type* TYPE = dx_asset_image_operations_mirror_vertical_get_type();
-  if (!TYPE) {
-    return NULL;
-  }
-  dx_asset_image_operations_mirror_vertical* SELF = DX_ASSET_IMAGE_OPERATIONS_MIRROR_VERTICAL(dx_object_alloc(sizeof(dx_asset_image_operations_mirror_vertical)));
-  if (!SELF) {
-    return NULL;
-  }
+dx_result dx_asset_image_operations_mirror_vertical_create(dx_asset_image_operations_mirror_vertical** RETURN) {
+  DX_CREATE_PREFIX(dx_asset_image_operations_mirror_vertical)
   if (dx_asset_image_operations_mirror_vertical_construct(SELF)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
-    return NULL;
+    return DX_FAILURE;
   }
-  return SELF;
+  *RETURN = SELF;
+  return DX_SUCCESS;
 }

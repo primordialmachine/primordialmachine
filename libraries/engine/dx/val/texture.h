@@ -25,16 +25,16 @@ static inline dx_val_texture_dispatch* DX_VAL_TEXTURE_DISPATCH(void* p) {
 struct dx_val_texture_dispatch {
   dx_object_dispatch _parent;
   dx_result(*set_data)(dx_val_texture*, dx_asset_texture*);
-  dx_result(*set_texture_address_mode_u)(dx_val_texture*, DX_TEXTURE_ADDRESS_MODE);
-  dx_result(*get_texture_address_mode_u)(DX_TEXTURE_ADDRESS_MODE*, dx_val_texture*);
-  dx_result(*set_texture_address_mode_v)(dx_val_texture*, DX_TEXTURE_ADDRESS_MODE);
-  dx_result(*get_texture_address_mode_v)(DX_TEXTURE_ADDRESS_MODE*, dx_val_texture*);
+  dx_result(*set_texture_address_mode_u)(dx_val_texture*, dx_texture_address_mode);
+  dx_result(*get_texture_address_mode_u)(dx_texture_address_mode*, dx_val_texture*);
+  dx_result(*set_texture_address_mode_v)(dx_val_texture*, dx_texture_address_mode);
+  dx_result(*get_texture_address_mode_v)(dx_texture_address_mode*, dx_val_texture*);
   dx_result(*set_texture_border_color)(dx_val_texture*, DX_VEC4 const*);
   dx_result(*get_texture_border_color)(DX_VEC4*, dx_val_texture*);
-  dx_result(*set_texture_minification_filter)(dx_val_texture*, DX_TEXTURE_MINIFICATION_FILTER);
-  dx_result(*get_texture_minification_filter)(DX_TEXTURE_MINIFICATION_FILTER*, dx_val_texture*);
-  dx_result(*set_texture_magnification_filter)(dx_val_texture*, DX_TEXTURE_MAGNIFICATION_FILTER);
-  dx_result(*get_texture_magnification_filter)(DX_TEXTURE_MAGNIFICATION_FILTER*, dx_val_texture*);
+  dx_result(*set_texture_minification_filter)(dx_val_texture*, dx_texture_minification_filter);
+  dx_result(*get_texture_minification_filter)(dx_texture_minification_filter*, dx_val_texture*);
+  dx_result(*set_texture_magnification_filter)(dx_val_texture*, dx_texture_magnification_filter);
+  dx_result(*get_texture_magnification_filter)(dx_texture_magnification_filter*, dx_val_texture*);
 };
 
 dx_result dx_val_texture_construct(dx_val_texture* SELF, dx_val_context* context);
@@ -57,16 +57,16 @@ static inline dx_result dx_val_texture_set_data(dx_val_texture* SELF, dx_asset_t
 /// @param texture_address_mode_u The texture address mode.
 /// @default-failure
 /// @default-return
-static inline dx_result dx_val_texture_set_texture_address_mode_u(dx_val_texture* SELF, DX_TEXTURE_ADDRESS_MODE texture_address_mode_u) {
+static inline dx_result dx_val_texture_set_texture_address_mode_u(dx_val_texture* SELF, dx_texture_address_mode texture_address_mode_u) {
   DX_OBJECT_VIRTUALCALL(dx_val_texture, set_texture_address_mode_u, SELF, texture_address_mode_u);
 }
 
 /// @brief Get the texture address mode for the u coordinates.
-/// @param RETURN A pointer to a <code>DX_TEXTURE_ADDRESS_MODE</code> variable.
+/// @param RETURN A pointer to a <code>dx_texture_address_mode</code> variable.
 /// @param SELF A pointer to this texture.
 /// @success <code>*RETURN</code> was assigned texture address mode for the u coordinates.
 /// @method-call
-static inline dx_result dx_val_texture_get_texture_address_mode_u(DX_TEXTURE_ADDRESS_MODE* RETURN, dx_val_texture* SELF) {
+static inline dx_result dx_val_texture_get_texture_address_mode_u(dx_texture_address_mode* RETURN, dx_val_texture* SELF) {
   DX_OBJECT_VIRTUALCALL(dx_val_texture, get_texture_address_mode_u, RETURN, SELF);
 }
 
@@ -76,16 +76,16 @@ static inline dx_result dx_val_texture_get_texture_address_mode_u(DX_TEXTURE_ADD
 /// @param SELF A pointer to this texture.
 /// @param texture_address_mode_v The texture address mode.
 /// @method-call
-static inline dx_result dx_val_texture_set_texture_address_mode_v(dx_val_texture* SELF, DX_TEXTURE_ADDRESS_MODE texture_address_mode_v) {
+static inline dx_result dx_val_texture_set_texture_address_mode_v(dx_val_texture* SELF, dx_texture_address_mode texture_address_mode_v) {
   DX_OBJECT_VIRTUALCALL(dx_val_texture, set_texture_address_mode_v, SELF, texture_address_mode_v);
 }
 
 /// @brief Get the texture address mode for the v coordinates.
-/// @param RETURN A pointer to a <code>DX_TEXTURE_ADDRESS_MODE</code> variable.
+/// @param RETURN A pointer to a <code>dx_texture_address_mode</code> variable.
 /// @param SELF A pointer to this texture.
 /// @success <code>*RETURN</code> was assigned texture address mode for the v coordinates.
 /// @method-call
-static inline dx_result dx_val_texture_get_texture_address_mode_v(DX_TEXTURE_ADDRESS_MODE* RETURN, dx_val_texture* SELF) {
+static inline dx_result dx_val_texture_get_texture_address_mode_v(dx_texture_address_mode* RETURN, dx_val_texture* SELF) {
   DX_OBJECT_VIRTUALCALL(dx_val_texture, get_texture_address_mode_v, RETURN, SELF);
 }
 
@@ -115,17 +115,17 @@ static inline dx_result dx_val_texture_get_texture_border_color(DX_VEC4* RETURN,
 /// @param texture_minification_filter The texture minification filter.
 /// @default-failure
 /// @default-return
-static inline dx_result dx_val_texture_set_texture_minification_filter(dx_val_texture* SELF, DX_TEXTURE_MINIFICATION_FILTER texture_minification_filter) {
+static inline dx_result dx_val_texture_set_texture_minification_filter(dx_val_texture* SELF, dx_texture_minification_filter texture_minification_filter) {
   DX_OBJECT_VIRTUALCALL(dx_val_texture, set_texture_minification_filter, SELF, texture_minification_filter);
 }
 
 /// @brief Get the texture minification filter.
-/// @param RETURN A pointer to a <code>DX_TEXTURE_MINIFICATION_FILTER</code> variable.
+/// @param RETURN A pointer to a <code>dx_texture_minification_filter</code> variable.
 /// @param SELF A pointer to this texture.
 /// @success <code>*RETURN</code> was assigned the texture minification filter.
 /// @default-failure
 /// @default-return
-static inline dx_result dx_val_texture_get_texture_minification_filter(DX_TEXTURE_MINIFICATION_FILTER* RETURN, dx_val_texture* SELF) {
+static inline dx_result dx_val_texture_get_texture_minification_filter(dx_texture_minification_filter* RETURN, dx_val_texture* SELF) {
   DX_OBJECT_VIRTUALCALL(dx_val_texture, get_texture_minification_filter, RETURN, SELF);
 }
 
@@ -136,17 +136,17 @@ static inline dx_result dx_val_texture_get_texture_minification_filter(DX_TEXTUR
 /// @param texture_magnification_filter The texture magnification filter.
 /// @default-failure
 /// @default-return
-static inline dx_result dx_val_texture_set_texture_magnification_filter(dx_val_texture* SELF, DX_TEXTURE_MAGNIFICATION_FILTER texture_magnification_filter) {
+static inline dx_result dx_val_texture_set_texture_magnification_filter(dx_val_texture* SELF, dx_texture_magnification_filter texture_magnification_filter) {
   DX_OBJECT_VIRTUALCALL(dx_val_texture, set_texture_magnification_filter, SELF, texture_magnification_filter);
 }
 
 /// @brief Get the texture magnification filter.
-/// @param RETURN A pointer to a <code>DX_TEXTURE_MAGNIFICATION_FILTER</code> variable.
+/// @param RETURN A pointer to a <code>dx_texture_magnification_filter</code> variable.
 /// @param SELF A pointer to this texture.
 /// @success <code>*RETURN</code> was assigned the texture magnification filter.
 /// @default-failure
 /// @default-return
-static inline dx_result dx_val_texture_get_texture_magnification_filter(DX_TEXTURE_MAGNIFICATION_FILTER* RETURN, dx_val_texture* SELF) {
+static inline dx_result dx_val_texture_get_texture_magnification_filter(dx_texture_magnification_filter* RETURN, dx_val_texture* SELF) {
   DX_OBJECT_VIRTUALCALL(dx_val_texture, get_texture_magnification_filter, RETURN, SELF);
 }
 

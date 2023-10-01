@@ -26,9 +26,9 @@ struct dx_adl_resolve_dispatch {
   dx_object_dispatch _parent;
 };
 
-int dx_adl_resolve_construct(dx_adl_resolve* self, dx_adl_context* context);
+dx_result dx_adl_resolve_construct(dx_adl_resolve* SELF, dx_adl_context* context);
 
-dx_adl_resolve* dx_adl_resolve_create(dx_adl_context* context);
+dx_result dx_adl_resolve_create(dx_adl_resolve** RETURN, dx_adl_context* context);
 
 int dx_adl_resolve_run(dx_adl_resolve* self);
 

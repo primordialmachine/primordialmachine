@@ -63,10 +63,7 @@ dx_result dx_val_material_construct(dx_val_material* SELF, dx_val_context* conte
 }
 
 dx_result dx_val_material_create(dx_val_material** RETURN, dx_val_context* context, dx_asset_material* asset_material) {
-  dx_val_material* SELF = DX_VAL_MATERIAL(dx_object_alloc(sizeof(dx_val_material)));
-  if (!SELF) {
-    return DX_FAILURE;
-  }
+  DX_CREATE_PREFIX(dx_val_material)
   if (dx_val_material_construct(SELF, context, asset_material)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;

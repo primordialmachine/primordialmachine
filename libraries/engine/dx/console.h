@@ -22,7 +22,7 @@ static inline dx_console_dispatch* DX_CONSOLE_DISPATCH(void* p) {
 struct dx_console_dispatch {
   dx_object_dispatch _parent;
   dx_result (*on_keyboard_key_message)(dx_console*, dx_keyboard_key_msg*);
-  dx_result (*render)(dx_console*, dx_f32, dx_i32, dx_i32);
+  dx_result (*render)(dx_console*, dx_f32, dx_i32, dx_i32, dx_i32, dx_i32);
   dx_result (*open)(dx_console*);
   dx_result (*close)(dx_console*);
   dx_result (*toggle)(dx_console*);
@@ -43,8 +43,8 @@ static inline dx_result dx_console_on_keyboard_key_message(dx_console* SELF, dx_
 /// @brief Render this console.
 /// @param SELF A pointer to this console.
 /// @method-call
-static inline dx_result dx_console_render(dx_console* SELF, dx_f32 delta_seconds, dx_i32 canvas_width, dx_i32 canvas_height) {
-  DX_OBJECT_VIRTUALCALL(dx_console, render, SELF, delta_seconds, canvas_width, canvas_height);
+static inline dx_result dx_console_render(dx_console* SELF, dx_f32 delta_seconds, dx_i32 canvas_size_horizontal, dx_i32 canvas_size_vertical, dx_i32 dpi_horizontal, dx_i32 dpi_vertical) {
+  DX_OBJECT_VIRTUALCALL(dx_console, render, SELF, delta_seconds, canvas_size_horizontal, canvas_size_vertical, dpi_horizontal, dpi_vertical);
 }
 
 /// @brief Open this console.

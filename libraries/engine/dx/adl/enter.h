@@ -19,32 +19,36 @@ struct dx_adl_enter {
   dx_adl_context* context;
 };
 
+static inline dx_adl_enter_dispatch* DX_ADL_ENTER_DISPATCH(void* p) {
+  return (dx_adl_enter_dispatch*)p;
+}
+
 struct dx_adl_enter_dispatch {
   dx_object_dispatch _parent;
 };
 
-int dx_adl_enter_construct(dx_adl_enter* self, dx_adl_context* context);
+dx_result dx_adl_enter_construct(dx_adl_enter* SELF, dx_adl_context* context);
 
-dx_adl_enter* dx_adl_enter_create(dx_adl_context* context);
+dx_result dx_adl_enter_create(dx_adl_enter** RETURN, dx_adl_context* context);
 
-int dx_adl_enter_run(dx_adl_enter* self, dx_ddl_node* source, dx_adl_context* context);
+int dx_adl_enter_run(dx_adl_enter* SELF, dx_ddl_node* source, dx_adl_context* context);
 
-int dx_adl_enter_on_color(dx_adl_enter* self, dx_ddl_node* source, dx_adl_context* context);
+int dx_adl_enter_on_color(dx_adl_enter* SELF, dx_ddl_node* source, dx_adl_context* context);
 
-int dx_adl_enter_on_scene(dx_adl_enter* self, dx_ddl_node* source, dx_adl_context* context);
+int dx_adl_enter_on_scene(dx_adl_enter* SELF, dx_ddl_node* source, dx_adl_context* context);
 
-int dx_adl_enter_on_image(dx_adl_enter* self, dx_ddl_node* source, dx_adl_context* context);
+int dx_adl_enter_on_image(dx_adl_enter* SELF, dx_ddl_node* source, dx_adl_context* context);
 
-int dx_adl_enter_on_mesh(dx_adl_enter* self, dx_ddl_node* source, dx_adl_context* context);
+int dx_adl_enter_on_mesh(dx_adl_enter* SELF, dx_ddl_node* source, dx_adl_context* context);
 
-int dx_adl_enter_on_mesh_instance(dx_adl_enter* self, dx_ddl_node* source, dx_adl_context* context);
+int dx_adl_enter_on_mesh_instance(dx_adl_enter* SELF, dx_ddl_node* source, dx_adl_context* context);
 
-int dx_adl_enter_on_material(dx_adl_enter* self, dx_ddl_node* source, dx_adl_context* context);
+int dx_adl_enter_on_material(dx_adl_enter* SELF, dx_ddl_node* source, dx_adl_context* context);
 
-int dx_adl_enter_on_viewer_instance(dx_adl_enter* self, dx_ddl_node* source, dx_adl_context* context);
+int dx_adl_enter_on_viewer_instance(dx_adl_enter* SELF, dx_ddl_node* source, dx_adl_context* context);
 
-int dx_adl_enter_on_viewer(dx_adl_enter* self, dx_ddl_node* source, dx_adl_context* context);
+int dx_adl_enter_on_viewer(dx_adl_enter* SELF, dx_ddl_node* source, dx_adl_context* context);
 
-int dx_adl_enter_on_texture(dx_adl_enter* self, dx_ddl_node* source, dx_adl_context* context);
+int dx_adl_enter_on_texture(dx_adl_enter* SELF, dx_ddl_node* source, dx_adl_context* context);
 
 #endif // DX_ADL_ENTER_H_INCLUDED

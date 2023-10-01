@@ -25,10 +25,7 @@ dx_result dx_mouse_state_construct(dx_mouse_state* SELF) {
 }
 
 dx_result dx_mouse_state_create(dx_mouse_state** RETURN) {
-  dx_mouse_state* SELF = DX_MOUSE_STATE(dx_object_alloc(sizeof(dx_mouse_state)));
-  if (!SELF) {
-    return DX_FAILURE;
-  }
+  DX_CREATE_PREFIX(dx_mouse_state)
   if (dx_mouse_state_construct(SELF)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;

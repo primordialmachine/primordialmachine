@@ -2,6 +2,10 @@
 
 #include "dx/aal/al/context.h"
 
+#define AL_LIBTYPE_STATIC
+#include <AL/al.h>
+#include <AL/alext.h>
+
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 static dx_aal_al_context* g_context = NULL;
@@ -28,13 +32,24 @@ static void dx_aal_al_system_dispatch_construct(dx_aal_al_system_dispatch* SELF)
 }
 
 static dx_result startup(dx_aal_al_system* SELF) {
-  if (dx_aal_al_context_create(&g_context)) {
+  SELF->device = alcOpenDevice(NULL);
+  if (!SELF->device) {
+    dx_log("unable to create OpenAL device\n", sizeof("unable to create OpenAL device\n") - 1);
+    return DX_FAILURE;
+  }
+  if (dx_aal_al_context_create(&g_context, SELF)) {
+    if (!alcCloseDevice(SELF->device)) {
+      dx_log("unable to destroy OpenAL device\n", sizeof("unable to destroy OpenAL device\n") - 1);
+    }
     return DX_FAILURE;
   }
   return DX_SUCCESS;
 }
 
 static dx_result shutdown(dx_aal_al_system* SELF) {
+  if (!alcCloseDevice(SELF->device)) {
+    dx_log("unable to destroy OpenAL device\n", sizeof("unable to destroy OpenAL device\n") - 1);
+  }
   DX_UNREFERENCE(g_context);
   g_context = NULL;
   return DX_SUCCESS;
@@ -63,10 +78,7 @@ dx_result dx_aal_al_system_construct(dx_aal_al_system* SELF, dx_msg_queue* msg_q
 }
 
 dx_result dx_aal_al_system_create(dx_aal_al_system** RETURN, dx_msg_queue* msg_queue) {
-  dx_aal_al_system* SELF = DX_AAL_AL_SYSTEM(dx_object_alloc(sizeof(dx_aal_al_system)));
-  if (!SELF) {
-    return DX_FAILURE;
-  }
+  DX_CREATE_PREFIX(dx_aal_al_system)
   if (dx_aal_al_system_construct(SELF, msg_queue)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;

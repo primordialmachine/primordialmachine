@@ -37,7 +37,7 @@ struct dx_asset_image_operations_checkerboard_pattern_fill_dispatch {
 /// @method-call
 dx_result dx_asset_image_operations_checkerboard_pattern_fill_construct(dx_asset_image_operations_checkerboard_pattern_fill* self);
 
-dx_asset_image_operations_checkerboard_pattern_fill* dx_asset_image_operations_checkerboard_pattern_fill_create();
+dx_result dx_asset_image_operations_checkerboard_pattern_fill_create(dx_asset_image_operations_checkerboard_pattern_fill** RETURN);
 
 
 

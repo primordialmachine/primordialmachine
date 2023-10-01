@@ -197,7 +197,7 @@ static void remove_material_from_backend(dx_val_mesh* self) {
 }
 
 static dx_result add_to_backend(dx_val_mesh* SELF) {
-  DX_VERTEX_FORMAT vertex_format = SELF->asset_mesh->vertex_format;
+  dx_vertex_format vertex_format = SELF->asset_mesh->vertex_format;
 
   // create buffer
   if (dx_val_context_create_buffer(&SELF->buffer, SELF->context)) {
@@ -227,13 +227,13 @@ static dx_result add_to_backend(dx_val_mesh* SELF) {
   // create the program
   uint8_t flags = DX_PROGRAM_WITH_MESH_AMBIENT_RGBA;
   switch (vertex_format) {
-  case DX_VERTEX_FORMAT_POSITION_XYZ: {
+  case dx_vertex_format_position_xyz: {
     /*Intentionally empty.*/
   } break;
-  case DX_VERTEX_FORMAT_POSITION_XYZ_AMBIENT_RGBA: {
+  case dx_vertex_format_position_xyz_ambient_rgba: {
     flags |= DX_PROGRAM_WITH_VERTEX_AMBIENT_RGBA;
   } break;
-  case DX_VERTEX_FORMAT_POSITION_XYZ_AMBIENT_UV: {
+  case dx_vertex_format_position_xyz_ambient_uv: {
    flags |= DX_PROGRAM_WITH_VERTEX_AMBIENT_UV;
    if (SELF->material->asset_material->ambient_texture_reference && SELF->material->asset_material->ambient_texture_reference->object) {
       flags |= DX_PROGRAM_WITH_MATERIAL_AMBIENT_TEXTURE;
@@ -335,19 +335,13 @@ dx_result dx_val_mesh_construct(dx_val_mesh* SELF, dx_val_context* context, dx_a
   return DX_SUCCESS;
 }
 
-dx_val_mesh* dx_val_mesh_create(dx_val_context* context, dx_asset_mesh* asset_mesh) {
-  dx_rti_type* TYPE = dx_val_mesh_get_type();
-  if (!TYPE) {
-    return NULL;
-  }
-  dx_val_mesh* SELF = DX_VAL_MESH(dx_object_alloc(sizeof(dx_val_mesh)));
-  if (!SELF) {
-    return NULL;
-  }
+dx_result dx_val_mesh_create(dx_val_mesh** RETURN, dx_val_context* context, dx_asset_mesh* asset_mesh) {
+  DX_CREATE_PREFIX(dx_val_mesh)
   if (dx_val_mesh_construct(SELF, context, asset_mesh)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
-    return NULL;
+    return DX_FAILURE;
   }
-  return SELF;
+  *RETURN = SELF;
+  return DX_SUCCESS;
 }

@@ -8,58 +8,58 @@ static void removed_callback(dx_object** p) {
   if (*p) DX_UNREFERENCE(*p);
 }
 
-dx_result dx_inline_object_array_initialize(dx_inline_object_array* self, dx_size initial_capacity) {
+dx_result dx_inline_object_array_initialize(dx_inline_object_array* SELF, dx_size initial_capacity) {
   DX_INLINE_POINTER_ARRAY_CONFIGURATION configuration;
   configuration.added_callback = (void(*)(void*)) & added_callback;
   configuration.removed_callback = (void(*)(void*)) & removed_callback;
-  if (dx_inline_pointer_array_initialize(&self->backend, initial_capacity, &configuration)) {
+  if (dx_inline_pointer_array_initialize(&SELF->backend, initial_capacity, &configuration)) {
     return DX_FAILURE;
   }
   return DX_SUCCESS;
 }
 
-void dx_inline_object_array_uninitialize(dx_inline_object_array* self) {
-  dx_inline_pointer_array_uninitialize(&self->backend);
+void dx_inline_object_array_uninitialize(dx_inline_object_array* SELF) {
+  dx_inline_pointer_array_uninitialize(&SELF->backend);
 }
 
-dx_result dx_inline_object_array_increase_capacity(dx_inline_object_array* self, dx_size additional_capacity)  {
-  if (!self) {
+dx_result dx_inline_object_array_increase_capacity(dx_inline_object_array* SELF, dx_size additional_capacity)  {
+  if (!SELF) {
     dx_set_error(DX_ERROR_INVALID_ARGUMENT);
     return DX_FAILURE;
   }
-  return dx_inline_pointer_array_increase_capacity(&self->backend, additional_capacity);
+  return dx_inline_pointer_array_increase_capacity(&SELF->backend, additional_capacity);
 }
 
-dx_result dx_inline_object_array_ensure_free_capacity(dx_inline_object_array* self, dx_size required_free_capacity) {
-  if (!self) {
+dx_result dx_inline_object_array_ensure_free_capacity(dx_inline_object_array* SELF, dx_size required_free_capacity) {
+  if (!SELF) {
     dx_set_error(DX_ERROR_INVALID_ARGUMENT);
     return DX_FAILURE;
   }
-  return dx_inline_pointer_array_ensure_free_capacity(&self->backend, required_free_capacity);
+  return dx_inline_pointer_array_ensure_free_capacity(&SELF->backend, required_free_capacity);
 }
 
-dx_result dx_inline_object_array_append(dx_inline_object_array* self, dx_object *pointer) {
-  if (!self) {
+dx_result dx_inline_object_array_append(dx_inline_object_array* SELF, dx_object *pointer) {
+  if (!SELF) {
     dx_set_error(DX_ERROR_INVALID_ARGUMENT);
     return DX_FAILURE;
   }
-  return dx_inline_pointer_array_append(&self->backend, pointer);
+  return dx_inline_pointer_array_append(&SELF->backend, pointer);
 }
 
-dx_result dx_inline_object_array_prepend(dx_inline_object_array* self, dx_object *pointer) {
-  if (!self) {
+dx_result dx_inline_object_array_prepend(dx_inline_object_array* SELF, dx_object *pointer) {
+  if (!SELF) {
     dx_set_error(DX_ERROR_INVALID_ARGUMENT);
     return DX_FAILURE;
   }
-  return dx_inline_pointer_array_prepend(&self->backend, pointer);
+  return dx_inline_pointer_array_prepend(&SELF->backend, pointer);
 }
 
-dx_result dx_inline_object_array_insert(dx_inline_object_array* self, dx_object *pointer, dx_size index) {
-  if (!self) {
+dx_result dx_inline_object_array_insert(dx_inline_object_array* SELF, dx_object *pointer, dx_size index) {
+  if (!SELF) {
     dx_set_error(DX_ERROR_INVALID_ARGUMENT);
     return DX_FAILURE;
   }
-  return dx_inline_pointer_array_insert(&self->backend, pointer, index);
+  return dx_inline_pointer_array_insert(&SELF->backend, pointer, index);
 }
 
 dx_result dx_inline_object_array_get_at(dx_object** RETURN, dx_inline_object_array const* SELF, dx_size index) {

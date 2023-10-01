@@ -34,9 +34,9 @@ struct dx_asset_face_dispatch {
 /// @param c The third index.
 /// @default-return
 /// @default-failure
-int dx_asset_face_construct_triangle(dx_asset_face* SELF, uint32_t a, uint32_t b, uint32_t c);
+dx_result dx_asset_face_construct_triangle(dx_asset_face* SELF, uint32_t a, uint32_t b, uint32_t c);
 
-dx_asset_face* dx_asset_face_create_triangle(uint32_t a, uint32_t b, uint32_t c);
+dx_result dx_asset_face_create_triangle(dx_asset_face** RETURN, uint32_t a, uint32_t b, uint32_t c);
 
 /// @brief Construct this face.
 /// @param SELF A pointer to this face.
@@ -46,18 +46,18 @@ dx_asset_face* dx_asset_face_create_triangle(uint32_t a, uint32_t b, uint32_t c)
 /// @param c The fourth index.
 /// @default-return
 /// @default-failure
-int dx_asset_face_construct_quadriliteral(dx_asset_face* SELF, uint32_t a, uint32_t b, uint32_t c, uint32_t d);
+dx_result dx_asset_face_construct_quadriliteral(dx_asset_face* SELF, uint32_t a, uint32_t b, uint32_t c, uint32_t d);
 
-dx_asset_face* dx_asset_face_create_quadriliteral(uint32_t a, uint32_t b, uint32_t c, uint32_t d);
+dx_result dx_asset_face_create_quadriliteral(dx_asset_face** RETURN, uint32_t a, uint32_t b, uint32_t c, uint32_t d);
 
 /// @brief Construct this face.
 /// @param SELF A pointer to this face.
 /// @param other A pointer of the face to copy.
 /// @default-return
 /// @default-failure
-int dx_asset_face_construct_copy(dx_asset_face* SELF, dx_asset_face* other);
+dx_result dx_asset_face_construct_copy(dx_asset_face* SELF, dx_asset_face* other);
 
-dx_asset_face* dx_asset_face_create_copy(dx_asset_face* other);
+dx_result dx_asset_face_create_copy(dx_asset_face** RETURN, dx_asset_face* other);
 
 /// @brief Convert this face into triangles. Add those triangles to the specified list.
 /// @param SELF 
@@ -98,7 +98,7 @@ struct dx_asset_mesh {
   uint32_t number_of_vertices;
 
   /// @brief The format of the vertices of this mesh.
-  DX_VERTEX_FORMAT vertex_format;
+  dx_vertex_format vertex_format;
 
   struct {
     /// The mesh ambient "rgba" value.
@@ -143,7 +143,7 @@ struct dx_asset_mesh_dispatch {
 /// - "cube" a cube mesh
 /// - "empty" an empty mesh
 /// @method-call
-dx_result dx_asset_mesh_create(dx_asset_mesh** RETURN, dx_string* name, dx_string* specifier, DX_VERTEX_FORMAT vertex_format, dx_asset_reference* material_reference);
+dx_result dx_asset_mesh_create(dx_asset_mesh** RETURN, dx_string* name, dx_string* specifier, dx_vertex_format vertex_format, dx_asset_reference* material_reference);
 
 /// @brief Pack the mesh data into a single stream of the specified format.
 /// @param SELF A pointer to this mesh.
@@ -155,7 +155,7 @@ dx_result dx_asset_mesh_create(dx_asset_mesh** RETURN, dx_string* name, dx_strin
 /// @success
 /// <code>*number_of_bytes</code> was assigned the length, in Bytes, of the packed mesh data.
 /// <code>*bytes</code> was assigned a pointer to an array of length <code>*number_of_bytes</code>.
-int dx_asset_mesh_format(dx_asset_mesh* SELF, DX_VERTEX_FORMAT vertex_format, void **bytes, dx_size*number_of_bytes);
+int dx_asset_mesh_format(dx_asset_mesh* SELF, dx_vertex_format vertex_format, void **bytes, dx_size*number_of_bytes);
 
 /// @brief Transform a range of vertices.
 /// @param SELF A pointer to this mesh.

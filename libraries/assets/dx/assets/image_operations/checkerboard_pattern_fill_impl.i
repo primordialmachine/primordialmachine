@@ -1,14 +1,18 @@
 
 static dx_result on_checkerboard_pattern_fill_image_operation(dx_asset_image* SELF, OFFSET2 offset, EXTEND2 extend, dx_asset_image_operations_checkerboard_pattern_fill* image_operation) {
-  dx_asset_image_operations_color_fill* first = dx_asset_image_operations_color_fill_create();
-  dx_asset_image_operations_color_fill_set_color(first, image_operation->first_checker_color);
-  if (!first) {
+  dx_asset_image_operations_color_fill* first = NULL;
+  if (dx_asset_image_operations_color_fill_create(&first)) {
+    return DX_FAILURE;
+  }
+  dx_asset_image_operations_color_fill* second = NULL;
+  if (dx_asset_image_operations_color_fill_create(&second)) {
+    DX_UNREFERENCE(first);
+    first = NULL;
     return DX_FAILURE;
   }
 
-  dx_asset_image_operations_color_fill* second = dx_asset_image_operations_color_fill_create();
-  dx_asset_image_operations_color_fill_set_color(second, image_operation->second_checker_color);
-  if (!second) {
+  if (dx_asset_image_operations_color_fill_set_color(first, image_operation->first_checker_color) ||
+      dx_asset_image_operations_color_fill_set_color(second, image_operation->second_checker_color)) {
     DX_UNREFERENCE(first);
     first = NULL;
     return DX_FAILURE;

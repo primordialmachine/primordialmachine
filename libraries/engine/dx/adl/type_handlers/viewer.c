@@ -15,9 +15,9 @@ static inline dx_string* _get_name(dx_adl_names* names, dx_size index) {
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-static int resolve(dx_adl_type_handlers_viewer* self, dx_adl_symbol* symbol, dx_adl_context* context);
+static int resolve(dx_adl_type_handlers_viewer* SELF, dx_adl_symbol* symbol, dx_adl_context* context);
 
-static dx_object* read(dx_adl_type_handlers_viewer* self, dx_ddl_node* node, dx_adl_context* context);
+static dx_result read(dx_object** RETURN, dx_adl_type_handlers_viewer* SELF, dx_ddl_node* node, dx_adl_context* context);
 
 static dx_asset_optics* _read_optics(dx_ddl_node* node, dx_adl_context* context);
 
@@ -42,7 +42,11 @@ static dx_asset_optics* _read_optics(dx_ddl_node* node, dx_adl_context* context)
     }
     DX_UNREFERENCE(received_type);
     received_type = NULL;
-    return DX_ASSET_OPTICS(dx_adl_type_handler_read(reader, node, context));
+    dx_asset_optics* asset_optics = NULL;
+    if (dx_adl_type_handler_read((dx_object**)&asset_optics, reader, node, context)) {
+      return NULL;
+    }
+    return asset_optics;
   } else {
     DX_UNREFERENCE(received_type);
     received_type = NULL;
@@ -65,7 +69,11 @@ static dx_asset_viewer_controller* _read_viewer_controller(dx_ddl_node* node, dx
     }
     DX_UNREFERENCE(received_type);
     received_type = NULL;
-    return DX_ASSET_VIEWER_CONTROLLER(dx_adl_type_handler_read(reader, node, context));
+    dx_asset_viewer_controller* asset_viewer_controller = NULL;
+    if (dx_adl_type_handler_read((dx_object**)&asset_viewer_controller, reader, node, context)) {
+      return NULL;
+    }
+    return asset_viewer_controller;
   } else {
     DX_UNREFERENCE(received_type);
     received_type = NULL;
@@ -74,7 +82,7 @@ static dx_asset_viewer_controller* _read_viewer_controller(dx_ddl_node* node, dx
   }
 }
 
-static int resolve(dx_adl_type_handlers_viewer* self, dx_adl_symbol* symbol, dx_adl_context* context) {
+static int resolve(dx_adl_type_handlers_viewer* SELF, dx_adl_symbol* symbol, dx_adl_context* context) {
   if (symbol->resolved) {
     return 0;
   }
@@ -82,22 +90,23 @@ static int resolve(dx_adl_type_handlers_viewer* self, dx_adl_symbol* symbol, dx_
   return 0;
 }
 
-static dx_object* read(dx_adl_type_handlers_viewer* self, dx_ddl_node* node, dx_adl_context* context) {
+static dx_result read(dx_object** RETURN, dx_adl_type_handlers_viewer* SELF, dx_ddl_node* node, dx_adl_context* context) {
   dx_asset_viewer* viewer_value = NULL;
   dx_string* name_value = NULL;
   // name
   {
     name_value = dx_adl_semantical_read_name(node, context);
     if (!name_value) {
-      return NULL;
+      return DX_FAILURE;
     }
   }
-  viewer_value = dx_asset_viewer_create(name_value);
+  if (dx_asset_viewer_create(&viewer_value, name_value)) {
+    DX_UNREFERENCE(name_value);
+    name_value = NULL;
+    return DX_FAILURE;
+  }
   DX_UNREFERENCE(name_value);
   name_value = NULL;
-  if (!viewer_value) {
-    return NULL;
-  }
   // source?
   {
     dx_ddl_node* child_node = dx_ddl_node_map_get(node, NAME(source_key));
@@ -105,14 +114,14 @@ static dx_object* read(dx_adl_type_handlers_viewer* self, dx_ddl_node* node, dx_
       if (dx_get_error() != DX_ERROR_NOT_FOUND) {
         DX_UNREFERENCE(viewer_value);
         viewer_value = NULL;
-        return NULL;
+        return DX_FAILURE;
       }
     } else {
       DX_VEC3* value = dx_adl_semantical_read_vector_3(child_node, context);
       if (!value) {
         DX_UNREFERENCE(viewer_value);
         viewer_value = NULL;
-        return NULL;
+        return DX_FAILURE;
       }
       viewer_value->source = *value;
       dx_memory_deallocate(value);
@@ -126,14 +135,14 @@ static dx_object* read(dx_adl_type_handlers_viewer* self, dx_ddl_node* node, dx_
       if (dx_get_error() != DX_ERROR_NOT_FOUND) {
         DX_UNREFERENCE(viewer_value);
         viewer_value = NULL;
-        return NULL;
+        return DX_FAILURE;
       }
     } else {
       DX_VEC3* value = dx_adl_semantical_read_vector_3(child_node, context);
       if (!value) {
         DX_UNREFERENCE(viewer_value);
         viewer_value = NULL;
-        return NULL;
+        return DX_FAILURE;
       }
       viewer_value->target = *value;
       dx_memory_deallocate(value);
@@ -147,14 +156,14 @@ static dx_object* read(dx_adl_type_handlers_viewer* self, dx_ddl_node* node, dx_
       if (dx_get_error() != DX_ERROR_NOT_FOUND) {
         DX_UNREFERENCE(viewer_value);
         viewer_value = NULL;
-        return NULL;
+        return DX_FAILURE;
       }
     } else {
       DX_VEC3* value = dx_adl_semantical_read_vector_3(child_node, context);
       if (!value) {
         DX_UNREFERENCE(viewer_value);
         viewer_value = NULL;
-        return NULL;
+        return DX_FAILURE;
       }
       viewer_value->up = *value;
       dx_memory_deallocate(value);
@@ -169,7 +178,7 @@ static dx_object* read(dx_adl_type_handlers_viewer* self, dx_ddl_node* node, dx_
       if (!optics) {
         DX_UNREFERENCE(viewer_value);
         viewer_value = NULL;
-        return NULL;
+        return DX_FAILURE;
       }
       if (viewer_value->optics) {
         DX_UNREFERENCE(viewer_value->optics);
@@ -180,7 +189,7 @@ static dx_object* read(dx_adl_type_handlers_viewer* self, dx_ddl_node* node, dx_
       if (dx_get_error() != DX_ERROR_NOT_FOUND) {
         DX_UNREFERENCE(viewer_value);
         viewer_value = NULL;
-        return NULL;
+        return DX_FAILURE;
       }
     }
   }
@@ -191,7 +200,7 @@ static dx_object* read(dx_adl_type_handlers_viewer* self, dx_ddl_node* node, dx_
       if (dx_get_error() != DX_ERROR_NOT_FOUND) {
         DX_UNREFERENCE(viewer_value);
         viewer_value = NULL;
-        return NULL;
+        return DX_FAILURE;
       } else {
         dx_set_error(DX_NO_ERROR);
       }
@@ -200,43 +209,43 @@ static dx_object* read(dx_adl_type_handlers_viewer* self, dx_ddl_node* node, dx_
       if (!controller) {
         DX_UNREFERENCE(viewer_value);
         viewer_value = NULL;
-        return NULL;
+        return DX_FAILURE;
       }
       viewer_value->controller = controller;
     }
   }
-  return DX_OBJECT(viewer_value);
+  *RETURN = DX_OBJECT(viewer_value);
+  return DX_SUCCESS;
 }
 
-int dx_adl_type_handlers_viewer_construct(dx_adl_type_handlers_viewer* self) {
-  dx_rti_type* _type = dx_adl_type_handlers_viewer_get_type();
-  if (!_type) {
-    return 1;
+dx_result dx_adl_type_handlers_viewer_construct(dx_adl_type_handlers_viewer* SELF) {
+  dx_rti_type* TYPE = dx_adl_type_handlers_viewer_get_type();
+  if (!TYPE) {
+    return DX_FAILURE;
   }
-  if (dx_adl_type_handler_construct(DX_ADL_TYPE_HANDLER(self))) {
-    return 1;
+  if (dx_adl_type_handler_construct(DX_ADL_TYPE_HANDLER(SELF))) {
+    return DX_FAILURE;
   }
-  DX_ADL_TYPE_HANDLER(self)->resolve = (int(*)(dx_adl_type_handler*, dx_adl_symbol*, dx_adl_context*)) & resolve;
-  DX_ADL_TYPE_HANDLER(self)->read = (dx_object*(*)(dx_adl_type_handler*, dx_ddl_node*, dx_adl_context*))&read;
-  DX_OBJECT(self)->type = _type;
-  return 0;
+  /// @todo Fixme.
+  DX_ADL_TYPE_HANDLER(SELF)->resolve = (int(*)(dx_adl_type_handler*, dx_adl_symbol*, dx_adl_context*)) & resolve;
+  DX_OBJECT(SELF)->type = TYPE;
+  return DX_SUCCESS;
 }
 
-static void dx_adl_type_handlers_viewer_destruct(dx_adl_type_handlers_viewer* self)
+static void dx_adl_type_handlers_viewer_destruct(dx_adl_type_handlers_viewer* SELF)
 {/*Intentionally empty.*/}
 
-static void dx_adl_type_handlers_viewer_dispatch_construct(dx_adl_type_handlers_viewer_dispatch* self)
-{/*Intentionally empty.*/}
+static void dx_adl_type_handlers_viewer_dispatch_construct(dx_adl_type_handlers_viewer_dispatch* SELF) {
+  DX_ADL_TYPE_HANDLER_DISPATCH(SELF)->read = (dx_result (*)(dx_object**, dx_adl_type_handler*, dx_ddl_node*, dx_adl_context*)) & read;
+}
 
-dx_adl_type_handlers_viewer* dx_adl_type_handlers_viewer_create() {
-  dx_adl_type_handlers_viewer* self = DX_ADL_TYPE_HANDLERS_VIEWER(dx_object_alloc(sizeof(dx_adl_type_handlers_viewer)));
-  if (!self) {
-    return NULL;
+dx_result dx_adl_type_handlers_viewer_create(dx_adl_type_handlers_viewer** RETURN) {
+  DX_CREATE_PREFIX(dx_adl_type_handlers_viewer)
+  if (dx_adl_type_handlers_viewer_construct(SELF)) {
+    DX_UNREFERENCE(SELF);
+    SELF = NULL;
+    return DX_FAILURE;
   }
-  if (dx_adl_type_handlers_viewer_construct(self)) {
-    DX_UNREFERENCE(self);
-    self = NULL;
-    return NULL;
-  }
-  return self;
+  *RETURN = SELF;
+  return DX_SUCCESS;
 }

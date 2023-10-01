@@ -33,10 +33,7 @@ dx_result dx_aal_al_system_factory_construct(dx_aal_al_system_factory* SELF) {
 }
 
 dx_result dx_aal_al_system_factory_create(dx_aal_al_system_factory** RETURN) {
-  dx_aal_al_system_factory* SELF = DX_AAL_AL_SYSTEM_FACTORY(dx_object_alloc(sizeof(dx_aal_al_system_factory)));
-  if (!SELF) {
-    return DX_FAILURE;
-  }
+  DX_CREATE_PREFIX(dx_aal_al_system_factory)
   if (dx_aal_al_system_factory_construct(SELF)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;

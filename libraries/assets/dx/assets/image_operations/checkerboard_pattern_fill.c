@@ -25,21 +25,15 @@ dx_result dx_asset_image_operations_checkerboard_pattern_fill_construct(dx_asset
   return DX_SUCCESS;
 }
 
-dx_asset_image_operations_checkerboard_pattern_fill* dx_asset_image_operations_checkerboard_pattern_fill_create() {
-  dx_rti_type* _type = dx_asset_image_operations_checkerboard_pattern_fill_get_type();
-  if (!_type) {
-    return NULL;
+dx_result dx_asset_image_operations_checkerboard_pattern_fill_create(dx_asset_image_operations_checkerboard_pattern_fill** RETURN) {
+  DX_CREATE_PREFIX(dx_asset_image_operations_checkerboard_pattern_fill)
+  if (dx_asset_image_operations_checkerboard_pattern_fill_construct(SELF)) {
+    DX_UNREFERENCE(SELF);
+    SELF = NULL;
+    return DX_FAILURE;
   }
-  dx_asset_image_operations_checkerboard_pattern_fill* self = DX_ASSET_IMAGE_OPERATIONS_CHECKERBOARD_PATTERN_FILL(dx_object_alloc(sizeof(dx_asset_image_operations_checkerboard_pattern_fill)));
-  if (!self) {
-    return NULL;
-  }
-  if (dx_asset_image_operations_checkerboard_pattern_fill_construct(self)) {
-    DX_UNREFERENCE(self);
-    self = NULL;
-    return NULL;
-  }
-  return self;
+  *RETURN = SELF;
+  return DX_SUCCESS;
 }
 
 #define PROPERTY(TYPE, PROPERTY_TYPE, PROPERTY_NAME) \

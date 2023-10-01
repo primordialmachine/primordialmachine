@@ -89,12 +89,12 @@ struct dx_val_command {
     struct {
       
       /// @brief The cull mode.
-      /// @default DX_CULL_MODE_BACK.
-      DX_CULL_MODE cull_mode;
+      /// @default dx_cull_mode_back.
+      dx_cull_mode cull_mode;
       
       /// @brief The depth test function.
-      /// @default DX_DEPTH_TEST_FUNCTION_LESS_THAN.
-      DX_DEPTH_TEST_FUNCTION depth_test_function;
+      /// @default dx_depth_test_function_less_than.
+      dx_depth_test_function depth_test_function;
       
       /// @brief Is depth write enable.
       /// @default DX_TRUE.
@@ -178,7 +178,7 @@ dx_result dx_val_command_construct_viewport(dx_val_command* SELF, dx_f32 l, dx_f
 dx_result dx_val_command_create_viewport(dx_val_command** RETURN, dx_f32 l, dx_f32 b, dx_f32 w, dx_f32 h);
 
 
-dx_result dx_val_command_construct_pipeline_state(dx_val_command* SELF, DX_CULL_MODE cull_mode, DX_DEPTH_TEST_FUNCTION depth_test_function, dx_bool depth_write_enabled);
+dx_result dx_val_command_construct_pipeline_state(dx_val_command* SELF, dx_cull_mode cull_mode, dx_depth_test_function depth_test_function, dx_bool depth_write_enabled);
 
 /// Create a pipeline state command.
 /// @param RETURN A pointer to a <code>dx_val_command</code> variable.
@@ -190,7 +190,7 @@ dx_result dx_val_command_construct_pipeline_state(dx_val_command* SELF, DX_CULL_
 /// The caller has acquired a reference to the returned object.
 /// @default-return
 /// @default-failure
-dx_result dx_val_command_create_pipeline_state(dx_val_command** RETURN, DX_CULL_MODE cull_mode, DX_DEPTH_TEST_FUNCTION depth_test_function, dx_bool depth_write_enabled);
+dx_result dx_val_command_create_pipeline_state(dx_val_command** RETURN, dx_cull_mode cull_mode, dx_depth_test_function depth_test_function, dx_bool depth_write_enabled);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 

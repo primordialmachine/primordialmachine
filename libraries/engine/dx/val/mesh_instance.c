@@ -7,8 +7,8 @@ DX_DEFINE_OBJECT_TYPE("dx.val.mesh_instance",
                       dx_object)
 
 static dx_val_cbinding* create_cbinding(dx_val_mesh_instance* self) {
-  dx_val_cbinding* cbinding = dx_val_cbinding_create();
-  if (!cbinding) {
+  dx_val_cbinding* cbinding = NULL;
+  if (dx_val_cbinding_create(&cbinding)) {
     return NULL;
   }
   dx_val_cbinding_set_rgba_f32(cbinding, "vs_mesh_ambient_rgba", &self->mesh->material->ambient_color);
@@ -74,8 +74,8 @@ static void dx_val_mesh_instance_destruct(dx_val_mesh_instance* self) {
 static void dx_val_mesh_instance_dispatch_construct(dx_val_mesh_instance_dispatch* self)
 {/*Intentionally empty.*/}
 
-dx_result dx_val_mesh_instance_construct(dx_val_mesh_instance* self, DX_MAT4 world_matrix, dx_val_mesh* mesh) {
-  if (!self || !mesh) {
+dx_result dx_val_mesh_instance_construct(dx_val_mesh_instance* SELF, DX_MAT4 world_matrix, dx_val_mesh* mesh) {
+  if (!SELF || !mesh) {
     dx_set_error(DX_ERROR_INVALID_ARGUMENT);
     return DX_FAILURE;
   }
@@ -83,24 +83,21 @@ dx_result dx_val_mesh_instance_construct(dx_val_mesh_instance* self, DX_MAT4 wor
   if (!TYPE) {
     return DX_FAILURE;
   }
-  self->commands = NULL;
-  self->world_matrix = world_matrix;
-  self->mesh = mesh;
-  DX_REFERENCE(self->mesh);
-  if (add_to_backend(self)) {
-    DX_UNREFERENCE(self->mesh);
-    self->mesh = NULL;
+  SELF->commands = NULL;
+  SELF->world_matrix = world_matrix;
+  SELF->mesh = mesh;
+  DX_REFERENCE(SELF->mesh);
+  if (add_to_backend(SELF)) {
+    DX_UNREFERENCE(SELF->mesh);
+    SELF->mesh = NULL;
     return DX_FAILURE;
   }
-  DX_OBJECT(self)->type = TYPE;
+  DX_OBJECT(SELF)->type = TYPE;
   return DX_SUCCESS;
 }
 
 dx_result dx_val_mesh_instance_create(dx_val_mesh_instance** RETURN, DX_MAT4 world_matrix, dx_val_mesh* mesh) {
-  dx_val_mesh_instance* SELF = DX_VAL_MESH_INSTANCE(dx_object_alloc(sizeof(dx_val_mesh_instance)));
-  if (!SELF) {
-    return DX_FAILURE;
-  }
+  DX_CREATE_PREFIX(dx_val_mesh_instance)
   if (dx_val_mesh_instance_construct(SELF, world_matrix, mesh)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;

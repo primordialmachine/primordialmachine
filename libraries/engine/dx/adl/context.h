@@ -31,9 +31,10 @@ struct dx_adl_context_dispatch {
   dx_object_dispatch _parent;
 };
 
-int dx_adl_context_construct(dx_adl_context* self);
+dx_result dx_adl_context_construct(dx_adl_context* SELF);
 
-dx_adl_context* dx_adl_context_create();
+/// @create-operator{dx_adl_context}
+dx_result dx_adl_context_create(dx_adl_context** RETURN);
 
 /// @brief Add a map entry (name, node) to the map from names (dx_string) to a type handler (dx_adl_type_handler).
 /// @param self This ADL context.

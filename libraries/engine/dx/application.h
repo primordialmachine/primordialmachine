@@ -44,6 +44,7 @@ struct dx_application_dispatch {
   dx_result(*startup_systems)(dx_application*);
   dx_result(*shutdown_systems)(dx_application*);
   dx_result(*get_val_context)(dx_val_context**, dx_application*);
+  dx_result(*get_aal_context)(dx_aal_context**, dx_application*);
 };
 
 /// @internal
@@ -89,6 +90,16 @@ static inline dx_result dx_application_get_val_context(dx_val_context** RETURN, 
   DX_OBJECT_VIRTUALCALL(dx_application, get_val_context, RETURN, SELF);
 }
 
+/// @brief Get the AAL context.
+/// @param RETURN A pointer to a <code>dx_aal_context*</code> variable.
+/// @param SELF A pointer to this application.
+/// @method-call
+/// @success <code>*RETURN</code> was assigned a pointer to the AAL context object. The caller acquired a reference to that object.
+/// @pre The AAL backend is running.
+static inline dx_result dx_application_get_aal_context(dx_aal_context** RETURN, dx_application* SELF) {
+  DX_OBJECT_VIRTUALCALL(dx_application, get_aal_context, RETURN, SELF);
+}
+
 /// @internal
 /// @brief Emit a "quit" message.
 /// @param SELF A pointer to this application object.
@@ -98,7 +109,7 @@ dx_result dx_application_emit_quit_msg(dx_application* SELF);
 /// @internal
 /// @brief Get the instance of the application singleton object.
 /// @success <code>*RETURN</code> was assigned a pointer to the application singleton object.
-/// The caller acquired a referenc to that object.
+/// The caller acquired a reference to that object.
 /// @procedure-call
 dx_result dx_application_get(dx_application** RETURN);
 

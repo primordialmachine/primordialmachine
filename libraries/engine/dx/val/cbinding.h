@@ -66,13 +66,13 @@ dx_result dx_val_cbinding_set_texture_index(dx_val_cbinding* SELF, char const* n
 
 dx_result dx_val_cbinding_construct(dx_val_cbinding* self);
 
-dx_val_cbinding* dx_val_cbinding_create();
+dx_result dx_val_cbinding_create(dx_val_cbinding** RETURN);
 
 typedef dx_inline_pointer_hashmap_iterator dx_val_cbinding_iter;
 
-int dx_val_cbinding_iter_initialize(dx_val_cbinding_iter* self, dx_val_cbinding* target);
+int dx_val_cbinding_iter_initialize(dx_val_cbinding_iter* SELF, dx_val_cbinding* target);
 
-void dx_val_cbinding_iter_uninitialize(dx_val_cbinding_iter* self);
+void dx_val_cbinding_iter_uninitialize(dx_val_cbinding_iter* SELF);
 
 int dx_val_cbinding_iter_next(dx_val_cbinding_iter* iter);
 

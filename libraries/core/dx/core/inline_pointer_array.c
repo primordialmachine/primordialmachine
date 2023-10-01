@@ -114,32 +114,32 @@ static dx_result _dx_impl_get_at(dx_inline_pointer_array_element* RETURN, _dx_im
 
 /// @internal
 /// @brief Insert an element.
-/// @param self A pointer to this _dx_impl object.
+/// @param SELF A pointer to this _dx_impl object.
 /// @param pointer The element.
 /// @param index The index.
 /// @method-call
-/// @error #DX_ERROR_INVALID_ARGUMENT @a self is a null pointer
+/// @error #DX_ERROR_INVALID_ARGUMENT @a SELF is a null pointer
 /// @error #DX_ERROR_INVALID_ARGUMENT @a index is greater than the size of the array
 /// @error #DX_ERROR_ALLOCATION_FAILED an allocation failed
-static dx_result _dx_impl_insert(_dx_impl* self, dx_inline_pointer_array_element pointer, dx_size index);
+static dx_result _dx_impl_insert(_dx_impl* SELF, dx_inline_pointer_array_element pointer, dx_size index);
 
 /// @internal
 /// @brief Append an element.
-/// @param self A pointer to this _dx_impl object.
+/// @param SELF A pointer to this _dx_impl object.
 /// @param pointer The element.
 /// @method-call
-/// @error #DX_ERROR_INVALID_ARGUMENT @a self is a null pointer
+/// @error #DX_ERROR_INVALID_ARGUMENT @a SELF is a null pointer
 /// @error #DX_ERROR_ALLOCATION_FAILED an allocation failed
-static dx_result _dx_impl_append(_dx_impl* self, dx_inline_pointer_array_element pointer);
+static dx_result _dx_impl_append(_dx_impl* SELF, dx_inline_pointer_array_element pointer);
 
 /// @internal
 /// @brief Prepend an element.
-/// @param self A pointer to this _dx_impl object.
+/// @param SELF A pointer to this _dx_impl object.
 /// @param pointer The element.
 /// @method-call
-/// @error #DX_ERROR_INVALID_ARGUMENT @a self is a null pointer
+/// @error #DX_ERROR_INVALID_ARGUMENT @a SELF is a null pointer
 /// @error #DX_ERROR_ALLOCATION_FAILED an allocation failed
-static dx_result _dx_impl_prepend(_dx_impl* self, dx_inline_pointer_array_element pointer);
+static dx_result _dx_impl_prepend(_dx_impl* SELF, dx_inline_pointer_array_element pointer);
 
 /// @internal
 /// @brief Remove the specified number of elements.
@@ -388,8 +388,8 @@ dx_result dx_inline_pointer_array_insert(dx_inline_pointer_array* SELF, dx_inlin
   return _dx_impl_insert(_DX_IMPL(SELF->pimpl), pointer, index);
 }
 
-dx_result dx_inline_pointer_array_get_at(dx_inline_pointer_array_element* RETURN, dx_inline_pointer_array const* self, dx_size index) {
-  return _dx_impl_get_at(RETURN, _DX_IMPL_CONST(self->pimpl), index);
+dx_result dx_inline_pointer_array_get_at(dx_inline_pointer_array_element* RETURN, dx_inline_pointer_array const* SELF, dx_size index) {
+  return _dx_impl_get_at(RETURN, _DX_IMPL_CONST(SELF->pimpl), index);
 }
 
 dx_result dx_inline_pointer_array_get_size(dx_size* RETURN, dx_inline_pointer_array const* SELF) {

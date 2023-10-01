@@ -4,17 +4,17 @@ DX_DEFINE_OBJECT_TYPE("dx.asset.image_operation",
                       dx_asset_image_operation,
                       dx_object);
 
-static void dx_asset_image_operation_destruct(dx_asset_image_operation* self)
+static void dx_asset_image_operation_destruct(dx_asset_image_operation* SELF)
 {/*Intentionally empty.*/}
 
-static void dx_asset_image_operation_dispatch_construct(dx_asset_image_operation_dispatch* self)
+static void dx_asset_image_operation_dispatch_construct(dx_asset_image_operation_dispatch* SELF)
 {/*Intentionally empty.*/}
 
-int dx_asset_image_operation_construct(dx_asset_image_operation* self) {
-  dx_rti_type* _type = dx_asset_image_operation_get_type();
-  if (!_type) {
-    return 1;
+dx_result dx_asset_image_operation_construct(dx_asset_image_operation* SELF) {
+  dx_rti_type* TYPE = dx_asset_image_operation_get_type();
+  if (!TYPE) {
+    return DX_FAILURE;
   }
-  DX_OBJECT(self)->type = _type;
-  return 0;
+  DX_OBJECT(SELF)->type = TYPE;
+  return DX_SUCCESS;
 }

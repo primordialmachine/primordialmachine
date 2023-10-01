@@ -31,10 +31,7 @@ dx_result dx_val_viewer_construct(dx_val_viewer* SELF, dx_asset_viewer_instance*
 }
 
 dx_result dx_val_viewer_create(dx_val_viewer** RETURN, dx_asset_viewer_instance* asset_viewer_instance) {
-  dx_val_viewer* SELF = DX_VAL_VIEWER(dx_object_alloc(sizeof(dx_val_viewer)));
-  if (!SELF) {
-    return DX_FAILURE;
-  }
+  DX_CREATE_PREFIX(dx_val_viewer)
   if (dx_val_viewer_construct(SELF, asset_viewer_instance)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;

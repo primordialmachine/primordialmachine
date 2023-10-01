@@ -51,10 +51,7 @@ static dx_result dx_val_gl_buffer_set_data(dx_val_gl_buffer* SELF, void const* p
 }
 
 dx_result dx_val_gl_buffer_create(dx_val_gl_buffer** RETURN, dx_val_gl_context* context) {
-  dx_val_gl_buffer* SELF = DX_VAL_GL_BUFFER(dx_object_alloc(sizeof(dx_val_gl_buffer)));
-  if (!SELF) {
-    return DX_FAILURE;
-  }
+  DX_CREATE_PREFIX(dx_val_gl_buffer)
   if (dx_val_gl_buffer_construct(SELF, context)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;

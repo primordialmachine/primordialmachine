@@ -43,8 +43,10 @@ struct dx_asset_viewer_dispatch {
 /// @return The zero value on success. A non-zero value on failure.
 /// @remarks The default values are up <code>(0,1,0)</code>, source <code>(0,0,0)</code>, and target <code>(0,0,-1)</code>.
 /// @default-failure
+/// @tood Fixme.
 int dx_asset_viewer_construct(dx_asset_viewer* SELF, dx_string* name);
 
-dx_asset_viewer* dx_asset_viewer_create(dx_string* name);
+/// @create-operator{dx_asset_viewer}
+dx_result dx_asset_viewer_create(dx_asset_viewer** RETURN, dx_string* name);
 
 #endif // DX_ASSET_VIEWER_H_INCLUDED

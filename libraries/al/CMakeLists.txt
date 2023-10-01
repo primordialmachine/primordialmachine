@@ -9,9 +9,19 @@ set(name "dailies.aal.al")
 set(${name}.kind "static-library")
 set(${name}.languages "C")
 set(${name}.public_include_directories "${CMAKE_CURRENT_SOURCE_DIR}")
-set(${name}.private_include_directories "${CMAKE_CURRENT_SOURCE_DIR}")
+set(${name}.private_include_directories "${CMAKE_CURRENT_SOURCE_DIR}"
+                                        "${CMAKE_CURRENT_SOURCE_DIR}/external/openal/includes")
 set(${name}.source_directory "${CMAKE_CURRENT_SOURCE_DIR}")
 dx_begin_project(${name})
+
+add_library(openallibrary STATIC IMPORTED)
+
+set_target_properties(openallibrary PROPERTIES IMPORTED_LOCATION_MINSIZEREL ${CMAKE_CURRENT_SOURCE_DIR}/external/${${name}.target_architecture}-minsizerel/openal/lib/OpenAL32.lib)
+set_target_properties(openallibrary PROPERTIES IMPORTED_LOCATION_RELEASE ${CMAKE_CURRENT_SOURCE_DIR}/external/${${name}.target_architecture}-release/openal/lib/OpenAL32.lib)
+set_target_properties(openallibrary PROPERTIES IMPORTED_LOCATION_DEBUG ${CMAKE_CURRENT_SOURCE_DIR}/external/${${name}.target_architecture}-debug/openal/lib/OpenAL32.lib)
+set_target_properties(openallibrary PROPERTIES IMPORTED_LOCATION_RELWITHDEBINFO ${CMAKE_CURRENT_SOURCE_DIR}/external/${${name}.target_architecture}-relwithdebinfo/openal/lib/OpenAL32.lib)
+
+set_target_properties(openallibrary PROPERTIES INTERFACE_INCLUDE_DIRECTORIES ${CMAKE_CURRENT_SOURCE_DIR}/external/${${name}.target_architecture}-$<CONFIG>/openal/include/)
 
 # "README.md".
 list(APPEND ${name}.readmes "README.md")
@@ -36,4 +46,8 @@ endfunction()
 
 dx_end_project(${name})
 
-target_link_libraries(${name} "dailies.engine")
+if (WIN32)
+  target_link_libraries(${name} openallibrary winmm.lib "dailies.engine")
+else()
+  target_link_libraries(${name} openallibrary "dailies.engine")
+endif()

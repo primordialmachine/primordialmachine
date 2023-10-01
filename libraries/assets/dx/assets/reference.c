@@ -16,35 +16,29 @@ static void dx_asset_reference_destruct(dx_asset_reference* self) {
 static void dx_asset_reference_dispatch_construct(dx_asset_reference_dispatch* self)
 {/*Intentionally empty.*/}
 
-int dx_asset_reference_construct(dx_asset_reference* self, dx_string* name) {
-  dx_rti_type* _type = dx_asset_reference_get_type();
-  if (!_type) {
-    return 1;
+dx_result dx_asset_reference_construct(dx_asset_reference* SELF, dx_string* name) {
+  dx_rti_type* TYPE = dx_asset_reference_get_type();
+  if (!TYPE) {
+    return DX_FAILURE;
   }
-  if (!self || !name) {
+  if (!SELF || !name) {
     dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return 1;
+    return DX_FAILURE;
   }
-  self->name = name;
-  DX_REFERENCE(self->name);
-  self->object = NULL;
-  DX_OBJECT(self)->type = _type;
-  return 0;
+  SELF->name = name;
+  DX_REFERENCE(SELF->name);
+  SELF->object = NULL;
+  DX_OBJECT(SELF)->type = TYPE;
+  return DX_SUCCESS;
 }
 
-dx_asset_reference* dx_asset_reference_create(dx_string* name) {
-  dx_rti_type* _type = dx_asset_reference_get_type();
-  if (!_type) {
-    return NULL;
+dx_result dx_asset_reference_create(dx_asset_reference** RETURN, dx_string* name) {
+  DX_CREATE_PREFIX(dx_asset_reference)
+  if (dx_asset_reference_construct(SELF, name)) {
+    DX_UNREFERENCE(SELF);
+    SELF = NULL;
+    return DX_FAILURE;
   }
-  dx_asset_reference* self = DX_ASSET_REFERENCE(dx_object_alloc(sizeof(dx_asset_reference)));
-  if (!self) {
-    return NULL;
-  }
-  if (dx_asset_reference_construct(self, name)) {
-    DX_UNREFERENCE(self);
-    self = NULL;
-    return NULL;
-  }
-  return self;
+  *RETURN = SELF;
+  return DX_SUCCESS;
 }

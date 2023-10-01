@@ -47,6 +47,10 @@ static void dx_string_dispatch_construct(dx_string_dispatch* self)
 {/*Intentionally emtpy.*/}
 
 int dx_string_construct(dx_string* self, char const* bytes, dx_size number_of_bytes) {
+  if (DX_SIZE_GREATEST < number_of_bytes) {
+    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
+    return DX_FAILURE;
+  }
   if (!self) {
     dx_set_error(DX_ERROR_INVALID_ARGUMENT);
     return 1;
@@ -75,14 +79,7 @@ int dx_string_construct(dx_string* self, char const* bytes, dx_size number_of_by
 }
 
 dx_result dx_string_create(dx_string** RETURN, char const* bytes, dx_size number_of_bytes) {
-  if (!RETURN || SIZE_MAX < number_of_bytes) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
-  }
-  dx_string* SELF = DX_STRING(dx_object_alloc(sizeof(dx_string)));
-  if (!SELF) {
-    return DX_FAILURE;
-  }
+  DX_CREATE_PREFIX(dx_string)
   if (dx_string_construct(SELF, bytes, number_of_bytes)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
@@ -285,14 +282,7 @@ dx_result dx_string_iterator_impl_construct(dx_string_iterator_impl* SELF, dx_st
 }
 
 dx_result dx_string_iterator_impl_create(dx_string_iterator_impl** RETURN, dx_string* string) {
-  dx_rti_type* TYPE = dx_string_iterator_impl_get_type();
-  if (!TYPE) {
-    return DX_FAILURE;
-  }
-  dx_string_iterator_impl* SELF = DX_STRING_ITERATOR_IMPL(dx_object_alloc(sizeof(dx_string_iterator_impl)));
-  if (!SELF) {
-    return DX_FAILURE;
-  }
+  DX_CREATE_PREFIX(dx_string_iterator_impl)
   if (dx_string_iterator_impl_construct(SELF, string)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;

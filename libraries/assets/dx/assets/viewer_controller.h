@@ -16,16 +16,16 @@ static inline dx_asset_viewer_controller* DX_ASSET_VIEWER_CONTROLLER(void* p) {
 
 struct dx_asset_viewer_controller {
   dx_object _parent;
-  int (*update)(dx_asset_viewer_controller* SELF, dx_asset_viewer* viewer, dx_f32 delta_seconds);
+  dx_result (*update)(dx_asset_viewer_controller* SELF, dx_asset_viewer* viewer, dx_f32 delta_seconds);
 };
 
 struct dx_asset_viewer_controller_dispatch {
   dx_object_dispatch _parent;
 };
 
-int dx_asset_viewer_controller_construct(dx_asset_viewer_controller* SELF);
+dx_result dx_asset_viewer_controller_construct(dx_asset_viewer_controller* SELF);
 
-int dx_asset_viewer_controller_update(dx_asset_viewer_controller* SELF, dx_asset_viewer* viewer, dx_f32 delta_seconds);
+dx_result dx_asset_viewer_controller_update(dx_asset_viewer_controller* SELF, dx_asset_viewer* viewer, dx_f32 delta_seconds);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
@@ -61,9 +61,9 @@ struct dx_asset_viewer_controllers_rotate_y_dispatch {
 /// @param SELF A pointer to this controller.
 /// @remarks The default values are up <code>(0,1,0)</code>, source <code>(0,0,1)</code>, target <code>(0,0,0)</code>, and degrees per second <code>16</code>.
 /// @default-return
-int dx_asset_viewer_controllers_rotate_y_construct(dx_asset_viewer_controllers_rotate_y* SELF);
+dx_result dx_asset_viewer_controllers_rotate_y_construct(dx_asset_viewer_controllers_rotate_y* SELF);
 
-dx_asset_viewer_controllers_rotate_y* dx_asset_viewer_controllers_rotate_y_create();
+dx_result dx_asset_viewer_controllers_rotate_y_create(dx_asset_viewer_controllers_rotate_y** RETURN);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 

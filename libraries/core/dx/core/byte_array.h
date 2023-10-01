@@ -70,6 +70,17 @@ dx_result dx_inline_byte_array_ensure_free_capacity(dx_inline_byte_array* SELF, 
 /// @method-call
 dx_result dx_inline_byte_array_remove(dx_inline_byte_array* SELF, dx_size index, dx_size length);
 
+/// @brief Set Bytes.
+/// @param SELF A pointer to this dx_inline_byte_array object.
+/// @param bytes A pointer to an array of @a number_of_bytes Bytes.
+/// @param number_of_bytes The number of Bytes in the array pointed to by @a bytes.
+/// @error #DX_ERROR_INVALID_ARGUMENT @a SELF is a null pointer
+/// @error #DX_ERROR_INVALID_ARGUMENT @a bytes is a null pointer
+/// @error #DX_ERROR_ALLOCATION_FAILED an allocation failed
+/// @success The Bytes in the array pointed to by @a bytes replaced the previous Bytes in this Byte array.
+/// @method-call
+dx_result dx_inline_byte_array_set(dx_inline_byte_array* SELF, char const* bytes, dx_size number_of_bytes);
+
 /// @brief Prepend Bytes.
 /// @param SELF A pointer to this dx_inline_byte_array object.
 /// @param bytes A pointer to an array of @a number_of_bytes Bytes.

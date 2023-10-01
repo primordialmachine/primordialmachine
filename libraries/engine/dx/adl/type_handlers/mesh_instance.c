@@ -13,19 +13,20 @@ static inline dx_string* _get_name(dx_adl_names* names, dx_size index) {
 
 #define NAME(name) _get_name(context->names, dx_adl_name_index_##name)
 
-static int resolve(dx_adl_type_handlers_mesh_instance* self,
+static int resolve(dx_adl_type_handlers_mesh_instance* SELF,
                    dx_adl_symbol* symbol,
                    dx_adl_context* context);
 
-static dx_object* read(dx_adl_type_handlers_mesh_instance* self,
-                       dx_ddl_node* node,
-                       dx_adl_context* context);
+static dx_result read(dx_object** RETURN,
+                      dx_adl_type_handlers_mesh_instance* SELF,
+                      dx_ddl_node* node,
+                      dx_adl_context* context);
 
 DX_DEFINE_OBJECT_TYPE("dx.adl.type_handlers.mesh_instance",
                       dx_adl_type_handlers_mesh_instance,
                       dx_adl_type_handler);
 
-static int resolve(dx_adl_type_handlers_mesh_instance* self, dx_adl_symbol* symbol, dx_adl_context* context) {
+static int resolve(dx_adl_type_handlers_mesh_instance* SELF, dx_adl_symbol* symbol, dx_adl_context* context) {
   if (symbol->resolved) {
     return 0;
   }
@@ -42,7 +43,7 @@ static int resolve(dx_adl_type_handlers_mesh_instance* self, dx_adl_symbol* symb
   return 0;
 }
 
-static dx_object* read(dx_adl_type_handlers_mesh_instance* self, dx_ddl_node* node, dx_adl_context* context) {
+static dx_result read(dx_object** RETURN, dx_adl_type_handlers_mesh_instance* SELF, dx_ddl_node* node, dx_adl_context* context) {
   dx_asset_mesh_instance* mesh_instance = NULL;
   dx_asset_reference* mesh_reference = NULL;
   DX_MAT4* transformation = NULL;
@@ -50,7 +51,7 @@ static dx_object* read(dx_adl_type_handlers_mesh_instance* self, dx_ddl_node* no
   {
     dx_string* name = NULL;
     if (dx_string_create(&name, "transformation", sizeof("transformation") - 1)) {
-      goto END;
+      return DX_FAILURE;
     }
     dx_error old_error = dx_get_error();
     dx_ddl_node* child_node = dx_ddl_node_map_get(node, name);
@@ -60,12 +61,12 @@ static dx_object* read(dx_adl_type_handlers_mesh_instance* self, dx_ddl_node* no
       if (dx_get_error() == DX_ERROR_NOT_FOUND) {
         dx_set_error(old_error);
       } else {
-        goto END;
+        return DX_FAILURE;
       }
     } else {
       transformation = dx_adl_semantical_read_translation(child_node, context);
       if (!transformation) {
-        goto END;
+        return DX_FAILURE;
       }
     }
   }
@@ -73,65 +74,72 @@ static dx_object* read(dx_adl_type_handlers_mesh_instance* self, dx_ddl_node* no
   {
     dx_string* name = dx_adl_semantical_read_string_field(node, NAME(reference_key), context->names);
     if (!name) {
-      goto END;
+      if (transformation) {
+        DX_UNREFERENCE(transformation);
+        transformation = NULL;
+      }
+      return DX_FAILURE;
     }
-    mesh_reference = dx_asset_reference_create(name);
+    if (dx_asset_reference_create(&mesh_reference, name)) {
+      if (transformation) {
+        DX_UNREFERENCE(transformation);
+        transformation = NULL;
+      }
+      DX_UNREFERENCE(name);
+      name = NULL;
+      return DX_FAILURE;
+    }
     DX_UNREFERENCE(name);
     name = NULL;
-    if (!mesh_reference) {
-      goto END;
-    }
   }
-  mesh_instance = dx_asset_mesh_instance_create(mesh_reference);
-  DX_UNREFERENCE(mesh_reference);
-  mesh_reference = NULL;
-  if (!mesh_instance) {
-    goto END;
-  }
-  if (transformation) {
-    mesh_instance->world_matrix = *transformation;
-  }
-END:
-  if (mesh_reference) {
+  mesh_instance = NULL;
+  if (dx_asset_mesh_instance_create(&mesh_instance, mesh_reference)) {
     DX_UNREFERENCE(mesh_reference);
     mesh_reference = NULL;
+    if (transformation) {
+      DX_UNREFERENCE(transformation);
+      transformation = NULL;
+    }
+    return DX_FAILURE;
   }
+  DX_UNREFERENCE(mesh_reference);
+  mesh_reference = NULL;
   if (transformation) {
+    mesh_instance->world_matrix = *transformation;
     dx_memory_deallocate(transformation);
     transformation = NULL;
   }
-  return DX_OBJECT(mesh_instance);
+  *RETURN = DX_OBJECT(mesh_instance);
+  return DX_SUCCESS;
 }
 
-int dx_adl_type_handlers_mesh_instance_construct(dx_adl_type_handlers_mesh_instance* self) {
-  dx_rti_type* _type = dx_adl_type_handlers_mesh_instance_get_type();
-  if (!_type) {
-    return 1;
+dx_result dx_adl_type_handlers_mesh_instance_construct(dx_adl_type_handlers_mesh_instance* SELF) {
+  dx_rti_type* TYPE = dx_adl_type_handlers_mesh_instance_get_type();
+  if (!TYPE) {
+    return DX_FAILURE;
   }
-  if (dx_adl_type_handler_construct(DX_ADL_TYPE_HANDLER(self))) {
-    return 1;
+  if (dx_adl_type_handler_construct(DX_ADL_TYPE_HANDLER(SELF))) {
+    return DX_FAILURE;
   }
-  DX_ADL_TYPE_HANDLER(self)->resolve = (int(*)(dx_adl_type_handler*, dx_adl_symbol*, dx_adl_context*))&resolve;
-  DX_ADL_TYPE_HANDLER(self)->read = (dx_object*(*)(dx_adl_type_handler*, dx_ddl_node*, dx_adl_context*))&read;
-  DX_OBJECT(self)->type = _type;
-  return 0;
+  DX_ADL_TYPE_HANDLER(SELF)->resolve = (int(*)(dx_adl_type_handler*, dx_adl_symbol*, dx_adl_context*))&resolve;
+  DX_OBJECT(SELF)->type = TYPE;
+  return DX_SUCCESS;
 }
 
-static void dx_adl_type_handlers_mesh_instance_destruct(dx_adl_type_handlers_mesh_instance* self)
+static void dx_adl_type_handlers_mesh_instance_destruct(dx_adl_type_handlers_mesh_instance* SELF)
 {/*Intentionally empty.*/}
 
-static void dx_adl_type_handlers_mesh_instance_dispatch_construct(dx_adl_type_handlers_mesh_instance_dispatch* self)
-{/*Intentionally empty.*/}
+static void dx_adl_type_handlers_mesh_instance_dispatch_construct(dx_adl_type_handlers_mesh_instance_dispatch* SELF) {
+  DX_ADL_TYPE_HANDLER_DISPATCH(SELF)->read = (dx_result (*)(dx_object**, dx_adl_type_handler*, dx_ddl_node*, dx_adl_context*)) & read;
+}
 
-dx_adl_type_handlers_mesh_instance* dx_adl_type_handlers_mesh_instance_create() {
-  dx_adl_type_handlers_mesh_instance* self = DX_ADL_TYPE_HANDLERS_MESH_INSTANCE(dx_object_alloc(sizeof(dx_adl_type_handlers_mesh_instance)));
-  if (!self) {
-    return NULL;
+dx_result dx_adl_type_handlers_mesh_instance_create(dx_adl_type_handlers_mesh_instance** RETURN) {
+  DX_CREATE_PREFIX(dx_adl_type_handlers_mesh_instance)
+  if (dx_adl_type_handlers_mesh_instance_construct(SELF)) {
+    DX_UNREFERENCE(SELF);
+    SELF = NULL;
+    return DX_FAILURE;
   }
-  if (dx_adl_type_handlers_mesh_instance_construct(self)) {
-    DX_UNREFERENCE(self);
-    self = NULL;
-    return NULL;
-  }
-  return self;
+  *RETURN = SELF;
+  return DX_SUCCESS;
 }

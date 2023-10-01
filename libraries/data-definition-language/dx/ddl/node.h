@@ -139,7 +139,7 @@ int dx_ddl_node_list_prepend(dx_ddl_node* SELF, dx_ddl_node* value);
 /// - #DX_INVALID_ARGUMENT @a self is a null pointer
 /// - #DX_INVALID_ARGUMENT @a value is a null pointer
 /// - #DX_INVALID_OPERATION this node is not of node kind #dx_ddl_node_kind_list.
-int dx_ddl_node_list_insert(dx_ddl_node* self, dx_ddl_node* value, dx_size index);
+int dx_ddl_node_list_insert(dx_ddl_node* SELF, dx_ddl_node* value, dx_size index);
 
 /// @brief Get an DDL node at the specified index in this DDL list node.
 /// @param self A pointer to this DDL node.
@@ -149,7 +149,7 @@ int dx_ddl_node_list_insert(dx_ddl_node* self, dx_ddl_node* value, dx_size index
 /// - #DX_INVALID_ARGUMENT @a self is a null pointer
 /// - #DX_INVALID_ARGUMENT @a index is greater than or equal to the length of this DDL list node
 /// - #DX_INVALID_OPERATION this node is not of node kind #dx_ddl_node_kind_list.
-dx_ddl_node* dx_ddl_node_list_get(dx_ddl_node* self, dx_size index);
+dx_ddl_node* dx_ddl_node_list_get(dx_ddl_node* SELF, dx_size index);
 
 /// @brief Get an DDL node at the specified index in this DDL list node.
 /// @param self A pointer to this DDL node.
@@ -191,7 +191,7 @@ int dx_ddl_node_set_string(dx_ddl_node* SELF, dx_string* string);
 dx_string* dx_ddl_node_get_number(dx_ddl_node const* self);
 
 /// @brief Set the number value of this DDL node.
-/// @param self A pointer to this DDL node.
+/// @param SELF A pointer to this DDL node.
 /// @param number A pointer to the string value.
 /// @return The zero value on success. A non-zero value on failure.
 /// @failure This function has set the the error variable. In particular, the following error codes are set:
@@ -199,7 +199,7 @@ dx_string* dx_ddl_node_get_number(dx_ddl_node const* self);
 /// - #DX_INVALID_ARGUMENT @a number is a null pointer
 /// - #DX_INVALID_OPERATION this node is not of node kind #dx_ddl_node_kind_number.
 /// @undefined The string is not well-formatted.
-int dx_ddl_node_set_number(dx_ddl_node* self, dx_string* number);
+int dx_ddl_node_set_number(dx_ddl_node* SELF, dx_string* number);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 

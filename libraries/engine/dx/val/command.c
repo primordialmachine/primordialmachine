@@ -42,10 +42,7 @@ dx_result dx_val_command_construct_clear_color(dx_val_command* SELF, dx_f32 l, d
 }
 
 dx_result dx_val_command_create_clear_color(dx_val_command** RETURN, dx_f32 l, dx_f32 b, dx_f32 w, dx_f32 h, DX_RGBA_F32 const* color) {
-  dx_val_command* SELF = DX_VAL_COMMAND(dx_object_alloc(sizeof(dx_val_command)));
-  if (!SELF) {
-    return DX_FAILURE;
-  }
+  DX_CREATE_PREFIX(dx_val_command)
   if (dx_val_command_construct_clear_color(SELF, l, b, w, h, color)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
@@ -71,10 +68,7 @@ dx_result dx_val_command_construct_clear_depth(dx_val_command* SELF, dx_f32 l, d
 }
 
 dx_result dx_val_command_create_clear_depth(dx_val_command** RETURN, dx_f32 l, dx_f32 b, dx_f32 w, dx_f32 h, dx_f32 depth) {
-  dx_val_command* SELF = DX_VAL_COMMAND(dx_object_alloc(sizeof(dx_val_command)));
-  if (!SELF) {
-    return DX_FAILURE;
-  }
+  DX_CREATE_PREFIX(dx_val_command)
   if (dx_val_command_construct_clear_depth(SELF, l, b, w, h, depth)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
@@ -110,10 +104,7 @@ dx_result dx_val_command_construct_draw(dx_val_command* SELF, dx_val_vbinding* v
 }
 
 dx_result dx_val_command_create_draw(dx_val_command** RETURN, dx_val_vbinding* vbinding, dx_val_texture* texture, dx_val_cbinding* cbinding, dx_val_program* program, dx_n32 start, dx_n32 length) {
-  dx_val_command* SELF = DX_VAL_COMMAND(dx_object_alloc(sizeof(dx_val_command)));
-  if (!SELF) {
-    return DX_FAILURE;
-  }
+  DX_CREATE_PREFIX(dx_val_command)
   if (dx_val_command_construct_draw(SELF, vbinding, texture, cbinding, program, start, length)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
@@ -138,10 +129,7 @@ dx_result dx_val_command_construct_viewport(dx_val_command* SELF, dx_f32 l, dx_f
 }
 
 dx_result dx_val_command_create_viewport(dx_val_command** RETURN, dx_f32 l, dx_f32 b, dx_f32 w, dx_f32 h) {
-  dx_val_command* SELF = DX_VAL_COMMAND(dx_object_alloc(sizeof(dx_val_command)));
-  if (!SELF) {
-    return DX_FAILURE;
-  }
+  DX_CREATE_PREFIX(dx_val_command)
   if (dx_val_command_construct_viewport(SELF, l, b, w, h)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
@@ -151,7 +139,7 @@ dx_result dx_val_command_create_viewport(dx_val_command** RETURN, dx_f32 l, dx_f
   return DX_SUCCESS;
 }
 
-dx_result dx_val_command_construct_pipeline_state(dx_val_command* SELF, DX_CULL_MODE cull_mode, DX_DEPTH_TEST_FUNCTION depth_test_function, dx_bool depth_write_enabled) {
+dx_result dx_val_command_construct_pipeline_state(dx_val_command* SELF, dx_cull_mode cull_mode, dx_depth_test_function depth_test_function, dx_bool depth_write_enabled) {
   dx_rti_type* TYPE = dx_val_command_get_type();
   if (!TYPE) {
     return DX_FAILURE;
@@ -164,11 +152,8 @@ dx_result dx_val_command_construct_pipeline_state(dx_val_command* SELF, DX_CULL_
   return DX_SUCCESS;
 }
 
-dx_result dx_val_command_create_pipeline_state(dx_val_command** RETURN, DX_CULL_MODE cull_mode, DX_DEPTH_TEST_FUNCTION depth_test_function, dx_bool depth_write_enabled) {
-  dx_val_command* SELF = DX_VAL_COMMAND(dx_object_alloc(sizeof(dx_val_command)));
-  if (!SELF) {
-    return DX_FAILURE;
-  }
+dx_result dx_val_command_create_pipeline_state(dx_val_command** RETURN, dx_cull_mode cull_mode, dx_depth_test_function depth_test_function, dx_bool depth_write_enabled) {
+  DX_CREATE_PREFIX(dx_val_command)
   if (dx_val_command_construct_pipeline_state(SELF, cull_mode, depth_test_function, depth_write_enabled)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
@@ -204,14 +189,7 @@ dx_result dx_val_command_list_construct(dx_val_command_list* SELF) {
 }
 
 dx_result dx_val_command_list_create(dx_val_command_list** RETURN) {
-  dx_rti_type* TYPE = dx_val_command_list_get_type();
-  if (!TYPE) {
-    return DX_FAILURE;
-  }
-  dx_val_command_list* SELF = DV_VAL_COMMAND_LIST(dx_object_alloc(sizeof(dx_val_command_list)));
-  if (!SELF) {
-    return DX_FAILURE;
-  }
+  DX_CREATE_PREFIX(dx_val_command_list)
   if (dx_val_command_list_construct(SELF)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
@@ -221,25 +199,25 @@ dx_result dx_val_command_list_create(dx_val_command_list** RETURN) {
   return DX_SUCCESS;
 }
 
-dx_result dx_val_command_list_append(dx_val_command_list* self, dx_val_command* command) {
-  return dx_inline_object_array_append(&self->backend, DX_OBJECT(command));
+dx_result dx_val_command_list_append(dx_val_command_list* SELF, dx_val_command* command) {
+  return dx_inline_object_array_append(&SELF->backend, DX_OBJECT(command));
 }
 
-dx_result dx_val_command_list_clear(dx_val_command_list* self) {
-  return dx_inline_object_array_clear(&self->backend);
+dx_result dx_val_command_list_clear(dx_val_command_list* SELF) {
+  return dx_inline_object_array_clear(&SELF->backend);
 }
 
-dx_size dx_val_command_list_get_size(dx_val_command_list const* self) {
+dx_size dx_val_command_list_get_size(dx_val_command_list const* SELF) {
   dx_size temporary;
-  if (dx_inline_object_array_get_size(&temporary, &self->backend)) {
+  if (dx_inline_object_array_get_size(&temporary, &SELF->backend)) {
     return 0;
   }
   return temporary;
 }
 
-dx_val_command* dx_val_command_list_get_at(dx_val_command_list const* self, dx_size index) {
+dx_val_command* dx_val_command_list_get_at(dx_val_command_list const* SELF, dx_size index) {
   dx_val_command* val_command = NULL;
-  if (dx_inline_object_array_get_at((dx_object**) & val_command, &self->backend, index)) {
+  if (dx_inline_object_array_get_at((dx_object**) & val_command, &SELF->backend, index)) {
     return NULL;
   }
   return val_command;

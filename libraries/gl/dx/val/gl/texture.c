@@ -12,7 +12,7 @@ DX_DEFINE_OBJECT_TYPE("dx.val.gl.texture",
 static dx_result dx_val_gl_texture_set_data(dx_val_gl_texture* SELF, dx_asset_texture* texture) {
   dx_val_gl_context* context = DX_VAL_GL_CONTEXT(DX_VAL_TEXTURE(SELF)->context);
   switch (DX_ASSET_IMAGE(texture->image_reference->object)->pixel_format) {
-  case DX_PIXEL_FORMAT_LN8: {
+  case dx_pixel_format_ln8: {
     context->glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     context->glBindTexture(GL_TEXTURE_2D, SELF->id);
     context->glTexImage2D(GL_TEXTURE_2D,
@@ -25,7 +25,7 @@ static dx_result dx_val_gl_texture_set_data(dx_val_gl_texture* SELF, dx_asset_te
                           GL_UNSIGNED_BYTE,
                           DX_ASSET_IMAGE(texture->image_reference->object)->pixels);
   } break;
-  case DX_PIXEL_FORMAT_RN8_GN8_BN8: {
+  case dx_pixel_format_rn8_gn8_bn8: {
     context->glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     context->glBindTexture(GL_TEXTURE_2D, SELF->id);
     context->glTexImage2D(GL_TEXTURE_2D,
@@ -38,7 +38,7 @@ static dx_result dx_val_gl_texture_set_data(dx_val_gl_texture* SELF, dx_asset_te
                           GL_UNSIGNED_BYTE,
                           DX_ASSET_IMAGE(texture->image_reference->object)->pixels);
   } break;
-  case DX_PIXEL_FORMAT_BN8_GN8_RN8: {
+  case dx_pixel_format_bn8_gn8_rn8: {
     context->glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     context->glBindTexture(GL_TEXTURE_2D, SELF->id);
     context->glTexImage2D(GL_TEXTURE_2D,
@@ -64,7 +64,7 @@ static dx_result dx_val_gl_texture_set_data(dx_val_gl_texture* SELF, dx_asset_te
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-static dx_result dx_val_gl_texture_set_texture_address_mode_u(dx_val_gl_texture* SELF, DX_TEXTURE_ADDRESS_MODE texture_address_mode_u) {
+static dx_result dx_val_gl_texture_set_texture_address_mode_u(dx_val_gl_texture* SELF, dx_texture_address_mode texture_address_mode_u) {
   if (SELF->texture_address_mode_u != texture_address_mode_u) {
     SELF->texture_address_mode_u = texture_address_mode_u;
     SELF->flags |= DX_VAL_GL_TEXTURE_ADDRESS_MODE_U_DIRTY;
@@ -72,14 +72,14 @@ static dx_result dx_val_gl_texture_set_texture_address_mode_u(dx_val_gl_texture*
   return DX_SUCCESS;
 }
 
-static dx_result dx_val_gl_texture_get_texture_address_mode_u(DX_TEXTURE_ADDRESS_MODE* RETURN, dx_val_gl_texture* SELF) {
+static dx_result dx_val_gl_texture_get_texture_address_mode_u(dx_texture_address_mode* RETURN, dx_val_gl_texture* SELF) {
   *RETURN = SELF->texture_address_mode_u;
   return DX_SUCCESS;
 }
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-static dx_result dx_val_gl_texture_set_texture_address_mode_v(dx_val_gl_texture* SELF, DX_TEXTURE_ADDRESS_MODE texture_address_mode_v) {
+static dx_result dx_val_gl_texture_set_texture_address_mode_v(dx_val_gl_texture* SELF, dx_texture_address_mode texture_address_mode_v) {
   if (SELF->texture_address_mode_v != texture_address_mode_v) {
     SELF->texture_address_mode_v = texture_address_mode_v;
     SELF->flags |= DX_VAL_GL_TEXTURE_ADDRESS_MODE_V_DIRTY;
@@ -87,7 +87,7 @@ static dx_result dx_val_gl_texture_set_texture_address_mode_v(dx_val_gl_texture*
   return DX_SUCCESS;
 }
 
-static dx_result dx_val_gl_texture_get_texture_address_mode_v(DX_TEXTURE_ADDRESS_MODE* RETURN, dx_val_gl_texture* SELF) {
+static dx_result dx_val_gl_texture_get_texture_address_mode_v(dx_texture_address_mode* RETURN, dx_val_gl_texture* SELF) {
   *RETURN = SELF->texture_address_mode_v;
   return DX_SUCCESS;
 }
@@ -109,7 +109,7 @@ static dx_result dx_val_gl_texture_get_texture_border_color(DX_VEC4* RETURN, dx_
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-static dx_result dx_val_gl_texture_set_texture_minification_filter(dx_val_gl_texture* SELF, DX_TEXTURE_MINIFICATION_FILTER texture_minification_filter) {
+static dx_result dx_val_gl_texture_set_texture_minification_filter(dx_val_gl_texture* SELF, dx_texture_minification_filter texture_minification_filter) {
   if (SELF->texture_minification_filter != texture_minification_filter) {
     SELF->texture_minification_filter = texture_minification_filter;
     SELF->flags |= DX_VAL_GL_TEXTURE_MINIFICATION_FILTER_DIRTY;
@@ -117,14 +117,14 @@ static dx_result dx_val_gl_texture_set_texture_minification_filter(dx_val_gl_tex
   return DX_SUCCESS;
 }
 
-static dx_result dx_val_gl_texture_get_texture_minification_filter(DX_TEXTURE_MINIFICATION_FILTER* RETURN, dx_val_gl_texture* SELF) {
+static dx_result dx_val_gl_texture_get_texture_minification_filter(dx_texture_minification_filter* RETURN, dx_val_gl_texture* SELF) {
   *RETURN = SELF->texture_minification_filter;
   return DX_SUCCESS;
 }
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-static dx_result dx_val_gl_texture_set_texture_magnification_filter(dx_val_gl_texture* SELF, DX_TEXTURE_MAGNIFICATION_FILTER texture_magnification_filter) {
+static dx_result dx_val_gl_texture_set_texture_magnification_filter(dx_val_gl_texture* SELF, dx_texture_magnification_filter texture_magnification_filter) {
   if (SELF->texture_magnification_filter != texture_magnification_filter) {
     SELF->texture_magnification_filter = texture_magnification_filter;
     SELF->flags |= DX_VAL_GL_TEXTURE_MAGNIFICATION_FILTER_DIRTY;
@@ -132,7 +132,7 @@ static dx_result dx_val_gl_texture_set_texture_magnification_filter(dx_val_gl_te
   return DX_SUCCESS;
 }
 
-static dx_result dx_val_gl_texture_get_texture_magnification_filter(DX_TEXTURE_MAGNIFICATION_FILTER* RETURN, dx_val_gl_texture* SELF) {
+static dx_result dx_val_gl_texture_get_texture_magnification_filter(dx_texture_magnification_filter* RETURN, dx_val_gl_texture* SELF) {
   *RETURN = SELF->texture_magnification_filter;
   return DX_SUCCESS;
 }
@@ -148,13 +148,13 @@ static dx_result upload(dx_val_gl_texture* SELF) {
   if (SELF->flags & DX_VAL_GL_TEXTURE_ADDRESS_MODE_U_DIRTY) {
 
     switch (SELF->texture_address_mode_u) {
-      case DX_TEXTURE_ADDRESS_MODE_REPEAT: {
+      case dx_texture_address_mode_repeat: {
         context->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
       } break;
-      case DX_TEXTURE_ADDRESS_MODE_MIRRORED_REPEAT: {
+      case dx_texture_address_mode_mirrored_repeat: {
         context->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
       } break;
-      case DX_TEXTURE_ADDRESS_MODE_CLAMP_TO_BORDER: {
+      case dx_texture_address_mode_clamp_to_border: {
         context->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
       } break;
       default: {
@@ -174,13 +174,13 @@ static dx_result upload(dx_val_gl_texture* SELF) {
   if (SELF->flags & DX_VAL_GL_TEXTURE_ADDRESS_MODE_V_DIRTY) {
 
     switch (SELF->texture_address_mode_v) {
-      case DX_TEXTURE_ADDRESS_MODE_REPEAT: {
+      case dx_texture_address_mode_repeat: {
         context->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
       } break;
-      case DX_TEXTURE_ADDRESS_MODE_MIRRORED_REPEAT: {
+      case dx_texture_address_mode_mirrored_repeat: {
         context->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
       } break;
-      case DX_TEXTURE_ADDRESS_MODE_CLAMP_TO_BORDER: {
+      case dx_texture_address_mode_clamp_to_border: {
         context->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
       } break;
       default: {
@@ -200,10 +200,10 @@ static dx_result upload(dx_val_gl_texture* SELF) {
   if (SELF->flags & DX_VAL_GL_TEXTURE_MINIFICATION_FILTER_DIRTY) {
 
     switch (SELF->texture_minification_filter) {
-      case DX_TEXTURE_MINIFICATION_FILTER_LINEAR: {
+      case dx_texture_minification_filter_linear: {
         context->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
       } break;
-      case DX_TEXTURE_MINIFICATION_FILTER_NEAREST: {
+      case dx_texture_minification_filter_nearest: {
         context->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
       } break;
       default: {
@@ -223,10 +223,10 @@ static dx_result upload(dx_val_gl_texture* SELF) {
   if (SELF->flags & DX_VAL_GL_TEXTURE_MAGNIFICATION_FILTER_DIRTY) {
 
     switch (SELF->texture_magnification_filter) {
-      case DX_TEXTURE_MAGNIFICATION_FILTER_LINEAR: {
+      case dx_texture_magnification_filter_linear: {
         context->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
       } break;
-      case DX_TEXTURE_MAGNIFICATION_FILTER_NEAREST: {
+      case dx_texture_magnification_filter_nearest: {
         context->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
       } break;
       default: {
@@ -269,17 +269,17 @@ static void dx_val_gl_texture_destruct(dx_val_gl_texture* SELF) {
 static void dx_val_gl_texture_dispatch_construct(dx_val_gl_texture_dispatch* self) {
   DX_VAL_TEXTURE_DISPATCH(self)->set_data = (dx_result(*)(dx_val_texture*, dx_asset_texture*)) & dx_val_gl_texture_set_data;
 
-  DX_VAL_TEXTURE_DISPATCH(self)->set_texture_address_mode_u = (dx_result(*)(dx_val_texture*, DX_TEXTURE_ADDRESS_MODE)) & dx_val_gl_texture_set_texture_address_mode_u;
-  DX_VAL_TEXTURE_DISPATCH(self)->get_texture_address_mode_u = (dx_result(*)(DX_TEXTURE_ADDRESS_MODE*, dx_val_texture*)) & dx_val_gl_texture_get_texture_address_mode_u;
+  DX_VAL_TEXTURE_DISPATCH(self)->set_texture_address_mode_u = (dx_result(*)(dx_val_texture*, dx_texture_address_mode)) & dx_val_gl_texture_set_texture_address_mode_u;
+  DX_VAL_TEXTURE_DISPATCH(self)->get_texture_address_mode_u = (dx_result(*)(dx_texture_address_mode*, dx_val_texture*)) & dx_val_gl_texture_get_texture_address_mode_u;
 
-  DX_VAL_TEXTURE_DISPATCH(self)->set_texture_address_mode_v = (dx_result(*)(dx_val_texture*, DX_TEXTURE_ADDRESS_MODE)) & dx_val_gl_texture_set_texture_address_mode_v;
-  DX_VAL_TEXTURE_DISPATCH(self)->get_texture_address_mode_v = (dx_result(*)(DX_TEXTURE_ADDRESS_MODE*, dx_val_texture*)) & dx_val_gl_texture_get_texture_address_mode_v;
+  DX_VAL_TEXTURE_DISPATCH(self)->set_texture_address_mode_v = (dx_result(*)(dx_val_texture*, dx_texture_address_mode)) & dx_val_gl_texture_set_texture_address_mode_v;
+  DX_VAL_TEXTURE_DISPATCH(self)->get_texture_address_mode_v = (dx_result(*)(dx_texture_address_mode*, dx_val_texture*)) & dx_val_gl_texture_get_texture_address_mode_v;
 
-  DX_VAL_TEXTURE_DISPATCH(self)->set_texture_minification_filter = (dx_result(*)(dx_val_texture*, DX_TEXTURE_MINIFICATION_FILTER)) & dx_val_gl_texture_set_texture_minification_filter;
-  DX_VAL_TEXTURE_DISPATCH(self)->get_texture_minification_filter = (dx_result(*)(DX_TEXTURE_MINIFICATION_FILTER*, dx_val_texture*)) & dx_val_gl_texture_get_texture_minification_filter;
+  DX_VAL_TEXTURE_DISPATCH(self)->set_texture_minification_filter = (dx_result(*)(dx_val_texture*, dx_texture_minification_filter)) & dx_val_gl_texture_set_texture_minification_filter;
+  DX_VAL_TEXTURE_DISPATCH(self)->get_texture_minification_filter = (dx_result(*)(dx_texture_minification_filter*, dx_val_texture*)) & dx_val_gl_texture_get_texture_minification_filter;
 
-  DX_VAL_TEXTURE_DISPATCH(self)->set_texture_magnification_filter = (dx_result(*)(dx_val_texture*, DX_TEXTURE_MINIFICATION_FILTER)) & dx_val_gl_texture_set_texture_magnification_filter;
-  DX_VAL_TEXTURE_DISPATCH(self)->get_texture_magnification_filter = (dx_result(*)(DX_TEXTURE_MINIFICATION_FILTER*, dx_val_texture*)) & dx_val_gl_texture_get_texture_magnification_filter;
+  DX_VAL_TEXTURE_DISPATCH(self)->set_texture_magnification_filter = (dx_result(*)(dx_val_texture*, dx_texture_minification_filter)) & dx_val_gl_texture_set_texture_magnification_filter;
+  DX_VAL_TEXTURE_DISPATCH(self)->get_texture_magnification_filter = (dx_result(*)(dx_texture_minification_filter*, dx_val_texture*)) & dx_val_gl_texture_get_texture_magnification_filter;
 
   DX_VAL_TEXTURE_DISPATCH(self)->set_texture_border_color = (dx_result(*)(dx_val_texture*, DX_VEC4 const*)) & dx_val_gl_texture_set_texture_border_color;
   DX_VAL_TEXTURE_DISPATCH(self)->get_texture_border_color = (dx_result(*)(DX_VEC4*, dx_val_texture*)) & dx_val_gl_texture_get_texture_border_color;
@@ -290,8 +290,8 @@ static dx_result fill_amber(dx_asset_image* image_value) {
   if (dx_asset_color_rgb_n8_create(&color_value, &dx_colors_amber)) {
     return DX_FAILURE;
   }
-  dx_asset_image_operations_color_fill* image_operation_value = dx_asset_image_operations_color_fill_create();
-  if (!image_operation_value) {
+  dx_asset_image_operations_color_fill* image_operation_value = NULL;
+  if (dx_asset_image_operations_color_fill_create(&image_operation_value)) {
     DX_UNREFERENCE(color_value);
     color_value = NULL;
     return DX_FAILURE;
@@ -326,19 +326,19 @@ dx_result dx_val_gl_texture_construct(dx_val_gl_texture* SELF, dx_val_gl_context
 
   SELF->flags = 0;
 
-  SELF->texture_address_mode_u = DX_TEXTURE_ADDRESS_MODE_REPEAT;
+  SELF->texture_address_mode_u = dx_texture_address_mode_repeat;
   SELF->flags |= DX_VAL_GL_TEXTURE_ADDRESS_MODE_U_DIRTY;
 
-  SELF->texture_address_mode_v = DX_TEXTURE_ADDRESS_MODE_REPEAT;
+  SELF->texture_address_mode_v = dx_texture_address_mode_repeat;
   SELF->flags |= DX_VAL_GL_TEXTURE_ADDRESS_MODE_V_DIRTY;
 
   SELF->texture_border_color = (DX_VEC4){ 1.f, 1.f, 1.f, 1.f, };
   SELF->flags |= DX_VAL_GL_TEXTURE_BORDER_COLOR_DIRTY;
 
-  SELF->texture_minification_filter = DX_TEXTURE_MINIFICATION_FILTER_LINEAR;
+  SELF->texture_minification_filter = dx_texture_minification_filter_linear;
   SELF->flags |= DX_VAL_GL_TEXTURE_MINIFICATION_FILTER_DIRTY;
 
-  SELF->texture_magnification_filter = DX_TEXTURE_MAGNIFICATION_FILTER_LINEAR;
+  SELF->texture_magnification_filter = dx_texture_magnification_filter_linear;
   SELF->flags |= DX_VAL_GL_TEXTURE_MAGNIFICATION_FILTER_DIRTY;
 
   context->glGetError(); // clear the error variable
@@ -356,7 +356,7 @@ dx_result dx_val_gl_texture_construct(dx_val_gl_texture* SELF, dx_val_gl_context
     return DX_FAILURE;
   }
   dx_asset_image* image = NULL;
-  if (dx_asset_image_create(&image, name, DX_PIXEL_FORMAT_RN8_GN8_BN8, 8, 8)) {
+  if (dx_asset_image_create(&image, name, dx_pixel_format_rn8_gn8_bn8, 8, 8)) {
     DX_UNREFERENCE(name);
     name = NULL;
     context->glDeleteTextures(1, &SELF->id);
@@ -373,7 +373,7 @@ dx_result dx_val_gl_texture_construct(dx_val_gl_texture* SELF, dx_val_gl_context
     return DX_FAILURE;
   }
   switch (image->pixel_format) {
-  case DX_PIXEL_FORMAT_RN8_GN8_BN8: {
+  case dx_pixel_format_rn8_gn8_bn8: {
     context->glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     context->glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, image->width, image->height, 0, GL_RGB, GL_UNSIGNED_BYTE, image->pixels);
   } break;
@@ -408,10 +408,7 @@ dx_result dx_val_gl_texture_construct(dx_val_gl_texture* SELF, dx_val_gl_context
 }
 
 dx_result dx_val_gl_texture_create(dx_val_gl_texture** RETURN, dx_val_gl_context* context) {
-  dx_val_gl_texture* SELF = DX_VAL_GL_TEXTURE(dx_object_alloc(sizeof(dx_val_gl_texture)));
-  if (!SELF) {
-    return DX_FAILURE;
-  }
+  DX_CREATE_PREFIX(dx_val_gl_texture)
   if (dx_val_gl_texture_construct(SELF, context)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;

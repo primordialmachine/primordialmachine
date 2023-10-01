@@ -14,17 +14,15 @@ static inline dx_string* _get_name(dx_adl_names* names, dx_size index) {
 
 static dx_asset_optics* _read_optics(dx_ddl_node* node, dx_adl_context* context);
 
-static dx_object* read(dx_adl_type_handlers_optics*,
-                       dx_ddl_node* node,
-                       dx_adl_context* context);
+static dx_result read(dx_object**, dx_adl_type_handlers_optics*, dx_ddl_node* node, dx_adl_context* context);
 
 DX_DEFINE_OBJECT_TYPE("dx.adl.type_handlers.optics",
                       dx_adl_type_handlers_optics,
                       dx_adl_type_handler);
 
 static dx_asset_optics_perspective* _read_optics_perspective(dx_ddl_node* node, dx_adl_context* context) {
-  dx_asset_optics_perspective* optics_value = dx_asset_optics_perspective_create();
-  if (!optics_value) {
+  dx_asset_optics_perspective* optics_value = NULL;
+  if (dx_asset_optics_perspective_create(&optics_value)) {
     return NULL;
   }
   // fieldOfViewY?
@@ -102,8 +100,8 @@ static dx_asset_optics_perspective* _read_optics_perspective(dx_ddl_node* node, 
 }
 
 static dx_asset_optics_orthographic* _read_optics_orthographic(dx_ddl_node* node, dx_adl_context* context) {
-  dx_asset_optics_orthographic* optics_value = dx_asset_optics_orthographic_create();
-  if (!optics_value) {
+  dx_asset_optics_orthographic* optics_value = NULL;
+  if (dx_asset_optics_orthographic_create(&optics_value)) {
     return NULL;
   }
   // near?
@@ -157,38 +155,41 @@ static dx_asset_optics* _read_optics(dx_ddl_node* node, dx_adl_context* context)
   return NULL;
 }
 
-static dx_object* read(dx_adl_type_handlers_optics* self, dx_ddl_node* node, dx_adl_context* context) {
-  return DX_OBJECT(_read_optics(node,context));
+static dx_result read(dx_object** RETURN, dx_adl_type_handlers_optics* SELF, dx_ddl_node* node, dx_adl_context* context) {
+  dx_object* temporary = DX_OBJECT(_read_optics(node,context));
+  if (!temporary) {
+    return DX_FAILURE;
+  }
+  *RETURN = temporary;
+  return DX_SUCCESS;
 }
 
-int dx_adl_type_handlers_optics_construct(dx_adl_type_handlers_optics* self) {
-  dx_rti_type* _type = dx_adl_type_handlers_optics_get_type();
-  if (!_type) {
-    return 1;
+dx_result dx_adl_type_handlers_optics_construct(dx_adl_type_handlers_optics* SELF) {
+  dx_rti_type* TYPE = dx_adl_type_handlers_optics_get_type();
+  if (!TYPE) {
+    return DX_FAILURE;
   }
-  if (dx_adl_type_handler_construct(DX_ADL_TYPE_HANDLER(self))) {
-    return 1;
+  if (dx_adl_type_handler_construct(DX_ADL_TYPE_HANDLER(SELF))) {
+    return DX_FAILURE;
   }
-  DX_ADL_TYPE_HANDLER(self)->read = (dx_object*(*)(dx_adl_type_handler*, dx_ddl_node*, dx_adl_context*))&read;
-  DX_OBJECT(self)->type = _type;
-  return 0;
+  DX_OBJECT(SELF)->type = TYPE;
+  return DX_SUCCESS;
 }
 
-static void dx_adl_type_handlers_optics_destruct(dx_adl_type_handlers_optics* self)
+static void dx_adl_type_handlers_optics_destruct(dx_adl_type_handlers_optics* SELF)
 {/*Intentionally empty.*/}
 
-static void dx_adl_type_handlers_optics_dispatch_construct(dx_adl_type_handlers_optics_dispatch* self)
-{/*Intentionally empty.*/}
+static void dx_adl_type_handlers_optics_dispatch_construct(dx_adl_type_handlers_optics_dispatch* SELF) {
+  DX_ADL_TYPE_HANDLER_DISPATCH(SELF)->read = (dx_result (*)(dx_object**, dx_adl_type_handler*, dx_ddl_node*, dx_adl_context*)) & read;
+}
 
-dx_adl_type_handlers_optics* dx_adl_type_handlers_optics_create() {
-  dx_adl_type_handlers_optics* self = DX_ADL_TYPE_HANDLERS_OPTICS(dx_object_alloc(sizeof(dx_adl_type_handlers_optics)));
-  if (!self) {
-    return NULL;
+dx_result dx_adl_type_handlers_optics_create(dx_adl_type_handlers_optics** RETURN) {
+  DX_CREATE_PREFIX(dx_adl_type_handlers_optics)
+  if (dx_adl_type_handlers_optics_construct(SELF)) {
+    DX_UNREFERENCE(SELF);
+    SELF = NULL;
+    return DX_FAILURE;
   }
-  if (dx_adl_type_handlers_optics_construct(self)) {
-    DX_UNREFERENCE(self);
-    self = NULL;
-    return NULL;
-  }
-  return self;
+  *RETURN = SELF;
+  return DX_SUCCESS;
 }
