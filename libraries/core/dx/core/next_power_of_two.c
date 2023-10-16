@@ -170,7 +170,7 @@ dx_result dx_next_power_of_two_gt_sz(dx_size* RETURN, dx_size x) {
 #if defined(_M_X64)
   return dx_next_power_of_two_gt_n64(RETURN, x);
 #elif defined(_M_IX86)
-  return dx_next_power_of_two_gt_n64(RETURN, x);
+  return dx_next_power_of_two_gt_n32(RETURN, x);
 #else
   #error("environment not (yet) supported")
 #endif
@@ -180,7 +180,7 @@ dx_result dx_next_power_of_two_gte_sz(dx_size* RETURN, dx_size x) {
 #if defined(_M_X64)
   return dx_next_power_of_two_gte_n64(RETURN, x);
 #elif defined(_M_IX86)
-  return dx_next_power_of_two_gte_n64(RETURN, x);
+  return dx_next_power_of_two_gte_n32(RETURN, x);
 #else
   #error("environment not (yet) supported")
 #endif
