@@ -1,0 +1,9 @@
+{
+  "type" : "typedef",
+  "last-update" : "2023-12-18",
+  "indices" : "core",
+  "name" : "Core_Natural64",
+  "id" : "core-natural64",
+  "signature" : "typedef &lt;implementation&gt; Core_Natural64;",
+  "description" : "An unsigned integer of a width of 64 Bits. This usually is an alias of @{code('uint64_t')}."
+}

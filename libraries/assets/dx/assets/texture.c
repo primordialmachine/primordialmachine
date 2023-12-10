@@ -2,7 +2,7 @@
 
 DX_DEFINE_OBJECT_TYPE("dx.assets.texture",
                       dx_assets_texture,
-                      dx_object);
+                      Core_Object);
 
 static void dx_assets_texture_destruct(dx_assets_texture* SELF) {
   if (SELF->name) {
@@ -15,22 +15,14 @@ static void dx_assets_texture_destruct(dx_assets_texture* SELF) {
   }
 }
 
-static void dx_assets_texture_dispatch_construct(dx_assets_texture_dispatch* SELF)
+static void dx_assets_texture_constructDispatch(dx_assets_texture_dispatch* SELF)
 {/*Intentionally empty.*/}
 
-dx_result dx_assets_texture_construct(dx_assets_texture* SELF, dx_string* name, dx_asset_reference* image_reference) {
-  if (!SELF) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
-  }
-  dx_rti_type* TYPE = dx_assets_texture_get_type();
-  if (!TYPE) {
-    return DX_FAILURE;
-  }
-
+Core_Result dx_assets_texture_construct(dx_assets_texture* SELF, Core_String* name, dx_asset_reference* image_reference) {
+  DX_CONSTRUCT_PREFIX(dx_assets_texture);
   if (!name) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
   SELF->name = name;
   DX_REFERENCE(name);
@@ -38,23 +30,23 @@ dx_result dx_assets_texture_construct(dx_assets_texture* SELF, dx_string* name, 
   if (!image_reference) {
     DX_UNREFERENCE(SELF->name);
     SELF->name = NULL;
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
   SELF->image_reference = image_reference;
   DX_REFERENCE(SELF->image_reference);
 
-  DX_OBJECT(SELF)->type = TYPE;
-  return DX_SUCCESS;
+  CORE_OBJECT(SELF)->type = TYPE;
+  return Core_Success;
 }
 
-dx_result dx_assets_texture_create(dx_assets_texture** RETURN, dx_string* name, dx_asset_reference* image_reference) {
-  DX_CREATE_PREFIX(dx_assets_texture)
+Core_Result dx_assets_texture_create(dx_assets_texture** RETURN, Core_String* name, dx_asset_reference* image_reference) {
+  DX_CREATE_PREFIX(dx_assets_texture);
   if (dx_assets_texture_construct(SELF, name, image_reference)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   *RETURN = SELF;
-  return DX_SUCCESS;
+  return Core_Success;
 }

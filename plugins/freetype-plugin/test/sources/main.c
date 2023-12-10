@@ -14,10 +14,10 @@
 #include <windows.h>
 
 static void* allocate(void* context, size_t n) {
-  int old_error = dx_get_error();
+  int old_error = Core_getError();
   void* p = NULL;
-  if (dx_memory_allocate(&p, n)) {
-    dx_set_error(old_error);
+  if (Core_Memory_allocate(&p, n)) {
+    Core_setError(old_error);
     return NULL;
   }
   return p;
@@ -42,85 +42,85 @@ static DX_FONT_LOADER_PLUGIN_GET_GLYPH_PIXELS_PROC* g_font_loader_plugin_get_gly
 static DX_FONT_LOADER_PLUGIN_GET_GLYPH_ADVANCE_PROC* g_font_loader_plugin_get_glyph_advance = NULL;
 static DX_FONT_LOADER_PLUGIN_GET_GLYPH_BEARING_PROC* g_font_loader_plugin_get_glyph_bearing = NULL;
 
-static dx_result startup();
+static Core_Result startup();
 
 static void shutdown();
 
-static dx_result startup() {
+static Core_Result startup() {
   shutdown();
   g_library = LoadLibraryA("./" "freetype-plugin" ".dll");
   if (NULL == g_library) {
     shutdown();
-    dx_set_error(DX_ERROR_ENVIRONMENT_FAILED);
-    return DX_FAILURE;
+    Core_setError(Core_Error_EnvironmentFailed);
+    return Core_Failure;
   }
   g_font_loader_plugin_reference_font = (DX_FONT_LOADER_PLUGIN_REFERENCE_FONT_PROC*)GetProcAddress(g_library, DX_FONT_LOADER_PLUGIN_REFERENCE_FONT_PROC_NAME);
   if (!g_font_loader_plugin_reference_font) {
     shutdown();
-    dx_set_error(DX_ERROR_ENVIRONMENT_FAILED);
-    return DX_FAILURE;
+    Core_setError(Core_Error_EnvironmentFailed);
+    return Core_Failure;
   }
   g_font_loader_plugin_unreference_font = (DX_FONT_LOADER_PLUGIN_UNREFERENCE_FONT_PROC*)GetProcAddress(g_library, DX_FONT_LOADER_PLUGIN_UNREFERENCE_FONT_PROC_NAME);
   if (!g_font_loader_plugin_unreference_font) {
     shutdown();
-    dx_set_error(DX_ERROR_ENVIRONMENT_FAILED);
-    return DX_FAILURE;
+    Core_setError(Core_Error_EnvironmentFailed);
+    return Core_Failure;
   }
   g_font_loader_plugin_create_font = (DX_FONT_LOADER_PLUGIN_CREATE_FONT_PROC*)GetProcAddress(g_library, DX_FONT_LOADER_PLUGIN_CREATE_FONT_PROC_NAME);
   if (!g_font_loader_plugin_create_font) {
     shutdown();
-    dx_set_error(DX_ERROR_ENVIRONMENT_FAILED);
-    return DX_FAILURE;
+    Core_setError(Core_Error_EnvironmentFailed);
+    return Core_Failure;
   }
   g_font_loader_plugin_get_font_size = (DX_FONT_LOADER_PLUGIN_GET_FONT_SIZE_PROC*)GetProcAddress(g_library, DX_FONT_LOADER_PLUGIN_GET_FONT_SIZE_PROC_NAME);
   if (!g_font_loader_plugin_get_font_size) {
     shutdown();
-    dx_set_error(DX_ERROR_ENVIRONMENT_FAILED);
-    return DX_FAILURE;
+    Core_setError(Core_Error_EnvironmentFailed);
+    return Core_Failure;
   }
   g_font_loader_plugin_get_baseline_distance = (DX_FONT_LOADER_PLUGIN_GET_BASELINE_DISTANCE_PROC*)GetProcAddress(g_library, DX_FONT_LOADER_PLUGIN_GET_BASELINE_DISTANCE_PROC_NAME);
   if (!g_font_loader_plugin_get_baseline_distance) {
     shutdown();
-    dx_set_error(DX_ERROR_ENVIRONMENT_FAILED);
-    return DX_FAILURE;
+    Core_setError(Core_Error_EnvironmentFailed);
+    return Core_Failure;
   }
   g_font_loader_plugin_reference_glyph = (DX_FONT_LOADER_PLUGIN_REFERENCE_GLYPH_PROC*)GetProcAddress(g_library, DX_FONT_LOADER_PLUGIN_REFERENCE_GLYPH_PROC_NAME);
   if (!g_font_loader_plugin_reference_glyph) {
     shutdown();
-    dx_set_error(DX_ERROR_ENVIRONMENT_FAILED);
-    return DX_FAILURE;
+    Core_setError(Core_Error_EnvironmentFailed);
+    return Core_Failure;
   }
   g_font_loader_plugin_unreference_glyph = (DX_FONT_LOADER_PLUGIN_UNREFERENCE_GLYPH_PROC*)GetProcAddress(g_library, DX_FONT_LOADER_PLUGIN_UNREFERENCE_GLYPH_PROC_NAME);
   if (!g_font_loader_plugin_unreference_glyph) {
     shutdown();
-    dx_set_error(DX_ERROR_ENVIRONMENT_FAILED);
-    return DX_FAILURE;
+    Core_setError(Core_Error_EnvironmentFailed);
+    return Core_Failure;
   }
   g_font_loader_plugin_get_glyph = (DX_FONT_LOADER_PLUGIN_GET_GLYPH_PROC*)GetProcAddress(g_library, DX_FONT_LOADER_PLUGIN_GET_GLYPH_PROC_NAME);
   if (!g_font_loader_plugin_get_glyph) {
     shutdown();
-    dx_set_error(DX_ERROR_ENVIRONMENT_FAILED);
-    return DX_FAILURE;
+    Core_setError(Core_Error_EnvironmentFailed);
+    return Core_Failure;
   }
   g_font_loader_plugin_get_glyph_pixels = (DX_FONT_LOADER_PLUGIN_GET_GLYPH_PIXELS_PROC*)GetProcAddress(g_library, DX_FONT_LOADER_PLUGIN_GET_GLYPH_PIXELS_PROC_NAME);
   if (!g_font_loader_plugin_get_glyph_pixels) {
     shutdown();
-    dx_set_error(DX_ERROR_ENVIRONMENT_FAILED);
-    return DX_FAILURE;
+    Core_setError(Core_Error_EnvironmentFailed);
+    return Core_Failure;
   }
   g_font_loader_plugin_get_glyph_advance = (DX_FONT_LOADER_PLUGIN_GET_GLYPH_ADVANCE_PROC*)GetProcAddress(g_library, DX_FONT_LOADER_PLUGIN_GET_GLYPH_ADVANCE_PROC_NAME);
   if (!g_font_loader_plugin_get_glyph_advance) {
     shutdown();
-    dx_set_error(DX_ERROR_ENVIRONMENT_FAILED);
-    return DX_FAILURE;
+    Core_setError(Core_Error_EnvironmentFailed);
+    return Core_Failure;
   }
   g_font_loader_plugin_get_glyph_bearing = (DX_FONT_LOADER_PLUGIN_GET_GLYPH_BEARING_PROC*)GetProcAddress(g_library, DX_FONT_LOADER_PLUGIN_GET_GLYPH_BEARING_PROC_NAME);
   if (!g_font_loader_plugin_get_glyph_bearing) {
     shutdown();
-    dx_set_error(DX_ERROR_ENVIRONMENT_FAILED);
-    return DX_FAILURE;
+    Core_setError(Core_Error_EnvironmentFailed);
+    return Core_Failure;
   }
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
 static void shutdown() {
@@ -141,28 +141,28 @@ static void shutdown() {
   }
 }
 
-static dx_result test_read_font() {
+static Core_Result test_read_font() {
   if (startup()) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
   dx_font_loader_plugin_font* font = NULL;
   if (g_font_loader_plugin_create_font(&font, "./assets/firacode-regular.ttf", 12, NULL, &allocate, &deallocate)) {
     shutdown();
-    return DX_FAILURE;
+    return Core_Failure;
   }
-  dx_f32 font_size;
+  Core_Real32 font_size;
   if (g_font_loader_plugin_get_font_size(&font_size, font)){
     g_font_loader_plugin_unreference_font(font);
     font = NULL;
     shutdown();
-    return DX_FAILURE;
+    return Core_Failure;
   }
-  dx_f32 baseline_distance;
+  Core_Real32 baseline_distance;
   if (g_font_loader_plugin_get_baseline_distance(&baseline_distance, font)) {
     g_font_loader_plugin_unreference_font(font);
     font = NULL;
     shutdown();
-    return DX_FAILURE;
+    return Core_Failure;
   }
   {
     dx_font_loader_plugin_glyph* glyph = NULL;
@@ -170,7 +170,7 @@ static dx_result test_read_font() {
       g_font_loader_plugin_unreference_font(font);
       font = NULL;
       shutdown();
-      return DX_FAILURE;
+      return Core_Failure;
     }
     g_font_loader_plugin_unreference_glyph(glyph);
     glyph = NULL;
@@ -178,7 +178,7 @@ static dx_result test_read_font() {
   g_font_loader_plugin_unreference_font(font);
   font = NULL;
   shutdown();
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
 int main(int argc, char** argv) {

@@ -21,10 +21,10 @@
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-static inline dx_string* _get_name(dx_adl_names* names, dx_size index) {
+static inline Core_String* _get_name(dx_adl_names* names, Core_Size index) {
   DX_DEBUG_ASSERT(NULL != names);
   DX_DEBUG_ASSERT(index < DX_ADL_NAMES_NUMBER_OF_NAMES);
-  dx_string* name = names->names[index];
+  Core_String* name = names->names[index];
   DX_DEBUG_ASSERT(NULL != name);
   return name;
 }
@@ -33,63 +33,55 @@ static inline dx_string* _get_name(dx_adl_names* names, dx_size index) {
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-static dx_result compare_keys_callback(dx_bool* RETURN, dx_string** key1, dx_string** key2);
+static Core_Result compare_keys_callback(Core_Boolean* RETURN, Core_String** key1, Core_String** key2);
 
-static dx_result hash_key_callback(dx_size* RETURN, dx_string** key);
+static Core_Result hash_key_callback(Core_Size* RETURN, Core_String** key);
 
-static void key_added_callback(dx_string** key);
+static void key_added_callback(Core_String** key);
 
-static void key_removed_callback(dx_string** key);
+static void key_removed_callback(Core_String** key);
 
-static void value_added_callback(dx_object** value);
+static void value_added_callback(Core_Object** value);
 
-static void value_removed_callback(dx_object** value);
+static void value_removed_callback(Core_Object** value);
 
-static dx_result initialize_type_handlers(dx_adl_context* SELF);
+static Core_Result initialize_type_handlers(dx_adl_context* SELF);
 
-static dx_result uninitialize_type_handlers(dx_adl_context* SELF);
+static Core_Result uninitialize_type_handlers(dx_adl_context* SELF);
 
-static dx_result compare_keys_callback(dx_bool* RETURN, dx_string** key1, dx_string** key2) {
-  DX_DEBUG_ASSERT(NULL != key1);
-  DX_DEBUG_ASSERT(NULL != *key1);
-  DX_DEBUG_ASSERT(NULL != key2);
-  DX_DEBUG_ASSERT(NULL != *key2);
-  *RETURN = dx_string_is_equal_to(*key1, *key2);
-  return DX_SUCCESS;
+static Core_Result compare_keys_callback(Core_Boolean* RETURN, Core_String** a, Core_String** b) {
+  return Core_String_isEqualTo(RETURN, *a, *b);
 }
 
-static dx_result hash_key_callback(dx_size* RETURN, dx_string** key) {
-  DX_DEBUG_ASSERT(NULL != key);
-  DX_DEBUG_ASSERT(NULL != *key);
-  *RETURN = dx_string_get_hash_value(*key);
-  return DX_SUCCESS;
+static Core_Result hash_key_callback(Core_Size* RETURN, Core_String** a) {
+  return Core_String_getHashValue(RETURN, *a);
 }
 
-static void key_added_callback(dx_string** key) {
+static void key_added_callback(Core_String** key) {
   DX_DEBUG_ASSERT(NULL != key);
   DX_DEBUG_ASSERT(NULL != *key);
   DX_REFERENCE(*key);
 }
 
-static void key_removed_callback(dx_string** key) {
+static void key_removed_callback(Core_String** key) {
   DX_DEBUG_ASSERT(NULL != key);
   DX_DEBUG_ASSERT(NULL != *key);
   DX_UNREFERENCE(*key);
 }
 
-static void value_added_callback(dx_object** value) {
+static void value_added_callback(Core_Object** value) {
   DX_DEBUG_ASSERT(NULL != value);
   DX_DEBUG_ASSERT(NULL != *value);
   DX_REFERENCE(*value);
 }
 
-static void value_removed_callback(dx_object** value) {
+static void value_removed_callback(Core_Object** value) {
   DX_DEBUG_ASSERT(NULL != value);
   DX_DEBUG_ASSERT(NULL != *value);
   DX_UNREFERENCE(*value);
 }
 
-static dx_result initialize_type_handlers(dx_adl_context* SELF) {
+static Core_Result initialize_type_handlers(dx_adl_context* SELF) {
   static DX_INLINE_POINTER_HASHMAP_CONFIGURATION const configuration = {
     .compare_keys_callback = (dx_inline_pointer_hashmap_compare_keys_callback*)&compare_keys_callback,
     .hash_key_callback = (dx_inline_pointer_hashmap_hash_key_callback*)&hash_key_callback,
@@ -99,22 +91,22 @@ static dx_result initialize_type_handlers(dx_adl_context* SELF) {
     .value_removed_callback = (dx_inline_pointer_hashmap_value_removed_callback*)&value_removed_callback,
   };
   if (dx_inline_pointer_hashmap_initialize(&SELF->type_handlers, &configuration)) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
 
   #define DEFINE1(NAME) \
     { \
-      dx_string* k = _get_name((SELF->names), dx_adl_name_index_##NAME##_type); \
+      Core_String* k = _get_name((SELF->names), dx_adl_name_index_##NAME##_type); \
       dx_adl_type_handler* v = NULL; \
       if (dx_adl_type_handlers_##NAME##_create((dx_adl_type_handlers_##NAME**)&v)) { \
         dx_inline_pointer_hashmap_uninitialize(&SELF->type_handlers); \
-        return DX_FAILURE; \
+        return Core_Failure; \
       } \
       if (dx_inline_pointer_hashmap_set(&SELF->type_handlers, k, v)) { \
         DX_UNREFERENCE(v); \
         v = NULL; \
         dx_inline_pointer_hashmap_uninitialize(&SELF->type_handlers); \
-        return DX_FAILURE; \
+        return Core_Failure; \
       } \
       DX_UNREFERENCE(v); \
       v = NULL; \
@@ -122,19 +114,19 @@ static dx_result initialize_type_handlers(dx_adl_context* SELF) {
 
   #define DEFINE2(NAME, TYPE) \
     { \
-      dx_string* k = _get_name((SELF->names), dx_adl_name_index_##NAME##_type); \
+      Core_String* k = _get_name((SELF->names), dx_adl_name_index_##NAME##_type); \
       dx_adl_type_handler* v = NULL; \
       if (TYPE##_create((TYPE**)&v)) { \
         \
           dx_inline_pointer_hashmap_uninitialize(&SELF->type_handlers);  \
-          return DX_FAILURE; \
+          return Core_Failure; \
       } \
         if (dx_inline_pointer_hashmap_set(&SELF->type_handlers, k, v)) { \
           \
             DX_UNREFERENCE(v); \
             v = NULL; \
             dx_inline_pointer_hashmap_uninitialize(&SELF->type_handlers); \
-            return DX_FAILURE; \
+            return Core_Failure; \
         } \
         DX_UNREFERENCE(v); \
         v = NULL; \
@@ -159,18 +151,18 @@ static dx_result initialize_type_handlers(dx_adl_context* SELF) {
   #undef DEFINE2
   #undef DEFINE1
   
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-static dx_result uninitialize_type_handlers(dx_adl_context* SELF) {
+static Core_Result uninitialize_type_handlers(dx_adl_context* SELF) {
   dx_inline_pointer_hashmap_uninitialize(&SELF->type_handlers);
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
 
 DX_DEFINE_OBJECT_TYPE("dx.adl.context",
                        dx_adl_context,
-                       dx_object)
+                       Core_Object);
 
 static void dx_adl_context_destruct(dx_adl_context* SELF) {
   if (SELF->scene) {
@@ -188,29 +180,26 @@ static void dx_adl_context_destruct(dx_adl_context* SELF) {
   SELF->names = NULL;
 }
 
-static void dx_adl_context_dispatch_construct(dx_adl_context_dispatch* SELF)
+static void dx_adl_context_constructDispatch(dx_adl_context_dispatch* SELF)
 {/*Intentionally empty.*/}
 
-dx_result dx_adl_context_construct(dx_adl_context* SELF) {
-  dx_rti_type* TYPE = dx_adl_context_get_type();
-  if (!TYPE) {
-    return DX_FAILURE;
-  }
+Core_Result dx_adl_context_construct(dx_adl_context* SELF) {
+  DX_CONSTRUCT_PREFIX(dx_adl_context);
   if (dx_adl_names_create(&SELF->names)) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
   SELF->scene = NULL;
   if (dx_asset_definitions_create(&SELF->definitions)) {
     DX_UNREFERENCE(SELF->names);
     SELF->names = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   if (dx_asset_definition_language_diagnostics_create(&SELF->diagnostics))  {
     DX_UNREFERENCE(SELF->definitions);
     SELF->definitions = NULL;
     DX_UNREFERENCE(SELF->names);
     SELF->names = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   if (dx_asset_definition_language_parser_create(&SELF->parser, SELF->diagnostics)) {
     DX_UNREFERENCE(SELF->diagnostics);
@@ -219,7 +208,7 @@ dx_result dx_adl_context_construct(dx_adl_context* SELF) {
     SELF->definitions = NULL;
     DX_UNREFERENCE(SELF->names);
     SELF->names = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   if (initialize_type_handlers(SELF)) {
     DX_UNREFERENCE(SELF->parser);
@@ -230,30 +219,30 @@ dx_result dx_adl_context_construct(dx_adl_context* SELF) {
     SELF->definitions = NULL;
     DX_UNREFERENCE(SELF->names);
     SELF->names = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
-  DX_OBJECT(SELF)->type = TYPE;
-  return DX_SUCCESS;
+  CORE_OBJECT(SELF)->type = TYPE;
+  return Core_Success;
 }
 
-dx_result dx_adl_context_create(dx_adl_context** RETURN) {
-  DX_CREATE_PREFIX(dx_adl_context)
+Core_Result dx_adl_context_create(dx_adl_context** RETURN) {
+  DX_CREATE_PREFIX(dx_adl_context);
   if (dx_adl_context_construct(SELF)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   *RETURN = SELF;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-dx_result dx_adl_context_add_type_handler(dx_adl_context* SELF, dx_string* name, dx_adl_type_handler* type_handler) {
+Core_Result dx_adl_context_add_type_handler(dx_adl_context* SELF, Core_String* name, dx_adl_type_handler* type_handler) {
   if (!SELF || !name || !type_handler) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
   if (dx_inline_pointer_hashmap_set(&SELF->type_handlers, (dx_inline_pointer_hashmap_key)name, (dx_inline_pointer_hashmap_value)type_handler)) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
-  return DX_SUCCESS;
+  return Core_Success;
 }

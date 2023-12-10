@@ -2,7 +2,7 @@
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-#include "dx/core/memory.h"
+#include "Core/Memory.h"
 #include "dx/core/inline_pointer_deque.h"
 
 
@@ -16,31 +16,28 @@
   #define TRACE(msg)
 #endif
 
-DX_DEFINE_OBJECT_TYPE("dx.msg",
-                      dx_msg,
-                      dx_object);
+DX_DEFINE_OBJECT_TYPE("Core.Message",
+                      Core_Message,
+                      Core_Object);
 
-dx_result dx_msg_get_flags(uint32_t* RETURN, dx_msg const* SELF) {
+Core_Result Core_Message_getFlags(uint32_t* RETURN, Core_Message const* SELF) {
   *RETURN = SELF->flags;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-static void dx_msg_destruct(dx_msg* SELF)
+static void Core_Message_destruct(Core_Message* SELF)
 {/*Intentionally empty.*/}
 
-static void dx_msg_dispatch_construct(dx_msg_dispatch* SELF)
+static void Core_Message_constructDispatch(Core_Message_dispatch* SELF)
 {/*Intentionally empty.*/}
 
-dx_result dx_msg_construct(dx_msg* SELF) {
+Core_Result Core_Message_construct(Core_Message* SELF) {
   TRACE("enter: dx_msg_construct\n");
-  dx_rti_type* TYPE = dx_msg_get_type();
-  if (!TYPE) {
-    return DX_FAILURE;
-  }
+  DX_CONSTRUCT_PREFIX(Core_Message);
   SELF->flags = DX_MSG_TYPE_UNDETERMINED;
-  DX_OBJECT(SELF)->type = TYPE;
+  CORE_OBJECT(SELF)->type = TYPE;
   TRACE("leave: dx_msg_construct\n");
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
 #undef TRACE
@@ -57,56 +54,53 @@ dx_result dx_msg_construct(dx_msg* SELF) {
 
 DX_DEFINE_OBJECT_TYPE("dx.emit_msg",
                       dx_emit_msg,
-                      dx_msg);
+                      Core_Message);
 
 static void dx_emit_msg_destruct(dx_emit_msg* SELF) {
   TRACE("enter: dx_emit_msg_destruct\n");
-  dx_memory_deallocate(SELF->p);
+  Core_Memory_deallocate(SELF->p);
   SELF->p = NULL;
   TRACE("leave: dx_emit_msg_destruct\n");
 }
 
-static void dx_emit_msg_dispatch_construct(dx_emit_msg_dispatch* SELF)
+static void dx_emit_msg_constructDispatch(dx_emit_msg_dispatch* SELF)
 {/*Intentionally empty.*/}
 
-dx_result dx_emit_msg_construct(dx_emit_msg* SELF, char const* p, dx_size n) {
+Core_Result dx_emit_msg_construct(dx_emit_msg* SELF, char const* p, Core_Size n) {
   TRACE("enter: dx_emit_msg_construct\n");
-  dx_rti_type* TYPE = dx_emit_msg_get_type();
-  if (!TYPE) {
-    return DX_FAILURE;
-  }
-  if (dx_msg_construct(DX_MSG(SELF))) {
+  DX_CONSTRUCT_PREFIX(dx_emit_msg);
+  if (Core_Message_construct(CORE_MESSAGE(SELF))) {
     TRACE("leave: dx_emit_msg_construct\n");
-    return DX_FAILURE;
+    return Core_Failure;
   }
   SELF->p = NULL;
-  if (dx_memory_allocate(&SELF->p, n)) {
+  if (Core_Memory_allocate(&SELF->p, n)) {
     TRACE("leave: dx_emit_msg_construct\n");
-    return DX_FAILURE;
+    return Core_Failure;
   }
-  dx_memory_copy(SELF->p, p, n);
+  Core_Memory_copy(SELF->p, p, n);
   SELF->n = n;
-  DX_MSG(SELF)->flags = DX_MSG_TYPE_EMIT;
-  DX_OBJECT(SELF)->type = TYPE;
+  CORE_MESSAGE(SELF)->flags = DX_MSG_TYPE_EMIT;
+  CORE_OBJECT(SELF)->type = TYPE;
   TRACE("leave: dx_emit_msg_construct\n");
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-dx_result dx_emit_msg_create(dx_emit_msg** RETURN, char const* p, dx_size n) {
-  DX_CREATE_PREFIX(dx_emit_msg)
+Core_Result dx_emit_msg_create(dx_emit_msg** RETURN, char const* p, Core_Size n) {
+  DX_CREATE_PREFIX(dx_emit_msg);
   if (dx_emit_msg_construct(SELF, p, n)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   *RETURN = SELF;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-dx_result dx_emit_msg_get(dx_emit_msg* SELF, char const** p, dx_size* n) {
+Core_Result dx_emit_msg_get(dx_emit_msg* SELF, char const** p, Core_Size* n) {
   *p = SELF->p;
   *n = SELF->n;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
 #undef TRACE
@@ -123,39 +117,36 @@ dx_result dx_emit_msg_get(dx_emit_msg* SELF, char const** p, dx_size* n) {
 
 DX_DEFINE_OBJECT_TYPE("dx.quit_msg",
                       dx_quit_msg,
-                      dx_msg);
+                      Core_Message);
 
 static void dx_quit_msg_destruct(dx_quit_msg* SELF)
 {/*Intentionally empty.*/}
 
-static void dx_quit_msg_dispatch_construct(dx_quit_msg_dispatch* SELF)
+static void dx_quit_msg_constructDispatch(dx_quit_msg_dispatch* SELF)
 {/*Intentionally empty.*/}
 
-dx_result dx_quit_msg_construct(dx_quit_msg* SELF) {
+Core_Result dx_quit_msg_construct(dx_quit_msg* SELF) {
   TRACE("enter: dx_quit_msg_construct\n");
-  dx_rti_type* TYPE = dx_quit_msg_get_type();
-  if (!TYPE) {
-    return DX_FAILURE;
-  }
-  if (dx_msg_construct(DX_MSG(SELF))) {
+  DX_CONSTRUCT_PREFIX(dx_quit_msg);
+  if (Core_Message_construct(CORE_MESSAGE(SELF))) {
     TRACE("leave: dx_quit_msg_construct\n");
-    return DX_FAILURE;
+    return Core_Failure;
   }
-  DX_MSG(SELF)->flags = DX_MSG_TYPE_QUIT;
-  DX_OBJECT(SELF)->type = TYPE;
+  CORE_MESSAGE(SELF)->flags = DX_MSG_TYPE_QUIT;
+  CORE_OBJECT(SELF)->type = TYPE;
   TRACE("leave: dx_quit_msg_construct\n");
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-dx_result dx_quit_msg_create(dx_quit_msg** RETURN) {
-  DX_CREATE_PREFIX(dx_quit_msg)
+Core_Result dx_quit_msg_create(dx_quit_msg** RETURN) {
+  DX_CREATE_PREFIX(dx_quit_msg);
   if (dx_quit_msg_construct(SELF)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   *RETURN = SELF;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
 #undef TRACE
@@ -182,47 +173,47 @@ typedef struct dx_msg_queue {
   dx_inline_pointer_deque deque;
 } dx_msg_queue;
 
-dx_result dx_msg_queue_push(dx_msg_queue* SELF, dx_msg* msg) {
+Core_Result dx_msg_queue_push(dx_msg_queue* SELF, Core_Message* msg) {
   TRACE("enter: dx_msg_queue_push\n");
   if (!SELF || !msg) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
+    Core_setError(Core_Error_ArgumentInvalid);
     TRACE("leave: dx_msg_queue_push\n");
-    return DX_FAILURE;
+    return Core_Failure;
   }
   if (dx_inline_pointer_deque_push_back(&SELF->deque, msg)) {
     TRACE("leave: dx_msg_queue_push\n");
-    return DX_FAILURE;
+    return Core_Failure;
   }
   TRACE("leave: dx_msg_queue_push (success)\n");
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-dx_result dx_msg_queue_pop(dx_msg** RETURN, dx_msg_queue* SELF) {
+Core_Result dx_msg_queue_pop(Core_Message** RETURN, dx_msg_queue* SELF) {
   TRACE("enter: dx_msg_queue_pop\n");
-  dx_msg* msg = NULL;
+  Core_Message* msg = NULL;
   if (dx_inline_pointer_deque_pop_front(&msg, &SELF->deque, true)) {
-    if (dx_get_error() != DX_ERROR_IS_EMPTY) {
+    if (Core_Error_Empty != Core_getError()) {
       TRACE("leave: dx_msg_queue_pop (failure)\n");
-      return DX_FAILURE;
+      return Core_Failure;
     } else {
-      dx_set_error(DX_NO_ERROR);
+      Core_setError(Core_Error_NoError);
       *RETURN = NULL;
       TRACE("leave: dx_msg_queue_pop (success)\n");
-      return DX_SUCCESS;
+      return Core_Success;
     }
   }
   *RETURN = msg;
   TRACE("leave: dx_msg_queue_pop (success)\n");
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-dx_result dx_msg_queue_create(dx_msg_queue** RETURN) {
+Core_Result dx_msg_queue_create(dx_msg_queue** RETURN) {
   TRACE("enter: dx_msg_queue_create\n");
   dx_msg_queue* msg_queue = NULL;
-  if (dx_memory_allocate(&msg_queue, sizeof(dx_msg_queue))) {
+  if (Core_Memory_allocate(&msg_queue, sizeof(dx_msg_queue))) {
     dx_log("allocation failed\n", sizeof("allocation failed\n"));
     TRACE("leave: dx_msg_queue_create\n");
-    return DX_FAILURE;
+    return Core_Failure;
   }
   DX_INLINE_POINTER_DEQUE_CONFIGURATION configuration = {
     .added_callback = &added,
@@ -230,17 +221,17 @@ dx_result dx_msg_queue_create(dx_msg_queue** RETURN) {
   };
   if (dx_inline_pointer_deque_initialize(&msg_queue->deque, 0, &configuration)) {
     TRACE("leave: dx_msg_queue_create (failure)\n");
-    return DX_FAILURE;
+    return Core_Failure;
   }
   TRACE("leave: dx_msg_queue_create (success)\n");
   *RETURN = msg_queue;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
 void dx_msg_queue_destroy(dx_msg_queue* msg_queue) {
   TRACE("enter: dx_msg_queue_destroy\n");
   dx_inline_pointer_deque_uninitialize(&msg_queue->deque);
-  dx_memory_deallocate(msg_queue);
+  Core_Memory_deallocate(msg_queue);
   msg_queue = NULL;
   TRACE("leave: dx_msg_queue_destroy\n");
 }

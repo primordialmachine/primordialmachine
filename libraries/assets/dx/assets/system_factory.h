@@ -26,8 +26,8 @@ struct dx_assets_system_factory_dispatch {
 /// @brief Construct this assets system factory.
 /// @param SELF A pointer to this assets system factory.
 /// @method-call
-dx_result dx_assets_system_factory_construct(dx_assets_system_factory* SELF);
+Core_Result dx_assets_system_factory_construct(dx_assets_system_factory* SELF);
 
-dx_result dx_assets_system_factory_create(dx_assets_system_factory** RETURN);
+Core_Result dx_assets_system_factory_create(dx_assets_system_factory** RETURN);
 
 #endif // DX_ASSETS_SYSTEM_FACTORY_H_INCLUDED

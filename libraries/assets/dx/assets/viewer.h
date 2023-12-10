@@ -11,19 +11,19 @@ typedef struct dx_assets_viewer_controller dx_assets_viewer_controller;
 /// @brief A viewer asset.
 DX_DECLARE_OBJECT_TYPE("dx.assets.viewer",
                        dx_assets_viewer,
-                       dx_object);
+                       Core_Object);
 
 static inline dx_assets_viewer* DX_ASSETS_VIEWER(void* p) {
   return (dx_assets_viewer*)p;
 }
 
 struct dx_assets_viewer {
-  dx_object _parent;
+  Core_Object _parent;
   /// @brief A pointer to the optics of this viewer.
   /// @default dx_assets_optics_perspective with default values.
   dx_assets_optics* optics;
   /// @brief A pointer to the ADL name of this viewer.
-  dx_string* name;
+  Core_String* name;
   /// @brief The up vector.
   DX_VEC3 up;
   /// @brief The source position.
@@ -39,7 +39,7 @@ static inline dx_assets_viewer_dispatch* DX_ASSETS_VIEWER_DISPATCH(void* p) {
 }
 
 struct dx_assets_viewer_dispatch {
-  dx_object_dispatch _parent;
+  Core_Object_Dispatch _parent;
 };
 
 /// @default
@@ -47,9 +47,9 @@ struct dx_assets_viewer_dispatch {
 /// The default values are up <code>(0,1,0)</code>, source <code>(0,0,0)</code>, and target <code>(0,0,-1)</code>.
 /// @param name A pointer to the "Asset Definition Language" name of this viewer object.
 /// @constructor{dx_assets_viewer}
-dx_result dx_assets_viewer_construct(dx_assets_viewer* SELF, dx_string* name);
+Core_Result dx_assets_viewer_construct(dx_assets_viewer* SELF, Core_String* name);
 
 /// @create-operator{dx_assets_viewer}
-dx_result dx_assets_viewer_create(dx_assets_viewer** RETURN, dx_string* name);
+Core_Result dx_assets_viewer_create(dx_assets_viewer** RETURN, Core_String* name);
 
 #endif // DX_ASSETS_VIEWER_H_INCLUDED

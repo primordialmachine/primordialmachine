@@ -3,7 +3,7 @@
 
 #include "dx/core/core.h"
 
-static inline dx_n8 _utf8_classify(char const x) {
+static inline Core_Natural8 _utf8_classify(char const x) {
   // mask first byte with 1000.0000 (0x80)
   // if the result is 0000.0000 (0x00) then we have a one byte sequence.
   if ((x & 0x80) == 0x00) {
@@ -38,23 +38,23 @@ static inline dx_n8 _utf8_classify(char const x) {
 /// @a false if the sequence of Bytes is not a UTF-8 sequence.
 /// @a false is also returned on failure.
 /// @default-failure
-static inline bool dx__is_utf8_sequence(char const* p, dx_size n) {
+static inline bool dx__is_utf8_sequence(char const* p, Core_Size n) {
   if (!p) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
+    Core_setError(Core_Error_ArgumentInvalid);
     return false;
   }
   char const* current = p;
   char const* end = p + n;
   while (current != end) {
     char const x = *current;
-    dx_size i = _utf8_classify(*current);
+    Core_Size i = _utf8_classify(*current);
     if (i == 0) {
       return false;
     }
     current++;
     // mask second,third,fourth byte with 1100.0000 (0xC0)
     // if the result is 1000.0000 (0x80) then we have a valid sequence.
-    for (dx_size j = 0; j < i - 1; ++j) {
+    for (Core_Size j = 0; j < i - 1; ++j) {
       if (current == end) {
         return false;
       }

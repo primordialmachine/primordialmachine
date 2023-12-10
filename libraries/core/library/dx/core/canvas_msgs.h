@@ -36,7 +36,7 @@ static inline dx_canvas_msg* DX_CANVAS_MSG(void* p) {
 }
 
 struct dx_canvas_msg {
-  dx_msg _parent;
+  Core_Message _parent;
   uint8_t kind;
 };
 
@@ -45,20 +45,20 @@ static inline dx_canvas_msg_dispatch* DX_CANVAS_MSG_DISPATCH(void* p) {
 }
 
 struct dx_canvas_msg_dispatch {
-  dx_msg_dispatch _parent;
+  Core_Message_dispatch _parent;
 };
 
 /// @param kind The kind of this canvas message.
 /// @constructor{dx_canvas_msg}
-dx_result dx_canvas_msg_construct(dx_canvas_msg* SELF, dx_canvas_msg_kind kind);
+Core_Result dx_canvas_msg_construct(dx_canvas_msg* SELF, dx_canvas_msg_kind kind);
 
-dx_result dx_canvas_msg_create(dx_canvas_msg** RETURN, dx_canvas_msg_kind kind);
+Core_Result dx_canvas_msg_create(dx_canvas_msg** RETURN, dx_canvas_msg_kind kind);
 
 /// @brief Get the kind of this canvas message.
 /// @param RETURN A pointer to a <code>dx_canvas_msg_kind</code> variable.
 /// @success <code>*RETURN</code> was assigned the kind.
 /// @method{dx_canvas_msg}
-dx_result dx_canvas_msg_get_kind(dx_canvas_msg_kind* RETURN, dx_canvas_msg* SELF);
+Core_Result dx_canvas_msg_get_kind(dx_canvas_msg_kind* RETURN, dx_canvas_msg* SELF);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
@@ -73,8 +73,8 @@ static inline dx_canvas_size_changed_msg* DX_CANVAS_SIZE_CHANGED_MSG(void* p) {
 
 struct dx_canvas_size_changed_msg {
   dx_canvas_msg _parent;
-  dx_f32 width;
-  dx_f32 height;
+  Core_Real32 width;
+  Core_Real32 height;
 };
 
 static inline dx_canvas_size_changed_msg_dispatch* DX_CANVAS_SIZE_CHANGED_MSG_DISPATCH(void* p) {
@@ -85,9 +85,9 @@ struct dx_canvas_size_changed_msg_dispatch {
   dx_canvas_msg_dispatch _parent;
 };
 
-dx_result dx_canvas_size_changed_msg_construct(dx_canvas_size_changed_msg* SELF, dx_f32 width, dx_f32 height);
+Core_Result dx_canvas_size_changed_msg_construct(dx_canvas_size_changed_msg* SELF, Core_Real32 width, Core_Real32 height);
 
-dx_result dx_canvas_size_changed_msg_create(dx_canvas_size_changed_msg** RETURN, dx_f32 width, dx_f32 height);
+Core_Result dx_canvas_size_changed_msg_create(dx_canvas_size_changed_msg** RETURN, Core_Real32 width, Core_Real32 height);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
@@ -102,8 +102,8 @@ static inline dx_canvas_dpi_changed_msg* DX_CANVAS_DPI_CHANGED_MSG(void* p) {
 
 struct dx_canvas_dpi_changed_msg {
   dx_canvas_msg _parent;
-  dx_f32 horizontal_dpi;
-  dx_f32 vertical_dpi;
+  Core_Real32 horizontal_dpi;
+  Core_Real32 vertical_dpi;
 };
 
 static inline dx_canvas_dpi_changed_msg_dispatch* DX_CANVAS_DPI_CHANGED_MSG_DISPATCH(void* p) {
@@ -114,9 +114,9 @@ struct dx_canvas_dpi_changed_msg_dispatch {
   dx_canvas_msg_dispatch _parent;
 };
 
-dx_result dx_canvas_dpi_changed_msg_construct(dx_canvas_dpi_changed_msg* SELF, dx_f32 horizontal_dpi, dx_f32 vertical_dpi);
+Core_Result dx_canvas_dpi_changed_msg_construct(dx_canvas_dpi_changed_msg* SELF, Core_Real32 horizontal_dpi, Core_Real32 vertical_dpi);
 
-dx_result dx_canvas_dpi_changed_msg_create(dx_canvas_dpi_changed_msg** RETURN, dx_f32 horizontal_dpi, dx_f32 vertical_dpi);
+Core_Result dx_canvas_dpi_changed_msg_create(dx_canvas_dpi_changed_msg** RETURN, Core_Real32 horizontal_dpi, Core_Real32 vertical_dpi);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 

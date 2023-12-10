@@ -1,0 +1,9 @@
+{
+  "type" : "symbolic-constant",
+  "last-update" : "2023-12-18",
+  "indices" : "core",
+  "name" : "Core_False",
+  "id" : "core-false",
+  "signature" : "#define Core_False &lt;implementation&gt;",
+  "description" : "One of the two values of the type <a href='#core-boolean'>Core_Boolean</code></a> indicating logically false."
+}

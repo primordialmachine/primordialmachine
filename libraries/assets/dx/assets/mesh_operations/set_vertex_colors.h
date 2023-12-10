@@ -23,8 +23,8 @@ struct dx_assets_mesh_operations_set_vertex_colors_dispatch {
   dx_asset_mesh_operation_dispatch _parent;
 };
 
-dx_result dx_assets_mesh_operations_set_vertex_colors_construct(dx_assets_mesh_operations_set_vertex_colors* SELF);
+Core_Result dx_assets_mesh_operations_set_vertex_colors_construct(dx_assets_mesh_operations_set_vertex_colors* SELF);
 
-dx_result dx_assets_mesh_operations_set_vertex_colors_create(dx_assets_mesh_operations_set_vertex_colors** RETURN);
+Core_Result dx_assets_mesh_operations_set_vertex_colors_create(dx_assets_mesh_operations_set_vertex_colors** RETURN);
 
 #endif // DX_ASSETS_MESH_OPERATIONS_SET_VERTEX_COLORS_H_INCLUDED

@@ -9,9 +9,9 @@ DX_DEFINE_OBJECT_TYPE("dx.aal.al.context",
                       dx_aal_al_context,
                       dx_aal_context);
 
-static dx_result start(dx_aal_al_context* SELF);
+static Core_Result start(dx_aal_al_context* SELF);
 
-static dx_result stop(dx_aal_al_context* SELF);
+static Core_Result stop(dx_aal_al_context* SELF);
 
 static void dx_aal_al_context_destruct(dx_aal_al_context* SELF) {
   alDeleteBuffers(1, &SELF->buffer);
@@ -20,18 +20,15 @@ static void dx_aal_al_context_destruct(dx_aal_al_context* SELF) {
   SELF->context = NULL;
 }
 
-static void dx_aal_al_context_dispatch_construct(dx_aal_al_context_dispatch* SELF) {
-  DX_AAL_CONTEXT_DISPATCH(SELF)->start = (dx_result(*)(dx_aal_context*)) & start;
-  DX_AAL_CONTEXT_DISPATCH(SELF)->stop = (dx_result(*)(dx_aal_context*)) & stop;
+static void dx_aal_al_context_constructDispatch(dx_aal_al_context_dispatch* SELF) {
+  DX_AAL_CONTEXT_DISPATCH(SELF)->start = (Core_Result(*)(dx_aal_context*)) & start;
+  DX_AAL_CONTEXT_DISPATCH(SELF)->stop = (Core_Result(*)(dx_aal_context*)) & stop;
 }
 
-dx_result dx_aal_al_context_construct(dx_aal_al_context * SELF, dx_aal_al_system* system) {
-  dx_rti_type* TYPE = dx_aal_al_context_get_type();
-  if (!TYPE) {
-    return DX_FAILURE;
-  }
+Core_Result dx_aal_al_context_construct(dx_aal_al_context * SELF, dx_aal_al_system* system) {
+  DX_CONSTRUCT_PREFIX(dx_aal_al_context);
   if (dx_aal_context_construct(DX_AAL_CONTEXT(SELF))) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
   ALCint attributes[] = {
     ALC_MAJOR_VERSION, 1,
@@ -40,12 +37,12 @@ dx_result dx_aal_al_context_construct(dx_aal_al_context * SELF, dx_aal_al_system
   };
   SELF->context = alcCreateContext(system->device, attributes);
   if (!SELF->context) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
   if (!alcMakeContextCurrent(SELF->context)) {
     alcDestroyContext(SELF->context);
     SELF->context = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   //
   ALfloat listener_position[] = { 0.0,0.0,4.0 };
@@ -57,7 +54,7 @@ dx_result dx_aal_al_context_construct(dx_aal_al_context * SELF, dx_aal_al_system
   if (AL_NO_ERROR != alGetError()) {
     alcDestroyContext(SELF->context);
     SELF->context = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   //
   ALfloat source_0_position[] = { -2.0, 0.0, 0.0 };
@@ -73,45 +70,45 @@ dx_result dx_aal_al_context_construct(dx_aal_al_context * SELF, dx_aal_al_system
   alGenBuffers(1, & SELF->buffer);
   if (AL_NO_ERROR != alGetError()) {
     alcDestroyContext(SELF->context);
-    return DX_FAILURE;
+    return Core_Failure;
   }
   // the number of samples
   // the sample rate (aka samples per second) multiplied by the duration in seconds
   ALuint number_of_samples = sample_rate * duration;
 
   uint8_t* data = NULL;
-  if (dx_memory_allocate(&data, sizeof(uint8_t) * number_of_samples)) {
+  if (Core_Memory_allocate(&data, sizeof(uint8_t) * number_of_samples)) {
     alDeleteBuffers(1, &SELF->buffer);
     SELF->buffer = 0;
     alcDestroyContext(SELF->context);
     SELF->context = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
-  for (dx_size i = 0; i < number_of_samples; ++i) {
+  for (Core_Size i = 0; i < number_of_samples; ++i) {
     data[i] = 0;
   }
   alBufferData(SELF->buffer, AL_FORMAT_MONO8, data, sizeof(uint8_t) * sample_rate * duration, sample_rate);
-  dx_memory_deallocate(data);
+  Core_Memory_deallocate(data);
   //
-  DX_OBJECT(SELF)->type = TYPE;
-  return DX_SUCCESS;
+  CORE_OBJECT(SELF)->type = TYPE;
+  return Core_Success;
 }
 
-dx_result dx_aal_al_context_create(dx_aal_al_context** RETURN, dx_aal_al_system* system) {
-  DX_CREATE_PREFIX(dx_aal_al_context)
+Core_Result dx_aal_al_context_create(dx_aal_al_context** RETURN, dx_aal_al_system* system) {
+  DX_CREATE_PREFIX(dx_aal_al_context);
   if (dx_aal_al_context_construct(SELF, system)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   *RETURN = SELF;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-static dx_result start(dx_aal_al_context* SELF) {
-  return DX_SUCCESS;
+static Core_Result start(dx_aal_al_context* SELF) {
+  return Core_Success;
 }
 
-static dx_result stop(dx_aal_al_context* SELF) {
-  return DX_SUCCESS;
+static Core_Result stop(dx_aal_al_context* SELF) {
+  return Core_Success;
 }

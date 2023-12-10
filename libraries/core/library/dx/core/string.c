@@ -1,12 +1,12 @@
 #include "dx/core/string.h"
 
+#include "dx/core/_is_utf8_sequence.h"
 #include "dx/core/_string_format.h"
-
 #include "dx/core/byte_array.h"
+#include "Core/Hash.h"
+#include "Core/Memory.h"
 #include "dx/core/safe_add_nx.h"
 #include "dx/core/safe_mul_nx.h"
-#include "dx/core/memory.h"
-#include "dx/core/_is_utf8_sequence.h"
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
@@ -23,8 +23,8 @@ static inline dx_string_iterator_impl* DX_STRING_ITERATOR_IMPL(void* p) {
 /// @internal 
 struct dx_string_iterator_impl {
   dx_string_iterator _parent;
-  dx_string* string;
-  dx_size index;
+  Core_String* string;
+  Core_Size index;
 };
 
 /// @internal 
@@ -38,120 +38,101 @@ struct dx_string_iterator_impl_dispatch {
 };
 
 /// @internal 
-dx_result dx_string_iterator_impl_construct(dx_string_iterator_impl* SELF, dx_string* string);
+Core_Result dx_string_iterator_impl_construct(dx_string_iterator_impl* SELF, Core_String* string);
 
 /// @internal 
-dx_result dx_string_iterator_impl_create(dx_string_iterator_impl** RETURN, dx_string* string);
+Core_Result dx_string_iterator_impl_create(dx_string_iterator_impl** RETURN, Core_String* string);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-DX_DEFINE_OBJECT_TYPE("dx.string",
-                      dx_string,
-                      dx_object);
+DX_DEFINE_OBJECT_TYPE("Core.String",
+                      Core_String,
+                      Core_Object);
 
-dx_result dx_string_printfv(dx_string** RETURN, dx_string* format, va_list arguments) {
+Core_Result Core_String_printfv(Core_String** RETURN, Core_String* format, va_list arguments) {
   dx_inline_byte_array buffer;
   if (dx_inline_byte_array_initialize(&buffer)) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
   if (dx__format_v(&buffer, format->bytes, format->bytes + format->number_of_bytes, arguments)) {
     dx_inline_byte_array_uninitialize(&buffer);
-    return DX_FAILURE;
+    return Core_Failure;
   }
-  dx_string* string = NULL;
-  if (dx_string_create(&string, buffer.elements, buffer.size)) {
+  Core_String* string = NULL;
+  if (Core_String_create(&string, buffer.elements, buffer.size)) {
     dx_inline_byte_array_uninitialize(&buffer);
-    return DX_FAILURE;
+    return Core_Failure;
   }
   dx_inline_byte_array_uninitialize(&buffer);
   *RETURN = string;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-dx_string* dx_string_printf(dx_string* format, ...) {
+Core_Result Core_String_printf(Core_String** RETURN, Core_String* format, ...) {
   va_list arguments;
   va_start(arguments, format);
-  dx_string* string = NULL;
-  if (dx_string_printfv(&string, format, arguments)) {
+  Core_String* string = NULL;
+  if (Core_String_printfv(&string, format, arguments)) {
     va_end(arguments);
-    return NULL;
-  }
-  va_end(arguments);
-  return string;
-}
-
-dx_result dx_string_printf_2(dx_string** RETURN, dx_string* format, ...) {
-  va_list arguments;
-  va_start(arguments, format);
-  dx_string* string = NULL;
-  if (dx_string_printfv(&string, format, arguments)) {
-    va_end(arguments);
-    return DX_FAILURE;
+    return Core_Failure;
   }
   va_end(arguments);
   *RETURN = string;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-static void dx_string_destruct(dx_string* self) {
-  dx_memory_deallocate(self->bytes);
-  self->bytes = NULL;
+static void Core_String_destruct(Core_String* SELF) {
+  Core_Memory_deallocate(SELF->bytes);
+  SELF->bytes = NULL;
 }
 
-static void dx_string_dispatch_construct(dx_string_dispatch* self)
+static void Core_String_constructDispatch(Core_String_dispatch* SELF)
 {/*Intentionally emtpy.*/}
 
-int dx_string_construct(dx_string* self, char const* bytes, dx_size number_of_bytes) {
-  if (DX_SIZE_GREATEST < number_of_bytes) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
-  }
-  if (!self) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return 1;
-  }
-  dx_rti_type* _type = dx_string_get_type();
-  if (!_type) {
-    return 1;
+Core_Result Core_String_construct(Core_String* SELF, char const* bytes, Core_Size number_of_bytes) {
+  DX_CONSTRUCT_PREFIX(Core_String);
+  if (Core_Size_Greatest < number_of_bytes) {
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
   if (!bytes) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return 1;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
   if (!dx__is_utf8_sequence(bytes, number_of_bytes)) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return 1;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
-  self->bytes = NULL;
-  if (dx_memory_allocate(&self->bytes, number_of_bytes)) {
-    return 1;
+  SELF->bytes = NULL;
+  if (Core_Memory_allocate(&SELF->bytes, number_of_bytes)) {
+    return Core_Failure;
   }
-  dx_memory_copy(self->bytes, bytes, number_of_bytes);
-  self->number_of_bytes = number_of_bytes;
+  Core_Memory_copy(SELF->bytes, bytes, number_of_bytes);
+  SELF->number_of_bytes = number_of_bytes;
 
-  DX_OBJECT(self)->type = _type;
-  return 0;
+  CORE_OBJECT(SELF)->type = TYPE;
+  return Core_Success;
 }
 
-dx_result dx_string_create(dx_string** RETURN, char const* bytes, dx_size number_of_bytes) {
-  DX_CREATE_PREFIX(dx_string)
-  if (dx_string_construct(SELF, bytes, number_of_bytes)) {
+Core_Result Core_String_create(Core_String** RETURN, char const* bytes, Core_Size number_of_bytes) {
+  DX_CREATE_PREFIX(Core_String);
+  if (Core_String_construct(SELF, bytes, number_of_bytes)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   *RETURN = SELF;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-dx_result dx_string_get_bytes(void const** RETURN, dx_string* SELF) {
+Core_Result Core_String_getBytes(void const** RETURN, Core_String* SELF) {
   *RETURN = SELF->bytes;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-dx_result dx_string_get_number_of_bytes(dx_size* RETURN, dx_string* SELF) {
+Core_Result Core_String_getNumberOfBytes(Core_Size* RETURN, Core_String* SELF) {
   *RETURN = SELF->number_of_bytes;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
@@ -165,7 +146,7 @@ dx_result dx_string_get_number_of_bytes(dx_size* RETURN, dx_string* SELF) {
 /// The zero value on failure.
 /// The function fails if there is an encoding error.
 /// @failure This function has set the error variable to #DX_DECODING_FAILED.
-static dx_size classify(uint8_t x) {
+static Core_Size classify(uint8_t x) {
   if ((x & 0x80) == 0x00) {
     // To determine if the first Byte is in the range 0xxx xxxx,
     // mask the Byte with 1000 0000 / 0x80. If the result is 0,
@@ -191,7 +172,7 @@ static dx_size classify(uint8_t x) {
     return 4;
   }
   else {
-    dx_set_error(DX_ERROR_DECODING_FAILED);
+    Core_setError(Core_Error_DecodingFailed);
     return 0;
   }
 }
@@ -202,11 +183,11 @@ typedef struct y_utf8_it {
   bool error;
 } y_utf8_it;
 
-int y_utf8_decode(y_utf8_it* it, dx_size* n, uint32_t* p) {
+int y_utf8_decode(y_utf8_it* it, Core_Size* n, uint32_t* p) {
   if (it->error || it->current == it->end) {
     return 1;
   }
-  dx_size l = classify(*it->current);
+  Core_Size l = classify(*it->current);
   if (!l) {
     it->error = true;
     return 1;
@@ -240,12 +221,12 @@ int y_utf8_decode(y_utf8_it* it, dx_size* n, uint32_t* p) {
   return 0;
 }
 
-bool dx_string_contains_symbol(dx_string const* SELF, uint32_t symbol) {
+Core_Boolean dx_string_contains_symbol(Core_String const* SELF, uint32_t symbol) {
   y_utf8_it it = { .current = (uint8_t*)SELF->bytes,
                    .end = (uint8_t*)SELF->bytes + SELF->number_of_bytes,
                    .error = false };
   uint32_t p;
-  dx_size n;
+  Core_Size n;
   while (!y_utf8_decode(&it, &n, &p)) {
     if (p == symbol) {
       return true;
@@ -254,26 +235,46 @@ bool dx_string_contains_symbol(dx_string const* SELF, uint32_t symbol) {
   return false;
 }
 
-bool dx_string_is_equal_to(dx_string const* SELF, dx_string const* other) {
-  if (!SELF || !other) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return false;
+Core_Result Core_String_containsSymbol(Core_Boolean* RETURN, Core_String const* SELF, uint32_t symbol) {
+  y_utf8_it it = { .current = (uint8_t*)SELF->bytes,
+                   .end = (uint8_t*)SELF->bytes + SELF->number_of_bytes,
+                   .error = false };
+  uint32_t p;
+  Core_Size n;
+  while (!y_utf8_decode(&it, &n, &p)) {
+    if (p == symbol) {
+      *RETURN = Core_True;
+      return Core_Success;
+    }
+  }
+  *RETURN = Core_False;
+  return Core_Success;
+}
+
+Core_Result Core_String_isEqualTo(Core_Boolean* RETURN, Core_String const* SELF, Core_String const* other) {
+  if (!RETURN || !SELF || !other) {
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
   if (SELF->number_of_bytes != other->number_of_bytes) {
-    return false;
+    *RETURN = false;
+  } else {
+    Core_Integer8 temporary;
+    Core_Memory_compare(&temporary, SELF->bytes, other->bytes, SELF->number_of_bytes); // must succeed
+    *RETURN = !temporary;
   }
-  return !dx_memory_compare(SELF->bytes, other->bytes, SELF->number_of_bytes);
+  return Core_Success;
 }
 
-dx_size dx_string_get_hash_value(dx_string const* SELF) {
-  if (!SELF) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return 0;
+Core_Result Core_String_getHashValue(Core_Size* RETURN, Core_String const* SELF) {
+  if (!RETURN || !SELF) {
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
-  return dx_hash_bytes(SELF->bytes, SELF->number_of_bytes);
+  return Core_hashBytes(RETURN, SELF->bytes, SELF->number_of_bytes);
 }
 
-dx_result dx_string_create_iterator(dx_string_iterator** RETURN, dx_string* SELF) {
+Core_Result Core_String_create_iterator(dx_string_iterator** RETURN, Core_String* SELF) {
   return dx_string_iterator_impl_create((dx_string_iterator_impl**)RETURN, SELF);
 }
 
@@ -283,82 +284,79 @@ DX_DEFINE_OBJECT_TYPE("dx.string_iterator_impl",
                        dx_string_iterator_impl,
                        dx_string_iterator);
 
-static dx_result dx_string_iterator_impl_has_value(dx_bool* RETURN, dx_string_iterator_impl* SELF);
+static Core_Result dx_string_iterator_impl_has_value(Core_Boolean* RETURN, dx_string_iterator_impl* SELF);
 
-static dx_result dx_string_iterator_impl_get_value(uint32_t* RETURN, dx_string_iterator_impl* SELF);
+static Core_Result dx_string_iterator_impl_get_value(uint32_t* RETURN, dx_string_iterator_impl* SELF);
 
-static dx_result dx_string_iterator_impl_next(dx_string_iterator_impl* SELF);
+static Core_Result dx_string_iterator_impl_next(dx_string_iterator_impl* SELF);
 
 static void dx_string_iterator_impl_destruct(dx_string_iterator_impl* SELF) {
   DX_UNREFERENCE(SELF->string);
   SELF->string = NULL;
 }
 
-static void dx_string_iterator_impl_dispatch_construct(dx_string_iterator_impl_dispatch* SELF) {
-  DX_STRING_ITERATOR_DISPATCH(SELF)->has_value = (dx_result(*)(dx_bool*,dx_string_iterator*))dx_string_iterator_impl_has_value;
-  DX_STRING_ITERATOR_DISPATCH(SELF)->get_value = (dx_result(*)(uint32_t*,dx_string_iterator*))dx_string_iterator_impl_get_value;
-  DX_STRING_ITERATOR_DISPATCH(SELF)->next = (dx_result(*)(dx_string_iterator*))dx_string_iterator_impl_next;
+static void dx_string_iterator_impl_constructDispatch(dx_string_iterator_impl_dispatch* SELF) {
+  DX_STRING_ITERATOR_DISPATCH(SELF)->has_value = (Core_Result(*)(Core_Boolean*,dx_string_iterator*))dx_string_iterator_impl_has_value;
+  DX_STRING_ITERATOR_DISPATCH(SELF)->get_value = (Core_Result(*)(uint32_t*,dx_string_iterator*))dx_string_iterator_impl_get_value;
+  DX_STRING_ITERATOR_DISPATCH(SELF)->next = (Core_Result(*)(dx_string_iterator*))dx_string_iterator_impl_next;
 }
 
-dx_result dx_string_iterator_impl_construct(dx_string_iterator_impl* SELF, dx_string* string) {
-  dx_rti_type* TYPE = dx_string_iterator_impl_get_type();
-  if (!TYPE) {
-    return DX_FAILURE;
-  }
+Core_Result dx_string_iterator_impl_construct(dx_string_iterator_impl* SELF, Core_String* string) {
+  DX_CONSTRUCT_PREFIX(dx_string_iterator_impl);
   if (dx_string_iterator_construct(DX_STRING_ITERATOR(SELF))) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
   if (!string) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
   SELF->string = string;
   DX_REFERENCE(SELF->string);
   SELF->index = 0;
-  DX_OBJECT(SELF)->type = TYPE;
-  return DX_SUCCESS;
+  CORE_OBJECT(SELF)->type = TYPE;
+  return Core_Success;
 }
 
-dx_result dx_string_iterator_impl_create(dx_string_iterator_impl** RETURN, dx_string* string) {
-  DX_CREATE_PREFIX(dx_string_iterator_impl)
+Core_Result dx_string_iterator_impl_create(dx_string_iterator_impl** RETURN, Core_String* string) {
+  DX_CREATE_PREFIX(dx_string_iterator_impl);
   if (dx_string_iterator_impl_construct(SELF, string)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   *RETURN = SELF;
-  return DX_SUCCESS; 
+  return Core_Success; 
 }
 
-static dx_result dx_string_iterator_impl_has_value(dx_bool* RETURN, dx_string_iterator_impl* SELF) {
+static Core_Result dx_string_iterator_impl_has_value(Core_Boolean* RETURN, dx_string_iterator_impl* SELF) {
   if (!RETURN || !SELF) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
-  dx_size number_of_bytes;
-  if (dx_string_get_number_of_bytes(&number_of_bytes, SELF->string)) {
-    return DX_FAILURE;
+  Core_Size number_of_bytes;
+  if (Core_String_getNumberOfBytes(&number_of_bytes, SELF->string)) {
+    return Core_Failure;
   }
   *RETURN = SELF->index < number_of_bytes;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-static dx_result dx_string_iterator_impl_get_value(uint32_t* RETURN, dx_string_iterator_impl* SELF) {
+static Core_Result dx_string_iterator_impl_get_value(uint32_t* RETURN, dx_string_iterator_impl* SELF) {
   if (!RETURN || !SELF) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
-  dx_size number_of_bytes = 0;
-  if (dx_string_get_number_of_bytes(&number_of_bytes, SELF->string)) {
-    return DX_FAILURE;
+  Core_Size number_of_bytes = 0;
+  if (Core_String_getNumberOfBytes(&number_of_bytes, SELF->string)) {
+    return Core_Failure;
   }
   if (SELF->index >= number_of_bytes) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
   char const* bytes = NULL;
-  if (dx_string_get_bytes(&bytes, SELF->string)) {
-    return DX_FAILURE;
+  if (Core_String_getBytes(&bytes, SELF->string)) {
+    return Core_Failure;
   }
   uint32_t code_point = 0;
   char const* start = bytes;
@@ -371,7 +369,7 @@ static dx_result dx_string_iterator_impl_get_value(uint32_t* RETURN, dx_string_i
     if (((*current) & 0x80) == 0x0) {
       code_point |= *current;
       *RETURN = code_point;
-      return DX_SUCCESS;
+      return Core_Success;
     }
     // mask first byte with 1110.0000 (0xE0)
     // if the result is 1100.0000 (0xC0) then we have a two byte sequence.
@@ -379,63 +377,63 @@ static dx_result dx_string_iterator_impl_get_value(uint32_t* RETURN, dx_string_i
       code_point |= *current;
       // mask second byte with 1100.0000 (0xC0)
       // if the result is 1000.0000 (0x80) then we have a valid sequence.
-      for (dx_size i = 0; i < 1; ++i) {
+      for (Core_Size i = 0; i < 1; ++i) {
         code_point <<= 8;
         code_point |= *(++current);
-        if (current == end) return DX_FAILURE;
-        if ((*current & 0xC0) != 0x80) return DX_FAILURE;
+        if (current == end) return Core_Failure;
+        if ((*current & 0xC0) != 0x80) return Core_Failure;
       }
       *RETURN = code_point;
-      return DX_SUCCESS;
+      return Core_Success;
     }
     // mask first byte with 1111.0000 (0xF0)
     // if the result is 1110.0000 (0xE0) then we have a three byte sequence.
     if ((x& 0xF0) == 0xE0) {
       // mask second to third byte with 1100.0000 (0xC0)
       // if the result is 1000.0000 (0x80) then we have a valid sequence.
-      for (dx_size i = 0; i < 2; ++i) {
+      for (Core_Size i = 0; i < 2; ++i) {
         code_point <<= 8;
         code_point |= *(++current);
-        if (current == end) return DX_FAILURE;
-        if ((*current & 0xC0) != 0x80) return DX_FAILURE;
+        if (current == end) return Core_Failure;
+        if ((*current & 0xC0) != 0x80) return Core_Failure;
       }
       *RETURN = code_point;
-      return DX_SUCCESS;
+      return Core_Success;
     }
     // mask first byte with 1111.1000 (0xF8)
     // if the result is 1111.0000 (0xF0) then we have a four byte sequence.
     if ((x & 0xF8) == 0xF0) {
       // mask second to fourth byte with 1100.0000 (0xC0)
       // if the result is 1000.0000 (0x80) then we have a valid sequence.
-      for (dx_size i = 0; i < 3; ++i) {
+      for (Core_Size i = 0; i < 3; ++i) {
         code_point <<= 8;
         code_point |= *(++current);
-        if (current == end) return DX_FAILURE;
-        if ((*current & 0xC0) != 0x80) return DX_FAILURE;
+        if (current == end) return Core_Failure;
+        if ((*current & 0xC0) != 0x80) return Core_Failure;
       }
       *RETURN = code_point;
-      return DX_SUCCESS;
+      return Core_Success;
     }
   }
-  return DX_FAILURE;
+  return Core_Failure;
 }
 
-static dx_result dx_string_iterator_impl_next(dx_string_iterator_impl* SELF) {
+static Core_Result dx_string_iterator_impl_next(dx_string_iterator_impl* SELF) {
   if (!SELF) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
-  dx_size number_of_bytes = 0;
-  if (dx_string_get_number_of_bytes(&number_of_bytes, SELF->string)) {
-    return DX_FAILURE;
+  Core_Size number_of_bytes = 0;
+  if (Core_String_getNumberOfBytes(&number_of_bytes, SELF->string)) {
+    return Core_Failure;
   }
   if (SELF->index >= number_of_bytes) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
   char const* bytes = NULL;
-  if (dx_string_get_bytes(&bytes, SELF->string)) {
-    return DX_FAILURE;
+  if (Core_String_getBytes(&bytes, SELF->string)) {
+    return Core_Failure;
   }
   uint32_t code_point = 0;
   char const* start = bytes;
@@ -447,117 +445,44 @@ static dx_result dx_string_iterator_impl_next(dx_string_iterator_impl* SELF) {
     // if the result is 0000.0000 (0x00) then we have a one byte sequence.
     if (((*current) & 0x80) == 0x0) {
       SELF->index += 1;
-      return DX_SUCCESS;
+      return Core_Success;
     }
     // mask first byte with 1110.0000 (0xE0)
     // if the result is 1100.0000 (0xC0) then we have a two byte sequence.
     if (((*current) & 0xE0) == 0xC0) {
       // mask second byte with 1100.0000 (0xC0)
       // if the result is 1000.0000 (0x80) then we have a valid sequence.
-      for (dx_size i = 0; i < 1; ++i) {
-        if (current == end) return DX_FAILURE;
-        if ((*current & 0xC0) != 0x80) return DX_FAILURE;
+      for (Core_Size i = 0; i < 1; ++i) {
+        if (current == end) return Core_Failure;
+        if ((*current & 0xC0) != 0x80) return Core_Failure;
       }
       SELF->index += 2;
-      return DX_SUCCESS;
+      return Core_Success;
     }
     // mask first byte with 1111.0000 (0xF0)
     // if the result is 1110.0000 (0xE0) then we have a three byte sequence.
     if ((x & 0xF0) == 0xE0) {
       // mask second to third byte with 1100.0000 (0xC0)
       // if the result is 1000.0000 (0x80) then we have a valid sequence.
-      for (dx_size i = 0; i < 2; ++i) {
-        if (current == end) return DX_FAILURE;
-        if ((*current & 0xC0) != 0x80) return DX_FAILURE;
+      for (Core_Size i = 0; i < 2; ++i) {
+        if (current == end) return Core_Failure;
+        if ((*current & 0xC0) != 0x80) return Core_Failure;
       }
       SELF->index += 3;
-      return DX_SUCCESS;
+      return Core_Success;
     }
     // mask first byte with 1111.1000 (0xF8)
     // if the result is 1111.0000 (0xF0) then we have a four byte sequence.
     if ((x & 0xF8) == 0xF0) {
       // mask second to fourth byte with 1100.0000 (0xC0)
       // if the result is 1000.0000 (0x80) then we have a valid sequence.
-      for (dx_size i = 0; i < 3; ++i) {
-        if (current == end) return DX_FAILURE;
-        if ((*current & 0xC0) != 0x80) return DX_FAILURE;
+      for (Core_Size i = 0; i < 3; ++i) {
+        if (current == end) return Core_Failure;
+        if ((*current & 0xC0) != 0x80) return Core_Failure;
       }
       SELF->index += 4;
-      return DX_SUCCESS;
+      return Core_Success;
     }
   }
-  return DX_FAILURE;
-}
-
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-
-int dx_str_to_i64(char const* p, dx_size l, int64_t* v) {
-  if (!p || !v) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return 1;
-  }
-  char const* q = p + l;
-  bool negative = false;
-  if (p != q && *p == '-') {
-    negative = true;
-    p++;
-    l -= 1;
-  }
-  uint64_t u;
-  if (dx_str_to_u64(p, l, &u)) {
-    return 1;
-  }
-  // neither +u nor -u can be represented by an int64_t value.
-  if (u > INT64_MAX) {
-    dx_set_error(DX_ERROR_CONVERSION_FAILED);
-    return 1;
-  }
-  // u is within the range of [0,INT64_MAX].
-  int64_t w = negative ? -(int64_t)u : +(int64_t)u;
-  *v = w;
-  return 0;
-}
-
-int dx_str_to_u64(char const* p, dx_size l, uint64_t* v) {
-  if (!p || !v) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return 1;
-  }
-  char const* q = p + l;
-  bool negative = false;
-  if (p != q && *p == '+') {
-    p++;
-  } else if (p != q && *p == '-') {
-    dx_set_error(DX_ERROR_CONVERSION_FAILED);
-    return 1;
-  }
-  uint64_t u = 0;
-  // there must be at least one digit
-  if (!(p != q && '0' <= *p && *p <= '9')) {
-    dx_set_error(DX_ERROR_CONVERSION_FAILED);
-    return 1;
-  }
-  do {
-    uint64_t overflow;
-    // safe multiply
-    u = dx_mul_u64(u, 10, &overflow);
-    if (overflow) {
-      dx_set_error(DX_ERROR_CONVERSION_FAILED);
-      return 1;
-    }
-    uint64_t w = (uint64_t)(*p) - (uint64_t)'0';
-    // safe add
-    u = dx_add_u64(u, w, &overflow);
-    if (overflow) {
-      dx_set_error(DX_ERROR_CONVERSION_FAILED);
-      return 1;
-    }
-    p++;
-  } while (p != q && '0' <= *p && *p <= '9');
-  if (p != q) {
-    dx_set_error(DX_ERROR_CONVERSION_FAILED);
-    return 1;
-  }
-  *v = u;
-  return 0;
+  return Core_Failure;
 }

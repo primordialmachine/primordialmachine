@@ -8,6 +8,6 @@
 #include "dx/data_definition_language.h"
 #include "dx/assets.h"
 
-dx_result dx_adl_compile(dx_assets_scene** RETURN, dx_ddl_node* node);
+Core_Result dx_adl_compile(dx_assets_scene** RETURN, dx_ddl_node* node);
 
 #endif // DX_ASSET_DEFINITION_LANGUAGE_H_INCLUDED

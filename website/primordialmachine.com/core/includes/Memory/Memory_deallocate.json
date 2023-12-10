@@ -1,0 +1,24 @@
+{
+  "type" : "function",
+  "last-update" : "2023-12-30",
+  "indices" : "core",
+  "name" : "Core_Memory_deallocate",
+  "id" : "core-memory-deallocate",
+  "signature" : "Core_Result Core_Memory_deallocate(void* p);",
+  "signatureRemarks": null,
+  "parameters" : [
+    {
+      "name" : "p",
+      "type" : "void*",
+      "description" : "A pointer to a memory block previously allocated by a call to @{code('Core_Memory_allocate')}."
+    }
+  ],
+  "errors" : [
+    {
+      "errorCode" : "Core_Error_ArgumentInvalid",
+      "errorCondition" : "@{code('p')} is a null pointer."
+    }
+  ],
+  "description" : "Deallocate a memory block.",
+  "success" : "The memory block pointed to by @{code('p')} was deallocated."
+}

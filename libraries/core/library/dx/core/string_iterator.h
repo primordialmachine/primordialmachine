@@ -8,14 +8,14 @@
 /// @extends dx.object
 DX_DECLARE_OBJECT_TYPE("dx.string_iterator",
                        dx_string_iterator,
-                       dx_object);
+                       Core_Object);
 
 static inline dx_string_iterator* DX_STRING_ITERATOR(void* p) {
   return (dx_string_iterator*)p;
 }
 
 struct dx_string_iterator {
-  dx_object _parent;
+  Core_Object _parent;
 };
 
 static inline dx_string_iterator_dispatch* DX_STRING_ITERATOR_DISPATCH(void* p) {
@@ -23,24 +23,24 @@ static inline dx_string_iterator_dispatch* DX_STRING_ITERATOR_DISPATCH(void* p) 
 }
 
 struct dx_string_iterator_dispatch {
-  dx_object_dispatch _parent;
-  dx_result (*has_value)(dx_bool *RETURN, dx_string_iterator* SELF);
-  dx_result (*get_value)(uint32_t* RETURN, dx_string_iterator* SELF);
-  dx_result (*next)(dx_string_iterator* SELF);
+  Core_Object_Dispatch _parent;
+  Core_Result (*has_value)(Core_Boolean *RETURN, dx_string_iterator* SELF);
+  Core_Result (*get_value)(uint32_t* RETURN, dx_string_iterator* SELF);
+  Core_Result (*next)(dx_string_iterator* SELF);
 
 };
 
-dx_result dx_string_iterator_construct(dx_string_iterator* SELF);
+Core_Result dx_string_iterator_construct(dx_string_iterator* SELF);
 
-static inline dx_result dx_string_iterator_has_value(dx_bool *RETURN, dx_string_iterator* SELF) {
+static inline Core_Result dx_string_iterator_has_value(Core_Boolean *RETURN, dx_string_iterator* SELF) {
   DX_OBJECT_VIRTUALCALL(dx_string_iterator, has_value, RETURN, SELF);
 }
 
-static inline dx_result dx_string_iterator_get_value(uint32_t* RETURN, dx_string_iterator* SELF) {
+static inline Core_Result dx_string_iterator_get_value(uint32_t* RETURN, dx_string_iterator* SELF) {
   DX_OBJECT_VIRTUALCALL(dx_string_iterator, get_value, RETURN, SELF);
 }
 
-static inline dx_result dx_string_iterator_next(dx_string_iterator* SELF) {
+static inline Core_Result dx_string_iterator_next(dx_string_iterator* SELF) {
   DX_OBJECT_VIRTUALCALL(dx_string_iterator, next, SELF);
 }
 

@@ -8,14 +8,14 @@
 /// A dx.val.material usually represents a dx.asset.material.
 DX_DECLARE_OBJECT_TYPE("dx.val.material",
                        dx_val_material,
-                       dx_object);
+                       Core_Object);
 
 static inline dx_val_material* DX_VAL_MATERIAL(void* p) {
   return (dx_val_material*)p;
 }
 
 struct dx_val_material {
-  dx_object _parent;
+  Core_Object _parent;
   dx_val_context* context;
   /// @brief A pointer to the underlaying material asset.
   dx_assets_material* material_asset;
@@ -30,11 +30,11 @@ static inline dx_val_material_dispatch* DX_VAL_MATERIAL_DISPATCH(void* p) {
 }
 
 struct dx_val_material_dispatch {
-  dx_object_dispatch _parent;
+  Core_Object_Dispatch _parent;
 };
 
-dx_result dx_val_material_construct(dx_val_material* SELF, dx_val_context* context, dx_assets_material* material_asset);
+Core_Result dx_val_material_construct(dx_val_material* SELF, dx_val_context* context, dx_assets_material* material_asset);
 
-dx_result dx_val_material_create(dx_val_material** RETURN, dx_val_context* context, dx_assets_material* material_asset);
+Core_Result dx_val_material_create(dx_val_material** RETURN, dx_val_context* context, dx_assets_material* material_asset);
 
 #endif // DX_VAL_MATERIAL_H_INCLUDED

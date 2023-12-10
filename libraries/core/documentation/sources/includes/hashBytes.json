@@ -1,0 +1,42 @@
+{
+  "type" : "function",
+  "last-update" : "2023-12-18",
+  "indices" : "core",
+  "name" : "Core_hashBytes",
+  "id" : "core-hashbytes",
+  "signature" : "Core_Result Core_hashBytes(Core_Size* RETURN, void *p, Core_Size n);",
+  "signatureRemarks": null,
+  "parameters" : [
+    {
+      "name" : "RETURN",
+      "type" : "Core_Size*",
+      "description" : "A pointer to a @{code('Core_Size')} variable."
+    },
+    {
+      "name" : "p",
+      "type" : "void*",
+      "description" : "A pointer to an array of @{code('n')} Bytes."
+    },
+    {
+      "name" : "n",
+      "type" : "Core_Size",
+      "description" : "The length, in Bytes, of the array pointed to by @{code('p')}. May be @{code('0')}."
+    }
+  ],
+  "errors" : [
+    {
+      "errorCode" : "@{code('Core_Error_ArgumentInvalid')}",
+      "errorCondition" : "@{code('RETURN')} is a null pointer"
+    },
+    {
+      "errorCode" : "@{code('Core_Error_ArgumentInvalid')}",
+      "errorCondition" : "@{code('p')} is a null pointer"
+    }
+  ],
+  "description" : "Computes the hash value of the value @{code('x')}.",
+  "success" : [
+    "@{code('*RETURN')} was assigned the hash value of the value @{code('x')}."
+  ],
+  "return" : "@{code('Core_Success')} on success. @{code('Core_Failure')} on failure.",
+  "remarks" : "This function sets the by-thread error variable on failure."
+}

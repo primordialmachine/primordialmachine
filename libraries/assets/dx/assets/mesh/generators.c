@@ -1,7 +1,7 @@
 #include "dx/assets/mesh/generators.h"
 
-dx_result dx_asset_mesh_append_triangle(dx_assets_mesh* mesh) {
-  static dx_size const number_of_vertices = 3;
+Core_Result dx_asset_mesh_append_triangle(dx_assets_mesh* mesh) {
+  static Core_Size const number_of_vertices = 3;
   static DX_VEC3 const xyz[] = {
     { -0.5f, -0.5f, 0.f, },
     { +0.5f, -0.5f, 0.f, },
@@ -18,17 +18,17 @@ dx_result dx_asset_mesh_append_triangle(dx_assets_mesh* mesh) {
     { 1.f, 0.f, },
     { 0.f, 1.f, },
   };
-  for (dx_size i = 0, n = number_of_vertices; i < n; ++i) {
+  for (Core_Size i = 0, n = number_of_vertices; i < n; ++i) {
     if (dx_assets_mesh_append_vertex(mesh, &xyz[i], &ambient_rgba[i], &ambient_uv[i])) {
-      return DX_FAILURE;
+      return Core_Failure;
     }
   }
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-dx_result dx_assets_mesh_append_quadriliteral(dx_assets_mesh* mesh) {
-  static dx_f32 const a = -0.5f;
-  static dx_f32 const b = +0.5f;
+Core_Result dx_assets_mesh_append_quadriliteral(dx_assets_mesh* mesh) {
+  static Core_Real32 const a = -0.5f;
+  static Core_Real32 const b = +0.5f;
 
   DX_VEC3 p[4];
   DX_VEC2_F32 t[4];
@@ -51,55 +51,55 @@ dx_result dx_assets_mesh_append_quadriliteral(dx_assets_mesh* mesh) {
 
   // left top
   if (dx_assets_mesh_append_vertex(mesh, &p[3], &c[3], &t[3])) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
 
   // left bottom
   if (dx_assets_mesh_append_vertex(mesh, &p[0], &c[0], &t[0])) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
 
   // right top
   if (dx_assets_mesh_append_vertex(mesh, &p[2], &c[2], &t[2])) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
 
   // triangle #2
 
   // right top
   if (dx_assets_mesh_append_vertex(mesh, &p[2], &c[2], &t[2])) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
 
   // left bottom
   if (dx_assets_mesh_append_vertex(mesh, &p[0], &c[0], &t[0])) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
 
   // right bottom
   if (dx_assets_mesh_append_vertex(mesh, &p[1], &c[1], &t[1])) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
 
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-dx_result dx_assets_mesh_on_triangle(dx_assets_mesh* mesh) {
+Core_Result dx_assets_mesh_on_triangle(dx_assets_mesh* mesh) {
   if (dx_assets_mesh_clear(mesh)) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
   return dx_asset_mesh_append_triangle(mesh);
 }
 
-dx_result dx_assets_mesh_on_cube(dx_assets_mesh* mesh) {
+Core_Result dx_assets_mesh_on_cube(dx_assets_mesh* mesh) {
   if (dx_assets_mesh_clear(mesh)) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
   DX_MAT4 t;
   dx_mat4_set_translate(&t, 0, 0, +0.5f);
 
   DX_MAT4 r;
-  dx_size i = 0;
+  Core_Size i = 0;
   // front face
   dx_assets_mesh_append_quadriliteral(mesh);
   dx_assets_mesh_transform_range(mesh, &t, i, 6);
@@ -138,38 +138,38 @@ dx_result dx_assets_mesh_on_cube(dx_assets_mesh* mesh) {
   DX_VEC4 const COLOR = (DX_VEC4){ 0.f, 0.f, 0.f, 0.f };
   dx_assets_mesh_set_mesh_ambient_rgba(mesh, &COLOR);
   //
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-dx_result dx_assets_mesh_on_empty(dx_assets_mesh* mesh) {
+Core_Result dx_assets_mesh_on_empty(dx_assets_mesh* mesh) {
   if (dx_assets_mesh_clear(mesh)) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
   DX_VEC4 const COLOR = (DX_VEC4){ 0.f, 0.f, 0.f, 0.f };
   dx_assets_mesh_set_mesh_ambient_rgba(mesh, &COLOR);
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-dx_result dx_assets_mesh_on_quadriliteral(dx_assets_mesh* mesh) {
+Core_Result dx_assets_mesh_on_quadriliteral(dx_assets_mesh* mesh) {
   if (dx_assets_mesh_clear(mesh)) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
   if (dx_assets_mesh_append_quadriliteral(mesh)) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
   DX_VEC4 const COLOR = (DX_VEC4){ 0.f, 0.f, 0.f, 0.f };
   dx_assets_mesh_set_mesh_ambient_rgba(mesh, &COLOR);
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-dx_result dx_assets_mesh_on_octahedron(dx_assets_mesh* mesh) {
+Core_Result dx_assets_mesh_on_octahedron(dx_assets_mesh* mesh) {
   if (dx_assets_mesh_clear(mesh)) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
   DX_MAT4 t;
 
   DX_MAT4 r;
-  dx_size i = 0;
+  Core_Size i = 0;
 
   static DX_VEC4 const WHITE = { 1.f, 1.f, 1.f, 1.f };
 
@@ -238,5 +238,5 @@ dx_result dx_assets_mesh_on_octahedron(dx_assets_mesh* mesh) {
   DX_VEC4 const COLOR = (DX_VEC4){ 0.f, 0.f, 0.f, 0.f };
   dx_assets_mesh_set_mesh_ambient_rgba(mesh, &COLOR);
   //
-  return DX_SUCCESS;
+  return Core_Success;
 }

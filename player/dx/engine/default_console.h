@@ -30,10 +30,10 @@ struct dx_default_console {
   // t indicates the current state.
   // this is a value between 0 and 1.
   // 0 means fully closed, 1 means fully opened.
-  dx_f32 cs;
+  Core_Real32 cs;
   // dt indicates the target state.
   // this is a value between 0 and 1.
-  dx_f32 ts;
+  Core_Real32 ts;
   /// @brief The console prompt.
   dx_string_buffer *prompt;
 };
@@ -46,8 +46,8 @@ struct dx_default_console_dispatch {
   dx_console_dispatch _parent;
 };
 
-dx_result dx_default_console_construct(dx_default_console* SELf, dx_font_presenter* font_presenter, dx_rectangle_presenter* rectangle_presenter);
+Core_Result dx_default_console_construct(dx_default_console* SELf, dx_font_presenter* font_presenter, dx_rectangle_presenter* rectangle_presenter);
 
-dx_result dx_default_console_create(dx_default_console** RETURN, dx_font_presenter* font_presenter, dx_rectangle_presenter* rectangle_presenter);
+Core_Result dx_default_console_create(dx_default_console** RETURN, dx_font_presenter* font_presenter, dx_rectangle_presenter* rectangle_presenter);
 
 #endif // DX_DEFAULT_CONSOLE_H_INCLUDED

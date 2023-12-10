@@ -24,14 +24,14 @@ static inline dx_aal_system_dispatch* DX_AAL_SYSTEM_DISPATCH(void* p) {
 
 struct dx_aal_system_dispatch {
   dx_system_dispatch _parent;
-  dx_result (*get_context)(dx_aal_context**, dx_aal_system*);
+  Core_Result (*get_context)(dx_aal_context**, dx_aal_system*);
 };
 
 /// @brief Construct this AL system.
 /// @param SELF A pointer to this AAL system object.
 /// @param msg_queue A pointer to the message queue.
 /// @method-call
-dx_result dx_aal_system_construct(dx_aal_system* SELF, dx_msg_queue* msg_queue);
+Core_Result dx_aal_system_construct(dx_aal_system* SELF, dx_msg_queue* msg_queue);
 
 /// @brief Get the AAL context.
 /// @param RETURN A pointer to a <code>dx_aal_context*</code> variable.
@@ -42,7 +42,7 @@ dx_result dx_aal_system_construct(dx_aal_system* SELF, dx_msg_queue* msg_queue);
 /// @warning
 /// This function fails if this AAL system is not started.
 /// @method-call
-static inline dx_result dx_aal_system_get_context(dx_aal_context** RETURN, dx_aal_system* SELF) {
+static inline Core_Result dx_aal_system_get_context(dx_aal_context** RETURN, dx_aal_system* SELF) {
   DX_OBJECT_VIRTUALCALL(dx_aal_system, get_context, RETURN, SELF); 
 }
 

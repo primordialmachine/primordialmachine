@@ -3,48 +3,58 @@
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-/// @ingroup Core_Environment
+/// @ingroup Core
+/// @brief The major version of this library.
+#define Core_Version_Major (2)
+
+/// @ingroup Core
+/// @brief The minor version of this library.
+#define Core_Version_Minor (0)
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+/// @ingroup Core
 /// @brief Symbolic constant for the Microsoft Windows operating system.
-#define DX_OPERATING_SYSTEM_WINDOWS (1)
+#define Core_OperatingSystem_Windows (1)
 
-/// @ingroup Core_Environment
+/// @ingroup Core
 /// @brief Symbolic constant for an Unix operating system.
-#define DX_OPERATING_SYSTEM_UNIX (2)
+#define Core_OperatingSystem_Unix (2)
 
-/// @ingroup Core_Environment
+/// @ingroup Core
 /// @brief Symbolic constant for Linux operating system.
-#define DX_OPERATING_SYSTEM_LINUX (3)
+#define Core_OperatingSystem_Linux (3)
 
-/// @ingroup Core_Environment
+/// @ingroup Core
 /// @brief Symbolic constant for a MacOS operating system.
-#define DX_OPERATING_SYSTEM_MACOS (4)
+#define Core_OperatingSystem_Macos (4)
 
-/// @ingroup Core_Environment
+/// @ingroup Core
 /// @brief Symbolic constant for a iOS operating system.
-#define DX_OPERATING_SYSTEM_IOS (5)
+#define Core_OperatingSystem_Ios (5)
 
-/// @ingroup Core_Environment
+/// @ingroup Core
 /// @brief Symbolic constant for a iOS simulator operating system.
-#define DX_OPERATING_SYSTEM_IOSSIMULATOR (6)
+#define Core_OperatingSystem_IosSimulator (6)
 
-/// @ingroup Core_Environment
+/// @ingroup Core
 /// @brief Symbolic constant for the Cygwin/Microsoft Windows operating system.
-#define DX_OPERATING_SYSTEM_CYGWIN (7)
+#define Core_Operatingsystem_Cygwin (7)
 
-/// @ingroup Core_Environment
+/// @ingroup Core
 /// @brief Symbolic constant for the MSYS/Microsoft Windows operating system.
-#define DX_OPERATING_SYSTEM_MSYS (8)
+#define Core_OperatingSystem_Msys (8)
 
-/// @ingroup Core_Environment
+/// @ingroup Core
 /// @brief Symbolic constant for the MinGW/Microsoft Windows operating system.
-#define DX_OPERATING_SYSTEM_MINGW (9)
+#define Core_OperatingSystem_Mingw (9)
 
-/// @ingroup Core_Environment
+/// @ingroup Core
 /// @brief Symbolic constant indicating the operating system.
-/// It is defined to a value of one of the DX_OPERATING_SYSTEM_* symbolic constants.
-#if !defined(DX_OPERATING_SYSTEM)
+/// It is defined to a value of one of the Core_OperatingSystem_* symbolic constants.
+#if !defined(Core_OperatingSystem)
   #if defined(_WIN32)
-    #define DX_OPERATING_SYSTEM DX_OPERATING_SYSTEM_WINDOWS
+    #define Core_OperatingSystem Core_OperatingSystem_Windows
   #else
     #error("operating system not (yet) supported")
   #endif
@@ -52,93 +62,103 @@
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-/// @ingroup Core_Environment
+/// @ingroup Core
 /// @brief Symbolic constant for the "MSVC" C compiler.
-#define DX_COMPILER_C_MSVC (1)
+#define Core_Compiler_C_Msvc (1)
 
-/// @ingroup Core_Environment
+/// @ingroup Core
 /// @brief Symbolic constant for the "GCC" C compiler.
-#define DX_COMPILER_C_GCC (2)
+#define Core_Compiler_C_Gcc (2)
 
-/// @ingroup core
+/// @ingroup Core
 /// @brief Symbolic constant for the "CLANG" C compiler.
-#define DX_COMPILER_C_CLANG (3)
+#define Core_Compiler_C_Clang (3)
 
-/// @ingroup core
+/// @ingroup Core
 /// @brief Symbolic constant for the "MSVC" CPP compiler.
-#define DX_COMPILER_CPP_MSVC (4)
+#define Core_Compiler_Cpp_Msvc (4)
 
-/// @ingroup core
+/// @ingroup Core
 /// @brief Symbolic constant for the "GCC" CPP compiler.
-#define DX_COMPILER_CPP_GCC (5)
+#define Core_Compiler_Cpp_Gcc (5)
 
-/// @ingroup core
+/// @ingroup Core
 /// @brief Symbolic constant for the "CLANG" CPP compiler.
-#define DX_COMPILER_CPP_CLANG (6)
+#define Core_Compiler_Cpp_Clang (6)
 
-/// @ingroup core
+/// @ingroup Core
 /// @brief Symbolic constant indicating the C compiler.
-/// It is defined to a value of one of the DX_COMPILER_C_* symbolic constants.
-#if !defined(DX_COMPILER_C)
+/// It is defined to a value of one of the Core_Compiler_C_* symbolic constants.
+#if !defined(Core_Compiler_C)
   #if defined(_MSC_VER)
-    #define DX_COMPILER_C DX_COMPILER_C_MSVC
+    #define Core_Compiler_C Core_Compiler_C_Msvc
   #elif defined(__GNUC__)
-    #define DX_COMPILER_C DX_COMPILER_C_GNUC
+    #define Core_Compiler_C Core_Compiler_C_Gcc_GNUC
   #elif defined(__clang__)
-    #define DX_COMPILER_C DX_COMPILER_C_CLANG
+    #define Core_Compiler_C Core_Compiler_C_Clang
   #else
     #error("C compiler not (yet) supported")
   #endif
 #endif
 
-/// @ingroup core
+/// @ingroup Core
 /// @brief Symbolic constant indicating the CPP compiler.
-/// It is defined to a value of one of the DX_COMPILER_CPP_* symbolic constants.
-#if !defined(DX_COMPILER_CPP)
+/// It is defined to a value of one of the Core_Compiler_CPP_* symbolic constants.
+#if !defined(Core_Compiler_Cpp)
   #if defined(_MSC_VER)
-    #define DX_COMPILER_CPP DX_COMPILER_CPP_MSVC
+    #define Core_Compiler_Cpp Core_Compiler_Cpp_Msvc
   #elif defined(__GNUC__)
-    #define DX_COMPILER_CPP DX_COMPILER_CPP_GNUC
+    #define Core_Compiler_Cpp Core_Compiler_Cpp_Gcc
   #elif defined(__clang__)
-    #define DX_COMPILER_CPP DX_COMPILER_CPP_CLANG
+    #define Core_Compiler_Cpp Core_Compiler_Cpp_Clang
   #else
-    #error("CPP compiler not (yet) supported")
+    #error("C++ compiler not (yet) supported")
   #endif
 #endif
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-#define DX_VISUALS_DIRECT3D12 (1)
+/// @ingroup Core
+/// @brief Symbolic constant for the "Direct3D 12" visuals backend.
+#define Core_VisualsBackend_Direct3d12 (1)
 
-#define DX_VISUALS_OPENGL4 (2)
+/// @ingroup Core
+/// @brief Symbolic constant for the "OpenGL 4" visuals backend.
+#define Core_VisualsBackend_OpenGl4 (2)
 
-#define DX_VISUALS_VULKAN3D (3)
+/// @ingroup Core
+/// @brief Symbolic constant for the "Vulkan" visuals backend.
+#define Core_VisualsBackend_Vulkan (3)
 
+/// @ingroup Core
 /// @brief Symbolic constant indicating the visuals backend.
-/// It is defined to a value of one of the DX_VISUALS_* symbolic constants.
-#define DX_VISUALS DX_VISUALS_OPENGL4
+/// It is defined to a value of one of the Core_VisualsBackend_* symbolic constants.
+#define Core_VisualsBackend Core_VisualsBackend_OpenGl4
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-#define DX_AUDIALS_OPENAL (1)
+/// @ingroup Core
+/// @brief Symbolic constant for the "OpenAL" audials backend.
+#define Core_AudialsBackend_OpenAl (1)
 
+/// @ingroup Core
 /// @brief Symbolic constant indicating the audials backend.
-/// It is defined to a value of one of the DX_AUDIALS_* symbolic constants.
-#define DX_AUDIALS DX_AUDIALS_OPENAL
+/// It is defined to a value of one of the Core_AudialsBackend_* symbolic constants.
+#define Core_AudialsBackend Core_AudialsBackend_OpenAl
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 /// If defined an evaluating to @a 1 and if compiled in debug mode,
-/// then "magic bytes" memory corruption detection pattern is available for dx_object.
+/// then "magic bytes" memory corruption detection pattern is available for Core_Object.
 /// A macro DX_DEBUG_CHECK_OBJECT_MAGIC_BYTES is provided.
-/// If this function is invoked on a pointer that does not point to a valid dx_object (or derived type) object,
+/// If this function is invoked on a pointer that does not point to a valid Core_Object (or derived type) object,
 /// then there is a good chance (but only a chance) that this function will cause a debug break.
 #define DX_OBJECT_WITH_MAGIC_BYTES (1)
 
 /// If defined and evaluating to @a 1 and if compiled in debug mode,
-/// then "magic bytes" memory corruption detection pattern is available for dx_object_dispatch.
+/// then "magic bytes" memory corruption detection pattern is available for Core_Object_Dispatch.
 /// A macro DX_DEBUG_CHECK_OBJECT_DISPATCH_MAGIC_BYTES is provided.
-/// If this function is invoked on a pointer that does not point to a valid dx_object_dispatch (or derived type) object,
+/// If this function is invoked on a pointer that does not point to a valid Core_Object_Dispatch (or derived type) object,
 /// then there is a good chance (but only a chance) that this function will cause a debug break.
 #define DX_OBJECT_DISPATCH_WITH_MAGIC_BYTES (1)
 
@@ -149,25 +169,21 @@
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
+/// If defined and evaluating to @a 1, then memory blocks allocated with Core_Memory_allocate are prefixed with their sizes.
+#define Core_Memory_withTagging (1)
+
+/// If defined and evaluating to @a 1 and if tagging is enabled (see Core_Memory_withTagging), then the allocator maintains statistics on allocations.
+#define Core_Memory_withStatistics (1)
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
 /// If defined and evaluating to @a 1,
 /// then a function dx_math_tests() is provided
 /// which performs tests on functionality provided by "dx/core/math.h".
 /// This function succeeds if all such tests succeed, otherwise it fails.
 #define DX_MATH_WITH_TESTS (1)
 
-/// If defined and evaluating to @a 1,
-/// the a function dx_safe_add_nx_tests() is provided
-/// which performs tests on functionality provided by dx/core/safe_add_nx.h".
-/// This function succeeds if all such tests succeed, otherwise it fails.
-#define DX_SAFE_ADD_NX_WITH_TESTS (1)
-
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-
-/// If defined and evaluating to @a 1,
-/// the a function dx_safe_mul_nx_tests() is provided
-/// which performs tests on functionality provided by dx/core/safe_mul_nx.h".
-/// This function succeeds if all such tests succeed, otherwise it fails.
-#define DX_SAFE_MUL_NX_WITH_TESTS (1)
 
 // If defined and evaluating to @a 1, then dx_mul_n8 uses an assembler implementation and otherwise a pure C implementation.
 // Currently, the assember implementation is preferred so keep this enabled.
@@ -204,14 +220,6 @@
 // If defined and evaluating to @a 1, then dx_mul_i64 uses an assembler implementation and otherwise a pure C implementation.
 // Currently, the assember implementation is the only implementation so keep this enabled.
 #define DX_MUL_I64_ASM (1)
-
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-
-/// If defined and evaluating to @a 1,
-/// the a function dx_next_power_of_to_tests() is provided
-/// which performs tests on functionality provided by dx/core/next_power_of_two.h".
-/// This function succeeds if all such tests succeed, otherwise it fails.
-#define DX_NEXT_POWER_OF_TWO_WITH_TESTS (1)
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 

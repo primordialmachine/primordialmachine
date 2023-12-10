@@ -70,7 +70,7 @@ int64_t dx_mul_i64(int64_t x, int64_t y, int64_t* z);
 
 #if defined(DX_SAFE_MUL_IX_WITH_TESTS) && 1 == DX_SAFE_MUL_IX_WITH_TESTS
 
-int dx_safe_mul_ix_tests();
+Core_Result dx_safe_mul_ix_tests();
 
 #endif // DX_SAFE_MUL_IX_WITH_TESTS
 

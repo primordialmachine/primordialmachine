@@ -7,14 +7,14 @@
 
 DX_DECLARE_OBJECT_TYPE("dx.val.program",
                        dx_val_program,
-                       dx_object);
+                       Core_Object);
 
 static inline dx_val_program* DX_VAL_PROGRAM(void* p) {
   return (dx_val_program*)p;
 }
 
 struct dx_val_program {
-  dx_object _parent;
+  Core_Object _parent;
   dx_val_context* ctx;
 };
 
@@ -23,14 +23,14 @@ static inline dx_val_program_dispatch* DX_VAL_PROGRAM_DISPATCH(void* p) {
 }
 
 struct dx_val_program_dispatch {
-  dx_object_dispatch _parent;
-  dx_result (*activate)(dx_val_program*);
-  dx_result (*bind)(dx_val_program*, dx_val_cbinding*);
+  Core_Object_Dispatch _parent;
+  Core_Result (*activate)(dx_val_program*);
+  Core_Result (*bind)(dx_val_program*, dx_val_cbinding*);
 };
 
-dx_result dx_val_program_construct(dx_val_program* SELF, dx_val_context* ctx);
+Core_Result dx_val_program_construct(dx_val_program* SELF, dx_val_context* ctx);
 
-static inline dx_result dx_val_program_activate(dx_val_program* SELF) {
+static inline Core_Result dx_val_program_activate(dx_val_program* SELF) {
   DX_OBJECT_VIRTUALCALL(dx_val_program, activate, SELF);
 }
 
@@ -38,7 +38,7 @@ static inline dx_result dx_val_program_activate(dx_val_program* SELF) {
 /// @param SELF A pointer to this program.
 /// @param binding A pointer to the specified constant binding.
 /// @method-call
-static inline dx_result dx_val_program_bind(dx_val_program* SELF, dx_val_cbinding* cbinding) {
+static inline Core_Result dx_val_program_bind(dx_val_program* SELF, dx_val_cbinding* cbinding) {
   DX_OBJECT_VIRTUALCALL(dx_val_program, bind, SELF, cbinding);
 }
 

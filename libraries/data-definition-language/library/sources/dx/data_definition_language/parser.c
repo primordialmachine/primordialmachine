@@ -4,7 +4,7 @@
 
 DX_DEFINE_OBJECT_TYPE("dx.ddl.parser",
                       dx_ddl_parser,
-                      dx_object);
+                      Core_Object);
 
 /// @brief Get if the current word is of the specified word type.
 /// @param SELF A pointer to this parser.
@@ -44,18 +44,18 @@ static dx_ddl_node* dx_ddl_parser_on_list(dx_ddl_parser* p);
 
 static int dx_ddl_parser_on_list_0(dx_ddl_parser* p, dx_ddl_node* list_node);
 
-static dx_result dx_ddl_parser_next(dx_ddl_parser* SELF);
+static Core_Result dx_ddl_parser_next(dx_ddl_parser* SELF);
 
 static bool dx_ddl_parser_is_word_kind(dx_ddl_parser const* SELF, dx_data_definition_language_word_kind word_kind) {
   if (!SELF) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
+    Core_setError(Core_Error_ArgumentInvalid);
     return false;
   }
   dx_data_definition_language_word_kind word_kind_received;
   if (dx_ddl_parser_get_word_kind(&word_kind_received, SELF)) {
     return false;
   }
-  return dx_get_error() ? false : word_kind_received == word_kind;
+  return Core_getError() ? false : word_kind_received == word_kind;
 }
 
 static dx_ddl_node* dx_ddl_parser_on_value(dx_ddl_parser* p) {
@@ -69,8 +69,8 @@ static dx_ddl_node* dx_ddl_parser_on_value(dx_ddl_parser* p) {
       if (dx_ddl_node_create(&node, dx_ddl_node_kind_number)) {
         return NULL;
       }
-      dx_string* number_literal = NULL;
-      if (dx_string_create(&number_literal, p->scanner->text.elements, p->scanner->text.size)) {
+      Core_String* number_literal = NULL;
+      if (Core_String_create(&number_literal, p->scanner->text.elements, p->scanner->text.size)) {
         DX_UNREFERENCE(node);
         node = NULL;
         return NULL;
@@ -96,8 +96,8 @@ static dx_ddl_node* dx_ddl_parser_on_value(dx_ddl_parser* p) {
       if (dx_ddl_node_create(&node, dx_ddl_node_kind_string)) {
         return NULL;
       }
-      dx_string* string_literal = NULL;
-      if (dx_string_create(&string_literal, p->scanner->text.elements, p->scanner->text.size)) {
+      Core_String* string_literal = NULL;
+      if (Core_String_create(&string_literal, p->scanner->text.elements, p->scanner->text.size)) {
         DX_UNREFERENCE(node);
         node = NULL;
         return NULL;
@@ -125,7 +125,7 @@ static dx_ddl_node* dx_ddl_parser_on_value(dx_ddl_parser* p) {
       return dx_ddl_parser_on_list(p);
     } break;
     default: {
-      dx_set_error(DX_ERROR_SYNTACTICAL_ERROR);
+      Core_setError(Core_Error_SyntacticalError);
       return NULL;
     } break;
   }
@@ -133,39 +133,39 @@ static dx_ddl_node* dx_ddl_parser_on_value(dx_ddl_parser* p) {
 
 static int dx_ddl_parser_on_map_0(dx_ddl_parser* p, dx_ddl_node* map_node) {
   if (!dx_ddl_parser_is_word_kind(p, dx_data_definition_language_word_kind_left_curly_bracket)) {
-    if (!dx_get_error()) {
-      dx_set_error(DX_ERROR_SYNTACTICAL_ERROR);
+    if (!Core_getError()) {
+      Core_setError(Core_Error_SyntacticalError);
     }
-    return DX_FAILURE;
+    return Core_Failure;
   }
   if (dx_ddl_parser_next(p)) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
   while (!dx_ddl_parser_is_word_kind(p, dx_data_definition_language_word_kind_right_curly_bracket)) {
-    if (dx_get_error()) {
-      return DX_FAILURE;
+    if (Core_getError()) {
+      return Core_Failure;
     }
     // name
     if (!dx_ddl_parser_is_word_kind(p, dx_data_definition_language_word_kind_name)) {
-      return DX_FAILURE;
+      return Core_Failure;
     }
-    dx_string* name = NULL;
-    if (dx_string_create(&name, p->scanner->text.elements, p->scanner->text.size)) {
-      return DX_FAILURE;
+    Core_String* name = NULL;
+    if (Core_String_create(&name, p->scanner->text.elements, p->scanner->text.size)) {
+      return Core_Failure;
     }
     if (dx_ddl_parser_next(p)) {
       DX_UNREFERENCE(name);
       name = NULL;
-      return DX_FAILURE;
+      return Core_Failure;
     }
     // ':'
     if (!dx_ddl_parser_is_word_kind(p, dx_data_definition_language_word_kind_colon)) {
-      if (!dx_get_error()) {
-        dx_set_error(DX_ERROR_SYNTACTICAL_ERROR);
+      if (!Core_getError()) {
+        Core_setError(Core_Error_SyntacticalError);
       }
       DX_UNREFERENCE(name);
       name = NULL;
-      return DX_FAILURE;
+      return Core_Failure;
     }
     if (dx_ddl_parser_next(p)) {
       DX_UNREFERENCE(name);
@@ -177,7 +177,7 @@ static int dx_ddl_parser_on_map_0(dx_ddl_parser* p, dx_ddl_node* map_node) {
     if (!value_node) {
       DX_UNREFERENCE(name);
       name = NULL;
-      return DX_FAILURE;
+      return Core_Failure;
     }
     // put (name, value) into the map
     if (dx_ddl_node_map_set(map_node, name, value_node)) {
@@ -185,7 +185,7 @@ static int dx_ddl_parser_on_map_0(dx_ddl_parser* p, dx_ddl_node* map_node) {
       value_node = NULL;
       DX_UNREFERENCE(name);
       name = NULL;
-      return DX_FAILURE;
+      return Core_Failure;
     }
     DX_UNREFERENCE(value_node);
     value_node = NULL;
@@ -193,36 +193,36 @@ static int dx_ddl_parser_on_map_0(dx_ddl_parser* p, dx_ddl_node* map_node) {
     name = NULL;
     // if no comma follows, break the loop
     if (!dx_ddl_parser_is_word_kind(p, dx_data_definition_language_word_kind_comma)) {
-      if (dx_get_error()) {
-        return DX_FAILURE;
+      if (Core_getError()) {
+        return Core_Failure;
       }
       break;
     }
     if (dx_ddl_parser_next(p)) {
-      return DX_FAILURE;
+      return Core_Failure;
     }
   }
   if (!dx_ddl_parser_is_word_kind(p, dx_data_definition_language_word_kind_right_curly_bracket)) {
     dx_log("syntactical error: received ", sizeof("syntactical error: received ") - 1);
     dx_data_definition_language_word_kind word_kind;
     if (dx_ddl_parser_get_word_kind(&word_kind, p)) {
-      return DX_FAILURE;
+      return Core_Failure;
     }
-    dx_string* s;
+    Core_String* s;
     if (dx_data_definition_language_word_kind_to_string(&s, word_kind)) {
-      return DX_FAILURE;
+      return Core_Failure;
     }
-    dx_size number_of_bytes;
-    if (dx_string_get_number_of_bytes(&number_of_bytes, s)) {
+    Core_Size number_of_bytes;
+    if (Core_String_getNumberOfBytes(&number_of_bytes, s)) {
       DX_UNREFERENCE(s);
       s = NULL;
-      return DX_FAILURE;
+      return Core_Failure;
     }
     char const* bytes = NULL;
-    if (dx_string_get_bytes(&bytes, s)) {
+    if (Core_String_getBytes(&bytes, s)) {
       DX_UNREFERENCE(s);
       s = NULL;
-      return DX_FAILURE;
+      return Core_Failure;
     }
     dx_log(bytes, number_of_bytes);
     DX_UNREFERENCE(s);
@@ -230,28 +230,28 @@ static int dx_ddl_parser_on_map_0(dx_ddl_parser* p, dx_ddl_node* map_node) {
 
     dx_log(", expected ", sizeof(", expected ") - 1);
     if (dx_data_definition_language_word_kind_to_string(&s, dx_data_definition_language_word_kind_right_curly_bracket)) {
-      return DX_FAILURE;
+      return Core_Failure;
     }
     {
-      dx_size number_of_bytes = 0;
-      if (dx_string_get_number_of_bytes(&number_of_bytes, s)) {
-        return DX_FAILURE;
+      Core_Size number_of_bytes = 0;
+      if (Core_String_getNumberOfBytes(&number_of_bytes, s)) {
+        return Core_Failure;
       }
       void const* bytes = NULL;
-      if (dx_string_get_bytes(&bytes, s)) {
-        return DX_FAILURE;
+      if (Core_String_getBytes(&bytes, s)) {
+        return Core_Failure;
       }
       dx_log(bytes, number_of_bytes);
     }
     DX_UNREFERENCE(s);
     s = NULL;
 
-    return DX_FAILURE;
+    return Core_Failure;
   }
   if (dx_ddl_parser_next(p)) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
 static dx_ddl_node* dx_ddl_parser_on_map(dx_ddl_parser* p) {
@@ -269,58 +269,58 @@ static dx_ddl_node* dx_ddl_parser_on_map(dx_ddl_parser* p) {
 
 static int dx_ddl_parser_on_list_0(dx_ddl_parser* p, dx_ddl_node* list_node) {
   if (!dx_ddl_parser_is_word_kind(p, dx_data_definition_language_word_kind_left_square_bracket)) {
-    if (!dx_get_error()) {
-      dx_set_error(DX_ERROR_SYNTACTICAL_ERROR);
+    if (!Core_getError()) {
+      Core_setError(Core_Error_SyntacticalError);
     }
-    return DX_FAILURE;
+    return Core_Failure;
   }
   if (dx_ddl_parser_next(p)) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
   while (!dx_ddl_parser_is_word_kind(p, dx_data_definition_language_word_kind_right_square_bracket)) {
     // value
     dx_ddl_node* value_node = dx_ddl_parser_on_value(p);
     if (!value_node) {
-      return DX_FAILURE;
+      return Core_Failure;
     }
     if (dx_ddl_node_list_append(list_node, value_node)) {
       DX_UNREFERENCE(value_node);
       value_node = NULL;
-      return DX_FAILURE;
+      return Core_Failure;
     }
     DX_UNREFERENCE(value_node);
     value_node = NULL;
     // if no comma follows, break the loop
     if (!dx_ddl_parser_is_word_kind(p, dx_data_definition_language_word_kind_comma)) {
-      if (dx_get_error()) {
-        return DX_FAILURE;
+      if (Core_getError()) {
+        return Core_Failure;
       }
       break;
     }
     if (dx_ddl_parser_next(p)) {
-      return DX_FAILURE;
+      return Core_Failure;
     }
   }
   if (!dx_ddl_parser_is_word_kind(p, dx_data_definition_language_word_kind_right_square_bracket)) {
-    dx_string* s;
+    Core_String* s;
 
     dx_log("syntactical error: received ", sizeof("syntactical error: received ") - 1);
 
     dx_data_definition_language_word_kind word_kind;
     if (dx_ddl_parser_get_word_kind(&word_kind, p)) {
-      return DX_FAILURE;
+      return Core_Failure;
     }
     if (dx_data_definition_language_word_kind_to_string(&s, word_kind)) {
-      return DX_FAILURE;
+      return Core_Failure;
     }
     {
-      dx_size number_of_bytes = 0;
-      if (dx_string_get_number_of_bytes(&number_of_bytes, s)) {
-        return DX_FAILURE;
+      Core_Size number_of_bytes = 0;
+      if (Core_String_getNumberOfBytes(&number_of_bytes, s)) {
+        return Core_Failure;
       }
       void const* bytes = NULL;
-      if (dx_string_get_bytes(&bytes, s)) {
-        return DX_FAILURE;
+      if (Core_String_getBytes(&bytes, s)) {
+        return Core_Failure;
       }
       dx_log(bytes, number_of_bytes);
     }
@@ -329,28 +329,28 @@ static int dx_ddl_parser_on_list_0(dx_ddl_parser* p, dx_ddl_node* list_node) {
 
     dx_log(", expected ", sizeof(", expected ") - 1);
     if (dx_data_definition_language_word_kind_to_string(&s, dx_data_definition_language_word_kind_right_square_bracket)) {
-      return DX_FAILURE;
+      return Core_Failure;
     }
     {
-      dx_size number_of_bytes = 0;
-      if (dx_string_get_number_of_bytes(&number_of_bytes, s)) {
-        return DX_FAILURE;
+      Core_Size number_of_bytes = 0;
+      if (Core_String_getNumberOfBytes(&number_of_bytes, s)) {
+        return Core_Failure;
       }
       void const* bytes = NULL;
-      if (dx_string_get_bytes(&bytes, s)) {
-        return DX_FAILURE;
+      if (Core_String_getBytes(&bytes, s)) {
+        return Core_Failure;
       }
       dx_log(bytes, number_of_bytes);
     }
     DX_UNREFERENCE(s);
     s = NULL;
 
-    return DX_FAILURE;
+    return Core_Failure;
   }
   if (dx_ddl_parser_next(p)) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
 static dx_ddl_node* dx_ddl_parser_on_list(dx_ddl_parser* p) {
@@ -366,10 +366,10 @@ static dx_ddl_node* dx_ddl_parser_on_list(dx_ddl_parser* p) {
   return node;
 }
 
-static dx_result dx_ddl_parser_next(dx_ddl_parser* SELF) {
+static Core_Result dx_ddl_parser_next(dx_ddl_parser* SELF) {
   if (!SELF) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
   return dx_scanner_step(DX_SCANNER(SELF->scanner));
 }
@@ -381,69 +381,66 @@ static void dx_ddl_parser_destruct(dx_ddl_parser* SELF) {
   SELF->scanner = NULL;
 }
 
-static void dx_ddl_parser_dispatch_construct(dx_ddl_parser_dispatch* SELF)
+static void dx_ddl_parser_constructDispatch(dx_ddl_parser_dispatch* SELF)
 {/*Intentionally empty.*/}
 
-dx_result dx_ddl_parser_construct(dx_ddl_parser* SELF, dx_data_definition_language_scanner* scanner, dx_data_definition_language_diagnostics* diagnostics) {
-  dx_rti_type* TYPE = dx_ddl_parser_get_type();
-  if (!TYPE) {
-    return DX_FAILURE;
-  }
-  if (!SELF || !scanner || !diagnostics) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+Core_Result dx_ddl_parser_construct(dx_ddl_parser* SELF, dx_data_definition_language_scanner* scanner, dx_data_definition_language_diagnostics* diagnostics) {
+  DX_CONSTRUCT_PREFIX(dx_ddl_parser);
+  if (!scanner || !diagnostics) {
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
   SELF->scanner = scanner;
   DX_REFERENCE(SELF->scanner);
   SELF->diagnostics = diagnostics;
   DX_REFERENCE(SELF->diagnostics);
-  DX_OBJECT(SELF)->type = TYPE;
-  return DX_SUCCESS;
+  CORE_OBJECT(SELF)->type = TYPE;
+  return Core_Success;
 }
 
-dx_result dx_ddl_parser_create(dx_ddl_parser** RETURN, dx_data_definition_language_scanner* scanner, dx_data_definition_language_diagnostics* diagnostics) {
-  DX_CREATE_PREFIX(dx_ddl_parser)
+Core_Result dx_ddl_parser_create(dx_ddl_parser** RETURN, dx_data_definition_language_scanner* scanner, dx_data_definition_language_diagnostics* diagnostics) {
+  DX_CREATE_PREFIX(dx_ddl_parser);
   if (dx_ddl_parser_construct(SELF, scanner, diagnostics)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   *RETURN = SELF;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-dx_result dx_ddl_parser_set(dx_ddl_parser* SELF, char const* p, dx_size l) {
+Core_Result dx_ddl_parser_set(dx_ddl_parser* SELF, char const* p, Core_Size l) {
   return dx_scanner_set(DX_SCANNER(SELF->scanner), p, l);
 }
 
-dx_result dx_ddl_parser_get_word_kind(dx_data_definition_language_word_kind* RETURN, dx_ddl_parser const* SELF) {
+Core_Result dx_ddl_parser_get_word_kind(dx_data_definition_language_word_kind* RETURN, dx_ddl_parser const* SELF) {
   if (!SELF) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
   return dx_data_definition_language_scanner_get_word_kind(RETURN, SELF->scanner);
 }
 
-dx_result dx_ddl_parser_run(dx_ddl_node** RETURN, dx_ddl_parser* SELF) {
+Core_Result dx_ddl_parser_run(dx_ddl_node** RETURN, dx_ddl_parser* SELF) {
   // <start of input>
   if (!dx_ddl_parser_is_word_kind(SELF, dx_data_definition_language_word_kind_start_of_input)) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
   if (dx_ddl_parser_next(SELF)) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
   dx_ddl_node* root_node = dx_ddl_parser_on_value(SELF);
   if (!root_node) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
   // <end of input>
   if (!dx_ddl_parser_is_word_kind(SELF, dx_data_definition_language_word_kind_end_of_input)) {
     DX_UNREFERENCE(root_node);
     root_node = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   *RETURN = root_node;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
@@ -476,16 +473,16 @@ static dx_ddl_parser* dx_ddl_parser_test_create_parser() {
   return parser;
 }
 
-static dx_result dx_ddl_parser_test1() {
+static Core_Result dx_ddl_parser_test1() {
   dx_ddl_parser* parser = dx_ddl_parser_test_create_parser();
   if (parser) {
     DX_UNREFERENCE(parser);
     parser = NULL;
   }
-  return dx_get_error() ? DX_FAILURE : DX_SUCCESS;
+  return Core_getError() ? Core_Failure : Core_Success;
 }
 
-static dx_result dx_ddl_parser_test2() {
+static Core_Result dx_ddl_parser_test2() {
   static const char* input =
     "{\n"
     "  type : 'ColorRGBU8',\n"
@@ -516,10 +513,10 @@ END:
     DX_UNREFERENCE(parser);
     parser = NULL;
   }
-  return dx_get_error() ? DX_FAILURE : DX_SUCCESS;
+  return Core_getError() ? Core_Failure : Core_Success;
 }
 
-static dx_result dx_ddl_parser_test3() {
+static Core_Result dx_ddl_parser_test3() {
   static const char* input =
     "{\n"
     "  type : 'CheckerboardBrush',"
@@ -559,20 +556,20 @@ END:
     DX_UNREFERENCE(parser);
     parser = NULL;
   }
-  return dx_get_error() ? DX_FAILURE : DX_SUCCESS;
+  return Core_getError() ? Core_Failure : Core_Success;
 }
 
-dx_result dx_ddl_parser_tests() {
+Core_Result dx_ddl_parser_tests() {
   if (dx_ddl_parser_test1()) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
   if (dx_ddl_parser_test2()) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
   if (dx_ddl_parser_test3()) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
 #endif // DX_DATA_DEFINITION_LANGUAGE_PARSER_WITH_TESTS

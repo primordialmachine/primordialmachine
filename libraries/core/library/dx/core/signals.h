@@ -1,41 +1,36 @@
+// A signal is identified by a type t and a name n.
+// We write (t,n) -> s if the signal is identified by the type t and the name n.
+// If a signal (t,n) -> s is defined then trying to define a signal (t,n) -> s' is an error.  
+// If (t,n) -> s then (t',n) -> s for any descendant types t' of t. We write t' < t to indicate that t' is a descendant type of t.
+// By the above: If a signal (t,n) -> s is defined then defining a signal (t',n) -> s' for any type t' <= t is an error.
 #if !defined(DX_CORE_SIGNALS_H_INCLUDED)
 #define DX_CORE_SIGNALS_H_INCLUDED
 
 #include "dx/core/error.h"
 #include "dx/core/object.h"
 
-/// @brief The opaque type of a signal.
-typedef struct dx_signal {
-  void* pimpl;
-} dx_signal;
+/// @brief Add a signal to a type.
+/// @param type The type of the signal.
+/// @param name The name of the signal.
+/// @procedure
+Core_Result Core_Signals_add(Core_Type* type, char const* p, Core_Size l);
 
-/// @brief The ID of a connection.
-typedef uintptr_t dx_connection_id;
+typedef Core_Result(*Core_Callback)(Core_Object* context, Core_Object* parameter);
 
-/// @brief Initialize this signal.
-/// @param SELF A pointer to this signal.
-/// @method-call
-dx_result dx_signal_initialize(dx_signal* SELF);
+/// @brief Add a connection.
+/// @param instance The instance to connect to.
+/// @param p, n The name of the signal to connect to.
+/// @param context, callback The context and the callback.
+/// @remarks The signal does not store a reference but a weak reference to the context object.
+/// If the weak reference becomes invalid, then this connection is removed.
+/// @procedure
+Core_Result Core_Signals_connect(Core_Object* instance, char const *p, Core_Size n, Core_Object* context, Core_Callback *callback);
 
-/// @brief Uninitialize this signal.
-/// @param SELF A pointer to thsi signal.
-void dx_signal_uninitialize(dx_signal* SELF);
-
-/// @brief Connect to a signal.
-/// @param RETURN A pointer to a <code>dx_connection_id</code> variable.
-/// @param SELF A pointer to this signal.
-/// @param object A pointer to the object.
-/// The object is wrapped in a weak reference.
-/// @method-call
-dx_result dx_signal_connect_object(dx_connection_id* RETURN, dx_signal* SELF, dx_object* object);
-
-/// @brief Connect to a signal.
-/// @param RETURN A pointer to a <code>dx_connection_id</code> variable.
-/// @param SELF A pointer to this signal.
-/// @param weak_reference A pointer to the weak reference.
-/// @method-call
-dx_result dx_signal_connect_weak_reference(dx_connection_id* RETURN, dx_signal* SELF, dx_weak_reference* weak_reference);
-
-dx_result dx_signal_notify(dx_signal* SELF, dx_object* parameter);
+/// @brief Notify a signal.
+/// @param instance The instance to notify the signal for.
+/// @param p, n The name of the signal to invoke.
+/// @param argument The argument to pass.
+/// @procedure
+Core_Result Core_Signals_invoke(Core_Object* instance, char const *p, Core_Size n, Core_Object* argument);
 
 #endif // DX_CORE_SIGNALS_H_INCLUDED

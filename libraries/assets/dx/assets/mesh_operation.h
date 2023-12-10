@@ -17,14 +17,14 @@ enum dx_asset_mesh_operation_kind {
 
 DX_DECLARE_OBJECT_TYPE("dx.asset.mesh_operation",
                        dx_asset_mesh_operation,
-                       dx_object);
+                       Core_Object);
 
 static inline dx_asset_mesh_operation* DX_ASSET_MESH_OPERATION(void* p) {
   return (dx_asset_mesh_operation*)p;
 }
 
 struct dx_asset_mesh_operation {
-  dx_object _parent;
+  Core_Object _parent;
   dx_asset_mesh_operation_kind kind;
 };
 
@@ -33,13 +33,13 @@ static inline dx_asset_mesh_operation_dispatch* DX_ASSET_MESH_OPERATION_DISPATCH
 }
 
 struct dx_asset_mesh_operation_dispatch {
-  dx_object_dispatch _parent;
-  dx_result (*apply)(dx_asset_mesh_operation* SELF, dx_assets_mesh* mesh);
+  Core_Object_Dispatch _parent;
+  Core_Result (*apply)(dx_asset_mesh_operation* SELF, dx_assets_mesh* mesh);
 };
 
-dx_result dx_asset_mesh_operation_construct(dx_asset_mesh_operation* SELF, dx_asset_mesh_operation_kind kind);
+Core_Result dx_asset_mesh_operation_construct(dx_asset_mesh_operation* SELF, dx_asset_mesh_operation_kind kind);
 
-static inline dx_result dx_asset_mesh_operation_apply(dx_asset_mesh_operation* SELF, dx_assets_mesh* mesh) {
+static inline Core_Result dx_asset_mesh_operation_apply(dx_asset_mesh_operation* SELF, dx_assets_mesh* mesh) {
   DX_OBJECT_VIRTUALCALL(dx_asset_mesh_operation, apply, SELF, mesh);
 }
 

@@ -35,14 +35,14 @@ typedef void (dx_inline_pointer_hashmap_value_removed_callback)(dx_inline_pointe
 /// @ingroup Core_Aggregates
 /// @brief Type of a callback function invoked if the hash value of a key must be computed.
 /// @param key A pointer to the key
-typedef dx_result (dx_inline_pointer_hashmap_hash_key_callback)(dx_size*,dx_inline_pointer_hashmap_key*);
-typedef dx_result (dx_inline_pointer_hashmap_compare_keys_callback)(dx_bool*,dx_inline_pointer_hashmap_key*, dx_inline_pointer_hashmap_key*);
+typedef Core_Result (dx_inline_pointer_hashmap_hash_key_callback)(Core_Size*,dx_inline_pointer_hashmap_key*);
+typedef Core_Result (dx_inline_pointer_hashmap_compare_keys_callback)(Core_Boolean*,dx_inline_pointer_hashmap_key*, dx_inline_pointer_hashmap_key*);
 
 typedef struct dx_inline_pointer_hashmap_node dx_inline_pointer_hashmap_node;
 
 struct dx_inline_pointer_hashmap_node {
   dx_inline_pointer_hashmap_node* next;
-  dx_size hash_value;
+  Core_Size hash_value;
   dx_inline_pointer_hashmap_key key;
   dx_inline_pointer_hashmap_value value;
 };
@@ -83,7 +83,7 @@ typedef struct DX_INLINE_POINTER_HASHMAP_CONFIGURATION {
 /// @param SELF A pointer to this hashmap.
 /// @param configuration A pointer to the configuration.
 /// @method-call
-dx_result dx_inline_pointer_hashmap_initialize(dx_inline_pointer_hashmap* SELF, DX_INLINE_POINTER_HASHMAP_CONFIGURATION const* configuration);
+Core_Result dx_inline_pointer_hashmap_initialize(dx_inline_pointer_hashmap* SELF, DX_INLINE_POINTER_HASHMAP_CONFIGURATION const* configuration);
 
 /// @ingroup Core_Aggregates
 /// @brief Uninitialize this hashmap.
@@ -94,7 +94,7 @@ void dx_inline_pointer_hashmap_uninitialize(dx_inline_pointer_hashmap* SELF);
 /// @brief Clear this hashmap.
 /// @param SELF A pointer to this hashmap.
 /// @method-call
-dx_result dx_inline_pointer_hashmap_clear(dx_inline_pointer_hashmap* SELF);
+Core_Result dx_inline_pointer_hashmap_clear(dx_inline_pointer_hashmap* SELF);
 
 /// @ingroup Core_Aggregates
 /// @brief Add or update an entry in this hashmap.
@@ -102,10 +102,10 @@ dx_result dx_inline_pointer_hashmap_clear(dx_inline_pointer_hashmap* SELF);
 /// @param key The key.
 /// @param value The value.
 /// @method-call
-/// @error #DX_ERROR_INVALID_ARGUMENT @a SELF was a null pointer
-/// @error #DX_ERROR_ALLOCATION_FAILED An allocation failed
+/// @error #Core_Error_ArgumentInvalid @a SELF was a null pointer
+/// @error #Core_Error_AllocationFailed An allocation failed
 /// @error #DX_ERROR_EXISTS An entry for the specified key already exists
-dx_result dx_inline_pointer_hashmap_set(dx_inline_pointer_hashmap* SELF, dx_inline_pointer_hashmap_key key, dx_inline_pointer_hashmap_value value);
+Core_Result dx_inline_pointer_hashmap_set(dx_inline_pointer_hashmap* SELF, dx_inline_pointer_hashmap_key key, dx_inline_pointer_hashmap_value value);
 
 /// @ingroup Core_Aggregates
 /// @brief Get the value of an entry in this hashmap.
@@ -114,48 +114,48 @@ dx_result dx_inline_pointer_hashmap_set(dx_inline_pointer_hashmap* SELF, dx_inli
 /// @param key The key.
 /// @success <code>*RETURN</code> was assigned the value of the entry.
 /// @method-call
-/// @error #DX_ERROR_NOT_FOUND no entry for the specified key was found
-/// @error #DX_ERROR_INVALID_ARGUMENT @a self was a null pointer
-dx_result dx_inline_pointer_hashmap_get(dx_inline_pointer_hashmap_value* RETURN, dx_inline_pointer_hashmap const* SELF, dx_inline_pointer_hashmap_key key);
+/// @error #Core_Error_NotFound no entry for the specified key was found
+/// @error #Core_Error_ArgumentInvalid @a self was a null pointer
+Core_Result dx_inline_pointer_hashmap_get(dx_inline_pointer_hashmap_value* RETURN, dx_inline_pointer_hashmap const* SELF, dx_inline_pointer_hashmap_key key);
 
 /// @ingroup Core_Aggregates
 /// @brief Remove an entry from this hashmap.
 /// @param SELF A pointer to this hashmap.
 /// @param key The key.
 /// @method-call
-/// @error #DX_ERROR_NOT_FOUND no entry for the specified key was found
-/// @error #DX_ERROR_INVALID_ARGUMENT @a self was a null pointer
-dx_result dx_inline_pointer_hashmap_remove(dx_inline_pointer_hashmap* SELF, dx_inline_pointer_hashmap_key key);
+/// @error #Core_Error_NotFound no entry for the specified key was found
+/// @error #Core_Error_ArgumentInvalid @a self was a null pointer
+Core_Result dx_inline_pointer_hashmap_remove(dx_inline_pointer_hashmap* SELF, dx_inline_pointer_hashmap_key key);
 
 /// @ingroup Core_Aggregates
 /// @brief Get the size, in elements.
-/// @param RETURN A pointer to a dx_size variable.
+/// @param RETURN A pointer to a Core_Size variable.
 /// @param SELF A pointer to this hashmap.
 /// @success <code>*RETURN</code> was assigned the size.
 /// @method-call
-/// @error #DX_ERROR_INVALID_ARGUMENT @a RETURN is a null pointer.
-/// @error #DX_ERROR_INVALID_ARGUMENT @a SELF is a null pointer.
-dx_result dx_inline_pointer_hashmap_get_size(dx_size* RETURN, dx_inline_pointer_hashmap const* SELF);
+/// @error #Core_Error_ArgumentInvalid @a RETURN is a null pointer.
+/// @error #Core_Error_ArgumentInvalid @a SELF is a null pointer.
+Core_Result dx_inline_pointer_hashmap_get_size(Core_Size* RETURN, dx_inline_pointer_hashmap const* SELF);
 
 /// @ingroup Core_Aggregates
 /// @brief Get the capacity, in elements.
-/// @param RETURN A pointer to a dx_size variable.
+/// @param RETURN A pointer to a Core_Size variable.
 /// @param SELF A pointer to this hashmap.
 /// @success <code>*RETURN</code> was assigned the capacity.
 /// @method-call
-/// @error #DX_ERROR_INVALID_ARGUMENT @a RETURN is a null pointer.
-/// @error #DX_ERROR_INVALID_ARGUMENT @a SELF is a null pointer.
-dx_result dx_inline_pointer_hashmap_get_capacity(dx_size* RETURN, dx_inline_pointer_hashmap const* SELF);
+/// @error #Core_Error_ArgumentInvalid @a RETURN is a null pointer.
+/// @error #Core_Error_ArgumentInvalid @a SELF is a null pointer.
+Core_Result dx_inline_pointer_hashmap_get_capacity(Core_Size* RETURN, dx_inline_pointer_hashmap const* SELF);
 
 /// @ingroup Core_Aggregates
 /// @brief Get the free capacity, in elements.
-/// @param RETURN A pointer to a dx_size variable.
+/// @param RETURN A pointer to a Core_Size variable.
 /// @param SELF A pointer to this hashmap.
 /// @success <code>*RETURN</code> was assigned the free capacity.
 /// @method-call
-/// @error #DX_ERROR_INVALID_ARGUMENT @a RETURN is a null pointer.
-/// @error #DX_ERROR_INVALID_ARGUMENT @a SELF is a null pointer.
-dx_result dx_inline_pointer_hashmap_get_free_capacity(dx_size* RETURN, dx_inline_pointer_hashmap const* SELF);
+/// @error #Core_Error_ArgumentInvalid @a RETURN is a null pointer.
+/// @error #Core_Error_ArgumentInvalid @a SELF is a null pointer.
+Core_Result dx_inline_pointer_hashmap_get_free_capacity(Core_Size* RETURN, dx_inline_pointer_hashmap const* SELF);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
@@ -169,8 +169,8 @@ dx_result dx_inline_pointer_hashmap_get_free_capacity(dx_size* RETURN, dx_inline
 /// dx_inline_pointer_hashmap target;
 /// ...
 /// if (dx_inline_pointer_hashmap_iterator_initialize(&target, &target)) { ... }
-/// dx_set_error(DX_NO_ERROR);
-/// dx_bool has_entry;
+/// Core_setError(Core_Error_NoError);
+/// Core_Boolean has_entry;
 /// if (dx_inline_pointer_hashmap_iterator_has_entry(&entry, &target)) {
 ///   ...
 /// }
@@ -200,9 +200,9 @@ struct dx_inline_pointer_hashmap_iterator {
 /// @param SELF A pointer to the dx_inline_pointer_hashmap_iterator object.
 /// @param target A pointer to the pointer hashmap to iterate over.
 /// @method-call
-/// @error #DX_ERROR_INVALID_ARGUMENT @a SELF is a null pointer.
-/// @error #DX_ERROR_INVALID_ARGUMENT @a target is a null pointer.
-dx_result dx_inline_pointer_hashmap_iterator_initialize(dx_inline_pointer_hashmap_iterator* SELF, dx_inline_pointer_hashmap* target);
+/// @error #Core_Error_ArgumentInvalid @a SELF is a null pointer.
+/// @error #Core_Error_ArgumentInvalid @a target is a null pointer.
+Core_Result dx_inline_pointer_hashmap_iterator_initialize(dx_inline_pointer_hashmap_iterator* SELF, dx_inline_pointer_hashmap* target);
 
 /// @ingroup Core_Aggregates
 /// @brief Uninitialize this pointer hashmap iterator.
@@ -211,38 +211,38 @@ void dx_inline_pointer_hashmap_iterator_uninitialize(dx_inline_pointer_hashmap_i
 
 /// @ingroup Core_Aggregates
 /// @brief Advance this iterator.
-/// @return #DX_SUCCESS on success. #DX_FAILURE on failure.
-dx_result dx_inline_pointer_hashmap_iterator_next(dx_inline_pointer_hashmap_iterator* self);
+/// @return #Core_Success on success. #Core_Failure on failure.
+Core_Result dx_inline_pointer_hashmap_iterator_next(dx_inline_pointer_hashmap_iterator* self);
 
 /// @ingroup Core_Aggregates
 /// @param SELF A pointer to this iterator.
 /// @success <code>*RETURN</code> was assigned @a true if there is an entry and was assigned @a false if there no entry.
 /// @method-call
-/// @error #DX_ERROR_INVALID_ARGUMENT @a RETURN is a null pointer.
-/// @error #DX_ERROR_INVALID_ARGUMENT @a SELF is a null pointer.
-dx_result dx_inline_pointer_hashmap_iterator_has_entry(dx_bool* RETURN, dx_inline_pointer_hashmap_iterator* SELF);
+/// @error #Core_Error_ArgumentInvalid @a RETURN is a null pointer.
+/// @error #Core_Error_ArgumentInvalid @a SELF is a null pointer.
+Core_Result dx_inline_pointer_hashmap_iterator_has_entry(Core_Boolean* RETURN, dx_inline_pointer_hashmap_iterator* SELF);
 
 /// @ingroup Core_Aggregates
 /// @param RETURN A pointer to a dx_inline_pointer_hashmap_value variable.
 /// @param SELF A pointer to this iterator.
 /// @success <code>*RETURN</code> was assigned the value.
 /// @method-call
-/// @error #DX_ERROR_INVALID_ARGUMENT @a RETURN is a null pointer.
-dx_result dx_inline_pointer_hashmap_iterator_get_value(dx_inline_pointer_hashmap_value* RETURN, dx_inline_pointer_hashmap_iterator* SELF);
+/// @error #Core_Error_ArgumentInvalid @a RETURN is a null pointer.
+Core_Result dx_inline_pointer_hashmap_iterator_get_value(dx_inline_pointer_hashmap_value* RETURN, dx_inline_pointer_hashmap_iterator* SELF);
 
 /// @ingroup Core_Aggregates
 /// @param RETURN A pointer to a dx_inline_pointer_hashmap_key variable.
 /// @param SELF A pointer to this iterator.
 /// @success <code>*RETURN</code> was assigned the key.
 /// @method-call
-/// @error #DX_ERROR_INVALID_ARGUMENT @a RETURN is a null pointer.
-dx_result dx_inline_pointer_hashmap_iterator_get_key(dx_inline_pointer_hashmap_key* RETURN, dx_inline_pointer_hashmap_iterator* SELF);
+/// @error #Core_Error_ArgumentInvalid @a RETURN is a null pointer.
+Core_Result dx_inline_pointer_hashmap_iterator_get_key(dx_inline_pointer_hashmap_key* RETURN, dx_inline_pointer_hashmap_iterator* SELF);
 
 /// @ingroup Core_Aggregates
 /// @brief Remove the current entry.
 /// @param SELF A pointer to this iterator.
 /// @method-call
-dx_result dx_inline_pointer_hashmap_iterator_remove(dx_inline_pointer_hashmap_iterator* SELF);
+Core_Result dx_inline_pointer_hashmap_iterator_remove(dx_inline_pointer_hashmap_iterator* SELF);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
@@ -251,18 +251,18 @@ dx_result dx_inline_pointer_hashmap_iterator_remove(dx_inline_pointer_hashmap_it
 /// @param SELF A pointer to this pointer hashmap.
 /// @param target A pointer to the target array.
 /// @method-call
-/// @error #DX_ERROR_INVALID_ARGUMENT @a SELF is a null pointer.
-/// @error #DX_ERROR_INVALID_ARGUMENT @a TARGET is a null pointer.
-dx_result dx_inline_pointer_hashmap_get_keys(dx_inline_pointer_hashmap* SELF, dx_inline_pointer_array* target);
+/// @error #Core_Error_ArgumentInvalid @a SELF is a null pointer.
+/// @error #Core_Error_ArgumentInvalid @a TARGET is a null pointer.
+Core_Result dx_inline_pointer_hashmap_get_keys(dx_inline_pointer_hashmap* SELF, dx_inline_pointer_array* target);
 
 /// @ingroup Core_Aggregates
 /// @brief Append the values of this pointer hashmap to the specified pointer array.
 /// @param SELF A pointer to this pointer hashmap.
 /// @param target A pointer to the target array.
 /// @method-call
-/// @error #DX_ERROR_INVALID_ARGUMENT @a SELF is a null pointer.
-/// @error #DX_ERROR_INVALID_ARGUMENT @a TARGET is a null pointer.
-dx_result dx_inline_pointer_hashmap_get_values(dx_inline_pointer_hashmap* SELF, dx_inline_pointer_array* target);
+/// @error #Core_Error_ArgumentInvalid @a SELF is a null pointer.
+/// @error #Core_Error_ArgumentInvalid @a TARGET is a null pointer.
+Core_Result dx_inline_pointer_hashmap_get_values(dx_inline_pointer_hashmap* SELF, dx_inline_pointer_array* target);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 

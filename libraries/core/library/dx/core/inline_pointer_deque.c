@@ -1,32 +1,32 @@
 #include "dx/core/inline_pointer_deque.h"
 
-#include "dx/core/memory.h"
+#include "Core/Memory.h"
 #include "dx/core/safe_add_nx.h"
 #include "dx/core/safe_mul_nx.h"
-#include "dx/core/next_power_of_two.h"
+#include "Core/NextPowerOfTwo.h"
 #include "dx/core/_get_best_array_size.h"
 
 /// @brief The greatest capacity, in elements, of a pointer array.
-static dx_size const GREATEST_CAPACITY = DX_SIZE_GREATEST / sizeof(void*);
+static Core_Size const GREATEST_CAPACITY = Core_Size_Greatest / sizeof(void*);
 
 /// @brief The least capacity, in elements, of a pointer array.
-static dx_size const LEAST_CAPACITY = 0;
+static Core_Size const LEAST_CAPACITY = 0;
 
-static inline dx_size MAX(dx_size self, dx_size other);
+static inline Core_Size MAX(Core_Size self, Core_Size other);
 
-static inline dx_size MIN(dx_size self, dx_size other);
+static inline Core_Size MIN(Core_Size self, Core_Size other);
 
-static inline MOD(dx_size index, dx_size capacity);
+static inline MOD(Core_Size index, Core_Size capacity);
 
-static inline dx_size MAX(dx_size self, dx_size other) {
+static inline Core_Size MAX(Core_Size self, Core_Size other) {
   return self > other ? self : other;
 }
 
-static inline dx_size MIN(dx_size self, dx_size other) {
+static inline Core_Size MIN(Core_Size self, Core_Size other) {
   return self < other ? self : other;
 }
 
-static inline MOD(dx_size index, dx_size capacity) {
+static inline MOD(Core_Size index, Core_Size capacity) {
   return index % capacity;
 }
 
@@ -35,12 +35,12 @@ typedef struct _dx_impl {
   /// @brief A pointer to an array of @a capacity @a (void *) elements.
   void** elements;
   /// @brief The capacity, in elements, of the array pointed to by @a array.
-  dx_size capacity;
+  Core_Size capacity;
   /// @brief The number of elements in this array.
-  dx_size size;
+  Core_Size size;
   
   /// @brief The position to read the next element from.
-  dx_size read;
+  Core_Size read;
 
   /// @brief A pointer to the @a dx_added_callback function or a null pointer.
   dx_inline_pointer_deque_added_callback* added_callback;
@@ -55,93 +55,93 @@ typedef struct _dx_impl {
 /// @param configuration A pointer to the configuration.
 /// @default-return
 /// @default-failure
-/// @error #DX_ERROR_INVALID_ARGUMENT @a self is a null pointer
-/// @error #DX_ERROR_ALLOCATION_FAILED @a initial_capacity is too big
-/// @error #DX_ERROR_ALLOCATION_FAILED an allocation failed
-static dx_result _dx_impl_initialize(_dx_impl* SELF, dx_size initial_capacity, DX_INLINE_POINTER_DEQUE_CONFIGURATION const* configuration);
+/// @error #Core_Error_ArgumentInvalid @a self is a null pointer
+/// @error #Core_Error_AllocationFailed @a initial_capacity is too big
+/// @error #Core_Error_AllocationFailed an allocation failed
+static Core_Result _dx_impl_initialize(_dx_impl* SELF, Core_Size initial_capacity, DX_INLINE_POINTER_DEQUE_CONFIGURATION const* configuration);
 
 /// @brief Uninitialize this _dx_impl object.
 /// @param SELF A pointer to this _dx_impl object.
 static void _dx_impl_uninitialize(_dx_impl* SELF);
 
 /// @brief Get the size, in elements.
-/// @param RETURN A pointer to a <code>dx_size</code> variable.
+/// @param RETURN A pointer to a <code>Core_Size</code> variable.
 /// @param SELF A pointer to this _dx_impl object.
 /// @success <code>*RETURN</code> was assigned the size.
 /// @method-call
-/// @error #DX_ERROR_INVALID_ARGUMENT @a RETURN is a null pointer
-/// @error #DX_ERROR_INVALID_ARGUMENT @a SELF is a null pointer
-static dx_result _dx_impl_get_size(dx_size* RETURN, _dx_impl const* SELF);
+/// @error #Core_Error_ArgumentInvalid @a RETURN is a null pointer
+/// @error #Core_Error_ArgumentInvalid @a SELF is a null pointer
+static Core_Result _dx_impl_get_size(Core_Size* RETURN, _dx_impl const* SELF);
 
 /// @brief Get the capacity, in elements.
-/// @param RETURN A pointer to a <code>dx_size</code> variable.
+/// @param RETURN A pointer to a <code>Core_Size</code> variable.
 /// @param SELF A pointer to this _dx_impl object.
 /// @success <code>*RETURN</code> was assigned the capacity.
 /// @method-call
-/// @error #DX_ERROR_INVALID_ARGUMENT @a RETURN is a null pointer
-/// @error #DX_ERROR_INVALID_ARGUMENT @a SELF is a null pointer
-static dx_result _dx_impl_get_capacity(dx_size* RETURN, _dx_impl const* self);
+/// @error #Core_Error_ArgumentInvalid @a RETURN is a null pointer
+/// @error #Core_Error_ArgumentInvalid @a SELF is a null pointer
+static Core_Result _dx_impl_get_capacity(Core_Size* RETURN, _dx_impl const* self);
 
 /// @brief Get the free capacity, in elements.
-/// @param RETURN A pointer to a <code>dx_size</code> variable.
+/// @param RETURN A pointer to a <code>Core_Size</code> variable.
 /// @param SELF A pointer to this _dx_impl object.
 /// @success <code>*RETURN</code> was assigned the free capacity.
 /// @method-call
-/// @error #DX_ERROR_INVALID_ARGUMENT @a RETURN is a null pointer
-/// @error #DX_ERROR_INVALID_ARGUMENT @a SELF is a null pointer
-static dx_result _dx_impl_get_free_capacity(dx_size* RETURN, _dx_impl const* SELF);
+/// @error #Core_Error_ArgumentInvalid @a RETURN is a null pointer
+/// @error #Core_Error_ArgumentInvalid @a SELF is a null pointer
+static Core_Result _dx_impl_get_free_capacity(Core_Size* RETURN, _dx_impl const* SELF);
 
 /// @brief Increase the capacity.
 /// @param SELF A pointer to this _dx_impl object.
 /// @param required_additional_capacity The amount to increase the capacity by.
 /// @method-call
-/// @error #DX_ERROR_INVALID_ARGUMENT @a self is a null pointer
-/// @error #DX_ERROR_ALLOCATION_FAILED @a additional_capacity is too big
-/// @error #DX_ERROR_ALLOCATION_FAILED an allocation failed
+/// @error #Core_Error_ArgumentInvalid @a self is a null pointer
+/// @error #Core_Error_AllocationFailed @a additional_capacity is too big
+/// @error #Core_Error_AllocationFailed an allocation failed
 /// @success The capacity increased by at least the specified amount.
-static dx_result _dx_impl_increase_capacity(_dx_impl* SELF, dx_size required_additional_capacity);
+static Core_Result _dx_impl_increase_capacity(_dx_impl* SELF, Core_Size required_additional_capacity);
 
 /// @brief Ensure the free capacity is greater than or equal to a specified value.
 /// @param SELF A pointer to this _dx_impl object.
 /// @param required_free_capacity The required free capacity.
 /// @method-call
-/// @error #DX_ERROR_INVALID_ARGUMENT @a SELF is a null pointer
-/// @error #DX_ERROR_ALLOCATION_FAILED @a required_free_capacity is too big
-/// @error #DX_ERROR_ALLOCATION_FAILED an allocation failed
+/// @error #Core_Error_ArgumentInvalid @a SELF is a null pointer
+/// @error #Core_Error_AllocationFailed @a required_free_capacity is too big
+/// @error #Core_Error_AllocationFailed an allocation failed
 /// @success The free capacity is greater than or equal to the specified required free capacity.
-static dx_result _dx_impl_ensure_free_capacity(_dx_impl* SELF, dx_size required_free_capacity);
+static Core_Result _dx_impl_ensure_free_capacity(_dx_impl* SELF, Core_Size required_free_capacity);
 
 /// @brief Remove all elements.
 /// @param SELF A pointer to this _dx_impl object.
 /// @method-call
-/// @error #DX_ERROR_INVALID_ARGUMENT @a SELF is a null pointer
-static dx_result _dx_impl_clear(_dx_impl* SELF);
+/// @error #Core_Error_ArgumentInvalid @a SELF is a null pointer
+static Core_Result _dx_impl_clear(_dx_impl* SELF);
 
 /// @brief Append an element.
 /// @param SELF A pointer to this _dx_impl object.
 /// @param pointer The element.
 /// @method-call
-/// @error #DX_ERROR_INVALID_ARGUMENT @a self is a null pointer
-/// @error #DX_ERROR_ALLOCATION_FAILED an allocation failed
-static dx_result _dx_impl_push_back(_dx_impl* SELF, dx_inline_pointer_deque_element pointer);
+/// @error #Core_Error_ArgumentInvalid @a self is a null pointer
+/// @error #Core_Error_AllocationFailed an allocation failed
+static Core_Result _dx_impl_push_back(_dx_impl* SELF, dx_inline_pointer_deque_element pointer);
 
 /// @brief Prepend an element.
 /// @param SELF A pointer to this _dx_impl object.
 /// @param pointer The element.
 /// @method-call
-/// @error #DX_ERROR_INVALID_ARGUMENT @a SELF is a null pointer
-/// @error #DX_ERROR_ALLOCATION_FAILED an allocation failed
-static dx_result _dx_impl_push_front(_dx_impl* SELF, dx_inline_pointer_deque_element pointer);
+/// @error #Core_Error_ArgumentInvalid @a SELF is a null pointer
+/// @error #Core_Error_AllocationFailed an allocation failed
+static Core_Result _dx_impl_push_front(_dx_impl* SELF, dx_inline_pointer_deque_element pointer);
 
 /// @brief Insert an element.
 /// @param SELF A pointer to this _dx_impl object.
 /// @param pointer The element.
 /// @param index The index.
 /// @method-call
-/// @error #DX_ERROR_INVALID_ARGUMENT @a SELF is a null pointer
-/// @error #DX_ERROR_INVALID_ARGUMENT @a index is greater than the size of this _dx_impl object
-/// @error #DX_ERROR_ALLOCATION_FAILED an allocation failed
-static dx_result _dx_impl_insert(_dx_impl* SELF, dx_inline_pointer_deque_element pointer, dx_size index);
+/// @error #Core_Error_ArgumentInvalid @a SELF is a null pointer
+/// @error #Core_Error_ArgumentInvalid @a index is greater than the size of this _dx_impl object
+/// @error #Core_Error_AllocationFailed an allocation failed
+static Core_Result _dx_impl_insert(_dx_impl* SELF, dx_inline_pointer_deque_element pointer, Core_Size index);
 
 /// @brief Get the pointer at the specified index.
 /// @param RETURN A pointer to a dx_inline_pointer_deque_element variable.
@@ -149,10 +149,10 @@ static dx_result _dx_impl_insert(_dx_impl* SELF, dx_inline_pointer_deque_element
 /// @param index The index.
 /// @success <code>*RETURN</code> was assigned the pointer at the specified index.
 /// @method-call
-/// @error #DX_ERROR_INVALID_ARGUMENT @a RETURN is a null pointer
-/// @error #DX_ERROR_INVALID_ARGUMENT @a SELF is a null pointer
-/// @error #DX_ERROR_INVALID_ARGUMENT @a index is greater than the size of this _dx_impl object
-static dx_result _dx_impl_get_at(dx_inline_pointer_deque_element* RETURN, _dx_impl* SELF, dx_size index);
+/// @error #Core_Error_ArgumentInvalid @a RETURN is a null pointer
+/// @error #Core_Error_ArgumentInvalid @a SELF is a null pointer
+/// @error #Core_Error_ArgumentInvalid @a index is greater than the size of this _dx_impl object
+static Core_Result _dx_impl_get_at(dx_inline_pointer_deque_element* RETURN, _dx_impl* SELF, Core_Size index);
 
 /// @brief Remove the pointer at the specified index.
 /// @param RETURN A pointer to a dx_inline_pointer_deque_element variable.
@@ -160,10 +160,10 @@ static dx_result _dx_impl_get_at(dx_inline_pointer_deque_element* RETURN, _dx_im
 /// @param steal The "removed" callback is not invoked if this is @a true.
 /// @param index The index.
 /// @method-call
-/// @error #DX_ERROR_INVALID_ARGUMENT @a RETURN is a null pointer
-/// @error #DX_ERROR_INVALID_ARGUMENT @a SELF is a null pointer
-/// @error #DX_ERROR_INVALID_ARGUMENT @a index is greater than or equal to the size of this _dx_impl object
-static dx_result _dx_impl_remove(dx_inline_pointer_deque_element* RETURN, _dx_impl* SELF, dx_bool steal, dx_size index);
+/// @error #Core_Error_ArgumentInvalid @a RETURN is a null pointer
+/// @error #Core_Error_ArgumentInvalid @a SELF is a null pointer
+/// @error #Core_Error_ArgumentInvalid @a index is greater than or equal to the size of this _dx_impl object
+static Core_Result _dx_impl_remove(dx_inline_pointer_deque_element* RETURN, _dx_impl* SELF, Core_Boolean steal, Core_Size index);
 
 /// @brief Pop the first pointer of the deque.
 /// @param RETURN A pointer to a <code>dx_inline_pointer_deque_element</code> variable.
@@ -171,10 +171,10 @@ static dx_result _dx_impl_remove(dx_inline_pointer_deque_element* RETURN, _dx_im
 /// @param steal The "removed" callback is not invoked if this is @a true.
 /// @success <code>*RETURN</code> was assigned the first pointer of the deque.
 /// @warning If the object was destroyed due to a call to the removed callback, then the returned pointer is invalid.
-/// @error #DX_ERROR_INVALID_ARGUMENT @a RETURN is a null pointer
-/// @error #DX_ERROR_INVALID_ARGUMENT @a SELF is a null pointer
-/// @error #DX_ERROR_INVALID_ARGUMENT the deque is empty.
-static dx_result _dx_impl_pop_front(dx_inline_pointer_deque_element* RETURN, _dx_impl* SELF, dx_bool steal);
+/// @error #Core_Error_ArgumentInvalid @a RETURN is a null pointer
+/// @error #Core_Error_ArgumentInvalid @a SELF is a null pointer
+/// @error #Core_Error_ArgumentInvalid the deque is empty.
+static Core_Result _dx_impl_pop_front(dx_inline_pointer_deque_element* RETURN, _dx_impl* SELF, Core_Boolean steal);
 
 /// @brief Pop the last pointer of the deque.
 /// @param RETURN A pointer to a <code>dx_inline_pointer_deque_element</code> variable.
@@ -182,25 +182,25 @@ static dx_result _dx_impl_pop_front(dx_inline_pointer_deque_element* RETURN, _dx
 /// @param steal The "removed" callback is not invoked if this is @a true.
 /// @success <code>*RETURN</code> was assigned the last pointer of the deque.
 /// @warning If the object was destroyed due to a call to the removed callback, then the returned pointer is invalid.
-/// @error #DX_ERROR_INVALID_ARGUMENT @a RETURN is a null pointer
-/// @error #DX_ERROR_INVALID_ARGUMENT @a SELF is a null pointer
-/// @error #DX_ERROR_INVALID_ARGUMENT the deque is empty
-static dx_result _dx_impl_pop_back(dx_inline_pointer_deque_element * RETURN, _dx_impl * SELF, dx_bool steal);
+/// @error #Core_Error_ArgumentInvalid @a RETURN is a null pointer
+/// @error #Core_Error_ArgumentInvalid @a SELF is a null pointer
+/// @error #Core_Error_ArgumentInvalid the deque is empty
+static Core_Result _dx_impl_pop_back(dx_inline_pointer_deque_element * RETURN, _dx_impl * SELF, Core_Boolean steal);
 
-static dx_result _dx_impl_initialize(_dx_impl* SELF, dx_size initial_capacity, DX_INLINE_POINTER_DEQUE_CONFIGURATION const* configuration) {
+static Core_Result _dx_impl_initialize(_dx_impl* SELF, Core_Size initial_capacity, DX_INLINE_POINTER_DEQUE_CONFIGURATION const* configuration) {
   if (!SELF) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
-  dx_size overflow;
-  dx_size initial_capacity_bytes = dx_mul_sz(initial_capacity, sizeof(dx_inline_pointer_deque_element), &overflow);
+  Core_Size overflow;
+  Core_Size initial_capacity_bytes = dx_mul_sz(initial_capacity, sizeof(dx_inline_pointer_deque_element), &overflow);
   if (overflow) {
-    dx_set_error(DX_ERROR_ALLOCATION_FAILED);
-    return DX_FAILURE;
+    Core_setError(Core_Error_AllocationFailed);
+    return Core_Failure;
   }
   void** elements = NULL;
-  if (dx_memory_allocate(&elements, initial_capacity_bytes)) {
-    return DX_FAILURE;
+  if (Core_Memory_allocate((void**)&elements, initial_capacity_bytes)) {
+    return Core_Failure;
   }
   SELF->read = 0;
   SELF->size = 0;
@@ -208,86 +208,86 @@ static dx_result _dx_impl_initialize(_dx_impl* SELF, dx_size initial_capacity, D
   SELF->capacity = initial_capacity;
   SELF->added_callback = configuration->added_callback;
   SELF->removed_callback = configuration->removed_callback;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
 static void _dx_impl_uninitialize(_dx_impl* self) {
   _dx_impl_clear(self);
-  dx_memory_deallocate(self->elements);
+  Core_Memory_deallocate(self->elements);
   self->elements = NULL;
   self->capacity = 0; 
 }
 
-static dx_result _dx_impl_get_size(dx_size* RETURN, _dx_impl const* SELF) {
+static Core_Result _dx_impl_get_size(Core_Size* RETURN, _dx_impl const* SELF) {
   if (!RETURN || !SELF) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
   *RETURN = SELF->size;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-static dx_result _dx_impl_get_capacity(dx_size* RETURN, _dx_impl const* SELF) {
+static Core_Result _dx_impl_get_capacity(Core_Size* RETURN, _dx_impl const* SELF) {
   if (!RETURN || !SELF) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
   *RETURN = SELF->capacity;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-static dx_result _dx_impl_get_free_capacity(dx_size* RETURN, _dx_impl const* SELF) {
+static Core_Result _dx_impl_get_free_capacity(Core_Size* RETURN, _dx_impl const* SELF) {
   if (!RETURN || !SELF) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
   *RETURN = SELF->capacity - SELF->size;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-static dx_result _dx_impl_increase_capacity(_dx_impl* SELF, dx_size required_additional_capacity) {
+static Core_Result _dx_impl_increase_capacity(_dx_impl* SELF, Core_Size required_additional_capacity) {
   if (!SELF) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
   if (!required_additional_capacity) {
-    return DX_SUCCESS;
+    return Core_Success;
   }
-  dx_size new_capacity = 0;
-  if (dx_get_best_array_size(&new_capacity, SELF->capacity, required_additional_capacity, LEAST_CAPACITY, GREATEST_CAPACITY, DX_TRUE)) {
-    return DX_FAILURE;
+  Core_Size new_capacity = 0;
+  if (dx_get_best_array_size(&new_capacity, SELF->capacity, required_additional_capacity, LEAST_CAPACITY, GREATEST_CAPACITY, Core_True)) {
+    return Core_Failure;
   }
   void** new_elements = NULL;
-  if (dx_memory_allocate(&new_elements, new_capacity * sizeof(void*))) {
-    return DX_FAILURE;
+  if (Core_Memory_allocate((void**)&new_elements, new_capacity * sizeof(void*))) {
+    return Core_Failure;
   }
-  for (dx_size i = 0, n = SELF->size; i < n; ++i) {
+  for (Core_Size i = 0, n = SELF->size; i < n; ++i) {
     new_elements[i] = SELF->elements[MOD(SELF->read + i, SELF->capacity)];
   }
-  dx_memory_deallocate(SELF->elements);
+  Core_Memory_deallocate(SELF->elements);
   SELF->elements = new_elements;
   SELF->capacity = new_capacity;
   SELF->read = 0;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-static dx_result _dx_impl_ensure_free_capacity(_dx_impl* SELF, dx_size required_free_capacity) {
+static Core_Result _dx_impl_ensure_free_capacity(_dx_impl* SELF, Core_Size required_free_capacity) {
   if (!SELF) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
-  dx_size available_free_capacity = SELF->capacity - SELF->size;
+  Core_Size available_free_capacity = SELF->capacity - SELF->size;
   if (available_free_capacity > required_free_capacity) {
-    return DX_SUCCESS;
+    return Core_Success;
   }
-  dx_size additional_capacity = required_free_capacity - available_free_capacity;
+  Core_Size additional_capacity = required_free_capacity - available_free_capacity;
   return _dx_impl_increase_capacity(SELF, additional_capacity);
 }
 
-static dx_result _dx_impl_clear(_dx_impl* SELF) {
+static Core_Result _dx_impl_clear(_dx_impl* SELF) {
   if (!SELF) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
   if (SELF->removed_callback) {
     while (SELF->size > 0) {
@@ -299,38 +299,38 @@ static dx_result _dx_impl_clear(_dx_impl* SELF) {
     SELF->size = 0;
   }
   SELF->read = 0;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-static dx_result _dx_impl_push_back(_dx_impl* SELF, dx_inline_pointer_deque_element pointer) {
+static Core_Result _dx_impl_push_back(_dx_impl* SELF, dx_inline_pointer_deque_element pointer) {
   if (!SELF) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
   return _dx_impl_insert(SELF, pointer, SELF->size);
 }
 
-static dx_result _dx_impl_push_front(_dx_impl* SELF, dx_inline_pointer_deque_element pointer) {
+static Core_Result _dx_impl_push_front(_dx_impl* SELF, dx_inline_pointer_deque_element pointer) {
   if (!SELF) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
   return _dx_impl_insert(SELF, pointer, 0);
 }
 
-static dx_result _dx_impl_insert(_dx_impl* SELF, dx_inline_pointer_deque_element pointer, dx_size index) {
+static Core_Result _dx_impl_insert(_dx_impl* SELF, dx_inline_pointer_deque_element pointer, Core_Size index) {
   if (!SELF) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
   if (index > SELF->size) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
   if (_dx_impl_ensure_free_capacity(SELF, 1)) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
-  dx_size const capacity = SELF->capacity; // The capacity does not change anymore for the rest of this
+  Core_Size const capacity = SELF->capacity; // The capacity does not change anymore for the rest of this
                                            // function but is frequently referenced, hence it is cached
                                            // here.
 
@@ -364,8 +364,8 @@ static dx_result _dx_impl_insert(_dx_impl* SELF, dx_inline_pointer_deque_element
     // As read' = read - 1, one can also write
     // - a'[read'] = a[read' + 1], ..., a'[read + index] = a[read' + index + 1]
     // which is the form used here.
-    dx_size offset = MOD(SELF->read - 1, capacity);
-    for (dx_size j = 0; j < index; ++j) {
+    Core_Size offset = MOD(SELF->read - 1, capacity);
+    for (Core_Size j = 0; j < index; ++j) {
       SELF->elements[MOD(offset + j, capacity)] = SELF->elements[MOD(offset + j + 1, capacity)];
     }
     SELF->read = MOD(SELF->read - 1, capacity);
@@ -376,8 +376,8 @@ static dx_result _dx_impl_insert(_dx_impl* SELF, dx_inline_pointer_deque_element
     // - a'[read + index] = newElement
     // - read' = read
     // - size' = size+1
-    dx_size offset = SELF->read;
-    for (dx_size j = SELF->size; j > index; --j) {
+    Core_Size offset = SELF->read;
+    for (Core_Size j = SELF->size; j > index; --j) {
       SELF->elements[MOD(offset + j, capacity)] = SELF->elements[MOD(offset + j - 1, capacity)];
     }
   }
@@ -386,39 +386,39 @@ static dx_result _dx_impl_insert(_dx_impl* SELF, dx_inline_pointer_deque_element
   if (SELF->added_callback) {
     SELF->added_callback(&pointer);
   }
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-static dx_result _dx_impl_get_at(dx_inline_pointer_deque_element* RETURN, _dx_impl* SELF, dx_size index) {
+static Core_Result _dx_impl_get_at(dx_inline_pointer_deque_element* RETURN, _dx_impl* SELF, Core_Size index) {
   if (!RETURN || !SELF) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
   if (index >= SELF->size) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
   *RETURN = SELF->elements[MOD(SELF->read + index, SELF->capacity)];
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-static dx_result _dx_impl_remove(dx_inline_pointer_deque_element* RETURN, _dx_impl* SELF, dx_bool steal, dx_size index) {
+static Core_Result _dx_impl_remove(dx_inline_pointer_deque_element* RETURN, _dx_impl* SELF, Core_Boolean steal, Core_Size index) {
   if (!RETURN || !SELF) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
   if (index >= SELF->size) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
-  dx_size const capacity = SELF->capacity;
+  Core_Size const capacity = SELF->capacity;
   void* element = SELF->elements[MOD(SELF->read + index, capacity)];
   if (index < SELF->size / 2) {
     // - a'[read] = a[read-1], ..., a'[read + index] = a[read + index - 1] 
     // - read' = read + 1
     // - size' = size - 1
-    dx_size offset = SELF->read;
-    for (dx_size j = index; j > 0; --j) {
+    Core_Size offset = SELF->read;
+    for (Core_Size j = index; j > 0; --j) {
       SELF->elements[MOD(offset + j, capacity)] = SELF->elements[MOD(offset + j - 1, capacity)];
     }
     SELF->read = MOD(SELF->read + 1, capacity);
@@ -427,7 +427,7 @@ static dx_result _dx_impl_remove(dx_inline_pointer_deque_element* RETURN, _dx_im
     // - read' = read
     // - size' = size - 1
     // shift a[i+1],..,a[n-1] left one position
-    for (dx_size j = index; j < SELF->size - 1; ++j) {
+    for (Core_Size j = index; j < SELF->size - 1; ++j) {
       SELF->elements[MOD(SELF->read + j, capacity)] = SELF->elements[MOD(SELF->read + j + 1, capacity)];
     }
   }
@@ -436,21 +436,21 @@ static dx_result _dx_impl_remove(dx_inline_pointer_deque_element* RETURN, _dx_im
     SELF->removed_callback(&element);
   }
   *RETURN = element;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-static dx_result _dx_impl_pop_front(dx_inline_pointer_deque_element* RETURN, _dx_impl* SELF, dx_bool steal) {
+static Core_Result _dx_impl_pop_front(dx_inline_pointer_deque_element* RETURN, _dx_impl* SELF, Core_Boolean steal) {
   if (SELF->size == 0) {
-    dx_set_error(DX_ERROR_IS_EMPTY);
-    return DX_FAILURE;
+    Core_setError(Core_Error_Empty);
+    return Core_Failure;
   }
   return _dx_impl_remove(RETURN, SELF, steal, 0);
 }
 
-static dx_result _dx_impl_pop_back(dx_inline_pointer_deque_element* RETURN, _dx_impl* SELF, dx_bool steal ) {
+static Core_Result _dx_impl_pop_back(dx_inline_pointer_deque_element* RETURN, _dx_impl* SELF, Core_Boolean steal ) {
   if (SELF->size == 0) {
-    dx_set_error(DX_ERROR_IS_EMPTY);
-    return DX_FAILURE;
+    Core_setError(Core_Error_Empty);
+    return Core_Failure;
   }
   return _dx_impl_remove(RETURN, SELF, steal, SELF->size - 1);
 }
@@ -461,88 +461,88 @@ static inline _dx_impl* _DX_IMPL(void* p) {
   return (_dx_impl*)p;
 }
 
-dx_result dx_inline_pointer_deque_initialize(dx_inline_pointer_deque* SELF, dx_size initial_capacity, DX_INLINE_POINTER_DEQUE_CONFIGURATION const* configuration) {
+Core_Result dx_inline_pointer_deque_initialize(dx_inline_pointer_deque* SELF, Core_Size initial_capacity, DX_INLINE_POINTER_DEQUE_CONFIGURATION const* configuration) {
   _dx_impl* pimpl = NULL;
-  if (dx_memory_allocate(&pimpl, sizeof(_dx_impl))) {
-    return DX_FAILURE;
+  if (Core_Memory_allocate(&pimpl, sizeof(_dx_impl))) {
+    return Core_Failure;
   }
   if (_dx_impl_initialize(pimpl, initial_capacity, configuration)) {
-    dx_memory_deallocate(pimpl);
+    Core_Memory_deallocate(pimpl);
     pimpl = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   SELF->pimpl = pimpl;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
 void dx_inline_pointer_deque_uninitialize(dx_inline_pointer_deque* SELF) {
   _dx_impl* pimpl = _DX_IMPL(SELF->pimpl);
   SELF->pimpl = NULL;
   _dx_impl_uninitialize(pimpl);
-  dx_memory_deallocate(pimpl);
+  Core_Memory_deallocate(pimpl);
 }
 
-dx_result dx_inline_pointer_deque_increase_capacity(dx_inline_pointer_deque* SELF, dx_size required_additional_capacity) {
+Core_Result dx_inline_pointer_deque_increase_capacity(dx_inline_pointer_deque* SELF, Core_Size required_additional_capacity) {
   _dx_impl* pimpl = _DX_IMPL(SELF->pimpl);
   return _dx_impl_increase_capacity(pimpl, required_additional_capacity);
 }
 
-dx_result dx_inline_pointer_deque_ensure_free_capacity(dx_inline_pointer_deque* SELF, dx_size required_free_capacity) {
+Core_Result dx_inline_pointer_deque_ensure_free_capacity(dx_inline_pointer_deque* SELF, Core_Size required_free_capacity) {
   _dx_impl* pimpl = _DX_IMPL(SELF->pimpl);
   return _dx_impl_ensure_free_capacity(pimpl, required_free_capacity);
 }
 
-dx_result dx_inline_pointer_deque_get_size(dx_size* RETURN, dx_inline_pointer_deque const* SELF) {
+Core_Result dx_inline_pointer_deque_get_size(Core_Size* RETURN, dx_inline_pointer_deque const* SELF) {
   _dx_impl* pimpl = _DX_IMPL(SELF->pimpl);
   return _dx_impl_get_size(RETURN, pimpl);
 }
 
-dx_result dx_inline_pointer_deque_get_capacity(dx_size* RETURN, dx_inline_pointer_deque const* SELF) {
+Core_Result dx_inline_pointer_deque_get_capacity(Core_Size* RETURN, dx_inline_pointer_deque const* SELF) {
   _dx_impl* pimpl = _DX_IMPL(SELF->pimpl);
   return _dx_impl_get_capacity(RETURN, pimpl);
 }
 
-dx_result dx_inline_pointer_deque_get_free_capacity(dx_size* RETURN, dx_inline_pointer_deque const* SELF) {
+Core_Result dx_inline_pointer_deque_get_free_capacity(Core_Size* RETURN, dx_inline_pointer_deque const* SELF) {
   _dx_impl* pimpl = _DX_IMPL(SELF->pimpl);
   return _dx_impl_get_free_capacity(RETURN, pimpl);
 }
 
-dx_result dx_inline_pointer_deque_clear(dx_inline_pointer_deque* SELF) {
+Core_Result dx_inline_pointer_deque_clear(dx_inline_pointer_deque* SELF) {
   _dx_impl* pimpl = _DX_IMPL(SELF->pimpl);
   return _dx_impl_clear(pimpl);
 }
 
-dx_result dx_inline_pointer_deque_push_back(dx_inline_pointer_deque* SELF, dx_inline_pointer_deque_element pointer) {
+Core_Result dx_inline_pointer_deque_push_back(dx_inline_pointer_deque* SELF, dx_inline_pointer_deque_element pointer) {
   _dx_impl* pimpl = _DX_IMPL(SELF->pimpl);
   return _dx_impl_push_back(pimpl, pointer);
 }
 
-dx_result dx_inline_pointer_deque_push_front(dx_inline_pointer_deque* SELF, dx_inline_pointer_deque_element pointer) {
+Core_Result dx_inline_pointer_deque_push_front(dx_inline_pointer_deque* SELF, dx_inline_pointer_deque_element pointer) {
   _dx_impl* pimpl = _DX_IMPL(SELF->pimpl);
   return _dx_impl_push_front(pimpl, pointer);
 }
 
-dx_result dx_inline_pointer_deque_insert(dx_inline_pointer_deque* SELF, dx_inline_pointer_deque_element pointer, dx_size index) {
+Core_Result dx_inline_pointer_deque_insert(dx_inline_pointer_deque* SELF, dx_inline_pointer_deque_element pointer, Core_Size index) {
   _dx_impl* pimpl = _DX_IMPL(SELF->pimpl);
   return _dx_impl_insert(pimpl, pointer, index);
 }
 
-dx_result dx_inline_pointer_deque_get_at(dx_inline_pointer_deque_element* RETURN, dx_inline_pointer_deque* SELF, dx_size index) {
+Core_Result dx_inline_pointer_deque_get_at(dx_inline_pointer_deque_element* RETURN, dx_inline_pointer_deque* SELF, Core_Size index) {
   _dx_impl* pimpl = _DX_IMPL(SELF->pimpl);
   return _dx_impl_get_at(RETURN, pimpl, index);
 }
 
-dx_result dx_inline_pointer_deque_remove(dx_inline_pointer_deque_element* RETURN, dx_inline_pointer_deque* SELF, dx_bool steal, dx_size index) {
+Core_Result dx_inline_pointer_deque_remove(dx_inline_pointer_deque_element* RETURN, dx_inline_pointer_deque* SELF, Core_Boolean steal, Core_Size index) {
   _dx_impl* pimpl = _DX_IMPL(SELF->pimpl);
   return _dx_impl_remove(RETURN, pimpl, steal, index);
 }
 
-dx_result dx_inline_pointer_deque_pop_front(dx_inline_pointer_deque_element* RETURN, dx_inline_pointer_deque* SELF, dx_bool steal) {
+Core_Result dx_inline_pointer_deque_pop_front(dx_inline_pointer_deque_element* RETURN, dx_inline_pointer_deque* SELF, Core_Boolean steal) {
   _dx_impl* pimpl = _DX_IMPL(SELF->pimpl);
   return _dx_impl_pop_front(RETURN, pimpl, steal);
 }
 
-dx_result dx_inline_pointer_deque_pop_back(dx_inline_pointer_deque_element* RETURN, dx_inline_pointer_deque* SELF, dx_bool steal) {
+Core_Result dx_inline_pointer_deque_pop_back(dx_inline_pointer_deque_element* RETURN, dx_inline_pointer_deque* SELF, Core_Boolean steal) {
   _dx_impl* pimpl = _DX_IMPL(SELF->pimpl);
   return _dx_impl_pop_back(RETURN, pimpl, steal);
 }

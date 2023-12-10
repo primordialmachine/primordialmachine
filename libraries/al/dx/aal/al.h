@@ -4,15 +4,15 @@
 #include "dx/core.h"
 #include "dx/application.h"
 
-#if !defined(DX_VISUALS)
-  #error("DX_VISUALS is not defined")
+#if !defined(Core_AudialsBackend)
+  #error("Core_AudialsBackend is not defined")
 #endif
 
-#if !defined(DX_OPERATING_SYSTEM)
-  #error("DX_OPERATING_SYSTEM is not defined")
+#if !defined(Core_OperatingSystem)
+  #error("Core_OperatingSystem is not defined")
 #endif
 
-#if DX_AUDIALS_OPENAL == DX_AUDIALS
+#if Core_AudialsBackend_OpenAl == Core_AudialsBackend
   /*Intentionally empty.*/
 #else
   #error("environment not (yet) supported")

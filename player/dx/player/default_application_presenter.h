@@ -23,10 +23,14 @@ static inline dx_default_application_presenter* DX_DEFAULT_APPLICATION_PRESENTER
 
 struct dx_default_application_presenter {
   dx_application_presenter _parent;
+  
   /// @brief
   /// @a true if the application should quit. @a false otherwise.
   /// The initial value is @a false.
   bool quit;
+  
+  /// @brief
+  /// A strong reference to the application object.
   dx_application* application;
   dx_msg_queue* message_queue;
   dx_val_context* val_context;
@@ -42,7 +46,7 @@ struct dx_default_application_presenter {
   dx_inline_object_array* scene_presenters;
   /// @brief The index of the scene to be displayed in the list of scenes.
   /// The initial value is @a 0. If the index is out of bounds, then no scene is displayed.
-  dx_size scene_index;
+  Core_Size scene_index;
 };
 
 static inline dx_default_application_presenter_dispatch* DX_DEFAULT_APPLICATION_PRESENTER_DISPATCH(void* p) {
@@ -53,8 +57,8 @@ struct dx_default_application_presenter_dispatch {
   dx_application_presenter_dispatch _parent;
 };
 
-dx_result dx_default_application_presenter_construct(dx_default_application_presenter* SELF, dx_font_presenter* font_presenter, dx_rectangle_presenter* rectangle_presenter, dx_application* application, dx_cl_interpreter* cl_interpreter, dx_msg_queue* message_queue, dx_val_context* val_context);
+Core_Result dx_default_application_presenter_construct(dx_default_application_presenter* SELF, dx_font_presenter* font_presenter, dx_rectangle_presenter* rectangle_presenter, dx_application* application, dx_cl_interpreter* cl_interpreter, dx_msg_queue* message_queue, dx_val_context* val_context);
 
-dx_result dx_default_application_presenter_create(dx_default_application_presenter** RETURN, dx_font_presenter* font_presenter, dx_rectangle_presenter* rectangle_presenter, dx_application* application, dx_cl_interpreter* cl_interpreter, dx_msg_queue* message_queue, dx_val_context* val_context);
+Core_Result dx_default_application_presenter_create(dx_default_application_presenter** RETURN, dx_font_presenter* font_presenter, dx_rectangle_presenter* rectangle_presenter, dx_application* application, dx_cl_interpreter* cl_interpreter, dx_msg_queue* message_queue, dx_val_context* val_context);
 
 #endif // DX_PLAYER_DEFAULT_APPLICATION_PRESENTER_H_INCLUDED

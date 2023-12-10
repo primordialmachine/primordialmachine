@@ -1,0 +1,50 @@
+{
+  "type" : "function",
+  "last-update" : "2023-12-30",
+  "indices" : "core",
+  "name" : "Core_Memory_reallocate",
+  "id" : "core-memory-reallocate",
+  "signature" : "Core_Result Core_Memory_reallocate(void **RETURN, void* p, Core_Size n);",
+  "signatureRemarks": null,
+  "parameters" : [
+    {
+      "name" : "RETURN",
+      "type" : "void**",
+      "description" : "A pointer to a @{code('void*')} variable."
+    },
+    {
+      "name" : "p",
+      "type" : "void*",
+      "description" : "A pointer to a memory block previously allocated by a call to @{code('Core_Memory_allocate*')}."
+    },
+    {
+      "name" : "n",
+      "type" : "Core_Size",
+      "description" : "The size, in Bytes, to reallocate the memory block pointed to by @{code('p')} to. Can be @{code('0')}."
+    }
+  ],
+  "errors" : [
+    {
+      "errorCode" : "Core_Error_ArgumentInvalid",
+      "errorCondition" : "@{code('RETURN')} is a null pointer."
+    },
+    {
+      "errorCode" : "Core_Error_ArgumentInvalid",
+      "errorCondition" : "@{code('p')} is a null pointer."
+    },
+    {
+      "errorCode" : "Core_Error_AllocationFailed",
+      "errorCondition" : "An allocation failed."
+    }
+  ],
+  "description" : "Reallocate a memory block.",
+  "success" : [
+    "@{code('*RETURN')} was assigned a pointer to a new memory block of size @{code('n')}.</br>",
+    "The old memory block was deallocated.</br>",
+    "A new memory block of size @{code('n')} was allocated by a call to @{code('Core_Memory_allocate')}.</br>",
+    "The first @{code('min(x,y)')} Bytes of the new memory block and the old memory block are equal where ",
+    "@{code('x')} is the size of the new memory block and @{code('y')} is the size of the old memory block."
+  ],
+  "return" : "@{code('Core_Success')} on success. @{code('Core_Failure')} on failure.",
+  "remarks" : "This function sets the by-thread error variable on failure."
+}

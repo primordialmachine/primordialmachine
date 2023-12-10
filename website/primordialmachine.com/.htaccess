@@ -1,8 +1,8 @@
 #######################################################################
 # Disable display of PHP errors.
 #######################################################################
-php_flag display_startup_errors off
-php_flag display_errors off
+php_flag display_startup_errors on
+php_flag display_errors on
 
 #######################################################################
 # Disable directory browsing for this directory and all subdirectories.
@@ -28,3 +28,60 @@ deny from all
 # ErrorDocument 403 /errors/403.html
 # ErrorDocument 404 /errors/404.html
 # ErrorDocument 500 /errors/500.html
+
+# Disable directory slashes.
+DirectorySlash Off
+
+#Disable Directory Listing
+Options -Indexes
+
+Options +FollowSymLinks
+
+RewriteEngine on
+
+###################################################
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteCond %{REQUEST_FILENAME} (core.php)
+RewriteRule ^(.*)$ /index.php?$1 [NC,L,QSA]
+
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteCond %{REQUEST_FILENAME} (core)
+RewriteRule ^(.*)$ /index.php?$1 [NC,L,QSA]
+
+###################################################
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteCond %{REQUEST_FILENAME} (data-definition-language/specification/index.php)
+RewriteRule ^(.*)$ /index.php?$1 [NC,L,QSA]
+
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteCond %{REQUEST_FILENAME} (data-definition-language/specification)
+RewriteRule ^(.*)$ /index.php?$1 [NC,L,QSA]
+
+###################################################
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteCond %{REQUEST_FILENAME} (asset-definition-language/specification/index.php)
+RewriteRule ^(.*)$ /index.php?$1 [NC,L,QSA]
+
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteCond %{REQUEST_FILENAME} (asset-definition-language/specification)
+RewriteRule ^(.*)$ /index.php?$1 [NC,L,QSA]
+
+
+###################################################
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteCond %{REQUEST_FILENAME} (val/index.php)
+RewriteRule ^(.*)$ /index.php?$1 [NC,L,QSA]
+
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteCond %{REQUEST_FILENAME} (val)
+RewriteRule ^(.*)$ /index.php?$1 [NC,L,QSA]
+
+
+###################################################
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteCond %{REQUEST_FILENAME} (aal/index.php)
+RewriteRule ^(.*)$ /index.php?$1 [NC,L,QSA]
+
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteCond %{REQUEST_FILENAME} (aal)
+RewriteRule ^(.*)$ /index.php?$1 [NC,L,QSA]

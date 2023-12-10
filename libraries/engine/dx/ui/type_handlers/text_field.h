@@ -27,8 +27,8 @@ struct dx_ui_type_handlers_text_field_dispatch {
   dx_ui_type_handler_dispatch _parent;
 };
 
-dx_result dx_ui_type_handlers_text_field_construct(dx_ui_type_handlers_text_field* SELF);
+Core_Result dx_ui_type_handlers_text_field_construct(dx_ui_type_handlers_text_field* SELF);
 
-dx_result dx_ui_type_handlers_text_field_create(dx_ui_type_handlers_text_field** RETURN);
+Core_Result dx_ui_type_handlers_text_field_create(dx_ui_type_handlers_text_field** RETURN);
 
 #endif // DX_UI_TYPE_HANDLERS_TEXT_FIELD_H_INCLUDED

@@ -15,14 +15,14 @@
 ///   A call to dx_system_shutdown on a "shutted down" system or a failure of this call is undefined behavior.
 DX_DECLARE_OBJECT_TYPE("dx.system",
                        dx_system,
-                       dx_object);
+                       Core_Object);
 
 static inline dx_system* DX_SYSTEM(void* p) {
   return (dx_system*)p;
 }
 
 struct dx_system {
-  dx_object _parent;
+  Core_Object _parent;
 };
 
 static inline dx_system_dispatch* DX_SYSTEM_DISPATCH(void* p) {
@@ -30,25 +30,25 @@ static inline dx_system_dispatch* DX_SYSTEM_DISPATCH(void* p) {
 }
 
 struct dx_system_dispatch {
-  dx_object_dispatch _parent;
-  dx_result (*startup)(dx_system*);
-  dx_result (*shutdown)(dx_system*);
+  Core_Object_Dispatch _parent;
+  Core_Result (*startup)(dx_system*);
+  Core_Result (*shutdown)(dx_system*);
 };
 
 /// @constructor{dx_system}
-dx_result dx_system_construct(dx_system* SELF);
+Core_Result dx_system_construct(dx_system* SELF);
 
 /// @brief Startup this system.
 /// @method{dx_system}
 /// @pre The system is shutted down.
-static inline dx_result dx_system_startup(dx_system* SELF) {
+static inline Core_Result dx_system_startup(dx_system* SELF) {
   DX_OBJECT_VIRTUALCALL(dx_system, startup, SELF);
 }
 
 /// @brief Shutdown this system.
 /// @method{dx_system}
 /// @pre The system is started up.
-static inline dx_result dx_system_shutdown(dx_system* SELF) {
+static inline Core_Result dx_system_shutdown(dx_system* SELF) {
   DX_OBJECT_VIRTUALCALL(dx_system, shutdown, SELF);
 }
 

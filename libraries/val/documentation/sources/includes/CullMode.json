@@ -1,0 +1,34 @@
+{
+  "type" : "enumeration",
+  "last-update" : "2023-12-26",
+  "indices" : "val",
+  "name" : "Core_CullMode",
+  "id" : "core-cullmode",
+  "signature" : "typedef enum Core_CullMode &lt;implementation&gt; Core_CullMode;",
+  "description": [
+    "An enumeration of cull modes.",
+    "A cull mode identitifes a technique for deciding wether a fragment is removed based on its facing towards the viewer."
+  ],
+  "elements": [
+    {
+      "name" : "Core_CullMode_None",
+      "description" : "Do not cull fragments."
+    },
+    {
+      "name" : "Core_CullMode_Front",
+      "description" : "Cull front facing fragments."
+    },
+    {
+      "name" : "Core_CullMode_Back",
+      "description" : "Cull back facing fragments."
+    },
+    {
+      "name" : "Core_CullMode_FrontAndBack",
+      "description" : "Cull both front facing and back facing fragments. This is an alias of @{code('Core_CullMode_BackAndFront')}."
+    },
+    {
+      "name" : "Core_CullMode_BackAndFront",
+      "description" : "Cull both back facing and front facing fragements. This is an alias of @{code('Core_CullMode_FrontAndBack')}."
+    }
+  ]
+}

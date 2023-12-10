@@ -23,7 +23,7 @@
 #define DX_DATA_DEFINITION_LANGUAGE_LIBRARY_MINOR_VERSION (1)
 
 
-dx_ddl_node* dx_ddl_compile(char const* p, dx_size n);
+dx_ddl_node* dx_ddl_compile(char const* p, Core_Size n);
 
 
 #endif // DX_DATA_DEFINITION_LANGUAGE_H_INCLUDED

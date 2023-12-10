@@ -1,6 +1,6 @@
 #include "dx/aal/al.h"
 
-#if DX_AUDIALS_OPENAL == DX_AUDIALS
+#if Core_AudialsBackend_OpenAl == Core_AudialsBackend
 
 #else
   #error("environment not (yet) supported")

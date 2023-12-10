@@ -5,14 +5,14 @@
 
 DX_DECLARE_OBJECT_TYPE("dx.val.buffer",
                        dx_val_buffer,
-                       dx_object);
+                       Core_Object);
 
 static inline dx_val_buffer* DX_VAL_BUFFER(void* p) {
   return (dx_val_buffer*)p;
 }
 
 struct dx_val_buffer {
-  dx_object _parent;
+  Core_Object _parent;
   dx_val_context* context;
 };
 
@@ -21,13 +21,13 @@ static inline dx_val_buffer_dispatch* DX_VAL_BUFFER_DISPATCH(void* p) {
 }
 
 struct dx_val_buffer_dispatch {
-  dx_object_dispatch _parent;
-  dx_result(*set_data)(dx_val_buffer*, void const*, dx_size);
+  Core_Object_Dispatch _parent;
+  Core_Result(*set_data)(dx_val_buffer*, void const*, Core_Size);
 };
 
-dx_result dx_val_buffer_construct(dx_val_buffer* SELF, dx_val_context* context);
+Core_Result dx_val_buffer_construct(dx_val_buffer* SELF, dx_val_context* context);
 
-static inline dx_result dx_val_buffer_set_data(dx_val_buffer* SELF, void const* p, dx_size n) {
+static inline Core_Result dx_val_buffer_set_data(dx_val_buffer* SELF, void const* p, Core_Size n) {
   DX_OBJECT_VIRTUALCALL(dx_val_buffer, set_data, SELF, p, n);
 }
 

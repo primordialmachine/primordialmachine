@@ -31,7 +31,7 @@ struct dx_val_gl_wgl_window_dispatch {
 /// @param SELF A pointer to this VAL GL/WGL window.
 /// @param application A pointer to the VAL GL/WGL application.
 /// @method-call
-dx_result dx_val_gl_wgl_window_construct(dx_val_gl_wgl_window* SELF, dx_gl_wgl_application* application);
+Core_Result dx_val_gl_wgl_window_construct(dx_val_gl_wgl_window* SELF, dx_gl_wgl_application* application);
 
 /// @internal
 /// @brief Create a VAL GL/WGL window.
@@ -39,6 +39,6 @@ dx_result dx_val_gl_wgl_window_construct(dx_val_gl_wgl_window* SELF, dx_gl_wgl_a
 /// @param application A pointer to the VAL GL/WGL application.
 /// @success <code>*RETURN</code> was assigned a pointer to the VAL GL/WGL window.
 /// @method-call
-dx_result dx_gl_wgl_window_create(dx_val_gl_wgl_window** RETURN, dx_gl_wgl_application* application);
+Core_Result dx_gl_wgl_window_create(dx_val_gl_wgl_window** RETURN, dx_gl_wgl_application* application);
 
 #endif // DX_VAL_GL_WGL_WINDOW_H_INCLUDED

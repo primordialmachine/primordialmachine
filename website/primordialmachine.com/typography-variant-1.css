@@ -186,6 +186,8 @@ ul.p-list > li {
   margin-left: 1rem;
 }
 
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
 div.section {
   font-weight: bold;
   text-transform: uppercase;
@@ -194,7 +196,16 @@ div.section {
 div.logo {
   font-family: var(--logo-font-family);
   font-weight: var(--logo-font-weight);
-  font-size: 400%;
+  font-size: 200%;
+}
+
+/* Only on normal screens. */
+@media (min-width: 800px) {
+  div.logo {
+    font-family: var(--logo-font-family);
+    font-weight: var(--logo-font-weight);
+    font-size: 400%;
+  }
 }
 
 div.logo a,

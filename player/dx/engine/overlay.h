@@ -9,20 +9,20 @@
 
 DX_DECLARE_OBJECT_TYPE("dx.overlay",
                        dx_overlay,
-                       dx_object);
+                       Core_Object);
 
 static inline dx_overlay* DX_OVERLAY(void* p) {
   return (dx_overlay*)p;
 }
 
 struct dx_overlay {
-  dx_object _parent;
+  Core_Object _parent;
   /// @brief The UI manager.
   dx_ui_manager* ui_manager;
   /// @brief The UI text field for overlay text.
   dx_ui_text_field* text_field;
   /// If the overlay is visible or not.
-  dx_bool visible;
+  Core_Boolean visible;
 };
 
 static inline dx_overlay_dispatch* DX_OVERLAY_DISPATCH(void* p) {
@@ -30,23 +30,22 @@ static inline dx_overlay_dispatch* DX_OVERLAY_DISPATCH(void* p) {
 }
 
 struct dx_overlay_dispatch {
-  dx_object_dispatch _parent;
+  Core_Object_Dispatch _parent;
 };
 
-dx_result dx_overlay_construct(dx_overlay* SELf, dx_font_presenter* font_presenter, dx_rectangle_presenter* rectangle_presenter);
+Core_Result dx_overlay_construct(dx_overlay* SELf, dx_font_presenter* font_presenter, dx_rectangle_presenter* rectangle_presenter);
 
-dx_result dx_overlay_create(dx_overlay** RETURN, dx_font_presenter* font_presenter, dx_rectangle_presenter* rectangle_presenter);
+Core_Result dx_overlay_create(dx_overlay** RETURN, dx_font_presenter* font_presenter, dx_rectangle_presenter* rectangle_presenter);
 
 /// @brief Render this overlay.
-/// @param SELF A pointer to this overlay.
-/// @method-call
-dx_result dx_overlay_render(dx_overlay* SELF, dx_f32 delta_seconds, dx_i32 canvas_size_horizontal, dx_i32 canvas_size_vertical, dx_i32 dpi_horizontal, dx_i32 dpi_vertical);
+/// @method{dx_overlay}
+Core_Result dx_overlay_render(dx_overlay* SELF, Core_Real32 delta_seconds, Core_Integer32 canvas_size_horizontal, Core_Integer32 canvas_size_vertical, Core_Integer32 dpi_horizontal, Core_Integer32 dpi_vertical);
 
-dx_result dx_overlay_add_message(dx_overlay* SELF, dx_string* message);
-dx_result dx_overlay_clear_messages(dx_overlay* SELF);
+Core_Result dx_overlay_add_message(dx_overlay* SELF, Core_String* message);
+Core_Result dx_overlay_clear_messages(dx_overlay* SELF);
 
-dx_result dx_overlay_set_visible(dx_overlay* SELF, bool visible);
+Core_Result dx_overlay_set_visible(dx_overlay* SELF, bool visible);
 
-dx_result dx_overlay_get_visible(bool *RETURN, dx_overlay* SELF);
+Core_Result dx_overlay_get_visible(bool *RETURN, dx_overlay* SELF);
 
 #endif // DX_ENGINE_OVERLAY_H_INCLUDED

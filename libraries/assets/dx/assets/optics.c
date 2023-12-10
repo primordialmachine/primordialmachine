@@ -4,21 +4,18 @@
 
 DX_DEFINE_OBJECT_TYPE("dx.assets.optics",
                       dx_assets_optics,
-                      dx_object);
+                      Core_Object);
 
 static void dx_assets_optics_destruct(dx_assets_optics* SELF)
 {/*Intentionally empty.*/}
 
-static void dx_assets_optics_dispatch_construct(dx_assets_optics_dispatch* SELF)
+static void dx_assets_optics_constructDispatch(dx_assets_optics_dispatch* SELF)
 {/*Intentionally empty.*/}
 
-dx_result dx_assets_optics_construct(dx_assets_optics* SELF) {
-  dx_rti_type* TYPE = dx_assets_optics_get_type();
-  if (!TYPE) {
-    return DX_FAILURE;
-  }
-  DX_OBJECT(SELF)->type = TYPE;
-  return DX_SUCCESS;
+Core_Result dx_assets_optics_construct(dx_assets_optics* SELF) {
+  DX_CONSTRUCT_PREFIX(dx_assets_optics);
+  CORE_OBJECT(SELF)->type = TYPE;
+  return Core_Success;
 }
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
@@ -29,40 +26,37 @@ DX_DEFINE_OBJECT_TYPE("dx.asset.optics_orthographic",
 
 static void dx_asset_optics_orthographic_destruct(dx_asset_optics_orthographic* SELF) {
   if (SELF->scale_y) {
-    dx_memory_deallocate(SELF->scale_y);
+    Core_Memory_deallocate(SELF->scale_y);
     SELF->scale_y = NULL;
   }
   if (SELF->scale_x) {
-    dx_memory_deallocate(SELF->scale_x);
+    Core_Memory_deallocate(SELF->scale_x);
     SELF->scale_x = NULL;
   }
   if (SELF->aspect_ratio) {
-    dx_memory_deallocate(SELF->aspect_ratio);
+    Core_Memory_deallocate(SELF->aspect_ratio);
     SELF->aspect_ratio = NULL;
   }
 }
 
-static void dx_asset_optics_orthographic_dispatch_construct(dx_asset_optics_orthographic_dispatch* SELF)
+static void dx_asset_optics_orthographic_constructDispatch(dx_asset_optics_orthographic_dispatch* SELF)
 {/*Intentionally empty.*/}
 
-dx_result dx_asset_optics_orthographic_construct(dx_asset_optics_orthographic* SELF) {
-  dx_rti_type* TYPE = dx_asset_optics_orthographic_get_type();
-  if (!TYPE) {
-    return DX_FAILURE;
-  }
+Core_Result dx_asset_optics_orthographic_construct(dx_asset_optics_orthographic* SELF) {
+  DX_CONSTRUCT_PREFIX(dx_asset_optics_orthographic);
   if (dx_assets_optics_construct(DX_ASSETS_OPTICS(SELF))) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
   SELF->aspect_ratio = NULL;
   SELF->scale_x = NULL;
   SELF->scale_y = NULL;
-  if (dx_memory_allocate(&SELF->scale_x, sizeof(dx_f32)) || dx_memory_allocate(&SELF->scale_y, sizeof(dx_f32))) {
+  if (Core_Memory_allocate(&SELF->scale_x, sizeof(Core_Real32)) || Core_Memory_allocate(&SELF->scale_y, sizeof(Core_Real32))) {
     if (SELF->scale_y) {
-      dx_memory_deallocate(SELF->scale_y);
+      Core_Memory_deallocate(SELF->scale_y);
       SELF->scale_y = NULL;
     }
     if (SELF->scale_x) {
-      dx_memory_deallocate(SELF->scale_x);
+      Core_Memory_deallocate(SELF->scale_x);
       SELF->scale_x = NULL;
     }
     return 1;
@@ -71,19 +65,19 @@ dx_result dx_asset_optics_orthographic_construct(dx_asset_optics_orthographic* S
   *SELF->scale_y = 1.f;
   SELF->near = 0.1f;
   SELF->far = 1000.f;
-  DX_OBJECT(SELF)->type = TYPE;
-  return DX_SUCCESS;
+  CORE_OBJECT(SELF)->type = TYPE;
+  return Core_Success;
 }
 
-dx_result dx_asset_optics_orthographic_create(dx_asset_optics_orthographic** RETURN) {
-  DX_CREATE_PREFIX(dx_asset_optics_orthographic)
+Core_Result dx_asset_optics_orthographic_create(dx_asset_optics_orthographic** RETURN) {
+  DX_CREATE_PREFIX(dx_asset_optics_orthographic);
   if (dx_asset_optics_orthographic_construct(SELF)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   *RETURN = SELF;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
@@ -94,42 +88,39 @@ DX_DEFINE_OBJECT_TYPE("dx.asset.optics_perspective",
 
 static void dx_asset_optics_perspective_destruct(dx_asset_optics_perspective* SELF) {
   if (SELF->aspect_ratio) {
-    dx_memory_deallocate(SELF->aspect_ratio);
+    Core_Memory_deallocate(SELF->aspect_ratio);
     SELF->aspect_ratio = NULL;
   }
 }
 
-static void dx_asset_optics_perspective_dispatch_construct(dx_asset_optics_perspective_dispatch* SELF)
+static void dx_asset_optics_perspective_constructDispatch(dx_asset_optics_perspective_dispatch* SELF)
 {/*Intentionally empty.*/}
 
-dx_result dx_asset_optics_perspective_construct(dx_asset_optics_perspective* SELF) {
-  dx_rti_type* TYPE = dx_asset_optics_perspective_get_type();
-  if (!TYPE) {
-    return DX_FAILURE;
-  }
+Core_Result dx_asset_optics_perspective_construct(dx_asset_optics_perspective* SELF) {
+  DX_CONSTRUCT_PREFIX(dx_asset_optics_perspective);
   if (dx_assets_optics_construct(DX_ASSETS_OPTICS(SELF))) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
-  if (dx_memory_allocate(&SELF->aspect_ratio, sizeof(dx_f32))) {
-    return DX_FAILURE;
+  if (Core_Memory_allocate(&SELF->aspect_ratio, sizeof(Core_Real32))) {
+    return Core_Failure;
   }
   *SELF->aspect_ratio = 1.33f;
   SELF->field_of_view_y = 60.f;
   SELF->near = 0.1f;
   SELF->far = 1000.f;
-  DX_OBJECT(SELF)->type = TYPE;
-  return DX_SUCCESS;
+  CORE_OBJECT(SELF)->type = TYPE;
+  return Core_Success;
 }
 
-dx_result dx_asset_optics_perspective_create(dx_asset_optics_perspective** RETURN) {
-  DX_CREATE_PREFIX(dx_asset_optics_perspective)
+Core_Result dx_asset_optics_perspective_create(dx_asset_optics_perspective** RETURN) {
+  DX_CREATE_PREFIX(dx_asset_optics_perspective);
   if (dx_asset_optics_perspective_construct(SELF)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   *RETURN = SELF;
-  return DX_SUCCESS; 
+  return Core_Success; 
 }
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/

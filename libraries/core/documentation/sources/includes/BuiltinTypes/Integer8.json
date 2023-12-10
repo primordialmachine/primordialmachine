@@ -1,0 +1,9 @@
+{
+  "type" : "typedef",
+  "last-update" : "2023-12-18",
+  "indices" : "core",
+  "name" : "Core_Integer8",
+  "id" : "core-integer8",
+  "signature" : "typedef &lt;implementation&gt; Core_Integer8;",
+  "description" : "A two's complement integer of a width of 8 Bits. This is an alias of <code>int8_t</code>."
+}

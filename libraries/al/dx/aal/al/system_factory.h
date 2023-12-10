@@ -26,8 +26,8 @@ struct dx_aal_al_system_factory_dispatch {
 /// @brief Construct this AAL AL system factory.
 /// @param SELF A pointer to this AAL AL system factory.
 /// @method-call
-dx_result dx_aal_al_system_factory_construct(dx_aal_al_system_factory* SELF);
+Core_Result dx_aal_al_system_factory_construct(dx_aal_al_system_factory* SELF);
 
-dx_result dx_aal_al_system_factory_create(dx_aal_al_system_factory** RETURN);
+Core_Result dx_aal_al_system_factory_create(dx_aal_al_system_factory** RETURN);
 
 #endif // DX_AAL_AL_SYSTEM_FACTORY_H_INCLUDED

@@ -11,26 +11,26 @@
 /// is a reference to an object of name @code{malachite}.
 DX_DECLARE_OBJECT_TYPE("dx.asset.reference",
                        dx_asset_reference,
-                       dx_object)
+                       Core_Object);
 
 static inline dx_asset_reference* DX_ASSET_REFERENCE(void* p) {
   return (dx_asset_reference*)p;
 }
 
 struct dx_asset_reference {
-  dx_object _parent;
+  Core_Object _parent;
   /// @brief The name.
-  dx_string* name;
+  Core_String* name;
   /// @brief A pointer to the object if it was successfully resolved.
-  dx_object* object;
+  Core_Object* object;
 };
 
 struct dx_asset_reference_dispatch {
-  dx_object_dispatch _parent;
+  Core_Object_Dispatch _parent;
 };
 
-dx_result dx_asset_reference_construct(dx_asset_reference* SELF, dx_string* name);
+Core_Result dx_asset_reference_construct(dx_asset_reference* SELF, Core_String* name);
 
-dx_result dx_asset_reference_create(dx_asset_reference** RETURN, dx_string* name);
+Core_Result dx_asset_reference_create(dx_asset_reference** RETURN, Core_String* name);
 
 #endif // DX_ASSET_REFERENCE_H_INCLUDED

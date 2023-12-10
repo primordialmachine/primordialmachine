@@ -4,7 +4,7 @@
 
 DX_DEFINE_OBJECT_TYPE("dx.val.mesh_instance",
                       dx_val_mesh_instance,
-                      dx_object)
+                      Core_Object);
 
 static dx_val_cbinding* create_cbinding(dx_val_mesh_instance* self) {
   dx_val_cbinding* cbinding = NULL;
@@ -19,15 +19,15 @@ static dx_val_cbinding* create_cbinding(dx_val_mesh_instance* self) {
   return cbinding;
 }
 
-static dx_result add_to_backend(dx_val_mesh_instance* self) {
+static Core_Result add_to_backend(dx_val_mesh_instance* self) {
   if (dx_val_command_list_create(&self->commands)) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
   dx_val_cbinding* cbinding = create_cbinding(self);
   if (!cbinding) {
     DX_UNREFERENCE(self->commands);
     self->commands = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   dx_val_command* command = NULL;
   if (dx_val_command_create_draw(&command, self->mesh->vbinding,
@@ -40,7 +40,7 @@ static dx_result add_to_backend(dx_val_mesh_instance* self) {
     cbinding = NULL;
     DX_UNREFERENCE(self->commands);
     self->commands = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   DX_UNREFERENCE(cbinding);
   cbinding = NULL;
@@ -49,11 +49,11 @@ static dx_result add_to_backend(dx_val_mesh_instance* self) {
     command = NULL;
     DX_UNREFERENCE(self->commands);
     self->commands = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   DX_UNREFERENCE(command);
   command = NULL;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
 static void remove_from_backend(dx_val_mesh_instance* self) {
@@ -71,17 +71,14 @@ static void dx_val_mesh_instance_destruct(dx_val_mesh_instance* self) {
   }
 }
 
-static void dx_val_mesh_instance_dispatch_construct(dx_val_mesh_instance_dispatch* self)
+static void dx_val_mesh_instance_constructDispatch(dx_val_mesh_instance_dispatch* self)
 {/*Intentionally empty.*/}
 
-dx_result dx_val_mesh_instance_construct(dx_val_mesh_instance* SELF, DX_MAT4 world_matrix, dx_val_mesh* mesh) {
-  if (!SELF || !mesh) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
-  }
-  dx_rti_type* TYPE = dx_val_mesh_instance_get_type();
-  if (!TYPE) {
-    return DX_FAILURE;
+Core_Result dx_val_mesh_instance_construct(dx_val_mesh_instance* SELF, DX_MAT4 world_matrix, dx_val_mesh* mesh) {
+  DX_CONSTRUCT_PREFIX(dx_val_mesh_instance);
+  if (!mesh) {
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
   SELF->commands = NULL;
   SELF->world_matrix = world_matrix;
@@ -90,21 +87,21 @@ dx_result dx_val_mesh_instance_construct(dx_val_mesh_instance* SELF, DX_MAT4 wor
   if (add_to_backend(SELF)) {
     DX_UNREFERENCE(SELF->mesh);
     SELF->mesh = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
-  DX_OBJECT(SELF)->type = TYPE;
-  return DX_SUCCESS;
+  CORE_OBJECT(SELF)->type = TYPE;
+  return Core_Success;
 }
 
-dx_result dx_val_mesh_instance_create(dx_val_mesh_instance** RETURN, DX_MAT4 world_matrix, dx_val_mesh* mesh) {
-  DX_CREATE_PREFIX(dx_val_mesh_instance)
+Core_Result dx_val_mesh_instance_create(dx_val_mesh_instance** RETURN, DX_MAT4 world_matrix, dx_val_mesh* mesh) {
+  DX_CREATE_PREFIX(dx_val_mesh_instance);
   if (dx_val_mesh_instance_construct(SELF, world_matrix, mesh)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   *RETURN = SELF;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
 dx_val_cbinding* dx_val_mesh_instance_get_cbinding(dx_val_mesh_instance* TYPE) {
@@ -112,9 +109,9 @@ dx_val_cbinding* dx_val_mesh_instance_get_cbinding(dx_val_mesh_instance* TYPE) {
   return command->draw_command.cbinding;
 }
 
-dx_result dx_val_mesh_instance_update_cbinding(dx_val_mesh_instance* TYPE, dx_val_cbinding* cbinding) {
+Core_Result dx_val_mesh_instance_update_cbinding(dx_val_mesh_instance* TYPE, dx_val_cbinding* cbinding) {
   dx_val_cbinding_set_rgba_f32(cbinding, "vs_mesh_ambient_rgba", &TYPE->mesh->material->ambient_color);
   dx_val_cbinding_set_mat4(cbinding, "vs_mesh_world_matrix", &TYPE->world_matrix);
   dx_val_cbinding_set_texture_index(cbinding, "ambient_texture_sampler", 0);
-  return DX_SUCCESS;
+  return Core_Success;
 }

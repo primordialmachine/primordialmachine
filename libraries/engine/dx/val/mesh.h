@@ -11,14 +11,14 @@
 /// A dx.mesh usually represents a dx.asset.mesh.
 DX_DECLARE_OBJECT_TYPE("dx.val.mesh",
                        dx_val_mesh,
-                       dx_object)
+                       Core_Object);
 
 static inline dx_val_mesh* DX_VAL_MESH(void* p) {
   return (dx_val_mesh*)p;
 }
 
 struct dx_val_mesh {
-  dx_object _parent;
+  Core_Object _parent;
   /// @brief A pointer to the corresponding asset mesh.
   dx_assets_mesh* mesh_asset;
   /// @brief A pointer to the corresponding assset material.
@@ -35,11 +35,11 @@ static inline dx_val_mesh_dispatch* DX_VAL_MESH_DISPATCH(void* p) {
 }
 
 struct dx_val_mesh_dispatch {
-  dx_object_dispatch _parent;
+  Core_Object_Dispatch _parent;
 };
 
-dx_result dx_val_mesh_construct(dx_val_mesh* SELF, dx_val_context* context, dx_assets_mesh* mesh_asset);
+Core_Result dx_val_mesh_construct(dx_val_mesh* SELF, dx_val_context* context, dx_assets_mesh* mesh_asset);
 
-dx_result dx_val_mesh_create(dx_val_mesh** RETURN, dx_val_context* context, dx_assets_mesh* mesh_asset);
+Core_Result dx_val_mesh_create(dx_val_mesh** RETURN, dx_val_context* context, dx_assets_mesh* mesh_asset);
 
 #endif // DX_VAL_MESH_H_INCLUDED

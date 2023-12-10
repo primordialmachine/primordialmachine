@@ -1,0 +1,9 @@
+{
+  "type" : "typedef",
+  "last-update" : "2023-12-18",
+  "indices" : "core",
+  "name" : "Core_Boolean",
+  "id" : "core-boolean",
+  "signature" : "typedef &lt;implementation&gt; Core_Boolean;",
+  "description" : "A type with two values <a href='#core-true'><code>Core_True</code></a> and <a href='#core-false'><code>Core_False</code></a> indicating logically true and logically value, respectively."
+}

@@ -10,10 +10,10 @@
 
 /// @ingroup Core_Annotations
 /// @brief Variable annotation indicating a thread local storage.
-#if (DX_COMPILER_C == DX_COMPILER_C_GCC || DX_COMPILER_C == DX_COMPILER_C_CLANG) && !defined(DOXYGEN)
-  #define DX_THREAD_LOCAL() __thread  /**< @hideinitializer */
-#elif (DX_COMPILER_C == DX_COMPILER_C_MSVC) && !defined(DOXYGEN)
-  #define DX_THREAD_LOCAL() __declspec(thread) /**< @hideinitializer */
+#if (Core_Compiler_C == Core_Compiler_C_Gcc || Core_Compiler_C == Core_Compiler_C_Clang) && !defined(DOXYGEN)
+  #define Core_ThreadLocal() __thread  /**< @hideinitializer */
+#elif (Core_Compiler_C == Core_Compiler_C_Msvc) && !defined(DOXYGEN)
+  #define Core_ThreadLocal() __declspec(thread) /**< @hideinitializer */
 #else
   #error("C compiler not (yet) supported")
 #endif
@@ -23,9 +23,9 @@
 /// @details
 /// This function annotation indicates that a function never returns.
 /// If it returns, it only returns by raising an exception or by calling `longjmp`.
-#if (DX_COMPILER_C == DX_COMPILER_C_GCC || DX_COMPILER_C == DX_COMPILER_C_CLANG) && !defined(DOXYGEN)
+#if (Core_Compiler_C == Core_Compiler_C_Gcc || Core_Compiler_C == Core_Compiler_C_Clang) && !defined(DOXYGEN)
   #define DX_NO_RETURN() __attribute__ ((noreturn)) /**< @hideinitializer */
-#elif (DX_COMPILER_C == DX_COMPILER_C_MSVC) && !defined(DOXYGEN)
+#elif (Core_Compiler_C == Core_Compiler_C_Msvc) && !defined(DOXYGEN)
   #define DX_NO_RETURN() __declspec(noreturn) /**< @hideinitializer */
 #else
   #error("C compiler not (yet) supported")
@@ -48,7 +48,7 @@
 ///   /* (X) In the heart with pain, abort execution. */
 /// }
 /// @endcode
-#if (DX_COMPILER_C == DX_COMPILER_C_GCC || DX_COMPILER_C == DX_COMPILER_C_CLANG) && !defined(DOXYGEN)
+#if (Core_Compiler_C == Core_Compiler_C_Gcc || Core_Compiler_C == Core_Compiler_C_CLANG) && !defined(DOXYGEN)
   #define DX_LIKELY(expression) (__builtin_expect((expression) ? 1 : 0, 1)) /**< @hideinitializer */
 #else
   #define DX_LIKELY(expression) (expression) /**< @hideinitializer */
@@ -71,7 +71,7 @@
 ///   /* (A) Foaming with joy, continue execution. */
 /// }
 /// @endcode
-#if (DX_COMPILER_C == DX_COMPILER_C_GCC || DX_COMPILER_C == DX_COMPILER_C_CLANG) && !defined(DOXYGEN)
+#if (Core_Compiler_C == Core_Compiler_C_Gcc || Core_Compiler_C == Core_Compiler_C_Clang) && !defined(DOXYGEN)
   #define DX_UNLIKELY(expression) (__builtin_expect((expression) ? 1 : 0, 0)) /**< @hideinitializer */
 #else
   #define DX_UNLIKELY(expression) (expression) /**< @hideinitializer */

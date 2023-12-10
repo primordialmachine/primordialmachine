@@ -14,10 +14,10 @@
 #include <windows.h>
 
 static void* allocate(void* context, size_t n) {
-  int old_error = dx_get_error();
+  Core_Error old_error = Core_getError();
   void* p = NULL;
-  if (dx_memory_allocate(&p, n)) {
-    dx_set_error(old_error);
+  if (Core_Memory_allocate(&p, n)) {
+    Core_setError(old_error);
     return NULL;
   }
   return p;
@@ -29,18 +29,18 @@ static void deallocate(void* context, void* p) {
   }
 }
 
-static dx_result test_read_png() {
+static Core_Result test_read_png() {
   HMODULE hModule = LoadLibraryA("./" DX_WIC_PLUGIN_LIBRARY_NAME ".dll");
   if (NULL == hModule) {
-    dx_set_error(DX_ERROR_ENVIRONMENT_FAILED);
-    return DX_FAILURE;
+    Core_setError(Core_Error_EnvironmentFailed);
+    return Core_Failure;
   }
   DX_WIC_PLUGIN_READ_IMAGE_PROC* procedure = (DX_WIC_PLUGIN_READ_IMAGE_PROC*)GetProcAddress(hModule, DX_WIC_PLUGIN_READ_IMAGE_PROC_NAME);
   if (!procedure) {
     FreeLibrary(hModule);
     hModule = NULL;
-    dx_set_error(DX_ERROR_ENVIRONMENT_FAILED);
-    return DX_FAILURE;
+    Core_setError(Core_Error_EnvironmentFailed);
+    return Core_Failure;
   }
   void* bytes;
   uint32_t stride;
@@ -50,27 +50,27 @@ static dx_result test_read_png() {
   if (procedure("hello.png", DX_WIC_PLUGIN_IMAGE_FORMAT_PNG, &bytes, &pixel_format, &stride, &width, &height, NULL, &allocate, &deallocate)) {
     FreeLibrary(hModule);
     hModule = NULL;
-    dx_set_error(DX_ERROR_ENVIRONMENT_FAILED);
-    return DX_FAILURE;
+    Core_setError(Core_Error_EnvironmentFailed);
+    return Core_Failure;
   }
-  dx_memory_deallocate(bytes);
+  Core_Memory_deallocate(bytes);
   FreeLibrary(hModule);
   hModule = NULL;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-static dx_result test_write_tiff() {
+static Core_Result test_write_tiff() {
   HMODULE hModule = LoadLibraryA("./" DX_WIC_PLUGIN_LIBRARY_NAME ".dll");
   if (NULL == hModule) {
-    dx_set_error(DX_ERROR_ENVIRONMENT_FAILED);
-    return DX_FAILURE;
+    Core_setError(Core_Error_EnvironmentFailed);
+    return Core_Failure;
   }
   DX_WIC_PLUGIN_WRITE_IMAGE_PROC* procedure = (DX_WIC_PLUGIN_WRITE_IMAGE_PROC*)GetProcAddress(hModule, DX_WIC_PLUGIN_WRITE_IMAGE_PROC_NAME);
   if (!procedure) {
     FreeLibrary(hModule);
     hModule = NULL;
-    dx_set_error(DX_ERROR_ENVIRONMENT_FAILED);
-    return DX_FAILURE;
+    Core_setError(Core_Error_EnvironmentFailed);
+    return Core_Failure;
   }
   uint32_t source_stride = 256 * (24/8);
   uint32_t source_width = 256;
@@ -79,8 +79,8 @@ static dx_result test_write_tiff() {
   if (!buffer) {
     FreeLibrary(hModule);
     hModule = NULL;
-    dx_set_error(DX_ERROR_ENVIRONMENT_FAILED);
-    return DX_FAILURE;
+    Core_setError(Core_Error_EnvironmentFailed);
+    return Core_Failure;
   }
   for (size_t i = 0; i < sizeof(uint8_t) * source_stride * source_height; i++) {
     buffer[i] = (uint8_t)rand();
@@ -90,28 +90,28 @@ static dx_result test_write_tiff() {
     buffer = NULL;
     FreeLibrary(hModule);
     hModule = NULL;
-    dx_set_error(DX_ERROR_ENVIRONMENT_FAILED);
-    return DX_FAILURE;
+    Core_setError(Core_Error_EnvironmentFailed);
+    return Core_Failure;
   }
   free(buffer);
   buffer = NULL;
   FreeLibrary(hModule);
   hModule = NULL;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-static dx_result test_write_png() {
+static Core_Result test_write_png() {
   HMODULE hModule = LoadLibraryA("./" DX_WIC_PLUGIN_LIBRARY_NAME);
   if (NULL == hModule) {
-    dx_set_error(DX_ERROR_ENVIRONMENT_FAILED);
-    return DX_FAILURE;
+    Core_setError(Core_Error_EnvironmentFailed);
+    return Core_Failure;
   }
   DX_WIC_PLUGIN_WRITE_IMAGE_PROC* procedure = (DX_WIC_PLUGIN_WRITE_IMAGE_PROC*)GetProcAddress(hModule, DX_WIC_PLUGIN_WRITE_IMAGE_PROC_NAME);
   if (!procedure) {
     FreeLibrary(hModule);
     hModule = NULL;
-    dx_set_error(DX_ERROR_ENVIRONMENT_FAILED);
-    return DX_FAILURE;
+    Core_setError(Core_Error_EnvironmentFailed);
+    return Core_Failure;
   }
   uint32_t source_stride = 256 * (24 / 8);
   uint32_t source_width = 256;
@@ -120,8 +120,8 @@ static dx_result test_write_png() {
   if (!buffer) {
     FreeLibrary(hModule);
     hModule = NULL;
-    dx_set_error(DX_ERROR_ENVIRONMENT_FAILED);
-    return DX_FAILURE;
+    Core_setError(Core_Error_EnvironmentFailed);
+    return Core_Failure;
   }
   for (size_t i = 0; i < sizeof(uint8_t) * source_stride * source_height; i++) {
     buffer[i] = (uint8_t)rand();
@@ -131,14 +131,14 @@ static dx_result test_write_png() {
     buffer = NULL;
     FreeLibrary(hModule);
     hModule = NULL;
-    dx_set_error(DX_ERROR_ENVIRONMENT_FAILED);
-    return DX_FAILURE;
+    Core_setError(Core_Error_EnvironmentFailed);
+    return Core_Failure;
   }
   free(buffer);
   buffer = NULL;
   FreeLibrary(hModule);
   hModule = NULL;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
 int main(int argc, char** argv) {

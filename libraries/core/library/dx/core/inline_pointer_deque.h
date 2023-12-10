@@ -41,140 +41,117 @@ struct dx_inline_pointer_deque {
 };
 
 /// @brief Initialize this dx_inline_pointer_deque object.
-/// @param SELF A pointer to this dx_inline_pointer_deque object.
 /// @param initial_capacity The initial capacity.
 /// @param configuration A pointer to the configuration.
-/// @method-call
-/// @error #DX_INVALID_ARGUMENT @a SELF is a null pointer
-/// @error #DX_ALLOCATION_FAILED @a initial_capacity is too big
-/// @error #DX_ALLOCATION_FAILED an allocation failed
-dx_result dx_inline_pointer_deque_initialize(dx_inline_pointer_deque* SELF, dx_size initial_capacity, DX_INLINE_POINTER_DEQUE_CONFIGURATION const* configuration);
+/// @method{dx_inline_pointer_deque}
+/// @error #Core_Error_AllocationFailed @a initial_capacity is too big
+/// @error #Core_Error_AllocationFailed an allocation failed
+Core_Result dx_inline_pointer_deque_initialize(dx_inline_pointer_deque* SELF, Core_Size initial_capacity, DX_INLINE_POINTER_DEQUE_CONFIGURATION const* configuration);
 
 /// @brief Uninitialize this dx_inline_pointer_deque object.
-/// @param SELF A pointer to this dx_inline_pointer_deque object.
+/// @method{dx_inline_pointer_deque}
 void dx_inline_pointer_deque_uninitialize(dx_inline_pointer_deque* SELF);
 
 /// @brief Increase the capacity.
-/// @param SELF A pointer to this dx_inline_pointer_deque object.
 /// @param required_additional_capacity The amount to increase the capacity by.
-/// @method-call
-/// @error #DX_INVALID_ARGUMENT @a SELF is a null pointer
-/// @error #DX_ALLOCATION_FAILED @a additional_capacity is too big
-/// @error #DX_ALLOCATION_FAILED an allocation failed
+/// @error #Core_Error_AllocationFailed @a additional_capacity is too big
+/// @error #Core_Error_AllocationFailed an allocation failed
 /// @success The capacity increased by at least the specified amount.
-dx_result dx_inline_pointer_deque_increase_capacity(dx_inline_pointer_deque* SELF, dx_size required_additional_capacity);
+/// @method{dx_inline_pointer_deque}
+Core_Result dx_inline_pointer_deque_increase_capacity(dx_inline_pointer_deque* SELF, Core_Size required_additional_capacity);
 
 /// @brief Ensure the free capacity is greater than or equal to a specified value.
-/// @param SELF A pointer to this dx_inline_pointer_deque object.
 /// @param required_free_capacity The required free capacity.
-/// @method-call
-/// @error #DX_ERROR_INVALID_ARGUMENT @a self is a null pointer
-/// @error #DX_ERROR_ALLOCATION_FAILED @a required_free_capacity is too big
-/// @error #DX_ERROR_ALLOCATION_FAILED an allocation failed
+/// @error #Core_Error_AllocationFailed @a required_free_capacity is too big
+/// @error #Core_Error_AllocationFailed an allocation failed
 /// @success The free capacity is greater than or equal to the specified required free capacity.
-dx_result dx_inline_pointer_deque_ensure_free_capacity(dx_inline_pointer_deque* SELF, dx_size required_free_capacity);
+/// @method{dx_inline_pointer_deque}
+Core_Result dx_inline_pointer_deque_ensure_free_capacity(dx_inline_pointer_deque* SELF, Core_Size required_free_capacity);
 
 /// @brief Get the size, in elements.
-/// @param RETURN A pointer to a <code>dx_size</code> variable.
-/// @param SELF A pointer to this dx_inline_pointer_deque object.
+/// @param RETURN A pointer to a <code>Core_Size</code> variable.
 /// @success <code>*RETURN</code> was assigned the size.
-/// @method-call
-/// @error #DX_ERROR_INVALID_ARGUMENT @a RETURN is a null pointer
-/// @error #DX_ERROR_INVALID_ARGUMENT @a SELF is a null pointer
-dx_result dx_inline_pointer_deque_get_size(dx_size* RETURN, dx_inline_pointer_deque const* SELF);
+/// @error #Core_Error_ArgumentInvalid @a RETURN is a null pointer
+/// @method{dx_inline_pointer_deque}
+Core_Result dx_inline_pointer_deque_get_size(Core_Size* RETURN, dx_inline_pointer_deque const* SELF);
 
 /// @brief Get the capacity, in elements.
-/// @param RETURN A pointer to a <code>dx_size</code> variable.
-/// @param SELF A pointer to this dx_inline_pointer_deque object.
+/// @param RETURN A pointer to a <code>Core_Size</code> variable.
 /// @success <code>*RETURN</code> was assigned the capacity.
-/// @method-call
-/// @error #DX_ERROR_INVALID_ARGUMENT @a RETURN is a null pointer
-/// @error #DX_ERROR_INVALID_ARGUMENT @a SELF is a null pointer
-dx_result dx_inline_pointer_deque_get_capacity(dx_size* RETURN, dx_inline_pointer_deque const* SELF);
+/// @error #Core_Error_ArgumentInvalid @a RETURN is a null pointer
+/// @method{dx_inline_pointer_deque}
+Core_Result dx_inline_pointer_deque_get_capacity(Core_Size* RETURN, dx_inline_pointer_deque const* SELF);
 
 /// @brief Get the free capacity, in elements.
-/// @param RETURN A pointer to a <code>dx_size</code> variable.
-/// @param SELF A pointer to this dx_inline_pointer_deque object.
+/// @param RETURN A pointer to a <code>Core_Size</code> variable.
 /// @success <code>*RETURN</code> was assigned the free capacity.
-/// @method-call
-/// @error #DX_ERROR_INVALID_ARGUMENT @a RETURN is a null pointer
-/// @error #DX_ERROR_INVALID_ARGUMENT @a SELF is a null pointer
-dx_result dx_inline_pointer_deque_get_free_capacity(dx_size* RETURN, dx_inline_pointer_deque const* SELF);
+/// @error #Core_Error_ArgumentInvalid @a RETURN is a null pointer
+/// @method{dx_inline_pointer_deque}
+Core_Result dx_inline_pointer_deque_get_free_capacity(Core_Size* RETURN, dx_inline_pointer_deque const* SELF);
 
 /// @brief Remove all elements.
 /// @param SELF A pointer to this dx_inline_pointer_deque object.
 /// @method-call
-/// @error #DX_ERROR_INVALID_ARGUMENT @a SELF is a null pointer
-dx_result dx_inline_pointer_deque_clear(dx_inline_pointer_deque* SELF);
+/// @error #Core_Error_ArgumentInvalid @a SELF is a null pointer
+Core_Result dx_inline_pointer_deque_clear(dx_inline_pointer_deque* SELF);
 
 /// @brief Append an element.
-/// @param SELF A pointer to this dx_inline_pointer_deque object.
 /// @param pointer The element.
-/// @method-call
-/// @error #DX_ERROR_INVALID_ARGUMENT @a SELF is a null pointer
-/// @error #DX_ERROR_ALLOCATION_FAILED an allocation failed
-dx_result dx_inline_pointer_deque_push_back(dx_inline_pointer_deque* SELF, dx_inline_pointer_deque_element pointer);
+/// @error #Core_Error_AllocationFailed an allocation failed
+/// @method{dx_inline_pointer_deque}
+Core_Result dx_inline_pointer_deque_push_back(dx_inline_pointer_deque* SELF, dx_inline_pointer_deque_element pointer);
 
 /// @brief Prepend an element.
-/// @param SELF A pointer to this dx_inline_pointer_deque object.
 /// @param pointer The element.
-/// @method-call
-/// @error #DX_ERROR_INVALID_ARGUMENT @a SELF is a null pointer
-/// @error #DX_ERROR_ALLOCATION_FAILED an allocation failed
-dx_result dx_inline_pointer_deque_push_front(dx_inline_pointer_deque* SELF, dx_inline_pointer_deque_element pointer);
+/// @error #Core_Error_AllocationFailed an allocation failed
+/// @method{dx_inline_pointer_deque}
+Core_Result dx_inline_pointer_deque_push_front(dx_inline_pointer_deque* SELF, dx_inline_pointer_deque_element pointer);
 
 /// @brief Insert an element.
-/// @param SELF A pointer to this dx_inline_pointer_deque object.
 /// @param pointer The element.
 /// @param index The index.
-/// @method-call
-/// @error #DX_ERROR_INVALID_ARGUMENT @a SELF is a null pointer
-/// @error #DX_ERROR_INVALID_ARGUMENT @a index is greater than the size of this dx_inline_pointer_deque object
-/// @error #DX_ERROR_ALLOCATION_FAILED an allocation failed
-dx_result dx_inline_pointer_deque_insert(dx_inline_pointer_deque* SELF, dx_inline_pointer_deque_element pointer, dx_size index);
+/// @error #Core_Error_ArgumentInvalid @a index is greater than the size of this dx_inline_pointer_deque object
+/// @error #Core_Error_AllocationFailed an allocation failed
+/// @method{dx_inline_pointer_deque}
+Core_Result dx_inline_pointer_deque_insert(dx_inline_pointer_deque* SELF, dx_inline_pointer_deque_element pointer, Core_Size index);
 
 /// @brief Get the pointer at the specified index.
 /// @param RETURN A pointer to a <code>dx_inline_pointer_deque_element</code> variable.
-/// @param SELF A pointer to this dx_inline_pointer_deque object.
 /// @param index The index.
 /// @success <code>*RETURN</code> was assigned the pointer at the specified index.
-/// @error #DX_ERROR_INVALID_ARGUMENT @a RETURN is a null pointer
-/// @error #DX_ERROR_INVALID_ARGUMENT @a SELF is a null pointer
-/// @error #DX_ERROR_INVALID_ARGUMENT @a index is greater than or equal to the size of this dx_inline_pointer_deque object
-dx_result dx_inline_pointer_deque_get_at(dx_inline_pointer_deque_element* RETURN, dx_inline_pointer_deque* SELF, dx_size index);
+/// @error #Core_Error_ArgumentInvalid @a RETURN is a null pointer
+/// @error #Core_Error_ArgumentInvalid @a index is greater than or equal to the size of this dx_inline_pointer_deque object
+/// @method{dx_inline_pointer_deque}
+Core_Result dx_inline_pointer_deque_get_at(dx_inline_pointer_deque_element* RETURN, dx_inline_pointer_deque* SELF, Core_Size index);
 
 /// @brief Remove the pointer at the specified index.
 /// @param RETURN A pointer to a <code>dx_inline_pointer_deque_element</code> variable.
-/// @param SELF A pointer to the dx_inline_pointer_deque object.
 /// @param steal The "removed" callback is not invoked if this is @a true.
 /// @param index The index.
 /// @success <code>*RETURN</code> was assigned the pointer at the specified index.
-/// @method-call
-/// @error #DX_ERROR_INVALID_ARGUMENT @a RETURN is a null pointer
-/// @error #DX_ERROR_INVALID_ARGUMENT @a SELF is a null pointer
-/// @error #DX_ERROR_INVALID_ARGUMENT @a index is greater than or equal to the size of this dx_inline_pointer_deque object
-dx_result dx_inline_pointer_deque_remove(dx_inline_pointer_deque_element* RETURN, dx_inline_pointer_deque* SELF, dx_bool steal, dx_size index);
+/// @error #Core_Error_ArgumentInvalid @a RETURN is a null pointer
+/// @error #Core_Error_ArgumentInvalid @a index is greater than or equal to the size of this dx_inline_pointer_deque object
+/// @method{dx_inline_pointer_deque}
+Core_Result dx_inline_pointer_deque_remove(dx_inline_pointer_deque_element* RETURN, dx_inline_pointer_deque* SELF, Core_Boolean steal, Core_Size index);
 
 /// @brief Pop the first pointer of the deque.
 /// @param RETURN A pointer to a <code>dx_inline_pointer_deque_element</code> variable.
-/// @param SELF A pointer to this deque.
 /// @param steal The "removed" callback is not invoked if this is @a true.
 /// @success <code>*RETURN</code> was assigned the first pointer of the deque.
 /// @warning If the object was destroyed due to a call to the removed callback, then the returned pointer is invalid.
-/// @error #DX_ERROR_INVALID_ARGUMENT @a RETURN is a null pointer
-/// @error #DX_ERROR_INVALID_ARGUMENT @a SELF is a null pointer
-/// @error #DX_ERROR_INVALID_ARGUMENT the deque is empty
-dx_result dx_inline_pointer_deque_pop_front(dx_inline_pointer_deque_element* RETURN, dx_inline_pointer_deque* SELF, dx_bool steal);
+/// @error #Core_Error_ArgumentInvalid @a RETURN is a null pointer
+/// @error #Core_Error_ArgumentInvalid the deque is empty
+/// @method{dx_inline_pointer_deque}
+Core_Result dx_inline_pointer_deque_pop_front(dx_inline_pointer_deque_element* RETURN, dx_inline_pointer_deque* SELF, Core_Boolean steal);
 
 /// @brief Pop the last pointer of the deque.
 /// @param RETURN A pointer to a <code>dx_inline_pointer_deque_element</code> variable.
-/// @param SELF A pointer to this deque.
 /// @param steal The "removed" callback is not invoked if this is @a true.
 /// @success <code>*RETURN</code> was assigned the last pointer of the deque.
 /// @warning If the object was destroyed due to a call to the removed callback, then the returned pointer is invalid.
-/// @error #DX_ERROR_INVALID_ARGUMENT @a RETURN is a null pointer
-/// @error #DX_ERROR_INVALID_ARGUMENT @a SELF is a null pointer
-/// @error #DX_ERROR_INVALID_ARGUMENT the deque is empty
-dx_result dx_inline_pointer_deque_pop_back(dx_inline_pointer_deque_element* RETURN, dx_inline_pointer_deque* SELF, dx_bool steal);
+/// @error #Core_Error_ArgumentInvalid @a RETURN is a null pointer
+/// @error #Core_Error_ArgumentInvalid the deque is empty
+/// @method{dx_inline_pointer_deque}
+Core_Result dx_inline_pointer_deque_pop_back(dx_inline_pointer_deque_element* RETURN, dx_inline_pointer_deque* SELF, Core_Boolean steal);
 
 #endif // DX_INLINE_POINTER_DEQUE_H_INCLUDED

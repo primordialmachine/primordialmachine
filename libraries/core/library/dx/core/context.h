@@ -6,14 +6,14 @@
 /// @brief Base of all contexts. A context is a provides access to functionality.
 DX_DECLARE_OBJECT_TYPE("dx.context",
                        dx_context,
-                       dx_object);
+                       Core_Object);
 
 static inline dx_context* DX_CONTEXT(void* p) {
   return (dx_context*)p;
 }
 
 struct dx_context {
-  dx_object _parent;
+  Core_Object _parent;
 };
 
 static inline dx_context_dispatch* DX_CONTEXT_DISPATCH(void* p) {
@@ -21,10 +21,10 @@ static inline dx_context_dispatch* DX_CONTEXT_DISPATCH(void* p) {
 }
 
 struct dx_context_dispatch {
-  dx_object_dispatch _parent;
+  Core_Object_Dispatch _parent;
 };
 
 /// @contructor{dx_context}
-dx_result dx_context_construct(dx_context* SELF);
+Core_Result dx_context_construct(dx_context* SELF);
 
 #endif // DX_CORE_CONTEXT_H_INCLUDED

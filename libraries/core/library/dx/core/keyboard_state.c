@@ -2,58 +2,55 @@
 
 DX_DEFINE_OBJECT_TYPE("dx.keyboard_state",
                       dx_keyboard_state,
-                      dx_object);
+                      Core_Object);
 
 static void dx_keyboard_state_destruct(dx_keyboard_state* SELF)
 {/*Intentionally empty.*/}
 
-static void dx_keyboard_state_dispatch_construct(dx_keyboard_state_dispatch* SELF)
+static void dx_keyboard_state_constructDispatch(dx_keyboard_state_dispatch* SELF)
 {/*Intentionally empty.*/}
 
-dx_result dx_keyboard_state_construct(dx_keyboard_state* SELF) {
-  dx_rti_type* TYPE = dx_keyboard_state_get_type();
-  if (!TYPE) {
-    return DX_FAILURE;
-  }
-  for (dx_size i = 0; i < dx_keyboard_state_configuration_number_of_keyboard_keys; ++i) {
+Core_Result dx_keyboard_state_construct(dx_keyboard_state* SELF) {
+  DX_CONSTRUCT_PREFIX(dx_keyboard_state);
+  for (Core_Size i = 0; i < dx_keyboard_state_configuration_number_of_keyboard_keys; ++i) {
     SELF->state[i] = false;
   }
-  DX_OBJECT(SELF)->type = TYPE;
-  return DX_SUCCESS;
+  CORE_OBJECT(SELF)->type = TYPE;
+  return Core_Success;
 }
 
-dx_result dx_keyboard_state_create(dx_keyboard_state** RETURN) {
-  DX_CREATE_PREFIX(dx_keyboard_state)
+Core_Result dx_keyboard_state_create(dx_keyboard_state** RETURN) {
+  DX_CREATE_PREFIX(dx_keyboard_state);
   if (dx_keyboard_state_construct(SELF)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   *RETURN = SELF;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-dx_result dx_keyboard_state_get_state(dx_bool* RETURN, dx_keyboard_state* SELF, dx_keyboard_key key) {
+Core_Result dx_keyboard_state_get_state(Core_Boolean* RETURN, dx_keyboard_state* SELF, dx_keyboard_key key) {
   if (!RETURN || !SELF || key < 0 || key >= dx_keyboard_state_configuration_number_of_keyboard_keys) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
   *RETURN = SELF->state[key];
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-dx_result dx_keyboard_state_set_state(dx_keyboard_state* SELF, dx_keyboard_key key, dx_bool state) {
+Core_Result dx_keyboard_state_set_state(dx_keyboard_state* SELF, dx_keyboard_key key, Core_Boolean state) {
   if (!SELF || key < 0 || key >= dx_keyboard_state_configuration_number_of_keyboard_keys) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
   SELF->state[key] = state;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-dx_result dx_keyboard_state_clear(dx_keyboard_state* SELF) {
-  for (dx_size i = 0; i < dx_keyboard_state_configuration_number_of_keyboard_keys; ++i) {
+Core_Result dx_keyboard_state_clear(dx_keyboard_state* SELF) {
+  for (Core_Size i = 0; i < dx_keyboard_state_configuration_number_of_keyboard_keys; ++i) {
     SELF->state[i] = false;
   }
-  return DX_SUCCESS;
+  return Core_Success;
 }

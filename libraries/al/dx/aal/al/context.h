@@ -34,8 +34,8 @@ struct dx_aal_al_context_dispatch {
 /// @param SELF A pointer to this AAL AL context.
 /// @param system A pointer to the AAL AL system that creates this context.
 /// @method-call
-dx_result dx_aal_al_context_construct(dx_aal_al_context* SELF, dx_aal_al_system* system);
+Core_Result dx_aal_al_context_construct(dx_aal_al_context* SELF, dx_aal_al_system* system);
 
-dx_result dx_aal_al_context_create(dx_aal_al_context** RETURN, dx_aal_al_system* system);
+Core_Result dx_aal_al_context_create(dx_aal_al_context** RETURN, dx_aal_al_system* system);
 
 #endif // DX_AAL_AL_CONTEXT_H_INCLUDED

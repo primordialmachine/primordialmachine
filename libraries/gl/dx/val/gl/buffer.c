@@ -6,7 +6,7 @@ DX_DEFINE_OBJECT_TYPE("dx.val.gl.buffer",
                       dx_val_gl_buffer,
                       dx_val_buffer);
 
-static dx_result dx_val_gl_buffer_set_data(dx_val_gl_buffer* SELF, void const* p, dx_size n);
+static Core_Result dx_val_gl_buffer_set_data(dx_val_gl_buffer* SELF, void const* p, Core_Size n);
 
 static void dx_val_gl_buffer_destruct(dx_val_gl_buffer* SELF) {
   if (SELF->id) {
@@ -16,47 +16,44 @@ static void dx_val_gl_buffer_destruct(dx_val_gl_buffer* SELF) {
   }
 }
 
-static void dx_val_gl_buffer_dispatch_construct(dx_val_gl_buffer_dispatch* SELF) {
-  DX_VAL_BUFFER_DISPATCH(SELF)->set_data = (dx_result(*)(dx_val_buffer*, void const*, dx_size)) & dx_val_gl_buffer_set_data;
+static void dx_val_gl_buffer_constructDispatch(dx_val_gl_buffer_dispatch* SELF) {
+  DX_VAL_BUFFER_DISPATCH(SELF)->set_data = (Core_Result(*)(dx_val_buffer*, void const*, Core_Size)) & dx_val_gl_buffer_set_data;
 }
 
-static dx_result dx_val_gl_buffer_construct(dx_val_gl_buffer* SELF, dx_val_gl_context* context) {
-  dx_rti_type* TYPE = dx_val_gl_buffer_get_type();
-  if (!TYPE) {
-    return DX_FAILURE;
-  }
+static Core_Result dx_val_gl_buffer_construct(dx_val_gl_buffer* SELF, dx_val_gl_context* context) {
+  DX_CONSTRUCT_PREFIX(dx_val_gl_buffer);
   if (dx_val_buffer_construct(DX_VAL_BUFFER(SELF), DX_VAL_CONTEXT(context))) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
   context->glGetError(); // clear the error variable
   context->glGenBuffers(1, &SELF->id);
   if (GL_NO_ERROR != context->glGetError()) {
-    dx_set_error(DX_ERROR_ENVIRONMENT_FAILED);
-    return DX_FAILURE;
+    Core_setError(Core_Error_EnvironmentFailed);
+    return Core_Failure;
   }
-  DX_OBJECT(SELF)->type = TYPE;
-  return DX_SUCCESS;
+  CORE_OBJECT(SELF)->type = TYPE;
+  return Core_Success;
 }
 
-static dx_result dx_val_gl_buffer_set_data(dx_val_gl_buffer* SELF, void const* p, dx_size n) {
+static Core_Result dx_val_gl_buffer_set_data(dx_val_gl_buffer* SELF, void const* p, Core_Size n) {
   dx_val_gl_context* context = DX_VAL_GL_CONTEXT(DX_VAL_BUFFER(SELF)->context);
   context->glGetError(); // clear the error variable
   context->glBindBuffer(GL_ARRAY_BUFFER, SELF->id);
   context->glBufferData(GL_ARRAY_BUFFER, n, p, GL_STATIC_DRAW);
   if (GL_NO_ERROR != context->glGetError()) {
-    dx_set_error(DX_ERROR_ENVIRONMENT_FAILED);
-    return DX_FAILURE;
+    Core_setError(Core_Error_EnvironmentFailed);
+    return Core_Failure;
   }
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-dx_result dx_val_gl_buffer_create(dx_val_gl_buffer** RETURN, dx_val_gl_context* context) {
-  DX_CREATE_PREFIX(dx_val_gl_buffer)
+Core_Result dx_val_gl_buffer_create(dx_val_gl_buffer** RETURN, dx_val_gl_context* context) {
+  DX_CREATE_PREFIX(dx_val_gl_buffer);
   if (dx_val_gl_buffer_construct(SELF, context)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   *RETURN = SELF;
-  return DX_SUCCESS;
+  return Core_Success;
 }

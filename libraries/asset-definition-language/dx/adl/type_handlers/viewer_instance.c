@@ -3,10 +3,10 @@
 #include "dx/assets.h"
 #include "dx/adl/parser.h"
 
-static inline dx_string* _get_name(dx_adl_names* names, dx_size index) {
+static inline Core_String* _get_name(dx_adl_names* names, Core_Size index) {
   DX_DEBUG_ASSERT(NULL != names);
   DX_DEBUG_ASSERT(index < DX_ADL_NAMES_NUMBER_OF_NAMES);
-  dx_string* name = names->names[index];
+  Core_String* name = names->names[index];
   DX_DEBUG_ASSERT(NULL != name);
   return name;
 }
@@ -17,21 +17,21 @@ static void _on_expected_key_key_added(void** a);
 
 static void _on_expected_key_key_removed(void** a);
 
-static dx_result _on_hash_expected_key_key(dx_size* RETURN, void** a);
+static Core_Result _on_hash_expected_key_key(Core_Size* RETURN, void** a);
 
-static dx_result _on_compare_expected_key_keys(dx_bool* RETURN, void** a, void** b);
+static Core_Result _on_compare_expected_key_keys(Core_Boolean* RETURN, void** a, void** b);
 
-static dx_result _initialize_expected_keys(dx_adl_type_handlers_viewer_instance* SELF);
+static Core_Result _initialize_expected_keys(dx_adl_type_handlers_viewer_instance* SELF);
 
-static dx_result _uninitialize_expected_keys(dx_adl_type_handlers_viewer_instance* SELF);
+static Core_Result _uninitialize_expected_keys(dx_adl_type_handlers_viewer_instance* SELF);
 
-static dx_result _check_keys(dx_adl_type_handlers_viewer_instance* SELF, dx_ddl_node* node);
+static Core_Result _check_keys(dx_adl_type_handlers_viewer_instance* SELF, dx_ddl_node* node);
 
-static dx_result _parse_viewer_instance(dx_assets_viewer_instance** RETURN, dx_adl_type_handlers_viewer_instance* SELF, dx_ddl_node* node, dx_adl_context* context);
+static Core_Result _parse_viewer_instance(dx_assets_viewer_instance** RETURN, dx_adl_type_handlers_viewer_instance* SELF, dx_ddl_node* node, dx_adl_context* context);
 
-static dx_result _parse(dx_object** RETURN, dx_adl_type_handlers_viewer_instance* SELF, dx_ddl_node* node, dx_adl_context* context);
+static Core_Result _parse(Core_Object** RETURN, dx_adl_type_handlers_viewer_instance* SELF, dx_ddl_node* node, dx_adl_context* context);
 
-static dx_result _resolve(dx_adl_type_handlers_viewer_instance* SELF, dx_adl_symbol* symbol, dx_adl_context* context);
+static Core_Result _resolve(dx_adl_type_handlers_viewer_instance* SELF, dx_adl_symbol* symbol, dx_adl_context* context);
 
 DX_DEFINE_OBJECT_TYPE("dx.adl.type_handlers.viewer_instance",
                       dx_adl_type_handlers_viewer_instance,
@@ -45,46 +45,44 @@ static void _on_expected_key_key_removed(void** a) {
   DX_UNREFERENCE(*a);
 }
 
-static dx_result _on_hash_expected_key_key(dx_size* RETURN, void** a) {
-  *RETURN = dx_string_get_hash_value(DX_STRING(*a));
-  return DX_SUCCESS;
+static Core_Result _on_hash_expected_key_key(Core_Size* RETURN, Core_String** a) {
+  return Core_String_getHashValue(RETURN, *a);
 }
 
-static dx_result _on_compare_expected_key_keys(dx_bool* RETURN, void** a, void** b) {
-  *RETURN = dx_string_is_equal_to(DX_STRING(*a), DX_STRING(*b));
-  return DX_SUCCESS;
+static Core_Result _on_compare_expected_key_keys(Core_Boolean* RETURN, Core_String** a, Core_String** b) {
+  return Core_String_isEqualTo(RETURN, *a, *b);
 }
 
-static dx_result _uninitialize_expected_keys(dx_adl_type_handlers_viewer_instance* SELF) {
+static Core_Result _uninitialize_expected_keys(dx_adl_type_handlers_viewer_instance* SELF) {
   dx_inline_pointer_hashmap_uninitialize(&SELF->expected_keys);
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-static dx_result _initialize_expected_keys(dx_adl_type_handlers_viewer_instance* SELF) {
+static Core_Result _initialize_expected_keys(dx_adl_type_handlers_viewer_instance* SELF) {
   DX_INLINE_POINTER_HASHMAP_CONFIGURATION cfg = {
     .key_added_callback = &_on_expected_key_key_added,
     .key_removed_callback = &_on_expected_key_key_removed,
     .value_added_callback = NULL,
     .value_removed_callback = NULL,
-    .hash_key_callback = &_on_hash_expected_key_key,
-    .compare_keys_callback = &_on_compare_expected_key_keys,
+    .hash_key_callback = (dx_inline_pointer_hashmap_hash_key_callback*)&_on_hash_expected_key_key,
+    .compare_keys_callback = (dx_inline_pointer_hashmap_compare_keys_callback*)&_on_compare_expected_key_keys,
   };
   if (dx_inline_pointer_hashmap_initialize(&SELF->expected_keys, &cfg)) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
 
 #define DEFINE(EXPECTED_KEY) \
   { \
-    dx_string* expected_key = NULL; \
-    if (dx_string_create(&expected_key, EXPECTED_KEY, sizeof(EXPECTED_KEY)-1)) { \
+    Core_String* expected_key = NULL; \
+    if (Core_String_create(&expected_key, EXPECTED_KEY, sizeof(EXPECTED_KEY)-1)) { \
       dx_inline_pointer_hashmap_uninitialize(&SELF->expected_keys); \
-      return DX_FAILURE; \
+      return Core_Failure; \
     } \
     if (dx_inline_pointer_hashmap_set(&SELF->expected_keys, expected_key, expected_key)) {\
       DX_UNREFERENCE(expected_key); \
       expected_key = NULL; \
       dx_inline_pointer_hashmap_uninitialize(&SELF->expected_keys); \
-      return DX_FAILURE; \
+      return Core_Failure; \
     } \
     DX_UNREFERENCE(expected_key); \
     expected_key = NULL; \
@@ -93,7 +91,7 @@ static dx_result _initialize_expected_keys(dx_adl_type_handlers_viewer_instance*
   DEFINE("name");
   DEFINE("reference");
 #undef DEFINE
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
 static void on_received_key_added(void** p) {
@@ -104,52 +102,52 @@ static void on_received_key_removed(void** p) {
   DX_UNREFERENCE(*p);
 }
 
-static dx_result _check_keys(dx_adl_type_handlers_viewer_instance* SELF, dx_ddl_node* node) {
+static Core_Result _check_keys(dx_adl_type_handlers_viewer_instance* SELF, dx_ddl_node* node) {
   DX_INLINE_POINTER_ARRAY_CONFIGURATION configuration = {
     .added_callback = &on_received_key_added,
     .removed_callback = &on_received_key_removed,
   };
   dx_inline_pointer_array received_keys;
   if (dx_inline_pointer_array_initialize(&received_keys, 0, &configuration)) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
   if (dx_inline_pointer_hashmap_get_keys(&node->map, &received_keys)) {
     dx_inline_pointer_array_uninitialize(&received_keys);
-    return DX_FAILURE;
+    return Core_Failure;
   }
-  dx_size number_of_received_keys = 0;
+  Core_Size number_of_received_keys = 0;
   if (dx_inline_pointer_array_get_size(&number_of_received_keys, &received_keys)) {
     dx_inline_pointer_array_uninitialize(&received_keys);
-    return DX_FAILURE;
+    return Core_Failure;
   }
-  for (dx_size i = 0, n = number_of_received_keys; i < n; ++i) {
-    dx_string* received_key = NULL;
+  for (Core_Size i = 0, n = number_of_received_keys; i < n; ++i) {
+    Core_String* received_key = NULL;
     if (dx_inline_pointer_array_get_at(&received_key, &received_keys, i)) {
       dx_inline_pointer_array_uninitialize(&received_keys);
-      return DX_FAILURE;
+      return Core_Failure;
     }
-    dx_string* expected_key = NULL;
+    Core_String* expected_key = NULL;
     if (dx_inline_pointer_hashmap_get(&expected_key, &SELF->expected_keys, received_key)) {
       dx_inline_pointer_array_uninitialize(&received_keys);
-      return DX_FAILURE;
+      return Core_Failure;
     }
   }
   dx_inline_pointer_array_uninitialize(&received_keys);
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-static dx_result _parse_viewer_instance(dx_assets_viewer_instance** RETURN, dx_adl_type_handlers_viewer_instance* SELF, dx_ddl_node* node, dx_adl_context* context) {
+static Core_Result _parse_viewer_instance(dx_assets_viewer_instance** RETURN, dx_adl_type_handlers_viewer_instance* SELF, dx_ddl_node* node, dx_adl_context* context) {
   dx_asset_reference* viewer_reference = NULL;
   // reference
   {
-    dx_string* name = dx_adl_semantical_read_string_field(node, NAME(reference_key), context->names);
+    Core_String* name = dx_adl_semantical_read_string_field(node, NAME(reference_key), context->names);
     if (!name) {
-      return DX_FAILURE;
+      return Core_Failure;
     }
     if (dx_asset_reference_create(&viewer_reference, name)) {
       DX_UNREFERENCE(name);
       name = NULL;
-      return DX_FAILURE;
+      return Core_Failure;
     }
     DX_UNREFERENCE(name);
     name = NULL;
@@ -158,34 +156,34 @@ static dx_result _parse_viewer_instance(dx_assets_viewer_instance** RETURN, dx_a
   if (dx_assets_viewer_instance_create(&viewer_instance_value, viewer_reference)) {
     DX_UNREFERENCE(viewer_reference);
     viewer_reference = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   DX_UNREFERENCE(viewer_reference);
   viewer_reference = NULL;
   *RETURN = viewer_instance_value;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-static dx_result _parse(dx_object** RETURN, dx_adl_type_handlers_viewer_instance* SELF, dx_ddl_node* node, dx_adl_context* context) {
+static Core_Result _parse(Core_Object** RETURN, dx_adl_type_handlers_viewer_instance* SELF, dx_ddl_node* node, dx_adl_context* context) {
   if (!node) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
   if (_check_keys(SELF, node)) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
   return _parse_viewer_instance((dx_assets_viewer_instance**)RETURN, SELF, node, context);
 }
 
-static dx_result _resolve(dx_adl_type_handlers_viewer_instance* SELF, dx_adl_symbol* symbol, dx_adl_context* context) {
+static Core_Result _resolve(dx_adl_type_handlers_viewer_instance* SELF, dx_adl_symbol* symbol, dx_adl_context* context) {
   if (symbol->resolved) {
-    return DX_SUCCESS;
+    return Core_Success;
   }
   dx_assets_viewer_instance* viewer_instance = DX_ASSETS_VIEWER_INSTANCE(symbol->asset);
   if (viewer_instance->viewer_reference) {
     dx_adl_symbol* referenced_symbol = NULL;
     if (dx_asset_definitions_get(&referenced_symbol, context->definitions, viewer_instance->viewer_reference->name)) {
-      return DX_FAILURE;
+      return Core_Failure;
     }
     viewer_instance->viewer_reference->object = referenced_symbol->asset;
     DX_REFERENCE(viewer_instance->viewer_reference->object);
@@ -193,40 +191,37 @@ static dx_result _resolve(dx_adl_type_handlers_viewer_instance* SELF, dx_adl_sym
     referenced_symbol = NULL;
   }
   symbol->resolved = true;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-dx_result dx_adl_type_handlers_viewer_instance_construct(dx_adl_type_handlers_viewer_instance* SELF) {
-  dx_rti_type* TYPE = dx_adl_type_handlers_viewer_instance_get_type();
-  if (!TYPE) {
-    return DX_FAILURE;
-  }
+Core_Result dx_adl_type_handlers_viewer_instance_construct(dx_adl_type_handlers_viewer_instance* SELF) {
+  DX_CONSTRUCT_PREFIX(dx_adl_type_handlers_viewer_instance);
   if (dx_adl_type_handler_construct(DX_ADL_TYPE_HANDLER(SELF))) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
   if (_initialize_expected_keys(SELF)) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
-  DX_OBJECT(SELF)->type = TYPE;
-  return DX_SUCCESS;
+  CORE_OBJECT(SELF)->type = TYPE;
+  return Core_Success;
 }
 
 static void dx_adl_type_handlers_viewer_instance_destruct(dx_adl_type_handlers_viewer_instance* SELF) {
   _uninitialize_expected_keys(SELF);
 }
 
-static void dx_adl_type_handlers_viewer_instance_dispatch_construct(dx_adl_type_handlers_viewer_instance_dispatch* SELF) {
-  DX_ADL_TYPE_HANDLER_DISPATCH(SELF)->read = (dx_result (*)(dx_object**, dx_adl_type_handler*, dx_ddl_node*, dx_adl_context*)) & _parse;
-  DX_ADL_TYPE_HANDLER_DISPATCH(SELF)->resolve = (dx_result(*)(dx_adl_type_handler*, dx_adl_symbol*, dx_adl_context*)) & _resolve;
+static void dx_adl_type_handlers_viewer_instance_constructDispatch(dx_adl_type_handlers_viewer_instance_dispatch* SELF) {
+  DX_ADL_TYPE_HANDLER_DISPATCH(SELF)->read = (Core_Result (*)(Core_Object**, dx_adl_type_handler*, dx_ddl_node*, dx_adl_context*)) & _parse;
+  DX_ADL_TYPE_HANDLER_DISPATCH(SELF)->resolve = (Core_Result(*)(dx_adl_type_handler*, dx_adl_symbol*, dx_adl_context*)) & _resolve;
 }
 
-dx_result dx_adl_type_handlers_viewer_instance_create(dx_adl_type_handlers_viewer_instance** RETURN) {
-  DX_CREATE_PREFIX(dx_adl_type_handlers_viewer_instance)
+Core_Result dx_adl_type_handlers_viewer_instance_create(dx_adl_type_handlers_viewer_instance** RETURN) {
+  DX_CREATE_PREFIX(dx_adl_type_handlers_viewer_instance);
   if (dx_adl_type_handlers_viewer_instance_construct(SELF)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   *RETURN = SELF;
-  return DX_SUCCESS;
+  return Core_Success;
 }

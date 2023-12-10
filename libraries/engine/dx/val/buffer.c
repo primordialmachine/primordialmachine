@@ -2,21 +2,18 @@
 
 DX_DEFINE_OBJECT_TYPE("dx.val.buffer",
                       dx_val_buffer,
-                      dx_object)
+                      Core_Object);
 
 static void dx_val_buffer_destruct(dx_val_buffer* self) {
   self->context = NULL;
 }
 
-static void dx_val_buffer_dispatch_construct(dx_val_buffer_dispatch* self)
+static void dx_val_buffer_constructDispatch(dx_val_buffer_dispatch* self)
 {/*Intentionally empty.*/}
 
-dx_result dx_val_buffer_construct(dx_val_buffer* SELF, dx_val_context* context) {
-  dx_rti_type* TYPE = dx_val_buffer_get_type();
-  if (!TYPE) {
-    return DX_FAILURE;
-  }
+Core_Result dx_val_buffer_construct(dx_val_buffer* SELF, dx_val_context* context) {
+  DX_CONSTRUCT_PREFIX(dx_val_buffer);
   SELF->context = context;
-  DX_OBJECT(SELF)->type = TYPE;
-  return DX_SUCCESS;
+  CORE_OBJECT(SELF)->type = TYPE;
+  return Core_Success;
 }

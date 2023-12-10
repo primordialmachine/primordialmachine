@@ -1,0 +1,35 @@
+{
+  "type" : "function",
+  "last-update" : "2023-12-18",
+  "indices" : "core",
+  "name" : "Core_Memory_allocate",
+  "id" : "core-memory-allocate",
+  "signature" : "Core_Result Core_Memory_allocate(void **RETURN, Core_Size n);",
+  "signatureRemarks": null,
+  "parameters" : [
+    {
+      "name" : "RETURN",
+      "type" : "void**",
+      "description" : "A pointer to a @{code('void*')} variable."
+    },
+    {
+      "name" : "n",
+      "type" : "Core_Size",
+      "description" : "The size, in Bytes, of the memory block to allocate. Can be @{code('0')}."
+    }
+  ],
+  "errors" : [
+    {
+      "errorCode" : "Core_Error_ArgumentInvalid",
+      "errorCondition" : "@{code('RETURN')} is a null pointer"
+    },
+    {
+      "errorCode" : "Core_Error_AllocationFailed",
+      "errorCondition" : "the allocation failed"
+    }
+  ],
+  "description" : "Allocate a memory block.",
+  "success" : "@{code('*RETURN')} was assigned a pointer to a new memory block of size @{code('n')}.",
+  "return" : "@{code('Core_Success')} on success. @{code('Core_Failure')} on failure.",
+  "remarks" : "This function sets the by-thread error variable on failure."
+}

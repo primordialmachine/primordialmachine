@@ -27,8 +27,8 @@ struct dx_adl_type_handlers_viewer_instance_dispatch {
   dx_adl_type_handler_dispatch _parent;
 };
 
-dx_result dx_adl_type_handlers_viewer_instance_construct(dx_adl_type_handlers_viewer_instance* SELF);
+Core_Result dx_adl_type_handlers_viewer_instance_construct(dx_adl_type_handlers_viewer_instance* SELF);
 
-dx_result dx_adl_type_handlers_viewer_instance_create(dx_adl_type_handlers_viewer_instance** RETURN);
+Core_Result dx_adl_type_handlers_viewer_instance_create(dx_adl_type_handlers_viewer_instance** RETURN);
 
 #endif // DX_ADL_TYPE_HANDLERS_VIEWER_INSTANCE_H_INCLUDED

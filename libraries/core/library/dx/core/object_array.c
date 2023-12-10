@@ -2,38 +2,31 @@
 
 DX_DEFINE_OBJECT_TYPE("dx.object_array",
                       dx_object_array,
-                      dx_object);
+                      Core_Object);
 
 static void dx_object_array_destruct(dx_object_array* SELF) {
   dx_inline_object_array_uninitialize(&SELF->backend);
 }
 
-static void dx_object_array_dispatch_construct(dx_object_array_dispatch* SELF)
+static void dx_object_array_constructDispatch(dx_object_array_dispatch* SELF)
 {/*Intentionally emtpy.*/}
 
-dx_result dx_object_array_construct(dx_object_array* SELF, dx_size initial_capacity) {
-  if (!SELF) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
-  }
-  dx_rti_type* TYPE = dx_object_array_get_type();
-  if (!TYPE) {
-    return DX_FAILURE;
-  }
+Core_Result dx_object_array_construct(dx_object_array* SELF, Core_Size initial_capacity) {
+  DX_CONSTRUCT_PREFIX(dx_object_array);
   if (dx_inline_object_array_initialize(&SELF->backend, initial_capacity)) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
-  DX_OBJECT(SELF)->type = TYPE;
-  return DX_SUCCESS;
+  CORE_OBJECT(SELF)->type = TYPE;
+  return Core_Success;
 }
 
-dx_result dx_object_array_create(dx_object_array** RETURN, dx_size initial_capacity) {
-  DX_CREATE_PREFIX(dx_object_array)
+Core_Result dx_object_array_create(dx_object_array** RETURN, Core_Size initial_capacity) {
+  DX_CREATE_PREFIX(dx_object_array);
   if (dx_object_array_construct(SELF, initial_capacity)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   *RETURN = SELF;
-  return DX_SUCCESS;
+  return Core_Success;
 }

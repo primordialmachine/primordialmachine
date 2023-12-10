@@ -14,47 +14,47 @@ DX_DEFINE_OBJECT_TYPE("dx.val.gl.program",
 #define DX_VAL_GL_PROGRAM_WITH_LOG_EMISSION_DISABLED (0)
 
 // Create a fragment program or vertex program.
-static dx_result
+static Core_Result
 create_shader
   (
     GLuint* id,
     dx_val_gl_context* ctx,
     GLenum type,
-    dx_string* program_text
+    Core_String* program_text
   );
 
-static dx_result
+static Core_Result
 emit_log
   (
     dx_val_gl_context* ctx,
     GLuint id
   );
 
-static dx_result dx_val_gl_program_bind(dx_val_gl_program* SELF, dx_val_cbinding* cbinding);
+static Core_Result dx_val_gl_program_bind(dx_val_gl_program* SELF, dx_val_cbinding* cbinding);
 
-static dx_result dx_val_gl_program_activate(dx_val_gl_program* SELF);
+static Core_Result dx_val_gl_program_activate(dx_val_gl_program* SELF);
 
-static dx_result dx_val_gl_program_construct(dx_val_gl_program* SELF,
+static Core_Result dx_val_gl_program_construct(dx_val_gl_program* SELF,
                                              dx_val_gl_context* ctx,
-                                             dx_string* vertex_program_text,
-                                             dx_string* fragment_program_text);
+                                             Core_String* vertex_program_text,
+                                             Core_String* fragment_program_text);
 
-static dx_result
+static Core_Result
 create_shader
   (
     GLuint* id,
     dx_val_gl_context* ctx,
     GLenum type,
-    dx_string *program_text
+    Core_String *program_text
   )
 {
   if (!id || !ctx || (type != GL_VERTEX_SHADER && type != GL_FRAGMENT_SHADER) || !program_text) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
   if (program_text->number_of_bytes > INT_MAX) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
   GLuint id1 = ctx->glCreateShader(type);
   {
@@ -62,19 +62,19 @@ create_shader
     if (dx_inline_byte_array_initialize(&byte_array)) {
       ctx->glDeleteShader(id1);
       id1 = 0;
-      return DX_FAILURE;
+      return Core_Failure;
     }
     if (dx_inline_byte_array_append(&byte_array, "#version 330 core\n", sizeof("#version 330 core\n") - 1)) {
       dx_inline_byte_array_uninitialize(&byte_array);
       ctx->glDeleteShader(id1);
       id1 = 0;
-      return DX_FAILURE;
+      return Core_Failure;
     }
     if (dx_inline_byte_array_append(&byte_array, program_text->bytes, program_text->number_of_bytes)) {
       dx_inline_byte_array_uninitialize(&byte_array);
       ctx->glDeleteShader(id1);
       id1 = 0;
-      return DX_FAILURE;
+      return Core_Failure;
     }
     GLint const m[] = { (GLint)byte_array.size };
     GLchar const *q[] = { byte_array.elements };
@@ -93,13 +93,13 @@ create_shader
     emit_log(ctx, id1);
     ctx->glDeleteShader(id1);
     id1 = 0;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   *id = id1;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-static dx_result
+static Core_Result
 emit_log
   (
     dx_val_gl_context* ctx,
@@ -112,35 +112,35 @@ emit_log
   GLint l; // including the zero terminator
   ctx->glGetShaderiv(id, GL_INFO_LOG_LENGTH, &l);
   char* p = NULL;
-  if (dx_memory_allocate(&p, sizeof(char) * l)) {
-    return DX_FAILURE;
+  if (Core_Memory_allocate(&p, sizeof(char) * l)) {
+    return Core_Failure;
   }
   ctx->glGetShaderInfoLog(id, l, NULL, p);
   dx_log(p, strlen(p));
-  dx_memory_deallocate(p);
+  Core_Memory_deallocate(p);
 #endif
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-static dx_result dx_val_gl_program_bind(dx_val_gl_program* SELF, dx_val_cbinding* cbinding) {
+static Core_Result dx_val_gl_program_bind(dx_val_gl_program* SELF, dx_val_cbinding* cbinding) {
   dx_val_gl_context* ctx = DX_VAL_GL_CONTEXT(DX_VAL_PROGRAM(SELF)->ctx);
 
   ctx->glUseProgram(SELF->program_id);
 
   dx_val_cbinding_iter it;
   if (dx_val_cbinding_iter_initialize(&it, cbinding)) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
   while (dx_val_cbinding_iter_has_entry(&it)) {
-    dx_string* name = dx_val_cbinding_iter_get_name(&it);
+    Core_String* name = dx_val_cbinding_iter_get_name(&it);
     if (!name) {
       dx_val_cbinding_iter_uninitialize(&it);
-      return DX_FAILURE;
+      return Core_Failure;
     }
     char const* bytes = NULL;
-    if (dx_string_get_bytes(&bytes, name)) {
+    if (Core_String_getBytes(&bytes, name)) {
       dx_val_cbinding_iter_uninitialize(&it);
-      return DX_FAILURE;
+      return Core_Failure;
     }
     GLint location = ctx->glGetUniformLocation(SELF->program_id, bytes);
     DX_UNREFERENCE(name);
@@ -155,7 +155,7 @@ static dx_result dx_val_gl_program_bind(dx_val_gl_program* SELF, dx_val_cbinding
       DX_VEC3 v;
       if (dx_val_cbinding_iter_get_vec3(&it, &v)) {
         dx_val_cbinding_iter_uninitialize(&it);
-        return DX_FAILURE;
+        return Core_Failure;
       }
       ctx->glUniform3fv(location, 1, &(v.e[0]));
     } break;
@@ -163,7 +163,7 @@ static dx_result dx_val_gl_program_bind(dx_val_gl_program* SELF, dx_val_cbinding
       DX_VEC4 v;
       if (dx_val_cbinding_iter_get_vec4(&it, &v)) {
         dx_val_cbinding_iter_uninitialize(&it);
-        return DX_FAILURE;
+        return Core_Failure;
       }
       ctx->glUniform4fv(location, 1, &(v.e[0]));
     } break;
@@ -171,7 +171,7 @@ static dx_result dx_val_gl_program_bind(dx_val_gl_program* SELF, dx_val_cbinding
       DX_RGBA_F32 v;
       if (dx_val_cbinding_iter_get_rgba_f32(&it, &v)) {
         dx_val_cbinding_iter_uninitialize(&it);
-        return DX_FAILURE;
+        return Core_Failure;
       }
       ctx->glUniform4fv(location, 1, (GLfloat const *)&v);
     } break;
@@ -179,49 +179,49 @@ static dx_result dx_val_gl_program_bind(dx_val_gl_program* SELF, dx_val_cbinding
       DX_MAT4 a;
       if (dx_val_cbinding_iter_get_mat4(&it, &a)) {
         dx_val_cbinding_iter_uninitialize(&it);
-        return DX_FAILURE;
+        return Core_Failure;
       }
       ctx->glUniformMatrix4fv(location, 1, GL_TRUE, &(a.e[0][0]));
     } break;
     case DX_VAL_CBINDING_TYPE_TEXTURE_INDEX: {
-      dx_size i;
+      Core_Size i;
       if (dx_val_cbinding_iter_get_texture_index(&it, &i)) {
         dx_val_cbinding_iter_uninitialize(&it);
-        return DX_FAILURE;
+        return Core_Failure;
       }
       GLint max_texture_units;
       ctx->glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &max_texture_units);
       if (i >= max_texture_units) {
         dx_val_cbinding_iter_uninitialize(&it);
-        return DX_FAILURE;
+        return Core_Failure;
       }
       ctx->glUniform1i(location, (GLint)i);
     } break;
     case DX_VAL_CBINDING_TYPE_EMPTY: {
-      if (dx_get_error()) {
+      if (Core_getError()) {
         dx_val_cbinding_iter_uninitialize(&it);
-        return DX_FAILURE;
+        return Core_Failure;
       }
     } break;
     default: {
-      dx_set_error(DX_ERROR_INVALID_ARGUMENT);
+      Core_setError(Core_Error_ArgumentInvalid);
       dx_val_cbinding_iter_uninitialize(&it);
-      return DX_FAILURE;
+      return Core_Failure;
     } break;
     };
     dx_val_cbinding_iter_next(&it);
   }
   dx_val_cbinding_iter_uninitialize(&it);
-  if (dx_get_error()) {
-    return DX_FAILURE;
+  if (Core_getError()) {
+    return Core_Failure;
   }
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-static dx_result dx_val_gl_program_activate(dx_val_gl_program* SELF) {
+static Core_Result dx_val_gl_program_activate(dx_val_gl_program* SELF) {
   dx_val_gl_context* ctx = DX_VAL_GL_CONTEXT(DX_VAL_PROGRAM(SELF)->ctx);
   ctx->glUseProgram(SELF->program_id);
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
 static void dx_val_gl_program_destruct(dx_val_gl_program* SELF) {
@@ -242,34 +242,30 @@ static void dx_val_gl_program_destruct(dx_val_gl_program* SELF) {
   }
 }
 
-static void dx_val_gl_program_dispatch_construct(dx_val_gl_program_dispatch* SELF) {
-  DX_VAL_PROGRAM_DISPATCH(SELF)->bind = (dx_result(*)(dx_val_program*, dx_val_cbinding*)) & dx_val_gl_program_bind;
-  DX_VAL_PROGRAM_DISPATCH(SELF)->activate = (dx_result(*)(dx_val_program*)) & dx_val_gl_program_activate;
+static void dx_val_gl_program_constructDispatch(dx_val_gl_program_dispatch* SELF) {
+  DX_VAL_PROGRAM_DISPATCH(SELF)->bind = (Core_Result(*)(dx_val_program*, dx_val_cbinding*)) & dx_val_gl_program_bind;
+  DX_VAL_PROGRAM_DISPATCH(SELF)->activate = (Core_Result(*)(dx_val_program*)) & dx_val_gl_program_activate;
 }
 
-static dx_result dx_val_gl_program_construct(dx_val_gl_program* SELF,
-                                             dx_val_gl_context* ctx,
-                                             dx_string* vertex_program_text,
-                                             dx_string* fragment_program_text)
-{
-  dx_rti_type* TYPE = dx_val_gl_program_get_type();
-  if (!TYPE) {
-    return DX_FAILURE;
-  }
+static Core_Result dx_val_gl_program_construct(dx_val_gl_program* SELF,
+                                               dx_val_gl_context* ctx,
+                                               Core_String* vertex_program_text,
+                                               Core_String* fragment_program_text) {
+  DX_CONSTRUCT_PREFIX(dx_val_gl_program);
   if (dx_val_program_construct(DX_VAL_PROGRAM(SELF), DX_VAL_CONTEXT(ctx))) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
   SELF->vertex_program_id = 0;
   SELF->fragment_program_id = 0;
   SELF->program_id = 0;
 
   if (create_shader(&SELF->vertex_program_id, ctx, GL_VERTEX_SHADER, vertex_program_text)) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
   if (create_shader(&SELF->fragment_program_id, ctx, GL_FRAGMENT_SHADER, fragment_program_text)) {
     ctx->glDeleteShader(SELF->vertex_program_id);
     SELF->vertex_program_id = 0;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   GLint success;
   {
@@ -284,24 +280,23 @@ static dx_result dx_val_gl_program_construct(dx_val_gl_program* SELF,
       SELF->fragment_program_id = 0;
       ctx->glDeleteShader(SELF->vertex_program_id);
       SELF->vertex_program_id = 0;
-      return DX_FAILURE;
+      return Core_Failure;
     }
   }
-  DX_OBJECT(SELF)->type = TYPE;
-  return DX_SUCCESS;
+  CORE_OBJECT(SELF)->type = TYPE;
+  return Core_Success;
 }
 
-dx_result dx_val_gl_program_create(dx_val_gl_program** RETURN,
-                                   dx_val_gl_context* ctx,
-                                   dx_string* vertex_program_text,
-                                   dx_string* fragment_program_text)
-{
-  DX_CREATE_PREFIX(dx_val_gl_program)
+Core_Result dx_val_gl_program_create(dx_val_gl_program** RETURN,
+                                     dx_val_gl_context* ctx,
+                                     Core_String* vertex_program_text,
+                                     Core_String* fragment_program_text) {
+  DX_CREATE_PREFIX(dx_val_gl_program);
   if (dx_val_gl_program_construct(SELF, ctx, vertex_program_text, fragment_program_text)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   *RETURN = SELF;
-  return DX_SUCCESS;
+  return Core_Success;
 }

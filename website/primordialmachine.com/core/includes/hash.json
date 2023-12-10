@@ -1,0 +1,51 @@
+{
+  "type" : "function",
+  "last-update" : "2023-12-18",
+  "indices" : "core",
+  "name" : "Core_hash",
+  "id" : "core-hash",
+  "signature" : "Core_Result Core_hash&lt;Suffix&gt;(Core_Size* RETURN, &lt;Type&gt; x);",
+  "signatureRemarks": [
+    "<p>where <code>&lt;Suffix&gt;</code> and <code>&lt;Type&gt;</code> can assume the values of</p>",
+    "<table style='width: initial !important'>",
+    "<tr><td><code>&lt;Suffix&gt;</code></td> <td><code>&lt;Type&gt;  </code></td></tr>",
+    "<tr><td><code>B             </code></td> <td><code>Core_Boolean  </code></td></tr>",
+    "<tr><td><code>R32           </code></td> <td><code>Core_Real32   </code></td></tr>",
+    "<tr><td><code>R64           </code></td> <td><code>Core_Real64   </code></td></tr>",
+    "<tr><td><code>Sz            </code></td> <td><code>Core_Size     </code></td></tr>",
+    "<tr><td><code>N8            </code></td> <td><code>Core_Natural8 </code></td></tr>",
+    "<tr><td><code>N16           </code></td> <td><code>Core_Natural16</code></td></tr>",
+    "<tr><td><code>N32           </code></td> <td><code>Core_Natural32</code></td></tr>",
+    "<tr><td><code>N64           </code></td> <td><code>Core_Natural64</code></td></tr>",
+    "<tr><td><code>I8            </code></td> <td><code>Core_Integer8 </code></td></tr>",
+    "<tr><td><code>I16           </code></td> <td><code>Core_Integer16</code></td></tr>",
+    "<tr><td><code>I32           </code></td> <td><code>Core_Integer32</code></td></tr>",
+    "<tr><td><code>I64           </code></td> <td><code>Core_Integer64</code></td></tr>",
+    "</table>"
+  ],
+  "parameters" : [
+    {
+      "name" : "RETURN",
+      "type" : "Core_Size*",
+      "description" : "A pointer to a <code>Core_Size</code> variable"
+    },
+    {
+      "name" : "x",
+      "type" : "&lt;Type&gt;",
+      "description" : "The value to be hashed."
+    }
+  ],
+  "errors" : [
+    {
+      "errorCode" : "@{code('Core_Error_ArgumentInvalid')}",
+      "errorCondition" : "@{code('RETURN')} is a null pointer"
+    }
+  ],
+  "description" : "Computes the hash value of the value @{code('x')}.",
+  "success" : [
+    "@{code('*RETURN')} was assigned the hash value of the value @{code('x')}.",
+    "The positive zero and the negative zero both hash to the same value."
+  ],
+  "return" : "@{code('Core_Success')} on success. @{code('Core_Failure')} on failure.",
+  "remarks" : "This function sets the by-thread error variable on failure."
+}

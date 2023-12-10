@@ -1,0 +1,9 @@
+{
+  "type" : "symbolic-constant",
+  "last-update" : "2023-12-18",
+  "indices" : "core",
+  "name" : "Core_Real32_Least",
+  "id" : "core-real32-least",
+  "signature" : "#define Core_Real32_Least &lt;implementation&gt;",
+  "description" : "The least value of type @{code('Core_Real32')}. This usually is an alias of @{code('-FLT_MAX')}."
+}

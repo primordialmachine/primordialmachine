@@ -11,20 +11,20 @@
 /// @brief The state maintained of a compiler when compiling an "Asset Definition Language" program from a "Data Definition Language" program.
 DX_DECLARE_OBJECT_TYPE("dx.adl.context",
                        dx_adl_context,
-                       dx_object);
+                       Core_Object);
 
 static inline dx_adl_context* DX_ADL_CONTEXT(void* p) {
   return (dx_adl_context*)p;
 }
 
 struct dx_adl_context {
-  dx_object _parent;
+  Core_Object _parent;
   /// @brief The definitions being loaded.
   dx_asset_definitions* definitions;
   /// @brief The scene being loaded.
   dx_assets_scene* scene;
 
-  /// @brief Map from names (dx_string) to type handlers (dx_adl_type_handler).
+  /// @brief Map from names (Core_String) to type handlers (dx_adl_type_handler).
   dx_inline_pointer_hashmap type_handlers;
   /// @brief A pointer to the names.
   dx_adl_names* names;
@@ -35,21 +35,21 @@ struct dx_adl_context {
 };
 
 struct dx_adl_context_dispatch {
-  dx_object_dispatch _parent;
+  Core_Object_Dispatch _parent;
 };
 
-dx_result dx_adl_context_construct(dx_adl_context* SELF);
+Core_Result dx_adl_context_construct(dx_adl_context* SELF);
 
 /// @create-operator{dx_adl_context}
-dx_result dx_adl_context_create(dx_adl_context** RETURN);
+Core_Result dx_adl_context_create(dx_adl_context** RETURN);
 
-/// @brief Add a map entry (name, node) to the map from names (dx_string) to a type handler (dx_adl_type_handler).
+/// @brief Add a map entry (name, node) to the map from names (Core_String) to a type handler (dx_adl_type_handler).
 /// @param name The name.
 /// @param type_handler The type handler.
 /// @error #DX_ERROR_ALREADY_EXISTS A map entry for the specified name already exists.
-/// @error #DX_ERROR_ALLOCATION_FAILED an allocation failed.
-/// @error #DX_ERROR_INVALID_ARGUMENT @a name or @a type_handler is a null pointer.
+/// @error #Core_Error_AllocationFailed an allocation failed.
+/// @error #Core_Error_ArgumentInvalid @a name or @a type_handler is a null pointer.
 /// @method{dx_adl_context}
-dx_result dx_adl_context_add_type_handler(dx_adl_context* SELF, dx_string* name, dx_adl_type_handler* type_handler);
+Core_Result dx_adl_context_add_type_handler(dx_adl_context* SELF, Core_String* name, dx_adl_type_handler* type_handler);
 
 #endif // DX_ADL_CONTEXT_H_INCLUDED

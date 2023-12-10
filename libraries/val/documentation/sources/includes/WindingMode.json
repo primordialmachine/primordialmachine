@@ -1,0 +1,19 @@
+{
+  "type" : "enumeration",
+  "last-update" : "2023-12-28",
+  "indices" : "val",
+  "name" : "Core_WindingMode",
+  "id" : "core-windingmode",
+  "signature" : "typedef enum Core_WindingMode &lt;implementation&gt; Core_WindingMode;",
+  "description": "An enumeration of winding modes.",
+  "elements": [
+    {
+      "name" : "Core_WindingMode_Clockwise",
+      "description" : "Clockwise winding mode."
+    },
+    {
+      "name" : "Core_WindingMode_CounterClockwise",
+      "description" : "Counter clockwise winding mode."
+    }
+  ]
+}

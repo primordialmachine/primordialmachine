@@ -1,0 +1,35 @@
+{
+  "type" : "enumeration",
+  "last-update" : "2023-12-26",
+  "indices" : "val",
+  "name" : "Core_VertexFormat",
+  "id" : "core-vertexformat",
+  "signature" : "typedef enum Core_VertexFormat &lt;implementation&gt; Core_VertexFormat;",
+  "description": "An enumeration of vertex formats.",
+  "elements": [
+    {
+      "name" : "Core_VertexFormat_PositionXyz",
+      "description" : "A vertex of the format xyz position."
+    },
+    {
+      "name" : "Core_VertexFormat_AmbientRgba",
+      "description" : "A vertex of the format rgba ambient."
+    },
+    {
+      "name" : "Core_VertexFormat_AmbientUv",
+      "description" : "A vertex of the format uv ambient."
+    },
+    {
+      "name" : "Core_VertexFormat_PositionXyzAmbientRgba",
+      "description" : "A vertex of the format xyz position first and rgba ambient last."
+    },
+    {
+      "name" : "Core_VertexFormat_PositionXyzAmbientUv",
+      "description" : "A vertex of the format xyz position first and uv ambient last."
+    },
+    {
+      "name" : "Core_VertexFormat_PositionXyzAmbientRgbaAmbientUv",
+      "description" : "A vertex of the format xyz positin first, rgba ambient second, and uv ambient last."
+    }
+  ]
+}

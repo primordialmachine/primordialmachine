@@ -24,6 +24,6 @@ struct dx_val_gl_system_factory_dispatch {
 };
 
 /// @constructor{dx_val_gl_system_factory}
-dx_result dx_val_gl_system_factory_construct(dx_val_gl_system_factory* SELF);
+Core_Result dx_val_gl_system_factory_construct(dx_val_gl_system_factory* SELF);
 
 #endif // DX_VAL_GL_SYSTEM_FACTORY_H_INCLUDED

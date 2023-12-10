@@ -1,0 +1,9 @@
+{
+  "type" : "symbolic-constant",
+  "last-update" : "2023-12-18",
+  "indices" : "core",
+  "name" : "Core_Real32_NoNumber",
+  "id" : "core-real32-nonumber",
+  "signature" : "#define Core_Real32_NoNumber &lt;implementation&gt;",
+  "description" : "The no number value of type @{code('Core_Real32')}. This usually is an alias of @{code('NAN')}."
+}

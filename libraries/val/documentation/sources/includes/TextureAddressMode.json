@@ -1,0 +1,46 @@
+{
+  "type" : "enumeration",
+  "last-update" : "2023-12-28",
+  "indices" : "val",
+  "name" : "Core_TextureAddressMode",
+  "id" : "core-textureaddressmode",
+  "signature" : "typedef enum Core_TextureAddressMode &lt;implementation&gt; Core_TextureAddressMode;",
+  "description": [
+    "An enumeration of texture address modes.",
+    "A texture address mode identifies a technique for resolving uv coordinates that are outside of the boundaries of a texture."
+  ],
+  "elements": [
+    {
+      "name" : "Core_TextureAddressMode_ClampToEdge",
+      "description" : [
+        "uv coordinates outside of the range of [0,1] are assigned the color of uv coordinate at 0 or 1, respectively.</br>",
+        "This usually corresponds to GL_TEXTURE_WRAP_S/GL_TEXTURE_WRAP_T with GL_CLAMP_TO_EDGE in OpenGL and D3D12_TEXTURE_ADDRESS_MODE_CLAMP in Direct3D 12."
+      ]
+    },
+    {
+      "name" : "Core_TextureAddressMode_ClampToBorder",
+      "description" : [
+        "uv coordinates outside of the range of [0,1] are assigned the border color of the texture.</br>",
+        "This usually corresponds to GL_TEXTURE_WRAP_S/GL_TEXTURE_WRAP_T with GL_CLAMP_TO_BORDER in OpenGL and D3D12_TEXTURE_ADDRESS_MODE_BORDER in Direct3D 12."
+      ]
+    },
+    {
+      "name" : "Core_TextureAddressMode_Repeat",
+      "description" : [
+        "Tile the texture at every uv integer junction.</br>",
+        "For example, for the u coordinates between 0 and 3, the texture is repeated three times.</br>",
+        "This usually corresponds to GL_TEXTURE_WRAP_S/GL_TEXTURE_WRAP_T with GL_REPEAT in OpenGL and D3D12_TEXTURE_ADDRESS_MODE_WRAP in Direct3D 12."
+      ]
+    },
+    {
+      "name" : "Core_TextureAddressMode_MirroredRepeat",
+      "description" : [
+        "Tile and flip the texture at every uv coordinate ingeger junction.</br>",
+        "For example, for the u coordinates between 0 and 3, the texture is repeated three times.",
+        "For the u coordinates between 0 and 1 and 2 and 3 the texture is address normally.",
+        "For the u coordinates between 1 and 2, the texture flipped.</br>",
+        "This usually corresponds to GL_TEXTURE_WRAP_S/GL_TEXTURE_WRAP_T with GL_MIRRORED_REPEAT in OpenGL, D3D12_TEXTURE_ADDRESS_MODE_MIRROR in Direct3D 12."
+      ]
+    }
+  ]
+}

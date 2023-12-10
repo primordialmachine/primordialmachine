@@ -7,28 +7,25 @@ DX_DEFINE_OBJECT_TYPE("dx.assets.context",
 static void dx_assets_context_destruct(dx_assets_context* SELF)
 {/*Intentionally empty.*/}
 
-static void dx_assets_context_dispatch_construct(dx_assets_context_dispatch* SELF)
+static void dx_assets_context_constructDispatch(dx_assets_context_dispatch* SELF)
 {/*Intentionally empty.*/}
 
-dx_result dx_assets_context_construct(dx_assets_context* SELF) {
-  dx_rti_type* TYPE = dx_assets_context_get_type();
-  if (!TYPE) {
-    return DX_FAILURE;
-  }
+Core_Result dx_assets_context_construct(dx_assets_context* SELF) {
+  DX_CONSTRUCT_PREFIX(dx_assets_context);
   if (dx_context_construct(DX_CONTEXT(SELF))) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
-  DX_OBJECT(SELF)->type = TYPE;
-  return DX_SUCCESS;
+  CORE_OBJECT(SELF)->type = TYPE;
+  return Core_Success;
 }
 
-dx_result dx_assets_context_create(dx_assets_context** RETURN) {
-  DX_CREATE_PREFIX(dx_assets_context)
+Core_Result dx_assets_context_create(dx_assets_context** RETURN) {
+  DX_CREATE_PREFIX(dx_assets_context);
   if (dx_assets_context_construct(SELF)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   *RETURN = SELF;
-  return DX_SUCCESS;
+  return Core_Success;
 }

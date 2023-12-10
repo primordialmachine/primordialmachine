@@ -1,0 +1,122 @@
+{
+  "type" : "enumeration",
+  "last-update" : "2023-12-28",
+  "indices" : "val",
+  "name" : "Core_PixelFormat",
+  "id" : "core-pixelformat",
+  "signature" : "typedef enum Core_PixelFormat &lt;implementation&gt; Core_PixelFormat;",
+  "description": "An enumeration of pixel formats.",
+  "elements": [
+    {
+      "name" : "Core_PixelFormat_Abgr8",
+      "description" : [
+        "Four Core_Natural8 values layed out consecutively in memory.</br>",
+        "The first value denotes the intensity of the alpha component.</br>",
+        "A component value of 0 indicates full transparency.</br>",
+        "A component value of 255 indicates full opacity.</br>",
+        "The second value denotes the intensity of the blue component,</br>",
+        "the third value denotes the intensity of the green component, and</br>",
+        "the fourth value denotes the intensity of the red component.</br>",
+        "A component value of 0 indicates least intensity.</br>",
+        "A component value of 255 indicates greatest intensity.</br>"
+      ]
+    },
+    {
+      "name" : "Core_PixelFormat_Al8",
+      "description" : [
+        "Two Core_Natural8 values layed out consecutively in memory.</br>",
+        "The first value denotes the intensity of the alpha component.</br>",
+        "A component value of 0 indicates full transparency.</br>",
+        "A component value of 255 indicates full opacity.</br>",
+        "The second value denotes the intensity of the luminance component.</br>",
+        "A component value of 0 indicates the least intensity.</br>",
+        "A component value of 255 indicates the greatest intensity."
+      ]
+    },
+    {
+      "name" : "Core_PixelFormat_Argb8",
+      "description" : [
+        "Four Core_Natural8 values layed out consecutively in memory.</br>",
+        "The first value denotes the intensity of the alpha component.</br>",
+        "A component value of 0 indicates full transparency.</br>",
+        "A component value of 255 indicates full opacity.</br>",
+        "The second value denotes the intensity of the red component,</br>",
+        "the third value denotes the intensity of the green component, and</br>",
+        "the fourth value denotes the intensity of the blue component.</br>",
+        "A component value of 0 indicates least intensity.</br>",
+        "A component value of 255 indicates greatest intensity."
+      ]
+    },
+    {
+      "name" : "Core_PixelFormat_Bgr8",
+      "description" : [
+        "Three Core_Natural8 values layed out consecutively in memory.</br>",
+        "The first value denotes the intensity of the blue component,</br>",
+        "the second value denotes the intensity of the green component, and</br>",
+        "the third value denotes the intensity of the red component.</br>",
+        "A component value of 0 indicates least intensity.</br>",
+        "A component value of 255 indicates greatest intensity."
+      ]
+    },
+    {
+      "name" : "Core_PixelFormat_Bgra8",
+      "description" : [
+        "Four Core_Natural8 values layed out consecutively in memory.</br>",
+        "The first value denotes the intensity of the blue component,</br>",
+        "the second value denotes the intensity of the green component, and</br>",
+        "the third value denotes the intensity of the red component.</br>",
+        "A component value of 0 indicates least intensity.</br>",
+        "A component value of 255 indicates greatest intensity.</br>",
+        "The fourth value denotes the intensity of the alpha component.</br>",
+        "A component value of 0 indicates full transparency.</br>",
+        "A component value of 255 indicates full opacity.</br>"
+      ]
+    },
+    {
+      "name" : "Core_PixelFormat_L8",
+      "description" : [
+        "One Core_Natural8 value.</br>",
+        "The value denotes the intensity of the luminance component.</br>",
+        "A component value of 0 indicates least intensity.</br>",
+        "A component value of 255 indicates greatest intensity."
+      ]
+    },
+    {
+      "name" : "Core_PixelFormat_La8",
+      "description" : [
+        "Two Core_Natural8 values layed out consecutively in memory.</br>",
+        "The first value denotes the intensity of the luminance component.</br>",
+        "A component value of 0 indicates the least intensity.</br>",
+        "A component value of 255 indicates the greatest intensity.</br>",
+        "The second value denotes the intensity of the alpha component.</br>",
+        "A component value of 0 indicates full transparency.</br>",
+        "A component value of 255 indicates full opacity."
+      ]
+    },
+    {
+      "name" : "Core_PixelFormat_Rgb8",
+      "description" : [
+        "Three Core_Natural8 values layed out consecutively in memory.</br>",
+        "The first value denotes the intensity of the red component,</br>",
+        "the second value denotes the intensity of the green component, and</br>",
+        "the third value denotes the intensity of the blue component.</br>",
+        "A component value of 0 indicates least intensity.</br>",
+        "A component value of 255 indicates greatest intensity."
+      ]
+    },
+    {
+      "name" : "Core_PixelFormat_Rgba8",
+      "description" : [
+        "Four Core_Natural8 values layed out consecutively in memory.</br>",
+        "The first value denotes the intensity of the red component,</br>",
+        "the second value denotes the intensity of the green component, and</br>",
+        "the third value denotes the intensity of the blue component.</br>",
+        "A component value of 0 indicates least intensity.</br>",
+        "A component value of 255 indicates greatest intensity.</br>",
+        "The fourth component denotes the intensity of the alpha component.</br>",
+        "A component value of 0 indicates full transparency.</br>",
+        "A component value of 255 indicates full opacity."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "type" : "function",
+  "last-update" : "2023-12-30",
+  "indices" : "core",
+  "name" : "Core_Memory_copy",
+  "id" : "core-memory-copy",
+  "signature" : "Core_Result Core_Memory_copy(void *p, void const* q, Core_Size n);",
+  "signatureRemarks": null,
+  "parameters" : [
+    {
+      "name" : "p",
+      "type" : "void*",
+      "description" : "A pointer to the target memory block."
+    },
+     {
+      "name" : "q",
+      "type" : "void const*",
+      "description" : "A pointer to the source memory block."
+    },
+    {
+      "name" : "n",
+      "type" : "Core_Size",
+      "description" : "The number of Bytes to copy."
+    }
+  ],
+  "errors" : [
+    {
+      "errorCode" : "Core_Error_ArgumentInvalid",
+      "errorCondition" : "@{code('p')} is a null pointer"
+    },
+    {
+      "errorCode" : "Core_Error_ArgumentInvalid",
+      "errorCondition" : "@{code('q')} is a null pointer"
+    }
+  ],
+  "description" : "Assign each Byte of a memory block the specified value. The memory blocks must not overlap.",
+  "return" : "@{code('Core_Success')} on success. @{code('Core_Failure')} on failure.",
+  "remarks" : "This function sets the by-thread error variable on failure."
+}

@@ -32,13 +32,16 @@ To assert Doxygen is properly installed, open a console and enter `doxygen --hel
 ### Building
 
 - Check out this repository to some folder. Henceforth we will denote that folder by the placeholder name `<source>`.
-- Create a folder outsode of `<source>`. Henceforth, we will denote that folder by the placeholder name `<build>`.
+- Create a folder outside of `<source>`. Henceforth, we will denote that folder by the placeholder name `<build>`.
 - To generate the Visual C++ project files in the folder `<build>`, open a console, enter the folder `<build>` and enter `cmake <source>`.
 
 The above will use the x64 of x86 generator depending on your system.
 To specifically choose one generator, enter `cmake -A x64 <source>` for x64 and `cmake -A Win32 <source>` for x86.
 
-Turn off the documentation building by specifying the `-DBUILD_DOCUMENTATION=OFF` option.
+### Running Tests
+The project's libraries ship with an increasing amount of automated tests.
+The tests of a particular library have a name of the form `<library-name>.tests.<test-name>`
+where `<library-name>` is the name of the library and `<test-name>` is the name of the respective test.
 
 ## CI/CD
 [![master branch build status](https://ci.appveyor.com/api/projects/status/x7jiybp3h9v65vkf/branch/master?svg=true)](https://ci.appveyor.com/project/primordialmachine/primordialmachine-develop/branch/master)

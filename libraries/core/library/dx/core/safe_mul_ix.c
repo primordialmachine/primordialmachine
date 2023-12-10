@@ -94,13 +94,13 @@ int64_t dx_mul_i64(int64_t x, int64_t y, int64_t* z) {
 
 #define DEFINE(A, B, U, V) \
 { \
-  dx_i8 u, v; \
+  Core_Integer8 u, v; \
   u = dx_mul_i8(A, B, &v); \
   if (u != U) { \
-    return 1; \
+    return Core_Failure; \
   } \
   if (v != V) { \
-    return 1; \
+    return Core_Failure; \
   } \
 }
 
@@ -108,28 +108,28 @@ static int dx_safe_mul_i8_tests() {
   // 0 * 0 = (0, 0)
   DEFINE(0, 0, 0, 0);
   // MAX * 0 = (0, 0)
-  DEFINE(DX_I8_GREATEST, 0, 0, 0);
+  DEFINE(Core_Integer8_Greatest, 0, 0, 0);
   // 0 * MAX = (MAX, 0)
-  DEFINE(0, DX_I8_GREATEST, 0, 0);
+  DEFINE(0, Core_Integer8_Greatest, 0, 0);
   // MAX * 1 = (MAX, 0)
-  DEFINE(DX_I8_GREATEST, 1, DX_I8_GREATEST, 0);
+  DEFINE(Core_Integer8_Greatest, 1, Core_Integer8_Greatest, 0);
   // 1 * MAX = (MAX, 0)
-  DEFINE(1, DX_I8_GREATEST, DX_I8_GREATEST, 0);
+  DEFINE(1, Core_Integer8_Greatest, Core_Integer8_Greatest, 0);
 
-  return 0;
+  return Core_Success;
 }
 
 #undef DEFINE
 
 #define DEFINE(A, B, U, V) \
 { \
-  dx_i16 u, v; \
+  Core_Integer16 u, v; \
   u = dx_mul_i16(A, B, &v); \
   if (u != U) { \
-    return 1; \
+    return Core_Failure; \
   } \
   if (v != V) { \
-    return 1; \
+    return Core_Failure; \
   } \
 }
 
@@ -137,91 +137,91 @@ static int dx_safe_mul_i16_tests() {
   // 0 * 0 = (0, 0)
   DEFINE(0, 0, 0, 0);
   // MAX * 0 = (0, 0)
-  DEFINE(DX_I16_GREATEST, 0, 0, 0);
+  DEFINE(Core_Integer16_Greatest, 0, 0, 0);
   // 0 * MAX = (MAX, 0)
-  DEFINE(0, DX_I16_GREATEST, 0, 0);
+  DEFINE(0, Core_Integer16_Greatest, 0, 0);
   // MAX * 1 = (MAX, 0)
-  DEFINE(DX_I16_GREATEST, 1, DX_I16_GREATEST, 0);
+  DEFINE(Core_Integer16_Greatest, 1, Core_Integer16_Greatest, 0);
   // 1 * MAX = (MAX, 0)
-  DEFINE(1, DX_I16_GREATEST, DX_I16_GREATEST, 0);
+  DEFINE(1, Core_Integer16_Greatest, Core_Integer16_Greatest, 0);
 
-  return 0;
+  return Core_Success;
 }
 
 #undef DEFINE
 
 #define DEFINE(A, B, U, V) \
 { \
-  dx_i32 u, v; \
+  Core_Integer32 u, v; \
   u = dx_mul_i32(A, B, &v); \
   if (u != U) { \
-    return 1; \
+    return Core_Failure; \
   } \
   if (v != V) { \
-    return 1; \
+    return Core_Failure; \
   } \
 }
 
-static int dx_safe_mul_i32_tests() {
+static Core_Result dx_safe_mul_i32_tests() {
   // 0 * 0 = (0, 0)
   DEFINE(0, 0, 0, 0);
   // MAX * 0 = (0, 0)
-  DEFINE(DX_I32_GREATEST, 0, 0, 0);
+  DEFINE(Core_Integer32_Greatest, 0, 0, 0);
   // 0 * MAX = (MAX, 0)
-  DEFINE(0, DX_I32_GREATEST, 0, 0);
+  DEFINE(0, Core_Integer32_Greatest, 0, 0);
   // MAX * 1 = (MAX, 0)
-  DEFINE(DX_I32_GREATEST, 1, DX_I32_GREATEST, 0);
+  DEFINE(Core_Integer32_Greatest, 1, Core_Integer32_Greatest, 0);
   // 1 * MAX = (MAX, 0)
-  DEFINE(1, DX_I32_GREATEST, DX_I32_GREATEST, 0);
+  DEFINE(1, Core_Integer32_Greatest, Core_Integer32_Greatest, 0);
 
-  return 0;
+  return Core_Success;
 }
 
 #undef DEFINE
 
 #define DEFINE(A, B, U, V) \
 { \
-  dx_i64 u, v; \
+  Core_Integer64 u, v; \
   u = dx_mul_i64(A, B, &v); \
   if (u != U) { \
-    return 1; \
+    return Core_Failure; \
   } \
   if (v != V) { \
-    return 1; \
+    return Core_Failure; \
   } \
 }
 
-static int dx_safe_mul_i64_tests() {
+static Core_Result dx_safe_mul_i64_tests() {
   // 0 * 0 = (0, 0)
   DEFINE(0, 0, 0, 0);
   // MAX * 0 = (0, 0)
-  DEFINE(DX_I64_GREATEST, 0, 0, 0);
+  DEFINE(Core_Integer64_Greatest, 0, 0, 0);
   // 0 * MAX = (MAX, 0)
-  DEFINE(0, DX_I64_GREATEST, 0, 0);
+  DEFINE(0, Core_Integer64_Greatest, 0, 0);
   // MAX * 1 = (MAX, 0)
-  DEFINE(DX_I64_GREATEST, 1, DX_I64_GREATEST, 0);
+  DEFINE(Core_Integer64_Greatest, 1, Core_Integer64_Greatest, 0);
   // 1 * MAX = (MAX, 0)
-  DEFINE(1, DX_I64_GREATEST, DX_I64_GREATEST, 0);
+  DEFINE(1, Core_Integer64_Greatest, Core_Integer64_Greatest, 0);
 
-  return 0;
+  return Core_Success;
 }
 
 #undef DEFINE
 
-int dx_safe_mul_ix_tests() {
+Core_Result dx_safe_mul_ix_tests() {
   if (dx_safe_mul_i8_tests()) {
-    return 1;
+    return Core_Failure;
   }
   if (dx_safe_mul_i16_tests()) {
-    return 1;
+    return Core_Failure;
   }
   if (dx_safe_mul_i32_tests()) {
-    return 1;
+    return Core_Failure;
   }
   if (dx_safe_mul_i64_tests()) {
-    return 1;
+    return Core_Failure;
   }
-  return 0;
+  return Core_Success;
 }
 
 #endif // DX_SAFE_MUL_IX_WITH_TESTS

@@ -7,8 +7,8 @@
 /// @defgroup Core_Annotations Core:Annotations
 /// Functionality related to annotations.
 
-/// @defgroup Core_BuiltinTypes Core:Builtin Types
-/// Functionality related to builtin types.
+/// @defgroup Core_FundamentalTypes Core:Fundamental Types
+/// Functionality related to fundamental types.
 
 /// @defgroup Core_Strings Core:Strings
 /// Functionality related to Strings.
@@ -33,13 +33,14 @@
 #include "dx/core/context.h"
 #include "dx/core/convert.h"
 #include "dx/core/core.h"
-#include "dx/core/count_leading_zeroes.h"
+#include "Core/CountLeadingZeroes.h"
 #include "dx/core/error.h"
 #include "dx/core/file_system.h"
+#include "Core/Hash.h"
 #include "dx/core/math.h"
-#include "dx/core/memory.h"
+#include "Core/Memory.h"
 #include "dx/core/msgs.h"
-#include "dx/core/next_power_of_two.h"
+#include "Core/NextPowerOfTwo.h"
 #include "dx/core/object.h"
 #include "dx/core/object_array.h"
 #include "dx/core/os.h"
@@ -50,6 +51,7 @@
 #include "dx/core/safe_mul_ix.h"
 #include "dx/core/safe_mul_nx.h"
 #include "dx/core/scanner.h"
+#include "dx/core/signals.h"
 #include "dx/core/string.h"
 #include "dx/core/string_buffer.h"
 #include "dx/core/visuals.h"
@@ -88,5 +90,19 @@
 /// @brief Macro evaluating to <code>__func__</code>.
 #define DX_C_FUNCTION_NAME __func__
 
+
+/// @brief Initialize the "Core" module.
+/// @return #Core_Success on success. #Core_Failure on failure.
+/// @undefined The "Core" module is already initialized.
+/// @undefined This function is called from a thread other than the main thread.
+/// @failure This function sets the by-thread error variable.
+Core_Result Core_initialize();
+
+/// @brief Uninitialize the "Core" module.
+/// @return #Core_Success on success. #Core_Failure on failure.
+/// @undefined The "Core" module is not yet initialized.
+/// @undefined This function is called from a thread other than the main thread.
+/// @failure This function sets the by-thread error variable.
+Core_Result Core_uninitialize();
 
 #endif // DX_CORE_H_INCLUDED

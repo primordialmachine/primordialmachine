@@ -1,0 +1,48 @@
+{
+  "type" : "function",
+  "last-update" : "2023-12-30",
+  "indices" : "core",
+  "name" : "Core_Memory_compare",
+  "id" : "core-memory-compare",
+  "signature" : "Core_Result Core_Memory_compare(Core_Natural8* RETURN, void const* p, void const* q, Core_Size n);",
+  "signatureRemarks": null,
+  "parameters" : [
+    {
+      "name" : "p",
+      "type" : "void*",
+      "description" : "A pointer to a memory block."
+    },
+    {
+      "name" : "p",
+      "type" : "void*",
+      "description" : "A pointer to a memory block."
+    },
+    {
+      "name" : "n",
+      "type" : "Core_Size",
+      "description" : "The number of Bytes to compare."
+    }
+  ],
+  "errors" : [
+    {
+      "errorCode" : "Core_Error_ArgumentInvalid",
+      "errorCondition" : "@{code('RETURN')} is a null pointer."
+    },
+    {
+      "errorCode" : "Core_Error_ArgumentInvalid",
+      "errorCondition" : "@{code('p')} is a null pointer."
+    },
+    {
+      "errorCode" : "Core_Error_ArgumentInvalid",
+      "errorCondition" : "@{code('q')} is a null pointer."
+    }
+  ],
+  "description" : "Compare the Bytes of memory blocks.",
+  "success" : [
+    "This function compares the Byte values of the memory blocks pointed to by @{code('p')} and @{code('q')} from the Byte.</br>",
+    "If all Byte values are equal, @{code('*RETURN')} was assigned @{code('0')}.</br>",
+    "If there are Byte values that are not equal, then the first mismatching Byte values are compared:</br>",
+    "@{code('*RETURN')} is assigned @{code('-1')} if the Byte value in @{code('p')} is smaller than the Byte value in @{code('q')}.",
+    "@{code('*RETURN')} is assigned @{code('+1')} if the Byte value in @{code('p')} is greater than the Byte value in @{code('q')}."
+   ]
+}

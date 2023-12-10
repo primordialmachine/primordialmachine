@@ -32,9 +32,9 @@ struct dx_aal_al_system_dispatch {
 /// @param SELF A pointer to this AAL AL system.
 /// @param msg_queue A pointer to the message queue.
 /// @method-call
-dx_result dx_aal_al_system_construct(dx_aal_al_system* SELF, dx_msg_queue* msg_queue);
+Core_Result dx_aal_al_system_construct(dx_aal_al_system* SELF, dx_msg_queue* msg_queue);
 
-dx_result dx_aal_al_system_create(dx_aal_al_system** RETURN, dx_msg_queue* msg_queue);
+Core_Result dx_aal_al_system_create(dx_aal_al_system** RETURN, dx_msg_queue* msg_queue);
 
 /// @brief Get the AAL AL context.
 /// @param RETURN A pointer to a <code>dx_aal_al_context*</code> variable.
@@ -45,6 +45,6 @@ dx_result dx_aal_al_system_create(dx_aal_al_system** RETURN, dx_msg_queue* msg_q
 /// @warning
 /// This function fails if this AAL AL system is not started.
 /// @method-call
-dx_result dx_aal_al_system_get_context(dx_aal_al_context** RETURN, dx_aal_al_system* SELF);
+Core_Result dx_aal_al_system_get_context(dx_aal_al_context** RETURN, dx_aal_al_system* SELF);
 
 #endif // DX_AAL_AL_SYSTEM_H_INCLUDED

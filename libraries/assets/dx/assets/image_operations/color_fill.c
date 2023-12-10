@@ -11,43 +11,40 @@ static void dx_assets_image_operations_color_fill_destruct(dx_assets_image_opera
   }
 }
 
-static void dx_assets_image_operations_color_fill_dispatch_construct(dx_assets_image_operations_color_fill_dispatch* SELF)
+static void dx_assets_image_operations_color_fill_constructDispatch(dx_assets_image_operations_color_fill_dispatch* SELF)
 {/*Intentionally empty.*/}
 
-dx_result dx_assets_image_operations_color_fill_construct(dx_assets_image_operations_color_fill* SELF) {
-  dx_rti_type* TYPE = dx_assets_image_operations_color_fill_get_type();
-  if (!TYPE) {
-    return DX_FAILURE;
-  }
+Core_Result dx_assets_image_operations_color_fill_construct(dx_assets_image_operations_color_fill* SELF) {
+  DX_CONSTRUCT_PREFIX(dx_assets_image_operations_color_fill);
   if (dx_assets_image_operation_construct(DX_ASSETS_IMAGE_OPERATION(SELF))) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
   SELF->color = NULL;
-  DX_OBJECT(SELF)->type = TYPE;
-  return DX_SUCCESS;
+  CORE_OBJECT(SELF)->type = TYPE;
+  return Core_Success;
 }
 
-dx_result dx_assets_image_operations_color_fill_create(dx_assets_image_operations_color_fill** RETURN) {
-  DX_CREATE_PREFIX(dx_assets_image_operations_color_fill)
+Core_Result dx_assets_image_operations_color_fill_create(dx_assets_image_operations_color_fill** RETURN) {
+  DX_CREATE_PREFIX(dx_assets_image_operations_color_fill);
   if (dx_assets_image_operations_color_fill_construct(SELF)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   *RETURN = SELF;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-dx_result dx_assets_image_operations_color_fill_set_color(dx_assets_image_operations_color_fill* SELF, dx_assets_color_rgb_n8* color) {
+Core_Result dx_assets_image_operations_color_fill_set_color(dx_assets_image_operations_color_fill* SELF, dx_assets_color_rgb_n8* color) {
   if (!SELF->color) {
-    dx_string* name = NULL;
-    if (dx_string_create(&name, "<anonymous>", sizeof("<anonymous") - 1)) {
-      return DX_FAILURE;
+    Core_String* name = NULL;
+    if (Core_String_create(&name, "<anonymous>", sizeof("<anonymous") - 1)) {
+      return Core_Failure;
     }
     if (dx_asset_reference_create(&SELF->color, name)) {
       DX_UNREFERENCE(name);
       name = NULL;
-      return DX_FAILURE;
+      return Core_Failure;
     }
     DX_UNREFERENCE(name);
     name = NULL;
@@ -56,11 +53,11 @@ dx_result dx_assets_image_operations_color_fill_set_color(dx_assets_image_operat
   if (SELF->color->object) {
     DX_UNREFERENCE(SELF->color->object);
   }
-  SELF->color->object = DX_OBJECT(color);
-  return DX_SUCCESS;
+  SELF->color->object = CORE_OBJECT(color);
+  return Core_Success;
 }
 
-dx_result dx_assets_image_operations_color_fill_get_color(DX_RGB_N8* RETURN, dx_assets_image_operations_color_fill* SELF) {
+Core_Result dx_assets_image_operations_color_fill_get_color(DX_RGB_N8* RETURN, dx_assets_image_operations_color_fill* SELF) {
   *RETURN = DX_ASSETS_COLOR_RGB_N8(SELF->color->object)->value;
-  return DX_SUCCESS;
+  return Core_Success;
 }

@@ -7,106 +7,101 @@
 
 DX_DEFINE_OBJECT_TYPE("dx.cl.interpreter_procedure",
                       dx_cl_interpreter_procedure,
-                      dx_object);
+                      Core_Object);
 
 static void dx_cl_interpreter_procedure_destruct(dx_cl_interpreter_procedure* SELF) {
   DX_UNREFERENCE(SELF->name);
   SELF->name = NULL;
 }
 
-static void dx_cl_interpreter_procedure_dispatch_construct(dx_cl_interpreter_procedure_dispatch* SELF)
+static void dx_cl_interpreter_procedure_constructDispatch(dx_cl_interpreter_procedure_dispatch* SELF)
 {/*Intentionally empty.*/}
 
-dx_result dx_cl_interpreter_procedure_construct(dx_cl_interpreter_procedure* SELF, dx_string* name, dx_cl_function* pointer) {
-  dx_rti_type* TYPE = dx_cl_interpreter_procedure_get_type();
-  if (!TYPE) {
-    return DX_FAILURE;
-  }
+Core_Result dx_cl_interpreter_procedure_construct(dx_cl_interpreter_procedure* SELF, Core_String* name, dx_cl_function* pointer) {
+  DX_CONSTRUCT_PREFIX(dx_cl_interpreter_procedure);
   SELF->name = name;
   DX_REFERENCE(name);
   SELF->pointer = pointer;
-  DX_OBJECT(SELF)->type = TYPE;
-  return DX_SUCCESS;
+  CORE_OBJECT(SELF)->type = TYPE;
+  return Core_Success;
 }
 
-dx_result dx_cl_interpreter_procedure_create(dx_cl_interpreter_procedure** RETURN, dx_string* name, dx_cl_function* pointer) {
+Core_Result dx_cl_interpreter_procedure_create(dx_cl_interpreter_procedure** RETURN, Core_String* name, dx_cl_function* pointer) {
   DX_CREATE_PREFIX(dx_cl_interpreter_procedure)
   if (dx_cl_interpreter_procedure_construct(SELF, name, pointer)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   *RETURN = SELF;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 DX_DEFINE_OBJECT_TYPE("dx.cl.interpreter",
                       dx_cl_interpreter,
-                      dx_object);
+                      Core_Object);
 
 static void dx_cl_interpreter_destruct(dx_cl_interpreter* SELF) {
   dx_inline_pointer_hashmap_uninitialize(&SELF->procedures);
 }
 
-static void dx_cl_interpreter_dispatch_construct(dx_cl_interpreter_dispatch* SELF)
+static void dx_cl_interpreter_constructDispatch(dx_cl_interpreter_dispatch* SELF)
 {/*Intentionally empty.*/}
 
-static void on_key_added(dx_object** a);
+static void on_key_added(Core_Object** a);
 
-static void on_key_removed(dx_object** a);
+static void on_key_removed(Core_Object** a);
 
-static void on_value_added(dx_object** a);
+static void on_value_added(Core_Object** a);
 
-static void on_value_removed(dx_object** a);
+static void on_value_removed(Core_Object** a);
 
-static dx_result on_hash_key(dx_size* RETURN,dx_object** a);
+static Core_Result on_hash_key(Core_Size* RETURN, Core_String** a);
 
-static dx_result on_compare_keys(dx_bool* RETURN, dx_object** a, dx_object** b);
+static Core_Result on_compare_keys(Core_Boolean* RETURN, Core_String** a, Core_String** b);
 
-static dx_result help(dx_application_presenter* application_presenter);
+static Core_Result help(dx_application_presenter* application_presenter);
 
-static void on_key_added(dx_object** a) {
+static void on_key_added(Core_Object** a) {
   DX_DEBUG_ASSERT(NULL != *a);
   DX_REFERENCE(*a);
 }
 
-static void on_key_removed(dx_object** a) {
+static void on_key_removed(Core_Object** a) {
   DX_DEBUG_ASSERT(NULL != *a);
   DX_UNREFERENCE(*a);
 }
 
-static void on_value_added(dx_object** a) {
+static void on_value_added(Core_Object** a) {
   DX_DEBUG_ASSERT(NULL != *a);
   DX_REFERENCE(*a);
 }
 
-static void on_value_removed(dx_object** a) {
+static void on_value_removed(Core_Object** a) {
   DX_DEBUG_ASSERT(NULL != *a);
   DX_UNREFERENCE(*a);
 }
 
-static dx_result on_hash_key(dx_size* RETURN, dx_object** a) {
-  *RETURN = dx_string_get_hash_value(DX_STRING(*a));
-  return DX_SUCCESS;
+static Core_Result on_hash_key(Core_Size* RETURN, Core_String** a) {
+  return Core_String_getHashValue(RETURN, *a);
 }
 
-static dx_result on_compare_keys(dx_bool* RETURN, dx_object** a, dx_object** b) {
-  *RETURN = dx_string_is_equal_to(DX_STRING(*a), DX_STRING(*b));
-  return DX_SUCCESS;
+static Core_Result on_compare_keys(Core_Boolean* RETURN, Core_String** a, Core_String** b) {
+  return Core_String_isEqualTo(RETURN, *a, *b);
 }
 
-static dx_result help(dx_application_presenter* application_presenter) {
-  dx_string* NEWLINE = NULL,
+static Core_Result help(dx_application_presenter* application_presenter) {
+  Core_String* NEWLINE = NULL,
            * INDENT = NULL;
-  if (dx_string_create(&NEWLINE, "\n", sizeof("\n") - 1)) {
-    return DX_FAILURE;
+  if (Core_String_create(&NEWLINE, "\n", sizeof("\n") - 1)) {
+    return Core_Failure;
   }
-  if (dx_string_create(&INDENT, "  ", sizeof("  ") - 1)) {
+  if (Core_String_create(&INDENT, "  ", sizeof("  ") - 1)) {
     DX_UNREFERENCE(NEWLINE);
     NEWLINE = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
 
   dx_cl_interpreter* cl_interpreter = NULL;
@@ -115,7 +110,7 @@ static dx_result help(dx_application_presenter* application_presenter) {
     INDENT = NULL;
     DX_UNREFERENCE(NEWLINE);
     NEWLINE = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   dx_object_array* procedures = NULL;
   if (dx_cl_interpreter_get_functions(&procedures, cl_interpreter)) {
@@ -125,7 +120,7 @@ static dx_result help(dx_application_presenter* application_presenter) {
     INDENT = NULL;
     DX_UNREFERENCE(NEWLINE);
     NEWLINE = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   DX_UNREFERENCE(cl_interpreter);
   cl_interpreter = NULL;
@@ -137,10 +132,10 @@ static dx_result help(dx_application_presenter* application_presenter) {
     INDENT = NULL;
     DX_UNREFERENCE(NEWLINE);
     NEWLINE = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
-  dx_string* text = NULL;
-  if (dx_string_create(&text, "available commands:\n", strlen("available commands:\n"))) {
+  Core_String* text = NULL;
+  if (Core_String_create(&text, "available commands:\n", strlen("available commands:\n"))) {
     DX_UNREFERENCE(procedures);
     procedures = NULL;
     DX_UNREFERENCE(console);
@@ -149,7 +144,7 @@ static dx_result help(dx_application_presenter* application_presenter) {
     INDENT = NULL;
     DX_UNREFERENCE(NEWLINE);
     NEWLINE = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   if (dx_console_append_output_text(console, text)) {
     DX_UNREFERENCE(text);
@@ -162,11 +157,11 @@ static dx_result help(dx_application_presenter* application_presenter) {
     INDENT = NULL;
     DX_UNREFERENCE(NEWLINE);
     NEWLINE = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   DX_UNREFERENCE(text);
   text = NULL;
-  dx_size size;
+  Core_Size size;
   if (dx_object_array_get_size(&size, procedures)) {
     DX_UNREFERENCE(procedures);
     procedures = NULL;
@@ -176,11 +171,11 @@ static dx_result help(dx_application_presenter* application_presenter) {
     INDENT = NULL;
     DX_UNREFERENCE(NEWLINE);
     NEWLINE = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
-  for (dx_size i = 0, n = size; i < n; ++i) {
+  for (Core_Size i = 0, n = size; i < n; ++i) {
     dx_cl_interpreter_procedure* p = NULL;
-    if (dx_object_array_get_at((dx_object**) & p, procedures, i)) {
+    if (dx_object_array_get_at((Core_Object**) & p, procedures, i)) {
       DX_UNREFERENCE(procedures);
       procedures = NULL;
       DX_UNREFERENCE(console);
@@ -189,7 +184,7 @@ static dx_result help(dx_application_presenter* application_presenter) {
       INDENT = NULL;
       DX_UNREFERENCE(NEWLINE);
       NEWLINE = NULL;
-      return DX_FAILURE;
+      return Core_Failure;
     }
     if (dx_console_append_output_text(console, INDENT)) {
       DX_UNREFERENCE(procedures);
@@ -200,7 +195,7 @@ static dx_result help(dx_application_presenter* application_presenter) {
       INDENT = NULL;
       DX_UNREFERENCE(NEWLINE);
       NEWLINE = NULL;
-      return DX_FAILURE;
+      return Core_Failure;
     }
     if (dx_console_append_output_text(console, p->name)) {
       DX_UNREFERENCE(procedures);
@@ -211,7 +206,7 @@ static dx_result help(dx_application_presenter* application_presenter) {
       INDENT = NULL;
       DX_UNREFERENCE(NEWLINE);
       NEWLINE = NULL;
-      return DX_FAILURE;
+      return Core_Failure;
     }
     if (dx_console_append_output_text(console, NEWLINE)) {
       DX_UNREFERENCE(procedures);
@@ -222,7 +217,7 @@ static dx_result help(dx_application_presenter* application_presenter) {
       INDENT = NULL;
       DX_UNREFERENCE(NEWLINE);
       NEWLINE = NULL;
-      return DX_FAILURE;
+      return Core_Failure;
     }
   }
   DX_UNREFERENCE(procedures);
@@ -233,107 +228,104 @@ static dx_result help(dx_application_presenter* application_presenter) {
   INDENT = NULL;
   DX_UNREFERENCE(NEWLINE);
   NEWLINE = NULL;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-dx_result dx_cl_interpreter_construct(dx_cl_interpreter* SELF) {
-  dx_rti_type* TYPE = dx_cl_interpreter_get_type();
-  if (!TYPE) {
-    return DX_FAILURE;
-  }
+Core_Result dx_cl_interpreter_construct(dx_cl_interpreter* SELF) {
+  DX_CONSTRUCT_PREFIX(dx_cl_interpreter);
   DX_INLINE_POINTER_HASHMAP_CONFIGURATION configuration = {
-    .compare_keys_callback = (dx_result(*)(dx_bool*,void**,void**)) & on_compare_keys,
-    .hash_key_callback = (dx_result(*)(dx_size*,void**)) & on_hash_key,
-    .key_added_callback = (void(*)(void**)) & on_key_added,
-    .key_removed_callback = (void(*)(void**)) & on_key_removed,
-    .value_added_callback = (void(*)(void**)) &on_value_added,
-    .value_removed_callback = (void(*)(void**)) &on_value_removed,
+    .compare_keys_callback = (dx_inline_pointer_hashmap_compare_keys_callback*)&on_compare_keys,
+    .hash_key_callback = (dx_inline_pointer_hashmap_hash_key_callback*)&on_hash_key,
+    .key_added_callback = (dx_inline_pointer_hashmap_key_added_callback*)&on_key_added,
+    .key_removed_callback = (dx_inline_pointer_hashmap_key_removed_callback*)&on_key_removed,
+    .value_added_callback = (dx_inline_pointer_hashmap_value_added_callback*)&on_value_added,
+    .value_removed_callback = (dx_inline_pointer_hashmap_value_removed_callback*)&on_value_removed,
   };
   if (dx_inline_pointer_hashmap_initialize(&SELF->procedures, &configuration)) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
-  dx_string* name = NULL;
-  if (dx_string_create(&name, "help", strlen("help"))) {
+  Core_String* name = NULL;
+  if (Core_String_create(&name, "help", strlen("help"))) {
     dx_inline_pointer_hashmap_uninitialize(&SELF->procedures);
-    return DX_FAILURE;
+    return Core_Failure;
   }
   dx_cl_interpreter_procedure* p = NULL;
   if (dx_cl_interpreter_procedure_create(&p, name, &help)) {
     DX_UNREFERENCE(name);
     name = NULL;
     dx_inline_pointer_hashmap_uninitialize(&SELF->procedures);
-    return DX_FAILURE;
+    return Core_Failure;
   }
   if (dx_inline_pointer_hashmap_set(&SELF->procedures, name, p)) {
     DX_UNREFERENCE(name);
     name = NULL;
     dx_inline_pointer_hashmap_uninitialize(&SELF->procedures);
-    return DX_FAILURE;
+    return Core_Failure;
   }
   DX_UNREFERENCE(name);
   name = NULL;
-  DX_OBJECT(SELF)->type = TYPE;
-  return DX_SUCCESS;
+  CORE_OBJECT(SELF)->type = TYPE;
+  return Core_Success;
 }
 
-dx_result dx_cl_interpreter_create(dx_cl_interpreter** RETURN) {
-  DX_CREATE_PREFIX(dx_cl_interpreter)
+Core_Result dx_cl_interpreter_create(dx_cl_interpreter** RETURN) {
+  DX_CREATE_PREFIX(dx_cl_interpreter);
   if (dx_cl_interpreter_construct(SELF)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   *RETURN = SELF;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-dx_result dx_cl_interpreter_execute(dx_cl_interpreter* SELF, dx_application_presenter* application_presenter, dx_string* name) {
+Core_Result dx_cl_interpreter_execute(dx_cl_interpreter* SELF, dx_application_presenter* application_presenter, Core_String* name) {
   dx_cl_interpreter_procedure* p = NULL;
   if (dx_inline_pointer_hashmap_get((dx_inline_pointer_hashmap_value*)&p, &SELF->procedures, name)) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
   if (p->pointer(application_presenter)) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-dx_result dx_cl_interpreter_register_function(dx_cl_interpreter* SELF, dx_string* name, dx_cl_function* function) {
+Core_Result dx_cl_interpreter_register_function(dx_cl_interpreter* SELF, Core_String* name, dx_cl_function* function) {
   dx_cl_interpreter_procedure* p = NULL;
   if (dx_inline_pointer_hashmap_get((dx_inline_pointer_hashmap_value*)&p, &SELF->procedures, name)) {
-    if (DX_ERROR_NOT_FOUND != dx_get_error()) {
-      return DX_FAILURE;
+    if (Core_Error_NotFound != Core_getError()) {
+      return Core_Failure;
     }
   }
   if (p) {
-    dx_set_error(DX_ERROR_EXISTS);
-    return DX_FAILURE;
+    Core_setError(Core_Error_Exists);
+    return Core_Failure;
   }
   if (dx_cl_interpreter_procedure_create(&p, name, function)) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
   if (dx_inline_pointer_hashmap_set(&SELF->procedures, name, p)) {
     DX_UNREFERENCE(p);
     p = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   DX_UNREFERENCE(p);
   p = NULL;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-dx_result dx_cl_interpreter_get_functions(dx_object_array** RETURN, dx_cl_interpreter* SELF) {
+Core_Result dx_cl_interpreter_get_functions(dx_object_array** RETURN, dx_cl_interpreter* SELF) {
   dx_object_array* functions = NULL;
-  dx_size size;
+  Core_Size size;
   if (dx_inline_pointer_hashmap_get_size(&size, &SELF->procedures)) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
   if (dx_object_array_create(&functions, size)) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
   if (dx_inline_pointer_hashmap_get_values(&SELF->procedures, &functions->backend.backend)) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
   *RETURN = functions;
-  return DX_SUCCESS;
+  return Core_Success;
 }

@@ -27,8 +27,8 @@ struct dx_adl_type_handlers_image_dispatch {
   dx_adl_type_handler_dispatch _parent;
 };
 
-dx_result dx_adl_type_handlers_image_construct(dx_adl_type_handlers_image* SELF);
+Core_Result dx_adl_type_handlers_image_construct(dx_adl_type_handlers_image* SELF);
 
-dx_result dx_adl_type_handlers_image_create(dx_adl_type_handlers_image** RETURN);
+Core_Result dx_adl_type_handlers_image_create(dx_adl_type_handlers_image** RETURN);
 
 #endif // DX_ADL_TYPE_HANDLERS_IMAGE_H_INCLUDED

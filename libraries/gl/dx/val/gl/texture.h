@@ -7,7 +7,7 @@ typedef struct dx_val_gl_context dx_val_gl_context;
 
 DX_DECLARE_OBJECT_TYPE("dx.val.gl.texture",
                        dx_val_gl_texture,
-                       dx_val_texture)
+                       dx_val_texture);
 
 static inline dx_val_gl_texture* DX_VAL_GL_TEXTURE(void* p) {
   return (dx_val_gl_texture*)p;
@@ -23,10 +23,10 @@ struct dx_val_gl_texture {
   dx_val_texture _parent;
   GLuint id;
   uint8_t flags;
-  dx_texture_magnification_filter texture_magnification_filter;
-  dx_texture_minification_filter texture_minification_filter;
-  dx_texture_address_mode texture_address_mode_u;
-  dx_texture_address_mode texture_address_mode_v;
+  Core_TextureMagnificationFilter texture_magnification_filter;
+  Core_TextureMinificationFilter texture_minification_filter;
+  Core_TextureAddressMode texture_address_mode_u;
+  Core_TextureAddressMode texture_address_mode_v;
   /// @todo This should be DX_RGBA_F32.
   DX_VEC4 texture_border_color;
 };
@@ -40,11 +40,11 @@ struct dx_val_gl_texture_dispatch {
 };
 
 /// @method-call
-dx_result dx_val_gl_texture_construct(dx_val_gl_texture* SELF, dx_val_gl_context* context);
+Core_Result dx_val_gl_texture_construct(dx_val_gl_texture* SELF, dx_val_gl_context* context);
 
 /// @method-call
-dx_result dx_val_gl_texture_create(dx_val_gl_texture** RETURN, dx_val_gl_context* context);
+Core_Result dx_val_gl_texture_create(dx_val_gl_texture** RETURN, dx_val_gl_context* context);
 
-dx_result dx_val_gl_texture_upload(dx_val_gl_texture* SELF);
+Core_Result dx_val_gl_texture_upload(dx_val_gl_texture* SELF);
 
 #endif // DX_VAL_GL_TEXTURE_H_INCLUDED

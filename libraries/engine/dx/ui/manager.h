@@ -8,16 +8,16 @@ typedef struct dx_ui_widget dx_ui_widget;
 
 DX_DECLARE_OBJECT_TYPE("dx.ui.manager",
                        dx_ui_manager,
-                       dx_object);
+                       Core_Object);
 
 static inline dx_ui_manager* DX_UI_MANAGER(void* p) {
   return (dx_ui_manager*)p;
 }
 
 struct dx_ui_manager {
-  dx_object _parent;
+  Core_Object _parent;
 
-  /// @brief Map from type names (e.g., "Text" or "Group"/dx_string) to type handlers (dx_ui_type_handler). 
+  /// @brief Map from type names (e.g., "Text" or "Group"/Core_String) to type handlers (dx_ui_type_handler). 
   dx_inline_pointer_hashmap type_handlers;
 
   dx_ui_widget* root;
@@ -37,41 +37,36 @@ static inline dx_ui_manager_dispatch* DX_UI_MANAGER_DISPATCH(void* p) {
 }
 
 struct dx_ui_manager_dispatch {
-  dx_object_dispatch _parent;
+  Core_Object_Dispatch _parent;
 };
 
-dx_result dx_ui_manager_construct(dx_ui_manager* SELF, dx_font_presenter* font_presenter, dx_rectangle_presenter* rectangle_presenter);
+Core_Result dx_ui_manager_construct(dx_ui_manager* SELF, dx_font_presenter* font_presenter, dx_rectangle_presenter* rectangle_presenter);
 
-dx_result dx_ui_manager_create(dx_ui_manager** RETURN, dx_font_presenter* font_presenter, dx_rectangle_presenter* rectangle_presenter);
+Core_Result dx_ui_manager_create(dx_ui_manager** RETURN, dx_font_presenter* font_presenter, dx_rectangle_presenter* rectangle_presenter);
 
 /// @brief Set the canvas DPI.
-/// @param SELF A pointer to this UI manager.
 /// @param dpi A pointer to a <code>DX_VEC2</code> variable.
-/// @method-call
-dx_result dx_ui_manager_set_canvas_dpi(dx_ui_manager* SELF, DX_VEC2_F32 const* dpi);
+/// @method{dx_ui_manager}
+Core_Result dx_ui_manager_set_canvas_dpi(dx_ui_manager* SELF, DX_VEC2_F32 const* dpi);
 
 /// @brief Set the canvas resolution.
-/// @param SELF A pointer to this UI manager.
 /// @param resolution A pointer to a <code>DX_VEC2</code> variable.
-/// @method-call
-dx_result dx_ui_manager_set_canvas_resolution(dx_ui_manager* SELF, DX_VEC2_F32 const* resolution);
+/// @method{dx_ui_manager}
+Core_Result dx_ui_manager_set_canvas_resolution(dx_ui_manager* SELF, DX_VEC2_F32 const* resolution);
 
 /// @brief Set the root.
-/// @param SELF A pointer to this UI manager.
 /// @param root A pointer to the UI widget or the null pointer.
-/// @method-call
-dx_result dx_ui_manager_set_root(dx_ui_manager* SELF, dx_ui_widget* root);
+/// @method{dx_ui_manager}
+Core_Result dx_ui_manager_set_root(dx_ui_manager* SELF, dx_ui_widget* root);
 
 /// @brief Enter rendering phase.
-/// @param SELF A pointer to this UI manager.
-/// @method-call
-dx_result dx_ui_manager_enter_render(dx_ui_manager* SELF);
+/// @method{dx_ui_manager}
+Core_Result dx_ui_manager_enter_render(dx_ui_manager* SELF);
 
 /// @brief Leave rendering phase.
-/// @param SELF A pointer to this UI manager.
-/// @method-call
-dx_result dx_ui_manager_leave_render(dx_ui_manager* SELF);
+/// @method{dx_ui_manager}
+Core_Result dx_ui_manager_leave_render(dx_ui_manager* SELF);
 
-dx_result dx_ui_manager_load(dx_ui_widget** RETURN, dx_ui_manager* SELF, dx_string* path);
+Core_Result dx_ui_manager_load(dx_ui_widget** RETURN, dx_ui_manager* SELF, Core_String* path);
 
 #endif // DX_UI_MANAGER_H_INCLUDED

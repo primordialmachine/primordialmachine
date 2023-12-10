@@ -6,7 +6,7 @@
 
 DX_DEFINE_OBJECT_TYPE("dx.val.mesh",
                       dx_val_mesh,
-                      dx_object);
+                      Core_Object);
 
 /// @brief See shader program source code for details.
 #define DX_PROGRAM_WITH_MESH_AMBIENT_RGBA (1)
@@ -31,30 +31,32 @@ DX_DEFINE_OBJECT_TYPE("dx.val.mesh",
 // @remarks
 // This function loads the vertex shader @code{<path>/<filename>.vs} and the fragment shader @code{<path>/<filename>.fs}.
 // The shaders can be adjusted at load time via the @a flags.
-static dx_val_program_text* load_program(dx_string* path, dx_string* filename, uint8_t flags);
+static dx_val_program_text* load_program(Core_String* path, Core_String* filename, uint8_t flags);
 
-static dx_result add_material_to_backend(dx_val_mesh* SELF);
+static Core_Result add_material_to_backend(dx_val_mesh* SELF);
 
 static void remove_material_from_backend(dx_val_mesh* SELF);
 
-static dx_result add_to_backend(dx_val_mesh* SELF);
+static Core_Result add_to_backend(dx_val_mesh* SELF);
 
 static void remove_from_backend(dx_val_mesh* SELF);
 
-static dx_val_program_text* load_program(dx_string* path, dx_string* filename, uint8_t flags) {
+static dx_val_program_text* load_program(Core_String* path, Core_String* filename, uint8_t flags) {
   dx_val_program_text* vertex_program = NULL, * fragment_program = NULL;
   dx_val_program_text* program = NULL;
   {
-    dx_string* format = NULL;
-    if (dx_string_create(&format, "${s}/${s}.vs", sizeof("${s}/${s}.vs") - 1)) {
+    Core_String* format = NULL;
+    if (Core_String_create(&format, "${s}/${s}.vs", sizeof("${s}/${s}.vs") - 1)) {
       goto on_error;
     }
-    dx_string* p = dx_string_printf(format, path, filename);
+    Core_String* p = NULL;
+    if (Core_String_printf(&p, format, path, filename)) {
+      DX_UNREFERENCE(format);
+      format = NULL;
+      goto on_error;
+    }
     DX_UNREFERENCE(format);
     format = NULL;
-    if (!p) {
-      goto on_error;
-    }
     if (dx_val_program_text_create_from_file(&vertex_program, DX_VAL_PROGRAM_TEXT_TYPE_VERTEX, p)) {
       DX_UNREFERENCE(p);
       p = NULL;
@@ -64,16 +66,18 @@ static dx_val_program_text* load_program(dx_string* path, dx_string* filename, u
     p = NULL;
   }
   {
-    dx_string* format = NULL;
-    if (dx_string_create(&format, "${s}/${s}.fs", sizeof("${s}/${s}.fs") - 1)) {
+    Core_String* format = NULL;
+    if (Core_String_create(&format, "${s}/${s}.fs", sizeof("${s}/${s}.fs") - 1)) {
       goto on_error;
     }
-    dx_string* p = dx_string_printf(format, path, filename);
+    Core_String* p = NULL;
+    if (Core_String_printf(&p, format, path, filename)) {
+      DX_UNREFERENCE(format);
+      format = NULL;
+      goto on_error;
+    }
     DX_UNREFERENCE(format);
     format = NULL;
-    if (!p) {
-      goto on_error;
-    }
     if (dx_val_program_text_create_from_file(&fragment_program, DX_VAL_PROGRAM_TEXT_TYPE_FRAGMENT, p)) {
       DX_UNREFERENCE(p);
       p = NULL;
@@ -95,8 +99,8 @@ static dx_val_program_text* load_program(dx_string* path, dx_string* filename, u
     DX_UNREFERENCE(fragment_program);
     fragment_program = NULL;
     if (DX_PROGRAM_WITH_MESH_AMBIENT_RGBA == (flags & DX_PROGRAM_WITH_MESH_AMBIENT_RGBA)) {
-      dx_string* name = NULL;
-      if (dx_string_create(&name, "WITH_MESH_AMBIENT_RGBA", sizeof("WITH_MESH_AMBIENT_RGBA") - 1)) {
+      Core_String* name = NULL;
+      if (Core_String_create(&name, "WITH_MESH_AMBIENT_RGBA", sizeof("WITH_MESH_AMBIENT_RGBA") - 1)) {
         DX_UNREFERENCE(program);
         program = NULL;
         goto on_error;
@@ -112,8 +116,8 @@ static dx_val_program_text* load_program(dx_string* path, dx_string* filename, u
       name = NULL;
     }
     if (DX_PROGRAM_WITH_VERTEX_AMBIENT_RGBA == (flags & DX_PROGRAM_WITH_VERTEX_AMBIENT_RGBA)) {
-      dx_string* name = NULL;
-      if (dx_string_create(&name, "WITH_VERTEX_AMBIENT_RGBA", sizeof("WITH_VERTEX_AMBIENT_RGBA") - 1)) {
+      Core_String* name = NULL;
+      if (Core_String_create(&name, "WITH_VERTEX_AMBIENT_RGBA", sizeof("WITH_VERTEX_AMBIENT_RGBA") - 1)) {
         DX_UNREFERENCE(program);
         program = NULL;
         goto on_error;
@@ -129,8 +133,8 @@ static dx_val_program_text* load_program(dx_string* path, dx_string* filename, u
       name = NULL;
     }
     if (DX_PROGRAM_WITH_VERTEX_AMBIENT_UV == (flags & DX_PROGRAM_WITH_VERTEX_AMBIENT_UV)) {
-      dx_string* name = NULL;
-      if (dx_string_create(&name, "WITH_VERTEX_AMBIENT_UV", sizeof("WITH_VERTEX_AMBIENT_UV") - 1)) {
+      Core_String* name = NULL;
+      if (Core_String_create(&name, "WITH_VERTEX_AMBIENT_UV", sizeof("WITH_VERTEX_AMBIENT_UV") - 1)) {
         DX_UNREFERENCE(program);
         program = NULL;
         goto on_error;
@@ -146,8 +150,8 @@ static dx_val_program_text* load_program(dx_string* path, dx_string* filename, u
       name = NULL;
     }
     if (DX_PROGRAM_WITH_MATERIAL_AMBIENT_TEXTURE == (flags & DX_PROGRAM_WITH_MATERIAL_AMBIENT_TEXTURE)) {
-      dx_string* name = NULL;
-      if (dx_string_create(&name, "WITH_MATERIAL_AMBIENT_TEXTURE", sizeof("WITH_MATERIAL_AMBIENT_TEXTURE") - 1)) {
+      Core_String* name = NULL;
+      if (Core_String_create(&name, "WITH_MATERIAL_AMBIENT_TEXTURE", sizeof("WITH_MATERIAL_AMBIENT_TEXTURE") - 1)) {
         DX_UNREFERENCE(program);
         program = NULL;
         goto on_error;
@@ -180,13 +184,13 @@ on_error:
   return NULL;
 }
 
-static dx_result add_material_to_backend(dx_val_mesh* SELF) {
+static Core_Result add_material_to_backend(dx_val_mesh* SELF) {
   if (SELF->mesh_asset->material_reference && SELF->mesh_asset->material_reference->object) {
     if (dx_val_material_create(&SELF->material, SELF->context, DX_ASSETS_MATERIAL(SELF->mesh_asset->material_reference->object))) {
-      return DX_FAILURE;
+      return Core_Failure;
     }
   }
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
 static void remove_material_from_backend(dx_val_mesh* SELF) {
@@ -196,44 +200,44 @@ static void remove_material_from_backend(dx_val_mesh* SELF) {
   }
 }
 
-static dx_result add_to_backend(dx_val_mesh* SELF) {
-  dx_vertex_format vertex_format = SELF->mesh_asset->vertex_format;
+static Core_Result add_to_backend(dx_val_mesh* SELF) {
+  Core_VertexFormat vertex_format = SELF->mesh_asset->vertex_format;
 
   // create buffer
   if (dx_val_context_create_buffer(&SELF->buffer, SELF->context)) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
 
   // upload data to buffer
-  void* bytes; dx_size number_of_bytes;
+  void* bytes; Core_Size number_of_bytes;
   if (dx_assets_mesh_format(SELF->mesh_asset, vertex_format, &bytes, &number_of_bytes)) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
   if (dx_val_buffer_set_data(SELF->buffer, bytes, number_of_bytes)) {
-    dx_memory_deallocate(bytes);
+    Core_Memory_deallocate(bytes);
     bytes = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
-  dx_memory_deallocate(bytes);
+  Core_Memory_deallocate(bytes);
   bytes = NULL;
 
   // create variable binding
   if (dx_val_context_create_vbinding(&SELF->vbinding, SELF->context, vertex_format, SELF->buffer)) {
     DX_UNREFERENCE(SELF->buffer);
     SELF->buffer = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
 
   // create the program
   uint8_t flags = DX_PROGRAM_WITH_MESH_AMBIENT_RGBA;
   switch (vertex_format) {
-  case dx_vertex_format_position_xyz: {
+  case Core_VertexFormat_position_xyz: {
     /*Intentionally empty.*/
   } break;
-  case dx_vertex_format_position_xyz_ambient_rgba: {
+  case Core_VertexFormat_position_xyz_ambient_rgba: {
     flags |= DX_PROGRAM_WITH_VERTEX_AMBIENT_RGBA;
   } break;
-  case dx_vertex_format_position_xyz_ambient_uv: {
+  case Core_VertexFormat_position_xyz_ambient_uv: {
    flags |= DX_PROGRAM_WITH_VERTEX_AMBIENT_UV;
    if (SELF->material->material_asset->ambient_texture_reference && SELF->material->material_asset->ambient_texture_reference->object) {
       flags |= DX_PROGRAM_WITH_MATERIAL_AMBIENT_TEXTURE;
@@ -244,18 +248,18 @@ static dx_result add_to_backend(dx_val_mesh* SELF) {
     SELF->vbinding = NULL;
     DX_UNREFERENCE(SELF->buffer);
     SELF->buffer = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   } break;
   };
-  dx_string* path = NULL;
-  if (dx_string_create(&path, "assets/gl", sizeof("assets/gl") - 1)) {
-    return DX_FAILURE;
+  Core_String* path = NULL;
+  if (Core_String_create(&path, "assets/gl", sizeof("assets/gl") - 1)) {
+    return Core_Failure;
   }
-  dx_string* filename = NULL;
-  if (dx_string_create(&filename, "3", sizeof("3") - 1)) {
+  Core_String* filename = NULL;
+  if (Core_String_create(&filename, "3", sizeof("3") - 1)) {
     DX_UNREFERENCE(path);
     path = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   dx_val_program_text* program_text = load_program(path, filename, flags);
   DX_UNREFERENCE(filename);
@@ -267,7 +271,7 @@ static dx_result add_to_backend(dx_val_mesh* SELF) {
     SELF->vbinding = NULL;
     DX_UNREFERENCE(SELF->buffer);
     SELF->buffer = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   if (dx_val_context_create_program(&SELF->program, SELF->context, program_text)) {
     DX_UNREFERENCE(program_text);
@@ -276,11 +280,11 @@ static dx_result add_to_backend(dx_val_mesh* SELF) {
     SELF->vbinding = NULL;
     DX_UNREFERENCE(SELF->buffer);
     SELF->buffer = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   DX_UNREFERENCE(program_text);
   program_text = NULL;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
 static void remove_from_backend(dx_val_mesh* SELF) {
@@ -305,14 +309,11 @@ static void dx_val_mesh_destruct(dx_val_mesh* SELF) {
   SELF->mesh_asset = NULL;
 }
 
-static void dx_val_mesh_dispatch_construct(dx_val_mesh_dispatch* SELF)
+static void dx_val_mesh_constructDispatch(dx_val_mesh_dispatch* SELF)
 {/*Intentionally empty.*/}
 
-dx_result dx_val_mesh_construct(dx_val_mesh* SELF, dx_val_context* context, dx_assets_mesh* mesh_asset) {
-  dx_rti_type* TYPE = dx_val_mesh_get_type();
-  if (!TYPE) {
-    return DX_FAILURE;
-  }
+Core_Result dx_val_mesh_construct(dx_val_mesh* SELF, dx_val_context* context, dx_assets_mesh* mesh_asset) {
+  DX_CONSTRUCT_PREFIX(dx_val_mesh);
 
   SELF->mesh_asset = mesh_asset;
   DX_REFERENCE(mesh_asset);
@@ -328,20 +329,20 @@ dx_result dx_val_mesh_construct(dx_val_mesh* SELF, dx_val_context* context, dx_a
     remove_material_from_backend(SELF);
     DX_UNREFERENCE(SELF->mesh_asset);
     SELF->mesh_asset = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
 
-  DX_OBJECT(SELF)->type = TYPE;
-  return DX_SUCCESS;
+  CORE_OBJECT(SELF)->type = TYPE;
+  return Core_Success;
 }
 
-dx_result dx_val_mesh_create(dx_val_mesh** RETURN, dx_val_context* context, dx_assets_mesh* mesh_asset) {
-  DX_CREATE_PREFIX(dx_val_mesh)
+Core_Result dx_val_mesh_create(dx_val_mesh** RETURN, dx_val_context* context, dx_assets_mesh* mesh_asset) {
+  DX_CREATE_PREFIX(dx_val_mesh);
   if (dx_val_mesh_construct(SELF, context, mesh_asset)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   *RETURN = SELF;
-  return DX_SUCCESS;
+  return Core_Success;
 }

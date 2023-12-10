@@ -32,37 +32,37 @@ struct dx_ui_group_dispatch {
 };
 
 /// @constructor{dx_ui_group}
-dx_result dx_ui_group_construct(dx_ui_group* SELF, dx_ui_manager* manager);
+Core_Result dx_ui_group_construct(dx_ui_group* SELF, dx_ui_manager* manager);
 
-dx_result dx_ui_group_create(dx_ui_group** RETURN, dx_ui_manager* manager);
+Core_Result dx_ui_group_create(dx_ui_group** RETURN, dx_ui_manager* manager);
 
 /// @brief Set the background color.
 /// @param background_color A pointer to a <code>DX_RGBA_F32</code> variable.
 /// @method{dx_ui_group}
-dx_result dx_ui_group_set_background_color(dx_ui_group* SELF, DX_RGBA_F32 const* background_color);
+Core_Result dx_ui_group_set_background_color(dx_ui_group* SELF, DX_RGBA_F32 const* background_color);
 
 /// @brief Get the background color.
 /// @param RETURN A pointer to a DX_VEC2 variable.
 /// @success <code>*RETURN</code> was assigned the background color.
 /// @method{dx_ui_group}
-dx_result dx_ui_group_get_background_color(DX_RGBA_F32* RETURN, dx_ui_group* SELF);
+Core_Result dx_ui_group_get_background_color(DX_RGBA_F32* RETURN, dx_ui_group* SELF);
 
 /// @brief Append a child to the list of children of this group.
 /// @param child A pointer to the child.
 /// @method{dx_ui_group}
-dx_result dx_ui_group_append_child(dx_ui_group* SELF, dx_ui_widget* child);
+Core_Result dx_ui_group_append_child(dx_ui_group* SELF, dx_ui_widget* child);
 
 /// @brief Prepend a child to the list of children of this group.
 /// @param child A pointer to the child.
 /// @method{dx_ui_group}
-dx_result dx_ui_group_prepend_child(dx_ui_group* SELF, dx_ui_widget* child);
+Core_Result dx_ui_group_prepend_child(dx_ui_group* SELF, dx_ui_widget* child);
 
 /// @brief Insert a child into the list of children of this group.
 /// @param child A pointer to the child.
 /// @param index The index at which to insert the child.
 /// @error #DX_ERROR_INVALID_INDEX The index is greater than the size of the child list.
-/// @error #DX_ERROR_INVALID_ARGUMENT @a child is null.
+/// @error #Core_Error_ArgumentInvalid @a child is null.
 /// @method{dx_ui_group}
-dx_result dx_ui_group_insert_child(dx_ui_group* SELF, dx_ui_widget* child, dx_size index);
+Core_Result dx_ui_group_insert_child(dx_ui_group* SELF, dx_ui_widget* child, Core_Size index);
 
 #endif // DX_UI_GROUP_H_INCLUDED

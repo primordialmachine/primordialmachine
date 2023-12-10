@@ -14,10 +14,10 @@
 #include <windows.h>
 
 static void* allocate(void* context, size_t n) {
-  int old_error = dx_get_error();
+  Core_Error old_error = Core_getError();
   void* p = NULL;
-  if (dx_memory_allocate(&p, n)) {
-    dx_set_error(old_error);
+  if (Core_Memory_allocate(&p, n)) {
+    Core_setError(old_error);
     return NULL;
   }
   return p;

@@ -1,0 +1,35 @@
+{
+  "type" : "function",
+  "last-update" : "2023-12-18",
+  "indices" : "core",
+  "name" : "Core_Memory_fill",
+  "id" : "core-memory-fill",
+  "signature" : "Core_Result Core_Memory_fill(void *p, Core_Size n, Core_Natural8 v);",
+  "signatureRemarks": null,
+  "parameters" : [
+    {
+      "name" : "p",
+      "type" : "void*",
+      "description" : "A pointer to a memory block of size @{code('n')}"
+    },
+    {
+      "name" : "n",
+      "type" : "Core_Size",
+      "description" : "The size of the memory block pointed to by @{code('p')}"
+    },
+    {
+      "name" : "v",
+      "type" : "Core_Natural8",
+      "description" : "The value to assign to each Byte of the memory block"
+    }
+  ],
+  "errors" : [
+    {
+      "errorCode" : "Core_Error_ArgumentInvalid",
+      "errorCondition" : "@{code('p')} is a null pointer"
+    }
+  ],
+  "description" : "Assign each Byte of a memory block the specified value.",
+  "return" : "@{code('Core_Success')} on success. @{code('Core_Failure')} on failure.",
+  "remarks" : "This function sets the by-thread error variable on failure."
+}

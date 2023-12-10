@@ -31,9 +31,9 @@ struct dx_assets_image_operations_mirror_vertical_dispatch {
 
 /// @detail The object is constructed with default values.
 /// @constructor{dx_assets_image_operations_mirror_vertical}
-dx_result dx_assets_image_operations_mirror_vertical_construct(dx_assets_image_operations_mirror_vertical* SELF);
+Core_Result dx_assets_image_operations_mirror_vertical_construct(dx_assets_image_operations_mirror_vertical* SELF);
 
 /// @create-operator{dx_assets_image_operations_mirror_vertical}
-dx_result dx_assets_image_operations_mirror_vertical_create(dx_assets_image_operations_mirror_vertical** RETURN);
+Core_Result dx_assets_image_operations_mirror_vertical_create(dx_assets_image_operations_mirror_vertical** RETURN);
 
 #endif // DX_ASSETS_IMAGE_OPERATIONS_MIRROR_VERTICAL_H_INCLUDED

@@ -29,49 +29,6 @@ endif()
 
 endmacro()
 
-# Macro which ensures that certain compiler warnings are treated as compiler errors.
-macro(dx_build_documentation target)
-
-if (BUILD_DOCUMENTATION)
-
-  find_package(Doxygen)
-
-  if (DOXYGEN_FOUND)
-    # Copy the doxygen configuration file to the out of source build directory.
-    # Also adjust the copied configuration file.
-    #set(DOXYGEN_IN ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile)
-    #set(DOXYGEN_OUT ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
-
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile @ONLY)
-    configure_file(${CMAKE_SOURCE_DIR}/doxygen/DoxyfileCommon ${CMAKE_CURRENT_BINARY_DIR}/DoxyfileCommon @ONLY)
-    configure_file(${CMAKE_SOURCE_DIR}/doxygen/doxygen-awesome.css  ${CMAKE_CURRENT_BINARY_DIR}/doxygen-awesome-css/doxygen-awesome.css @ONLY)
-    configure_file(${CMAKE_SOURCE_DIR}/doxygen/doxygen-awesome-sidebar-only.css ${CMAKE_CURRENT_BINARY_DIR}/doxygen-awesome-css/doxygen-awesome-sidebar-only.css @ONLY)
-
-    # Additional dependencies.
-    file(GLOB_RECURSE ${name}.doxygen_files "${CMAKE_CURRENT_SOURCE_DIR}/documentation/*.*" )
-    list(APPEND ${name}.doxygen_files ${CMAKE_SOURCE_DIR}/doxygen/doxygen-awesome.css)
-    list(APPEND ${name}.doxygen_files ${CMAKE_SOURCE_DIR}/doxygen/doxygen-awesome-sidebar-only.css)
-    list(APPEND ${name}.doxygen_files ${CMAKE_SOURCE_DIR}/doxygen/DoxyfileCommon)
-    list(APPEND ${name}.doxygen_files ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile)
-
-    add_custom_command(
-      OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/doxygen.stamp
-      DEPENDS ${${name}.sources} ${${name}.headers} ${${name}.readmes} ${${name}.inlays} ${${name}.asms} ${${name}.doxygen_files}
-      WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-      COMMAND "doxygen" Doxyfile
-      COMMAND cmake -E touch ${CMAKE_CURRENT_BINARY_DIR}/doxygen.stamp
-      COMMENT "generating API documentation with Doxygen"
-      VERBATIM)
-
-    add_custom_target(${name}.documentation ALL
-                      DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/doxygen.stamp)
-  endif (DOXYGEN_FOUND)
-
-endif()
-
-endmacro()
-
-
 # asserts the following variable are defined
 #   - ${target}.languages
 # defines the following variables:
@@ -143,19 +100,6 @@ macro(dx_end_project target)
     add_library(${target} ${${target}.sources} ${${target}.headers} ${${target}.readmes} ${${target}.inlays} ${${target}.asms})
   else()
     message ( FATAL_ERROR "${target}: ${target}.kind is `${${target}.kind}`. ${target}.kind must be defined to 'dynamic-library', 'executable', or 'static-library'" )
-  endif()
-
-  if (DEFINED ${target}.doxygen_enabled)
-    if ("${${target}.doxygen_enabled}" STREQUAL ON)
-    elseif ("${${target}.doxygen_enabled}" STREQUAL OFF)
-    else()
-      message ( FATAL_ERROR "${target}: ${target}.doxygen_enabled is `${${target}.doxygen_enabled}`. ${target}.doxygen_enabled must be undefined or defined to 'ON' or 'OFF'" )
-    endif()
-  else()
-    set(${target}.doxygen_enabled ON)
-  endif()
-  if (${${target}.doxygen_enabled})
-    dx_build_documentation(${target})
   endif()
 
   source_group(TREE ${${target}.source_directory} FILES ${${target}.asms})

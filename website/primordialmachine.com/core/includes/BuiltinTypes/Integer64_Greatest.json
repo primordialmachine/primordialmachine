@@ -1,0 +1,9 @@
+{
+  "type" : "symbolic-constant",
+  "last-update" : "2023-12-18",
+  "indices" : "core",
+  "name" : "Core_Integer64_Greatest",
+  "id" : "core-integer64-greatest",
+  "signature" : "#define Core_Integer64_Greatest &lt;implementation&gt;",
+  "description" : "The greatest value of type @{code('Core_Integer64')}."
+}

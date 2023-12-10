@@ -29,8 +29,8 @@ struct dx_ui_scrollbar_dispatch {
   dx_ui_widget_dispatch _parent;
 };
 
-dx_result dx_ui_scrollbar_construct(dx_ui_scrollbar* SELF, dx_ui_manager* manager);
+Core_Result dx_ui_scrollbar_construct(dx_ui_scrollbar* SELF, dx_ui_manager* manager);
 
-dx_result dx_ui_scrollbar_create(dx_ui_scrollbar** RETURN, dx_ui_manager* manager);
+Core_Result dx_ui_scrollbar_create(dx_ui_scrollbar** RETURN, dx_ui_manager* manager);
 
 #endif // DX_UI_SCROLLBAR_H_INCLUDED

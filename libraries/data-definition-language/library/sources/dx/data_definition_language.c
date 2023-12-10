@@ -26,7 +26,7 @@ static dx_ddl_parser* _create_parser() {
   return parser;
 }
 
-dx_ddl_node* dx_ddl_compile(char const* p, dx_size n) {
+dx_ddl_node* dx_ddl_compile(char const* p, Core_Size n) {
   dx_ddl_parser* parser = _create_parser();
   if (!parser) {
     return NULL;

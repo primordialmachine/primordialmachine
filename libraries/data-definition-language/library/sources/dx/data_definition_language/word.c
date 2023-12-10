@@ -2,36 +2,33 @@
 
 DX_DEFINE_OBJECT_TYPE("dx.ddl.word",
                       dx_ddl_word,
-                      dx_object);
+                      Core_Object);
 
 static void dx_ddl_word_destruct(dx_ddl_word* SELF) {
   DX_UNREFERENCE(SELF->text);
   SELF->text = NULL;
 }
 
-static void dx_ddl_word_dispatch_construct(dx_ddl_word_dispatch* SELF)
+static void dx_ddl_word_constructDispatch(dx_ddl_word_dispatch* SELF)
 {/*Intentionally empty.*/}
 
-dx_result dx_ddl_word_construct(dx_ddl_word* SELF, dx_data_definition_language_word_kind kind, dx_string* text) {
-  dx_rti_type* TYPE = dx_ddl_word_get_type();
-  if (!TYPE) {
-    return DX_FAILURE;
+Core_Result dx_ddl_word_construct(dx_ddl_word* SELF, dx_data_definition_language_word_kind kind, Core_String* text) {
+  DX_CONSTRUCT_PREFIX(dx_ddl_word);
+  if (!text) {
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
-  if (!SELF || !text) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
-  }
-  DX_OBJECT(SELF)->type = TYPE;
-  return DX_SUCCESS;
+  CORE_OBJECT(SELF)->type = TYPE;
+  return Core_Success;
 }
 
-dx_result dx_ddl_word_create(dx_ddl_word** RETURN, dx_data_definition_language_word_kind kind, dx_string* text) {
-  DX_CREATE_PREFIX(dx_ddl_word)
+Core_Result dx_ddl_word_create(dx_ddl_word** RETURN, dx_data_definition_language_word_kind kind, Core_String* text) {
+  DX_CREATE_PREFIX(dx_ddl_word);
   if (dx_ddl_word_construct(SELF, kind, text)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   *RETURN = SELF;
-  return DX_SUCCESS;
+  return Core_Success;
 }

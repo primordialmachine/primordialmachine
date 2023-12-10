@@ -4,7 +4,7 @@
 
 DX_DEFINE_OBJECT_TYPE("dx.val.vbinding",
                       dx_val_vbinding,
-                      dx_object);
+                      Core_Object);
 
 static void dx_val_vbinding_destruct(dx_val_vbinding* SELF) {
   if (SELF->buffer) {
@@ -14,17 +14,14 @@ static void dx_val_vbinding_destruct(dx_val_vbinding* SELF) {
   SELF->context = NULL;
 }
 
-static void dx_val_vbinding_dispatch_construct(dx_val_vbinding_dispatch* SELF)
+static void dx_val_vbinding_constructDispatch(dx_val_vbinding_dispatch* SELF)
 {/*Intentionally empty.*/}
 
-dx_result dx_val_vbinding_construct(dx_val_vbinding* SELF, dx_val_buffer* buffer) {
-  dx_rti_type* TYPE = dx_val_vbinding_get_type();
-  if (!TYPE) {
-    return DX_FAILURE;
-  }
+Core_Result dx_val_vbinding_construct(dx_val_vbinding* SELF, dx_val_buffer* buffer) {
+  DX_CONSTRUCT_PREFIX(dx_val_vbinding);
   SELF->buffer = buffer;
   DX_REFERENCE(SELF->buffer);
   SELF->context = buffer->context;
-  DX_OBJECT(SELF)->type = TYPE;
-  return DX_SUCCESS;
+  CORE_OBJECT(SELF)->type = TYPE;
+  return Core_Success;
 }

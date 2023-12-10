@@ -57,10 +57,10 @@ struct dx_ui_text_field_dispatch {
 };
 
 /// @constructor{dx_ui_text_field}
-dx_result dx_ui_text_field_construct(dx_ui_text_field* SELF, dx_ui_manager* manager);
+Core_Result dx_ui_text_field_construct(dx_ui_text_field* SELF, dx_ui_manager* manager);
 
 /// @create-operator{dx_ui_text_field}
-dx_result dx_ui_text_field_create(dx_ui_text_field** RETURN, dx_ui_manager* manager);
+Core_Result dx_ui_text_field_create(dx_ui_text_field** RETURN, dx_ui_manager* manager);
 
 /// @{
 
@@ -68,12 +68,12 @@ dx_result dx_ui_text_field_create(dx_ui_text_field** RETURN, dx_ui_manager* mana
 /// @param RETURN A pointer to a DX_VEC2 variable.
 /// @success <code>*RETURN</code> was assigned the background color.
 /// @method{dx_ui_text_field}
-dx_result dx_ui_text_field_get_background_color(DX_RGBA_F32* RETURN, dx_ui_text_field* SELF);
+Core_Result dx_ui_text_field_get_background_color(DX_RGBA_F32* RETURN, dx_ui_text_field* SELF);
 
 /// @brief Set the background color.
 /// @param background_color A pointer to a <code>DX_RGBA_F32</code> variable.
 /// @method{dx_ui_text_field}
-dx_result dx_ui_text_field_set_background_color(dx_ui_text_field* SELF, DX_RGBA_F32 const* background_color);
+Core_Result dx_ui_text_field_set_background_color(dx_ui_text_field* SELF, DX_RGBA_F32 const* background_color);
 
 /// @}
 
@@ -83,12 +83,12 @@ dx_result dx_ui_text_field_set_background_color(dx_ui_text_field* SELF, DX_RGBA_
 /// @param RETURN A pointer to a DX_VEC2 variable.
 /// @success <code>*RETURN</code> was assigned the text color.
 /// @method{dx_ui_text_field}
-dx_result dx_ui_text_field_get_text_color(DX_RGBA_F32* RETURN, dx_ui_text_field* SELF);
+Core_Result dx_ui_text_field_get_text_color(DX_RGBA_F32* RETURN, dx_ui_text_field* SELF);
 
 /// @brief Set the text color.
 /// @param text_color A pointer to a <code>DX_RGBA_F32</code> variable.
 /// @method{dx_ui_text_field}
-dx_result dx_ui_text_field_set_text_color(dx_ui_text_field* SELF, DX_RGBA_F32 const* text_color);
+Core_Result dx_ui_text_field_set_text_color(dx_ui_text_field* SELF, DX_RGBA_F32 const* text_color);
 
 /// @}
 
@@ -99,14 +99,14 @@ dx_result dx_ui_text_field_set_text_color(dx_ui_text_field* SELF, DX_RGBA_F32 co
 /// @success <code>*RETURN</code> was assigned a pointer to the font object.
 /// The caller acquired a reference to the font object.
 /// @method{dx_ui_text_field}
-dx_result dx_ui_text_get_font(dx_font** RETURN, dx_ui_text_field* SELF);
+Core_Result dx_ui_text_get_font(dx_font** RETURN, dx_ui_text_field* SELF);
 
 /// @brief Set the font.
 /// @param font A pointer to the font..
 /// @success The font was set.
 /// This text field acquired a reference to the font object.
 /// @method{dx_ui_text_field}
-dx_result dx_ui_text_set_font(dx_ui_text_field* SELF, dx_font* font);
+Core_Result dx_ui_text_set_font(dx_ui_text_field* SELF, dx_font* font);
 
 /// @}
 
@@ -116,12 +116,12 @@ dx_result dx_ui_text_set_font(dx_ui_text_field* SELF, dx_font* font);
 /// @param RETURN A pointer to a <code>dx_ui_scrollbar_policy</code> variable.
 /// @success <code>*RETURN</code> was assigned the horizontal scrollbar policy.
 /// @method{dx_ui_text_field}
-dx_result dx_ui_text_field_get_horizontal_scrollbar_policy(dx_ui_scrollbar_policy* RETURN, dx_ui_text_field* SELF);
+Core_Result dx_ui_text_field_get_horizontal_scrollbar_policy(dx_ui_scrollbar_policy* RETURN, dx_ui_text_field* SELF);
 
 /// @brief Set the horizontal scrollbar policy.
 /// @param param scrollbar_policy The scrollbar policy.
 /// @method{dx_ui_text_field}
-dx_result dx_ui_text_field_set_horizontal_scrollbar_policy(dx_ui_text_field* SELF, dx_ui_scrollbar_policy scrollbar_policy);
+Core_Result dx_ui_text_field_set_horizontal_scrollbar_policy(dx_ui_text_field* SELF, dx_ui_scrollbar_policy scrollbar_policy);
 
 /// @}
 
@@ -131,12 +131,12 @@ dx_result dx_ui_text_field_set_horizontal_scrollbar_policy(dx_ui_text_field* SEL
 /// @param RETURN A pointer to a <code>dx_ui_scrollbar_policy</code> variable.
 /// @success <code>*RETURN</code> was assigned the vertical scrollbar policy.
 /// @method{dx_ui_text_field}
-dx_result dx_ui_text_field_get_vertical_scrollbar_policy(dx_ui_scrollbar_policy* RETURN, dx_ui_text_field* SELF);
+Core_Result dx_ui_text_field_get_vertical_scrollbar_policy(dx_ui_scrollbar_policy* RETURN, dx_ui_text_field* SELF);
 
 /// @brief Set the vertical scrollbar policy.
 /// @param param scrollbar_policy The scrollbar policy.
 /// @method{dx_ui_text_field}
-dx_result dx_ui_text_field_set_vertical_scrollbar_policy(dx_ui_text_field* SELF, dx_ui_scrollbar_policy scrollbar_policy);
+Core_Result dx_ui_text_field_set_vertical_scrollbar_policy(dx_ui_text_field* SELF, dx_ui_scrollbar_policy scrollbar_policy);
 
 /// @}
 
@@ -148,20 +148,20 @@ dx_result dx_ui_text_field_set_vertical_scrollbar_policy(dx_ui_text_field* SELF,
 /// A copy of the text was made.
 /// The text object is no longer required by this text field object.
 /// @method{dx_ui_text_field}
-dx_result dx_ui_text_field_set_text(dx_ui_text_field* SELF, dx_string* text);
+Core_Result dx_ui_text_field_set_text(dx_ui_text_field* SELF, Core_String* text);
 
 /// @brief Get the text.
-/// @param RETURN A pointer to a <code>dx_string*</code> variable.
+/// @param RETURN A pointer to a <code>Core_String*</code> variable.
 /// @success <code>*RETURN</code> was assigned a pointer to the font object.
 /// The caller acquired a reference to the font object.
 /// @method{dx_ui_text_field}
-dx_result dx_ui_text_field_get_text(dx_string** RETURN, dx_ui_text_field* SELF);
+Core_Result dx_ui_text_field_get_text(Core_String** RETURN, dx_ui_text_field* SELF);
 
 /// @}
 
 /// @brief Append to the text.
 /// @param text A pointer to the text to append.
 /// @method{dx_ui_text_field}
-dx_result dx_ui_text_field_append_text(dx_ui_text_field* SELF, dx_string* text);
+Core_Result dx_ui_text_field_append_text(dx_ui_text_field* SELF, Core_String* text);
 
 #endif // DX_UI_TEXT_FIELD_H_INCLUDED

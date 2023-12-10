@@ -1,6 +1,6 @@
 #include "dx/core/inline_pointer_hashmap.h"
 
-#include "dx/core/memory.h"
+#include "Core/Memory.h"
 #include "dx/core/safe_mul_nx.h"
 #include "dx/core/inline_pointer_array.h"
 #include "dx/core/_get_best_array_size.h"
@@ -16,18 +16,18 @@ typedef struct _dx_impl _dx_impl;
 /// @param new_capacity The new capacity. Must not be @a 0.
 /// @return The zero value on success. A non-zero value on failure.
 /// @failure The function has set the error variable. In particular, the following error codes are set:
-/// @error #DX_ERROR_INVALID_ARGUMENT @a self is a null pointer.
-/// @error #DX_ERROR_INVALID_ARGUMENT @a new_capacity is smaller than @a 1 or greater than the greatest capacity.
-/// @error #DX_ERROR_ALLOCATION_FAILED an allocation failed.
-static dx_result _dx_impl_set_capacity(_dx_impl* SELF, dx_size new_capacity);
+/// @error #Core_Error_ArgumentInvalid @a self is a null pointer.
+/// @error #Core_Error_ArgumentInvalid @a new_capacity is smaller than @a 1 or greater than the greatest capacity.
+/// @error #Core_Error_AllocationFailed an allocation failed.
+static Core_Result _dx_impl_set_capacity(_dx_impl* SELF, Core_Size new_capacity);
 
-static dx_result _dx_impl_maybe_resize(_dx_impl* SELF);
+static Core_Result _dx_impl_maybe_resize(_dx_impl* SELF);
 
 /// @brief Initialize this implementation.
 /// @param SELF A pointer to an uninitialized _dx_impl object.
 /// @param configuration A pointer to a DX_POINTER_HASHMAP_CONFIGURATION object.
-/// @return #DX_SUCCESS on success. #DX_FAILURE on failure.
-static inline dx_result _dx_impl_initialize(_dx_impl* SELF, DX_INLINE_POINTER_HASHMAP_CONFIGURATION const* configuration);
+/// @return #Core_Success on success. #Core_Failure on failure.
+static inline Core_Result _dx_impl_initialize(_dx_impl* SELF, DX_INLINE_POINTER_HASHMAP_CONFIGURATION const* configuration);
 
 /// @brief Uninitialize this implementation.
 /// @param SELF A pointer to an initialized _dx_impl object.
@@ -35,17 +35,17 @@ static inline void _dx_impl_uninitialize(_dx_impl* self);
 
 /// @brief Clear this implementation.
 /// @param SELF A pointer to this implementation.
-/// @return #DX_SUCCESS on success. #DX_FAILURE on failure.
-static inline dx_result _dx_impl_clear(_dx_impl* self);
+/// @return #Core_Success on success. #Core_Failure on failure.
+static inline Core_Result _dx_impl_clear(_dx_impl* self);
 
 /// @brief Add or update an entry in this hashmap.
 /// @param SELF A pointer to this hashmap.
 /// @param key The key.
 /// @param value The value.
 /// @param replace 
-/// @error #DX_ERROR_ALREADY_EXISTS @a replace is DX_FALSE and an entry for the specified key already exists
-/// @error #DX_ERROR_INVALID_ARGUMENT @a SELF was a null pointer
-static inline dx_result _dx_impl_set(_dx_impl* SELF, dx_inline_pointer_hashmap_key key, dx_inline_pointer_hashmap_value value, bool replace);
+/// @error #DX_ERROR_ALREADY_EXISTS @a replace is Core_False and an entry for the specified key already exists
+/// @error #Core_Error_ArgumentInvalid @a SELF was a null pointer
+static inline Core_Result _dx_impl_set(_dx_impl* SELF, dx_inline_pointer_hashmap_key key, dx_inline_pointer_hashmap_value value, bool replace);
 
 /// @brief Get the value of an entry in this hashmap.
 /// @param RETURN A pointer to a <code>dx_inline_pointer_hashmap_value*</code> variable.
@@ -53,49 +53,49 @@ static inline dx_result _dx_impl_set(_dx_impl* SELF, dx_inline_pointer_hashmap_k
 /// @param key The key.
 /// @success <code>*RETURN</code> was assigned a pointer to the value.
 /// @method-call
-/// @error #DX_ERROR_NOT_FOUND no entry for the specified key was found
-/// @error #DX_ERROR_INVALID_ARGUMENT @a SELF was a null pointer
-static inline dx_result _dx_impl_get(dx_inline_pointer_hashmap_value* RETURN, _dx_impl* SELF, dx_inline_pointer_hashmap_key key);
+/// @error #Core_Error_NotFound no entry for the specified key was found
+/// @error #Core_Error_ArgumentInvalid @a SELF was a null pointer
+static inline Core_Result _dx_impl_get(dx_inline_pointer_hashmap_value* RETURN, _dx_impl* SELF, dx_inline_pointer_hashmap_key key);
 
 /// @brief Remove an entry from this hashmap.
 /// @param SELF A pointer to this hashmap.
 /// @param key The key.
 /// @method-call
-/// @error #DX_ERROR_NOT_FOUND no entry for the specified key was found
-/// @error #DX_ERROR_INVALID_ARGUMENT @a self was a null pointer.
-static inline dx_result _dx_impl_remove(_dx_impl* SELF, dx_inline_pointer_hashmap_key key);
+/// @error #Core_Error_NotFound no entry for the specified key was found
+/// @error #Core_Error_ArgumentInvalid @a self was a null pointer.
+static inline Core_Result _dx_impl_remove(_dx_impl* SELF, dx_inline_pointer_hashmap_key key);
 
 /// @brief Get the size, in elements.
-/// @param RETURN A pointer to a dx_size variable.
+/// @param RETURN A pointer to a Core_Size variable.
 /// @param SELF A pointer to this hashmap.
 /// @success <code>*RETURN</code> was assigned the size.
 /// @method-call
-/// @error #DX_ERROR_INVALID_ARGUMENT @a RETURN was a null pointer.
-/// @error #DX_ERROR_INVALID_ARGUMENT @a SELF was a null pointer.
-static inline dx_result _dx_impl_get_size(dx_size* RETURN, _dx_impl const* SELF);
+/// @error #Core_Error_ArgumentInvalid @a RETURN was a null pointer.
+/// @error #Core_Error_ArgumentInvalid @a SELF was a null pointer.
+static inline Core_Result _dx_impl_get_size(Core_Size* RETURN, _dx_impl const* SELF);
 
 /// @brief Get the capacity, in elements.
-/// @param RETURN A pointer to a dx_size variable.
+/// @param RETURN A pointer to a Core_Size variable.
 /// @param SELF A pointer to this hashmap.
 /// @success <code>*RETURN</code> was assigned the capacity.
 /// @method-call
-/// @error #DX_ERROR_INVALID_ARGUMENT @a RETURN was a null pointer.
-/// @error #DX_ERROR_INVALID_ARGUMENT @a SELF was a null pointer.
-static inline dx_result _dx_impl_get_capacity(dx_size* RETURN, _dx_impl const* SELF);
+/// @error #Core_Error_ArgumentInvalid @a RETURN was a null pointer.
+/// @error #Core_Error_ArgumentInvalid @a SELF was a null pointer.
+static inline Core_Result _dx_impl_get_capacity(Core_Size* RETURN, _dx_impl const* SELF);
 
 /// @brief Get the free capacity, in elements.
-/// @param RETURN A pointer to a dx_size variable.
+/// @param RETURN A pointer to a Core_Size variable.
 /// @param SELF A pointer to this hashmap.
 /// @success <code>*RETURN</code> was assigned the free capacity.
 /// @method-call
-/// @error #DX_ERROR_INVALID_ARGUMENT @a RETURN was a null pointer.
-/// @error #DX_ERROR_INVALID_ARGUMENT @a SELF was a null pointer.
-static inline dx_result _dx_impl_get_free_capacity(dx_size* RETURN, _dx_impl const* SELF);
+/// @error #Core_Error_ArgumentInvalid @a RETURN was a null pointer.
+/// @error #Core_Error_ArgumentInvalid @a SELF was a null pointer.
+static inline Core_Result _dx_impl_get_free_capacity(Core_Size* RETURN, _dx_impl const* SELF);
 
 struct _dx_impl_node {
   _dx_impl_node* next;
   /// @brief The hash value.
-  dx_size hash_value;
+  Core_Size hash_value;
   /// @brief The key.
   dx_inline_pointer_hashmap_key key;
   /// @brief The value.
@@ -109,9 +109,9 @@ struct _dx_impl {
   
   _dx_impl_bucket* buckets;
   /// @brief Size of this hashmap.
-  dx_size size;
+  Core_Size size;
   /// @brief The capacity of this hashmap.
-  dx_size capacity;
+  Core_Size capacity;
   
   /// @brief A pointer to the @a _dx_key_added_callback_impl1 function or a null pointer.
   dx_inline_pointer_hashmap_key_added_callback* key_added_callback;
@@ -133,73 +133,73 @@ struct _dx_impl {
 
 #define _DX_IMPL_LEAST_CAPACITY 1
 
-#define _DX_IMPL_GREATEST_CAPACITY (DX_SIZE_GREATEST / sizeof(_dx_impl_bucket))
+#define _DX_IMPL_GREATEST_CAPACITY (Core_Size_Greatest / sizeof(_dx_impl_bucket))
 
-static _dx_impl_node** _dx_impl_allocate_bucket_array(dx_size n) {
-  dx_size overflow;
-  dx_size n_bytes = dx_mul_sz(n, sizeof(_dx_impl_bucket), &overflow);
+static _dx_impl_node** _dx_impl_allocate_bucket_array(Core_Size n) {
+  Core_Size overflow;
+  Core_Size n_bytes = dx_mul_sz(n, sizeof(_dx_impl_bucket), &overflow);
   if (overflow) {
-    dx_set_error(DX_ERROR_ALLOCATION_FAILED);
+    Core_setError(Core_Error_AllocationFailed);
     return NULL;
   }
   _dx_impl_bucket* buckets = NULL;
-  if (dx_memory_allocate(&buckets, n_bytes)) {
+  if (Core_Memory_allocate((void**)&buckets, n_bytes)) {
     return NULL;
   }
-  for (dx_size i = 0; i < n; ++i) {
+  for (Core_Size i = 0; i < n; ++i) {
     buckets[i] = NULL;
   }
   return buckets;
 }
 
-static dx_result _dx_impl_set_capacity(_dx_impl* SELF, dx_size new_capacity) {
+static Core_Result _dx_impl_set_capacity(_dx_impl* SELF, Core_Size new_capacity) {
   if (!SELF || !new_capacity) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
-  dx_size old_capacity = SELF->capacity;
+  Core_Size old_capacity = SELF->capacity;
   _dx_impl_bucket* old_buckets = SELF->buckets;
   _dx_impl_bucket* new_buckets = _dx_impl_allocate_bucket_array(new_capacity);
   if (!new_buckets) {
-    dx_set_error(DX_ERROR_ALLOCATION_FAILED);
-    return DX_FAILURE;
+    Core_setError(Core_Error_AllocationFailed);
+    return Core_Failure;
   }
-  for (dx_size i = 0; i < old_capacity; ++i) {
+  for (Core_Size i = 0; i < old_capacity; ++i) {
     _dx_impl_bucket* old_bucket = &old_buckets[i];
     while (*old_bucket) {
       _dx_impl_node* node = *old_bucket;
       *old_bucket = node->next;
-      dx_size new_hash_index = node->hash_value % new_capacity;
+      Core_Size new_hash_index = node->hash_value % new_capacity;
       node->next = new_buckets[new_hash_index];
       new_buckets[new_hash_index] = node;
     }
   }
-  dx_memory_deallocate(old_buckets);
+  Core_Memory_deallocate(old_buckets);
   SELF->capacity = new_capacity;
   SELF->buckets = new_buckets;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-static dx_result _dx_impl_maybe_resize(_dx_impl* SELF) {
+static Core_Result _dx_impl_maybe_resize(_dx_impl* SELF) {
   if (SELF->size > SELF->capacity) {
-    dx_size new_capacity;
+    Core_Size new_capacity;
     if (dx_get_best_array_size(&new_capacity, SELF->capacity, 1, _DX_IMPL_LEAST_CAPACITY, _DX_IMPL_GREATEST_CAPACITY, true)) {
-      return DX_FAILURE;
+      return Core_Failure;
     }
     return _dx_impl_set_capacity(SELF, new_capacity);
   }
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-static inline dx_result _dx_impl_initialize(_dx_impl* SELF, DX_INLINE_POINTER_HASHMAP_CONFIGURATION const* configuration) {
+static inline Core_Result _dx_impl_initialize(_dx_impl* SELF, DX_INLINE_POINTER_HASHMAP_CONFIGURATION const* configuration) {
   if (!SELF || !configuration) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
-  static dx_size const INITIAL_CAPACITY = 8;
+  static Core_Size const INITIAL_CAPACITY = 8;
   SELF->buckets = _dx_impl_allocate_bucket_array(INITIAL_CAPACITY);
   if (!SELF->buckets) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
   SELF->size = 0;
   SELF->capacity = INITIAL_CAPACITY;
@@ -210,23 +210,23 @@ static inline dx_result _dx_impl_initialize(_dx_impl* SELF, DX_INLINE_POINTER_HA
   
   SELF->value_added_callback = configuration->value_added_callback;
   SELF->value_removed_callback = configuration->value_removed_callback;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
 static inline void _dx_impl_uninitialize(_dx_impl* SELF) {
   DX_DEBUG_ASSERT(NULL != SELF);
   _dx_impl_clear(SELF);
   DX_DEBUG_ASSERT(NULL != SELF->buckets);
-  dx_memory_deallocate(SELF->buckets);
+  Core_Memory_deallocate(SELF->buckets);
   SELF->buckets = NULL;
 }
 
-static inline dx_result _dx_impl_clear(_dx_impl* self) {
+static inline Core_Result _dx_impl_clear(_dx_impl* self) {
   if (!self) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
-  for (dx_size i = 0, n = self->capacity; i < n; ++i) {
+  for (Core_Size i = 0, n = self->capacity; i < n; ++i) {
     _dx_impl_node** bucket = &self->buckets[i];
     while (*bucket) {
       _dx_impl_node* node = *bucket;
@@ -237,25 +237,25 @@ static inline dx_result _dx_impl_clear(_dx_impl* self) {
       if (self->key_removed_callback) {
         self->key_removed_callback(&node->key);
       }
-      dx_memory_deallocate(node);
+      Core_Memory_deallocate(node);
     }
   }
   self->size = 0;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-static inline dx_result _dx_impl_set(_dx_impl* SELF, dx_inline_pointer_hashmap_key key, dx_inline_pointer_hashmap_value value, dx_bool replace) {
+static inline Core_Result _dx_impl_set(_dx_impl* SELF, dx_inline_pointer_hashmap_key key, dx_inline_pointer_hashmap_value value, Core_Boolean replace) {
   if (!SELF) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
-  dx_size hash_value;
+  Core_Size hash_value;
   SELF->hash_key_callback(&hash_value, &key);
-  dx_size hash_index = hash_value % SELF->capacity;
+  Core_Size hash_index = hash_value % SELF->capacity;
   _dx_impl_node* node;
   for (node = SELF->buckets[hash_index]; NULL != node; node = node->next) {
     if (node->hash_value == hash_value) {
-      dx_bool are_equal;
+      Core_Boolean are_equal;
       SELF->compare_keys_callback(&are_equal, &node->key, &key);
       if (are_equal) {
         break;
@@ -264,8 +264,8 @@ static inline dx_result _dx_impl_set(_dx_impl* SELF, dx_inline_pointer_hashmap_k
   }
   if (node) {
     if (!replace) {
-      dx_set_error(DX_ERROR_EXISTS);
-      return DX_FAILURE;
+      Core_setError(Core_Error_Exists);
+      return Core_Failure;
     }
     //
     if (SELF->key_added_callback) {
@@ -284,8 +284,8 @@ static inline dx_result _dx_impl_set(_dx_impl* SELF, dx_inline_pointer_hashmap_k
     }
     node->value = value;
   } else {
-    if (dx_memory_allocate(&node, sizeof(_dx_impl_node))) {
-      return DX_FAILURE;
+    if (Core_Memory_allocate(&node, sizeof(_dx_impl_node))) {
+      return Core_Failure;
     }
     if (SELF->key_added_callback) {
       SELF->key_added_callback(&key);
@@ -299,50 +299,50 @@ static inline dx_result _dx_impl_set(_dx_impl* SELF, dx_inline_pointer_hashmap_k
     node->next = SELF->buckets[hash_index];
     SELF->buckets[hash_index] = node;
     SELF->size++;
-    dx_error old_error = dx_get_error();
+    Core_Error old_error = Core_getError();
     if (_dx_impl_maybe_resize(SELF)) {
-      dx_set_error(old_error);
+      Core_setError(old_error);
     }
   }
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-static inline dx_result _dx_impl_get(dx_inline_pointer_hashmap_value* RETURN, _dx_impl* SELF, dx_inline_pointer_hashmap_key key) {
+static inline Core_Result _dx_impl_get(dx_inline_pointer_hashmap_value* RETURN, _dx_impl* SELF, dx_inline_pointer_hashmap_key key) {
   if (!RETURN || !SELF) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
-  dx_size hash_value;
+  Core_Size hash_value;
   SELF->hash_key_callback(&hash_value, &key);
-  dx_size hash_index = hash_value % SELF->capacity;
+  Core_Size hash_index = hash_value % SELF->capacity;
   _dx_impl_node* node;
   for (node = SELF->buckets[hash_index]; NULL != node; node = node->next) {
     if (node->hash_value == hash_value) {
-      dx_bool are_equal;
+      Core_Boolean are_equal;
       SELF->compare_keys_callback(&are_equal, &node->key, &key);
       if (are_equal) {
         *RETURN = node->value;
-        return DX_SUCCESS;
+        return Core_Success;
       }
     }
   }
-  dx_set_error(DX_ERROR_NOT_FOUND);
-  return DX_FAILURE;
+  Core_setError(Core_Error_NotFound);
+  return Core_Failure;
 }
 
-static inline dx_result _dx_impl_remove(_dx_impl* SELF, dx_inline_pointer_hashmap_key key) {
+static inline Core_Result _dx_impl_remove(_dx_impl* SELF, dx_inline_pointer_hashmap_key key) {
   if (!SELF) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
-  dx_size hash_value;
+  Core_Size hash_value;
   SELF->hash_key_callback(&hash_value, &key);
-  dx_size hash_index = hash_value % SELF->capacity;
+  Core_Size hash_index = hash_value % SELF->capacity;
   _dx_impl_node** previous;
   _dx_impl_node* current;
   for (previous = &SELF->buckets[hash_index], current = SELF->buckets[hash_index]; NULL != current; previous = &current->next, current = current->next) {
     if (current->hash_value == hash_value) {
-      dx_bool are_equal;
+      Core_Boolean are_equal;
       SELF->compare_keys_callback(&are_equal, &current->key, &key);
       if (are_equal) {
         *previous = current->next;
@@ -352,40 +352,40 @@ static inline dx_result _dx_impl_remove(_dx_impl* SELF, dx_inline_pointer_hashma
         if (SELF->key_removed_callback) {
           SELF->key_removed_callback(&current->key);
         }
-        dx_memory_deallocate(current);
-        return DX_SUCCESS;
+        Core_Memory_deallocate(current);
+        return Core_Success;
       }
     }
   }
-  dx_set_error(DX_ERROR_NOT_FOUND);
-  return DX_FAILURE;
+  Core_setError(Core_Error_NotFound);
+  return Core_Failure;
 }
 
-static inline dx_result _dx_impl_get_size(dx_size* RETURN, _dx_impl const* SELF) {
+static inline Core_Result _dx_impl_get_size(Core_Size* RETURN, _dx_impl const* SELF) {
   if (!RETURN || !SELF) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
   *RETURN = SELF->size;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-static inline dx_result _dx_impl_get_capacity(dx_size* RETURN, _dx_impl const* SELF) {
+static inline Core_Result _dx_impl_get_capacity(Core_Size* RETURN, _dx_impl const* SELF) {
   if (!RETURN || !SELF) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
   *RETURN = SELF->capacity;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-static inline dx_result _dx_impl_get_free_capacity(dx_size* RETURN, _dx_impl const* SELF) {
+static inline Core_Result _dx_impl_get_free_capacity(Core_Size* RETURN, _dx_impl const* SELF) {
   if (!RETURN || !SELF) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
   *RETURN = SELF->capacity - SELF->size;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
@@ -394,83 +394,83 @@ static inline _dx_impl* _DX_IMPL(void* p) {
   return (_dx_impl*)p;
 }
 
-dx_result dx_inline_pointer_hashmap_initialize(dx_inline_pointer_hashmap* SELF, DX_INLINE_POINTER_HASHMAP_CONFIGURATION const* configuration) {
+Core_Result dx_inline_pointer_hashmap_initialize(dx_inline_pointer_hashmap* SELF, DX_INLINE_POINTER_HASHMAP_CONFIGURATION const* configuration) {
   if (!SELF || !configuration) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
   SELF->pimpl = NULL;
-  if (dx_memory_allocate(&SELF->pimpl, sizeof(_dx_impl))) {
-    return DX_FAILURE;
+  if (Core_Memory_allocate(&SELF->pimpl, sizeof(_dx_impl))) {
+    return Core_Failure;
   }
   if (_dx_impl_initialize(_DX_IMPL(SELF->pimpl), configuration)) {
-    dx_memory_deallocate(SELF->pimpl);
+    Core_Memory_deallocate(SELF->pimpl);
     SELF->pimpl = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
 void dx_inline_pointer_hashmap_uninitialize(dx_inline_pointer_hashmap* self) {
   DX_DEBUG_ASSERT(NULL != self);
   DX_DEBUG_ASSERT(NULL != self->pimpl);
   _dx_impl_uninitialize(_DX_IMPL(self->pimpl));
-  dx_memory_deallocate(self->pimpl);
+  Core_Memory_deallocate(self->pimpl);
   self->pimpl = NULL;
 }
 
-dx_result dx_inline_pointer_hashmap_clear(dx_inline_pointer_hashmap* self) {
+Core_Result dx_inline_pointer_hashmap_clear(dx_inline_pointer_hashmap* self) {
   if (!self) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
   return _dx_impl_clear(_DX_IMPL(self->pimpl));
 }
 
-dx_result dx_inline_pointer_hashmap_set(dx_inline_pointer_hashmap* SELF, dx_inline_pointer_hashmap_key key, dx_inline_pointer_hashmap_value value) {
+Core_Result dx_inline_pointer_hashmap_set(dx_inline_pointer_hashmap* SELF, dx_inline_pointer_hashmap_key key, dx_inline_pointer_hashmap_value value) {
   if (!SELF) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
   return _dx_impl_set(_DX_IMPL(SELF->pimpl), key, value, false);
 }
 
-dx_result dx_inline_pointer_hashmap_get(dx_inline_pointer_hashmap_value* RETURN, dx_inline_pointer_hashmap const* SELF, dx_inline_pointer_hashmap_key key) {
+Core_Result dx_inline_pointer_hashmap_get(dx_inline_pointer_hashmap_value* RETURN, dx_inline_pointer_hashmap const* SELF, dx_inline_pointer_hashmap_key key) {
   if (!SELF) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
   return _dx_impl_get(RETURN, _DX_IMPL(SELF->pimpl), key);
 }
 
-dx_result dx_inline_pointer_hashmap_remove(dx_inline_pointer_hashmap* SELF, dx_inline_pointer_hashmap_key key) {
+Core_Result dx_inline_pointer_hashmap_remove(dx_inline_pointer_hashmap* SELF, dx_inline_pointer_hashmap_key key) {
   if (!SELF) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
   return _dx_impl_remove(_DX_IMPL(SELF->pimpl), key);
 }
 
-dx_result dx_inline_pointer_hashmap_get_size(dx_size* RETURN, dx_inline_pointer_hashmap const* SELF) {
+Core_Result dx_inline_pointer_hashmap_get_size(Core_Size* RETURN, dx_inline_pointer_hashmap const* SELF) {
   if (!SELF) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
   return _dx_impl_get_size(RETURN, _DX_IMPL(SELF->pimpl));
 }
 
-dx_result dx_inline_pointer_hashmap_get_capacity(dx_size* RETURN, dx_inline_pointer_hashmap const* SELF) {
+Core_Result dx_inline_pointer_hashmap_get_capacity(Core_Size* RETURN, dx_inline_pointer_hashmap const* SELF) {
   if (!SELF) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
   return _dx_impl_get_capacity(RETURN, _DX_IMPL(SELF->pimpl));
 }
 
-dx_result dx_inline_pointer_hashmap_get_free_capacity(dx_size* RETURN, dx_inline_pointer_hashmap const* SELF) {
+Core_Result dx_inline_pointer_hashmap_get_free_capacity(Core_Size* RETURN, dx_inline_pointer_hashmap const* SELF) {
   if (!SELF) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
   return _dx_impl_get_free_capacity(RETURN, _DX_IMPL(SELF->pimpl));
 }
@@ -483,7 +483,7 @@ static inline _dx_impl_iterator* _DX_IMPL_ITERATOR(void* p) {
 }
 struct _dx_impl_iterator {
   _dx_impl* target;
-  dx_size bucket;
+  Core_Size bucket;
   _dx_impl_node** previous;
   _dx_impl_node* current;
 };
@@ -519,14 +519,14 @@ static inline void _dx_impl_increment(_dx_impl_iterator* self) {
   }
 }
 
-dx_result dx_inline_pointer_hashmap_iterator_initialize(dx_inline_pointer_hashmap_iterator* SELF, dx_inline_pointer_hashmap* target) {
+Core_Result dx_inline_pointer_hashmap_iterator_initialize(dx_inline_pointer_hashmap_iterator* SELF, dx_inline_pointer_hashmap* target) {
   if (!SELF) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
   _dx_impl_iterator* pimpl = NULL;
-  if (dx_memory_allocate(&pimpl, sizeof(_dx_impl_iterator))) {
-    return DX_FAILURE;
+  if (Core_Memory_allocate(&pimpl, sizeof(_dx_impl_iterator))) {
+    return Core_Failure;
   }
   pimpl->target = _DX_IMPL(target->pimpl);
   pimpl->bucket = 0;
@@ -534,67 +534,67 @@ dx_result dx_inline_pointer_hashmap_iterator_initialize(dx_inline_pointer_hashma
   pimpl->current = NULL;
   _dx_impl_increment(pimpl);
   SELF->pimpl = pimpl;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
 void dx_inline_pointer_hashmap_iterator_uninitialize(dx_inline_pointer_hashmap_iterator* SELF) {
   _dx_impl_iterator* pimpl = _DX_IMPL_ITERATOR(SELF->pimpl);
-  dx_memory_deallocate(pimpl);
+  Core_Memory_deallocate(pimpl);
 }
 
-dx_result dx_inline_pointer_hashmap_iterator_next(dx_inline_pointer_hashmap_iterator* SELF) {
+Core_Result dx_inline_pointer_hashmap_iterator_next(dx_inline_pointer_hashmap_iterator* SELF) {
   _dx_impl_iterator* pimpl = _DX_IMPL_ITERATOR(SELF->pimpl);
   _dx_impl_increment(pimpl);
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-dx_result dx_inline_pointer_hashmap_iterator_has_entry(dx_bool* RETURN, dx_inline_pointer_hashmap_iterator* SELF) {
+Core_Result dx_inline_pointer_hashmap_iterator_has_entry(Core_Boolean* RETURN, dx_inline_pointer_hashmap_iterator* SELF) {
   if (!RETURN || !SELF) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
   _dx_impl_iterator* pimpl = _DX_IMPL_ITERATOR(SELF->pimpl);
   *RETURN = NULL != pimpl->current;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-dx_result dx_inline_pointer_hashmap_iterator_get_value(dx_inline_pointer_hashmap_value* RETURN, dx_inline_pointer_hashmap_iterator* SELF) {
+Core_Result dx_inline_pointer_hashmap_iterator_get_value(dx_inline_pointer_hashmap_value* RETURN, dx_inline_pointer_hashmap_iterator* SELF) {
   if (!RETURN || !SELF) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
   _dx_impl_iterator* pimpl = _DX_IMPL_ITERATOR(SELF->pimpl);
   if (!pimpl->current) {
-    dx_set_error(DX_ERROR_INVALID_OPERATION);
-    return DX_FAILURE;
+    Core_setError(Core_Error_OperationInvalid);
+    return Core_Failure;
   }
   *RETURN = pimpl->current->value;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-dx_result dx_inline_pointer_hashmap_iterator_get_key(dx_inline_pointer_hashmap_key* RETURN, dx_inline_pointer_hashmap_iterator* SELF) {
+Core_Result dx_inline_pointer_hashmap_iterator_get_key(dx_inline_pointer_hashmap_key* RETURN, dx_inline_pointer_hashmap_iterator* SELF) {
   if (!RETURN || !SELF) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
   _dx_impl_iterator* pimpl = _DX_IMPL_ITERATOR(SELF->pimpl);
   if (!pimpl->current) {
-    dx_set_error(DX_ERROR_INVALID_OPERATION);
-    return DX_FAILURE;
+    Core_setError(Core_Error_OperationInvalid);
+    return Core_Failure;
   }
   *RETURN = pimpl->current->key;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-dx_result dx_inline_pointer_hashmap_iterator_remove(dx_inline_pointer_hashmap_iterator* SELF) {
+Core_Result dx_inline_pointer_hashmap_iterator_remove(dx_inline_pointer_hashmap_iterator* SELF) {
   if (!SELF) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
   _dx_impl_iterator* pimpl = _DX_IMPL_ITERATOR(SELF->pimpl);
   if (!pimpl->current) {
-    dx_set_error(DX_ERROR_INVALID_OPERATION);
-    return DX_FAILURE;
+    Core_setError(Core_Error_OperationInvalid);
+    return Core_Failure;
   }
   _dx_impl_node** previous = pimpl->previous;
   _dx_impl_node* current = pimpl->current;
@@ -609,83 +609,83 @@ dx_result dx_inline_pointer_hashmap_iterator_remove(dx_inline_pointer_hashmap_it
     // Only if the removed node was the last in the bucket and hence pimpl->current is now a null pointer.
     _dx_impl_increment(pimpl);
   }
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-dx_result dx_inline_pointer_hashmap_get_keys(dx_inline_pointer_hashmap* SELF, dx_inline_pointer_array* target) {
+Core_Result dx_inline_pointer_hashmap_get_keys(dx_inline_pointer_hashmap* SELF, dx_inline_pointer_array* target) {
   _dx_impl* pimpl = _DX_IMPL(SELF->pimpl);
   dx_inline_pointer_hashmap_iterator it;
   if (dx_inline_pointer_array_ensure_free_capacity(target, pimpl->size)) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
   if (dx_inline_pointer_hashmap_iterator_initialize(&it, SELF)) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
-  dx_bool has_entry;
+  Core_Boolean has_entry;
   if (dx_inline_pointer_hashmap_iterator_has_entry(&has_entry, &it)) {
     dx_inline_pointer_hashmap_iterator_uninitialize(&it);
-    return DX_FAILURE;
+    return Core_Failure;
   }
   while (has_entry) {
     dx_inline_pointer_hashmap_key key = NULL;
     if (dx_inline_pointer_hashmap_iterator_get_key(&key, &it)) {
       dx_inline_pointer_hashmap_iterator_uninitialize(&it);
-      return DX_FAILURE;
+      return Core_Failure;
     }
     if (dx_inline_pointer_array_append(target, key)) {
       dx_inline_pointer_hashmap_iterator_uninitialize(&it);
-      return DX_FAILURE;
+      return Core_Failure;
     }
     if (dx_inline_pointer_hashmap_iterator_next(&it)) {
       dx_inline_pointer_hashmap_iterator_uninitialize(&it);
-      return DX_FAILURE;
+      return Core_Failure;
     }
     if (dx_inline_pointer_hashmap_iterator_has_entry(&has_entry, &it)) {
       dx_inline_pointer_hashmap_iterator_uninitialize(&it);
-      return DX_FAILURE;
+      return Core_Failure;
     }
   }
   dx_inline_pointer_hashmap_iterator_uninitialize(&it);
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-dx_result dx_inline_pointer_hashmap_get_values(dx_inline_pointer_hashmap* SELF, dx_inline_pointer_array* target) {
+Core_Result dx_inline_pointer_hashmap_get_values(dx_inline_pointer_hashmap* SELF, dx_inline_pointer_array* target) {
   _dx_impl* pimpl = _DX_IMPL(SELF->pimpl);
   dx_inline_pointer_hashmap_iterator it;
   if (dx_inline_pointer_array_ensure_free_capacity(target, pimpl->size)) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
   if (dx_inline_pointer_hashmap_iterator_initialize(&it, SELF)) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
-  dx_bool has_entry;
+  Core_Boolean has_entry;
   if (dx_inline_pointer_hashmap_iterator_has_entry(&has_entry, &it)) {
     dx_inline_pointer_hashmap_iterator_uninitialize(&it);
-    return DX_FAILURE;
+    return Core_Failure;
   }
   while (has_entry) {
     dx_inline_pointer_hashmap_value value = NULL;
     if (dx_inline_pointer_hashmap_iterator_get_value(&value, &it)) {
       dx_inline_pointer_hashmap_iterator_uninitialize(&it);
-      return DX_FAILURE;
+      return Core_Failure;
     }
     if (dx_inline_pointer_array_append(target, value)) {
       dx_inline_pointer_hashmap_iterator_uninitialize(&it);
-      return DX_FAILURE;
+      return Core_Failure;
     }
     if (dx_inline_pointer_hashmap_iterator_next(&it)) {
       dx_inline_pointer_hashmap_iterator_uninitialize(&it);
-      return DX_FAILURE;
+      return Core_Failure;
     }
     if (dx_inline_pointer_hashmap_iterator_has_entry(&has_entry, &it)) {
       dx_inline_pointer_hashmap_iterator_uninitialize(&it);
-      return DX_FAILURE;
+      return Core_Failure;
     }
   }
   dx_inline_pointer_hashmap_iterator_uninitialize(&it);
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/

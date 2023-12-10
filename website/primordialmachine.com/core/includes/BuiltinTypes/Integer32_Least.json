@@ -1,0 +1,9 @@
+{
+  "type" : "symbolic-constant",
+  "last-update" : "2023-12-18",
+  "indices" : "core",
+  "name" : "Core_Integer32_Least",
+  "id" : "core-integer32-least",
+  "signature" : "#define Core_Integer32_Least &lt;implementation&gt;",
+  "description" : "The least value of type @{code('Core_Integer32')}."
+}

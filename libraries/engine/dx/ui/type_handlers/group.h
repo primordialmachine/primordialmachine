@@ -27,8 +27,8 @@ struct dx_ui_type_handlers_group_dispatch {
   dx_ui_type_handler_dispatch _parent;
 };
 
-dx_result dx_ui_type_handlers_group_construct(dx_ui_type_handlers_group* SELF);
+Core_Result dx_ui_type_handlers_group_construct(dx_ui_type_handlers_group* SELF);
 
-dx_result dx_ui_type_handlers_group_create(dx_ui_type_handlers_group** RETURN);
+Core_Result dx_ui_type_handlers_group_create(dx_ui_type_handlers_group** RETURN);
 
 #endif // DX_UI_TYPE_HANDLERS_GROUP_H_INCLUDED

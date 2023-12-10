@@ -24,15 +24,15 @@ static inline dx_assets_system_dispatch* DX_ASSETS_SYSTEM_DISPATCH(void* p) {
 
 struct dx_assets_system_dispatch {
   dx_system_dispatch _parent;
-  dx_result(*get_context)(dx_assets_context**, dx_assets_system*);
+  Core_Result(*get_context)(dx_assets_context**, dx_assets_system*);
 };
 
 /// @brief Construct this system.
 /// @constructor{dx_assets_system}
-dx_result dx_assets_system_construct(dx_assets_system* SELF);
+Core_Result dx_assets_system_construct(dx_assets_system* SELF);
 
 /// @create-operator{dx_assets_system}
-dx_result dx_assets_system_create(dx_assets_system** RETURN);
+Core_Result dx_assets_system_create(dx_assets_system** RETURN);
 
 /// @brief Get the Assets context.
 /// @param RETURN A pointer to a <code>dx_assets_context*</code> variable.
@@ -42,7 +42,7 @@ dx_result dx_assets_system_create(dx_assets_system** RETURN);
 /// @warning
 /// This function fails if this Assets system is not started.
 /// @method{dx_assets_system}
-static inline dx_result dx_assets_system_get_context(dx_assets_context** RETURN, dx_assets_system* SELF) {
+static inline Core_Result dx_assets_system_get_context(dx_assets_context** RETURN, dx_assets_system* SELF) {
   DX_OBJECT_VIRTUALCALL(dx_assets_system, get_context, RETURN, SELF);
 }
 

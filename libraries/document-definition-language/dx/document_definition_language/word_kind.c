@@ -3,17 +3,17 @@
 DX_DEFINE_ENUMERATION_TYPE("dx.document_definition_language.word_kind",
                            dx_document_definition_language_word_kind);
 
-dx_result dx_document_definition_language_word_kind_to_string(dx_string** RETURN, dx_document_definition_language_word_kind SELF) {
+Core_Result dx_document_definition_language_word_kind_to_string(Core_String** RETURN, dx_document_definition_language_word_kind SELF) {
   switch (SELF) {
   #define DEFINE(SYMBOL, STRING) \
     case SYMBOL: { \
-      return dx_string_create(RETURN, STRING, sizeof(STRING) - 1); \
+      return Core_String_create(RETURN, STRING, sizeof(STRING) - 1); \
     } break;
   #include "dx/document_definition_language/word_kind.i"
   #undef DEFINE
     default: {
-      dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-      return DX_FAILURE;
+      Core_setError(Core_Error_ArgumentInvalid);
+      return Core_Failure;
     } break;
   };
 }

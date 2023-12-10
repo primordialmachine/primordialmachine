@@ -2,7 +2,7 @@
 
 DX_DEFINE_OBJECT_TYPE("dx.assets.material",
                       dx_assets_material,
-                      dx_object);
+                      Core_Object);
 
 static void dx_assets_material_destruct(dx_assets_material* SELF) {
   if (SELF->ambient_color) {
@@ -23,22 +23,14 @@ static void dx_assets_material_destruct(dx_assets_material* SELF) {
   }
 }
 
-static void dx_assets_material_dispatch_construct(dx_assets_material_dispatch* self)
+static void dx_assets_material_constructDispatch(dx_assets_material_dispatch* self)
 {/*Intentionally empty.*/}
 
-dx_result dx_assets_material_construct(dx_assets_material* SELF, dx_string* name) {
-  if (!SELF) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
-  }
-  dx_rti_type* TYPE = dx_assets_material_get_type();
-  if (!TYPE) {
-    return DX_FAILURE;
-  }
-  
+Core_Result dx_assets_material_construct(dx_assets_material* SELF, Core_String* name) {
+  DX_CONSTRUCT_PREFIX(dx_assets_material);
   if (!name) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
   SELF->name = name;
   DX_REFERENCE(SELF->name);
@@ -49,35 +41,35 @@ dx_result dx_assets_material_construct(dx_assets_material* SELF, dx_string* name
   
   SELF->controller = NULL;
 
-  DX_OBJECT(SELF)->type = TYPE;
-  return DX_SUCCESS;
+  CORE_OBJECT(SELF)->type = TYPE;
+  return Core_Success;
 }
 
-dx_result dx_assets_material_create(dx_assets_material** RETURN, dx_string* name) {
-  DX_CREATE_PREFIX(dx_assets_material)
+Core_Result dx_assets_material_create(dx_assets_material** RETURN, Core_String* name) {
+  DX_CREATE_PREFIX(dx_assets_material);
   if (dx_assets_material_construct(SELF, name)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   *RETURN = SELF;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-dx_result dx_assets_material_set_ambient_color(dx_assets_material* SELF, dx_assets_color_rgb_n8* ambient_color) {
+Core_Result dx_assets_material_set_ambient_color(dx_assets_material* SELF, dx_assets_color_rgb_n8* ambient_color) {
   if (!SELF || !ambient_color) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
   if (!SELF->ambient_color) {
-    dx_string* name = NULL;
-    if (dx_string_create(&name, "<anonymous>", sizeof("<anonymous") - 1)) {
-      return DX_FAILURE;
+    Core_String* name = NULL;
+    if (Core_String_create(&name, "<anonymous>", sizeof("<anonymous") - 1)) {
+      return Core_Failure;
     }
     if (dx_asset_reference_create(&SELF->ambient_color, name)) {
       DX_UNREFERENCE(name);
       name = NULL;
-      return DX_FAILURE;
+      return Core_Failure;
     }
     DX_UNREFERENCE(name);
     name = NULL;
@@ -86,14 +78,14 @@ dx_result dx_assets_material_set_ambient_color(dx_assets_material* SELF, dx_asse
   if (SELF->ambient_color->object) {
     DX_UNREFERENCE(SELF->ambient_color->object);
   }
-  SELF->ambient_color->object = DX_OBJECT(ambient_color);
-  return DX_SUCCESS;
+  SELF->ambient_color->object = CORE_OBJECT(ambient_color);
+  return Core_Success;
 }
 
-dx_result dx_assets_material_set_ambient_texture(dx_assets_material* SELF, dx_asset_reference* ambient_texture_reference) {
+Core_Result dx_assets_material_set_ambient_texture(dx_assets_material* SELF, dx_asset_reference* ambient_texture_reference) {
   if (!SELF) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
   if (ambient_texture_reference) {
     DX_REFERENCE(ambient_texture_reference);
@@ -102,5 +94,5 @@ dx_result dx_assets_material_set_ambient_texture(dx_assets_material* SELF, dx_as
     DX_UNREFERENCE(SELF->ambient_texture_reference);
   }
   SELF->ambient_texture_reference = ambient_texture_reference;
-  return DX_SUCCESS;
+  return Core_Success;
 }

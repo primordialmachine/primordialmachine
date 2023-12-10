@@ -26,6 +26,6 @@ struct dx_val_system_factory_dispatch {
 /// @brief Construct this VAL system factory_.
 /// @param SELF A pointer to this VAL system factory object.
 /// @method-call
-dx_result dx_val_system_factory_construct(dx_val_system_factory* SELF);
+Core_Result dx_val_system_factory_construct(dx_val_system_factory* SELF);
 
 #endif // DX_VAL_SYSTEM_FACTORY_H_INCLUDED

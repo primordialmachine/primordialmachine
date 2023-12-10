@@ -44,38 +44,38 @@ static bool _is_digit(char x) {
 /// @param RETURN A pointer to a <code>int</code> variable.
 /// @param start The start of this parse.
 /// @param end The end of this parse.
-/// @return DX_SUCCESS on success, DX_FAILURE on failure.
+/// @return Core_Success on success, Core_Failure on failure.
 /// @success <code>*RETURN</code> was assigned the number of significands.
-static dx_result parse_fractional_digits_specifier(uint8_t* RETURN, char const** start, char const* end);
+static Core_Result parse_fractional_digits_specifier(uint8_t* RETURN, char const** start, char const* end);
 
 /// @param RETURN A pointer to a <code>int</code> variable.
 /// @param start The start of this parse.
 /// @param end The end of this parse.
-/// @return DX_SUCCESS on success, DX_FAILURE on failure.
+/// @return Core_Success on success, Core_Failure on failure.
 /// @success <code>*RETURN</code> was assigned the precision.
-static dx_result parse_type_specifier_bits(uint8_t* RETURN, char const** start, char const* end);
+static Core_Result parse_type_specifier_bits(uint8_t* RETURN, char const** start, char const* end);
 
-static dx_result parse_fractional_digits_specifier(uint8_t* RETURN, char const** start, char const* end) {
+static Core_Result parse_fractional_digits_specifier(uint8_t* RETURN, char const** start, char const* end) {
   // '.'
   if ((*start) == end) {
-    dx_set_error(DX_ERROR_SYNTACTICAL_ERROR);
-    return DX_FAILURE;
+    Core_setError(Core_Error_SyntacticalError);
+    return Core_Failure;
   }
   if (!IS('.')) {
-    dx_set_error(DX_ERROR_SYNTACTICAL_ERROR);
-    return DX_FAILURE;
+    Core_setError(Core_Error_SyntacticalError);
+    return Core_Failure;
   }
   (*start)++;
 
   // digit
   uint8_t temporary = 0;
   if ((*start) == end) {
-    dx_set_error(DX_ERROR_SYNTACTICAL_ERROR);
-    return DX_FAILURE;
+    Core_setError(Core_Error_SyntacticalError);
+    return Core_Failure;
   }
   if (!_is_digit(**start)) {
-    dx_set_error(DX_ERROR_SYNTACTICAL_ERROR);
-    return DX_FAILURE;
+    Core_setError(Core_Error_SyntacticalError);
+    return Core_Failure;
   }
   temporary += (uint8_t)(**start) - (uint8_t)'0';
   (*start)++;
@@ -86,58 +86,58 @@ static dx_result parse_fractional_digits_specifier(uint8_t* RETURN, char const**
     temporary += (uint8_t)(**start) - (uint8_t)'0';
   }
   *RETURN = temporary;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
 
-static dx_result parse_type_specifier_bits(uint8_t* RETURN, char const** start, char const* end) {
+static Core_Result parse_type_specifier_bits(uint8_t* RETURN, char const** start, char const* end) {
   if ((*start) == end) {
-    dx_set_error(DX_ERROR_SYNTACTICAL_ERROR);
-    return DX_FAILURE;
+    Core_setError(Core_Error_SyntacticalError);
+    return Core_Failure;
   }
   
   if (IS('8')) {
     *RETURN = PRINT_PRECISION_8;
-    return DX_SUCCESS;
+    return Core_Success;
   } else if ((**start) == '1') {
     (*start)++;
     if ((*start) == end) {
-      dx_set_error(DX_ERROR_SYNTACTICAL_ERROR);
-      return DX_FAILURE;
+      Core_setError(Core_Error_SyntacticalError);
+      return Core_Failure;
     }
     if (!IS('6')) {
-      dx_set_error(DX_ERROR_SYNTACTICAL_ERROR);
-      return DX_FAILURE;
+      Core_setError(Core_Error_SyntacticalError);
+      return Core_Failure;
     }
     *RETURN = PRINT_PRECISION_16;
-    return DX_SUCCESS;
+    return Core_Success;
   } else if (IS('3')) {
     (*start)++;
     if ((*start) == end) {
-      dx_set_error(DX_ERROR_SYNTACTICAL_ERROR);
-      return DX_FAILURE;
+      Core_setError(Core_Error_SyntacticalError);
+      return Core_Failure;
     }
     if (!IS('2')) {
-      dx_set_error(DX_ERROR_SYNTACTICAL_ERROR);
-      return DX_FAILURE;
+      Core_setError(Core_Error_SyntacticalError);
+      return Core_Failure;
     }
     *RETURN = PRINT_PRECISION_32;
-    return DX_SUCCESS;
+    return Core_Success;
   } else if (IS('6')) {
     (*start)++;
     if ((*start) == end) {
-      dx_set_error(DX_ERROR_SYNTACTICAL_ERROR);
-      return DX_FAILURE;
+      Core_setError(Core_Error_SyntacticalError);
+      return Core_Failure;
     }
     if (!IS('4')) {
-      dx_set_error(DX_ERROR_SYNTACTICAL_ERROR);
-      return DX_FAILURE;
+      Core_setError(Core_Error_SyntacticalError);
+      return Core_Failure;
     }
     *RETURN = PRINT_PRECISION_64;
-    return DX_SUCCESS;
+    return Core_Success;
   } else {
-    dx_set_error(DX_ERROR_SYNTACTICAL_ERROR);
-    return DX_FAILURE;
+    Core_setError(Core_Error_SyntacticalError);
+    return Core_Failure;
   }
 }
 
@@ -289,14 +289,14 @@ int dx__format_v(dx_inline_byte_array* buffer, char const* start, char const* en
       format_spec_t format_spec;
       parse(&format_spec, &current, end);
       if (format_spec.type == PRINT_ERROR) {
-        dx_set_error(DX_ERROR_INVALID_ARGUMENT);
+        Core_setError(Core_Error_ArgumentInvalid);
         return 1;
       }
       switch (format_spec.type) {
       case PRINT_STRING: {
-        dx_string* argument = va_arg(arguments, dx_string*);
+        Core_String* argument = va_arg(arguments, Core_String*);
         if (!argument) {
-          dx_set_error(DX_ERROR_INVALID_ARGUMENT);
+          Core_setError(Core_Error_ArgumentInvalid);
           return 1;
         }
         if (dx_inline_byte_array_append(buffer, argument->bytes, argument->number_of_bytes)) {
@@ -304,7 +304,7 @@ int dx__format_v(dx_inline_byte_array* buffer, char const* start, char const* en
         }
       } break;
       case PRINT_I8: {
-        dx_i8 argument = va_arg(arguments, dx_i8);
+        Core_Integer8 argument = va_arg(arguments, Core_Integer8);
         char temporary[44];
         int result = snprintf(temporary, 44, "%"PRIi8, argument);
         if (result < 0 || result >= 44) {
@@ -315,7 +315,7 @@ int dx__format_v(dx_inline_byte_array* buffer, char const* start, char const* en
         }
       } break;
       case PRINT_I16: {
-        dx_i16 argument = va_arg(arguments, dx_i16);
+        Core_Integer16 argument = va_arg(arguments, Core_Integer16);
         char temporary[44];
         int result = snprintf(temporary, 44, "%"PRIi16, argument);
         if (result < 0 || result >= 44) {
@@ -326,7 +326,7 @@ int dx__format_v(dx_inline_byte_array* buffer, char const* start, char const* en
         }
       } break;
       case PRINT_I32: {
-        dx_i32 argument = va_arg(arguments, dx_i32);
+        Core_Integer32 argument = va_arg(arguments, Core_Integer32);
         char temporary[44];
         int result = snprintf(temporary, 44, "%"PRIi32, argument);
         if (result < 0 || result >= 44) {
@@ -337,7 +337,7 @@ int dx__format_v(dx_inline_byte_array* buffer, char const* start, char const* en
         }
       } break;
       case PRINT_I64: {
-        dx_i64 argument = va_arg(arguments, dx_i64);
+        Core_Integer64 argument = va_arg(arguments, Core_Integer64);
         char temporary[44];
         int result = snprintf(temporary, 44, "%"PRIi64, argument);
         if (result < 0 || result >= 44) {
@@ -348,7 +348,7 @@ int dx__format_v(dx_inline_byte_array* buffer, char const* start, char const* en
         }
       } break;
       case PRINT_N8: {
-        dx_n8 argument = va_arg(arguments, dx_n8);
+        Core_Natural8 argument = va_arg(arguments, Core_Natural8);
         char temporary[44];
         int result = snprintf(temporary, 44, "%"PRIu8, argument);
         if (result < 0 || result >= 44) {
@@ -359,7 +359,7 @@ int dx__format_v(dx_inline_byte_array* buffer, char const* start, char const* en
         }
       } break;
       case PRINT_N16: {
-        dx_n16 argument = va_arg(arguments, dx_n16);
+        Core_Natural16 argument = va_arg(arguments, Core_Natural16);
         char temporary[44];
         int result = snprintf(temporary, 44, "%"PRIu16, argument);
         if (result < 0 || result >= 44) {
@@ -370,7 +370,7 @@ int dx__format_v(dx_inline_byte_array* buffer, char const* start, char const* en
         }
       } break;
       case PRINT_N32: {
-        dx_n32 argument = va_arg(arguments, dx_n32);
+        Core_Natural32 argument = va_arg(arguments, Core_Natural32);
         char temporary[44];
         int result = snprintf(temporary, 44, "%"PRIu32, argument);
         if (result < 0 || result >= 44) {
@@ -381,7 +381,7 @@ int dx__format_v(dx_inline_byte_array* buffer, char const* start, char const* en
         }
       } break;
       case PRINT_N64: {
-        dx_n64 argument = va_arg(arguments, dx_n64);
+        Core_Natural64 argument = va_arg(arguments, Core_Natural64);
         char temporary[44];
         int result = snprintf(temporary, 44, "%"PRIu64, argument);
         if (result < 0 || result >= 44) {
@@ -392,7 +392,7 @@ int dx__format_v(dx_inline_byte_array* buffer, char const* start, char const* en
         }
       } break;
       case PRINT_R32: {
-        dx_f32 argument = va_arg(arguments, dx_f32);
+        Core_Real32 argument = va_arg(arguments, Core_Real32);
         char temporary[44];
         int result = snprintf(temporary, 44, "%.*f", (int)format_spec.fractional_digits, argument);
         if (result < 0 || result >= 44) {
@@ -403,7 +403,7 @@ int dx__format_v(dx_inline_byte_array* buffer, char const* start, char const* en
         }
       } break;
       case PRINT_R64: {
-        dx_f64 argument = va_arg(arguments, dx_f64);
+        Core_Real64 argument = va_arg(arguments, Core_Real64);
         char temporary[44];
         int result = snprintf(temporary, 44, "%.*lf", (int)format_spec.fractional_digits, argument);
         if (result < 0 || result >= 44) {
@@ -421,7 +421,7 @@ int dx__format_v(dx_inline_byte_array* buffer, char const* start, char const* en
       } break;
       default: {
         // Expected: Format specifier. Received: Unknown format specifier prefix.
-        dx_set_error(DX_ERROR_INVALID_ARGUMENT);
+        Core_setError(Core_Error_ArgumentInvalid);
         return 1;
       } break;
       };

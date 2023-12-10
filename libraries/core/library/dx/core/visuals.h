@@ -8,42 +8,42 @@
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-#include "dx/core/visuals/cull_mode.h"
-#include "dx/core/visuals/depth_test_function.h"
-#include "dx/core/visuals/pixel_format.h"
-#include "dx/core/visuals/texture_address_mode.h"
-#include "dx/core/visuals/vertex_format.h"
-#include "dx/core/visuals/winding_mode.h"
+#include "Core/Visuals/CullMode.h"
+#include "Core/Visuals/DepthCompareFunction.h"
+#include "core/Visuals/PixelFormat.h"
+#include "Core/Visuals/TextureAddressMode.h"
+#include "Core/Visuals/VertexFormat.h"
+#include "Core/Visuals/WindingMode.h"
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 /// @ingroup Core_Visuals
 /// @brief Enumeration of texture minification filters.
-DX_DECLARE_ENUMERATION_TYPE("dx.texture_minification_filter",
-                            dx_texture_minification_filter);
+DX_DECLARE_ENUMERATION_TYPE("Core.TextureMinificationFilter",
+                            Core_TextureMinificationFilter);
 
-enum dx_texture_minification_filter {
+enum Core_TextureMinificationFilter {
 
   /// GL_TEXTURE_MIN_FILTER with GL_NEAREST in OpenGL
-  dx_texture_minification_filter_nearest,
+  Core_TextureMinificationFilter_Nearest,
 
   /// GL_TEXTURE_MIN_FILTER with GL_LINEAR in OpenGL
-  dx_texture_minification_filter_linear,
+  Core_TextureMinificationFilter_Linear,
 
 };
 
 /// @ingroup Core_Visuals
 /// @brief Enumeration of texture magnification filters.
-DX_DECLARE_ENUMERATION_TYPE("dx.texture_magnification_filter",
-                            dx_texture_magnification_filter);
+DX_DECLARE_ENUMERATION_TYPE("Core.TextureMagnificationFilter",
+                            Core_TextureMagnificationFilter);
 
-enum dx_texture_magnification_filter {
+enum Core_TextureMagnificationFilter {
 
   /// GL_TEXTURE_MAG_FILTER with GL_NEAREST in OpenGL
-  dx_texture_magnification_filter_nearest,
+  Core_TextureMagnificationFilter_Nearest,
 
   /// GL_TEXTURE_MAG_FILTER with GL_LINEAR in OpenGL
-  dx_texture_magnification_filter_linear,
+  Core_TextureMagnificationFilter_Linear,
 
 };
 

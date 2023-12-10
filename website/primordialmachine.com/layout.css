@@ -6,6 +6,11 @@
  * @description Structural properties (as opposed to colors, typography and decorations).
  */
 
+:root {
+    --nav-menu-level-1-padding: 0.725rem;
+    --nav-menu-level-2-padding: 0.725rem;
+}
+
 main > div.container
 {
   display: block;
@@ -129,28 +134,34 @@ li.nav-menu-element-level-1 > a:visited {
   
   text-decoration: none;
   
-  padding: 0.25rem;
+  padding: var(--nav-menu-level-1-padding);
   
   white-space: nowrap;
 }
 
-li.nav-menu-element-level-1 {  
+li.nav-menu-element-level-1 {
   margin-left: 1rem;
+  position: relative
 }
 
-li.nav-menu-element-level-1:first {
+li.nav-menu-element-level-1:first-child {
   margin-left: 0;
 }
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 /* navigation menu level 2 */
 
+li.nav-menu-element-level-2 a {
+  display: block;
+  width: 100%;
+}
+
 li.nav-menu-element-level-2 a,
 li.nav-menu-element-level-2 a:hover,
 li.nav-menu-element-level-2 a:visited {
   text-decoration: none;
   
-  padding: 0.25rem;
+  padding: var(--nav-menu-level-2-padding);
   
   white-space: nowrap;
 }
@@ -166,6 +177,8 @@ li.nav-menu-element-level-2 a:visited {
   border-radius: 0.25rem;
   
   margin-top: 1rem;
+  
+    padding: var(--nav-menu-level-2-padding);
 }
 
 .nav-menu-level-2.opened {
@@ -174,4 +187,9 @@ li.nav-menu-element-level-2 a:visited {
 
 .nav-menu-level-2.closed {
   display: none;
+}
+
+.nav-menu-level-2.open-left {
+  position: absolute;
+  right: 0;
 }

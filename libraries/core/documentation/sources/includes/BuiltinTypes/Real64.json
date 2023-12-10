@@ -1,0 +1,9 @@
+{
+  "type" : "typedef",
+  "last-update" : "2023-12-18",
+  "indices" : "core",
+  "name" : "Core_Real64",
+  "id" : "core-real64",
+  "signature" : "typedef &lt;implementation&gt; Core_Real64;",
+  "description" : "An IEEE 754 64 bit floating point value. This usually is an alias of @{code('double')}."
+}

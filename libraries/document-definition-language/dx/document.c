@@ -6,41 +6,38 @@
 
 DX_DEFINE_OBJECT_TYPE("dx.text_line",
                       dx_text_range,
-                      dx_object);
+                      Core_Object);
 
 static void dx_text_range_destruct(dx_text_range* SELF)
 {/*Intentionally empty.*/}
 
-static void dx_text_range_dispatch_construct(dx_text_range_dispatch* SELF)
+static void dx_text_range_constructDispatch(dx_text_range_dispatch* SELF)
 {/*Intentionally empty.*/}
 
-dx_result dx_text_range_construct(dx_text_range* SELF, dx_size start, dx_size length) {
-  dx_rti_type* TYPE = dx_text_range_get_type();
-  if (!TYPE) {
-    return DX_FAILURE;
-  }
+Core_Result dx_text_range_construct(dx_text_range* SELF, Core_Size start, Core_Size length) {
+  DX_CONSTRUCT_PREFIX(dx_text_range);
   SELF->start = start;
   SELF->length = length;
-  DX_OBJECT(SELF)->type = TYPE;
-  return DX_SUCCESS;
+  CORE_OBJECT(SELF)->type = TYPE;
+  return Core_Success;
 }
 
-dx_result dx_text_range_create(dx_text_range** RETURN, dx_size start, dx_size length) {
-  DX_CREATE_PREFIX(dx_text_range)
+Core_Result dx_text_range_create(dx_text_range** RETURN, Core_Size start, Core_Size length) {
+  DX_CREATE_PREFIX(dx_text_range);
   if (dx_text_range_construct(SELF, start, length)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   *RETURN = SELF;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 DX_DEFINE_OBJECT_TYPE("dx.text_document",
                       dx_text_document,
-                      dx_object);
+                      Core_Object);
 
 static void dx_text_document_destruct(dx_text_document* SELF) {
   DX_UNREFERENCE(SELF->lines);
@@ -49,83 +46,80 @@ static void dx_text_document_destruct(dx_text_document* SELF) {
   SELF->text = NULL;
 }
 
-static void dx_text_document_dispatch_construct(dx_text_document_dispatch* SELF)
+static void dx_text_document_constructDispatch(dx_text_document_dispatch* SELF)
 {/*Intentionally empty.*/}
 
-dx_result dx_text_document_construct(dx_text_document* SELF) {
-  dx_rti_type* TYPE = dx_text_document_get_type();
-  if (!TYPE) {
-    return DX_FAILURE;
-  }
+Core_Result dx_text_document_construct(dx_text_document* SELF) {
+  DX_CONSTRUCT_PREFIX(dx_text_document);
   if (dx_object_array_create(&SELF->lines, 0)) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
   if (dx_string_buffer_create(&SELF->text)) {
     DX_UNREFERENCE(SELF->lines);
     SELF->lines = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
-  DX_OBJECT(SELF)->type = TYPE;
-  return DX_SUCCESS;
+  CORE_OBJECT(SELF)->type = TYPE;
+  return Core_Success;
 }
 
-dx_result dx_text_document_create(dx_text_document** RETURN) {
-  DX_CREATE_PREFIX(dx_text_document)
+Core_Result dx_text_document_create(dx_text_document** RETURN) {
+  DX_CREATE_PREFIX(dx_text_document);
   if (dx_text_document_construct(SELF)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   *RETURN = SELF;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-static dx_result get_last_line_or_null(dx_text_range** RETURN, dx_text_document* SELF) {
-  dx_size size = 0;
+static Core_Result get_last_line_or_null(dx_text_range** RETURN, dx_text_document* SELF) {
+  Core_Size size = 0;
   if (dx_object_array_get_size(&size, SELF->lines)) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
   if (size == 0) {
     *RETURN = NULL;
-    return DX_SUCCESS;
+    return Core_Success;
   }
-  return dx_object_array_get_at((dx_object**)RETURN, SELF->lines, size - 1);
+  return dx_object_array_get_at((Core_Object**)RETURN, SELF->lines, size - 1);
 }
 
-static dx_result dx_string_buffer_ends_with_newline(dx_bool* RETURN, dx_string_buffer* SELF) {
+static Core_Result dx_string_buffer_ends_with_newline(Core_Boolean* RETURN, dx_string_buffer* SELF) {
   if (SELF->backend.size < 1) {
-    *RETURN = DX_FALSE;
-    return DX_SUCCESS;
+    *RETURN = Core_False;
+    return Core_Success;
   }
   *RETURN = (SELF->backend.elements[SELF->backend.size - 1] == '\n')
          || (SELF->backend.elements[SELF->backend.size - 1] == '\r');
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-static dx_result dx_text_document_append_lines(dx_text_document* SELF, dx_object_array* lines) {
-  dx_size existing_number_of_lines = 0, number_of_lines = 0;
+static Core_Result dx_text_document_append_lines(dx_text_document* SELF, dx_object_array* lines) {
+  Core_Size existing_number_of_lines = 0, number_of_lines = 0;
   if (dx_object_array_get_size(&existing_number_of_lines, SELF->lines) || dx_object_array_get_size(&number_of_lines, lines)) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
   // if the array is empty, there is nothing to do.
   if (0 == number_of_lines) {
-    return DX_SUCCESS;
+    return Core_Success;
   }
   // if the last existing line does not end with a newline,
   // append the first (incoming) line to that line.
   dx_text_range* last_line = NULL;
   if (get_last_line_or_null(&last_line, SELF)) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
-  dx_size i = 0;
+  Core_Size i = 0;
   if (last_line) {
-    dx_bool ends_with_newline = false;
+    Core_Boolean ends_with_newline = false;
     if (dx_string_buffer_ends_with_newline(&ends_with_newline, SELF->text)) {
-      return DX_FAILURE;
+      return Core_Failure;
     }
     dx_text_range* current_line = NULL;
-    if (dx_object_array_get_at((dx_object**)&current_line, lines, 0)) {
-      return DX_FAILURE;
+    if (dx_object_array_get_at((Core_Object**)&current_line, lines, 0)) {
+      return Core_Failure;
     }
     if (!ends_with_newline) {
       last_line->length += current_line->length;
@@ -135,50 +129,50 @@ static dx_result dx_text_document_append_lines(dx_text_document* SELF, dx_object
   // add the remaining lines.
   for (; i < number_of_lines; ++i) {
     dx_text_range* line = NULL;
-    if (dx_object_array_get_at((dx_object**)&line, lines, i)) {
-      return DX_FAILURE;
+    if (dx_object_array_get_at((Core_Object**)&line, lines, i)) {
+      return Core_Failure;
     }
-    if (dx_object_array_append(SELF->lines, DX_OBJECT(line))) {
-      return DX_FAILURE;
+    if (dx_object_array_append(SELF->lines, CORE_OBJECT(line))) {
+      return Core_Failure;
     }
   }
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-static dx_result parse(dx_object_array** RETURN, dx_string* text) {
+static Core_Result parse(dx_object_array** RETURN, Core_String* text) {
   dx_object_array* lines;
   if (dx_object_array_create(&lines, 0)) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
   // Scan the text.
   dx_document_definition_language_scanner* scanner = NULL;
   if (dx_document_definition_language_scanner_create(&scanner)) {
     DX_UNREFERENCE(lines);
     lines = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
-  dx_size number_of_bytes = 0;
-  if (dx_string_get_number_of_bytes(&number_of_bytes, text)) {
+  Core_Size number_of_bytes = 0;
+  if (Core_String_getNumberOfBytes(&number_of_bytes, text)) {
     DX_UNREFERENCE(scanner);
     scanner = NULL;
     DX_UNREFERENCE(lines);
     lines = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   void const* bytes = NULL;
-  if (dx_string_get_bytes(&bytes, text)) {
+  if (Core_String_getBytes(&bytes, text)) {
     DX_UNREFERENCE(scanner);
     scanner = NULL;
     DX_UNREFERENCE(lines);
     lines = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   if (dx_scanner_set(DX_SCANNER(scanner), bytes, number_of_bytes)) {
     DX_UNREFERENCE(scanner);
     scanner = NULL;
     DX_UNREFERENCE(lines);
     lines = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   dx_document_definition_language_word_kind word_kind;
   // start of input
@@ -187,42 +181,42 @@ static dx_result parse(dx_object_array** RETURN, dx_string* text) {
     scanner = NULL;
     DX_UNREFERENCE(lines);
     lines = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   if (word_kind != dx_document_definition_language_word_kind_start_of_input) {
     DX_UNREFERENCE(scanner);
     scanner = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   if (dx_scanner_step(DX_SCANNER(scanner))) {
     DX_UNREFERENCE(scanner);
     scanner = NULL;
     DX_UNREFERENCE(lines);
     lines = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   // lines*
   if (dx_document_definition_language_scanner_get_word_kind(&word_kind, scanner)) {
     DX_UNREFERENCE(scanner);
     scanner = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   while (dx_document_definition_language_word_kind_line == word_kind) {
-    dx_size word_start_offset = 0,
+    Core_Size word_start_offset = 0,
       word_end_offset = 0;
     if (dx_scanner_get_word_start_offset(&word_start_offset, DX_SCANNER(scanner))) {
       DX_UNREFERENCE(scanner);
       scanner = NULL;
       DX_UNREFERENCE(lines);
       lines = NULL;
-      return DX_FAILURE;
+      return Core_Failure;
     }
     if (dx_scanner_get_word_end_offset(&word_end_offset, DX_SCANNER(scanner))) {
       DX_UNREFERENCE(scanner);
       scanner = NULL;
       DX_UNREFERENCE(lines);
       lines = NULL;
-      return DX_FAILURE;
+      return Core_Failure;
     }
     dx_text_range* current_line = NULL;
     if (dx_text_range_create(&current_line, word_start_offset, word_end_offset - word_start_offset)) {
@@ -230,16 +224,16 @@ static dx_result parse(dx_object_array** RETURN, dx_string* text) {
       scanner = NULL;
       DX_UNREFERENCE(lines);
       lines = NULL;
-      return DX_FAILURE;
+      return Core_Failure;
     }
-    if (dx_object_array_append(lines, DX_OBJECT(current_line))) {
+    if (dx_object_array_append(lines, CORE_OBJECT(current_line))) {
       DX_UNREFERENCE(current_line);
       current_line = NULL;
       DX_UNREFERENCE(scanner);
       scanner = NULL;
       DX_UNREFERENCE(lines);
       lines = NULL;
-      return DX_FAILURE;
+      return Core_Failure;
     }
     DX_UNREFERENCE(current_line);
     current_line = NULL;
@@ -248,14 +242,14 @@ static dx_result parse(dx_object_array** RETURN, dx_string* text) {
       scanner = NULL;
       DX_UNREFERENCE(lines);
       lines = NULL;
-      return DX_FAILURE;
+      return Core_Failure;
     }
     if (dx_document_definition_language_scanner_get_word_kind(&word_kind, scanner)) {
       DX_UNREFERENCE(scanner);
       scanner = NULL;
       DX_UNREFERENCE(lines);
       lines = NULL;
-      return DX_FAILURE;
+      return Core_Failure;
     }
   }
   // end of input
@@ -264,69 +258,69 @@ static dx_result parse(dx_object_array** RETURN, dx_string* text) {
     scanner = NULL;
     DX_UNREFERENCE(lines);
     lines = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   DX_UNREFERENCE(scanner);
   scanner = NULL;
   
   *RETURN = lines;
 
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-dx_result dx_text_document_set_text(dx_text_document* SELF, dx_string* text) {
+Core_Result dx_text_document_set_text(dx_text_document* SELF, Core_String* text) {
   dx_object_array* lines = NULL;
   if (parse(&lines, text)) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
-  dx_size number_of_lines;
+  Core_Size number_of_lines;
   if (dx_object_array_get_size(&number_of_lines, lines)) {
     DX_UNREFERENCE(lines);
     lines = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   dx_object_array_clear(SELF->lines);
   if (dx_text_document_append_lines(SELF, lines)) {
     DX_UNREFERENCE(lines);
     lines = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   DX_UNREFERENCE(lines);
   lines = NULL;
   if (dx_string_buffer_set_string(SELF->text, text)) {
     /// @todo Can we recover?
-    return DX_FAILURE;
+    return Core_Failure;
   }
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-dx_result dx_text_document_get_text(dx_string** RETURN, dx_text_document* SELF) {
+Core_Result dx_text_document_get_text(Core_String** RETURN, dx_text_document* SELF) {
   return dx_string_buffer_to_string(RETURN, SELF->text);
 }
 
-dx_result dx_text_document_append_text(dx_text_document* SELF, dx_string* text) {
+Core_Result dx_text_document_append_text(dx_text_document* SELF, Core_String* text) {
   // Get the start offset.
-  dx_size start_offset;
+  Core_Size start_offset;
   if (dx_string_buffer_get_number_of_bytes(&start_offset, SELF->text)) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
   dx_object_array* lines = NULL;
   if (parse(&lines, text)) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
-  dx_size number_of_lines;
+  Core_Size number_of_lines;
   if (dx_object_array_get_size(&number_of_lines, lines)) {
     DX_UNREFERENCE(lines);
     lines = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
 
-  for (dx_size i = 0; i < number_of_lines; ++i) {
+  for (Core_Size i = 0; i < number_of_lines; ++i) {
     dx_text_range* line = NULL;
-    if (dx_object_array_get_at((dx_object**) & line, lines, i)) {
+    if (dx_object_array_get_at((Core_Object**) & line, lines, i)) {
       DX_UNREFERENCE(lines);
       lines = NULL;
-      return DX_FAILURE;
+      return Core_Failure;
     }
     line->start += start_offset;
   }
@@ -334,15 +328,15 @@ dx_result dx_text_document_append_text(dx_text_document* SELF, dx_string* text) 
   if (dx_text_document_append_lines(SELF, lines)) {
     DX_UNREFERENCE(lines);
     lines = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   DX_UNREFERENCE(lines);
   lines = NULL;
   if (dx_string_buffer_append_string(SELF->text, text)) {
     /// @todo Can we recover?
-    return DX_FAILURE;
+    return Core_Failure;
   }
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/

@@ -5,9 +5,9 @@
 
 DX_DEFINE_OBJECT_TYPE("dx.val.gl.wgl.window",
                       dx_val_gl_wgl_window,
-                      dx_object);
+                      Core_Object);
 
-static dx_result get_canvas_size(dx_val_gl_wgl_window* SELF, dx_i32* width, dx_i32* height);
+static Core_Result get_canvas_size(dx_val_gl_wgl_window* SELF, Core_Integer32* width, Core_Integer32* height);
 
 static void dx_val_gl_wgl_window_destruct(dx_val_gl_wgl_window* SELF) {
   if (SELF->dc) {
@@ -23,21 +23,18 @@ static void dx_val_gl_wgl_window_destruct(dx_val_gl_wgl_window* SELF) {
   SELF->application = NULL;
 }
 
-static void dx_val_gl_wgl_window_dispatch_construct(dx_val_gl_wgl_window_dispatch* SELF) {
-  DX_VAL_GL_WINDOW_DISPATCH(SELF)->get_canvas_size = (dx_result(*)(dx_val_gl_window*,dx_i32*,dx_i32*)) & get_canvas_size;
+static void dx_val_gl_wgl_window_constructDispatch(dx_val_gl_wgl_window_dispatch* SELF) {
+  DX_VAL_GL_WINDOW_DISPATCH(SELF)->get_canvas_size = (Core_Result(*)(dx_val_gl_window*,Core_Integer32*,Core_Integer32*)) & get_canvas_size;
 }
 
-dx_result dx_val_gl_wgl_window_construct(dx_val_gl_wgl_window* SELF, dx_gl_wgl_application* application) {
-  dx_rti_type* TYPE = dx_val_gl_wgl_window_get_type();
-  if (!TYPE) {
-    return DX_FAILURE;
-  }
+Core_Result dx_val_gl_wgl_window_construct(dx_val_gl_wgl_window* SELF, dx_gl_wgl_application* application) {
+  DX_CONSTRUCT_PREFIX(dx_val_gl_wgl_window);
   if (!application) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
   if (dx_val_gl_window_construct(DX_VAL_GL_WINDOW(SELF))) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
   SELF->application = application;
   DX_REFERENCE(application);
@@ -57,7 +54,7 @@ dx_result dx_val_gl_wgl_window_construct(dx_val_gl_wgl_window* SELF, dx_gl_wgl_a
     DX_UNREFERENCE(application);
     application = NULL;
     dx_log("unable to create window\n", sizeof("unable to create window\n") - 1);
-    return DX_FAILURE;
+    return Core_Failure;
   }
   SELF->dc = GetDC(SELF->wnd);
   if (!SELF->dc) {
@@ -66,31 +63,31 @@ dx_result dx_val_gl_wgl_window_construct(dx_val_gl_wgl_window* SELF, dx_gl_wgl_a
     DX_UNREFERENCE(application);
     application = NULL;
     dx_log("unable to create drawing context\n", sizeof("unable to create drawing context\n") - 1);
-    return DX_FAILURE;
+    return Core_Failure;
   }
-  DX_OBJECT(SELF)->type = TYPE;
-  return DX_SUCCESS;
+  CORE_OBJECT(SELF)->type = TYPE;
+  return Core_Success;
 }
 
-dx_result dx_gl_wgl_window_create(dx_val_gl_wgl_window** RETURN, dx_gl_wgl_application* application) {
-  DX_CREATE_PREFIX(dx_val_gl_wgl_window)
+Core_Result dx_gl_wgl_window_create(dx_val_gl_wgl_window** RETURN, dx_gl_wgl_application* application) {
+  DX_CREATE_PREFIX(dx_val_gl_wgl_window);
   if (dx_val_gl_wgl_window_construct(SELF, application)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   *RETURN = SELF;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-static dx_result get_canvas_size(dx_val_gl_wgl_window* SELF, dx_i32* width, dx_i32* height) {
+static Core_Result get_canvas_size(dx_val_gl_wgl_window* SELF, Core_Integer32* width, Core_Integer32* height) {
   if (!SELF || !width || !height) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
   RECT rect;
   GetClientRect(SELF->wnd, &rect);
   *width = rect.right - rect.left;
   *height = rect.bottom - rect.top;
-  return DX_SUCCESS;
+  return Core_Success;
 }

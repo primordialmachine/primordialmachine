@@ -4,14 +4,23 @@
 #include "dx/core/annotations.h"
 #include "dx/core/configuration.h"
 #include "dx/core/error.h"
-#include "dx/core/builtin_types.h"
+#include "Core/FundamentalTypes.h"
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+/// @brief Macro providing the name of the "self" variable.
+#define SELF _self
+
+/// @brief Macro providing the name of the "return" variable.
+#define RETURN _return
+
+/// @brief Macro providing the name of the "type" variable.
+#define TYPE _type
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 // assert
 #include <assert.h>
-
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 /// @brief Macro causing a debug break if the expression evaluates to logically false.
 /// @param expression The expression.
@@ -43,28 +52,28 @@ dx_reference_counter dx_reference_counter_decrement(dx_reference_counter* refere
 /// - the first @a n Bytes of that array are a valid utf-8 string
 /// @pre
 /// - utf8 is supported by standard output
-void dx_log(char const *p, dx_size n);
+void dx_log(char const *p, Core_Size n);
 
 /// @{
 /// @brief Write a number to standard output.
 /// @warning There is no guarantee that the log message is written.
 /// @param value The number.
 
-void dx_log_i64(dx_i64 value);
+void dx_log_i64(Core_Integer64 value);
 
-void dx_log_i32(dx_i32 value);
+void dx_log_i32(Core_Integer32 value);
 
-void dx_log_i16(dx_i16 value);
+void dx_log_i16(Core_Integer16 value);
 
-void dx_log_i8(dx_i8 value);
+void dx_log_i8(Core_Integer8 value);
 
-void dx_log_n64(dx_n64 value);
+void dx_log_n64(Core_Natural64 value);
 
-void dx_log_n32(dx_n32 value);
+void dx_log_n32(Core_Natural32 value);
 
-void dx_log_n16(dx_n16 value);
+void dx_log_n16(Core_Natural16 value);
 
-void dx_log_n8(dx_n8 value);
+void dx_log_n8(Core_Natural8 value);
 
 /// @}
 
@@ -90,103 +99,9 @@ void dx_log_p(void const* p);
 /// In either method, a and b are considered equal if they are both nan
 /// @return @a true if @a a and @a b are equal.
 /// @a false if they are not equal or an error occurred.
-bool dx_almost_equal_f32(dx_f32 a, dx_f32 b, int method, dx_f32 epsilon);
-bool dx_almost_equal_f64(dx_f64 a, dx_f64 b, int method, dx_f64 epsilon);
+bool dx_almost_equal_f32(Core_Real32 a, Core_Real32 b, int method, Core_Real32 epsilon);
+bool dx_almost_equal_f64(Core_Real64 a, Core_Real64 b, int method, Core_Real64 epsilon);
 /// @}
-
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-
-/// @ingroup core
-/// @brief Compute the hash value of a pointer.
-/// @param x The pointer.
-/// @return The hash value.
-dx_size dx_hash_pointer(void const* );
-
-/// @ingroup core
-/// @brief Compute the hash value of a <code>dx_bool</code> value.
-/// @param x The value.
-/// @return The hash value.
-dx_size dx_hash_bool(dx_bool x);
-
-/// @ingroup core
-/// @brief Compute the hash value of an array of Bytes.
-/// @param p A pointer to the array of Bytes.
-/// @param n The length of the array.
-/// @return The hash value.
-dx_size dx_hash_bytes(void const* p, dx_size n);
-
-/// @ingroup core
-/// @brief Compute the hash value of an <code>dx_f32</code> value.
-/// @param x The value.
-/// @return The hash value.
-dx_size dx_hash_f32(dx_f32 x);
-
-/// @ingroup core
-/// @brief Compute the hash value of an <code>dx_f64</code> value.
-/// @param x The value.
-/// @return The hash value.
-dx_size dx_hash_f64(dx_f64 x);
-
-/// @ingroup core
-/// @brief Compute the hash value of an <code>dx_i8</code> value.
-/// @param x The value.
-/// @return The hash value.
-dx_size dx_hash_i8(dx_i8 x);
-
-/// @ingroup core
-/// @brief Compute the hash value of an <code>dx_i16</code> value.
-/// @param x The value.
-/// @return The hash value.
-dx_size dx_hash_i16(dx_i16 x);
-
-/// @ingroup core
-/// @brief Compute the hash value of an <code>dx_i32</code> value.
-/// @param x The value.
-/// @return The hash value.
-dx_size dx_hash_i32(dx_i32 x);
-
-/// @ingroup core
-/// @brief Compute the hash value of an <code>dx_i64</code> value.
-/// @param x The value.
-/// @return The hash value.
-dx_size dx_hash_i64(dx_i64 x);
-
-/// @ingroup core
-/// @brief Compute the hash value of an <code>dx_n8</code> value.
-/// @param x The value.
-/// @return The hash value.
-dx_size dx_hash_n8(dx_n8 x);
-
-/// @ingroup core
-/// @brief Compute the hash value of an <code>dx_n16</code> value.
-/// @param x The value.
-/// @return The hash value.
-dx_size dx_hash_n16(dx_n16 x);
-
-/// @ingroup core
-/// @brief Compute the hash value of an <code>dx_n32</code> value.
-/// @param x The value.
-/// @return The hash value.
-dx_size dx_hash_n32(dx_n32 x);
-
-/// @ingroup core
-/// @brief Compute the hash value of an <code>dx_n64</code> value.
-/// @param x The value.
-/// @return The hash value.
-dx_size dx_hash_n64(dx_n64 x);
-
-/// @ingroup core
-/// @brief Compute the hash value of an <code>dx_size</code> value.
-/// @param x The value.
-/// @return The hash value.
-dx_size dx_hash_sz(dx_size x);
-
-/// @ingroup core
-/// @brief Combine two hash values.
-/// @param x The first hash value.
-/// @param y The second hash value.
-/// @return The combination of the first hash value and the second hash value.
-dx_size dx_combine_hash(dx_size x, dx_size y);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
@@ -195,8 +110,8 @@ dx_size dx_combine_hash(dx_size x, dx_size y);
 /// @brief Get if a floating point value is a subnormal value.
 /// @param x The floating point value.
 /// @return @a true if the floating point value is a subnormal value, @a false otherwise.
-dx_bool dx_fp32_is_subnormal(dx_f32 x);
-dx_bool dx_fp64_is_subnormal(dx_f64 x);
+Core_Boolean dx_fp32_is_subnormal(Core_Real32 x);
+Core_Boolean dx_fp64_is_subnormal(Core_Real64 x);
 /// @}
 
 /// @{
@@ -204,8 +119,8 @@ dx_bool dx_fp64_is_subnormal(dx_f64 x);
 /// @brief Get if a floating point value is a not a number value.
 /// @param x The floating point value.
 /// @return @a true if the floating point value is a not a number value, @a false otherwise.
-dx_bool dx_fp32_is_nan(dx_f32 x);
-dx_bool dx_fp64_is_nan(dx_f64 x);
+Core_Boolean dx_fp32_is_nan(Core_Real32 x);
+Core_Boolean dx_fp64_is_nan(Core_Real64 x);
 /// @}
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/

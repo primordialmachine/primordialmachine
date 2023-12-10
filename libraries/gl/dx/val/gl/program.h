@@ -28,9 +28,9 @@ struct dx_val_gl_program_dispatch {
   dx_val_program _parent;
 };
 
-dx_result dx_val_gl_program_create(dx_val_gl_program** RETURN,
+Core_Result dx_val_gl_program_create(dx_val_gl_program** RETURN,
                                    dx_val_gl_context* ctx,
-                                   dx_string* vertex_program_text,
-                                   dx_string* fragment_program_text);
+                                   Core_String* vertex_program_text,
+                                   Core_String* fragment_program_text);
 
 #endif // DX_VAL_GL_PROGRAM_H_INCLUDED

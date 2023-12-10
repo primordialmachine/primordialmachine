@@ -1,0 +1,9 @@
+{
+  "type" : "symbolic-constant",
+  "last-update" : "2023-12-18",
+  "indices" : "core",
+  "name" : "Core_Real64_GreatestBaseTwoExponent",
+  "id" : "core-real64-greatestbasetwoexponent",
+  "signature" : "#define Core_Real64_GreatestBaseTwoExponent &lt;implementation&gt;",
+  "description" : "The greatest integer such that two raised to the power of that value minus one is a normalized @{code('Core_Real64')} value. This usually is an alias of @{code('DBL_MAX_EXP')}."
+}

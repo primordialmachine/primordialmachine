@@ -1,0 +1,9 @@
+{
+  "type" : "symbolic-constant",
+  "last-update" : "2023-12-18",
+  "indices" : "core",
+  "name" : "Core_Real32_GreatestBaseTwoExponent",
+  "id" : "core-real32-greatestbasetwoexponent",
+  "signature" : "#define Core_Real32_GreatestBaseTwoExponent &lt;implementation&gt;",
+  "description" : "The greatest integer such that two raised to the power of that value minus one is a normalized @{code('Core_Real32')} value. This usually is an alias of @{code('FLT_MAX_EXP')}."
+}

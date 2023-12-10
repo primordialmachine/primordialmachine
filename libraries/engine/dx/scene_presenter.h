@@ -22,14 +22,14 @@
 /// 5) the "scene presenter" is destroyed by the "scene execution environment".
 DX_DECLARE_OBJECT_TYPE("dx.scene_presenter",
                        dx_scene_presenter,
-                       dx_object)
+                       Core_Object);
 
 static inline dx_scene_presenter* DX_SCENE_PRESENTER(void *p) {
   return (dx_scene_presenter*)p;
 }
 
 struct dx_scene_presenter {
-  dx_object _parent;
+  Core_Object _parent;
   dx_val_context* context;
 };
 
@@ -38,21 +38,21 @@ static inline dx_scene_presenter_dispatch* DX_SCENE_PRESENTER_DISPATCH(void* p) 
 }
 
 struct dx_scene_presenter_dispatch {
-  dx_object_dispatch _parent;
-  dx_result(*startup)(dx_scene_presenter* SELF, dx_val_context* context);
-  dx_result(*render)(dx_scene_presenter* SELF, dx_val_context* context, dx_f32 delta_seconds, dx_i32 canvas_width, dx_i32 canvas_height);
-  dx_result(*shutdown)(dx_scene_presenter* SELF, dx_val_context* context);
+  Core_Object_Dispatch _parent;
+  Core_Result(*startup)(dx_scene_presenter* SELF, dx_val_context* context);
+  Core_Result(*render)(dx_scene_presenter* SELF, dx_val_context* context, Core_Real32 delta_seconds, Core_Integer32 canvas_width, Core_Integer32 canvas_height);
+  Core_Result(*shutdown)(dx_scene_presenter* SELF, dx_val_context* context);
 };
 
 /// @brief Construct this scene.
 /// @param SELF A pointer to this scene presenter.
 /// @default-return
-dx_result dx_scene_presenter_construct(dx_scene_presenter* SELF);
+Core_Result dx_scene_presenter_construct(dx_scene_presenter* SELF);
 
 /// @brief Callback. Invoked by the execution environment.
 /// @param SELF A pointer to this scene presenter.
 /// @default-return
-static inline dx_result dx_scene_presenter_startup(dx_scene_presenter* SELF, dx_val_context* context) {
+static inline Core_Result dx_scene_presenter_startup(dx_scene_presenter* SELF, dx_val_context* context) {
   DX_OBJECT_VIRTUALCALL(dx_scene_presenter, startup, SELF, context);
 }
 
@@ -62,14 +62,14 @@ static inline dx_result dx_scene_presenter_startup(dx_scene_presenter* SELF, dx_
 /// @param delta_seconds The delta, in seconds, the visualization time has advanced.
 /// @param canvas_width, canvas_height The width and height of the canvas.
 /// @default-return
-static inline dx_result dx_scene_presenter_render(dx_scene_presenter* SELF, dx_val_context* context, dx_f32 delta_seconds, dx_i32 canvas_width, dx_i32 canvas_height) {
+static inline Core_Result dx_scene_presenter_render(dx_scene_presenter* SELF, dx_val_context* context, Core_Real32 delta_seconds, Core_Integer32 canvas_width, Core_Integer32 canvas_height) {
   DX_OBJECT_VIRTUALCALL(dx_scene_presenter, render, SELF, context, delta_seconds, canvas_width, canvas_height);
 }
 
 /// @brief Callback. Invoked by the execution environment.
 /// @param self A pointer to this scene.
 /// @default-return
-static inline dx_result dx_scene_presenter_shutdown(dx_scene_presenter* SELF, dx_val_context* context) {
+static inline Core_Result dx_scene_presenter_shutdown(dx_scene_presenter* SELF, dx_val_context* context) {
   DX_OBJECT_VIRTUALCALL(dx_scene_presenter, shutdown, SELF, context);
 }
 

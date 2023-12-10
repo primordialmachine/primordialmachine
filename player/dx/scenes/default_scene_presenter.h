@@ -23,7 +23,7 @@ struct dx_default_scene_presenter {
   /// @brief A pointer to the dx_asset_scene.
   dx_assets_scene* asset_scene;
   /// @brief A pointer to an UTF-8 C string. The path of the ADL file to load.
-  dx_string* path;
+  Core_String* path;
   /// @brief List of dx_val_mesh_instance objects to render.
   dx_inline_object_array mesh_instances;
   /// @brief List of dx_val_viewer objects.
@@ -47,8 +47,8 @@ struct dx_default_scene_presenter_dispatch {
 /// @param path A pointer to an UTF-8 C string. The path of the ADL file to load.
 /// @default-return
 /// @default-failure
-dx_result dx_default_scene_presenter_construct(dx_default_scene_presenter* SELF, dx_string* path);
+Core_Result dx_default_scene_presenter_construct(dx_default_scene_presenter* SELF, Core_String* path);
 
-dx_result dx_default_scene_presenter_create(dx_default_scene_presenter** RETURN, dx_string* path);
+Core_Result dx_default_scene_presenter_create(dx_default_scene_presenter** RETURN, Core_String* path);
 
 #endif // DX_DEFAULT_SCENE_PRESENTER_H_INCLUDED

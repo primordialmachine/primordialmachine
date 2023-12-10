@@ -31,10 +31,10 @@ struct dx_gl_wgl_context_dispatch {
 
 /// @constructor{dx_gl_wgl_context}
 /// @todo Make private to package.
-dx_result dx_gl_wgl_context_construct(dx_gl_wgl_context* SELF, dx_val_gl_wgl_window* window);
+Core_Result dx_gl_wgl_context_construct(dx_gl_wgl_context* SELF, dx_val_gl_wgl_window* window);
 
 /// @create-operator{dx_gl_wgl_context}
 /// @todo Scope to package. That is, move to "context.package.h".
-dx_result dx_gl_wgl_context_create(dx_gl_wgl_context** RETURN, dx_val_gl_wgl_window * window);
+Core_Result dx_gl_wgl_context_create(dx_gl_wgl_context** RETURN, dx_val_gl_wgl_window * window);
 
 #endif // DX_GL_WGL_CONTEXT_H_INCLUDED

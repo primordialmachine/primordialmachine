@@ -1,0 +1,9 @@
+{
+  "type" : "symbolic-constant",
+  "last-update" : "2023-12-18",
+  "indices" : "core",
+  "name" : "Core_Natural64_Greatest",
+  "id" : "core-natural64-greatest",
+  "signature" : "#define Core_Natural64_Greatest &lt;implementation&gt;",
+  "description" : "The greatest value of type @{code('Core_Natural64')}."
+}

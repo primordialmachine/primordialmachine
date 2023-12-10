@@ -26,6 +26,6 @@ struct dx_val_gl_buffer_dispatch {
   dx_val_buffer_dispatch _parent;
 };
 
-dx_result dx_val_gl_buffer_create(dx_val_gl_buffer** RETURN, dx_val_gl_context* context);
+Core_Result dx_val_gl_buffer_create(dx_val_gl_buffer** RETURN, dx_val_gl_context* context);
 
 #endif // DX_VAL_GL_BUFFER_H_INCLUDED

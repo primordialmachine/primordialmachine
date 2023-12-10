@@ -15,14 +15,14 @@ static inline bool is_digit(char const* current, char const* end);
 /// @param n The number of Bytes.
 /// @return The zero value on success. A non-zero value on failure.
 /// @default-failure
-static int dx_parse_flit(char const* p, dx_size n);
+static int dx_parse_flit(char const* p, Core_Size n);
 
 static inline bool is_digit(char const* current, char const* end) {
   return (current != end)
       && ('0' <= *current && *current <= '9');
 }
 
-static int dx_parse_flit(char const* p, dx_size n) {
+static int dx_parse_flit(char const* p, Core_Size n) {
   char const* start = p;
   char const* end = p + n;
   char const* current = p;
@@ -38,8 +38,8 @@ static int dx_parse_flit(char const* p, dx_size n) {
     do {
       current++;
     } while (is_digit(current, end));
-    if (dx_get_error()) {
-      return DX_FAILURE;
+    if (Core_getError()) {
+      return Core_Failure;
     }
     if (current != end && *current == '.') {
       current++;
@@ -50,17 +50,17 @@ static int dx_parse_flit(char const* p, dx_size n) {
   } else if (current != end && *current == '.') {
     current++;
     if (!is_digit(current, end)) {
-      dx_set_error(DX_ERROR_CONVERSION_FAILED);
-      return DX_FAILURE;
+      Core_setError(Core_Error_ConversionFailed);
+      return Core_Failure;
     }
     do {
       current++;
     } while (is_digit(current, end));
-    if (dx_get_error()) {
-      return DX_FAILURE;
+    if (Core_getError()) {
+      return Core_Failure;
     }
   } else {
-    return DX_FAILURE;
+    return Core_Failure;
   }
   if (current != end && (*current == 'e' || *current == 'E')) {
     current++;
@@ -68,23 +68,23 @@ static int dx_parse_flit(char const* p, dx_size n) {
       current++;
     }
     if (!is_digit(current, end)) {
-      dx_set_error(DX_ERROR_CONVERSION_FAILED);
-      return DX_FAILURE;
+      Core_setError(Core_Error_ConversionFailed);
+      return Core_Failure;
     }
     do {
       current++;
     } while (is_digit(current, end));
-    if (dx_get_error()) {
-      return DX_FAILURE;
+    if (Core_getError()) {
+      return Core_Failure;
     }
   }
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-dx_result dx_convert_utf8bytes_to_i8(char const* p, dx_size n, dx_i8* target) {
+Core_Result dx_convert_utf8bytes_to_i8(char const* p, Core_Size n, Core_Integer8* target) {
   if (!p || !target) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
   char const* start = p;
   char const* end = p + n;
@@ -99,32 +99,34 @@ dx_result dx_convert_utf8bytes_to_i8(char const* p, dx_size n, dx_i8* target) {
     }
   }
   if (current == end) {
-    dx_set_error(DX_ERROR_CONVERSION_FAILED);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ConversionFailed);
+    return Core_Failure;
   }
-  dx_i8 value = 0;
+  Core_Integer8 value = 0;
   // digit+
   if (!is_digit(current, end)) {
-    dx_set_error(DX_ERROR_CONVERSION_FAILED);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ConversionFailed);
+    return Core_Failure;
   }
   if (negative) {
     do {
       //
-      static const dx_i8 BASE = 10;
-      static const dx_i8 MIN1 = DX_I8_GREATEST + 8; // 128 / 10 = 12.8 = 12.
-                                                    // 12 * 10 = 120 is no overflow.
-      if (value == MIN1) {
-        dx_set_error(DX_ERROR_CONVERSION_FAILED);
-        return DX_FAILURE;
+      static const Core_Integer8 BASE = 10;
+      static const Core_Integer8 MIN1 = Core_Integer8_Least + 8; // -128 / 10 = -12.8 = -12.
+                                                                 // -12 * 10 = -120  is no overflow.
+      if (value < MIN1) {
+        // A multiplication of a value smaller than MIN1 by 10 would cause an overflow.
+        // Hence, the conversion must fail.
+        Core_setError(Core_Error_ConversionFailed);
+        return Core_Failure;
       }
       value = value * BASE;
       //
-      static const dx_i8 MIN2 = DX_I8_LEAST;
-      dx_i8 x = *current - '0';
+      static const Core_Integer8 MIN2 = Core_Integer8_Least;
+      Core_Integer8 x = *current - '0';
       if (value < MIN2 + x) {
-        dx_set_error(DX_ERROR_CONVERSION_FAILED);
-        return DX_FAILURE;
+        Core_setError(Core_Error_ConversionFailed);
+        return Core_Failure;
       }
       value -= x;
       //
@@ -133,20 +135,22 @@ dx_result dx_convert_utf8bytes_to_i8(char const* p, dx_size n, dx_i8* target) {
   } else {
     do {
       //
-      static const dx_i8 BASE = 10;
-      static const dx_i8 MAX1 = DX_I8_GREATEST - 7; // 127 / 10 = 12.7 = 12.
-                                                    // 12 * 10 = 120 is no overflow.
-      if (value == MAX1) {
-        dx_set_error(DX_ERROR_CONVERSION_FAILED);
-        return DX_FAILURE;
+      static const Core_Integer8 BASE = 10;
+      static const Core_Integer8 MAX1 = Core_Integer8_Greatest - 7; // 127 / 10 = 12.7 = 12.
+                                                                    // 12 * 10 = 120 is no overflow.
+      if (value > MAX1) {
+        // A multiplication of a value greater than MAX1 by 10 would cause an overflow.
+      // Hence the conversion must fail.
+        Core_setError(Core_Error_ConversionFailed);
+        return Core_Failure;
       }
       value = value * BASE;
       //
-      static const dx_i8 MAX2 = DX_I8_GREATEST;
-      dx_i8 x = *current - '0';
+      static const Core_Integer8 MAX2 = Core_Integer8_Greatest;
+      Core_Integer8 x = *current - '0';
       if (MAX2 - x < value) {
-        dx_set_error(DX_ERROR_CONVERSION_FAILED);
-        return DX_FAILURE;
+        Core_setError(Core_Error_ConversionFailed);
+        return Core_Failure;
       }
       value += x;
       //
@@ -154,64 +158,66 @@ dx_result dx_convert_utf8bytes_to_i8(char const* p, dx_size n, dx_i8* target) {
     } while (is_digit(current, end));
   }
   *target = value;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-dx_result dx_convert_utf8bytes_to_n8(char const* p, dx_size n, dx_n8* target) {
+Core_Result dx_convert_utf8bytes_to_n8(char const* p, Core_Size n, Core_Natural8* target) {
   if (!p || !target) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
   char const* start = p;
   char const* end = p + n;
   char const* current = start;
   if (current != end) {
     if (*current == '-') {
-      dx_set_error(DX_ERROR_CONVERSION_FAILED);
-      return DX_FAILURE;
+      Core_setError(Core_Error_ConversionFailed);
+      return Core_Failure;
     } else if (*current == '+') {
       current++;
     }
   }
   if (current == end) {
-    dx_set_error(DX_ERROR_CONVERSION_FAILED);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ConversionFailed);
+    return Core_Failure;
   }
-  dx_n8 value = 0;
+  Core_Natural8 value = 0;
   // digit+
   if (!is_digit(current, end)) {
-    dx_set_error(DX_ERROR_CONVERSION_FAILED);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ConversionFailed);
+    return Core_Failure;
   }
   do {
     //
-    static const dx_n8 BASE = 10;
-    static const dx_n8 MAX1 = DX_N8_GREATEST - 5; // 255 / 10 = 25.5 = 25.
-                                                  // 25 * 10 = 250 is no overflow.
-    if (value == MAX1) {
-      dx_set_error(DX_ERROR_CONVERSION_FAILED);
-      return DX_FAILURE;
+    static const Core_Natural8 BASE = 10;
+    static const Core_Natural8 MAX1 = Core_Natural8_Greatest - 5; // 255 / 10 = 25.5 = 25.
+                                                                  // 25 * 10 = 250 is no overflow.
+    if (value > MAX1) {
+      // A multiplication of a value greater than MAX1 by 10 would cause an overflow.
+      // Hence the conversion must fail.
+      Core_setError(Core_Error_ConversionFailed);
+      return Core_Failure;
     }
     value = value * BASE;
     //
-    static const dx_n8 MAX2 = DX_N8_GREATEST;
-    dx_n8 x = *current - '0';
+    static const Core_Natural8 MAX2 = Core_Natural8_Greatest;
+    Core_Natural8 x = *current - '0';
     if (MAX2 - x < value) {
-      dx_set_error(DX_ERROR_CONVERSION_FAILED);
-      return DX_FAILURE;
+      Core_setError(Core_Error_ConversionFailed);
+      return Core_Failure;
     }
     value += x;
     //
     current++;
   } while (is_digit(current, end));
   *target = value;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-dx_result dx_convert_utf8bytes_to_i16(char const* p, dx_size n, dx_i16* target) {
+Core_Result dx_convert_utf8bytes_to_i16(char const* p, Core_Size n, Core_Integer16* target) {
   if (!p || !target) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
   char const* start = p;
   char const* end = p + n;
@@ -226,32 +232,34 @@ dx_result dx_convert_utf8bytes_to_i16(char const* p, dx_size n, dx_i16* target) 
     }
   }
   if (current == end) {
-    dx_set_error(DX_ERROR_CONVERSION_FAILED);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ConversionFailed);
+    return Core_Failure;
   }
-  dx_i16 value = 0;
+  Core_Integer16 value = 0;
   // digit+
   if (!is_digit(current, end)) {
-    dx_set_error(DX_ERROR_CONVERSION_FAILED);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ConversionFailed);
+    return Core_Failure;
   }
   if (negative) {
     do {
       //
-      static const dx_i16 BASE = 10;
-      static const dx_i16 MIN1 = DX_I16_LEAST - 8; // 32768 / 10 = 3276.8 = 3276.
-                                                   // 3276 * 10 = 32760 is no overflow.
-      if (value == MIN1) {
-        dx_set_error(DX_ERROR_CONVERSION_FAILED);
-        return DX_FAILURE;
+      static const Core_Integer16 BASE = 10;
+      static const Core_Integer16 MIN1 = Core_Integer16_Least + 8; // -32768 / 10 = 3276.8 = 3276.
+                                                                   // -3276 * 10 = 32760 is no overflow.
+      if (value < MIN1) {
+        // A multiplication of a value smaller than MIN1 by 10 would cause an overflow.
+        // Hence, the conversion must fail.
+        Core_setError(Core_Error_ConversionFailed);
+        return Core_Failure;
       }
       value = value * BASE;
       //
-      static const dx_i16 MIN2 = DX_I16_LEAST;
-      dx_i16 x = *current - '0';
+      static const Core_Integer16 MIN2 = Core_Integer16_Least;
+      Core_Integer16 x = *current - '0';
       if (value < MIN2 + x) {
-        dx_set_error(DX_ERROR_CONVERSION_FAILED);
-        return DX_FAILURE;
+        Core_setError(Core_Error_ConversionFailed);
+        return Core_Failure;
       }
       value -= x;
       //
@@ -260,20 +268,22 @@ dx_result dx_convert_utf8bytes_to_i16(char const* p, dx_size n, dx_i16* target) 
   } else {
     do {
       //
-      static const dx_i16 BASE = 10;
-      static const dx_i16 MAX1 = DX_I16_GREATEST - 7; // 32767 / 10 = 3276.7 = 3276.
-                                                      // 3276 * 10 = 32760 is no overflow.
-      if (value == MAX1) {
-        dx_set_error(DX_ERROR_CONVERSION_FAILED);
-        return DX_FAILURE;
+      static const Core_Integer16 BASE = 10;
+      static const Core_Integer16 MAX1 = Core_Integer16_Greatest - 7; // 32767 / 10 = 3276.7 = 3276.
+                                                                      // 3276 * 10 = 32760 is no overflow.
+      if (value > MAX1) {
+        // A multiplication of a value greater than MAX1 by 10 would cause an overflow.
+        // Hence the conversion must fail.
+        Core_setError(Core_Error_ConversionFailed);
+        return Core_Failure;
       }
       value = value * BASE;
       //
-      static const dx_i16 MAX2 = DX_I16_GREATEST;
-      dx_i16 x = *current - '0';
+      static const Core_Integer16 MAX2 = Core_Integer16_Greatest;
+      Core_Integer16 x = *current - '0';
       if (MAX2 - x < value) {
-        dx_set_error(DX_ERROR_CONVERSION_FAILED);
-        return DX_FAILURE;
+        Core_setError(Core_Error_ConversionFailed);
+        return Core_Failure;
       }
       value += x;
       //
@@ -281,64 +291,66 @@ dx_result dx_convert_utf8bytes_to_i16(char const* p, dx_size n, dx_i16* target) 
     } while (is_digit(current, end));
   }
   *target = value;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-dx_result dx_convert_utf8bytes_to_n16(char const* p, dx_size n, dx_n16* target) {
+Core_Result dx_convert_utf8bytes_to_n16(char const* p, Core_Size n, Core_Natural16* target) {
   if (!p || !target) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
   char const* start = p;
   char const* end = p + n;
   char const* current = start;
   if (current != end) {
     if (*current == '-') {
-      dx_set_error(DX_ERROR_CONVERSION_FAILED);
-      return DX_FAILURE;
+      Core_setError(Core_Error_ConversionFailed);
+      return Core_Failure;
     } else if (*current == '+') {
       current++;
     }
   }
   if (current == end) {
-    dx_set_error(DX_ERROR_CONVERSION_FAILED);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ConversionFailed);
+    return Core_Failure;
   }
-  dx_n16 value = 0;
+  Core_Natural16 value = 0;
   // digit+
   if (!is_digit(current, end)) {
-    dx_set_error(DX_ERROR_CONVERSION_FAILED);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ConversionFailed);
+    return Core_Failure;
   }
   do {
     //
-    static const dx_n16 BASE = 10;
-    static const dx_n16 MAX1 = DX_N16_GREATEST - 5; // 65535 / 10 = 6553.5 = 6553.
-                                                    // 6553*10 = 65530 is no overflow.
-    if (value == MAX1) {
-      dx_set_error(DX_ERROR_CONVERSION_FAILED);
-      return DX_FAILURE;
+    static const Core_Natural16 BASE = 10;
+    static const Core_Natural16 MAX1 = Core_Natural16_Greatest - 5; // 65535 / 10 = 6553.5 = 6553.
+                                                                    // 6553*10 = 65530 is no overflow.
+    if (value > MAX1) {
+      // A multiplication of a value greater than MAX1 by 10 would cause an overflow.
+      // Hence the conversion must fail.
+      Core_setError(Core_Error_ConversionFailed);
+      return Core_Failure;
     }
     value = value * BASE;
     //
-    static const dx_n16 MAX2 = DX_N16_GREATEST;
-    dx_n16 x = *current - '0';
+    static const Core_Natural16 MAX2 = Core_Natural16_Greatest;
+    Core_Natural16 x = *current - '0';
     if (MAX2 - x < value) {
-      dx_set_error(DX_ERROR_CONVERSION_FAILED);
-      return DX_FAILURE;
+      Core_setError(Core_Error_ConversionFailed);
+      return Core_Failure;
     }
     value += x;
     //
     current++;
   } while (is_digit(current, end));
   *target = value;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-dx_result dx_convert_utf8bytes_to_i32(char const* p, dx_size n, dx_i32* target) {
+Core_Result dx_convert_utf8bytes_to_i32(char const* p, Core_Size n, Core_Integer32* target) {
   if (!p || !target) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
   char const* start = p;
   char const* end = p + n;
@@ -353,32 +365,34 @@ dx_result dx_convert_utf8bytes_to_i32(char const* p, dx_size n, dx_i32* target) 
     }
   }
   if (current == end) {
-    dx_set_error(DX_ERROR_CONVERSION_FAILED);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ConversionFailed);
+    return Core_Failure;
   }
-  dx_i32 value = 0;
+  Core_Integer32 value = 0;
   // digit+
   if (!is_digit(current, end)) {
-    dx_set_error(DX_ERROR_CONVERSION_FAILED);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ConversionFailed);
+    return Core_Failure;
   }
   if (negative) {
     do {
       //
-      static const dx_i32 BASE = 10;
-      static const dx_i32 MIN1 = DX_I32_LEAST + 8; // 2147483648 / 10 = 214748364.8 = 214748364.
-                                                   // 214748364 * 10 = 2147483640 is no overflow.
-      if (value == MIN1) {
-        dx_set_error(DX_ERROR_CONVERSION_FAILED);
-        return DX_FAILURE;
+      static const Core_Integer32 BASE = 10;
+      static const Core_Integer32 MIN1 = Core_Integer32_Least + 8; // -2147483648 / 10 = -214748364.8 = -214748364.
+                                                                   // -214748364 * 10 = -2147483640 is no overflow.
+      if (value < MIN1) {
+        // A multiplication of a value smaller than MIN1 by 10 would cause an overflow.
+        // Hence, the conversion must fail.
+        Core_setError(Core_Error_ConversionFailed);
+        return Core_Failure;
       }
       value = value * BASE;
       //
-      static const dx_i32 MIN2 = DX_I32_LEAST;
-      dx_i32 x = *current - '0';
+      static const Core_Integer32 MIN2 = Core_Integer32_Least;
+      Core_Integer32 x = *current - '0';
       if (value < MIN2 + x) {
-        dx_set_error(DX_ERROR_CONVERSION_FAILED);
-        return DX_FAILURE;
+        Core_setError(Core_Error_ConversionFailed);
+        return Core_Failure;
       }
       value -= x;
       //
@@ -387,20 +401,20 @@ dx_result dx_convert_utf8bytes_to_i32(char const* p, dx_size n, dx_i32* target) 
   } else {
     do {
       //
-      static const dx_i32 BASE = 10;
-      static const dx_i32 MAX1 = DX_I32_GREATEST - 7; // 2147483647 / 10 = 214748364.7 = 214748364.
-                                                      // 214748364 * 10 = 2147483640 is no overflow.
-      if (value == MAX1) {
-        dx_set_error(DX_ERROR_CONVERSION_FAILED);
-        return DX_FAILURE;
+      static const Core_Integer32 BASE = 10;
+      static const Core_Integer32 MAX1 = Core_Integer32_Greatest - 7; // 2147483647 / 10 = 214748364.7 = 214748364.
+                                                                      // 214748364 * 10 = 2147483640 is no overflow.
+      if (value > MAX1) {
+        Core_setError(Core_Error_ConversionFailed);
+        return Core_Failure;
       }
       value = value * BASE;
       //
-      static const dx_i32 MAX2 = DX_I32_GREATEST;
-      dx_i32 x = *current - '0';
+      static const Core_Integer32 MAX2 = Core_Integer32_Greatest;
+      Core_Integer32 x = *current - '0';
       if (MAX2 - x < value) {
-        dx_set_error(DX_ERROR_CONVERSION_FAILED);
-        return DX_FAILURE;
+        Core_setError(Core_Error_ConversionFailed);
+        return Core_Failure;
       }
       value += x;
       //
@@ -408,64 +422,64 @@ dx_result dx_convert_utf8bytes_to_i32(char const* p, dx_size n, dx_i32* target) 
     } while (is_digit(current, end));
   }
   *target = value;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-dx_result dx_convert_utf8bytes_to_n32(char const* p, dx_size n, dx_n32* target) {
+Core_Result dx_convert_utf8bytes_to_n32(char const* p, Core_Size n, Core_Natural32* target) {
   if (!p || !target) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
   char const* start = p;
   char const* end = p + n;
   char const* current = start;
   if (current != end) {
     if (*current == '-') {
-      dx_set_error(DX_ERROR_CONVERSION_FAILED);
-      return DX_FAILURE;
+      Core_setError(Core_Error_ConversionFailed);
+      return Core_Failure;
     } else if (*current == '+') {
       current++;
     }
   }
   if (current == end) {
-    dx_set_error(DX_ERROR_CONVERSION_FAILED);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ConversionFailed);
+    return Core_Failure;
   }
-  dx_n32 value = 0;
+  Core_Natural32 value = 0;
   // digit+
   if (!is_digit(current, end)) {
-    dx_set_error(DX_ERROR_CONVERSION_FAILED);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ConversionFailed);
+    return Core_Failure;
   }
   do {
     //
-    static const dx_n32 BASE = 10;
-    static const dx_n32 MAX1 = DX_N32_GREATEST - 5; // 4294967295 / 10 = 429496729.5 = 429496729.
-                                                    // 429496729 * 10 = 4294967290 is no overflow.
+    static const Core_Natural32 BASE = 10;
+    static const Core_Natural32 MAX1 = Core_Natural32_Greatest - 5; // 4294967295 / 10 = 429496729.5 = 429496729.
+                                                                    // 429496729 * 10 = 4294967290 is no overflow.
     if (value == MAX1) {
-      dx_set_error(DX_ERROR_CONVERSION_FAILED);
-      return DX_FAILURE;
+      Core_setError(Core_Error_ConversionFailed);
+      return Core_Failure;
     }
     value = value * BASE;
     //
-    static const uint32_t MAX2 = DX_N32_GREATEST;
-    dx_n32 x = *current - '0';
+    static const uint32_t MAX2 = Core_Natural32_Greatest;
+    Core_Natural32 x = *current - '0';
     if (MAX2 - x < value) {
-      dx_set_error(DX_ERROR_CONVERSION_FAILED);
-      return DX_FAILURE;
+      Core_setError(Core_Error_ConversionFailed);
+      return Core_Failure;
     }
     value += x;
     //
     current++;
   } while (is_digit(current, end));
   *target = value;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-dx_result dx_convert_utf8bytes_to_i64(char const* p, dx_size n, dx_i64* target) {
+Core_Result dx_convert_utf8bytes_to_i64(char const* p, Core_Size n, Core_Integer64* target) {
   if (!p || !target) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
   char const* start = p;
   char const* end = p + n;
@@ -480,32 +494,34 @@ dx_result dx_convert_utf8bytes_to_i64(char const* p, dx_size n, dx_i64* target) 
     }
   }
   if (current == end) {
-    dx_set_error(DX_ERROR_CONVERSION_FAILED);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ConversionFailed);
+    return Core_Failure;
   }
-  dx_i64 value = 0;
+  Core_Integer64 value = 0;
   // digit+
   if (!is_digit(current, end)) {
-    dx_set_error(DX_ERROR_CONVERSION_FAILED);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ConversionFailed);
+    return Core_Failure;
   }
   if (negative) {
     do {
       //
-      static dx_i64 const BASE = 10;
-      static dx_i64 const MIN1 = DX_I64_LEAST + 8; // 9223372036854775808 / 10 = 922337203685477580.8 = 922337203685477580.
-                                                   // 922337203685477580 * 10 = 9223372036854775800 is no overflow.
+      static Core_Integer64 const BASE = 10;
+      static Core_Integer64 const MIN1 = Core_Integer64_Least + 8; // -9223372036854775808 / 10 = -922337203685477580.8 = -922337203685477580.
+                                                                   // -922337203685477580 * 10 = -9223372036854775800 is no overflow.
       if (value == MIN1) {
-        dx_set_error(DX_ERROR_CONVERSION_FAILED);
-        return DX_FAILURE;
+        // A multiplication of MIN1 by 10 would cause an overflow.
+        // Hence, the conversion must fail.
+        Core_setError(Core_Error_ConversionFailed);
+        return Core_Failure;
       }
       value = value * BASE;
       //
-      static dx_i64 const MIN2 = DX_I64_LEAST;
-      dx_i64 x = ((dx_i64)*current) - ((dx_i64)'0');
+      static Core_Integer64 const MIN2 = Core_Integer64_Least;
+      Core_Integer64 x = *current - '0';
       if (value < MIN2 + x) {
-        dx_set_error(DX_ERROR_CONVERSION_FAILED);
-        return DX_FAILURE;
+        Core_setError(Core_Error_ConversionFailed);
+        return Core_Failure;
       }
       value -= x;
       //
@@ -514,20 +530,20 @@ dx_result dx_convert_utf8bytes_to_i64(char const* p, dx_size n, dx_i64* target) 
   } else {
     do {
       //
-      static dx_i64 const BASE = 10;
-      static dx_i64 const MAX1 = DX_I64_GREATEST - 7; // 9223372036854775807 / 10 = 922337203685477580.7 = 922337203685477580.
-                                                      // 922337203685477580 * 10 = 9223372036854775800 is no overflow.
+      static Core_Integer64 const BASE = 10;
+      static Core_Integer64 const MAX1 = Core_Integer64_Greatest - 7; // 9223372036854775807 / 10 = 922337203685477580.7 = 922337203685477580.
+                                                                      // 922337203685477580 * 10 = 9223372036854775800 is no overflow.
       if (value == MAX1) {
-        dx_set_error(DX_ERROR_CONVERSION_FAILED);
-        return DX_FAILURE;
+        Core_setError(Core_Error_ConversionFailed);
+        return Core_Failure;
       }
       value = value * BASE;
       //
-      static dx_i64 const MAX2 = DX_I64_GREATEST;
-      dx_i64 x = ((dx_i64)*current) - ((dx_i64)'0');
+      static Core_Integer64 const MAX2 = Core_Integer64_Greatest;
+      Core_Integer64 x = *current - '0';
       if (MAX2 - x < value) {
-        dx_set_error(DX_ERROR_CONVERSION_FAILED);
-        return DX_FAILURE;
+        Core_setError(Core_Error_ConversionFailed);
+        return Core_Failure;
       }
       value += x;
       //
@@ -535,61 +551,61 @@ dx_result dx_convert_utf8bytes_to_i64(char const* p, dx_size n, dx_i64* target) 
     } while (is_digit(current, end));
   }
   *target = value;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-dx_result dx_convert_utf8bytes_to_n64(char const* p, dx_size n, dx_n64* target) {
+Core_Result dx_convert_utf8bytes_to_n64(char const* p, Core_Size n, Core_Natural64* target) {
   if (!p || !target) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
   char const* start = p;
   char const* end = p + n;
   char const* current = start;
   if (current != end) {
     if (*current == '-') {
-      dx_set_error(DX_ERROR_CONVERSION_FAILED);
-      return DX_FAILURE;
+      Core_setError(Core_Error_ConversionFailed);
+      return Core_Failure;
     } else if (*current == '+') {
       current++;
     }
   }
   if (current == end) {
-    dx_set_error(DX_ERROR_CONVERSION_FAILED);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ConversionFailed);
+    return Core_Failure;
   }
-  dx_n64 value = 0;
+  Core_Natural64 value = 0;
   // digit+
   if (!is_digit(current, end)) {
-    dx_set_error(DX_ERROR_CONVERSION_FAILED);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ConversionFailed);
+    return Core_Failure;
   }
   do {
     //
-    static dx_n64 const BASE = 10;
-    static dx_n64 const MAX1 = DX_N64_GREATEST - 5; // 18446744073709551615	/ 10 = 1844674407370955161.5 = 1844674407370955161.
-                                                    // 1844674407370955161 * 10 = 18446744073709551610 is no overflow.
+    static Core_Natural64 const BASE = 10;
+    static Core_Natural64 const MAX1 = Core_Natural64_Greatest - 5; // 18446744073709551615	/ 10 = 1844674407370955161.5 = 1844674407370955161.
+                                                                    // 1844674407370955161 * 10 = 18446744073709551610 is no overflow.
     if (value == MAX1) {
-      dx_set_error(DX_ERROR_CONVERSION_FAILED);
-      return DX_FAILURE;
+      Core_setError(Core_Error_ConversionFailed);
+      return Core_Failure;
     }
     value = value * BASE;
     //
-    static dx_n64 const MAX2 = DX_N64_GREATEST;
-    dx_n64 x = ((dx_n64)*current) - (dx_n64)'0';
+    static Core_Natural64 const MAX2 = Core_Natural64_Greatest;
+    Core_Natural64 x = *current - '0';
     if (MAX2 - x < value) {
-      dx_set_error(DX_ERROR_CONVERSION_FAILED);
-      return DX_FAILURE;
+      Core_setError(Core_Error_ConversionFailed);
+      return Core_Failure;
     }
     value += x;
     //
     current++;
   } while (is_digit(current, end));
   *target = value;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-dx_result dx_convert_utf8bytes_to_sz(char const* p, dx_size n, dx_size* target) {
+Core_Result dx_convert_utf8bytes_to_sz(char const* p, Core_Size n, Core_Size* target) {
 #if defined(_M_X64)
   return dx_convert_utf8bytes_to_n64(p, n, target);
 #elif defined(_M_IX86)
@@ -600,14 +616,14 @@ dx_result dx_convert_utf8bytes_to_sz(char const* p, dx_size n, dx_size* target) 
 }
 
 
-dx_result dx_convert_utf8bytes_to_f32(char const* p, dx_size n, dx_f32* target) {
+Core_Result dx_convert_utf8bytes_to_f32(char const* p, Core_Size n, Core_Real32* target) {
   if (dx_parse_flit(p, n)) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
 #define N_MAX 200
   if (n > N_MAX) {
-    dx_set_error(DX_ERROR_CONVERSION_FAILED);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ConversionFailed);
+    return Core_Failure;
   }
   errno = 0;
   char buffer[N_MAX + 1];
@@ -616,26 +632,26 @@ dx_result dx_convert_utf8bytes_to_f32(char const* p, dx_size n, dx_f32* target) 
   char* end;
   double v = strtof(buffer, &end);
   if (end != &buffer[n]) {
-    dx_set_error(DX_ERROR_CONVERSION_FAILED);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ConversionFailed);
+    return Core_Failure;
   }
   if (errno) {
-    dx_set_error(DX_ERROR_CONVERSION_FAILED);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ConversionFailed);
+    return Core_Failure;
   }
 #undef N_MAX
   *target = v;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-dx_result dx_convert_utf8bytes_to_f64(char const* p, dx_size n, dx_f64* target) {
+Core_Result dx_convert_utf8bytes_to_f64(char const* p, Core_Size n, Core_Real64* target) {
   if (dx_parse_flit(p, n)) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
 #define N_MAX 200
   if (n > N_MAX) {
-    dx_set_error(DX_ERROR_CONVERSION_FAILED);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ConversionFailed);
+    return Core_Failure;
   }
   errno = 0;
   char buffer[N_MAX + 1];
@@ -644,36 +660,36 @@ dx_result dx_convert_utf8bytes_to_f64(char const* p, dx_size n, dx_f64* target) 
   char* end;
   double v = strtod(buffer, &end);
   if (end != &buffer[n]) {
-    dx_set_error(DX_ERROR_CONVERSION_FAILED);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ConversionFailed);
+    return Core_Failure;
   }
   if (errno) {
-    dx_set_error(DX_ERROR_CONVERSION_FAILED);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ConversionFailed);
+    return Core_Failure;
   }
 #undef N_MAX
   *target = v;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-dx_result dx_convert_utf8bytes_to_bool(char const* p, dx_size n, dx_bool* target) {
+Core_Result dx_convert_utf8bytes_to_bool(char const* p, Core_Size n, Core_Boolean* target) {
   if (!p || !target) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
   static_assert(sizeof("true") != sizeof("false"), "environment not supported");
   switch (n) {
     case sizeof("true") - sizeof(char) : {
       *target = !memcmp(p, "true", n);
-      return DX_SUCCESS;
+      return Core_Success;
     } break;
     case sizeof("false") - sizeof(char) : {
       *target = !memcmp(p, "false", n);
-      return DX_SUCCESS;
+      return Core_Success;
     } break;
     default: {
-      dx_set_error(DX_ERROR_CONVERSION_FAILED);
-      return DX_FAILURE;
+      Core_setError(Core_Error_ConversionFailed);
+      return Core_Failure;
     } break;
   };
 }

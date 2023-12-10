@@ -11,15 +11,15 @@
 /// A face of four indices is also called a quadriliteral.
 DX_DECLARE_OBJECT_TYPE("dx.assets.face",
                        dx_assets_face,
-                       dx_object);
+                       Core_Object);
 
 static inline dx_assets_face* DX_ASSETS_FACE(void* p) {
   return (dx_assets_face*)p;
 }
 
 struct dx_assets_face {
-  dx_object _parent;
-  dx_size number_of_indices;
+  Core_Object _parent;
+  Core_Size number_of_indices;
   uint32_t *indices;
 };
 
@@ -28,32 +28,32 @@ static inline dx_assets_face_dispatch* DX_ASSETS_FACE_DISPATCH(void* p) {
 }
 
 struct dx_assets_face_dispatch {
-  dx_object_dispatch _parent;
+  Core_Object_Dispatch _parent;
 };
 
 /// @param a The first index.
 /// @param b The second index.
 /// @param c The third index.
 /// @constructor{dx_assets_face}
-dx_result dx_assets_face_construct_triangle(dx_assets_face* SELF, uint32_t a, uint32_t b, uint32_t c);
+Core_Result dx_assets_face_construct_triangle(dx_assets_face* SELF, uint32_t a, uint32_t b, uint32_t c);
 
-dx_result dx_assets_face_create_triangle(dx_assets_face** RETURN, uint32_t a, uint32_t b, uint32_t c);
+Core_Result dx_assets_face_create_triangle(dx_assets_face** RETURN, uint32_t a, uint32_t b, uint32_t c);
 
 /// @param a The first index.
 /// @param b The second index.
 /// @param c The third index.
 /// @param c The fourth index.
 /// @constructor{dx_assets_face}
-dx_result dx_assets_face_construct_quadriliteral(dx_assets_face* SELF, uint32_t a, uint32_t b, uint32_t c, uint32_t d);
+Core_Result dx_assets_face_construct_quadriliteral(dx_assets_face* SELF, uint32_t a, uint32_t b, uint32_t c, uint32_t d);
 
-dx_result dx_assets_face_create_quadriliteral(dx_assets_face** RETURN, uint32_t a, uint32_t b, uint32_t c, uint32_t d);
+Core_Result dx_assets_face_create_quadriliteral(dx_assets_face** RETURN, uint32_t a, uint32_t b, uint32_t c, uint32_t d);
 
 /// @brief Construct this face.
 /// @param other A pointer of the face to copy.
 /// @constructor{dx_assets_face}
-dx_result dx_assets_face_construct_copy(dx_assets_face* SELF, dx_assets_face* other);
+Core_Result dx_assets_face_construct_copy(dx_assets_face* SELF, dx_assets_face* other);
 
-dx_result dx_assets_face_create_copy(dx_assets_face** RETURN, dx_assets_face* other);
+Core_Result dx_assets_face_create_copy(dx_assets_face** RETURN, dx_assets_face* other);
 
 /// @brief Convert this face into triangles. Add those triangles to the specified list.
 /// @param SELF 
@@ -61,7 +61,7 @@ dx_result dx_assets_face_create_copy(dx_assets_face** RETURN, dx_assets_face* ot
 /// @return 
 /// @remarks If the face is a triangle, then its copy is added to the list.
 /// If the face is a quadriliteral (with four indices i0, i1, i2, i3) then it is split at indices i0 and i2.
-dx_result dx_assets_face_to_triangles(dx_assets_face* SELF, dx_inline_object_array* faces);
+Core_Result dx_assets_face_to_triangles(dx_assets_face* SELF, dx_inline_object_array* faces);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
@@ -75,17 +75,17 @@ dx_result dx_assets_face_to_triangles(dx_assets_face* SELF, dx_inline_object_arr
 /// A mesh always has a dx_asset_material associated.
 DX_DECLARE_OBJECT_TYPE("dx.assets.mesh",
                        dx_assets_mesh,
-                       dx_object);
+                       Core_Object);
 
 static inline dx_assets_mesh* DX_ASSETS_MESH(void* p) {
   return (dx_assets_mesh*)p;
 }
 
 struct dx_assets_mesh {
-  dx_object _parent;
+  Core_Object _parent;
 
   /// @brief A pointer to the ADL name of this image.
-  dx_string* name;
+  Core_String* name;
 
   /// @brief Reference to the material of this mesh.
   dx_asset_reference* material_reference;
@@ -94,7 +94,7 @@ struct dx_assets_mesh {
   uint32_t number_of_vertices;
 
   /// @brief The format of the vertices of this mesh.
-  dx_vertex_format vertex_format;
+  Core_VertexFormat vertex_format;
 
   struct {
     /// The mesh ambient "rgba" value.
@@ -122,7 +122,7 @@ static inline dx_assets_mesh_dispatch* DX_ASSETS_MESH_DISPATCH(void* p) {
 }
 
 struct dx_assets_mesh_dispatch {
-  dx_object_dispatch _parent;
+  Core_Object_Dispatch _parent;
 };
 
 /// @brief Generate a mesh.
@@ -139,36 +139,36 @@ struct dx_assets_mesh_dispatch {
 /// - "cube" a cube mesh
 /// - "empty" an empty mesh
 /// @create-operator{dx_assets_mesh}
-dx_result dx_assets_mesh_create(dx_assets_mesh** RETURN, dx_string* name, dx_string* specifier, dx_vertex_format vertex_format, dx_asset_reference* material_reference);
+Core_Result dx_assets_mesh_create(dx_assets_mesh** RETURN, Core_String* name, Core_String* specifier, Core_VertexFormat vertex_format, dx_asset_reference* material_reference);
 
 /// @brief Pack the mesh data into a single stream of the specified format.
 /// @param vertex_format The vertex format to pack the mesh data in.
 /// @param bytes A pointer to a <code>void*</code> variable.
-/// @param number_of_bytes A pointer to a <code>dx_size</code> variable.
+/// @param number_of_bytes A pointer to a <code>Core_Size</code> variable.
 /// @success
 /// <code>*number_of_bytes</code> was assigned the length, in Bytes, of the packed mesh data.
 /// <code>*bytes</code> was assigned a pointer to an array of length <code>*number_of_bytes</code>.
 /// @method{dx_assets_mesh}
-dx_result dx_assets_mesh_format(dx_assets_mesh* SELF, dx_vertex_format vertex_format, void **bytes, dx_size*number_of_bytes);
+Core_Result dx_assets_mesh_format(dx_assets_mesh* SELF, Core_VertexFormat vertex_format, void **bytes, Core_Size*number_of_bytes);
 
 /// @brief Transform a range of vertices.
 /// @param a A pointer to the transformation matrix.
 /// @param i The index of the vertex at which the range starts.
 /// @param n The number of vertices in the range.
 /// @method{dx_assets_mesh}
-dx_result dx_assets_mesh_transform_range(dx_assets_mesh* SELF, DX_MAT4 const* a, dx_size i, dx_size n);
+Core_Result dx_assets_mesh_transform_range(dx_assets_mesh* SELF, DX_MAT4 const* a, Core_Size i, Core_Size n);
 
 /// @brief Append a vertex.
 /// @param xyz, ambient_rgba, ambient_uv The mesh data.
 /// @method{dx_assets_mesh}
-dx_result dx_assets_mesh_append_vertex(dx_assets_mesh* SELF,
+Core_Result dx_assets_mesh_append_vertex(dx_assets_mesh* SELF,
                                        DX_VEC3 const* xyz,
                                        DX_VEC4 const* ambient_rgba,
                                        DX_VEC2_F32 const* ambient_uv);
 
 /// @brief Remove all vertices.
 /// @method{dx_assets_mesh}
-dx_result dx_assets_mesh_clear(dx_assets_mesh* SELF);
+Core_Result dx_assets_mesh_clear(dx_assets_mesh* SELF);
 
 /// @brief Set the "mesh ambient rgba" value.
 /// @param SELF A pointer to this mesh.
@@ -179,6 +179,6 @@ void dx_assets_mesh_set_mesh_ambient_rgba(dx_assets_mesh* SELF, DX_VEC4 const* v
 /// @param i The index of the vertex at which the range starts.
 /// @param n The length, in vertices, of the range.
 /// @method{dx_assets_mesh}
-dx_result dx_assets_mesh_append_range(dx_assets_mesh* SELF, dx_size i, dx_size n);
+Core_Result dx_assets_mesh_append_range(dx_assets_mesh* SELF, Core_Size i, Core_Size n);
 
 #endif // DX_ASSETS_MESH_H_INCLUDED

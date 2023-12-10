@@ -1,0 +1,9 @@
+{
+  "type" : "typedef",
+  "last-update" : "2023-12-18",
+  "indices" : "core",
+  "name" : "Core_Integer32",
+  "id" : "core-integer32",
+  "signature" : "typedef &lt;implementation&gt; Core_Integer32;",
+  "description" : "A two's complement integer of a width of 32 Bits. This usually is an alias of @{code('int32_t')}."
+}

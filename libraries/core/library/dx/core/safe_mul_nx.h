@@ -69,10 +69,10 @@ uint32_t dx_mul_u32(uint32_t x, uint32_t y, uint32_t* z);
 uint64_t dx_mul_u64(uint64_t x, uint64_t y, uint64_t* z);
 
 /// @ingroup core
-/// Compute the product of two <code>dx_size</code> values and return the low and the high word of the result separatly.
+/// Compute the product of two <code>Core_Size</code> values and return the low and the high word of the result separatly.
 /// @param a The multiplier/first factor.
 /// @param b The multiplicand/second factor.
-/// @param [out] c A pointer to a <code>dx_size</code> variable.
+/// @param [out] c A pointer to a <code>Core_Size</code> variable.
 /// @return
 /// The low word of the product.
 /// @success
@@ -81,13 +81,7 @@ uint64_t dx_mul_u64(uint64_t x, uint64_t y, uint64_t* z);
 /// @failure
 /// This function cannot fail.
 /// @warning
-/// If <code>c</code> does not point to a <code>dx_size</code> variable, the behavior of this function is undefined.
-dx_size dx_mul_sz(dx_size a, dx_size b, dx_size* c);
-
-#if defined(DX_SAFE_MUL_NX_WITH_TESTS) && 1 == DX_SAFE_MUL_NX_WITH_TESTS
-
-int dx_safe_mul_nx_tests();
-
-#endif // DX_SAFE_MUL_NX_WITH_TESTS
+/// If <code>c</code> does not point to a <code>Core_Size</code> variable, the behavior of this function is undefined.
+Core_Size dx_mul_sz(Core_Size a, Core_Size b, Core_Size* c);
 
 #endif // DX_ASM_MUL_NX_H_INCLUDED

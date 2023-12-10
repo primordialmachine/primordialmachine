@@ -7,28 +7,25 @@ DX_DEFINE_OBJECT_TYPE("dx.assets.image_operations.mirror_vertical",
 static void dx_assets_image_operations_mirror_vertical_destruct(dx_assets_image_operations_mirror_vertical* SELF)
 {/*Intentionally empty.*/}
 
-static void dx_assets_image_operations_mirror_vertical_dispatch_construct(dx_assets_image_operations_mirror_vertical_dispatch* SELF)
+static void dx_assets_image_operations_mirror_vertical_constructDispatch(dx_assets_image_operations_mirror_vertical_dispatch* SELF)
 {/*Intentionally empty.*/}
 
-dx_result dx_assets_image_operations_mirror_vertical_construct(dx_assets_image_operations_mirror_vertical* SELF) {
-  dx_rti_type* TYPE = dx_assets_image_operations_mirror_vertical_get_type();
-  if (!TYPE) {
-    return DX_FAILURE;
-  }
+Core_Result dx_assets_image_operations_mirror_vertical_construct(dx_assets_image_operations_mirror_vertical* SELF) {
+  DX_CONSTRUCT_PREFIX(dx_assets_image_operations_mirror_vertical);
   if (dx_assets_image_operation_construct(DX_ASSETS_IMAGE_OPERATION(SELF))) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
-  DX_OBJECT(SELF)->type = TYPE;
-  return DX_SUCCESS;
+  CORE_OBJECT(SELF)->type = TYPE;
+  return Core_Success;
 }
 
-dx_result dx_assets_image_operations_mirror_vertical_create(dx_assets_image_operations_mirror_vertical** RETURN) {
-  DX_CREATE_PREFIX(dx_assets_image_operations_mirror_vertical)
+Core_Result dx_assets_image_operations_mirror_vertical_create(dx_assets_image_operations_mirror_vertical** RETURN) {
+  DX_CREATE_PREFIX(dx_assets_image_operations_mirror_vertical);
   if (dx_assets_image_operations_mirror_vertical_construct(SELF)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   *RETURN = SELF;
-  return DX_SUCCESS;
+  return Core_Success;
 }

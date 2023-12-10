@@ -9,14 +9,14 @@
 /// There was not use in introducing a dx.val.viewer_instance object (yet).
 DX_DECLARE_OBJECT_TYPE("dx.val.viewer",
                        dx_val_viewer,
-                       dx_object)
+                       Core_Object);
 
 static inline dx_val_viewer* DX_VAL_VIEWER(void* p) {
   return (dx_val_viewer*)p;
 }
 
 struct dx_val_viewer {
-  dx_object _parent;
+  Core_Object _parent;
   /// @brief The asset viewer instance this viewer is based on.
   dx_assets_viewer_instance* asset_viewer_instance;
   /// @brief The view matrix of this viewer.
@@ -36,15 +36,15 @@ static inline dx_val_viewer_dispatch* DX_VAL_VIEWER_DISPATCH(void* p) {
 }
 
 struct dx_val_viewer_dispatch {
-  dx_object_dispatch _parent;
+  Core_Object_Dispatch _parent;
 };
 
-dx_result dx_val_viewer_construct(dx_val_viewer* SELF, dx_assets_viewer_instance* asset_viewer_instance);
+Core_Result dx_val_viewer_construct(dx_val_viewer* SELF, dx_assets_viewer_instance* asset_viewer_instance);
 
-dx_result dx_val_viewer_create(dx_val_viewer** RETURN, dx_assets_viewer_instance* asset_viewer_instance);
+Core_Result dx_val_viewer_create(dx_val_viewer** RETURN, dx_assets_viewer_instance* asset_viewer_instance);
 
-dx_result dx_val_viewer_get_projection_matrix(DX_MAT4* RETURN, dx_val_viewer* SELF, dx_i32 canvas_width, dx_i32 canvas_height);
+Core_Result dx_val_viewer_get_projection_matrix(DX_MAT4* RETURN, dx_val_viewer* SELF, Core_Integer32 canvas_width, Core_Integer32 canvas_height);
 
-dx_result dx_val_viewer_get_view_matrix(DX_MAT4* RETURN, dx_val_viewer* SELF, dx_i32 canvas_width, dx_i32 canvas_height);
+Core_Result dx_val_viewer_get_view_matrix(DX_MAT4* RETURN, dx_val_viewer* SELF, Core_Integer32 canvas_width, Core_Integer32 canvas_height);
 
 #endif // DX_VAL_VIEWER_H_INCLUDED

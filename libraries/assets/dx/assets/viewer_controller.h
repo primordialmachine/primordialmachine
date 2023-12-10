@@ -8,24 +8,24 @@ typedef struct dx_assets_viewer dx_assets_viewer;
 
 DX_DECLARE_OBJECT_TYPE("dx.assets.viewer_controller",
                        dx_assets_viewer_controller,
-                       dx_object);
+                       Core_Object);
 
 static inline dx_assets_viewer_controller* DX_ASSETS_VIEWER_CONTROLLER(void* p) {
   return (dx_assets_viewer_controller*)p;
 }
 
 struct dx_assets_viewer_controller {
-  dx_object _parent;
-  dx_result (*update)(dx_assets_viewer_controller* SELF, dx_assets_viewer* viewer, dx_f32 delta_seconds);
+  Core_Object _parent;
+  Core_Result (*update)(dx_assets_viewer_controller* SELF, dx_assets_viewer* viewer, Core_Real32 delta_seconds);
 };
 
 struct dx_assets_viewer_controller_dispatch {
-  dx_object_dispatch _parent;
+  Core_Object_Dispatch _parent;
 };
 
-dx_result dx_assets_viewer_controller_construct(dx_assets_viewer_controller* SELF);
+Core_Result dx_assets_viewer_controller_construct(dx_assets_viewer_controller* SELF);
 
-dx_result dx_assets_viewer_controller_update(dx_assets_viewer_controller* SELF, dx_assets_viewer* viewer, dx_f32 delta_seconds);
+Core_Result dx_assets_viewer_controller_update(dx_assets_viewer_controller* SELF, dx_assets_viewer* viewer, Core_Real32 delta_seconds);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
@@ -42,7 +42,7 @@ static inline dx_asset_viewer_controllers_rotate_y* DX_ASSET_VIEWER_CONTROLLERS_
 struct dx_asset_viewer_controllers_rotate_y {
   dx_assets_viewer_controller _parent;
   /// @brief The number of degrees per second to rotate the viewer by.
-  dx_f32 degrees_per_second;
+  Core_Real32 degrees_per_second;
   /// @brief The position the viewer is looking from.
   DX_VEC3 source;
   /// @brief The position the viewer is looking at.
@@ -50,7 +50,7 @@ struct dx_asset_viewer_controllers_rotate_y {
   /// @brief The up vector of the viewer.
   DX_VEC3 up;
   /// @brief The current degrees to rotate the viewer by.
-  dx_f32 degrees;
+  Core_Real32 degrees;
 };
 
 static inline dx_asset_viewer_controllers_rotate_y_dispatch* DX_ASSET_VIEWER_CONTROLLERS_ROTATE_Y_DISPATCH(void* p) {
@@ -66,9 +66,9 @@ struct dx_asset_viewer_controllers_rotate_y_dispatch {
 /// @remarks The default values are up <code>(0,1,0)</code>, source <code>(0,0,1)</code>, target <code>(0,0,0)</code>, and degrees per second <code>16</code>.
 /// @default-return
 /// @todo Fixme.
-dx_result dx_asset_viewer_controllers_rotate_y_construct(dx_asset_viewer_controllers_rotate_y* SELF);
+Core_Result dx_asset_viewer_controllers_rotate_y_construct(dx_asset_viewer_controllers_rotate_y* SELF);
 
-dx_result dx_asset_viewer_controllers_rotate_y_create(dx_asset_viewer_controllers_rotate_y** RETURN);
+Core_Result dx_asset_viewer_controllers_rotate_y_create(dx_asset_viewer_controllers_rotate_y** RETURN);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 

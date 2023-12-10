@@ -6,10 +6,10 @@
 // strlen
 #include <string.h>
 
-static inline dx_string* _get_name(dx_adl_names* names, dx_size index) {
+static inline Core_String* _get_name(dx_adl_names* names, Core_Size index) {
   DX_DEBUG_ASSERT(NULL != names);
   DX_DEBUG_ASSERT(index < DX_ADL_NAMES_NUMBER_OF_NAMES);
-  dx_string* name = names->names[index];
+  Core_String* name = names->names[index];
   DX_DEBUG_ASSERT(NULL != name);
   return name;
 }
@@ -20,21 +20,21 @@ static void _on_expected_key_key_added(void** a);
 
 static void _on_expected_key_key_removed(void** a);
 
-static dx_result _on_hash_expected_key_key(dx_size* RETURN, void** a);
+static Core_Result _on_hash_expected_key_key(Core_Size* RETURN, void** a);
 
-static dx_result _on_compare_expected_key_keys(dx_bool* RETURN, void** a, void** b);
+static Core_Result _on_compare_expected_key_keys(Core_Boolean* RETURN, void** a, void** b);
 
-static dx_result _initialize_expected_keys(dx_adl_type_handlers_image_operations_checkerboard_pattern_fill* SELF);
+static Core_Result _initialize_expected_keys(dx_adl_type_handlers_image_operations_checkerboard_pattern_fill* SELF);
 
-static dx_result _uninitialize_expected_keys(dx_adl_type_handlers_image_operations_checkerboard_pattern_fill* SELF);
+static Core_Result _uninitialize_expected_keys(dx_adl_type_handlers_image_operations_checkerboard_pattern_fill* SELF);
 
-static dx_result _check_keys(dx_adl_type_handlers_image_operations_checkerboard_pattern_fill* SELF, dx_ddl_node* node);
+static Core_Result _check_keys(dx_adl_type_handlers_image_operations_checkerboard_pattern_fill* SELF, dx_ddl_node* node);
 
-static dx_result _parse_checker_colors(dx_adl_type_handlers_image_operations_checkerboard_pattern_fill* SELF, dx_assets_image_operations_checkerboard_pattern_fill* asset, dx_ddl_node* node, dx_adl_context* context);
+static Core_Result _parse_checker_colors(dx_adl_type_handlers_image_operations_checkerboard_pattern_fill* SELF, dx_assets_image_operations_checkerboard_pattern_fill* asset, dx_ddl_node* node, dx_adl_context* context);
 
-static dx_result _parse(dx_object** RETURN, dx_adl_type_handlers_image_operations_checkerboard_pattern_fill* SELF, dx_ddl_node* node, dx_adl_context* context);
+static Core_Result _parse(Core_Object** RETURN, dx_adl_type_handlers_image_operations_checkerboard_pattern_fill* SELF, dx_ddl_node* node, dx_adl_context* context);
 
-static dx_result _resolve(dx_adl_type_handlers_image_operations_checkerboard_pattern_fill* SELF, dx_adl_symbol* symbol, dx_adl_context* context);
+static Core_Result _resolve(dx_adl_type_handlers_image_operations_checkerboard_pattern_fill* SELF, dx_adl_symbol* symbol, dx_adl_context* context);
 
 DX_DEFINE_OBJECT_TYPE("dx.adl.type_handlers.image_operations.checkerboard_pattern_fill_reader",
                       dx_adl_type_handlers_image_operations_checkerboard_pattern_fill,
@@ -48,46 +48,44 @@ static void _on_expected_key_key_removed(void** a) {
   DX_UNREFERENCE(*a);
 }
 
-static dx_result _on_hash_expected_key_key(dx_size* RETURN, void** a) {
-  *RETURN = dx_string_get_hash_value(DX_STRING(*a));
-  return DX_SUCCESS;
+static Core_Result _on_hash_expected_key_key(Core_Size* RETURN, Core_String** a) {
+  return Core_String_getHashValue(RETURN, *a);
 }
 
-static dx_result _on_compare_expected_key_keys(dx_bool* RETURN, void** a, void** b) {
-  *RETURN = dx_string_is_equal_to(DX_STRING(*a), DX_STRING(*b));
-  return DX_SUCCESS;
+static Core_Result _on_compare_expected_key_keys(Core_Boolean* RETURN, Core_String** a, Core_String** b) {
+  return Core_String_isEqualTo(RETURN, *a, *b);
 }
 
-static dx_result _uninitialize_expected_keys(dx_adl_type_handlers_image_operations_checkerboard_pattern_fill* SELF) {
+static Core_Result _uninitialize_expected_keys(dx_adl_type_handlers_image_operations_checkerboard_pattern_fill* SELF) {
   dx_inline_pointer_hashmap_uninitialize(&SELF->expected_keys);
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-static dx_result _initialize_expected_keys(dx_adl_type_handlers_image_operations_checkerboard_pattern_fill* SELF) {
+static Core_Result _initialize_expected_keys(dx_adl_type_handlers_image_operations_checkerboard_pattern_fill* SELF) {
   DX_INLINE_POINTER_HASHMAP_CONFIGURATION cfg = {
     .key_added_callback = &_on_expected_key_key_added,
     .key_removed_callback = &_on_expected_key_key_removed,
     .value_added_callback = NULL,
     .value_removed_callback = NULL,
-    .hash_key_callback = &_on_hash_expected_key_key,
-    .compare_keys_callback = &_on_compare_expected_key_keys,
+    .hash_key_callback = (dx_inline_pointer_hashmap_hash_key_callback*)&_on_hash_expected_key_key,
+    .compare_keys_callback = (dx_inline_pointer_hashmap_compare_keys_callback*)&_on_compare_expected_key_keys,
   };
   if (dx_inline_pointer_hashmap_initialize(&SELF->expected_keys, &cfg)) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
 
 #define DEFINE(EXPECTED_KEY) \
   { \
-    dx_string* expected_key = NULL; \
-    if (dx_string_create(&expected_key, EXPECTED_KEY, sizeof(EXPECTED_KEY)-1)) { \
+    Core_String* expected_key = NULL; \
+    if (Core_String_create(&expected_key, EXPECTED_KEY, sizeof(EXPECTED_KEY)-1)) { \
       dx_inline_pointer_hashmap_uninitialize(&SELF->expected_keys); \
-      return DX_FAILURE; \
+      return Core_Failure; \
     } \
     if (dx_inline_pointer_hashmap_set(&SELF->expected_keys, expected_key, expected_key)) {\
       DX_UNREFERENCE(expected_key); \
       expected_key = NULL; \
       dx_inline_pointer_hashmap_uninitialize(&SELF->expected_keys); \
-      return DX_FAILURE; \
+      return Core_Failure; \
     } \
     DX_UNREFERENCE(expected_key); \
     expected_key = NULL; \
@@ -97,7 +95,7 @@ static dx_result _initialize_expected_keys(dx_adl_type_handlers_image_operations
   DEFINE("checkerSize");
   DEFINE("checkerColors");
 #undef DEFINE
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
 static void on_received_key_added(void** p) {
@@ -108,74 +106,74 @@ static void on_received_key_removed(void** p) {
   DX_UNREFERENCE(*p);
 }
 
-static dx_result _check_keys(dx_adl_type_handlers_image_operations_checkerboard_pattern_fill* SELF, dx_ddl_node* node) {
+static Core_Result _check_keys(dx_adl_type_handlers_image_operations_checkerboard_pattern_fill* SELF, dx_ddl_node* node) {
   DX_INLINE_POINTER_ARRAY_CONFIGURATION configuration = {
     .added_callback = &on_received_key_added,
     .removed_callback = &on_received_key_removed,
   };
   dx_inline_pointer_array received_keys;
   if (dx_inline_pointer_array_initialize(&received_keys, 0, &configuration)) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
   if (dx_inline_pointer_hashmap_get_keys(&node->map, &received_keys)) {
     dx_inline_pointer_array_uninitialize(&received_keys);
-    return DX_FAILURE;
+    return Core_Failure;
   }
-  dx_size number_of_received_keys = 0;
+  Core_Size number_of_received_keys = 0;
   if (dx_inline_pointer_array_get_size(&number_of_received_keys, &received_keys)) {
     dx_inline_pointer_array_uninitialize(&received_keys);
-    return DX_FAILURE;
+    return Core_Failure;
   }
-  for (dx_size i = 0, n = number_of_received_keys; i < n; ++i) {
-    dx_string* received_key = NULL;
+  for (Core_Size i = 0, n = number_of_received_keys; i < n; ++i) {
+    Core_String* received_key = NULL;
     if (dx_inline_pointer_array_get_at(&received_key, &received_keys, i)) {
       dx_inline_pointer_array_uninitialize(&received_keys);
-      return DX_FAILURE;
+      return Core_Failure;
     }
-    dx_string* expected_key = NULL;
+    Core_String* expected_key = NULL;
     if (dx_inline_pointer_hashmap_get(&expected_key, &SELF->expected_keys, received_key)) {
       dx_inline_pointer_array_uninitialize(&received_keys);
-      return DX_FAILURE;
+      return Core_Failure;
     }
   }
   dx_inline_pointer_array_uninitialize(&received_keys);
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-static dx_result _parse_checker_colors(dx_adl_type_handlers_image_operations_checkerboard_pattern_fill* SELF, dx_assets_image_operations_checkerboard_pattern_fill *asset, dx_ddl_node* node, dx_adl_context* context) {
+static Core_Result _parse_checker_colors(dx_adl_type_handlers_image_operations_checkerboard_pattern_fill* SELF, dx_assets_image_operations_checkerboard_pattern_fill *asset, dx_ddl_node* node, dx_adl_context* context) {
   // checkerColors
   dx_ddl_node* child_node = NULL;
   if (dx_ddl_node_map_get(&child_node, node, NAME(checker_colors_key))) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
   // checkerColors.first
   if (dx_adl_semantical_read_color_instance_field(&asset->first_checker_color, child_node, false, NAME(first_key), context)) {
     DX_UNREFERENCE(child_node);
     child_node = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   // checkerColors.second
   if (dx_adl_semantical_read_color_instance_field(&asset->second_checker_color, child_node, false, NAME(second_key), context)) {
     DX_UNREFERENCE(child_node);
     child_node = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   DX_UNREFERENCE(child_node);
   child_node = NULL;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-static dx_result _parse(dx_object** RETURN, dx_adl_type_handlers_image_operations_checkerboard_pattern_fill* SELF, dx_ddl_node* node, dx_adl_context* context) {
+static Core_Result _parse(Core_Object** RETURN, dx_adl_type_handlers_image_operations_checkerboard_pattern_fill* SELF, dx_ddl_node* node, dx_adl_context* context) {
   if (!node) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
   if (_check_keys(SELF, node)) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
   dx_assets_image_operations_checkerboard_pattern_fill* image_operation = NULL;
   if (dx_assets_image_operations_checkerboard_pattern_fill_create(&image_operation)) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
   // numberOfCheckers
   {
@@ -183,40 +181,40 @@ static dx_result _parse(dx_object** RETURN, dx_adl_type_handlers_image_operation
     if (dx_ddl_node_map_get(&child_node, node, NAME(number_of_checkers_key))) {
       DX_UNREFERENCE(image_operation);
       image_operation = NULL;
-      return DX_FAILURE;
+      return Core_Failure;
     }
     // numberOfCheckers.horizontal
     {
-      dx_size value;
+      Core_Size value;
       if (dx_adl_semantical_read_sz(&value, child_node, NAME(horizontal_key))) {
         DX_UNREFERENCE(child_node);
         child_node = NULL;
         DX_UNREFERENCE(image_operation);
         image_operation = NULL;
-        return DX_FAILURE;
+        return Core_Failure;
       }
       if (dx_assets_image_operations_checkerboard_pattern_fill_set_number_of_checkers_horizontal(image_operation, value)) {
         DX_UNREFERENCE(image_operation);
         image_operation = NULL;
-        return DX_FAILURE;
+        return Core_Failure;
       }
     }
     // numberOfCheckers.vertical
     {
-      dx_size value;
+      Core_Size value;
       if (dx_adl_semantical_read_sz(&value, child_node, NAME(vertical_key))) {
         DX_UNREFERENCE(child_node);
         child_node = NULL;
         DX_UNREFERENCE(image_operation);
         image_operation = NULL;
-        return DX_FAILURE;
+        return Core_Failure;
       }
       if (dx_assets_image_operations_checkerboard_pattern_fill_set_number_of_checkers_vertical(image_operation, value)) {
         DX_UNREFERENCE(child_node);
         child_node = NULL;
         DX_UNREFERENCE(image_operation);
         image_operation = NULL;
-        return DX_FAILURE;
+        return Core_Failure;
       }
     }
     DX_UNREFERENCE(child_node);
@@ -228,42 +226,42 @@ static dx_result _parse(dx_object** RETURN, dx_adl_type_handlers_image_operation
     if (dx_ddl_node_map_get(&child_node, node, NAME(checker_size_key))) {
       DX_UNREFERENCE(image_operation);
       image_operation = NULL;
-      return DX_FAILURE;
+      return Core_Failure;
     }
     // checkerSize.horizontal
     {
-      dx_size value;
+      Core_Size value;
       if (dx_adl_semantical_read_sz(&value, child_node, NAME(horizontal_key))) {
         DX_UNREFERENCE(child_node);
         child_node = NULL;
         DX_UNREFERENCE(image_operation);
         image_operation = NULL;
-        return DX_FAILURE;
+        return Core_Failure;
       }
       if (dx_assets_image_operations_checkerboard_pattern_fill_set_checker_size_horizontal(image_operation, value)) {
         DX_UNREFERENCE(child_node);
         child_node = NULL;
         DX_UNREFERENCE(image_operation);
         image_operation = NULL;
-        return DX_FAILURE;
+        return Core_Failure;
       }
     }
     // checkerSize.vertical
     {
-      dx_size value;
+      Core_Size value;
       if (dx_adl_semantical_read_sz(&value, child_node, NAME(vertical_key))) {
         DX_UNREFERENCE(child_node);
         child_node = NULL;
         DX_UNREFERENCE(image_operation);
         image_operation = NULL;
-        return DX_FAILURE;
+        return Core_Failure;
       }
       if (dx_assets_image_operations_checkerboard_pattern_fill_set_checker_size_vertical(image_operation, value)) {
         DX_UNREFERENCE(child_node);
         child_node = NULL;
         DX_UNREFERENCE(image_operation);
         image_operation = NULL;
-        return DX_FAILURE;
+        return Core_Failure;
       }
     }
     DX_UNREFERENCE(child_node);
@@ -273,15 +271,15 @@ static dx_result _parse(dx_object** RETURN, dx_adl_type_handlers_image_operation
   if (_parse_checker_colors(SELF, image_operation, node, context)) {
     DX_UNREFERENCE(image_operation);
     image_operation = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
-  *RETURN = DX_OBJECT(image_operation);
-  return DX_SUCCESS;
+  *RETURN = CORE_OBJECT(image_operation);
+  return Core_Success;
 }
 
-static dx_result _resolve(dx_adl_type_handlers_image_operations_checkerboard_pattern_fill* SELF, dx_adl_symbol* symbol, dx_adl_context* context) {
+static Core_Result _resolve(dx_adl_type_handlers_image_operations_checkerboard_pattern_fill* SELF, dx_adl_symbol* symbol, dx_adl_context* context) {
   if (symbol->resolved) {
-    return DX_SUCCESS;
+    return Core_Success;
   }
   dx_assets_image_operations_checkerboard_pattern_fill* asset = DX_ASSETS_IMAGE_OPERATIONS_CHECKERBOARD_PATTERN_FILL(symbol->asset);
   // checkerColors
@@ -290,13 +288,13 @@ static dx_result _resolve(dx_adl_type_handlers_image_operations_checkerboard_pat
     {
       dx_adl_symbol* color_symbol = NULL;
       if (dx_asset_definitions_get(&color_symbol, context->definitions, asset->first_checker_color->name)) {
-        return DX_FAILURE;
+        return Core_Failure;
       }
       dx_assets_color_rgb_n8* color_asset = DX_ASSETS_COLOR_RGB_N8(color_symbol->asset);
       if (dx_assets_image_operations_checkerboard_pattern_fill_set_first_checker_color(asset, color_asset)) {
         DX_UNREFERENCE(color_symbol);
         color_symbol = NULL;
-        return DX_FAILURE;
+        return Core_Failure;
       }
       DX_UNREFERENCE(color_symbol);
       color_symbol = NULL;
@@ -305,13 +303,13 @@ static dx_result _resolve(dx_adl_type_handlers_image_operations_checkerboard_pat
     {
       dx_adl_symbol* color_symbol = NULL;
       if (dx_asset_definitions_get(&color_symbol, context->definitions, asset->second_checker_color->name)) {
-        return DX_FAILURE;
+        return Core_Failure;
       }
       dx_assets_color_rgb_n8* color_asset = DX_ASSETS_COLOR_RGB_N8(color_symbol->asset);
       if (dx_assets_image_operations_checkerboard_pattern_fill_set_second_checker_color(asset, color_asset)) {
         DX_UNREFERENCE(color_symbol);
         color_symbol = NULL;
-        return DX_FAILURE;
+        return Core_Failure;
       }
       DX_UNREFERENCE(color_symbol);
       color_symbol = NULL;
@@ -319,40 +317,37 @@ static dx_result _resolve(dx_adl_type_handlers_image_operations_checkerboard_pat
   }
   //
   symbol->resolved = true;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-dx_result dx_adl_type_handlers_image_operations_checkerboard_pattern_fill_construct(dx_adl_type_handlers_image_operations_checkerboard_pattern_fill* SELF) {
-  dx_rti_type* TYPE = dx_adl_type_handlers_image_operations_checkerboard_pattern_fill_get_type();
-  if (!TYPE) {
-    return DX_FAILURE;
-  }
+Core_Result dx_adl_type_handlers_image_operations_checkerboard_pattern_fill_construct(dx_adl_type_handlers_image_operations_checkerboard_pattern_fill* SELF) {
+  DX_CONSTRUCT_PREFIX(dx_adl_type_handlers_image_operations_checkerboard_pattern_fill);
   if (dx_adl_type_handler_construct(DX_ADL_TYPE_HANDLER(SELF))) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
   if (_initialize_expected_keys(SELF)) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
-  DX_OBJECT(SELF)->type = TYPE;
-  return DX_SUCCESS;
+  CORE_OBJECT(SELF)->type = TYPE;
+  return Core_Success;
 }
 
 static void dx_adl_type_handlers_image_operations_checkerboard_pattern_fill_destruct(dx_adl_type_handlers_image_operations_checkerboard_pattern_fill* SELF) {
   _uninitialize_expected_keys(SELF);
 }
 
-static void dx_adl_type_handlers_image_operations_checkerboard_pattern_fill_dispatch_construct(dx_adl_type_handlers_image_operations_checkerboard_pattern_fill_dispatch* SELF) {
-  DX_ADL_TYPE_HANDLER_DISPATCH(SELF)->read = (dx_result (*)(dx_object**, dx_adl_type_handler*, dx_ddl_node*, dx_adl_context*)) & _parse;
-  DX_ADL_TYPE_HANDLER_DISPATCH(SELF)->resolve = (dx_result(*)(dx_adl_type_handler*, dx_adl_symbol*, dx_adl_context*)) & _resolve;
+static void dx_adl_type_handlers_image_operations_checkerboard_pattern_fill_constructDispatch(dx_adl_type_handlers_image_operations_checkerboard_pattern_fill_dispatch* SELF) {
+  DX_ADL_TYPE_HANDLER_DISPATCH(SELF)->read = (Core_Result (*)(Core_Object**, dx_adl_type_handler*, dx_ddl_node*, dx_adl_context*)) & _parse;
+  DX_ADL_TYPE_HANDLER_DISPATCH(SELF)->resolve = (Core_Result(*)(dx_adl_type_handler*, dx_adl_symbol*, dx_adl_context*)) & _resolve;
 }
 
-dx_result dx_adl_type_handlers_image_operations_checkerboard_pattern_fill_create(dx_adl_type_handlers_image_operations_checkerboard_pattern_fill** RETURN) {
-  DX_CREATE_PREFIX(dx_adl_type_handlers_image_operations_checkerboard_pattern_fill)
+Core_Result dx_adl_type_handlers_image_operations_checkerboard_pattern_fill_create(dx_adl_type_handlers_image_operations_checkerboard_pattern_fill** RETURN) {
+  DX_CREATE_PREFIX(dx_adl_type_handlers_image_operations_checkerboard_pattern_fill);
   if (dx_adl_type_handlers_image_operations_checkerboard_pattern_fill_construct(SELF)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   *RETURN = SELF;
-  return DX_SUCCESS;
+  return Core_Success;
 }

@@ -4,23 +4,23 @@
 
 DX_DEFINE_OBJECT_TYPE("dx.val.material",
                       dx_val_material,
-                      dx_object);
+                      Core_Object);
 
-static dx_result add_to_backend(dx_val_material* SELF) {
+static Core_Result add_to_backend(dx_val_material* SELF) {
   if (SELF->material_asset->ambient_texture_reference && SELF->material_asset->ambient_texture_reference->object) {
     dx_assets_texture* asset_ambient_texture = DX_ASSETS_TEXTURE(SELF->material_asset->ambient_texture_reference->object);
     dx_val_texture* ambient_texture = NULL;
     if (dx_val_context_create_texture(&ambient_texture, SELF->context)) {
-      return DX_FAILURE;
+      return Core_Failure;
     }
     if (dx_val_texture_set_data(ambient_texture, asset_ambient_texture)) {
       DX_UNREFERENCE(ambient_texture);
       ambient_texture = NULL;
-      return DX_FAILURE;
+      return Core_Failure;
     }
     SELF->ambient_texture = ambient_texture;
   }
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
 static void remove_from_backend(dx_val_material* SELF) {
@@ -36,17 +36,14 @@ static void dx_val_material_destruct(dx_val_material* SELF) {
   SELF->material_asset = NULL;
 }
 
-static void dx_val_material_dispatch_construct(dx_val_material_dispatch* SELF)
+static void dx_val_material_constructDispatch(dx_val_material_dispatch* SELF)
 {/*Intentionally empty.*/}
 
-dx_result dx_val_material_construct(dx_val_material* SELF, dx_val_context* context, dx_assets_material* material_asset) {
-  if (!SELF || !context || !material_asset) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
-  }
-  dx_rti_type* TYPE = dx_val_material_get_type();
-  if (!TYPE) {
-    return DX_FAILURE;
+Core_Result dx_val_material_construct(dx_val_material* SELF, dx_val_context* context, dx_assets_material* material_asset) {
+  DX_CONSTRUCT_PREFIX(dx_val_material);
+  if (!context || !material_asset) {
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
   SELF->context = context;
   SELF->material_asset = material_asset;
@@ -56,19 +53,19 @@ dx_result dx_val_material_construct(dx_val_material* SELF, dx_val_context* conte
   if (add_to_backend(SELF)) {
     DX_UNREFERENCE(SELF->material_asset);
     SELF->material_asset = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
-  DX_OBJECT(SELF)->type = TYPE;
-  return DX_SUCCESS;
+  CORE_OBJECT(SELF)->type = TYPE;
+  return Core_Success;
 }
 
-dx_result dx_val_material_create(dx_val_material** RETURN, dx_val_context* context, dx_assets_material* material_asset) {
-  DX_CREATE_PREFIX(dx_val_material)
+Core_Result dx_val_material_create(dx_val_material** RETURN, dx_val_context* context, dx_assets_material* material_asset) {
+  DX_CREATE_PREFIX(dx_val_material);
   if (dx_val_material_construct(SELF, context, material_asset)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   *RETURN = SELF;
-  return DX_SUCCESS;
+  return Core_Success;
 }

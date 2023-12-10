@@ -27,8 +27,8 @@ struct dx_adl_type_handlers_optics_perspective_dispatch {
   dx_adl_type_handler_dispatch _parent;
 };
 
-dx_result dx_adl_type_handlers_optics_perspective_construct(dx_adl_type_handlers_optics_perspective* SELF);
+Core_Result dx_adl_type_handlers_optics_perspective_construct(dx_adl_type_handlers_optics_perspective* SELF);
 
-dx_result dx_adl_type_handlers_optics_perspective_create(dx_adl_type_handlers_optics_perspective** RETURN);
+Core_Result dx_adl_type_handlers_optics_perspective_create(dx_adl_type_handlers_optics_perspective** RETURN);
 
 #endif // DX_ADL_TYPE_HANDLERS_OPTICS_PERSPECTIVE_H_INCLUDED

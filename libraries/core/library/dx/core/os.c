@@ -2,91 +2,195 @@
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-#include "dx/core/memory.h"
+#include "Core/Memory.h"
 #include "dx/core/safe_add_nx.h"
 
-// SYSTEM_INFO, GetSystemInfo
-#define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
+#if !defined(Core_OperatingSystem)
+
+  #error("target operating system not defined")
+
+#endif
+
+#if Core_OperatingSystem == DX_OPERATING_SYSTEM_WINDOWS
+
+  // SYSTEM_INFO, GetSystemInfo, MAX_PATH
+  #define WIN32_LEAN_AND_MEAN
+  #include <Windows.h>
+
+#endif
+
+#if Core_OperatingSystem == DX_OPERATING_SYSTEM_CYGWIN
+
+  // PATH_MAX
+  #include <limits.h>
+
+#endif
+#if Core_OperatingSystem == DX_OPERATING_SYSTEM_LINUX || \
+    Core_OperatingSystem == DX_OPERATING_SYSTEM_MACOS
+
+  // PATH_MAX
+  #include <linux/limits.h>
+
+#endif
+
+#if (Core_OperatingSystem == DX_OPERATING_SYSTEM_LINUX)  || \
+    (Core_OperatingSystem == DX_OPERATING_SYSTEM_CYGWIN) || \
+    (Core_OperatingSystem == DX_OPERATING_SYSTEM_MACOS)
+
+  // sysconf
+  #include <unistd.h>
+
+#endif
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-dx_size dx_os_get_page_size() {
-  SYSTEM_INFO system_info;
-  GetSystemInfo(&system_info);
-  if (system_info.dwPageSize > SIZE_MAX) {
-    dx_set_error(DX_ERROR_ENVIRONMENT_FAILED);
-    return 0;
+#if (Core_OperatingSystem == DX_OPERATING_SYSTEM_LINUX)  || \
+    (Core_OperatingSystem == DX_OPERATING_SYSTEM_CYGWIN) || \
+    (Core_OperatingSystem == DX_OPERATING_SYSTEM_MACOS)
+
+Core_Result Core_getPageSize(Core_Size* RETURN) {
+  if (!RETURN) {
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
-  return (dx_size)system_info.dwPageSize;
+  long temporary = sysconf(_SC_PAGESIZE);
+  if (temporary < 0 || temporary > Core_Size_Greatest) {
+    Core_setError(Core_Error_EnvironmentFailed);
+    return Core_Failure;
+  }
+  *RETURN = temporary;
+  return Core_Success;
 }
 
-dx_size dx_os_get_number_of_cores() {
-  SYSTEM_INFO system_info;
-  GetSystemInfo(&system_info);
-  if (system_info.dwNumberOfProcessors > SIZE_MAX) {
-    dx_set_error(DX_ERROR_ENVIRONMENT_FAILED);
-    return 0;
+Core_Result Core_getNumberOfCores(Core_Size* RETURN) {
+  if (!RETURN) {
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
-  return (dx_size)system_info.dwNumberOfProcessors;
+  long temporary = sysconf(_SC_NPROCESSORS_ONLN);
+  if (temporary < 0 || temporary > Core_Size_Greatest) {
+    Core_setError(Core_Error_EnvironmentFailed);
+    return Core_Failure;
+  }
+  *RETURN = temporary;
+  return Core_Success;
 }
 
-dx_string* dx_os_get_executable_path() {
+Core_Result Core_getExecutablePathname(Core_String** RETURN) {
+  if (!RETURN) {
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
+  }
+  // w/o trailing zero
+  char buffer[PATH_MAX + 1];
+  // readlink will not append a zero terminator.
+  ssize_t size = readlink("/proc/self/exe", buffer, PATH_MAX);
+  if (-1 == size) {
+    Core_setErrror(Core_Error_EnvironmentFailed);
+    return Core_Failure;
+  }
+  buffer[size] = '\0';
+  /// @todo `readlink` returns a string in some encoding.
+  /// We assume(!) that this encoding is UTF-8 at the moment.
+  Core_String* temporary = NULL;
+  if (Core_String_create(&temporary, buffer, size)) {
+    return Core_Failure;
+  }
+  *RETURN = temporary;
+  return Core_Success;
+}
+
+#endif
+
+#if Core_OperatingSystem == DX_OPERATING_SYSTEM_WINDOWS  
+
+Core_Result Core_getPageSize(Core_Size* RETURN) {
+  if (!RETURN) {
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure; 
+  }
+  SYSTEM_INFO systemInfo;
+  GetSystemInfo(&systemInfo);
+  if (systemInfo.dwPageSize > Core_Size_Greatest) {
+    Core_setError(Core_Error_EnvironmentFailed);
+    return Core_Failure;
+  }
+  *RETURN = (Core_Size)systemInfo.dwPageSize;
+  return Core_Success;
+}
+
+Core_Result Core_getNumberOfCores(Core_Size* RETURN) {
+  if (!RETURN) {
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
+  }
+  SYSTEM_INFO systemInfo;
+  GetSystemInfo(&systemInfo);
+  if (systemInfo.dwNumberOfProcessors > Core_Size_Greatest) {
+    Core_setError(Core_Error_EnvironmentFailed);
+    return Core_Failure;
+  }
+  *RETURN = (Core_Size)systemInfo.dwNumberOfProcessors;
+  return Core_Success;
+}
+
+Core_Result Core_getExecutablePath(Core_String** RETURN) {
   HMODULE module = GetModuleHandleA(NULL);
   if (!module) {
-    dx_set_error(DX_ERROR_ENVIRONMENT_FAILED);
-    return NULL;
+    Core_setError(Core_Error_EnvironmentFailed);
+    return Core_Failure;
   }
-  dx_size n = MAX_PATH;
+  Core_Size n = MAX_PATH;
   char* p = NULL;
-  if (dx_memory_allocate(&p, n)) {
-    return NULL;
+  if (Core_Memory_allocate(&p, n)) {
+    return Core_Failure;
   }
   do {
     DWORD m = GetModuleFileNameA(module, p, n);
     if (m == 0) {
-      dx_memory_deallocate(p);
+      Core_Memory_deallocate(p);
       p = NULL;
-      dx_set_error(DX_ERROR_ENVIRONMENT_FAILED);
-      return NULL;
+      Core_setError(Core_Error_EnvironmentFailed);
+      return Core_Failure;
     }
     // If m is non-zero, then the function succeeded.
     // There are now two cases:
     // a) m == n: The buffer was too small (n is non-zero).
     // b) m < n: m denotes the number of characters copied without the zero terminator.
     if (m == n) {
-      dx_size overflow;
-      dx_size n_new = dx_add_sz(n, MAX_PATH, &overflow);
+      Core_Size overflow;
+      Core_Size n_new;
+      Core_safeAddSz(&n_new, n, MAX_PATH, &overflow);
       if (overflow) {
         n_new = SIZE_MAX;
       }
       if (n_new == n) {
-        dx_memory_deallocate(p);
+        Core_Memory_deallocate(p);
         p = NULL;
-        dx_set_error(DX_ERROR_ALLOCATION_FAILED);
-        return NULL;
+        Core_setError(Core_Error_AllocationFailed);
+        return Core_Failure;
       }
-      char* p_new = dx_memory_reallocate(p, n_new);
-      if (!p_new) {
-        dx_memory_deallocate(p);
+      if (Core_Memory_reallocate(&p, p, n_new)) {
+        Core_Memory_deallocate(p);
         p = NULL;
-        dx_set_error(DX_ERROR_ALLOCATION_FAILED);
-        return NULL;
+        return Core_Failure;
       }
-      p = p_new;
       n = n_new;
     } else {
-      dx_string* s = NULL;
-      if (dx_string_create(&s, p, m)) {
-        dx_memory_deallocate(p);
+      Core_String* s = NULL;
+      if (Core_String_create(&s, p, m)) {
+        Core_Memory_deallocate(p);
         p = NULL;
-        return NULL;
+        return Core_Failure;
       }
-      dx_memory_deallocate(p);
+      Core_Memory_deallocate(p);
       p = NULL;
-      return s;
+      *RETURN = s;
+      return Core_Success;
     }
   } while (true);
 }
+
+#endif
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/

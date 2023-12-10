@@ -27,8 +27,8 @@ struct dx_adl_type_handlers_color_dispatch {
   dx_adl_type_handler_dispatch _parent;
 };
 
-dx_result dx_adl_type_handlers_color_construct(dx_adl_type_handlers_color* SELF);
+Core_Result dx_adl_type_handlers_color_construct(dx_adl_type_handlers_color* SELF);
 
-dx_result dx_adl_type_handlers_color_create(dx_adl_type_handlers_color** RETURN);
+Core_Result dx_adl_type_handlers_color_create(dx_adl_type_handlers_color** RETURN);
 
 #endif // DX_ADL_TYPE_HANDLERS_COLOR_H_INCLUDED

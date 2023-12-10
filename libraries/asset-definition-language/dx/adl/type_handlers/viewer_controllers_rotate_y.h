@@ -27,8 +27,8 @@ struct dx_adl_type_handlers_viewer_controllers_rotate_y_dispatch {
   dx_adl_type_handler_dispatch _parent;
 };
 
-dx_result dx_adl_type_handlers_viewer_controllers_rotate_y_construct(dx_adl_type_handlers_viewer_controllers_rotate_y* SELF);
+Core_Result dx_adl_type_handlers_viewer_controllers_rotate_y_construct(dx_adl_type_handlers_viewer_controllers_rotate_y* SELF);
 
-dx_result dx_adl_type_handlers_viewer_controllers_rotate_y_create(dx_adl_type_handlers_viewer_controllers_rotate_y** RETURN);
+Core_Result dx_adl_type_handlers_viewer_controllers_rotate_y_create(dx_adl_type_handlers_viewer_controllers_rotate_y** RETURN);
 
 #endif // DX_ADL_TYPE_HANDLERS_VIEWER_CONTROLLERS_ROTATE_Y_H_INCLUDED

@@ -2,7 +2,7 @@
 
 DX_DEFINE_OBJECT_TYPE("dx.asset.mesh_instance",
                       dx_asset_mesh_instance,
-                      dx_object);
+                      Core_Object);
 
 static void dx_asset_mesh_instance_destruct(dx_asset_mesh_instance* SELF) {
   DX_UNREFERENCE(SELF->world_matrix);
@@ -11,22 +11,15 @@ static void dx_asset_mesh_instance_destruct(dx_asset_mesh_instance* SELF) {
   SELF->mesh_reference = NULL;
 }
 
-static void dx_asset_mesh_instance_dispatch_construct(dx_asset_mesh_instance_dispatch* SELF)
+static void dx_asset_mesh_instance_constructDispatch(dx_asset_mesh_instance_dispatch* SELF)
 {/*Intentionally empty.*/}
 
-dx_result dx_asset_mesh_instance_construct(dx_asset_mesh_instance* SELF, dx_asset_reference* mesh_reference) {
-  if (!SELF) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
-  }
-  dx_rti_type* TYPE = dx_asset_mesh_instance_get_type();
-  if (!TYPE) {
-    return DX_FAILURE;
-  }
+Core_Result dx_asset_mesh_instance_construct(dx_asset_mesh_instance* SELF, dx_asset_reference* mesh_reference) {
+  DX_CONSTRUCT_PREFIX(dx_asset_mesh_instance);
 
   if (!mesh_reference) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
   SELF->mesh_reference = mesh_reference;
   DX_REFERENCE(SELF->mesh_reference);
@@ -36,20 +29,20 @@ dx_result dx_asset_mesh_instance_construct(dx_asset_mesh_instance* SELF, dx_asse
   if (dx_assets_matrix_4x4_f32_create(&SELF->world_matrix, &temporary)) {
     DX_UNREFERENCE(SELF->mesh_reference);
     SELF->mesh_reference = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
 
-  DX_OBJECT(SELF)->type = TYPE;
-  return DX_SUCCESS;
+  CORE_OBJECT(SELF)->type = TYPE;
+  return Core_Success;
 }
 
-dx_result dx_asset_mesh_instance_create(dx_asset_mesh_instance** RETURN, dx_asset_reference* mesh_reference) {
-  DX_CREATE_PREFIX(dx_asset_mesh_instance)
+Core_Result dx_asset_mesh_instance_create(dx_asset_mesh_instance** RETURN, dx_asset_reference* mesh_reference) {
+  DX_CREATE_PREFIX(dx_asset_mesh_instance);
   if (dx_asset_mesh_instance_construct(SELF, mesh_reference)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   *RETURN = SELF;
-  return DX_SUCCESS;
+  return Core_Success;
 }

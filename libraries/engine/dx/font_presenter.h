@@ -16,14 +16,14 @@
 /// - the texture coordinates for the subtexture.
 DX_DECLARE_OBJECT_TYPE("dx.glyph_atlas",
                        dx_glyph_atlas,
-                       dx_object);
+                       Core_Object);
 
 static inline dx_glyph_atlas* DX_GLYPH_ATLAS_PRESENTER(void* p) {
   return (dx_glyph_atlas*)p;
 }
 
 struct dx_glyph_atlas {
-  dx_object _parent;
+  Core_Object _parent;
   // the rectangle presenter
   dx_rectangle_presenter* rectangle_presenter;
   // the font manager
@@ -37,7 +37,7 @@ static inline dx_glyph_atlas_dispatch* DX_GLYPH_ATLAS_DISPATCH(void* p) {
 }
 
 struct dx_glyph_atlas_dispatch {
-  dx_object_dispatch _parent;
+  Core_Object_Dispatch _parent;
 };
 
 /// @brief Construct this glyph atlas.
@@ -45,11 +45,11 @@ struct dx_glyph_atlas_dispatch {
 /// @param font_manager A pointer to the font manager.
 /// @param rectangle_presenter A pointer to the rectangle presenter.
 /// @param val_context A pointer to the VAL context.
-dx_result dx_glyph_atlas_construct(dx_glyph_atlas* SELF, dx_font_manager* font_manager, dx_rectangle_presenter* rectangle_presenter, dx_val_context* val_context);
+Core_Result dx_glyph_atlas_construct(dx_glyph_atlas* SELF, dx_font_manager* font_manager, dx_rectangle_presenter* rectangle_presenter, dx_val_context* val_context);
 
-dx_result dx_glyph_atlas_create(dx_glyph_atlas** RETURN, dx_font_manager* font_manager, dx_rectangle_presenter* rectangle_presenter, dx_val_context* val_context);
+Core_Result dx_glyph_atlas_create(dx_glyph_atlas** RETURN, dx_font_manager* font_manager, dx_rectangle_presenter* rectangle_presenter, dx_val_context* val_context);
 
-dx_result dx_glyph_atlas_get_texture(dx_glyph_atlas* SELF, dx_font_glyph* glyph, dx_val_texture** val_texture, DX_RECT2_F32 *texture_coordinates);
+Core_Result dx_glyph_atlas_get_texture(dx_glyph_atlas* SELF, dx_font_glyph* glyph, dx_val_texture** val_texture, DX_RECT2_F32 *texture_coordinates);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
@@ -91,9 +91,9 @@ struct dx_font_presenter_dispatch {
   dx_presenter_dispatch _parent;
 };
 
-dx_result dx_font_presenter_construct(dx_font_presenter* SELf, dx_font_manager* font_manager, dx_rectangle_presenter* rectangle_presenter);
+Core_Result dx_font_presenter_construct(dx_font_presenter* SELf, dx_font_manager* font_manager, dx_rectangle_presenter* rectangle_presenter);
 
-dx_result dx_font_presenter_create(dx_font_presenter** RETURN, dx_font_manager* font_manager, dx_rectangle_presenter* rectangle_presenter);
+Core_Result dx_font_presenter_create(dx_font_presenter** RETURN, dx_font_manager* font_manager, dx_rectangle_presenter* rectangle_presenter);
 
 /// @brief Enumeration of policies for not available glyphs.
 typedef enum DX_GLYH_NOT_AVAILABLE_POLICY {
@@ -149,13 +149,13 @@ typedef struct DX_TEXT_PRESENTATION_OPTIONS {
   DX_CODE_POINT_NOT_PRESENTABLE_POLICY code_point_not_presentable_policy;
 
   /// @brief If a glyph's descender shall be presented.
-  dx_bool present_glyph_descender;
+  Core_Boolean present_glyph_descender;
 
   /// @brief If a glyph's ascender shall be presented.
-  dx_bool present_glyph_ascender;
+  Core_Boolean present_glyph_ascender;
 
   /// @brief If the glyph shall be presented.
-  dx_bool present_glyph;
+  Core_Boolean present_glyph;
 
   /// @brief The vertical anchor to be used.
   dx_text_anchor_vertical vertical_anchor;
@@ -173,9 +173,9 @@ typedef struct DX_TEXT_PRESENTATION_OPTIONS {
 /// @param font The font to be used.
 /// @param options A pointer to the options.
 /// @method{dx_font_presenter}
-dx_result dx_font_presenter_render_line_string(dx_font_presenter* SELF,
+Core_Result dx_font_presenter_render_line_string(dx_font_presenter* SELF,
                                                DX_VEC2_F32 const* position,
-                                               dx_string* string,
+                                               Core_String* string,
                                                DX_RGBA_F32 const* text_color,
                                                dx_font* font,
                                                DX_TEXT_PRESENTATION_OPTIONS const* options);
@@ -191,9 +191,9 @@ dx_result dx_font_presenter_render_line_string(dx_font_presenter* SELF,
 /// @param font The font to be used.
 /// @param options A pointer to the options.
 /// @method{dx_font_presenter}
-dx_result dx_font_presenter_measure_line_string(dx_font_presenter* SELF,
+Core_Result dx_font_presenter_measure_line_string(dx_font_presenter* SELF,
                                                 DX_VEC2_F32 const* position,
-                                                dx_string* string,
+                                                Core_String* string,
                                                 dx_font* font,
                                                 DX_TEXT_MEASUREMENT_OPTIONS const* options,
                                                 DX_RECT2_F32* bounds);
@@ -209,7 +209,7 @@ dx_result dx_font_presenter_measure_line_string(dx_font_presenter* SELF,
 /// @param font The font to be used.
 /// @param options A pointer to the options.
 /// @method{dx_font_presenter}
-dx_result dx_font_presenter_render_line_string_iterator(dx_font_presenter* SELF,
+Core_Result dx_font_presenter_render_line_string_iterator(dx_font_presenter* SELF,
                                                         DX_VEC2_F32 const* position,
                                                         dx_string_iterator* string_iterator,
                                                         DX_RGBA_F32 const* text_color,
@@ -227,7 +227,7 @@ dx_result dx_font_presenter_render_line_string_iterator(dx_font_presenter* SELF,
 /// @param font The font to be used.
 /// @param options A pointer to the options.
 /// @method{dx_font_presenter}
-dx_result dx_font_presenter_measure_line_string_iterator(dx_font_presenter* SELF,
+Core_Result dx_font_presenter_measure_line_string_iterator(dx_font_presenter* SELF,
                                                          DX_VEC2_F32 const* position,
                                                          dx_string_iterator* string_iterator,
                                                          dx_font* font,

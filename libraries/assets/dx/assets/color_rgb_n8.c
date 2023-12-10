@@ -2,44 +2,41 @@
 
 DX_DEFINE_OBJECT_TYPE("dx.assets.color_rgb_n8",
                       dx_assets_color_rgb_n8,
-                      dx_object);
+                      Core_Object);
 
 static void dx_assets_color_rgb_n8_destruct(dx_assets_color_rgb_n8* SELF)
 {/*Intentionally empty.*/}
 
-static void dx_assets_color_rgb_n8_dispatch_construct(dx_assets_color_rgb_n8_dispatch* SELF)
+static void dx_assets_color_rgb_n8_constructDispatch(dx_assets_color_rgb_n8_dispatch* SELF)
 {/*Intentionally empty.*/}
 
-dx_result dx_assets_color_rgb_n8_construct(dx_assets_color_rgb_n8* SELF, DX_RGB_N8 const* value) {
-  dx_rti_type* TYPE = dx_assets_color_rgb_n8_get_type();
-  if (!TYPE) {
-    return DX_FAILURE;
-  }
-  if (!SELF || !value) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+Core_Result dx_assets_color_rgb_n8_construct(dx_assets_color_rgb_n8* SELF, DX_RGB_N8 const* value) {
+  DX_CONSTRUCT_PREFIX(dx_assets_color_rgb_n8);
+  if (!value) {
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
   SELF->value = *value;
-  DX_OBJECT(SELF)->type = TYPE;
-  return DX_SUCCESS;
+  CORE_OBJECT(SELF)->type = TYPE;
+  return Core_Success;
 }
 
-dx_result dx_assets_color_rgb_n8_create(dx_assets_color_rgb_n8** RESULT, DX_RGB_N8 const* value) {
-  DX_CREATE_PREFIX(dx_assets_color_rgb_n8)
+Core_Result dx_assets_color_rgb_n8_create(dx_assets_color_rgb_n8** RETURN, DX_RGB_N8 const* value) {
+  DX_CREATE_PREFIX(dx_assets_color_rgb_n8);
   if (dx_assets_color_rgb_n8_construct(SELF, value)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
-  *RESULT = SELF;
-  return DX_SUCCESS;
+  *RETURN = SELF;
+  return Core_Success;
 }
 
-dx_result dx_assets_color_rgb_n8_get_value(DX_RGB_N8* RETURN, dx_assets_color_rgb_n8* SELF) {
+Core_Result dx_assets_color_rgb_n8_get_value(DX_RGB_N8* RETURN, dx_assets_color_rgb_n8* SELF) {
   if (!RETURN || !SELF) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
   *RETURN = SELF->value;
-  return DX_SUCCESS;
+  return Core_Success;
 }

@@ -1,0 +1,9 @@
+{
+  "type" : "symbolic-constant",
+  "last-update" : "2023-12-18",
+  "indices" : "core",
+  "name" : "Core_Real32_LeastBaseTwoExponent",
+  "id" : "core-real32-leastbasetwoexponent",
+  "signature" : "#define Core_Real32_LeastBaseTwoExponent &lt;implementation&gt;",
+  "description" : "The least integer such that two raised to the power of that value minus one is a normalized @{code('Core_Real32')} value. This usually is an alias of @{code('FLT_MIN_EXP')}."
+}

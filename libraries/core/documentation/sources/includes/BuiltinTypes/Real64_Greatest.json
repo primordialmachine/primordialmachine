@@ -1,0 +1,9 @@
+{
+  "type" : "symbolic-constant",
+  "last-update" : "2023-12-18",
+  "indices" : "core",
+  "name" : "Core_Real64_Greatest",
+  "id" : "core-real64-greatest",
+  "signature" : "#define Core_Real64_Greatest &lt;implementation&gt;",
+  "description" : "The greatest value of type @{code('Core_Real64')}. This usually is an alias of @{code('+DBL_MAX')}."
+}

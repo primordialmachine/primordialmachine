@@ -1,0 +1,36 @@
+{
+  "type" : "function",
+  "last-update" : "2023-12-18",
+  "indices" : "core",
+  "name" : "Core_Memory_zero",
+  "id" : "core-memory-zero",
+  "signature" : "Core_Result Core_Memory_zero(void *p, Core_Size n);",
+  "signatureRemarks": null,
+  "parameters" : [
+    {
+      "name" : "p",
+      "type" : "void*",
+      "description" : "A pointer to a memory block of size @{code('n')}."
+    },
+    {
+      "name" : "n",
+      "type" : "Core_Size",
+      "description" : "The size of the memory block pointed to by @{code('p')}."
+    }
+  ],
+  "errors" : [
+    {
+      "errorCode" : "Core_Error_ArgumentInvalid",
+      "errorCondition" : "@{code('p')} is a null pointer."
+    }
+  ],
+  "description" : "Assign each Byte of a memory block the value zero.",
+  "remarks" : [
+    "The call",
+    "@{code('Core_Memory_zero(p,n)')}",
+    "is possibly faster but other than that equivalent to the call",
+    "@{code('Core_Memory_fill(p, n, 0)')}",
+    "This function sets the by-thread error variable on failure."
+  ],
+  "return" : "@{code('Core_Success')} on success. @{code('Core_Failure')} on failure."
+}

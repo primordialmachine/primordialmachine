@@ -7,17 +7,14 @@ DX_DEFINE_OBJECT_TYPE("dx.aal.context",
 static void dx_aal_context_destruct(dx_aal_context* SELF)
 {/*Intentionally empty.*/}
 
-static void dx_aal_context_dispatch_construct(dx_aal_context_dispatch* SELF)
+static void dx_aal_context_constructDispatch(dx_aal_context_dispatch* SELF)
 {/*Intentionally empty.*/}
 
-dx_result dx_aal_context_construct(dx_aal_context* SELF) {
-  dx_rti_type* TYPE = dx_aal_context_get_type();
-  if (!TYPE) {
-    return DX_FAILURE;
-  }
+Core_Result dx_aal_context_construct(dx_aal_context* SELF) {
+  DX_CONSTRUCT_PREFIX(dx_aal_context);
   if (dx_context_construct(DX_CONTEXT(SELF))) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
-  DX_OBJECT(SELF)->type = TYPE;
-  return DX_SUCCESS;
+  CORE_OBJECT(SELF)->type = TYPE;
+  return Core_Success;
 }

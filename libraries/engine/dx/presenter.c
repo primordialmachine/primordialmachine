@@ -6,7 +6,7 @@
 
 DX_DEFINE_OBJECT_TYPE("dx.presenter",
                       dx_presenter,
-                      dx_object);
+                      Core_Object);
 
 static void dx_presenter_destruct(dx_presenter* SELF) {
   DX_UNREFERENCE(SELF->aal_context);
@@ -16,40 +16,37 @@ static void dx_presenter_destruct(dx_presenter* SELF) {
   SELF->val_context = NULL;
 }
 
-static void dx_presenter_dispatch_construct(dx_presenter_dispatch* SELF)
+static void dx_presenter_constructDispatch(dx_presenter_dispatch* SELF)
 {/*Intentionally empty.*/}
 
-dx_result dx_presenter_construct(dx_presenter* SELF, dx_val_context* val_context, dx_aal_context* aal_context) {
-  dx_rti_type* TYPE = dx_presenter_get_type();
-  if (!TYPE) {
-    return DX_FAILURE;
-  }
+Core_Result dx_presenter_construct(dx_presenter* SELF, dx_val_context* val_context, dx_aal_context* aal_context) {
+  DX_CONSTRUCT_PREFIX(dx_presenter);
   if (!val_context) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
   SELF->val_context = val_context;
   DX_REFERENCE(SELF->val_context);
   if (!aal_context) {
     DX_UNREFERENCE(SELF->val_context);
     SELF->val_context = NULL;
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
   SELF->aal_context = aal_context;
   DX_REFERENCE(SELF->aal_context);
-  DX_OBJECT(SELF)->type = TYPE;
-  return DX_SUCCESS;
+  CORE_OBJECT(SELF)->type = TYPE;
+  return Core_Success;
 }
 
-dx_result dx_presenter_get_val_context(dx_val_context** RETURN, dx_presenter* SELF) {
+Core_Result dx_presenter_get_val_context(dx_val_context** RETURN, dx_presenter* SELF) {
   DX_REFERENCE(SELF->val_context);
   *RETURN = SELF->val_context;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-dx_result dx_presenter_get_aal_context(dx_aal_context** RETURN, dx_presenter* SELF) {
+Core_Result dx_presenter_get_aal_context(dx_aal_context** RETURN, dx_presenter* SELF) {
   DX_REFERENCE(SELF->aal_context);
   *RETURN = SELF->aal_context;
-  return DX_SUCCESS;
+  return Core_Success;
 }

@@ -27,8 +27,8 @@ struct dx_adl_type_handlers_image_operations_color_fill_dispatch {
   dx_adl_type_handler_dispatch _parent;
 };
 
-dx_result dx_adl_type_handlers_image_operations_color_fill_construct(dx_adl_type_handlers_image_operations_color_fill* SELF);
+Core_Result dx_adl_type_handlers_image_operations_color_fill_construct(dx_adl_type_handlers_image_operations_color_fill* SELF);
 
-dx_result dx_adl_type_handlers_image_operations_color_fill_create(dx_adl_type_handlers_image_operations_color_fill** RETURN);
+Core_Result dx_adl_type_handlers_image_operations_color_fill_create(dx_adl_type_handlers_image_operations_color_fill** RETURN);
 
 #endif // DX_ADL_TYPE_HANDLERS_IMAGE_OPERATIONS_COLOR_FILL_H_INCLUDED

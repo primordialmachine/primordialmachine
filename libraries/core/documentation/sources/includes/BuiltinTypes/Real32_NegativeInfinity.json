@@ -1,0 +1,9 @@
+{
+  "type" : "symbolic-constant",
+  "last-update" : "2023-12-18",
+  "indices" : "core",
+  "name" : "Core_Real32_NegativeInfinity",
+  "id" : "core-real32-negativeinfinity",
+  "signature" : "#define Core_Real32_NegativeInfinity &lt;implementation&gt;",
+  "description" : "The negative infinity value of type @{code('Core_Real32')}. This usually is an alias of @{code('-INFINITY')}."
+}

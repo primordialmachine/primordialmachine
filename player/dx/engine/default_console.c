@@ -12,9 +12,9 @@
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 // open/close with 2 units per second.
-static dx_f32 const OPEN_CLOSE_SPEED = 2.f;
+static Core_Real32 const OPEN_CLOSE_SPEED = 2.f;
 // the maximum number of console lines.
-static dx_size const MAX_LINES = 20;
+static Core_Size const MAX_LINES = 20;
 
 // the console background color
 static DX_RGBA_F32 const CONSOLE_BACKGROUND_COLOR = { .r = 0.f, .g = 0.f, .b = 0.f, .a = 1.f };
@@ -29,40 +29,40 @@ DX_DEFINE_OBJECT_TYPE("dx.default_console",
 
 /// @brief Execute the prompt.
 /// @method{dx_default_console}
-static dx_result on_execute_prompt(dx_default_console* SELF);
+static Core_Result on_execute_prompt(dx_default_console* SELF);
 
-static dx_result on_keyboard_key_message(dx_default_console* SELF, dx_keyboard_key_msg* keyboard_key_message);
+static Core_Result on_keyboard_key_message(dx_default_console* SELF, dx_keyboard_key_msg* keyboard_key_message);
 
-static dx_result render(dx_default_console* SELF, dx_f32 delta_seconds, dx_i32 canvas_size_horizontal, dx_i32 canvas_size_vertical, dx_i32 dpi_horizontal, dx_i32 dpi_vertical);
+static Core_Result render(dx_default_console* SELF, Core_Real32 delta_seconds, Core_Integer32 canvas_size_horizontal, Core_Integer32 canvas_size_vertical, Core_Integer32 dpi_horizontal, Core_Integer32 dpi_vertical);
 
-static dx_result open(dx_default_console* SELF);
+static Core_Result open(dx_default_console* SELF);
 
-static dx_result close(dx_default_console* SELF);
+static Core_Result close(dx_default_console* SELF);
 
-static dx_result toggle(dx_default_console* SELF);
+static Core_Result toggle(dx_default_console* SELF);
 
-static dx_result is_open(dx_bool* RETURN, dx_default_console* SELF);
+static Core_Result is_open(Core_Boolean* RETURN, dx_default_console* SELF);
 
-static dx_result is_closed(dx_bool* RETURN, dx_default_console* SELF);
+static Core_Result is_closed(Core_Boolean* RETURN, dx_default_console* SELF);
 
-static dx_result append_output_text(dx_default_console* SELF, dx_string* text);
+static Core_Result append_output_text(dx_default_console* SELF, Core_String* text);
 
-static dx_result get_wigdget_by_name(dx_ui_widget** RETURN, dx_default_console* SELF, const char* name);
+static Core_Result get_wigdget_by_name(dx_ui_widget** RETURN, dx_default_console* SELF, const char* name);
 
-static dx_result on_layout(dx_default_console* SELF, dx_f32 console_x, dx_f32 console_y, dx_f32 console_w, dx_f32 console_h);
+static Core_Result on_layout(dx_default_console* SELF, Core_Real32 console_x, Core_Real32 console_y, Core_Real32 console_w, Core_Real32 console_h);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-static dx_result on_execute_prompt(dx_default_console* SELF) {
-  dx_string* string = NULL;
+static Core_Result on_execute_prompt(dx_default_console* SELF) {
+  Core_String* string = NULL;
   if (dx_string_buffer_to_string(&string, SELF->prompt)) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
   dx_application_presenter* application_presenter = NULL;
   if (dx_application_presenter_get(&application_presenter)) {
     DX_UNREFERENCE(string);
     string = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   dx_cl_interpreter* cl_interpreter = NULL;
   if (dx_application_presenter_get_cl_interpreter(&cl_interpreter, application_presenter)) {
@@ -70,18 +70,18 @@ static dx_result on_execute_prompt(dx_default_console* SELF) {
     application_presenter = NULL;
     DX_UNREFERENCE(string);
     string = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   dx_console_append_output_text(DX_CONSOLE(SELF), string);
-  dx_string* newline = NULL;
-  if (dx_string_create(&newline, "\n", sizeof("\n") - 1)) {
+  Core_String* newline = NULL;
+  if (Core_String_create(&newline, "\n", sizeof("\n") - 1)) {
     DX_UNREFERENCE(string);
     string = NULL;
     DX_UNREFERENCE(application_presenter);
     application_presenter = NULL;
     DX_UNREFERENCE(string);
     string = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   dx_console_append_output_text(DX_CONSOLE(SELF), newline);
   DX_UNREFERENCE(newline);
@@ -89,7 +89,7 @@ static dx_result on_execute_prompt(dx_default_console* SELF) {
 
   dx_string_buffer_clear(SELF->prompt);
   if (dx_cl_interpreter_execute(cl_interpreter, application_presenter, string)) {
-    dx_set_error(DX_NO_ERROR);
+    Core_setError(Core_Error_NoError);
   }
   DX_UNREFERENCE(string);
   string = NULL;
@@ -97,27 +97,27 @@ static dx_result on_execute_prompt(dx_default_console* SELF) {
   cl_interpreter = NULL;
   DX_UNREFERENCE(application_presenter);
   application_presenter = NULL;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-static dx_result on_keyboard_key_message(dx_default_console* SELF, dx_keyboard_key_msg* keyboard_key_message) {
+static Core_Result on_keyboard_key_message(dx_default_console* SELF, dx_keyboard_key_msg* keyboard_key_message) {
   dx_keyboard_key_action action;
   dx_keyboard_key key;
   if (dx_keyboard_key_msg_get_action(&action, keyboard_key_message) || dx_keyboard_key_msg_get_key(&key, keyboard_key_message)) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
   if (DX_KEYBOARD_KEY_ACTION_RELEASED == action) {
     if (dx_keyboard_key_return == key) {
       return on_execute_prompt(SELF);
     } else if (dx_keyboard_key_backspace == key) {
-      dx_size number_of_bytes;
+      Core_Size number_of_bytes;
       if (dx_string_buffer_get_number_of_bytes(&number_of_bytes, SELF->prompt)) {
-        return DX_FAILURE;
+        return Core_Failure;
       }
       if (number_of_bytes > 0) {
         return dx_string_buffer_remove_last(SELF->prompt);
       } else {
-        return DX_SUCCESS;
+        return Core_Success;
       }
     } else if (dx_keyboard_key_space == key) {
       char symbol = ' ';
@@ -126,13 +126,13 @@ static dx_result on_keyboard_key_message(dx_default_console* SELF, dx_keyboard_k
       char symbol;
       uint8_t modifiers = 0;
       if (dx_input_msg_get_modifiers(&modifiers, DX_INPUT_MSG(keyboard_key_message))) {
-        return DX_FAILURE;
+        return Core_Failure;
       }
       if (dx_keyboard_key_less == key) {
         symbol = modifiers & (DX_MODIFIER_LSHIFT | DX_MODIFIER_RSHIFT) ? '>' : '<';
       } else {
-        dx_set_error(DX_ERROR_ENVIRONMENT_FAILED); // should not happen
-        return DX_FAILURE;
+        Core_setError(Core_Error_EnvironmentFailed); // should not happen
+        return Core_Failure;
       }
       return dx_string_buffer_append_bytes(SELF->prompt, &symbol, 1);
     } else if (dx_keyboard_key_minus == key || dx_keyboard_key_plus == key || dx_keyboard_key_comma == key ||
@@ -140,7 +140,7 @@ static dx_result on_keyboard_key_message(dx_default_console* SELF, dx_keyboard_k
       char symbol;
       uint8_t modifiers = 0;
       if (dx_input_msg_get_modifiers(&modifiers, DX_INPUT_MSG(keyboard_key_message))) {
-        return DX_FAILURE;
+        return Core_Failure;
       }
       if (dx_keyboard_key_minus == key) {
         symbol = modifiers & (DX_MODIFIER_LSHIFT | DX_MODIFIER_RSHIFT) ? '_' : '-';
@@ -151,8 +151,8 @@ static dx_result on_keyboard_key_message(dx_default_console* SELF, dx_keyboard_k
       } else if (dx_keyboard_key_period == key) {
         symbol = modifiers & (DX_MODIFIER_LSHIFT | DX_MODIFIER_RSHIFT) ? ':' : '.';
       } else {
-        dx_set_error(DX_ERROR_ENVIRONMENT_FAILED); // should not happen
-        return DX_FAILURE;
+        Core_setError(Core_Error_EnvironmentFailed); // should not happen
+        return Core_Failure;
       }
       return dx_string_buffer_append_bytes(SELF->prompt, &symbol, 1);
     } else if (dx_keyboard_key__0 <= key && key <= dx_keyboard_key__9) {
@@ -183,7 +183,7 @@ static dx_result on_keyboard_key_message(dx_default_console* SELF, dx_keyboard_k
       char symbol;
       uint8_t modifiers = 0;
       if (dx_input_msg_get_modifiers(&modifiers, DX_INPUT_MSG(keyboard_key_message))) {
-        return DX_FAILURE;
+        return Core_Failure;
       }
       if (modifiers & (DX_MODIFIER_LSHIFT | DX_MODIFIER_RSHIFT)) {
         symbol = SHIFT_MAP[key - dx_keyboard_key__0];
@@ -252,7 +252,7 @@ static dx_result on_keyboard_key_message(dx_default_console* SELF, dx_keyboard_k
       char symbol;
       uint8_t modifiers = 0;
       if (dx_input_msg_get_modifiers(&modifiers, DX_INPUT_MSG(keyboard_key_message))) {
-        return DX_FAILURE;
+        return Core_Failure;
       }
       if (modifiers & (DX_MODIFIER_LSHIFT | DX_MODIFIER_RSHIFT)) {
         symbol = SHIFT_MAP[key - dx_keyboard_key_a];
@@ -262,10 +262,10 @@ static dx_result on_keyboard_key_message(dx_default_console* SELF, dx_keyboard_k
         return dx_string_buffer_append_bytes(SELF->prompt, &symbol, 1);
       }
     } else {
-      return DX_SUCCESS;
+      return Core_Success;
     }
   }
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
 // this layouter
@@ -273,7 +273,7 @@ static dx_result on_keyboard_key_message(dx_default_console* SELF, dx_keyboard_k
 // - sets the size of the input field to one line
 // - sets the size of the output field to canvas height minus the size of the input field
 // - places the output field above the input field
-static dx_result render(dx_default_console* SELF, dx_f32 delta_seconds, dx_i32 canvas_size_horizontal, dx_i32 canvas_size_vertical, dx_i32 dpi_horizontal, dx_i32 dpi_vertical) {
+static Core_Result render(dx_default_console* SELF, Core_Real32 delta_seconds, Core_Integer32 canvas_size_horizontal, Core_Integer32 canvas_size_vertical, Core_Integer32 dpi_horizontal, Core_Integer32 dpi_vertical) {
   if (SELF->cs < SELF->ts) {
     SELF->cs += OPEN_CLOSE_SPEED * delta_seconds;
     if (SELF->cs > SELF->ts) {
@@ -289,32 +289,32 @@ static dx_result render(dx_default_console* SELF, dx_f32 delta_seconds, dx_i32 c
   if (SELF->cs > 0.f) {
     // this is basically the standard distance from one baseline to another.
     // usually, you want this value to be multiplied by 1.5.
-    dx_f32 baseline_distance;
+    Core_Real32 baseline_distance;
     dx_font_get_baseline_distance(&baseline_distance, SELF->ui_output_field->font);
     // the distance from the baseline to the maximal extend of any symbol above the baseline.
-    dx_f32 ascender;
+    Core_Real32 ascender;
     dx_font_get_ascender(&ascender, SELF->ui_output_field->font);
     // the distance from the baseline to the maximal extend of any symbol below the baseline.
-    dx_f32 descender;
+    Core_Real32 descender;
     dx_font_get_descender(&descender, SELF->ui_output_field->font);
     // the distance of the baselines of two lines.
     baseline_distance = baseline_distance * 1.5f;
-    dx_f32 insets_x = 16.f;
-    dx_f32 insets_y = 16.f;
+    Core_Real32 insets_x = 16.f;
+    Core_Real32 insets_y = 16.f;
 
-    dx_f32 max_line_height = ascender - descender;
+    Core_Real32 max_line_height = ascender - descender;
 
     // when the console is closed, it starts above canvas size vertical.
-    dx_f32 console_position_y_min = canvas_size_vertical;
+    Core_Real32 console_position_y_min = canvas_size_vertical;
     // the position of the console along the x-axis is 0.
-    dx_f32 console_position_x = 0.f;
+    Core_Real32 console_position_x = 0.f;
     // the width of the console is the horizontal size of the canvas.
-    dx_f32 console_width = canvas_size_horizontal;
+    Core_Real32 console_width = canvas_size_horizontal;
     // the height of the console is a little bit less then the height of the canvas.
-    dx_f32 console_height = canvas_size_vertical - 16.f * 4;
-    dx_f32 console_position_y_max = canvas_size_vertical - console_height;
+    Core_Real32 console_height = canvas_size_vertical - 16.f * 4;
+    Core_Real32 console_position_y_max = canvas_size_vertical - console_height;
 
-    dx_f32 console_position_y;
+    Core_Real32 console_position_y;
     // we lerp from position canvas_
     dx_lerp(&console_position_y, console_position_y_min, console_position_y_max, SELF->cs);
 
@@ -336,10 +336,10 @@ static dx_result render(dx_default_console* SELF, dx_f32 delta_seconds, dx_i32 c
       {
         dx_string_buffer* string_buffer;
         if (dx_string_buffer_clone(&string_buffer, SELF->prompt)) {
-          return DX_FAILURE;
+          return Core_Failure;
         }
 
-        dx_f32 startx, starty;
+        Core_Real32 startx, starty;
 
         // console input
         startx = console_position_x + insets_x;
@@ -348,13 +348,13 @@ static dx_result render(dx_default_console* SELF, dx_f32 delta_seconds, dx_i32 c
         if (dx_string_buffer_prepend_bytes(string_buffer, SYMBOL, strlen(SYMBOL))) {
           DX_UNREFERENCE(string_buffer);
           string_buffer = NULL;
-          return DX_FAILURE;
+          return Core_Failure;
         }
-        dx_string* string = NULL;
+        Core_String* string = NULL;
         if (dx_string_buffer_to_string(&string, string_buffer)) {
           DX_UNREFERENCE(string_buffer);
           string_buffer = NULL;
-          return DX_FAILURE;
+          return Core_Failure;
         }
         DX_UNREFERENCE(string_buffer);
         string_buffer = NULL;
@@ -365,10 +365,6 @@ static dx_result render(dx_default_console* SELF, dx_f32 delta_seconds, dx_i32 c
           dx_rgba_f32_set(&bgc, 1.f, 0.f, 0.f, 1.f);
           dx_ui_text_field_set_background_color(SELF->ui_input_field, &bgc);
           SELF->ui_input_field->vertical_text_anchor = dx_text_anchor_vertical_center;
-        }
-        {
-        }
-        {
         }
         {
           dx_ui_text_field_set_text(SELF->ui_input_field, string);
@@ -391,71 +387,71 @@ static dx_result render(dx_default_console* SELF, dx_f32 delta_seconds, dx_i32 c
     dx_ui_manager_leave_render(SELF->ui_manager);
     dx_ui_manager_set_root(SELF->ui_manager, NULL);
   }
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-static dx_result open(dx_default_console* SELF) {
+static Core_Result open(dx_default_console* SELF) {
   SELF->ts = 1.f;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-static dx_result close(dx_default_console* SELF) {
+static Core_Result close(dx_default_console* SELF) {
   SELF->ts = 0.f;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-static dx_result toggle(dx_default_console* SELF) {
+static Core_Result toggle(dx_default_console* SELF) {
   if (SELF->ts == 1.f) {
     SELF->ts = 0.f;
   } else if (SELF->ts == 0.f) {
     SELF->ts = 1.f;
   }
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-static dx_result is_open(dx_bool* RETURN, dx_default_console* SELF) {
+static Core_Result is_open(Core_Boolean* RETURN, dx_default_console* SELF) {
   *RETURN = 1.f == SELF->ts;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-static dx_result is_closed(dx_bool* RETURN, dx_default_console* SELF) {
+static Core_Result is_closed(Core_Boolean* RETURN, dx_default_console* SELF) {
   *RETURN = 0.f == SELF->ts;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-static dx_result append_output_text(dx_default_console* SELF, dx_string* text) {
+static Core_Result append_output_text(dx_default_console* SELF, Core_String* text) {
   if (dx_ui_text_field_append_text(SELF->ui_output_field, text)) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-static dx_result get_wigdget_by_name(dx_ui_widget** RETURN, dx_default_console* SELF, const char* name) {
-  dx_string* name1 = NULL;
-  if (dx_string_create(&name1, name, strlen(name))) {
-    return DX_FAILURE;
+static Core_Result get_wigdget_by_name(dx_ui_widget** RETURN, dx_default_console* SELF, const char* name) {
+  Core_String* name1 = NULL;
+  if (Core_String_create(&name1, name, strlen(name))) {
+    return Core_Failure;
   }
   dx_ui_widget* widget1 = NULL;
   if (dx_ui_widget_get_child_by_name(&widget1, DX_UI_WIDGET(SELF->ui_group), name1)) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
   *RETURN = widget1;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-static dx_result on_layout(dx_default_console* SELF, dx_f32 console_x, dx_f32 console_y, dx_f32 console_w, dx_f32 console_h) {
+static Core_Result on_layout(dx_default_console* SELF, Core_Real32 console_x, Core_Real32 console_y, Core_Real32 console_w, Core_Real32 console_h) {
   // positive y axis is going up
 
   // the insets on the left side of the "console" group.
-  dx_f32 insets_l = 16.f;
+  Core_Real32 insets_l = 16.f;
   // the insets on the top side of the "console" group.
-  dx_f32 insets_t = 16.f;
+  Core_Real32 insets_t = 16.f;
   // the insets on the bottom side of the "console" group.
-  dx_f32 insets_b = 16.f;
+  Core_Real32 insets_b = 16.f;
   // the insets on the right side of the "console" group.
-  dx_f32 insets_r = 16.f;
+  Core_Real32 insets_r = 16.f;
 
   // set the position and the size of the "console" group.
   DX_VEC2_F32 v;
@@ -472,7 +468,7 @@ static dx_result on_layout(dx_default_console* SELF, dx_f32 console_x, dx_f32 co
     dx_ui_widget_set_relative_position(DX_UI_WIDGET(SELF->ui_input_field), &p);
   }
   {
-    dx_f32 baseline_distance;
+    Core_Real32 baseline_distance;
     dx_font_get_baseline_distance(&baseline_distance, SELF->ui_input_field->font);
     baseline_distance *= 1.5f;
 
@@ -482,7 +478,7 @@ static dx_result on_layout(dx_default_console* SELF, dx_f32 console_x, dx_f32 co
     dx_ui_widget_set_relative_size(DX_UI_WIDGET(SELF->ui_input_field), &s);
   }
 
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
@@ -504,35 +500,32 @@ static void dx_default_console_destruct(dx_default_console* SELF) {
   SELF->prompt = NULL;
 }
 
-static void dx_default_console_dispatch_construct(dx_default_console_dispatch* SELF) {
-  DX_CONSOLE_DISPATCH(SELF)->close = (dx_result(*)(dx_console*)) & close;
-  DX_CONSOLE_DISPATCH(SELF)->on_keyboard_key_message = (dx_result(*)(dx_console*,dx_keyboard_key_msg*)) & on_keyboard_key_message;
-  DX_CONSOLE_DISPATCH(SELF)->open = (dx_result(*)(dx_console*)) & open;
-  DX_CONSOLE_DISPATCH(SELF)->close = (dx_result(*)(dx_console*)) & close;
-  DX_CONSOLE_DISPATCH(SELF)->render = (dx_result(*)(dx_console*, dx_f32, dx_i32, dx_i32, dx_i32, dx_i32)) & render;
-  DX_CONSOLE_DISPATCH(SELF)->toggle = (dx_result(*)(dx_console*)) & toggle;
-  DX_CONSOLE_DISPATCH(SELF)->is_open = (dx_result(*)(dx_bool*,dx_console*)) & is_open;
-  DX_CONSOLE_DISPATCH(SELF)->is_closed = (dx_result(*)(dx_bool*,dx_console*)) & is_closed;
-  DX_CONSOLE_DISPATCH(SELF)->append_output_text = (dx_result(*)(dx_console*, dx_string*)) & append_output_text;
+static void dx_default_console_constructDispatch(dx_default_console_dispatch* SELF) {
+  DX_CONSOLE_DISPATCH(SELF)->close = (Core_Result(*)(dx_console*)) & close;
+  DX_CONSOLE_DISPATCH(SELF)->on_keyboard_key_message = (Core_Result(*)(dx_console*,dx_keyboard_key_msg*)) & on_keyboard_key_message;
+  DX_CONSOLE_DISPATCH(SELF)->open = (Core_Result(*)(dx_console*)) & open;
+  DX_CONSOLE_DISPATCH(SELF)->close = (Core_Result(*)(dx_console*)) & close;
+  DX_CONSOLE_DISPATCH(SELF)->render = (Core_Result(*)(dx_console*, Core_Real32, Core_Integer32, Core_Integer32, Core_Integer32, Core_Integer32)) & render;
+  DX_CONSOLE_DISPATCH(SELF)->toggle = (Core_Result(*)(dx_console*)) & toggle;
+  DX_CONSOLE_DISPATCH(SELF)->is_open = (Core_Result(*)(Core_Boolean*,dx_console*)) & is_open;
+  DX_CONSOLE_DISPATCH(SELF)->is_closed = (Core_Result(*)(Core_Boolean*,dx_console*)) & is_closed;
+  DX_CONSOLE_DISPATCH(SELF)->append_output_text = (Core_Result(*)(dx_console*, Core_String*)) & append_output_text;
 }
 
-dx_result dx_default_console_construct(dx_default_console* SELF, dx_font_presenter* font_presenter, dx_rectangle_presenter* rectangle_presenter) {
-  dx_rti_type* TYPE = dx_default_console_get_type();
-  if (!TYPE) {
-    return DX_FAILURE;
-  }
+Core_Result dx_default_console_construct(dx_default_console* SELF, dx_font_presenter* font_presenter, dx_rectangle_presenter* rectangle_presenter) {
+  DX_CONSTRUCT_PREFIX(dx_default_console);
   if (dx_console_construct(DX_CONSOLE(SELF))) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
   if (dx_ui_manager_create(&SELF->ui_manager, font_presenter, rectangle_presenter)) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
   {
-    dx_string* path = NULL;
-    if (dx_string_create(&path, "./assets/console/console.ui", sizeof("./assets/console/console.ui") - 1)) {
+    Core_String* path = NULL;
+    if (Core_String_create(&path, "./assets/console/console.ui", sizeof("./assets/console/console.ui") - 1)) {
       DX_UNREFERENCE(SELF->ui_manager);
       SELF->ui_manager = NULL;
-      return DX_FAILURE;
+      return Core_Failure;
     }
     dx_ui_widget* temporary = NULL;
     if (dx_ui_manager_load(&temporary, SELF->ui_manager, path)) {
@@ -540,7 +533,7 @@ dx_result dx_default_console_construct(dx_default_console* SELF, dx_font_present
       path = NULL;
       DX_UNREFERENCE(SELF->ui_manager);
       SELF->ui_manager = NULL;
-      return DX_FAILURE;
+      return Core_Failure;
     }
     SELF->ui_group = DX_UI_GROUP(temporary);
     DX_UNREFERENCE(path);
@@ -551,7 +544,7 @@ dx_result dx_default_console_construct(dx_default_console* SELF, dx_font_present
     SELF->ui_group = NULL;
     DX_UNREFERENCE(SELF->ui_manager);
     SELF->ui_manager = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   if (get_wigdget_by_name((dx_ui_widget**) & SELF->ui_output_field, SELF, "outputField")) {
     DX_UNREFERENCE(SELF->ui_input_field);
@@ -560,7 +553,7 @@ dx_result dx_default_console_construct(dx_default_console* SELF, dx_font_present
     SELF->ui_group = NULL;
     DX_UNREFERENCE(SELF->ui_manager);
     SELF->ui_manager = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   if (dx_string_buffer_create(&SELF->prompt)) {
     DX_UNREFERENCE(SELF->ui_output_field);
@@ -571,21 +564,21 @@ dx_result dx_default_console_construct(dx_default_console* SELF, dx_font_present
     SELF->ui_group = NULL;
     DX_UNREFERENCE(SELF->ui_manager);
     SELF->ui_manager = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   SELF->cs = 0.f;
   SELF->ts = 0.f;
-  DX_OBJECT(SELF)->type = TYPE;
-  return DX_SUCCESS;
+  CORE_OBJECT(SELF)->type = TYPE;
+  return Core_Success;
 }
 
-dx_result dx_default_console_create(dx_default_console** RETURN, dx_font_presenter* font_presenter, dx_rectangle_presenter* rectangle_presenter) {
-  DX_CREATE_PREFIX(dx_default_console)
+Core_Result dx_default_console_create(dx_default_console** RETURN, dx_font_presenter* font_presenter, dx_rectangle_presenter* rectangle_presenter) {
+  DX_CREATE_PREFIX(dx_default_console);
   if (dx_default_console_construct(SELF, font_presenter, rectangle_presenter)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   *RETURN = SELF;
-  return DX_SUCCESS;
+  return Core_Success;
 }

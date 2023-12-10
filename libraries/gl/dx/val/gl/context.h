@@ -41,7 +41,7 @@ static inline dx_val_gl_context* DX_VAL_GL_CONTEXT(void* p) {
 struct dx_val_gl_context {
   dx_val_context _parent;
   // remember as this is part of the command-modifiable state and must be restored when modified during the execution of certain commands (e.g., clear depth).
-  dx_bool depth_write_enabled;
+  Core_Boolean depth_write_enabled;
 #define DEFINE(TYPE, NAME, EXTENSION_NAME) TYPE NAME;
 #include "dx/val/gl/functions.i"
 #undef DEFINE
@@ -51,6 +51,6 @@ struct dx_val_gl_context_dispatch {
   dx_val_context_dispatch _parent;
 };
 
-dx_result dx_val_gl_context_construct(dx_val_gl_context* SELF, void *(*link)(char const* name));
+Core_Result dx_val_gl_context_construct(dx_val_gl_context* SELF, Core_Result (*link)(void** RETURN, char const* name));
 
 #endif // DX_VAL_GL_CONTEXT_H_INCLUDED

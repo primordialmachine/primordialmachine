@@ -158,6 +158,6 @@ enum dx_data_definition_language_word_kind {
 #undef DEFINE
 };
 
-dx_result dx_data_definition_language_word_kind_to_string(dx_string** RETURN, dx_data_definition_language_word_kind SELF);
+Core_Result dx_data_definition_language_word_kind_to_string(Core_String** RETURN, dx_data_definition_language_word_kind SELF);
 
 #endif // DX_DATA_DEFINITION_LANGUAGE_WORD_KIND_H_INCLUDED

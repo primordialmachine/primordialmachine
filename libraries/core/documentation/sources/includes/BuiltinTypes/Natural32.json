@@ -1,0 +1,9 @@
+{
+  "type" : "typedef",
+  "last-update" : "2023-12-18",
+  "indices" : "core",
+  "name" : "Core_Natural32",
+  "id" : "core-natural32",
+  "signature" : "typedef &lt;implementation&gt; Core_Natural32;",
+  "description" : "An unsigned integer of a width of 32 Bits. This usually is an alias of @{code('uint32_t')}."
+}

@@ -1,0 +1,9 @@
+{
+  "type" : "typedef",
+  "last-update" : "2023-12-18",
+  "indices" : "core",
+  "name" : "Core_Integer64",
+  "id" : "core-integer64",
+  "signature" : "typedef &lt;implementation&gt; Core_Integer64;",
+  "description" : "A two's complement integer of a width of 64 Bits. This usually is an alias of @{code('int64_t')}."
+}

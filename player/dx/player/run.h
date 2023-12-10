@@ -16,12 +16,12 @@
 /// - acquire a reference to the application presenter when required and
 /// - relinquish that reference asap
 /// to ensure cycles are only temporay.
-dx_result dx_application_presenter_get(dx_application_presenter** RETURN);
+Core_Result dx_application_presenter_get(dx_application_presenter** RETURN);
 
 /// @brief Run the engine with the specified command-line arguments. Does not return until the application terminates.
 /// @param argc The number of command-line arguments.
 /// @param argv A pointer to an array of @a argc pointers to C strings representing the command-line arguments.
 /// @procedure
-dx_result dx_run(int argc, char** argv);
+Core_Result dx_run(int argc, char** argv);
 
 #endif // DX_RUN_H_INCLUDED

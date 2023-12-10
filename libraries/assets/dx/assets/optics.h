@@ -7,14 +7,14 @@
 
 DX_DECLARE_OBJECT_TYPE("dx.assets.optics",
                        dx_assets_optics,
-                       dx_object);
+                       Core_Object);
 
 static inline dx_assets_optics* DX_ASSETS_OPTICS(void* p) {
   return (dx_assets_optics*)p;
 }
 
 struct dx_assets_optics {
-  dx_object _parent;
+  Core_Object _parent;
 };
 
 static inline dx_assets_optics_dispatch* DX_ASSETS_OPTICS_DISPATCH(void* p) {
@@ -22,11 +22,11 @@ static inline dx_assets_optics_dispatch* DX_ASSETS_OPTICS_DISPATCH(void* p) {
 }
 
 struct dx_assets_optics_dispatch {
-  dx_object _parent;
+  Core_Object _parent;
 };
 
 /// @constructor{dx_assets_optics}
-dx_result dx_assets_optics_construct(dx_assets_optics* SELF);
+Core_Result dx_assets_optics_construct(dx_assets_optics* SELF);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
@@ -49,19 +49,19 @@ struct dx_asset_optics_orthographic {
   dx_assets_optics _parent;
   /// @brief The aspect ratio.
   /// The default value is NULL.
-  dx_f32* aspect_ratio;
+  Core_Real32* aspect_ratio;
   /// @brief The scaling along the x-axis applied to the rectangle the points are projected into.
   /// The default value is 1.0.
   /// If not specified, scale_y is assigned the actual width of the viewport.
-  dx_f32 *scale_x;
+  Core_Real32 *scale_x;
   /// @brief The scaling along the y-axis applied to the rectangle the points are projected into.
   /// The default value is 1.0.
   /// If not specified, scale_y is assigned the actual height of the viewport.
-  dx_f32 *scale_y;
+  Core_Real32 *scale_y;
   /// @brief The default values are 0.1.
-  dx_f32 near;
+  Core_Real32 near;
   /// @brief The default value is 1000.0.
-  dx_f32 far;
+  Core_Real32 far;
 };
 
 #if DX_CONFIGURATION_SYSTEM == DX_CONFIGURATION_SYSTEM_WINDOWS
@@ -78,10 +78,10 @@ struct dx_asset_optics_orthographic_dispatch {
 };
 
 /// @constructor{dx_asset_optics_orthographic}
-dx_result dx_asset_optics_orthographic_construct(dx_asset_optics_orthographic* SELF);
+Core_Result dx_asset_optics_orthographic_construct(dx_asset_optics_orthographic* SELF);
 
 /// @create-operator{dx_asset_optics_orthographic}
-dx_result dx_asset_optics_orthographic_create(dx_asset_optics_orthographic** RETURN);
+Core_Result dx_asset_optics_orthographic_create(dx_asset_optics_orthographic** RETURN);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
@@ -105,17 +105,17 @@ struct dx_asset_optics_perspective {
   /// @brief The aspect ratio (the quotient of the width and the height of near plane).
   /// The default is 4:3 = 1.33... .
   /// If not provided, it is computed from the actual width and the actual height of the viewport.
-  dx_f32* aspect_ratio;
+  Core_Real32* aspect_ratio;
   /// @brief The field of yiew angle in degrees.
   /// The angle between
   /// - a plane through the origin and the bottom of the near plane
   /// - a plane through the origin and the top of the near plane.
   /// The default is 60.0.
-  dx_f32 field_of_view_y;
+  Core_Real32 field_of_view_y;
   /// @brief The default value is 0.1.
-  dx_f32 near;
+  Core_Real32 near;
   /// @brief The default value is 1000.0.
-  dx_f32 far;
+  Core_Real32 far;
 };
 
 #if DX_CONFIGURATION_SYSTEM == DX_CONFIGURATION_SYSTEM_WINDOWS
@@ -132,10 +132,10 @@ struct dx_asset_optics_perspective_dispatch {
 };
 
 /// @constructor{dx_asset_optics_perspective}
-dx_result dx_asset_optics_perspective_construct(dx_asset_optics_perspective* SELF);
+Core_Result dx_asset_optics_perspective_construct(dx_asset_optics_perspective* SELF);
 
 /// @create-operator{dx_asset_optics_perspective}
-dx_result dx_asset_optics_perspective_create(dx_asset_optics_perspective** RETURN);
+Core_Result dx_asset_optics_perspective_create(dx_asset_optics_perspective** RETURN);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 

@@ -27,8 +27,8 @@ struct dx_adl_type_handlers_material_dispatch {
   dx_adl_type_handler_dispatch _parent;
 };
 
-dx_result dx_adl_type_handlers_material_construct(dx_adl_type_handlers_material* SELF);
+Core_Result dx_adl_type_handlers_material_construct(dx_adl_type_handlers_material* SELF);
 
-dx_result dx_adl_type_handlers_material_create(dx_adl_type_handlers_material** RETURN);
+Core_Result dx_adl_type_handlers_material_create(dx_adl_type_handlers_material** RETURN);
 
 #endif // DX_ADL_TYPE_HANDLERS_MATERIAL_H_INCLUDED

@@ -2,7 +2,7 @@
 
 DX_DEFINE_OBJECT_TYPE("dx.val.program.text",
                       dx_val_program_text,
-                      dx_object);
+                      Core_Object);
 
 static void dx_val_program_text_destruct(dx_val_program_text* program_text) {
   switch (program_text->type) {
@@ -20,61 +20,61 @@ static void dx_val_program_text_destruct(dx_val_program_text* program_text) {
   };
 }
 
-static void dx_val_program_text_dispatch_construct(dx_val_program_text_dispatch* self)
+static void dx_val_program_text_constructDispatch(dx_val_program_text_dispatch* self)
 {/*Intentionally empty.*/}
 
-dx_result dx_val_program_text_construct_from_file(dx_val_program_text* SELF, dx_val_program_text_type type, dx_string* path) {
-  dx_rti_type* TYPE = dx_val_program_text_get_type();
-  if (!TYPE) {
-    return DX_FAILURE;
-  }
+Core_Result dx_val_program_text_construct_from_file(dx_val_program_text* SELF, dx_val_program_text_type type, Core_String* path) {
+  DX_CONSTRUCT_PREFIX(dx_val_program_text);
+
   if (dx_string_contains_symbol(path, '\0')) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
-  dx_string* format = NULL;
-  if (dx_string_create(&format, "${s}\0", sizeof("${s}\0"))) {
-    return DX_FAILURE;
+  Core_String* format = NULL;
+  if (Core_String_create(&format, "${s}\0", sizeof("${s}\0"))) {
+    return Core_Failure;
   }
-  dx_string *path1 = dx_string_printf(format, path);
+  Core_String* path1 = NULL;
+  if (Core_String_printf(&path1, format, path)) {
+    DX_UNREFERENCE(format);
+    format = NULL;
+    return Core_Failure;
+  }
   DX_UNREFERENCE(format);
-  if (!path1) {
-    return DX_FAILURE;
-  }
-  char* bytes; dx_size number_of_bytes;
+  format = NULL;
+  char* bytes; Core_Size number_of_bytes;
   if (dx_get_file_contents(path1->bytes, &bytes, &number_of_bytes)) {
     DX_UNREFERENCE(path1);
     path1 = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   DX_UNREFERENCE(path1);
   path1 = NULL;
   SELF->program_text = NULL;
-  if (dx_string_create(&SELF->program_text, bytes, number_of_bytes)) {
-    dx_memory_deallocate(bytes);
+  if (Core_String_create(&SELF->program_text, bytes, number_of_bytes)) {
+    Core_Memory_deallocate(bytes);
     bytes = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
-  dx_memory_deallocate(bytes);
+  Core_Memory_deallocate(bytes);
   bytes = NULL;
   SELF->parent = NULL;
   SELF->type = type;
   
-  DX_OBJECT(SELF)->type = TYPE;
-  return DX_SUCCESS;
+  CORE_OBJECT(SELF)->type = TYPE;
+  return Core_Success;
 }
 
-dx_result dx_val_program_text_construct(dx_val_program_text* SELF, dx_val_program_text* vertex_program_text, dx_val_program_text* fragment_program_text) {
-  dx_rti_type* TYPE = dx_val_program_text_get_type();
-  if (!TYPE) {
-    return DX_FAILURE;
-  }
+Core_Result dx_val_program_text_construct(dx_val_program_text* SELF, dx_val_program_text* vertex_program_text, dx_val_program_text* fragment_program_text) {
+  DX_CONSTRUCT_PREFIX(dx_val_program_text);
+
   if (!vertex_program_text || DX_VAL_PROGRAM_TEXT_TYPE_VERTEX != vertex_program_text->type) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
+
   if (!fragment_program_text || DX_VAL_PROGRAM_TEXT_TYPE_FRAGMENT != fragment_program_text->type) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
   
   SELF->vertex_program_text = vertex_program_text;
@@ -87,50 +87,51 @@ dx_result dx_val_program_text_construct(dx_val_program_text* SELF, dx_val_progra
   
   SELF->type = DX_VAL_PROGRAM_TEXT_TYPE_VERTEX_FRAGMENT;
   
-  DX_OBJECT(SELF)->type = TYPE;
-  return DX_SUCCESS;
+  CORE_OBJECT(SELF)->type = TYPE;
+  return Core_Success;
 }
 
-dx_result dx_val_program_text_create_from_file(dx_val_program_text** RETURN, dx_val_program_text_type type, dx_string* path) {
-  DX_CREATE_PREFIX(dx_val_program_text)
+Core_Result dx_val_program_text_create_from_file(dx_val_program_text** RETURN, dx_val_program_text_type type, Core_String* path) {
+  DX_CREATE_PREFIX(dx_val_program_text);
   if (dx_val_program_text_construct_from_file(SELF, type, path)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   *RETURN = SELF;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-dx_result dx_val_program_text_create(dx_val_program_text** RETURN, dx_val_program_text *vertex_program_text, dx_val_program_text* fragment_program_text) {
-  DX_CREATE_PREFIX(dx_val_program_text)
+Core_Result dx_val_program_text_create(dx_val_program_text** RETURN, dx_val_program_text *vertex_program_text, dx_val_program_text* fragment_program_text) {
+  DX_CREATE_PREFIX(dx_val_program_text);
   if (dx_val_program_text_construct(SELF, vertex_program_text, fragment_program_text)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   *RETURN = SELF;
-  return DX_SUCCESS;  
+  return Core_Success;  
 }
 
-static dx_result add_define(dx_val_program_text* SELF, dx_string* name) {
-  dx_string* format = NULL;
-  if (dx_string_create(&format, "#define ${s} (1)\n${s}", sizeof("#define ${s} (1)\n${s}"))) {
-    return DX_FAILURE;
+static Core_Result add_define(dx_val_program_text* SELF, Core_String* name) {
+  Core_String* format = NULL;
+  if (Core_String_create(&format, "#define ${s} (1)\n${s}", sizeof("#define ${s} (1)\n${s}"))) {
+    return Core_Failure;
   }
-  dx_string* program_text = dx_string_printf(format, name, SELF->program_text);
+  Core_String* program_text = NULL;
+  if (Core_String_printf(&program_text, format, name, SELF->program_text)) {
+    DX_UNREFERENCE(format);
+    format = NULL;
+    return Core_Failure;
+  }
   DX_UNREFERENCE(format);
   format = NULL;
-  if (!program_text) {
-    return DX_FAILURE;
-  }
   DX_UNREFERENCE(SELF->program_text);
-  SELF->program_text = NULL;
   SELF->program_text = program_text;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-dx_result dx_val_program_text_add_define(dx_val_program_text* SELF, dx_string* name) {
+Core_Result dx_val_program_text_add_define(dx_val_program_text* SELF, Core_String* name) {
   switch (SELF->type) {
     case DX_VAL_PROGRAM_TEXT_TYPE_FRAGMENT: {
       if (add_define(SELF, name)) {
@@ -140,7 +141,7 @@ dx_result dx_val_program_text_add_define(dx_val_program_text* SELF, dx_string* n
       if (p) {
         p = p->vertex_program_text;
         if (add_define(p, name)) {
-          return DX_FAILURE;
+          return Core_Failure;
         }
       }
       return 0;
@@ -165,5 +166,5 @@ dx_result dx_val_program_text_add_define(dx_val_program_text* SELF, dx_string* n
       return add_define(SELF->fragment_program_text, name);
     } break;
   };
-  return DX_SUCCESS;
+  return Core_Success;
 }

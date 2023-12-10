@@ -22,19 +22,19 @@ enum dx_val_program_text_type {
 ///   dx_val_program_text objects of the type #DX_VAL_PROGRAM_TEXT_TYPE_FRAGMENT and #DX_VAL_PROGRAM_TEXT_TYPE_VERTEX, respectively.
 DX_DECLARE_OBJECT_TYPE("dx.val.program_text",
                        dx_val_program_text,
-                       dx_object);
+                       Core_Object);
 
 static inline dx_val_program_text* DX_VAL_PROGRAM_TEXT(void* p) {
   return (dx_val_program_text*)p;
 }
 
 struct dx_val_program_text {
-  dx_object _parent;
+  Core_Object _parent;
   dx_val_program_text* parent;
   dx_val_program_text_type type;
   union {
     // For DX_VAL_PROGRAM_TEXT_TYPE_VERTEX or DX_VAL_PROGRAM_TEXT_TYPE_FRAGMENT
-    dx_string* program_text;
+    Core_String* program_text;
     // For DX_VAL_PROGRAM_TEXT_TYPE_VERTEX_FRAGMENT
     struct {
       dx_val_program_text* vertex_program_text;
@@ -48,7 +48,7 @@ static inline dx_val_program_text_dispatch* DX_VAL_PROGRAM_TEXT_DISPATCH(void* p
 }
 
 struct dx_val_program_text_dispatch {
-  dx_object_dispatch _parent;
+  Core_Object_Dispatch _parent;
 };
 
 /// @param SELF A pointer to this program text object.
@@ -56,18 +56,18 @@ struct dx_val_program_text_dispatch {
 /// @param path The path to the file to load the program text from.
 /// @default-failure
 /// @default-return
-dx_result dx_val_program_text_construct_from_file(dx_val_program_text* SELF, dx_val_program_text_type type, dx_string* path);
+Core_Result dx_val_program_text_construct_from_file(dx_val_program_text* SELF, dx_val_program_text_type type, Core_String* path);
 
 /// @param SELF A pointer to this program text object.
 /// @param vertex_program_text Pointer to a program text object of type DX_VAL_PROGRAM_SOURCE_TYPE_VERTEX.
 /// @param fragment_program_text Pointer to a program text object of type DX_VAL_PROGRAM_SOURCE_TYPE_FRAGMENT.
 /// @default-failure
 /// @default-return
-dx_result dx_val_program_text_construct(dx_val_program_text* SELF, dx_val_program_text *vertex_program_text, dx_val_program_text* fragment_program_text);
+Core_Result dx_val_program_text_construct(dx_val_program_text* SELF, dx_val_program_text *vertex_program_text, dx_val_program_text* fragment_program_text);
 
-dx_result dx_val_program_text_create_from_file(dx_val_program_text** RETURN, dx_val_program_text_type type, dx_string* path);
+Core_Result dx_val_program_text_create_from_file(dx_val_program_text** RETURN, dx_val_program_text_type type, Core_String* path);
 
-dx_result dx_val_program_text_create(dx_val_program_text** RETURN, dx_val_program_text *vertex_program_text, dx_val_program_text* fragment_program_text);
+Core_Result dx_val_program_text_create(dx_val_program_text** RETURN, dx_val_program_text *vertex_program_text, dx_val_program_text* fragment_program_text);
 
 /// @brief Prefix the program with a define of the specified name.
 /// @code
@@ -77,6 +77,6 @@ dx_result dx_val_program_text_create(dx_val_program_text** RETURN, dx_val_progra
 /// @param name A pointer to the name.
 /// @default-failure
 /// @default-return
-dx_result dx_val_program_text_add_define(dx_val_program_text* SELF, dx_string* name);
+Core_Result dx_val_program_text_add_define(dx_val_program_text* SELF, Core_String* name);
 
 #endif // DX_PROGRAM_SOURCE_H_INCLUDED

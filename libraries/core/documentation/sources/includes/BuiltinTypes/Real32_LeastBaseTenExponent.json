@@ -1,0 +1,9 @@
+{
+  "type" : "symbolic-constant",
+  "last-update" : "2023-12-18",
+  "indices" : "core",
+  "name" : "Core_Real32_LeastBaseTenExponent",
+  "id" : "core-real32-leastbasetenexponent",
+  "signature" : "#define Core_Real32_LeastBaseTenExponent &lt;implementation&gt;",
+  "description" : "The least integer such that ten raised to the power of that value minus one is a normalized @{code('Core_Real32')} value. This usually is an alias of @{code('FLT_MIN_10_EXP')}."
+}

@@ -1,0 +1,33 @@
+{
+  "type" : "function",
+  "last-update" : "2023-12-18",
+  "indices" : "core",
+  "name" : "Core_hashPointer",
+  "id" : "core-hashpointer",
+  "signature" : "Core_Result Core_hashPointer(Core_Size* RETURN, void const*x);",
+  "signatureRemarks": null,
+  "parameters" : [
+    {
+      "name" : "RETURN",
+      "type" : "Core_Size*",
+      "description" : "A pointer to a @{code('Core_Size')} variable."
+    },
+    {
+      "name" : "x",
+      "type" : "void const*",
+      "description" : "The pointer to be hashed. May be the null pointer."
+    }
+  ],
+  "errors" : [
+    {
+      "errorCode" : "@{code('Core_Error_ArgumentInvalid')}",
+      "errorCondition" : "@{code('RETURN')} is a null pointer."
+    }
+  ],
+  "description" : "Computes the hash value of the value @{code('x')}.",
+  "success" : [
+    "@{code('*RETURN')} was assigned the hash value of the value @{code('x')}."
+  ],
+  "return" : "@{code('Core_Success')} on success. @{code('Core_Failure')} on failure.",
+  "remarks" : "This function sets the by-thread error variable on failure."
+}

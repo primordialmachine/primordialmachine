@@ -8,7 +8,6 @@
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-#include "dx/core/core.h"
 #include "dx/core/string.h"
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
@@ -16,123 +15,141 @@
 /// @ingroup Core_FileSystem
 /// @brief An enumeration of file access modes to files.
 /// @remarks The enumeration elements can be combined.
-typedef enum DX_FILE_ACCESS_MODE {
+DX_DECLARE_ENUMERATION_TYPE("Core_FileAccessMode",
+                            Core_FileAccessMode);
+
+enum Core_FileAccessMode {
 
   /// @brief Read access.
-  /// @remark Can be combined with DX_FILE_ACCESS_MODE_WRITE.
-  DX_FILE_ACCESS_MODE_READ = 1,
+  /// @remark Can be combined with dx_file_access_mode_write.
+  Core_FileAccessMode_Read = 1,
 
   /// @brief Write access.
-  /// @remark Can be combined with DX_FILE_ACCESS_MODE_READ.
-  DX_FILE_ACCESS_MODE_WRITE = 2,
+  /// @remark Can be combined with dx_file_access_mode_read.
+  Core_FileAccessMode_Write = 2,
 
   /// @brief Read and write access.
-  /// @remark Alias for @code{DX_FILE_ACCESS_MODE_READ|DX_FILE_ACCESS_MODE_WRITE}.
-  /// Alias for @code{DX_FILE_ACCESS_MODE_WRITE_READ}.
-  DX_FILE_ACCESS_MODE_READ_WRITE = DX_FILE_ACCESS_MODE_READ | DX_FILE_ACCESS_MODE_WRITE,
+  /// @remark Alias for @code{Core_FileAccessMode_Read|Core_FileAccessMode_Write}.
+  /// Alias for @code{Core_FileAccessMode_WriteRead}.
+  Core_FileAccessMode_ReadWrite = Core_FileAccessMode_Read | Core_FileAccessMode_Write,
 
   /// @brief Write and read access.
-  /// @remark Alias for @code{DX_FILE_ACCESS_MODE_WRITE|DX_FILE_ACCESS_MODE_READ}.
-  /// Alias for @code{DX_FILE_ACCESS_MODE_READ_WRITE}.
-  DX_FILE_ACCESS_MODE_WRITE_READ = DX_FILE_ACCESS_MODE_WRITE | DX_FILE_ACCESS_MODE_READ,
+  /// @remark Alias for @code{Core_FileAccessMode_Write|Core_FileAccessMode_Read}.
+  /// Alias for @code{Core_FileAccessMode_ReadWrite}.
+  Core_FileAccessMode_WriteRead = Core_FileAccessMode_Write | Core_FileAccessMode_Read,
 
-} DX_FILE_ACCESS_MODE;
+};
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 /// @ingroup Core_FileSystem
 /// @brief An enumeration of policies for opening a file in case of that the file exists.
 /// @remarks The enumeration elements can not be combined.
-typedef enum DX_EXISTING_FILE_POLICY {
+DX_DECLARE_ENUMERATION_TYPE("Core_ExistingFilePolicy",
+                            Core_ExistingFilePolicy);
 
-  /// @brief Retain the file.
-  DX_EXISTING_FILE_POLICY_RETAIN,
+enum Core_ExistingFilePolicy {
 
-  /// @brief Truncate the file.
-  DX_EXISTING_FILE_POLICY_TRUNCATE,
+  /// @brief Retain the file contents.
+  Core_ExistingFilePolicy_Retain,
 
-} DX_EXISTING_FILE_POLICY;
+  /// @brief Truncate the file contents.
+  Core_ExistingFilePolicy_Truncate,
+
+};
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 /// @ingroup Core_FileSystem
 /// @brief An enumeration of policies for opening a file in case of that the file does not exist.
 /// @remarks The enumeration elements can not be combined.
-typedef enum DX_NON_EXISTING_FILE_POLICY {
+DX_DECLARE_ENUMERATION_TYPE("Core_NonExistingFilePolicy",
+                            Core_NonExistingFilePolicy);
 
-  /// @brief Fail.
-  DX_NON_EXISTING_FILE_POLICY_FAIL,
+enum Core_NonExistingFilePolicy {
 
-  /// @brief Create the file.
-  DX_NON_EXISTING_FILE_POLICY_CREATE,
+  /// @brief Fail if the file does not exist.
+  Core_NonExistingFilePolicy_Fail,
 
-} DX_NON_EXISTING_FILE_POLICY;
+  /// @brief Create the file if it does not exist.
+  Core_NonExistingFilePolicy_Create,
 
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-
-/// @ingroup Core_FileSystem
-/// @brief
-/// Get the contents of a file.
-/// @param path
-/// The path to the file.
-/// @param bytes
-/// A pointer to a <code>char*</code> variable.
-/// @param number_of_bytes
-/// A pointer to a <code>dx_size</code> variable.
-/// @success
-/// <code>*number_of_bytes</code> was assigned the length, in Bytes, of the contents.
-/// <code>*bytes</code> was assigned a pointer to an array of that length.
-/// That array must be deallocated using dx_memory_deallocate() when no long required.
-/// @procedure
-dx_result dx_get_file_contents(char const *path, char **bytes, dx_size*number_of_bytes);
-
-/// @ingroup Core_FileSystem
-/// @brief
-/// Get the contents of a file.
-/// @param path
-/// The path to the file.
-/// @param bytes
-/// A pointer to a <code>char*</code> variable.
-/// @param number_of_bytes
-/// A pointer to a <code>dx_size</code> variable.
-/// @success
-/// <code>*number_of_bytes</code> was assigned the length, in Bytes, of the contents.
-/// <code>*bytes</code> was assigned a pointer to an array of that length.
-/// That array must be deallocated using dx_memory_deallocate() when no long required.
-/// @procedure
-dx_result dx_get_file_contents_s(dx_string* path, char** bytes, dx_size* number_of_bytes);
+};
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+DX_DECLARE_ENUMERATION_TYPE("Core.FileState",
+                            Core_FileState);
 
 /// @ingroup Core_FileSystem
 /// @brief Enumeration of file states.
-typedef enum DX_FILE_STATE {
+enum Core_FileState {
 
   /// @brief Unable to determine the file's state.
-  DX_FILE_STATE_UNKNOWN,
+  Core_FileState_Unknown,
 
   /// @brief A file was found and is a director file.
-  DX_FILE_STATE_ISDIRECTORY,
-  
+  Core_FileState_IsDirectory,
+
   /// @brief A file was found and is a regular file.
-  DX_FILE_STATE_ISREGULAR,
-  
+  Core_FileState_IsRegular,
+
   /// @brief A file was not found.
-  DX_FILE_STATE_NOTFOUND,
-  
-} DX_FILE_STATE;
+  Core_FileState_NotFound,
+
+};
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+/// @ingroup Core_FileSystem
+/// @brief
+/// Get the contents of a file.
+/// @param path
+/// The path to the file.
+/// @param bytes
+/// A pointer to a <code>char*</code> variable.
+/// @param number_of_bytes
+/// A pointer to a <code>Core_Size</code> variable.
+/// @success
+/// <code>*number_of_bytes</code> was assigned the length, in Bytes, of the contents.
+/// <code>*bytes</code> was assigned a pointer to an array of that length.
+/// That array must be deallocated using Core_Memory_deallocate() when no long required.
+/// @procedure
+Core_Result dx_get_file_contents(char const *path, char **bytes, Core_Size*number_of_bytes);
+
+/// @ingroup Core_FileSystem
+/// @brief
+/// Get the contents of a file.
+/// @param path
+/// The path to the file.
+/// @param bytes
+/// A pointer to a <code>char*</code> variable.
+/// @param number_of_bytes
+/// A pointer to a <code>Core_Size</code> variable.
+/// @success
+/// <code>*number_of_bytes</code> was assigned the length, in Bytes, of the contents.
+/// <code>*bytes</code> was assigned a pointer to an array of that length.
+/// That array must be deallocated using Core_Memory_deallocate() when no long required.
+/// @procedure
+Core_Result dx_get_file_contents_s(Core_String* path, char** bytes, Core_Size* number_of_bytes);
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 /// @ingroup Core_FileSystem
 /// @brief Get the state of a file.
-/// @param RETURN A pointer to a DX_FILE_STATE variable.
+/// @param RETURN A pointer to a Core_FileState variable.
 /// @param path The path to the file.
 /// @success <code>*RETURN</code> was assigned the file state.
 /// @procedure
-dx_result dx_get_file_state(DX_FILE_STATE* RETURN, char const* path);
+Core_Result dx_get_file_state(Core_FileState* RETURN, char const* path);
 
 /// @ingroup Core_FileSystem
 /// @brief Get the state of a file.
-/// @param RETURN A pointer to a DX_FILE_STATE variable.
+/// @param RETURN A pointer to a Core_FileState variable.
 /// @param path The path to the file.
 /// @success <code>*RETURN</code> was assigned the file state.
 /// @procedure
-dx_result dx_get_file_state_s(DX_FILE_STATE* RETURN, dx_string* path);
+Core_Result dx_get_file_state_s(Core_FileState* RETURN, Core_String* path);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 

@@ -1,0 +1,30 @@
+{
+  "type" : "function",
+  "last-update" : "2023-12-18",
+  "indices" : "core",
+  "name" : "Core_getPageSize",
+  "id" : "core-getpagesize",
+  "signature" : "Core_Result Core_getPageSize(Core_Size* RETURN);",
+  "signatureRemarks": null,
+  "parameters" : [
+    {
+      "name" : "RETURN",
+      "type" : "Core_Size*",
+      "description" : "A pointer to a <code>Core_Size</code> variable"
+    }
+  ],
+  "errors" : [
+    {
+      "errorCode" : "Core_Error_ArgumentInvalid",
+      "errorCondition" : "@{code('RETURN')} is a null pointer"
+    },
+    {
+      "errorCode" : "Core_Error_EnvironmentFailed",
+      "errorCondition" : "the executing target environment failed"
+    }
+  ],
+  "description" : "Get the memory page size of the executing target environment.",
+  "success" : "@{code('*RETURN')} was assigned the <code>*RETURN</code> was assigned the memory page size.",
+  "return" : "@{code('Core_Success')} on success. @{code('Core_Failure')} on failure.",
+  "remarks" : "This function sets the by-thread error variable on failure."
+}

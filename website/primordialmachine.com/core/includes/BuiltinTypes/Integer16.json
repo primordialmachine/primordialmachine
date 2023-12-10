@@ -1,0 +1,9 @@
+{
+  "type" : "typedef",
+  "last-update" : "2023-12-18",
+  "indices" : "core",
+  "name" : "Core_Integer16",
+  "id" : "core-integer16",
+  "signature" : "typedef &lt;implementation&gt; Core_Integer16;",
+  "description" : "A two's complement integer of a width of 16 Bits. This usually is an alias of @{code('int16_t')}."
+}

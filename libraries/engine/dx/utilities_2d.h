@@ -7,49 +7,53 @@
 #include "dx/font_manager.h"
 #include <string.h>
 
-static inline dx_result dx_engine_utilities_2d_create_program_text(dx_val_program_text** RETURN, dx_val_context* context, dx_string* path, dx_string* filename) {
+static inline Core_Result dx_engine_utilities_2d_create_program_text(dx_val_program_text** RETURN, dx_val_context* context, Core_String* path, Core_String* filename) {
   dx_val_program_text* vertex_program = NULL, * fragment_program = NULL;
   dx_val_program_text* program = NULL;
   {
-    dx_string* format = NULL;
-    if (dx_string_create(&format, "${s}/${s}.vs", sizeof("${s}/${s}.vs") - 1)) {
-      return DX_FAILURE;
+    Core_String* format = NULL;
+    if (Core_String_create(&format, "${s}/${s}.vs", sizeof("${s}/${s}.vs") - 1)) {
+      return Core_Failure;
     }
-    dx_string* p = dx_string_printf(format, path, filename);
+    Core_String* p = NULL;
+    if (Core_String_printf(&p, format, path, filename)) {
+      DX_UNREFERENCE(format);
+      format = NULL;
+      return Core_Failure;
+    }
     DX_UNREFERENCE(format);
     format = NULL;
-    if (!p) {
-      return DX_FAILURE;
-    }
     if (dx_val_program_text_create_from_file(&vertex_program, DX_VAL_PROGRAM_TEXT_TYPE_VERTEX, p)) {
       DX_UNREFERENCE(p);
       p = NULL;
-      return DX_FAILURE;
+      return Core_Failure;
     }
     DX_UNREFERENCE(p);
     p = NULL;
   }
   {
-    dx_string* format = NULL;
-    if (dx_string_create(&format, "${s}/${s}.fs", sizeof("${s}/${s}.fs") - 1)) {
+    Core_String* format = NULL;
+    if (Core_String_create(&format, "${s}/${s}.fs", sizeof("${s}/${s}.fs") - 1)) {
       DX_UNREFERENCE(vertex_program);
       vertex_program = NULL;
-      return DX_FAILURE;
+      return Core_Failure;
     }
-    dx_string* p = dx_string_printf(format, path, filename);
+    Core_String* p = NULL;
+    if (Core_String_printf(&p, format, path, filename)) {
+      DX_UNREFERENCE(format);
+      format = NULL;
+      DX_UNREFERENCE(vertex_program);
+      vertex_program = NULL;
+      return Core_Failure;
+    }
     DX_UNREFERENCE(format);
     format = NULL;
-    if (!p) {
-      DX_UNREFERENCE(vertex_program);
-      vertex_program = NULL;
-      return DX_FAILURE;
-    }
     if (dx_val_program_text_create_from_file(&fragment_program, DX_VAL_PROGRAM_TEXT_TYPE_FRAGMENT, p)) {
       DX_UNREFERENCE(vertex_program);
       vertex_program = NULL;
       DX_UNREFERENCE(p);
       p = NULL;
-      return DX_FAILURE;
+      return Core_Failure;
     }
     DX_UNREFERENCE(p);
     p = NULL;
@@ -60,7 +64,7 @@ static inline dx_result dx_engine_utilities_2d_create_program_text(dx_val_progra
       vertex_program = NULL;
       DX_UNREFERENCE(fragment_program);
       fragment_program = NULL;
-      return DX_FAILURE;
+      return Core_Failure;
     }
     DX_UNREFERENCE(vertex_program);
     vertex_program = NULL;
@@ -68,19 +72,19 @@ static inline dx_result dx_engine_utilities_2d_create_program_text(dx_val_progra
     fragment_program = NULL;
   }
   *RETURN = program;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-static inline dx_result dx_engine_utilities_2d_create_program(dx_val_program** RETURN, dx_val_context* val_context, char* path, char* filename) {
-  dx_string* path1 = NULL;
-  if (dx_string_create(&path1, path, strlen(path))) {
-    return DX_FAILURE;
+static inline Core_Result dx_engine_utilities_2d_create_program(dx_val_program** RETURN, dx_val_context* val_context, char* path, char* filename) {
+  Core_String* path1 = NULL;
+  if (Core_String_create(&path1, path, strlen(path))) {
+    return Core_Failure;
   }
-  dx_string* filename1 = NULL;
-  if (dx_string_create(&filename1, filename, strlen(filename))) {
+  Core_String* filename1 = NULL;
+  if (Core_String_create(&filename1, filename, strlen(filename))) {
     DX_UNREFERENCE(path1);
     path1 = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   dx_val_program_text* val_program_text = NULL;
   if (dx_engine_utilities_2d_create_program_text(&val_program_text, val_context, path1, filename1)) {
@@ -90,7 +94,7 @@ static inline dx_result dx_engine_utilities_2d_create_program(dx_val_program** R
     DX_UNREFERENCE(path1);
     path1 = NULL;
     //
-    return DX_FAILURE;
+    return Core_Failure;
   }
   DX_UNREFERENCE(filename1);
   filename1 = NULL;
@@ -103,26 +107,26 @@ static inline dx_result dx_engine_utilities_2d_create_program(dx_val_program** R
     DX_UNREFERENCE(val_program_text);
     val_program_text = NULL;
     //
-    return DX_FAILURE;
+    return Core_Failure;
   }
   DX_UNREFERENCE(val_program_text);
   val_program_text = NULL;
   *RETURN = val_program;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
 /// @todo Asset materials must be created via the assets manager.
-static inline dx_result dx_engine_utilities_2d_create_material(dx_val_material** RETURN, dx_val_context* context, char const* name) {
+static inline Core_Result dx_engine_utilities_2d_create_material(dx_val_material** RETURN, dx_val_context* context, char const* name) {
   // create the asset material
-  dx_string* name_string = NULL;
-  if (dx_string_create(&name_string, name, strlen(name))) {
-    return DX_FAILURE;
+  Core_String* name_string = NULL;
+  if (Core_String_create(&name_string, name, strlen(name))) {
+    return Core_Failure;
   }
   dx_assets_material* material_asset = NULL;
   if (dx_assets_material_create(&material_asset, name_string)) {
     DX_UNREFERENCE(name_string);
     name_string = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   DX_UNREFERENCE(name_string);
   name_string = NULL;
@@ -131,14 +135,14 @@ static inline dx_result dx_engine_utilities_2d_create_material(dx_val_material**
   if (dx_assets_color_rgb_n8_create(&ambient_color, &WHITE)) {
     DX_UNREFERENCE(material_asset);
     material_asset = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   if (dx_assets_material_set_ambient_color(material_asset, ambient_color)) {
     DX_UNREFERENCE(ambient_color);
     ambient_color = NULL;
     DX_UNREFERENCE(material_asset);
     material_asset = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   DX_UNREFERENCE(ambient_color);
   ambient_color = NULL;
@@ -147,12 +151,12 @@ static inline dx_result dx_engine_utilities_2d_create_material(dx_val_material**
   if (dx_val_material_create(&val_material, context, material_asset)) {
     DX_UNREFERENCE(material_asset);
     material_asset = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   DX_UNREFERENCE(material_asset);
   material_asset = NULL;
   *RETURN = val_material;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
 /// @utility
@@ -165,68 +169,68 @@ static inline dx_result dx_engine_utilities_2d_create_material(dx_val_material**
 /// @param h The height of the pixel rectangle.
 /// @default-return
 /// @defaut-failure
-static inline dx_result dx_assets_extensions_create_texture_from_pixels(dx_assets_texture** RETURN, void* pixels, dx_pixel_format pixel_format, dx_n32 width, dx_n32 height) {
-  if (width > DX_SIZE_GREATEST || height > DX_SIZE_GREATEST) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+static inline Core_Result dx_assets_extensions_create_texture_from_pixels(dx_assets_texture** RETURN, void* pixels, Core_PixelFormat pixel_format, Core_Natural32 width, Core_Natural32 height) {
+  if (width > Core_Size_Greatest || height > Core_Size_Greatest) {
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
   //
-  dx_string* image_name = NULL;
-  if (dx_string_create(&image_name, "<temporary>", sizeof("<temporary>") - 1)) {
-    return DX_FAILURE;
+  Core_String* image_name = NULL;
+  if (Core_String_create(&image_name, "<temporary>", sizeof("<temporary>") - 1)) {
+    return Core_Failure;
   }
   dx_assets_image* image = NULL;
   if (dx_assets_image_create(&image, image_name, pixel_format, width, height)) {
     DX_UNREFERENCE(image_name);
     image_name = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
-  dx_size number_of_bytes_per_pixel;
+  Core_Size number_of_bytes_per_pixel;
   if (dx_pixel_format_get_number_of_bytes_per_pixel(&number_of_bytes_per_pixel, pixel_format)) {
     DX_UNREFERENCE(image);
     image = NULL;
     DX_UNREFERENCE(image_name);
     image_name = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
-  dx_size overflow;
-  dx_size number_of_pixels = dx_mul_sz(width, height, &overflow);
+  Core_Size overflow;
+  Core_Size number_of_pixels = dx_mul_sz(width, height, &overflow);
   if (overflow) {
     DX_UNREFERENCE(image);
     image = NULL;
     DX_UNREFERENCE(image_name);
     image_name = NULL;
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
 
-  dx_size number_of_bytes = dx_mul_sz(number_of_pixels, number_of_bytes_per_pixel, &overflow);
+  Core_Size number_of_bytes = dx_mul_sz(number_of_pixels, number_of_bytes_per_pixel, &overflow);
   if (overflow) {
     DX_UNREFERENCE(image);
     image = NULL;
     DX_UNREFERENCE(image_name);
     image_name = NULL;
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
-  dx_memory_copy(image->pixels, pixels, number_of_bytes);
+  Core_Memory_copy(image->pixels, pixels, number_of_bytes);
   dx_asset_reference* image_reference = NULL;
   if (dx_asset_reference_create(&image_reference, image_name)) {
     DX_UNREFERENCE(image);
     image = NULL;
     DX_UNREFERENCE(image_name);
     image_name = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   DX_UNREFERENCE(image_name);
   image_name = NULL;
-  image_reference->object = DX_OBJECT(image);
+  image_reference->object = CORE_OBJECT(image);
   //
-  dx_string* texture_name = NULL;
-  if (dx_string_create(&texture_name, "<temporary>", sizeof("<temporary>") - 1)) {
+  Core_String* texture_name = NULL;
+  if (Core_String_create(&texture_name, "<temporary>", sizeof("<temporary>") - 1)) {
     DX_UNREFERENCE(image_reference);
     image_reference = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   dx_assets_texture* texture = NULL;
   if (dx_assets_texture_create(&texture, texture_name, image_reference)) {
@@ -234,7 +238,7 @@ static inline dx_result dx_assets_extensions_create_texture_from_pixels(dx_asset
     texture_name = NULL;
     DX_UNREFERENCE(image_reference);
     image_reference = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   DX_UNREFERENCE(texture_name);
   texture_name = NULL;
@@ -243,25 +247,25 @@ static inline dx_result dx_assets_extensions_create_texture_from_pixels(dx_asset
   //
   *RETURN = texture;
   //
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-static inline dx_result dx_assets_extensions_create_texture_from_glyph(dx_assets_texture** RETURN, dx_font_glyph* glyph) {
+static inline Core_Result dx_assets_extensions_create_texture_from_glyph(dx_assets_texture** RETURN, dx_font_glyph* glyph) {
   uint32_t width = 0,
            height = 0;
   if (dx_font_glyph_get_size(glyph, &width, &height)) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
   void* pixels = NULL;
   if (dx_font_glyph_get_pixels(glyph, &pixels)) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
   dx_assets_texture* texture = NULL;
-  if (dx_assets_extensions_create_texture_from_pixels(&texture, pixels, dx_pixel_format_ln8, width, height)) {
-    return DX_FAILURE;
+  if (dx_assets_extensions_create_texture_from_pixels(&texture, pixels, Core_PixelFormat_L8, width, height)) {
+    return Core_Failure;
   }
   *RETURN = texture;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
 

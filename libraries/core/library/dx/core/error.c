@@ -2,12 +2,12 @@
 
 #include "dx/core/core.h"
 
-DX_THREAD_LOCAL() dx_error g_error = DX_NO_ERROR;
+Core_ThreadLocal() Core_Error g_error = Core_Error_NoError;
 
-dx_error dx_get_error() {
+Core_Error Core_getError() {
   return g_error;
 }
 
-void dx_set_error(dx_error error) {
+void Core_setError(Core_Error error) {
   g_error = error;
 }

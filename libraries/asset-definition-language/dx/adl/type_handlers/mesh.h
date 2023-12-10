@@ -27,8 +27,8 @@ struct dx_adl_type_handlers_mesh_dispatch {
   dx_adl_type_handler_dispatch _parent;
 };
 
-dx_result dx_adl_type_handlers_mesh_construct(dx_adl_type_handlers_mesh* SELF);
+Core_Result dx_adl_type_handlers_mesh_construct(dx_adl_type_handlers_mesh* SELF);
 
-dx_result dx_adl_type_handlers_mesh_create(dx_adl_type_handlers_mesh** RETURN);
+Core_Result dx_adl_type_handlers_mesh_create(dx_adl_type_handlers_mesh** RETURN);
 
 #endif // DX_ADL_TYPE_HANDLERS_MESH_H_INCLUDED

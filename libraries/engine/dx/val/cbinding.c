@@ -5,22 +5,22 @@
 
 DX_DECLARE_OBJECT_TYPE("dx.val.cbinding_node",
                        dx_val_cbinding_node,
-                       dx_object);
+                       Core_Object);
 
 dx_val_cbinding_node* DX_VAL_CBINDING_NODE(void* p) {
   return (dx_val_cbinding_node*)p;
 }
 
 struct dx_val_cbinding_node {
-  dx_object _parent;
-  dx_string* name;
+  Core_Object _parent;
+  Core_String* name;
   uint8_t tag;
   union {
     DX_VEC3 vec3;
     DX_VEC4 vec4;
     DX_MAT4 mat4;
     DX_RGBA_F32 rgba_f32;
-    dx_size texture_index;
+    Core_Size texture_index;
   };
 };
 
@@ -29,57 +29,55 @@ dx_val_cbinding_node_dispatch* DX_VAL_CBINDING_NODE_DISPATCH(void* p) {
 }
 
 struct dx_val_cbinding_node_dispatch {
-  dx_object_dispatch _parent;
+  Core_Object_Dispatch _parent;
 };
 
-dx_result dx_val_cbinding_node_construct(dx_val_cbinding_node* SELF, dx_string* name);
+Core_Result dx_val_cbinding_node_construct(dx_val_cbinding_node* SELF, Core_String* name);
 
-dx_result dx_val_cbinding_node_create(dx_val_cbinding_node** RETURN, dx_string* name);
+Core_Result dx_val_cbinding_node_create(dx_val_cbinding_node** RETURN, Core_String* name);
 
 DX_DEFINE_OBJECT_TYPE("dx.val.cbinding_node",
                       dx_val_cbinding_node,
-                      dx_object);
+                      Core_Object);
 
 static void dx_val_cbinding_node_destruct(dx_val_cbinding_node* SELF) {
   DX_UNREFERENCE(SELF->name);
   SELF->name = NULL;
 }
 
-static void dx_val_cbinding_node_dispatch_construct(dx_val_cbinding_node_dispatch* SELF)
+static void dx_val_cbinding_node_constructDispatch(dx_val_cbinding_node_dispatch* SELF)
 {/*Intentionally empty.*/}
 
-dx_result dx_val_cbinding_node_construct(dx_val_cbinding_node* SELF, dx_string* name) {
-  dx_rti_type* TYPE = dx_val_cbinding_node_get_type();
-  if (!TYPE) {
-    return DX_FAILURE;
-  }
+Core_Result dx_val_cbinding_node_construct(dx_val_cbinding_node* SELF, Core_String* name) {
+  DX_CONSTRUCT_PREFIX(dx_val_cbinding_node);
+
   SELF->tag = DX_VAL_CBINDING_TYPE_EMPTY;
   
   SELF->name = name;
   DX_REFERENCE(SELF->name);
 
-  DX_OBJECT(SELF)->type = TYPE;
-  return DX_SUCCESS;
+  CORE_OBJECT(SELF)->type = TYPE;
+  return Core_Success;
 }
 
-dx_result dx_val_cbinding_node_create(dx_val_cbinding_node** RETURN, dx_string* name) {
-  DX_CREATE_PREFIX(dx_val_cbinding_node)
+Core_Result dx_val_cbinding_node_create(dx_val_cbinding_node** RETURN, Core_String* name) {
+  DX_CREATE_PREFIX(dx_val_cbinding_node);
   if (dx_val_cbinding_node_construct(SELF, name)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   *RETURN = SELF;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-static inline dx_val_cbinding_node* get_or_create(dx_val_cbinding* SELF, dx_string* name) {
+static inline dx_val_cbinding_node* get_or_create(dx_val_cbinding* SELF, Core_String* name) {
   dx_val_cbinding_node* node = NULL;
   if (dx_inline_pointer_hashmap_get(&node, &SELF->kvs, name)) {
-    if (DX_ERROR_NOT_FOUND != dx_get_error()) {
+    if (Core_Error_NotFound != Core_getError()) {
       return NULL;
     } else {
-      dx_set_error(DX_NO_ERROR);
+      Core_setError(Core_Error_NoError);
     }
   }
   if (!node) {
@@ -97,133 +95,128 @@ static inline dx_val_cbinding_node* get_or_create(dx_val_cbinding* SELF, dx_stri
   return node;
 }
 
-dx_result dx_val_cbinding_set_vec3(dx_val_cbinding* SELF, char const* name, DX_VEC3 const* value) {
-  dx_string* name1 = NULL;
-  if (dx_string_create(&name1, name, strlen(name) + 1)) {
-    return DX_FAILURE;
+Core_Result dx_val_cbinding_set_vec3(dx_val_cbinding* SELF, char const* name, DX_VEC3 const* value) {
+  Core_String* name1 = NULL;
+  if (Core_String_create(&name1, name, strlen(name) + 1)) {
+    return Core_Failure;
   }
   dx_val_cbinding_node* node = get_or_create(SELF, name1);
   DX_UNREFERENCE(name1);
   name1 = NULL;
   if (!node) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
   node->tag = DX_VAL_CBINDING_TYPE_VEC3;
   node->vec3 = *value;
   DX_UNREFERENCE(node);
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-dx_result dx_val_cbinding_set_vec4(dx_val_cbinding* SELF, char const* name, DX_VEC4 const* value) {
-  dx_string* name1 = NULL;
-  if (dx_string_create(&name1, name, strlen(name) + 1)) {
-    return DX_FAILURE;
+Core_Result dx_val_cbinding_set_vec4(dx_val_cbinding* SELF, char const* name, DX_VEC4 const* value) {
+  Core_String* name1 = NULL;
+  if (Core_String_create(&name1, name, strlen(name) + 1)) {
+    return Core_Failure;
   }
   dx_val_cbinding_node* node = get_or_create(SELF, name1);
   DX_UNREFERENCE(name1);
   name1 = NULL;
   if (!node) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
   node->tag = DX_VAL_CBINDING_TYPE_VEC4;
   node->vec4 = *value;
   DX_UNREFERENCE(node);
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-dx_result dx_val_cbinding_set_mat4(dx_val_cbinding* SELF, char const *name, DX_MAT4 const* value) {
-  dx_string* name1 = NULL;
-  if (dx_string_create(&name1, name, strlen(name) + 1)) {
-    return DX_FAILURE;
+Core_Result dx_val_cbinding_set_mat4(dx_val_cbinding* SELF, char const *name, DX_MAT4 const* value) {
+  Core_String* name1 = NULL;
+  if (Core_String_create(&name1, name, strlen(name) + 1)) {
+    return Core_Failure;
   }
   dx_val_cbinding_node* node = get_or_create(SELF, name1);
   DX_UNREFERENCE(name1);
   name1 = NULL;
   if (!node) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
   node->tag = DX_VAL_CBINDING_TYPE_MAT4;
   node->mat4 = *value;
   DX_UNREFERENCE(node);
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-dx_result dx_val_cbinding_set_rgba_f32(dx_val_cbinding* SELF, char const* name, DX_RGBA_F32 const* value) {
-  dx_string* name1 = NULL;
-  if (dx_string_create(&name1, name, strlen(name) + 1)) {
-    return DX_FAILURE;
+Core_Result dx_val_cbinding_set_rgba_f32(dx_val_cbinding* SELF, char const* name, DX_RGBA_F32 const* value) {
+  Core_String* name1 = NULL;
+  if (Core_String_create(&name1, name, strlen(name) + 1)) {
+    return Core_Failure;
   }
   dx_val_cbinding_node* node = get_or_create(SELF, name1);
   DX_UNREFERENCE(name1);
   name1 = NULL;
   if (!node) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
   node->tag = DX_VAL_CBINDING_TYPE_RGBA_F32;
   node->rgba_f32 = *value;
   DX_UNREFERENCE(node);
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-dx_result dx_val_cbinding_set_texture_index(dx_val_cbinding* SELF, char const* name, dx_size value) {
-  dx_string* name1 = NULL;
-  if (dx_string_create(&name1, name, strlen(name) + 1)) {
-    return DX_FAILURE;
+Core_Result dx_val_cbinding_set_texture_index(dx_val_cbinding* SELF, char const* name, Core_Size value) {
+  Core_String* name1 = NULL;
+  if (Core_String_create(&name1, name, strlen(name) + 1)) {
+    return Core_Failure;
   }
   dx_val_cbinding_node* node = get_or_create(SELF, name1);
   DX_UNREFERENCE(name1);
   name1 = NULL;
   if (!node) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
   node->tag = DX_VAL_CBINDING_TYPE_TEXTURE_INDEX;
   node->texture_index = value;
   DX_UNREFERENCE(node);
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
 DX_DEFINE_OBJECT_TYPE("dx.val.cbinding",
                       dx_val_cbinding,
-                      dx_object);
+                      Core_Object);
 
 static void dx_val_cbinding_destruct(dx_val_cbinding* self) {
   dx_inline_pointer_hashmap_uninitialize(&self->kvs);
 }
 
-static void dx_val_cbinding_dispatch_construct(dx_val_cbinding_dispatch* self)
+static void dx_val_cbinding_constructDispatch(dx_val_cbinding_dispatch* self)
 {/*Intentionally empty.*/}
 
-static dx_result kvs_hash_key(dx_size* RETURN, dx_string** a) {
-  *RETURN = dx_string_get_hash_value(*a);
-  return DX_SUCCESS;
+static Core_Result kvs_hash_key(Core_Size* RETURN, Core_String** a) {
+  return Core_String_getHashValue(RETURN, *a);
 }
 
-static dx_result kvs_keys_equal(dx_bool* RETURN, dx_string** a, dx_string** b) {
-  *RETURN = dx_string_is_equal_to(*a, *b);
-  return DX_SUCCESS;
+static Core_Result kvs_keys_equal(Core_Boolean* RETURN, Core_String** a, Core_String** b) {
+  return Core_String_isEqualTo(RETURN, *a, *b);
 }
 
-static void kvs_key_added(dx_string** a) {
+static void kvs_key_added(Core_String** a) {
   DX_REFERENCE(*a);
 }
 
-static void kvs_key_removed(dx_string** a) {
+static void kvs_key_removed(Core_String** a) {
   DX_UNREFERENCE(*a);
 }
 
-static void kvs_value_added(dx_object** a) {
+static void kvs_value_added(Core_Object** a) {
   DX_REFERENCE(*a);
 }
 
-static void kvs_value_removed(dx_object** a) {
+static void kvs_value_removed(Core_Object** a) {
   DX_UNREFERENCE(*a);
 }
 
-dx_result dx_val_cbinding_construct(dx_val_cbinding* self) {
-  dx_rti_type* TYPE = dx_val_cbinding_get_type();
-  if (!TYPE) {
-    return DX_FAILURE;
-  }
+Core_Result dx_val_cbinding_construct(dx_val_cbinding* SELF) {
+  DX_CONSTRUCT_PREFIX(dx_val_cbinding);
   DX_INLINE_POINTER_HASHMAP_CONFIGURATION configuration = {
     .compare_keys_callback = (dx_inline_pointer_hashmap_compare_keys_callback*)&kvs_keys_equal,
     .hash_key_callback = (dx_inline_pointer_hashmap_hash_key_callback*)&kvs_hash_key,
@@ -232,22 +225,22 @@ dx_result dx_val_cbinding_construct(dx_val_cbinding* self) {
     .value_added_callback = (dx_inline_pointer_hashmap_value_added_callback*)&kvs_value_added,
     .value_removed_callback = (dx_inline_pointer_hashmap_value_removed_callback*)&kvs_value_removed,
   };
-  if (dx_inline_pointer_hashmap_initialize(&self->kvs, &configuration)) {
-    return DX_FAILURE;
+  if (dx_inline_pointer_hashmap_initialize(&SELF->kvs, &configuration)) {
+    return Core_Failure;
   }
-  DX_OBJECT(self)->type = TYPE;
-  return DX_SUCCESS;
+  CORE_OBJECT(SELF)->type = TYPE;
+  return Core_Success;
 }
 
-dx_result dx_val_cbinding_create(dx_val_cbinding** RETURN) {
-  DX_CREATE_PREFIX(dx_val_cbinding)
+Core_Result dx_val_cbinding_create(dx_val_cbinding** RETURN) {
+  DX_CREATE_PREFIX(dx_val_cbinding);
   if (dx_val_cbinding_construct(SELF)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   *RETURN = SELF;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
 int dx_val_cbinding_iter_initialize(dx_val_cbinding_iter* SELF, dx_val_cbinding* target) {
@@ -263,7 +256,7 @@ int dx_val_cbinding_iter_next(dx_val_cbinding_iter* SELF) {
 }
 
 bool dx_val_cbinding_iter_has_entry(dx_val_cbinding_iter* SELF) {
-  dx_bool temporary = false;
+  Core_Boolean temporary = false;
   if (dx_inline_pointer_hashmap_iterator_has_entry(&temporary, SELF)) {
     return false;
   }
@@ -281,7 +274,7 @@ uint8_t dx_val_cbinding_iter_get_tag(dx_val_cbinding_iter* SELF) {
   return node->tag;
 }
 
-dx_string* dx_val_cbinding_iter_get_name(dx_val_cbinding_iter* SELF) {
+Core_String* dx_val_cbinding_iter_get_name(dx_val_cbinding_iter* SELF) {
   dx_val_cbinding_node* node = NULL;
   if (dx_inline_pointer_hashmap_iterator_get_value(&node, SELF)) {
     return NULL;
@@ -293,77 +286,77 @@ dx_string* dx_val_cbinding_iter_get_name(dx_val_cbinding_iter* SELF) {
   return node->name;
 }
 
-dx_result dx_val_cbinding_iter_get_vec3(dx_val_cbinding_iter* SELF, DX_VEC3* v) {
+Core_Result dx_val_cbinding_iter_get_vec3(dx_val_cbinding_iter* SELF, DX_VEC3* v) {
   dx_val_cbinding_node* node = NULL;
   if (dx_inline_pointer_hashmap_iterator_get_value(&node, SELF)) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
   if (!node || node->tag != DX_VAL_CBINDING_TYPE_VEC3) {
-    if (!dx_get_error()) {
-      dx_set_error(DX_ERROR_INVALID_OPERATION);
+    if (!Core_getError()) {
+      Core_setError(Core_Error_OperationInvalid);
     }
-    return DX_FAILURE;
+    return Core_Failure;
   }
   *v = node->vec3;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-dx_result dx_val_cbinding_iter_get_vec4(dx_val_cbinding_iter* SELF, DX_VEC4* v) {
+Core_Result dx_val_cbinding_iter_get_vec4(dx_val_cbinding_iter* SELF, DX_VEC4* v) {
   dx_val_cbinding_node* node = NULL;
   if (dx_inline_pointer_hashmap_iterator_get_value(&node, SELF)) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
   if (!node || node->tag != DX_VAL_CBINDING_TYPE_VEC4) {
-    if (!dx_get_error()) {
-      dx_set_error(DX_ERROR_INVALID_OPERATION);
+    if (!Core_getError()) {
+      Core_setError(Core_Error_OperationInvalid);
     }
-    return DX_FAILURE;
+    return Core_Failure;
   }
   *v = node->vec4;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-dx_result dx_val_cbinding_iter_get_mat4(dx_val_cbinding_iter* SELF, DX_MAT4* a) {
+Core_Result dx_val_cbinding_iter_get_mat4(dx_val_cbinding_iter* SELF, DX_MAT4* a) {
   dx_val_cbinding_node* node = NULL;
   if (dx_inline_pointer_hashmap_iterator_get_value(&node, SELF)) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
   if (!node || node->tag != DX_VAL_CBINDING_TYPE_MAT4) {
-    if (!dx_get_error()) {
-      dx_set_error(DX_ERROR_INVALID_OPERATION);
+    if (!Core_getError()) {
+      Core_setError(Core_Error_OperationInvalid);
     }
-    return DX_FAILURE;
+    return Core_Failure;
   }
   *a = node->mat4;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-dx_result dx_val_cbinding_iter_get_rgba_f32(dx_val_cbinding_iter* SELF, DX_RGBA_F32* c) {
+Core_Result dx_val_cbinding_iter_get_rgba_f32(dx_val_cbinding_iter* SELF, DX_RGBA_F32* c) {
   dx_val_cbinding_node* node = NULL;
   if (dx_inline_pointer_hashmap_iterator_get_value(&node, SELF)) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
   if (!node || node->tag != DX_VAL_CBINDING_TYPE_RGBA_F32) {
-    if (!dx_get_error()) {
-      dx_set_error(DX_ERROR_INVALID_OPERATION);
+    if (!Core_getError()) {
+      Core_setError(Core_Error_OperationInvalid);
     }
-    return DX_FAILURE;
+    return Core_Failure;
   }
   *c = node->rgba_f32;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-dx_result dx_val_cbinding_iter_get_texture_index(dx_val_cbinding_iter* SELF, dx_size* i) {
+Core_Result dx_val_cbinding_iter_get_texture_index(dx_val_cbinding_iter* SELF, Core_Size* i) {
   dx_val_cbinding_node* node = NULL;
   if (dx_inline_pointer_hashmap_iterator_get_value(&node, SELF)) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
   if (!node || node->tag != DX_VAL_CBINDING_TYPE_TEXTURE_INDEX) {
-    if (!dx_get_error()) {
-      dx_set_error(DX_ERROR_INVALID_OPERATION);
+    if (!Core_getError()) {
+      Core_setError(Core_Error_OperationInvalid);
     }
-    return DX_FAILURE;
+    return Core_Failure;
   }
   *i = node->texture_index;
-  return DX_SUCCESS;
+  return Core_Success;
 }

@@ -27,8 +27,8 @@ struct dx_adl_type_handlers_optics_orthographic_dispatch {
   dx_adl_type_handler_dispatch _parent;
 };
 
-dx_result dx_adl_type_handlers_optics_orthographic_construct(dx_adl_type_handlers_optics_orthographic* SELF);
+Core_Result dx_adl_type_handlers_optics_orthographic_construct(dx_adl_type_handlers_optics_orthographic* SELF);
 
-dx_result dx_adl_type_handlers_optics_orthographic_create(dx_adl_type_handlers_optics_orthographic** RETURN);
+Core_Result dx_adl_type_handlers_optics_orthographic_create(dx_adl_type_handlers_optics_orthographic** RETURN);
 
 #endif // DX_ADL_TYPE_HANDLERS_OPTICS_ORTHOGRAPHIC_H_INCLUDED

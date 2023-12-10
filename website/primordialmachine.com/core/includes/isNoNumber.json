@@ -1,0 +1,33 @@
+{
+  "type" : "function",
+  "last-update" : "2023-12-18",
+  "indices" : "core",
+  "name" : "Core_isNoNumber",
+  "id" : "core-isnonumber",
+  "signature" : "Core_Result Core_isNoNumber&lt;Suffix&gt;(Core_Boolean* RETURN, &lt;Type&gt; x);",
+  "signatureRemarks": [
+    "<p>where <code>&lt;Suffix&gt;</code> and <code>&lt;Type&gt;</code> can assume the values of</p>",
+    "<table style='width: initial !important'>",
+    "<tr><td><code>&lt;Suffix&gt;</code></td> <td><code>&lt;Type&gt;  </code></td></tr>",
+    "<tr><td><code>R32           </code></td> <td><code>Core_Real32   </code></td></tr>",
+    "<tr><td><code>R64           </code></td> <td><code>Core_Real64   </code></td></tr>",
+    "</table>"
+  ],
+  "parameters" : [
+    {
+      "name" : "RETURN",
+      "type" : "Core_Boolean*",
+      "description" : "A pointer to a @{code('Core_Boolean')} variable"
+    }
+  ],
+  "errors" : [
+    {
+      "errorCode" : "@{code('Core_Error_ArgumentInvalid')}",
+      "errorCondition" : "@{code('RETURN')} is a null pointer"
+    }
+  ],
+  "description" : "Get if a value is @{code('no number')}.",
+  "success" : "@{code('*RETURN')} was assigned @{code('Core_True')} if the value @{code('x')} is @{code('no number')} and was assigned @{code('Core_False')} otherwise.",
+  "return" : "@{code('Core_Success')} on success. @{code('Core_Failure')} on failure.",
+  "remarks" : "This function sets the by-thread error variable on failure."
+}

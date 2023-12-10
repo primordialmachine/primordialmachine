@@ -2,10 +2,10 @@
 #define DX_CORE_GET_BEST_ARRAY_SIZE_H_INCLUDED
 
 #include "dx/core/error.h"
-#include "dx/core/builtin_types.h"
+#include "Core/FundamentalTypes.h"
 
 /// @brief Get the best size.
-/// @param new A pointer to a <code>dx_size</code> variable.
+/// @param new A pointer to a <code>Core_Size</code> variable.
 /// @param current The current size.
 /// @param additional The required additional size.
 /// @param least The least size of an array.
@@ -20,6 +20,6 @@
 ///       - compute a best new value x = greatest
 ///     - else
 ///       - fail
-dx_result dx_get_best_array_size(dx_size* RETURN, dx_size current, dx_size additional, dx_size least, dx_size greatest, dx_bool saturate);
+Core_Result dx_get_best_array_size(Core_Size* RETURN, Core_Size current, Core_Size additional, Core_Size least, Core_Size greatest, Core_Boolean saturate);
 
 #endif // DX_CORE_GET_BEST_ARRAY_SIZE_H_INCLUDED

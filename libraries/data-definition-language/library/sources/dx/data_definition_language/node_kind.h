@@ -15,6 +15,6 @@ enum dx_ddl_node_kind {
 #undef DEFINE
 };
 
-dx_result dx_ddl_node_kind_to_string(dx_string** RETURN, dx_ddl_node_kind SELF);
+Core_Result dx_ddl_node_kind_to_string(Core_String** RETURN, dx_ddl_node_kind SELF);
 
 #endif // DX_DATA_DEFINITION_LANGUAGE_NODE_KIND_H_INCLUDED

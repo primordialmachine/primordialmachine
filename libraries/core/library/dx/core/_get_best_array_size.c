@@ -1,44 +1,44 @@
 #include "dx/core/_get_best_array_size.h"
 
-#include "dx/core/next_power_of_two.h"
+#include "Core/NextPowerOfTwo.h"
 
-dx_result dx_get_best_array_size(dx_size* RETURN, dx_size current, dx_size additional, dx_size least, dx_size greatest, dx_bool saturate) {
-  dx_error old_error = dx_get_error();
+Core_Result dx_get_best_array_size(Core_Size* RETURN, Core_Size current, Core_Size additional, Core_Size least, Core_Size greatest, Core_Boolean saturate) {
+  Core_Error old_error = Core_getError();
   if (least > greatest) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
-  if (DX_SIZE_GREATEST - current < additional) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+  if (Core_Size_Greatest - current < additional) {
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
-  dx_size new = current;
+  Core_Size new = current;
   if (new < least) {
     new = least;
   }
   new = current + additional;
   {
-    dx_size temporary;
-    if (dx_next_power_of_two_gte_sz(&temporary, new)) {
+    Core_Size temporary;
+    if (Core_nextPowerOfTwoGteSz(&temporary, new)) {
       // no power of two equal to or greater than new is found
       // new is not a power of two and there is no next power of two greater than new
-      dx_set_error(old_error);
+      Core_setError(old_error);
     } else {
       new = temporary;
     }
   }
   if (new > greatest) {
     if (!saturate) {
-      dx_set_error(DX_ERROR_NOT_FOUND);
-      return DX_FAILURE;
+      Core_setError(Core_Error_NotFound);
+      return Core_Failure;
     } else {
       new = greatest;
       if (new < current + additional) {
-        dx_set_error(DX_ERROR_NOT_FOUND);
-        return DX_FAILURE;   
+        Core_setError(Core_Error_NotFound);
+        return Core_Failure;   
       }
     }
   }
   *RETURN = new;
-  return DX_SUCCESS;
+  return Core_Success;
 }

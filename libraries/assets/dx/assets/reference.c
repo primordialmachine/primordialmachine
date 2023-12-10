@@ -2,7 +2,7 @@
 
 DX_DEFINE_OBJECT_TYPE("dx.asset.reference",
                       dx_asset_reference,
-                      dx_object)
+                      Core_Object);
 
 static void dx_asset_reference_destruct(dx_asset_reference* self) {
   if (self->object) {
@@ -13,32 +13,29 @@ static void dx_asset_reference_destruct(dx_asset_reference* self) {
   self->name = NULL;
 }
 
-static void dx_asset_reference_dispatch_construct(dx_asset_reference_dispatch* self)
+static void dx_asset_reference_constructDispatch(dx_asset_reference_dispatch* self)
 {/*Intentionally empty.*/}
 
-dx_result dx_asset_reference_construct(dx_asset_reference* SELF, dx_string* name) {
-  dx_rti_type* TYPE = dx_asset_reference_get_type();
-  if (!TYPE) {
-    return DX_FAILURE;
-  }
-  if (!SELF || !name) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
+Core_Result dx_asset_reference_construct(dx_asset_reference* SELF, Core_String* name) {
+  DX_CONSTRUCT_PREFIX(dx_asset_reference);
+  if (!name) {
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
   }
   SELF->name = name;
   DX_REFERENCE(SELF->name);
   SELF->object = NULL;
-  DX_OBJECT(SELF)->type = TYPE;
-  return DX_SUCCESS;
+  CORE_OBJECT(SELF)->type = TYPE;
+  return Core_Success;
 }
 
-dx_result dx_asset_reference_create(dx_asset_reference** RETURN, dx_string* name) {
-  DX_CREATE_PREFIX(dx_asset_reference)
+Core_Result dx_asset_reference_create(dx_asset_reference** RETURN, Core_String* name) {
+  DX_CREATE_PREFIX(dx_asset_reference);
   if (dx_asset_reference_construct(SELF, name)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   *RETURN = SELF;
-  return DX_SUCCESS;
+  return Core_Success;
 }

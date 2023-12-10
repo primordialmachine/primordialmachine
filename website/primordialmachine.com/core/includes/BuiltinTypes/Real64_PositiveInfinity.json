@@ -1,0 +1,9 @@
+{
+  "type" : "symbolic-constant",
+  "last-update" : "2023-12-18",
+  "indices" : "core",
+  "name" : "Core_Real64_PositiveInfinity",
+  "id" : "core-real64-positiveinfinity",
+  "signature" : "#define Core_Real64_PositiveInfinity &lt;implementation&gt;",
+  "description" : "The positive infinity value of type @{code('Core_Real64')}. This usually is an alias of @{code('+INFINITY')}."
+}

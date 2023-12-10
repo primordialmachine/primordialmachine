@@ -6,25 +6,18 @@
 
 DX_DEFINE_OBJECT_TYPE("dx.fps_counter",
                       dx_fps_counter,
-                      dx_object)
+                      Core_Object);
 
 static void dx_fps_counter_destruct(dx_fps_counter* self)
 {/*Intentionally empty.*/}
 
-static void dx_fps_counter_dispatch_construct(dx_fps_counter_dispatch* self)
+static void dx_fps_counter_constructDispatch(dx_fps_counter_dispatch* self)
 {/*Intentionally empty.*/}
 
-dx_result dx_fps_counter_construct(dx_fps_counter* SELF) {
-  if (!SELF) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
-  }
-  dx_rti_type* TYPE = dx_fps_counter_get_type();
-  if (!TYPE) {
-    return DX_FAILURE;
-  }
-  DX_OBJECT(SELF)->type = TYPE;
-  return DX_SUCCESS;
+Core_Result dx_fps_counter_construct(dx_fps_counter* SELF) {
+  DX_CONSTRUCT_PREFIX(dx_fps_counter);
+  CORE_OBJECT(SELF)->type = TYPE;
+  return Core_Success;
 }
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
@@ -33,42 +26,42 @@ DX_DEFINE_OBJECT_TYPE("dx.default_fps_counter",
                       dx_default_fps_counter,
                       dx_fps_counter);
 
-static dx_result dx_default_fps_counter_on_enter_frame(dx_default_fps_counter* SELF) {
+static Core_Result dx_default_fps_counter_on_enter_frame(dx_default_fps_counter* SELF) {
   if (!SELF) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
   SELF->started = true;
   SELF->start = GetTickCount64();
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-static dx_result dx_default_fps_counter_on_leave_frame(dx_default_fps_counter* SELF) {
+static Core_Result dx_default_fps_counter_on_leave_frame(dx_default_fps_counter* SELF) {
   if (!SELF) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
   if (!SELF->started) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
-  dx_n64 delta = GetTickCount64() - SELF->start;
+  Core_Natural64 delta = GetTickCount64() - SELF->start;
   SELF->started = false;
   SELF->durations[SELF->write] = delta;
   SELF->write = (SELF->write + 1) % 256;
   if (SELF->size < 256) {
     SELF->size++;
   }
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
-static dx_result dx_default_fps_counter_get_fps(dx_f64* RETURN, dx_default_fps_counter* SELF) {
+static Core_Result dx_default_fps_counter_get_fps(Core_Real64* RETURN, dx_default_fps_counter* SELF) {
   if (!SELF->size) {
     *RETURN = 1000.f;
-    return DX_SUCCESS;
+    return Core_Success;
   } else {
-    dx_f64 average_duration = 0.;
-    for (dx_size i = 0, n = SELF->size; i < n; ++i) {
-      average_duration += (dx_f64)SELF->durations[i];
+    Core_Real64 average_duration = 0.;
+    for (Core_Size i = 0, n = SELF->size; i < n; ++i) {
+      average_duration += (Core_Real64)SELF->durations[i];
     }
-    average_duration /= (dx_f64)SELF->size;
+    average_duration /= (Core_Real64)SELF->size;
     // if average duration is zero,
     // then theoretically we have a
     // infinite number of frames per
@@ -78,48 +71,41 @@ static dx_result dx_default_fps_counter_get_fps(dx_f64* RETURN, dx_default_fps_c
     } else {
       *RETURN = 1000. / average_duration;
     }
-    return DX_SUCCESS;
+    return Core_Success;
   }
 }
 
 static void dx_default_fps_counter_destruct(dx_default_fps_counter* self)
 {/*Intentionally empty.*/}
 
-static void dx_default_fps_counter_dispatch_construct(dx_default_fps_counter_dispatch* self) {
-  DX_FPS_COUNTER_DISPATCH(self)->get_fps = (dx_result(*)(dx_f64*, dx_fps_counter*))dx_default_fps_counter_get_fps;
-  DX_FPS_COUNTER_DISPATCH(self)->on_enter_frame = (dx_result(*)(dx_fps_counter*))dx_default_fps_counter_on_enter_frame;
-  DX_FPS_COUNTER_DISPATCH(self)->on_leave_frame = (dx_result(*)(dx_fps_counter*))dx_default_fps_counter_on_leave_frame;
+static void dx_default_fps_counter_constructDispatch(dx_default_fps_counter_dispatch* self) {
+  DX_FPS_COUNTER_DISPATCH(self)->get_fps = (Core_Result(*)(Core_Real64*, dx_fps_counter*))dx_default_fps_counter_get_fps;
+  DX_FPS_COUNTER_DISPATCH(self)->on_enter_frame = (Core_Result(*)(dx_fps_counter*))dx_default_fps_counter_on_enter_frame;
+  DX_FPS_COUNTER_DISPATCH(self)->on_leave_frame = (Core_Result(*)(dx_fps_counter*))dx_default_fps_counter_on_leave_frame;
 }
 
-dx_result dx_default_fps_counter_construct(dx_default_fps_counter* SELF) {
-  if (!SELF) {
-    dx_set_error(DX_ERROR_INVALID_ARGUMENT);
-    return DX_FAILURE;
-  }
-  dx_rti_type* TYPE = dx_default_fps_counter_get_type();
-  if (!TYPE) {
-    return DX_FAILURE;
-  }
+Core_Result dx_default_fps_counter_construct(dx_default_fps_counter* SELF) {
+  DX_CONSTRUCT_PREFIX(dx_default_fps_counter);
   if (dx_fps_counter_construct(DX_FPS_COUNTER(SELF))) {
-    return DX_FAILURE;
+    return Core_Failure;
   }
   SELF->started = 0;
   SELF->start = 0;
   SELF->write = 0;
   SELF->size = 0;
-  DX_OBJECT(SELF)->type = TYPE;
-  return DX_SUCCESS;
+  CORE_OBJECT(SELF)->type = TYPE;
+  return Core_Success;
 }
 
-dx_result dx_default_fps_counter_create(dx_default_fps_counter** RETURN) {
+Core_Result dx_default_fps_counter_create(dx_default_fps_counter** RETURN) {
   DX_CREATE_PREFIX(dx_default_fps_counter)
   if (dx_default_fps_counter_construct(SELF)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
-    return DX_FAILURE;
+    return Core_Failure;
   }
   *RETURN = SELF;
-  return DX_SUCCESS;
+  return Core_Success;
 }
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/

@@ -1,0 +1,9 @@
+{
+  "type" : "symbolic-constant",
+  "last-update" : "2023-12-18",
+  "indices" : "core",
+  "name" : "Core_Real64_Least",
+  "id" : "core-real64-least",
+  "signature" : "#define Core_Real64_Least &lt;implementation&gt;",
+  "description" : "The least value of type @{code('Core_Real64')}. This usually is an alias of @{code('-DBL_MAX')}."
+}

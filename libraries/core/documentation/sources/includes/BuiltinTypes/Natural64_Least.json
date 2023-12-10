@@ -1,0 +1,9 @@
+{
+  "type" : "symbolic-constant",
+  "last-update" : "2023-12-18",
+  "indices" : "core",
+  "name" : "Core_Natural64_Least",
+  "id" : "core-natural64-least",
+  "signature" : "#define Core_Natural64_Least &lt;implementation&gt;",
+  "description" : "The least value of type @{code('Core_Natural64')}. This usually is an alias of @{code('0u64')}."
+}

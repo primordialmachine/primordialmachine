@@ -25,9 +25,9 @@ struct dx_assets_context_dispatch {
 };
 
 /// @constructor{dx_assets_context}
-dx_result dx_assets_context_construct(dx_assets_context* SELF);
+Core_Result dx_assets_context_construct(dx_assets_context* SELF);
 
 /// @constructor-operator{dx_assets_context}
-dx_result dx_assets_context_create(dx_assets_context** RETURN);
+Core_Result dx_assets_context_create(dx_assets_context** RETURN);
 
 #endif  // DX_ASSETS_CONTEXT_H_INCLUDED
