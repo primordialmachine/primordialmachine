@@ -100,7 +100,7 @@ START:
         goto START;
       } else {
         if (Core_Error_NoError == Core_getError()) {
-          Core_setError(Core_Error_LexicalError);
+          Core_setError(Core_Error_LexicalAnalysisFailed);
         }
         dx_data_definition_language_diagnostics_on_unexpected_symbol(SELF->diagnostics, SELF->current - SELF->start);
         SELF->kind = dx_data_definition_language_word_kind_error;
@@ -295,7 +295,7 @@ static bool dx_data_definition_language_scanner_is_alphabetic(dx_data_definition
 
 static Core_Result dx_data_definition_language_scanner_on_single_quoted_string(dx_data_definition_language_scanner* SELF) {
   if (!(SELF->current != SELF->end && *SELF->current == '\'')) {
-    Core_setError(Core_Error_LexicalError);
+    Core_setError(Core_Error_LexicalAnalysisFailed);
     return Core_Failure;
   }
   SELF->current++;
@@ -338,7 +338,7 @@ static Core_Result dx_data_definition_language_scanner_on_single_quoted_string(d
 
 static Core_Result dx_data_definition_language_scanner_on_double_quoted_string(dx_data_definition_language_scanner* SELF) {
   if (!(SELF->current != SELF->end && *SELF->current == '\"')) {
-    Core_setError(Core_Error_LexicalError);
+    Core_setError(Core_Error_LexicalAnalysisFailed);
     return Core_Failure;
   }
   SELF->current++;
@@ -348,7 +348,7 @@ static Core_Result dx_data_definition_language_scanner_on_double_quoted_string(d
       // Unclosed string literal error.
       // Expected string contents or closing single quote.
       // Received end of input.
-      Core_setError(Core_Error_LexicalError);
+      Core_setError(Core_Error_LexicalAnalysisFailed);
       return Core_Failure;
     } else if (*SELF->current == '\"') {
       if (last_was_slash) {
@@ -465,7 +465,7 @@ static Core_Result dx_data_definition_language_scanner_on_number(dx_data_definit
       return Core_Failure;
     }
   } else {
-    Core_setError(Core_Error_LexicalError);
+    Core_setError(Core_Error_LexicalAnalysisFailed);
     return Core_Failure;
   }
   // exponent?
@@ -552,7 +552,7 @@ static Core_Result dx_data_definition_language_scanner_skip_multi_line_comment(d
   while (true) {
     if (SELF->current == SELF->end) {
       dx_data_definition_language_diagnostics_on_unclosed_multi_line_comment(SELF->diagnostics, SELF->current - SELF->start);
-      Core_setError(Core_Error_LexicalError);
+      Core_setError(Core_Error_LexicalAnalysisFailed);
       return Core_Failure;
     } else if (*SELF->current == '*') {
       SELF->current++;

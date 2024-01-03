@@ -1,0 +1,9 @@
+{
+  "type" : "symbolic-constant",
+  "last-update" : "2024-01-03",
+  "indices" : "core",
+  "name" : "Core_Error_NotFound",
+  "id" : "core-error-notfound",
+  "signature" : "#define Core_Error_NotFound &lt;implementation&gt;",
+  "description" : "Symbolic constant for a Core_Error value. That value indicates a failure because something was not found (but should have been found). The value is guaranteed to be a non-zero value."
+}

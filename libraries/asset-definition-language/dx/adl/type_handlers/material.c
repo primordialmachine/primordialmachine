@@ -171,7 +171,7 @@ static Core_Result _parse_material_controller(dx_assets_material_controller** RE
   } else {
     DX_UNREFERENCE(received_type);
     received_type = NULL;
-    Core_setError(Core_Error_SemanticalError);
+    Core_setError(Core_Error_SemanticalAnalysisFailed);
     return Core_Failure;
   }
 }

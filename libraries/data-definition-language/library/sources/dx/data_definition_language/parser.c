@@ -125,7 +125,7 @@ static dx_ddl_node* dx_ddl_parser_on_value(dx_ddl_parser* p) {
       return dx_ddl_parser_on_list(p);
     } break;
     default: {
-      Core_setError(Core_Error_SyntacticalError);
+      Core_setError(Core_Error_SyntacticalAnalysisFailed);
       return NULL;
     } break;
   }
@@ -134,7 +134,7 @@ static dx_ddl_node* dx_ddl_parser_on_value(dx_ddl_parser* p) {
 static int dx_ddl_parser_on_map_0(dx_ddl_parser* p, dx_ddl_node* map_node) {
   if (!dx_ddl_parser_is_word_kind(p, dx_data_definition_language_word_kind_left_curly_bracket)) {
     if (!Core_getError()) {
-      Core_setError(Core_Error_SyntacticalError);
+      Core_setError(Core_Error_SyntacticalAnalysisFailed);
     }
     return Core_Failure;
   }
@@ -161,7 +161,7 @@ static int dx_ddl_parser_on_map_0(dx_ddl_parser* p, dx_ddl_node* map_node) {
     // ':'
     if (!dx_ddl_parser_is_word_kind(p, dx_data_definition_language_word_kind_colon)) {
       if (!Core_getError()) {
-        Core_setError(Core_Error_SyntacticalError);
+        Core_setError(Core_Error_SyntacticalAnalysisFailed);
       }
       DX_UNREFERENCE(name);
       name = NULL;
@@ -270,7 +270,7 @@ static dx_ddl_node* dx_ddl_parser_on_map(dx_ddl_parser* p) {
 static int dx_ddl_parser_on_list_0(dx_ddl_parser* p, dx_ddl_node* list_node) {
   if (!dx_ddl_parser_is_word_kind(p, dx_data_definition_language_word_kind_left_square_bracket)) {
     if (!Core_getError()) {
-      Core_setError(Core_Error_SyntacticalError);
+      Core_setError(Core_Error_SyntacticalAnalysisFailed);
     }
     return Core_Failure;
   }

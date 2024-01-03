@@ -151,7 +151,7 @@ static Core_Result _parse_mesh_operation(dx_ddl_node* node, dx_adl_symbol* symbo
     return Core_Failure;
   }
   if (node->kind != dx_ddl_node_kind_map) {
-    Core_setError(Core_Error_SemanticalError);
+    Core_setError(Core_Error_SemanticalAnalysisFailed);
     return Core_Failure;
   }
   Core_String* received_type = NULL;
@@ -180,7 +180,7 @@ static Core_Result _parse_mesh_operation(dx_ddl_node* node, dx_adl_symbol* symbo
     } else {
       DX_UNREFERENCE(reader_symbol);
       reader_symbol = NULL;
-      Core_setError(Core_Error_SemanticalError);
+      Core_setError(Core_Error_SemanticalAnalysisFailed);
       return Core_Failure;
     }
   }
@@ -213,7 +213,7 @@ static Core_Result _parse_mesh_operations(dx_ddl_node* node, dx_adl_symbol* symb
     return Core_Failure;
   }
   if (node->kind != dx_ddl_node_kind_list) {
-    Core_setError(Core_Error_SemanticalError);
+    Core_setError(Core_Error_SemanticalAnalysisFailed);
     return Core_Failure;
   }
   Core_Size n;
@@ -242,7 +242,7 @@ static Core_Result _parse_vertex_format(Core_VertexFormat* RETURN, dx_ddl_node* 
     return Core_Failure;
   }
   if (node->kind != dx_ddl_node_kind_list) {
-    Core_setError(Core_Error_SemanticalError);
+    Core_setError(Core_Error_SemanticalAnalysisFailed);
     return Core_Failure;
   }
   Core_VertexFormat vertex_format = 0;
@@ -280,7 +280,7 @@ static Core_Result _parse_vertex_format(Core_VertexFormat* RETURN, dx_ddl_node* 
     } else if (isEqualTo[2]) {
       vertex_format |= Core_VertexFormat_ambient_uv;
     } else {
-      Core_setError(Core_Error_SemanticalError);
+      Core_setError(Core_Error_SemanticalAnalysisFailed);
       return Core_Failure;
     }
   }

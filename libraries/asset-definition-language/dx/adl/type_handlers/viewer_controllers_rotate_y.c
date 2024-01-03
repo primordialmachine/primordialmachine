@@ -157,7 +157,7 @@ static Core_Result _parse(Core_Object** RETURN, dx_adl_type_handlers_viewer_cont
   DX_UNREFERENCE(received_type);
   received_type = NULL;
   if (!isEqualTo) {
-    Core_setError(Core_Error_SemanticalError);
+    Core_setError(Core_Error_SemanticalAnalysisFailed);
     return Core_Failure;
   }
   Core_Real32 degrees_per_second;

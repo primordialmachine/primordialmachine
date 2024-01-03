@@ -227,7 +227,7 @@ DX_DEFINE_OBJECT_TYPE("dx.val.gl.wgl.system",
 
 /// @internal
 /// @brief Determine the mouse button that was pressed/released given the msg, wparam, and lparam arguments of a WM_(L|M|R|X)BUTTON(DOWN|UP) message.
-/// @param RETURN A pointer to a <code>dx_keyboard_key</code> value.
+/// @param RETURN A pointer to a <code>Core_KeyboardKey_A</code> value.
 /// @aram msg The msg value of the message.
 /// @param wparam The wparam value of the message.
 /// @param lparam The lparam value of the message.
@@ -237,13 +237,13 @@ static Core_Result map_mouse_button(dx_mouse_button* RETURN, dx_val_gl_wgl_syste
 
 /// @internal
 /// @brief Determine the keyboard key that was pressed/released given the msg, wparam, and lparam arguments of a WM_(KEY|SYSKEY)(DOWN|UP) message.
-/// @param RETURN A pointer to a <code>dx_keyboard_key</code> value.
+/// @param RETURN A pointer to a <code>Core_KeyboardKey_A</code> value.
 /// @aram msg The msg value of the message.
 /// @param wparam The wparam value of the message.
 /// @param lparam The lparam value of the message.
 /// @procedure
 /// @error #Core_Error_NotFound if the key is not supported.
-static Core_Result map_keyboard_key(dx_keyboard_key* RETURN, dx_val_gl_wgl_system* SELF, UINT msg, WPARAM wparam, LPARAM lparam);
+static Core_Result map_keyboard_key(Core_KeyboardKey* RETURN, dx_val_gl_wgl_system* SELF, UINT msg, WPARAM wparam, LPARAM lparam);
 
 static Core_Result get_modifiers(uint8_t* RETURN, dx_val_gl_wgl_system* SELF);
 
@@ -291,7 +291,7 @@ static Core_Result map_mouse_button(dx_mouse_button* RETURN, dx_val_gl_wgl_syste
   return Core_Success;
 }
 
-static Core_Result map_keyboard_key(dx_keyboard_key* RETURN, dx_val_gl_wgl_system* SELF, UINT msg, WPARAM wparam, LPARAM lparam) {
+static Core_Result map_keyboard_key(Core_KeyboardKey* RETURN, dx_val_gl_wgl_system* SELF, UINT msg, WPARAM wparam, LPARAM lparam) {
   // Windows simply sends shift, control, and menu messages.
   // We want to distinguish between the left and the right variants of those keys.
   // The method is awkward.
@@ -316,110 +316,114 @@ static Core_Result map_keyboard_key(dx_keyboard_key* RETURN, dx_val_gl_wgl_syste
   switch (wparam) {
   #define DEFINE(SOURCE, TARGET) \
   case SOURCE: { \
+    /*dx_log("mapped to ", sizeof("mapped to ") - 1);*/ \
+    /*dx_log(dx_keyboard_key_to_string(TARGET), strlen(dx_keyboard_key_to_string(TARGET)));*/ \
+    /*dx_log("\n", sizeof("\n") - 1);*/ \
     *RETURN = TARGET; \
   } break;
-    DEFINE('0', dx_keyboard_key__0);
-    DEFINE('1', dx_keyboard_key__1);
-    DEFINE('2', dx_keyboard_key__2);
-    DEFINE('3', dx_keyboard_key__3);
-    DEFINE('4', dx_keyboard_key__4);
-    DEFINE('5', dx_keyboard_key__5);
-    DEFINE('6', dx_keyboard_key__6);
-    DEFINE('7', dx_keyboard_key__7);
-    DEFINE('8', dx_keyboard_key__8);
-    DEFINE('9', dx_keyboard_key__9);
+    DEFINE('0', Core_KeyboardKey_D0);
+    DEFINE('1', Core_KeyboardKey_D1);
+    DEFINE('2', Core_KeyboardKey_D2);
+    DEFINE('3', Core_KeyboardKey_D3);
+    DEFINE('4', Core_KeyboardKey_D4);
+    DEFINE('5', Core_KeyboardKey_D5);
+    DEFINE('6', Core_KeyboardKey_D6);
+    DEFINE('7', Core_KeyboardKey_D7);
+    DEFINE('8', Core_KeyboardKey_D8);
+    DEFINE('9', Core_KeyboardKey_D9);
 
 
-    DEFINE('A', dx_keyboard_key_a);
-    DEFINE('B', dx_keyboard_key_b);
-    DEFINE('C', dx_keyboard_key_c);
-    DEFINE('D', dx_keyboard_key_d);
-    DEFINE('E', dx_keyboard_key_e);
-    DEFINE('F', dx_keyboard_key_f);
-    DEFINE('G', dx_keyboard_key_g);
-    DEFINE('H', dx_keyboard_key_h);
-    DEFINE('I', dx_keyboard_key_i);
-    DEFINE('J', dx_keyboard_key_j);
-    DEFINE('K', dx_keyboard_key_k);
-    DEFINE('L', dx_keyboard_key_l);
-    DEFINE('M', dx_keyboard_key_m);
-    DEFINE('N', dx_keyboard_key_n);
-    DEFINE('O', dx_keyboard_key_o);
-    DEFINE('P', dx_keyboard_key_p);
-    DEFINE('Q', dx_keyboard_key_q);
-    DEFINE('R', dx_keyboard_key_r);
-    DEFINE('S', dx_keyboard_key_s);
-    DEFINE('T', dx_keyboard_key_t);
-    DEFINE('U', dx_keyboard_key_u);
-    DEFINE('V', dx_keyboard_key_v);
-    DEFINE('W', dx_keyboard_key_w);
-    DEFINE('X', dx_keyboard_key_x);
-    DEFINE('Y', dx_keyboard_key_y);
-    DEFINE('Z', dx_keyboard_key_z);
+    DEFINE('A', Core_KeyboardKey_A);
+    DEFINE('B', Core_KeyboardKey_B);
+    DEFINE('C', Core_KeyboardKey_C);
+    DEFINE('D', Core_KeyboardKey_D);
+    DEFINE('E', Core_KeyboardKey_E);
+    DEFINE('F', Core_KeyboardKey_F);
+    DEFINE('G', Core_KeyboardKey_G);
+    DEFINE('H', Core_KeyboardKey_H);
+    DEFINE('I', Core_KeyboardKey_I);
+    DEFINE('J', Core_KeyboardKey_J);
+    DEFINE('K', Core_KeyboardKey_K);
+    DEFINE('L', Core_KeyboardKey_L);
+    DEFINE('M', Core_KeyboardKey_M);
+    DEFINE('N', Core_KeyboardKey_N);
+    DEFINE('O', Core_KeyboardKey_O);
+    DEFINE('P', Core_KeyboardKey_P);
+    DEFINE('Q', Core_KeyboardKey_Q);
+    DEFINE('R', Core_KeyboardKey_R);
+    DEFINE('S', Core_KeyboardKey_S);
+    DEFINE('T', Core_KeyboardKey_T);
+    DEFINE('U', Core_KeyboardKey_U);
+    DEFINE('V', Core_KeyboardKey_V);
+    DEFINE('W', Core_KeyboardKey_W);
+    DEFINE('X', Core_KeyboardKey_X);
+    DEFINE('Y', Core_KeyboardKey_Y);
+    DEFINE('Z', Core_KeyboardKey_Z);
 
-    DEFINE(VK_F1, dx_keyboard_key_f1);
-    DEFINE(VK_F2, dx_keyboard_key_f2);
-    DEFINE(VK_F3, dx_keyboard_key_f3);
-    DEFINE(VK_F4, dx_keyboard_key_f4);
-    DEFINE(VK_F5, dx_keyboard_key_f5);
-    DEFINE(VK_F6, dx_keyboard_key_f6);
-    DEFINE(VK_F7, dx_keyboard_key_f7);
-    DEFINE(VK_F8, dx_keyboard_key_f8);
-    DEFINE(VK_F9, dx_keyboard_key_f9);
-    DEFINE(VK_F10, dx_keyboard_key_f10);
-    DEFINE(VK_F11, dx_keyboard_key_f11);
-    DEFINE(VK_F12, dx_keyboard_key_f12);
-    DEFINE(VK_F13, dx_keyboard_key_f13);
-    DEFINE(VK_F14, dx_keyboard_key_f14);
-    DEFINE(VK_F15, dx_keyboard_key_f15);
-    DEFINE(VK_F16, dx_keyboard_key_f16);
-    DEFINE(VK_F17, dx_keyboard_key_f17);
-    DEFINE(VK_F18, dx_keyboard_key_f18);
-    DEFINE(VK_F19, dx_keyboard_key_f19);
-    DEFINE(VK_F20, dx_keyboard_key_f20);
-    DEFINE(VK_F21, dx_keyboard_key_f21);
-    DEFINE(VK_F22, dx_keyboard_key_f22);
-    DEFINE(VK_F23, dx_keyboard_key_f23);
-    DEFINE(VK_F24, dx_keyboard_key_f24);
+    DEFINE(VK_F1, Core_KeyboardKey_F1);
+    DEFINE(VK_F2, Core_KeyboardKey_F2);
+    DEFINE(VK_F3, Core_KeyboardKey_F3);
+    DEFINE(VK_F4, Core_KeyboardKey_F4);
+    DEFINE(VK_F5, Core_KeyboardKey_F5);
+    DEFINE(VK_F6, Core_KeyboardKey_F6);
+    DEFINE(VK_F7, Core_KeyboardKey_F7);
+    DEFINE(VK_F8, Core_KeyboardKey_F8);
+    DEFINE(VK_F9, Core_KeyboardKey_F9);
+    DEFINE(VK_F10, Core_KeyboardKey_F10);
+    DEFINE(VK_F11, Core_KeyboardKey_F11);
+    DEFINE(VK_F12, Core_KeyboardKey_F12);
+    DEFINE(VK_F13, Core_KeyboardKey_F13);
+    DEFINE(VK_F14, Core_KeyboardKey_F14);
+    DEFINE(VK_F15, Core_KeyboardKey_F15);
+    DEFINE(VK_F16, Core_KeyboardKey_F16);
+    DEFINE(VK_F17, Core_KeyboardKey_F17);
+    DEFINE(VK_F18, Core_KeyboardKey_F18);
+    DEFINE(VK_F19, Core_KeyboardKey_F19);
+    DEFINE(VK_F20, Core_KeyboardKey_F20);
+    DEFINE(VK_F21, Core_KeyboardKey_F21);
+    DEFINE(VK_F22, Core_KeyboardKey_F22);
+    DEFINE(VK_F23, Core_KeyboardKey_F23);
+    DEFINE(VK_F24, Core_KeyboardKey_F24);
 
-    DEFINE(VK_NUMPAD0, dx_keyboard_key_numpad_0);
-    DEFINE(VK_NUMPAD1, dx_keyboard_key_numpad_1);
-    DEFINE(VK_NUMPAD2, dx_keyboard_key_numpad_2);
-    DEFINE(VK_NUMPAD3, dx_keyboard_key_numpad_3);
-    DEFINE(VK_NUMPAD4, dx_keyboard_key_numpad_4);
-    DEFINE(VK_NUMPAD5, dx_keyboard_key_numpad_5);
-    DEFINE(VK_NUMPAD6, dx_keyboard_key_numpad_6);
-    DEFINE(VK_NUMPAD7, dx_keyboard_key_numpad_7);
-    DEFINE(VK_NUMPAD8, dx_keyboard_key_numpad_8);
-    DEFINE(VK_NUMPAD9, dx_keyboard_key_numpad_9);
+    DEFINE(VK_NUMPAD0, Core_KeyboardKey_NumPad0);
+    DEFINE(VK_NUMPAD1, Core_KeyboardKey_NumPad1);
+    DEFINE(VK_NUMPAD2, Core_KeyboardKey_NumPad2);
+    DEFINE(VK_NUMPAD3, Core_KeyboardKey_NumPad3);
+    DEFINE(VK_NUMPAD4, Core_KeyboardKey_NumPad4);
+    DEFINE(VK_NUMPAD5, Core_KeyboardKey_NumPad5);
+    DEFINE(VK_NUMPAD6, Core_KeyboardKey_NumPad6);
+    DEFINE(VK_NUMPAD7, Core_KeyboardKey_NumPad7);
+    DEFINE(VK_NUMPAD8, Core_KeyboardKey_NumPad8);
+    DEFINE(VK_NUMPAD9, Core_KeyboardKey_NumPad9);
 
-    DEFINE(VK_UP, dx_keyboard_key_up);
-    DEFINE(VK_DOWN, dx_keyboard_key_down);
-    DEFINE(VK_LEFT, dx_keyboard_key_left);
-    DEFINE(VK_RIGHT, dx_keyboard_key_right);
+    DEFINE(VK_UP, Core_KeyboardKey_UpArrow);
+    DEFINE(VK_DOWN, Core_KeyboardKey_DownArrow);
+    DEFINE(VK_LEFT, Core_KeyboardKey_LeftArrow);
+    DEFINE(VK_RIGHT, Core_KeyboardKey_RightArrow);
 
-    DEFINE(VK_ESCAPE, dx_keyboard_key_escape);
-    DEFINE(VK_RETURN, dx_keyboard_key_return);
-    DEFINE(VK_OEM_5, dx_keyboard_key_dead_circumflex);
+    DEFINE(VK_ESCAPE, Core_KeyboardKey_Escape);
+    DEFINE(VK_RETURN, Core_KeyboardKey_Return);
+    DEFINE(VK_OEM_5, Core_KeyboardKey_DeadCircumflex);
+    DEFINE(VK_OEM_6, Core_KeyboardKey_DeadGrave);
 
-    DEFINE(VK_BACK, dx_keyboard_key_backspace);
+    DEFINE(VK_BACK, Core_KeyboardKey_Backspace);
 
-    DEFINE(VK_OEM_PERIOD, dx_keyboard_key_period);
-    DEFINE(VK_OEM_PLUS, dx_keyboard_key_plus);
-    DEFINE(VK_OEM_MINUS, dx_keyboard_key_minus);
-    DEFINE(VK_OEM_COMMA, dx_keyboard_key_comma);
+    DEFINE(VK_OEM_PERIOD, Core_KeyboardKey_Period);
+    DEFINE(VK_OEM_PLUS, Core_KeyboardKey_Plus);
+    DEFINE(VK_OEM_MINUS, Core_KeyboardKey_Minus);
+    DEFINE(VK_OEM_COMMA, Core_KeyboardKey_Comma);
 
-    DEFINE(VK_SPACE, dx_keyboard_key_space);
+    DEFINE(VK_SPACE, Core_KeyboardKey_Space);
 
-    DEFINE(VK_LSHIFT, dx_keyboard_key_left_shift);
-    DEFINE(VK_RSHIFT, dx_keyboard_key_right_shift);
-    DEFINE(VK_LCONTROL, dx_keyboard_key_left_control);
-    DEFINE(VK_RCONTROL, dx_keyboard_key_right_control);
-    DEFINE(VK_LMENU, dx_keyboard_key_left_menu);
-    DEFINE(VK_RMENU, dx_keyboard_key_right_menu);
+    DEFINE(VK_LSHIFT, Core_KeyboardKey_LeftShift);
+    DEFINE(VK_RSHIFT, Core_KeyboardKey_RightShift);
+    DEFINE(VK_LCONTROL, Core_KeyboardKey_LeftControl);
+    DEFINE(VK_RCONTROL, Core_KeyboardKey_RightControl);
+    DEFINE(VK_LMENU, Core_KeyboardKey_LeftMenu);
+    DEFINE(VK_RMENU, Core_KeyboardKey_RightMenu);
 
-    DEFINE(VK_OEM_2, dx_keyboard_key_number_sign)
-      DEFINE(VK_OEM_102, dx_keyboard_key_less);
+    DEFINE(VK_OEM_2, Core_KeyboardKey_NumberSign);
+    DEFINE(VK_OEM_102, Core_KeyboardKey_Less);
   #undef DEFINE
     default: {
       Core_setError(Core_Error_NotFound);
@@ -434,31 +438,31 @@ static Core_Result get_modifiers(uint8_t* RETURN, dx_val_gl_wgl_system* SELF) {
   Core_Boolean state;
   dx_keyboard_state* keyboard_state = DX_VAL_SYSTEM(SELF)->keyboard_state;
   //
-  if (dx_keyboard_state_get_state(&state, keyboard_state, dx_keyboard_key_left_shift)) {
+  if (dx_keyboard_state_get_state(&state, keyboard_state, Core_KeyboardKey_LeftShift)) {
     return Core_Failure;
   }
   if (state) {
     modifiers |= DX_MODIFIER_LSHIFT;
   }
-  dx_keyboard_state_get_state(&state, keyboard_state, dx_keyboard_key_right_shift);
+  dx_keyboard_state_get_state(&state, keyboard_state, Core_KeyboardKey_RightShift);
   if (state) {
     modifiers |= DX_MODIFIER_RSHIFT;
   }
   //
-  dx_keyboard_state_get_state(&state, keyboard_state, dx_keyboard_key_left_control);
+  dx_keyboard_state_get_state(&state, keyboard_state, Core_KeyboardKey_LeftControl);
   if (state) {
     modifiers |= DX_MODIFIER_LCTRL;
   }
-  dx_keyboard_state_get_state(&state, keyboard_state, dx_keyboard_key_right_control);
+  dx_keyboard_state_get_state(&state, keyboard_state, Core_KeyboardKey_RightControl);
   if (state) {
     modifiers |= DX_MODIFIER_RCTRL;
   }
   //
-  dx_keyboard_state_get_state(&state, keyboard_state, dx_keyboard_key_left_menu);
+  dx_keyboard_state_get_state(&state, keyboard_state, Core_KeyboardKey_LeftMenu);
   if (state) {
     modifiers |= DX_MODIFIER_LMENU;
   }
-  dx_keyboard_state_get_state(&state, keyboard_state, dx_keyboard_key_right_menu);
+  dx_keyboard_state_get_state(&state, keyboard_state, Core_KeyboardKey_RightMenu);
   if (state) {
     modifiers |= DX_MODIFIER_RMENU;
   }
@@ -731,7 +735,7 @@ Core_Result dx_val_gl_wgl_system_on_mouse_pointer_message(dx_val_gl_wgl_system* 
 }
 
 Core_Result dx_val_gl_wgl_system_on_keyboard_key_message(dx_val_gl_wgl_system* SELF, HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam) {
-  dx_keyboard_key keyboard_key;
+  Core_KeyboardKey keyboard_key;
   if (map_keyboard_key(&keyboard_key, SELF, msg, wparam, lparam)) {
     return Core_Failure;
   }

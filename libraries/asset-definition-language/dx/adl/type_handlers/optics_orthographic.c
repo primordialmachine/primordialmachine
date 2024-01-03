@@ -150,7 +150,7 @@ static Core_Result _parse_optics_orthographic(dx_asset_optics_orthographic** RET
   DX_UNREFERENCE(received_type);
   received_type = NULL;
   if (!isEqualTo) {
-    Core_setError(Core_Error_SemanticalError);
+    Core_setError(Core_Error_SemanticalAnalysisFailed);
     return Core_Failure;
   }
   //

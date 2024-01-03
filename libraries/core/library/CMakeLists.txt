@@ -124,6 +124,10 @@ list(APPEND ${name}.headers "Core/Memory.h")
 list(APPEND ${name}.sources "Core/NextPowerOfTwo.c")
 list(APPEND ${name}.headers "Core/NextPowerOfTwo.h")
 
+list(APPEND ${name}.sources "Core/KeyboardKey.c")
+list(APPEND ${name}.headers "Core/KeyboardKey.h")
+list(APPEND ${name}.inlays  "Core/KeyboardKey.i")
+
 # Folder "dx/core/visuals".
 list(APPEND ${name}.sources "Core/Visuals/CullMode.c")
 list(APPEND ${name}.headers "Core/Visuals/CullMode.h")

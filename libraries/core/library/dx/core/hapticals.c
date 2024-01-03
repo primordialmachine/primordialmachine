@@ -6,18 +6,18 @@
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-char const* dx_keyboard_key_to_string(dx_keyboard_key SELF) {
+char const* dx_keyboard_key_to_string(Core_KeyboardKey SELF) {
   //if (Nucleus_Unlikely(!string)) return Nucleus_Status_InvalidArgument;
   switch (SELF) {
-  #define ALIAS(aliased,alias)
-  #define DEFINE(name,value,description)\
-    case dx_keyboard_key_##name: {\
+  #define Alias(alias,aliased)
+  #define Define(name,value,description)\
+    case Core_KeyboardKey_##name: {\
       static const char *STRING = description;\
       return STRING;\
     };
-  #include "dx/core/keyboard_keys.i"
-  #undef DEFINE
-  #undef ALIAS
+  #include "Core/KeyboardKey.i"
+  #undef Define
+  #undef Alias
     default: {
       Core_setError(Core_Error_ArgumentInvalid);
       return NULL;
@@ -99,7 +99,7 @@ static void dx_keyboard_key_msg_destruct(dx_keyboard_key_msg* SELF)
 static void dx_keyboard_key_msg_constructDispatch(dx_keyboard_key_msg_dispatch* SELF)
 {/*Intentionally empty.*/}
 
-Core_Result dx_keyboard_key_msg_construct(dx_keyboard_key_msg* SELF, dx_keyboard_key_action action, dx_keyboard_key key, uint8_t modifiers) {
+Core_Result dx_keyboard_key_msg_construct(dx_keyboard_key_msg* SELF, dx_keyboard_key_action action, Core_KeyboardKey key, uint8_t modifiers) {
   DX_CONSTRUCT_PREFIX(dx_keyboard_key_msg);
   if (dx_input_msg_construct(DX_INPUT_MSG(SELF), DX_INPUT_MSG_KIND_KEYBOARD_KEY, modifiers)) {
     return Core_Failure;
@@ -115,12 +115,12 @@ Core_Result dx_keyboard_key_msg_get_action(dx_keyboard_key_action* RETURN, dx_ke
   return Core_Success;
 }
 
-Core_Result dx_keyboard_key_msg_get_key(dx_keyboard_key* RETURN, dx_keyboard_key_msg* SELF) {
+Core_Result dx_keyboard_key_msg_get_key(Core_KeyboardKey* RETURN, dx_keyboard_key_msg* SELF) {
   *RETURN = SELF->key;
   return Core_Success;
 }
 
-Core_Result dx_keyboard_key_msg_create(dx_keyboard_key_msg** RETURN, dx_keyboard_key_action action, dx_keyboard_key key, uint8_t modifiers) {
+Core_Result dx_keyboard_key_msg_create(dx_keyboard_key_msg** RETURN, dx_keyboard_key_action action, Core_KeyboardKey key, uint8_t modifiers) {
   DX_CREATE_PREFIX(dx_keyboard_key_msg);
   if (dx_keyboard_key_msg_construct(SELF, action, key, modifiers)) {
     DX_UNREFERENCE(SELF);

@@ -32,7 +32,7 @@ Core_Result dx_val_system_construct(dx_val_system* SELF, dx_msg_queue* msg_queue
   return Core_Success;
 }
 
-Core_Result dx_val_system_emit_keyboard_key_pressed_msg(dx_val_system* SELF, dx_keyboard_key key, uint8_t modifiers) {
+Core_Result dx_val_system_emit_keyboard_key_pressed_msg(dx_val_system* SELF, Core_KeyboardKey key, uint8_t modifiers) {
   Core_Message* msg = NULL;
   if (dx_keyboard_key_msg_create((dx_keyboard_key_msg**)&msg, DX_KEYBOARD_KEY_ACTION_PRESSED, key, modifiers)) {
     return Core_Failure;
@@ -47,7 +47,7 @@ Core_Result dx_val_system_emit_keyboard_key_pressed_msg(dx_val_system* SELF, dx_
   return Core_Success;
 }
 
-Core_Result dx_val_system_emit_keyboard_key_released_msg(dx_val_system* SELF, dx_keyboard_key key, uint8_t modifiers) {
+Core_Result dx_val_system_emit_keyboard_key_released_msg(dx_val_system* SELF, Core_KeyboardKey key, uint8_t modifiers) {
   Core_Message* msg = NULL;
   if (dx_keyboard_key_msg_create((dx_keyboard_key_msg**)&msg, DX_KEYBOARD_KEY_ACTION_RELEASED, key, modifiers)) {
     return Core_Failure;

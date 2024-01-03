@@ -7,6 +7,7 @@
 #define DX_CORE_HAPTICALS_H_INCLUDED
 
 #include "dx/core/msgs.h"
+#include "Core/KeyboardKey.h"
 
 /// @ingroup Core_Hapticals
 /// @brief The "lmenu" modifier.
@@ -32,23 +33,10 @@
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 /// @ingroup Core_Hapticals
-/// @brief Enumeration of keyboard keys.
-DX_DECLARE_ENUMERATION_TYPE("dx.keyboard_key",
-                            dx_keyboard_key);
-
-enum dx_keyboard_key {
-  #define ALIAS(aliased,alias) dx_keyboard_key_##alias = dx_keyboard_key_##aliased,
-  #define DEFINE(name,value,description) dx_keyboard_key_##name = value,
-  #include "dx/core/keyboard_keys.i"
-  #undef DEFINE
-  #undef ALIAS
-};
-
-/// @ingroup Core_Hapticals
 /// @brief Return a human-readable, static constant C string describing a keyboard key.
-/// @param self The keyboard key.
+/// @param SELF The keyboard key.
 /// @return A pointer to a C string as described above on success. The null pointer on failure.
-char const* dx_keyboard_key_to_string(dx_keyboard_key self);
+char const* dx_keyboard_key_to_string(Core_KeyboardKey SELF);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
@@ -152,7 +140,7 @@ static inline dx_keyboard_key_msg* DX_KEYBOARD_KEY_MSG(void* p) {
 /// @param action The action of the key. Must be #DX_KEYBOARD_KEY_ACTION_PRESSED or #DX_KEYBOARD_KEY_ACTION_RELEASED.
 /// @param key The key.
 /// @constructor{dx_keyboard_key_msg}
-Core_Result dx_keyboard_key_msg_construct(dx_keyboard_key_msg* SELF, dx_keyboard_key_action action, dx_keyboard_key key, uint8_t modifiers);
+Core_Result dx_keyboard_key_msg_construct(dx_keyboard_key_msg* SELF, dx_keyboard_key_action action, Core_KeyboardKey key, uint8_t modifiers);
 
 /// @brief Get the action.
 /// @param RETURN A pointer to a <code>dx_keyboard_key_action</code> variable.
@@ -161,10 +149,10 @@ Core_Result dx_keyboard_key_msg_construct(dx_keyboard_key_msg* SELF, dx_keyboard
 Core_Result dx_keyboard_key_msg_get_action(dx_keyboard_key_action* RETURN, dx_keyboard_key_msg* SELF);
 
 /// @brief Get the key.
-/// @param RETURN A pointer to a <code>dx_keyboard_key</code> variable.
+/// @param RETURN A pointer to a <code>Core_KeyboardKey</code> variable.
 /// @success <code>*RETURN</code> was assigned the keyboard key.
 /// @method{dx_keyboard_key_msg}
-Core_Result dx_keyboard_key_msg_get_key(dx_keyboard_key* RETURN, dx_keyboard_key_msg* SELF);
+Core_Result dx_keyboard_key_msg_get_key(Core_KeyboardKey* RETURN, dx_keyboard_key_msg* SELF);
 
 /// @brief Create a "keyboard key" message.
 /// @param RETURN A pointer to a code <code>dx_keyboard_key_msg*</code> variable.
@@ -173,12 +161,12 @@ Core_Result dx_keyboard_key_msg_get_key(dx_keyboard_key* RETURN, dx_keyboard_key
 /// @param modifiers The modifiers.
 /// @success <code>*RETURN</code> was assigned a pointer to the "keyboard key" message object.
 /// @create-operator{dx_keyboard_key_msg}
-Core_Result dx_keyboard_key_msg_create(dx_keyboard_key_msg** RETURN, dx_keyboard_key_action action, dx_keyboard_key key, uint8_t modifiers);
+Core_Result dx_keyboard_key_msg_create(dx_keyboard_key_msg** RETURN, dx_keyboard_key_action action, Core_KeyboardKey key, uint8_t modifiers);
 
 struct dx_keyboard_key_msg {
   dx_input_msg _parent;
   dx_keyboard_key_action action;
-  dx_keyboard_key key;
+  Core_KeyboardKey key;
 };
 
 struct dx_keyboard_key_msg_dispatch {

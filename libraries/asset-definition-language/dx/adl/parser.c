@@ -102,7 +102,7 @@ Core_Result dx_asset_definition_language_parser_parse_translation(dx_assets_matr
   if (!isEqualTo) {
     DX_UNREFERENCE(received_type);
     received_type = NULL;
-    Core_setError(Core_Error_LexicalError);
+    Core_setError(Core_Error_LexicalAnalysisFailed);
     return Core_Failure;
   }
   DX_UNREFERENCE(received_type);
@@ -123,7 +123,7 @@ Core_Result dx_asset_definition_language_parser_parse_translation(dx_assets_matr
 Core_Result dx_asset_definition_language_parser_parse_vector_3_f32(dx_assets_vector_3_f32** RETURN, dx_ddl_node* node, dx_adl_context* context) {
   Core_String* received_type = NULL;
   if (dx_asset_definition_language_parser_parse_type(&received_type, node, context)) {
-    Core_setError(Core_Error_SemanticalError);
+    Core_setError(Core_Error_SemanticalAnalysisFailed);
     return Core_Failure;
   }
   Core_Boolean isEqualTo = Core_False;
@@ -135,7 +135,7 @@ Core_Result dx_asset_definition_language_parser_parse_vector_3_f32(dx_assets_vec
   DX_UNREFERENCE(received_type);
   received_type = NULL;
   if (!isEqualTo) {
-    Core_setError(Core_Error_SemanticalError);
+    Core_setError(Core_Error_SemanticalAnalysisFailed);
     return Core_Failure;
   }
   DX_VEC3 value;
@@ -159,7 +159,7 @@ Core_Result dx_asset_definition_language_parser_parse_vector_3_f32_field(dx_asse
   if (child_node->kind != dx_ddl_node_kind_map) {
     DX_UNREFERENCE(child_node);
     child_node = NULL;
-    Core_setError(Core_Error_SemanticalError);
+    Core_setError(Core_Error_SemanticalAnalysisFailed);
     return Core_Failure;
   }
   if (dx_asset_definition_language_parser_parse_vector_3_f32(RETURN, child_node, context)) {
@@ -181,7 +181,7 @@ Core_Result dx_asset_definition_language_parser_parse_type(Core_String** RETURN,
   if (child_node->kind != dx_ddl_node_kind_string) {
     DX_UNREFERENCE(child_node);
     child_node = NULL;
-    Core_setError(Core_Error_SemanticalError);
+    Core_setError(Core_Error_SemanticalAnalysisFailed);
     return Core_Failure;
   }
   Core_String* type = NULL;
@@ -328,7 +328,7 @@ Core_String* dx_adl_semantical_read_string_field(dx_ddl_node* node, Core_String*
 static Core_Result dx_adl_semantical_read_instance(dx_asset_reference** RETURN, dx_ddl_node* node, Core_String* expected_type, dx_adl_context* context) {
   Core_String* received_type = NULL;
   if (dx_asset_definition_language_parser_parse_type(&received_type, node, context)) {
-    Core_setError(Core_Error_SemanticalError);
+    Core_setError(Core_Error_SemanticalAnalysisFailed);
     return Core_Failure;
   }
   Core_Boolean isEqualTo = Core_False;
@@ -340,7 +340,7 @@ static Core_Result dx_adl_semantical_read_instance(dx_asset_reference** RETURN, 
   DX_UNREFERENCE(received_type);
   received_type = NULL;
   if (!isEqualTo) {
-    Core_setError(Core_Error_SemanticalError);
+    Core_setError(Core_Error_SemanticalAnalysisFailed);
     return Core_Failure;
   }
   Core_String* value = dx_adl_semantical_read_string_field(node, NAME(reference_key), context->names);
@@ -374,7 +374,7 @@ Core_Result dx_asset_definition_language_parser_parse_color_instance(dx_asset_re
   DX_UNREFERENCE(received_type);
   received_type = NULL;
   if (!isEqualTo) {
-    Core_setError(Core_Error_SemanticalError);
+    Core_setError(Core_Error_SemanticalAnalysisFailed);
     return Core_Failure;
   }
   Core_String* value = dx_adl_semantical_read_string_field(node, NAME(reference_key), context->names);
@@ -399,7 +399,7 @@ Core_Result dx_adl_semantical_read_color_instance_field(dx_asset_reference** RET
     if (Core_Error_NotFound != Core_getError()) {
       return Core_Failure;
     } else {
-      Core_setError(optional ? Core_Error_NoError : Core_Error_SemanticalError);
+      Core_setError(optional ? Core_Error_NoError : Core_Error_SemanticalAnalysisFailed);
       return optional ? Core_Success : Core_Failure;
     }
   }
@@ -425,7 +425,7 @@ Core_Result dx_asset_definition_language_parser_parse_image_instance_field(dx_as
     if (Core_Error_NotFound != Core_getError()) {
       return Core_Failure;
     } else {
-      Core_setError(optional ? Core_Error_NoError : Core_Error_SemanticalError);
+      Core_setError(optional ? Core_Error_NoError : Core_Error_SemanticalAnalysisFailed);
       return optional ? Core_Success : Core_Failure;
     }
   }
@@ -451,7 +451,7 @@ Core_Result dx_asset_definition_language_parser_parse_texture_instance_field(dx_
     if (Core_Error_NotFound != Core_getError()) {
       return Core_Failure;
     } else {
-      Core_setError(optional ? Core_Error_NoError : Core_Error_SemanticalError);
+      Core_setError(optional ? Core_Error_NoError : Core_Error_SemanticalAnalysisFailed);
       return optional ? Core_Success : Core_Failure;
     }
   }
@@ -477,7 +477,7 @@ Core_Result dx_adl_semantical_read_material_instance_field(dx_asset_reference** 
     if (Core_Error_NotFound != Core_getError()) {
       return Core_Failure;
     } else {
-      Core_setError(optional ? Core_Error_NoError : Core_Error_SemanticalError);
+      Core_setError(optional ? Core_Error_NoError : Core_Error_SemanticalAnalysisFailed);
       return optional ? Core_Success : Core_Failure;
     }
   }

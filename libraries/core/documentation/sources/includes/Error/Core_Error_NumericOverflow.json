@@ -1,0 +1,9 @@
+{
+  "type" : "symbolic-constant",
+  "last-update" : "2024-01-01",
+  "indices" : "core",
+  "name" : "Core_Error_NumericOverflow",
+  "id" : "core-error-numericoverflow",
+  "signature" : "#define Core_Error_NumericOverflow &lt;implementation&gt;",
+  "description" : "Symbolic constant for a Core_Error value. That value indicates a failure because of a numeric overflow. The value is guaranteed to be a non-zero value."
+}

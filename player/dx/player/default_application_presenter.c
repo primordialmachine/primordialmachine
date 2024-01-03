@@ -87,32 +87,32 @@ static Core_Result on_msg(dx_default_application_presenter* SELF, Core_Message* 
         if (temporary) {
           // if the circumflex key is released, we close the console.
           dx_keyboard_key_action action;
-          dx_keyboard_key key;
+          Core_KeyboardKey key;
           if (dx_keyboard_key_msg_get_action(&action, keyboard_key_msg) || dx_keyboard_key_msg_get_key(&key, keyboard_key_msg)) {
             return Core_Failure;
           }
-          if (DX_KEYBOARD_KEY_ACTION_RELEASED == action && dx_keyboard_key_dead_circumflex == key) {
+          if (DX_KEYBOARD_KEY_ACTION_RELEASED == action && Core_KeyboardKey_DeadCircumflex == key) {
             dx_console_toggle(SELF->console);
           } else {
             dx_console_on_keyboard_key_message(SELF->console, keyboard_key_msg);
           }
         } else {
           dx_keyboard_key_action action;
-          dx_keyboard_key key;
+          Core_KeyboardKey key;
           if (dx_keyboard_key_msg_get_action(&action, keyboard_key_msg) || dx_keyboard_key_msg_get_key(&key, keyboard_key_msg)) {
             return Core_Failure;
           }
-          if (DX_KEYBOARD_KEY_ACTION_RELEASED == action && dx_keyboard_key_return == key) {
+          if (DX_KEYBOARD_KEY_ACTION_RELEASED == action && Core_KeyboardKey_Return == key) {
             Core_Size n;
             if (dx_inline_object_array_get_size(&n, SELF->scene_presenters)) {
               return Core_Failure;
             }
             SELF->scene_index = (SELF->scene_index + 1) % n;
           }
-          if (DX_KEYBOARD_KEY_ACTION_RELEASED == action && dx_keyboard_key_dead_circumflex == key) {
+          if (DX_KEYBOARD_KEY_ACTION_RELEASED == action && Core_KeyboardKey_DeadCircumflex == key) {
             dx_console_open(SELF->console);
           }
-          if (DX_KEYBOARD_KEY_ACTION_RELEASED == action && dx_keyboard_key_escape == key) {
+          if (DX_KEYBOARD_KEY_ACTION_RELEASED == action && Core_KeyboardKey_Escape == key) {
             Core_Message* msg = NULL;
             if (dx_quit_msg_create((dx_quit_msg**)&msg)) {
               return Core_Failure;

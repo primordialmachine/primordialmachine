@@ -78,8 +78,7 @@ require_once($ROOT_DIR . '/libraries/Cdoc/Include.php');
             <?php
               $index = CdocIndexManager::getInstance()->getByName('core');
               $index->sortEntries();
-              for ($i = 0; $i < count($index->getEntryList()); ++$i) {
-                $entry = $index->getEntryList()[$i];
+              foreach ($index->getEntryList() as $entry) {
                 echo
                   '<li>' .
                   '<a href="' . $entry['href'] . '">' . $entry['text'] . '</a>' .

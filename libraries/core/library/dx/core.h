@@ -37,6 +37,7 @@
 #include "dx/core/error.h"
 #include "dx/core/file_system.h"
 #include "Core/Hash.h"
+#include "core/KeyboardKey.h"
 #include "dx/core/math.h"
 #include "Core/Memory.h"
 #include "dx/core/msgs.h"

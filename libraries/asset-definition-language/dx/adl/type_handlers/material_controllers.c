@@ -160,7 +160,7 @@ static Core_Result _parse(Core_Object** RETURN, dx_adl_type_handlers_material_co
     *RETURN = CORE_OBJECT(asset);
     return Core_Success;
   } else {
-    Core_setError(Core_Error_SemanticalError);
+    Core_setError(Core_Error_SemanticalAnalysisFailed);
     return Core_Failure;
   }
 }

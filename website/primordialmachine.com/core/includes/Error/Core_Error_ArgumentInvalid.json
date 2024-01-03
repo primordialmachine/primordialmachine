@@ -1,0 +1,9 @@
+{
+  "type" : "symbolic-constant",
+  "last-update" : "2023-12-31",
+  "indices" : "core",
+  "name" : "Core_Error_ArgumentInvalid",
+  "id" : "core-error-argumentinvalid",
+  "signature" : "#define Core_Error_ArgumentInvalid &lt;implementation&gt;",
+  "description" : "Symbolic constant for a Core_Error value. That value indicates that an argument is invalid. The value is guaranteed to be a non-zero value."
+}

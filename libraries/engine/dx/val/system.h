@@ -55,7 +55,7 @@ static inline Core_Result dx_val_system_get_context(dx_val_context** RETURN, dx_
 /// @param key The keyboard key.
 /// @param modifiers The modifiers.
 /// @method{dx_val_system}
-Core_Result dx_val_system_emit_keyboard_key_pressed_msg(dx_val_system* SELF, dx_keyboard_key key, uint8_t modifiers);
+Core_Result dx_val_system_emit_keyboard_key_pressed_msg(dx_val_system* SELF, Core_KeyboardKey key, uint8_t modifiers);
 
 /// @internal
 /// @brief Emit a "keyboard key released" message.
@@ -63,7 +63,7 @@ Core_Result dx_val_system_emit_keyboard_key_pressed_msg(dx_val_system* SELF, dx_
 /// @param key The keyboard key.
 /// @param modifiers The modifiers.
 /// @method{dx_val_system}
-Core_Result dx_val_system_emit_keyboard_key_released_msg(dx_val_system* SELF, dx_keyboard_key key, uint8_t modifiers);
+Core_Result dx_val_system_emit_keyboard_key_released_msg(dx_val_system* SELF, Core_KeyboardKey key, uint8_t modifiers);
 
 /// @internal
 /// @brief Emit a "mouse button pressed" message.

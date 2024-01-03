@@ -152,7 +152,7 @@ static Core_Result _parse_optics_perspective(dx_asset_optics_perspective** RETUR
   DX_UNREFERENCE(received_type);
   received_type = NULL;
   if (!isEqualTo) {
-    Core_setError(Core_Error_SemanticalError);
+    Core_setError(Core_Error_SemanticalAnalysisFailed);
     return Core_Failure;
   }
   //

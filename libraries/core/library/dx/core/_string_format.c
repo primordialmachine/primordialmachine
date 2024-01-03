@@ -58,11 +58,11 @@ static Core_Result parse_type_specifier_bits(uint8_t* RETURN, char const** start
 static Core_Result parse_fractional_digits_specifier(uint8_t* RETURN, char const** start, char const* end) {
   // '.'
   if ((*start) == end) {
-    Core_setError(Core_Error_SyntacticalError);
+    Core_setError(Core_Error_SyntacticalAnalysisFailed);
     return Core_Failure;
   }
   if (!IS('.')) {
-    Core_setError(Core_Error_SyntacticalError);
+    Core_setError(Core_Error_SyntacticalAnalysisFailed);
     return Core_Failure;
   }
   (*start)++;
@@ -70,11 +70,11 @@ static Core_Result parse_fractional_digits_specifier(uint8_t* RETURN, char const
   // digit
   uint8_t temporary = 0;
   if ((*start) == end) {
-    Core_setError(Core_Error_SyntacticalError);
+    Core_setError(Core_Error_SyntacticalAnalysisFailed);
     return Core_Failure;
   }
   if (!_is_digit(**start)) {
-    Core_setError(Core_Error_SyntacticalError);
+    Core_setError(Core_Error_SyntacticalAnalysisFailed);
     return Core_Failure;
   }
   temporary += (uint8_t)(**start) - (uint8_t)'0';
@@ -92,7 +92,7 @@ static Core_Result parse_fractional_digits_specifier(uint8_t* RETURN, char const
 
 static Core_Result parse_type_specifier_bits(uint8_t* RETURN, char const** start, char const* end) {
   if ((*start) == end) {
-    Core_setError(Core_Error_SyntacticalError);
+    Core_setError(Core_Error_SyntacticalAnalysisFailed);
     return Core_Failure;
   }
   
@@ -102,11 +102,11 @@ static Core_Result parse_type_specifier_bits(uint8_t* RETURN, char const** start
   } else if ((**start) == '1') {
     (*start)++;
     if ((*start) == end) {
-      Core_setError(Core_Error_SyntacticalError);
+      Core_setError(Core_Error_SyntacticalAnalysisFailed);
       return Core_Failure;
     }
     if (!IS('6')) {
-      Core_setError(Core_Error_SyntacticalError);
+      Core_setError(Core_Error_SyntacticalAnalysisFailed);
       return Core_Failure;
     }
     *RETURN = PRINT_PRECISION_16;
@@ -114,11 +114,11 @@ static Core_Result parse_type_specifier_bits(uint8_t* RETURN, char const** start
   } else if (IS('3')) {
     (*start)++;
     if ((*start) == end) {
-      Core_setError(Core_Error_SyntacticalError);
+      Core_setError(Core_Error_SyntacticalAnalysisFailed);
       return Core_Failure;
     }
     if (!IS('2')) {
-      Core_setError(Core_Error_SyntacticalError);
+      Core_setError(Core_Error_SyntacticalAnalysisFailed);
       return Core_Failure;
     }
     *RETURN = PRINT_PRECISION_32;
@@ -126,17 +126,17 @@ static Core_Result parse_type_specifier_bits(uint8_t* RETURN, char const** start
   } else if (IS('6')) {
     (*start)++;
     if ((*start) == end) {
-      Core_setError(Core_Error_SyntacticalError);
+      Core_setError(Core_Error_SyntacticalAnalysisFailed);
       return Core_Failure;
     }
     if (!IS('4')) {
-      Core_setError(Core_Error_SyntacticalError);
+      Core_setError(Core_Error_SyntacticalAnalysisFailed);
       return Core_Failure;
     }
     *RETURN = PRINT_PRECISION_64;
     return Core_Success;
   } else {
-    Core_setError(Core_Error_SyntacticalError);
+    Core_setError(Core_Error_SyntacticalAnalysisFailed);
     return Core_Failure;
   }
 }

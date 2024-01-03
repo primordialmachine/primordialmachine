@@ -1,0 +1,9 @@
+{
+  "type" : "symbolic-constant",
+  "last-update" : "2024-01-01",
+  "indices" : "core",
+  "name" : "Core_Error_NotImplemented",
+  "id" : "core-error-notimplemented",
+  "signature" : "#define Core_Error_NotImplemented &lt;implementation&gt;",
+  "description" : "Symbolic constant for a Core_Error value. That value indicates a failure because something was not implemented. The value is guaranteed to be a non-zero value."
+}

@@ -9,94 +9,74 @@
 #include "dx/core/configuration.h"
 #include <inttypes.h>
 
-/// @ingroup Core
-/// @brief The integer type of values indicating error status.
+// http://localhost/core#core-error
 typedef int Core_Error;
 
-/// @ingroup Core
-/// @brief Symbolic constant for a Core_Error value indicating the absence of an error.
-/// This is the only Core_Error_* symbolic constant evaluating to to the zero value.
-#define Core_Error_NoError (0)
+enum _Core_Error {
+  // http://localhost/core#core-error-noerror
+  Core_Error_NoError = (0),
 
-/// @ingroup Core
-/// @brief Symbolic constant for a Core_Error value indicating a failure because of a failed allocation.
-/// The Core_Error value this symbolic constant is evaluating to is guaranteed to be non-zero.
-#define Core_Error_AllocationFailed (1)
+  // http://localhost/core#core-error-allocationfailed
+  Core_Error_AllocationFailed,
 
-/// @ingroup Core
-/// @brief Symbolic constant for a Core_Error value indicating a failure because of an invalid argument.
-/// The Core_Error value this symbolic constant is evaluating to is guaranteed to be non-zero.
-#define Core_Error_ArgumentInvalid (2)
+  // http://localhost/core#core-error-argumentinvalid
+  Core_Error_ArgumentInvalid,
 
-/// @ingroup Core
-/// @brief Symbolic constant for a Core_Error value indicating a failure because of an invalid operation.
-/// The Core_Error value this symbolic constant is evaluating to is guaranteed to be non-zero.
-#define Core_Error_OperationInvalid (3)
+  // http://localhost/core#core-error-operationinvalid
+  Core_Error_OperationInvalid,
 
-/// @ingroup Core
-/// @brief Symbolic constant for a Core_Error value indicating a failure because of a failed environment.
-/// The Core_Error value this symbolic constant is evaluating to is guaranteed to be non-zero.
-#define Core_Error_EnvironmentFailed (4)
+  // http://localhost/core#core-error-environmentfailed
+  Core_Error_EnvironmentFailed,
 
-/// @ingroup Core
-/// @brief Symbolic constant for a Core_Error value indicating a failure because of a failed conversion.
-/// The Core_Error value this symbolic constant is evaluating to is guaranteed to be non-zero.
-#define Core_Error_ConversionFailed (5)
+  // http://localhost/core#core-error-lexicalanalysisfailed
+  Core_Error_LexicalAnalysisFailed,
 
-/// @ingroup Core
-/// @brief Symbolic constant for a Core_Error value indicating a failure because of a failed decoding.
-/// The Core_Error value this symbolic constant is evaluating to is guaranteed to be non-zero.
-#define Core_Error_DecodingFailed (6)
+  // http://localhost/core#core-error-syntacticalanalysisfailed
+  Core_Error_SyntacticalAnalysisFailed,
 
-/// @ingroup Core
-/// @brief Symbolic constant for a Core_Error value indicating a failure because of a lexical error.
-/// The Core_Error value this symbolic constant is evaluating to is guaranteed to be non-zero.
-#define Core_Error_LexicalError (7)
+  // http://localhost/core#core-error-semanticalanalysisfailed
+  Core_Error_SemanticalAnalysisFailed,
 
-/// @ingroup Core
-/// @brief Symbolic constant for a Core_Error value indicating a failure because of a syntactical error.
-/// The Core_Error value this symbolic constant is evaluating to is guaranteed to be non-zero.
-#define Core_Error_SyntacticalError (8)
+  // http://localhost/core#core-error-exists
+  Core_Error_Exists,
 
-/// @ingroup Core
-/// @brief Symbolic constant for a Core_Error value indicating a failure because of a semantical error.
-/// The Core_Error value this symbolic constant is evaluating to is guaranteed to be non-zero.
-#define Core_Error_SemanticalError (9)
+  // http://localhost/core#core-error-notexists
+  Core_Error_NotExists,
 
-/// @ingroup Core
-/// @brief Symbolic constant for a Core_Error value indicating a failure because something was not found.
-/// The Core_Error value this symbolic constant is evaluating to is guaranteed to be non-zero.
-#define Core_Error_NotFound (10)
+  // http://localhost/core#core-error-empty
+  Core_Error_Empty,
 
-/// @ingroup Core
-/// @brief Symbolic constant for a Core_Error value indicating a failure because something exists.
-/// The Core_Error value this symbolic constant is evaluating to is guaranteed to be non-zero.
-#define Core_Error_Exists (11)
+  // http://localhost/core#core-error-notempty
+  Core_Error_NotEmpty,
 
-/// @ingroup Core
-/// @brief Symbolic constant for a Core_Error value indicating a failure because of an overflow.
-/// The Core_Error value this symbolic constant is evaluating to is guaranteed to be non-zero.
-#define Core_Error_Overflow (12)
+  // http://localhost/core#core-error-notinitialized
+  Core_Error_NotInitialized,
 
-/// @ingroup Core
-/// @brief Symbolic constant for a Core_Error value indicating a failure because an operation was not (yet) implemented.
-/// The Core_Error value this symbolic constant is evaluating to is guaranteed to be non-zero.
-#define Core_Error_NotImplemented (13)
+  // http://localhost/core#core-error-notinitialized
+  Core_Error_Initialized,
 
-/// @ingroup Core
-/// @brief Symbolic constant for a Core_Error value indicating a failure because something is empty.
-/// The Core_Error value this symbolic constant is evaluating to is guaranteed to be non-zero.
-#define Core_Error_Empty (14)
+  // http://localhost/core#core-error-numericoverflow
+  Core_Error_NumericOverflow,
 
-/// @ingroup Core
-/// @brief Symbolic constant for a Core_Error value indicating a failure because something is not (yet) intialized.
-/// The Core_Error value this symbolic constant is evaluating to is guaranteed to be non-zero.
-#define Core_Error_NotInitialized (15)
+  // http://localhost/core#core-error-notimplemented
+  Core_Error_NotImplemented,
 
-/// @ingroup Core
-/// @brief Symbolic constant for a Core_Error value indicating a failure because something is (already) intialized.
-/// This value is guaranteed to be a non-zero value.
-#define Core_Error_Initialized (16)
+  // http://localhost/core#core-error-conversionfailed
+  Core_Error_ConversionFailed,
+
+  // http://localhost/core#core-error-decodingfailed
+  Core_Error_DecodingFailed,
+
+  // http://localhost/core#core-error-encodingfailed
+  Core_Error_EncodingFailed,
+
+  // http://localhost/core#core-error-notfound
+  Core_Error_NotFound,
+
+  // http://localhost/core#core-error-found
+  Core_Error_Found,
+
+};
 
 /// @ingroup Core
 /// @brief Get the value of the error variable.

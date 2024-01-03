@@ -1,0 +1,9 @@
+{
+  "type" : "symbolic-constant",
+  "last-update" : "2023-12-31",
+  "indices" : "core",
+  "name" : "Core_Error_AllocationFailed",
+  "id" : "core-error-allocationfailed",
+  "signature" : "#define Core_Error_AllocationFailed &lt;implementation&gt;",
+  "description" : "Symbolic constant for a Core_Error value. That value indicates that an allocation failed. The value is guaranteed to be a non-zero value."
+}

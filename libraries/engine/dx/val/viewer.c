@@ -89,7 +89,7 @@ Core_Result dx_val_viewer_get_projection_matrix(DX_MAT4* RETURN, dx_val_viewer* 
     return Core_Success;
   }
 
-  Core_setError(Core_Error_SemanticalError);
+  Core_setError(Core_Error_SemanticalAnalysisFailed);
   return Core_Failure;
 }
 

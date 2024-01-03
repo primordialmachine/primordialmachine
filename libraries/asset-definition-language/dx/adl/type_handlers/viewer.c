@@ -157,7 +157,7 @@ static Core_Result _parse_optics(dx_assets_optics** RETURN, dx_ddl_node* node, d
   if (!isEqualTo[0] && !isEqualTo[1]) {
     DX_UNREFERENCE(received_type);
     received_type = NULL;
-    Core_setError(Core_Error_SemanticalError);
+    Core_setError(Core_Error_SemanticalAnalysisFailed);
     return Core_Failure;
   }
   dx_adl_type_handler* type_handler = NULL;
@@ -179,7 +179,7 @@ static Core_Result _parse_optics(dx_assets_optics** RETURN, dx_ddl_node* node, d
 static Core_Result _parse_viewer_controller(dx_assets_viewer_controller** RETURN, dx_ddl_node* node, dx_adl_context* context) {
   Core_String* received_type = NULL;
   if (dx_asset_definition_language_parser_parse_type(&received_type, node, context)) {
-    Core_setError(Core_Error_SemanticalError);
+    Core_setError(Core_Error_SemanticalAnalysisFailed);
     return Core_Failure;
   }
   Core_Boolean isEqualTo = Core_False;
@@ -206,7 +206,7 @@ static Core_Result _parse_viewer_controller(dx_assets_viewer_controller** RETURN
   } else {
     DX_UNREFERENCE(received_type);
     received_type = NULL;
-    Core_setError(Core_Error_SemanticalError);
+    Core_setError(Core_Error_SemanticalAnalysisFailed);
     return Core_Failure;
   }
 }

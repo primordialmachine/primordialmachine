@@ -56,11 +56,11 @@ require_once($ROOT_DIR . '/libraries/Cdoc/Include.php');
           <ul>
             <?php
               $index = CdocIndexManager::getInstance()->getByName('aal');
-              for ($i = 0; $i < count($index); ++$i) {
-                $indexEntry = $index[$i];
+              $index->sortEntries();
+              foreach ($index->getEntryList() as $entry) {
                 echo
                   '<li>' .
-                  '<a href="' . $indexEntry['href'] . '">' . $indexEntry['text'] . '</a>' .
+                  '<a href="' . $entry['href'] . '">' . $entry['text'] . '</a>' .
                   '</li>'
                   ;
               }

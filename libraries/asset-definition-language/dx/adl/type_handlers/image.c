@@ -164,7 +164,7 @@ static Core_Result _parse_image_operation(dx_ddl_node* node, dx_adl_symbol* symb
     return Core_Failure;
   }
   if (!isEqualTo[0] && !isEqualTo[1]) {
-    Core_setError(Core_Error_SemanticalError);
+    Core_setError(Core_Error_SemanticalAnalysisFailed);
     DX_UNREFERENCE(received_type);
     received_type = NULL;
     return Core_Failure;
@@ -221,7 +221,7 @@ static Core_Result _parse_image_operations(dx_ddl_node* node, dx_adl_symbol* sym
     return Core_Failure;
   }
   if (node->kind != dx_ddl_node_kind_list) {
-    Core_setError(Core_Error_SemanticalError);
+    Core_setError(Core_Error_SemanticalAnalysisFailed);
     return Core_Failure;
   }
   Core_Size n;
@@ -282,7 +282,7 @@ static Core_Result _parse_image_with_size_and_format(dx_assets_image** RETURN, C
   } else if (isEqualTo[1]) {
     pixel_format_value = Core_PixelFormat_Bgr8;
   } else {
-    Core_setError(Core_Error_SemanticalError);
+    Core_setError(Core_Error_SemanticalAnalysisFailed);
     return Core_Failure;
   }
   // width
@@ -350,7 +350,7 @@ static Core_Result _parse_image(dx_assets_image** RETURN, dx_ddl_node* node, dx_
     DX_UNREFERENCE(name_value);
     name_value = NULL;
   } else {
-    Core_setError(Core_Error_SemanticalError);
+    Core_setError(Core_Error_SemanticalAnalysisFailed);
     DX_UNREFERENCE(name_value);
     name_value = NULL;
     return Core_Failure;

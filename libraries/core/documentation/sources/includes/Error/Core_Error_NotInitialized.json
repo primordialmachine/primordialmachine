@@ -1,0 +1,9 @@
+{
+  "type" : "symbolic-constant",
+  "last-update" : "2023-12-13",
+  "indices" : "core",
+  "name" : "Core_Error_NotInitialized",
+  "id" : "core-error-notinitialized",
+  "signature" : "#define Core_Error_NotInitialized &lt;implementation&gt;",
+  "description" : "Symbolic constant for a Core_Error value. That value indicates that an an error occurred because something was not initialized (but should have been initialized). The value is guaranteed to be a non-zero value."
+}

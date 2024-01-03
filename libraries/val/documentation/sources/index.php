@@ -1,12 +1,15 @@
 <?php
 define('SITE_PRIVATE', true);
 $ROOT_DIR = $_SERVER['DOCUMENT_ROOT'];
-$DOCUMENT_DIR = $_SERVER['DOCUMENT_ROOT'] . '/val/';
-require_once($ROOT_DIR . '/site.php');
+if ($ROOT_DIR != '/') {
+  $ROOT_DIR .= DIRECTORY_SEPARATOR;
+}
+$DOCUMENT_DIR = $ROOT_DIR . 'val' . DIRECTORY_SEPARATOR;
+require_once($ROOT_DIR . 'site.php');
 $options = [];
-$options['site_title'] = $SITE_TITLE;
-$options['site_url_prefix'] = $SITE_URL_PREFIX;
-$options['additional_css_stylesheets']= array('val/index.css?v=1');
+$options['site_title'] = App::getInstance()->site_title;
+$options['site_url_prefix'] = App::getInstance()->site_url_prefix;
+$options['additional_css_stylesheets']= array('val' . DIRECTORY_SEPARATOR . 'index.css?v=1');
 on_enter_document($options);
 
 require_once($ROOT_DIR . '/libraries/Template/Include.php');
@@ -38,8 +41,13 @@ require_once($ROOT_DIR . '/libraries/Cdoc/Include.php');
         Nothing to see here yet. Come back later, traveler.
         </p>
         <?php
+        if (PRINT_DIRECTORY_INFORMATION) {
+          echo '<p>root directory:    ' . $ROOT_DIR . '</p>';
+          echo '<p>document directory:' . $DOCUMENT_DIR . '</p>';
+          echo '<p>include directory: ' . $DOCUMENT_DIR . 'includes' . DIRECTORY_SEPARATOR . '</p>';
+        }
         $context = new CdocContext();
-        $context->findContents($DOCUMENT_DIR . '/includes/');
+        $context->findContentsRecursive($DOCUMENT_DIR . 'includes' . DIRECTORY_SEPARATOR);
         $context->emit();
         ?>
       </div>
@@ -49,8 +57,7 @@ require_once($ROOT_DIR . '/libraries/Cdoc/Include.php');
             <?php
               $index = CdocIndexManager::getInstance()->getByName('val');
               $index->sortEntries();
-              for ($i = 0; $i < count($index->getEntryList()); ++$i) {
-                $entry = $index->getEntryList()[$i];
+              foreach ($index->getEntryList() as $entry) {
                 echo
                   '<li>' .
                   '<a href="' . $entry['href'] . '">' . $entry['text'] . '</a>' .

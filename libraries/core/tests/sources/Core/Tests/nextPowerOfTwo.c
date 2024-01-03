@@ -57,11 +57,11 @@ static Core_Result Core_Tests_nextPowerOfTwoTestsN64() {
 
   // ...
 
-  EXPECT_FAILURE(GteN64, Core_Natural64_Greatest - 1, Core_Error_Overflow);
-  EXPECT_FAILURE(GtN64, Core_Natural64_Greatest - 1, Core_Error_Overflow);
+  EXPECT_FAILURE(GteN64, Core_Natural64_Greatest - 1, Core_Error_NumericOverflow);
+  EXPECT_FAILURE(GtN64, Core_Natural64_Greatest - 1, Core_Error_NumericOverflow);
 
-  EXPECT_FAILURE(GteN64, Core_Natural64_Greatest - 0, Core_Error_Overflow);
-  EXPECT_FAILURE(GtN64, Core_Natural64_Greatest - 0, Core_Error_Overflow);
+  EXPECT_FAILURE(GteN64, Core_Natural64_Greatest - 0, Core_Error_NumericOverflow);
+  EXPECT_FAILURE(GtN64, Core_Natural64_Greatest - 0, Core_Error_NumericOverflow);
 
   return Core_Success;
 }
@@ -98,11 +98,11 @@ static Core_Result Core_Tests_nextPowerOfTwoTestsN32() {
 
   // ...
 
-  EXPECT_FAILURE(GteN32, Core_Natural32_Greatest - 1, Core_Error_Overflow);
-  EXPECT_FAILURE(GtN32, Core_Natural32_Greatest - 1, Core_Error_Overflow);
+  EXPECT_FAILURE(GteN32, Core_Natural32_Greatest - 1, Core_Error_NumericOverflow);
+  EXPECT_FAILURE(GtN32, Core_Natural32_Greatest - 1, Core_Error_NumericOverflow);
 
-  EXPECT_FAILURE(GteN32, Core_Natural32_Greatest - 0, Core_Error_Overflow);
-  EXPECT_FAILURE(GtN32, Core_Natural32_Greatest - 0, Core_Error_Overflow);
+  EXPECT_FAILURE(GteN32, Core_Natural32_Greatest - 0, Core_Error_NumericOverflow);
+  EXPECT_FAILURE(GtN32, Core_Natural32_Greatest - 0, Core_Error_NumericOverflow);
 
   return Core_Success;
 }
@@ -139,11 +139,11 @@ static Core_Result Core_Tests_nextPowerOfTwoTestsN16() {
 
   // ...
 
-  EXPECT_FAILURE(GteN16, Core_Natural16_Greatest - 1, Core_Error_Overflow);
-  EXPECT_FAILURE(GtN16, Core_Natural16_Greatest - 1, Core_Error_Overflow);
+  EXPECT_FAILURE(GteN16, Core_Natural16_Greatest - 1, Core_Error_NumericOverflow);
+  EXPECT_FAILURE(GtN16, Core_Natural16_Greatest - 1, Core_Error_NumericOverflow);
 
-  EXPECT_FAILURE(GteN16, Core_Natural16_Greatest - 0, Core_Error_Overflow);
-  EXPECT_FAILURE(GtN16, Core_Natural16_Greatest - 0, Core_Error_Overflow);
+  EXPECT_FAILURE(GteN16, Core_Natural16_Greatest - 0, Core_Error_NumericOverflow);
+  EXPECT_FAILURE(GtN16, Core_Natural16_Greatest - 0, Core_Error_NumericOverflow);
 
   return Core_Success;
 }
@@ -180,11 +180,11 @@ static Core_Result Core_Tests_nextPowerOfTwoTestsN8() {
 
   // ...
 
-  EXPECT_FAILURE(GteN8, Core_Natural8_Greatest - 1, Core_Error_Overflow);
-  EXPECT_FAILURE(GtN8, Core_Natural8_Greatest - 1, Core_Error_Overflow);
+  EXPECT_FAILURE(GteN8, Core_Natural8_Greatest - 1, Core_Error_NumericOverflow);
+  EXPECT_FAILURE(GtN8, Core_Natural8_Greatest - 1, Core_Error_NumericOverflow);
   
-  EXPECT_FAILURE(GteN8, Core_Natural8_Greatest - 0, Core_Error_Overflow);
-  EXPECT_FAILURE(GtN8, Core_Natural8_Greatest - 0, Core_Error_Overflow);
+  EXPECT_FAILURE(GteN8, Core_Natural8_Greatest - 0, Core_Error_NumericOverflow);
+  EXPECT_FAILURE(GtN8, Core_Natural8_Greatest - 0, Core_Error_NumericOverflow);
 
   return Core_Success;
 }

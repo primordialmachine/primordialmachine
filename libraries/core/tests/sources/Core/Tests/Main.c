@@ -63,13 +63,13 @@ static Core_Result Core_Tests_mousePointerMsgTests() {
 static Core_Result Core_Tests_keyboardKeyMsgTests() {
   dx_keyboard_key_msg* msg = NULL;
   //
-  if (dx_keyboard_key_msg_create(&msg, DX_KEYBOARD_KEY_ACTION_PRESSED, dx_keyboard_key_a, 0)) {
+  if (dx_keyboard_key_msg_create(&msg, DX_KEYBOARD_KEY_ACTION_PRESSED, Core_KeyboardKey_A, 0)) {
     return Core_Failure;
   }
   DX_UNREFERENCE(msg);
   msg = NULL;
   //
-  if (dx_keyboard_key_msg_create(&msg, DX_KEYBOARD_KEY_ACTION_RELEASED, dx_keyboard_key_a, 0)) {
+  if (dx_keyboard_key_msg_create(&msg, DX_KEYBOARD_KEY_ACTION_RELEASED, Core_KeyboardKey_A, 0)) {
     return Core_Failure;
   }
   DX_UNREFERENCE(msg);

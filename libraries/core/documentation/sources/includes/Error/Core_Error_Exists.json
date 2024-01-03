@@ -1,0 +1,9 @@
+{
+  "type" : "symbolic-constant",
+  "last-update" : "2023-12-31",
+  "indices" : "core",
+  "name" : "Core_Error_Exists",
+  "id" : "core-error-exists",
+  "signature" : "#define Core_Error_Exists &lt;implementation&gt;",
+  "description" : "Symbolic constant for a Core_Error value. That value indicates that an an error occurred because something existed (but should not have existed). The value is guaranteed to be a non-zero value."
+}

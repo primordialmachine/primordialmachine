@@ -1,0 +1,9 @@
+{
+  "type" : "symbolic-constant",
+  "last-update" : "2023-12-31",
+  "indices" : "core",
+  "name" : "Core_Error_SyntacticalAnalysisFailed",
+  "id" : "core-error-syntacticalanalysisfailed",
+  "signature" : "#define Core_Error_SyntacticalAnalysisFailed &lt;implementation&gt;",
+  "description" : "Symbolic constant for a Core_Error value. That value indicates that a syntactical analysis failed. The value is guaranteed to be a non-zero value."
+}

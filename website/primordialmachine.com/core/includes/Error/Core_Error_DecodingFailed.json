@@ -1,0 +1,9 @@
+{
+  "type" : "symbolic-constant",
+  "last-update" : "2024-01-01",
+  "indices" : "core",
+  "name" : "Core_Error_DecodingFailed",
+  "id" : "core-error-decodingfailed",
+  "signature" : "#define Core_Error_DecodingFailed &lt;implementation&gt;",
+  "description" : "Symbolic constant for a Core_Error value. That value indicates that a decoding failed. The value is guaranteed to be a non-zero value."
+}

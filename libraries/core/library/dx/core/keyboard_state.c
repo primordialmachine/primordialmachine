@@ -30,7 +30,7 @@ Core_Result dx_keyboard_state_create(dx_keyboard_state** RETURN) {
   return Core_Success;
 }
 
-Core_Result dx_keyboard_state_get_state(Core_Boolean* RETURN, dx_keyboard_state* SELF, dx_keyboard_key key) {
+Core_Result dx_keyboard_state_get_state(Core_Boolean* RETURN, dx_keyboard_state* SELF, Core_KeyboardKey key) {
   if (!RETURN || !SELF || key < 0 || key >= dx_keyboard_state_configuration_number_of_keyboard_keys) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
@@ -39,7 +39,7 @@ Core_Result dx_keyboard_state_get_state(Core_Boolean* RETURN, dx_keyboard_state*
   return Core_Success;
 }
 
-Core_Result dx_keyboard_state_set_state(dx_keyboard_state* SELF, dx_keyboard_key key, Core_Boolean state) {
+Core_Result dx_keyboard_state_set_state(dx_keyboard_state* SELF, Core_KeyboardKey key, Core_Boolean state) {
   if (!SELF || key < 0 || key >= dx_keyboard_state_configuration_number_of_keyboard_keys) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;

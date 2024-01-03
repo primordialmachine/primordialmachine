@@ -70,7 +70,7 @@ before_build:
     - ps: |
         Write-Host "CMake Generator: ${env:CMAKE_GENERATOR_NAME}"
         Write-Host "CMake Architecture: ${env:CMAKE_ARCHITECTURE_NAME}"
-        cmake -DBUILD_DOCUMENTATION=OFF -G ${env:CMAKE_GENERATOR_NAME} -A ${env:CMAKE_ARCHITECTURE_NAME} CMakeLists.txt
+        cmake -G ${env:CMAKE_GENERATOR_NAME} -A ${env:CMAKE_ARCHITECTURE_NAME} CMakeLists.txt
 
 build:
     parallel: true       # enable MSBuild parallel builds

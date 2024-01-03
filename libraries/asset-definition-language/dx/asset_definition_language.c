@@ -132,7 +132,7 @@ Core_Result dx_adl_compile(dx_assets_scene** RETURN, dx_ddl_node* node) {
   if (!isEqualTo) {
     DX_UNREFERENCE(context);
     context = NULL;
-    Core_setError(Core_Error_SemanticalError);
+    Core_setError(Core_Error_SemanticalAnalysisFailed);
     return Core_Failure;
   }
   if (_read_scene(node, context)) {

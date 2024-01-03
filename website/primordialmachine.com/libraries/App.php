@@ -1,5 +1,7 @@
 <?php
 
+require_once(__DIR__ . '/../config.php');
+
 /// @singleton
 class App {
   
@@ -30,11 +32,11 @@ class App {
 
   private function __construct() {
     //
-    global $SITE_URL_PREFIX;
-    $this->site_url_prefix = $SITE_URL_PREFIX;
+    //global $SITE_URL_PREFIX;
+    $this->site_url_prefix = SITE_URL_PREFIX;
 
-    global $SITE_TITLE;
-    $this->site_title = $SITE_TITLE;
+    //global $SITE_TITLE;
+    $this->site_title = SITE_TITLE;
     
     global $_SERVER;
     $this->site_document_root = $_SERVER['DOCUMENT_ROOT'];
@@ -42,13 +44,13 @@ class App {
     $this->css_files =
       array
         (
-          ($SITE_URL_PREFIX) . 'reset.css',
-          ($SITE_URL_PREFIX) . 'layout.css',
-          ($SITE_URL_PREFIX) . 'colors-variant-1.css',
-          ($SITE_URL_PREFIX) . 'site.css',
-          ($SITE_URL_PREFIX) . 'icons.css',
-          ($SITE_URL_PREFIX) . 'typography-variant-1.css',
-          ($SITE_URL_PREFIX) . 'decorations.css',
+          ($this->site_url_prefix) . 'reset.css',
+          ($this->site_url_prefix) . 'layout.css',
+          ($this->site_url_prefix) . 'colors-variant-1.css',
+          ($this->site_url_prefix) . 'site.css',
+          ($this->site_url_prefix) . 'icons.css',
+          ($this->site_url_prefix) . 'typography-variant-1.css',
+          ($this->site_url_prefix) . 'decorations.css',
         );
 
     $this->js_files =

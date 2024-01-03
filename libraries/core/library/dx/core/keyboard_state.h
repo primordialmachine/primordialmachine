@@ -42,14 +42,14 @@ Core_Result dx_keyboard_state_create(dx_keyboard_state** RETURN);
 /// @param key The keyboard key.
 /// @success <code>*RETURN</code> was assigned the state of the keyboard key.
 /// @default-runtime-calling-convent
-Core_Result dx_keyboard_state_get_state(Core_Boolean* RETURN, dx_keyboard_state* SELF, dx_keyboard_key key);
+Core_Result dx_keyboard_state_get_state(Core_Boolean* RETURN, dx_keyboard_state* SELF, Core_KeyboardKey key);
 
 /// @brief Set the state of a keyboard key.
 /// @param SELF A pointer to this keyboard state.
 /// @param key The keyboard key.
 /// @param state The state.
 /// @default-runtime-calling-convent
-Core_Result dx_keyboard_state_set_state(dx_keyboard_state* SELF, dx_keyboard_key key, Core_Boolean state);
+Core_Result dx_keyboard_state_set_state(dx_keyboard_state* SELF, Core_KeyboardKey key, Core_Boolean state);
 
 /// @brief Set the state of all keys to @a false.
 /// @param SELF A pointer to this keyboard state.

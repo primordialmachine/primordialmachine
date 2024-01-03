@@ -128,8 +128,8 @@ Core_Result dx_asset_definition_language_enter_on_scene_element(dx_asset_definit
   Core_String* received_type = NULL;
   if (dx_asset_definition_language_parser_parse_type(&received_type, source, context)) {
     if (Core_Error_NotFound == Core_getError()) {
-      dx_log("the definition is issing the type field", sizeof("the definition is missing the type field") - 1);
-      Core_setError(Core_Error_SemanticalError);
+      dx_log("the definition is missing the type field", sizeof("the definition is missing the type field") - 1);
+      Core_setError(Core_Error_SemanticalAnalysisFailed);
     }
     return Core_Failure;
   }
@@ -162,7 +162,7 @@ Core_Result dx_asset_definition_language_enter_on_color(dx_asset_definition_lang
   if (!isEqualTo) {
     DX_UNREFERENCE(received_type);
     received_type = NULL;
-    Core_setError(Core_Error_SemanticalError);
+    Core_setError(Core_Error_SemanticalAnalysisFailed);
     return Core_Failure;
   }
   // name
@@ -212,7 +212,7 @@ Core_Result dx_asset_definition_language_enter_on_scene(dx_asset_definition_lang
   if (!isEqualTo) {
     DX_UNREFERENCE(received_type);
     received_type = NULL;
-    Core_setError(Core_Error_LexicalError);
+    Core_setError(Core_Error_LexicalAnalysisFailed);
     return Core_Failure;
   }
   // elements?
@@ -277,7 +277,7 @@ Core_Result dx_asset_definition_language_enter_on_image(dx_asset_definition_lang
   if (!isEqualTo) {
     DX_UNREFERENCE(received_type);
     received_type = NULL;
-    Core_setError(Core_Error_SemanticalError);
+    Core_setError(Core_Error_SemanticalAnalysisFailed);
     return Core_Failure;
   }
   // name
@@ -327,7 +327,7 @@ Core_Result dx_asset_definition_language_enter_on_mesh(dx_asset_definition_langu
   if (!isEqualTo) {
     DX_UNREFERENCE(received_type);
     received_type = NULL;
-    Core_setError(Core_Error_SemanticalError);
+    Core_setError(Core_Error_SemanticalAnalysisFailed);
     return Core_Failure;
   }
   // name
@@ -377,7 +377,7 @@ Core_Result dx_asset_definition_language_enter_on_mesh_instance(dx_asset_definit
   if (!isEqualTo) {
     DX_UNREFERENCE(received_type);
     received_type = NULL;
-    Core_setError(Core_Error_SemanticalError);
+    Core_setError(Core_Error_SemanticalAnalysisFailed);
     return Core_Failure;
   }
   // generated name
@@ -422,7 +422,7 @@ Core_Result dx_asset_definition_language_enter_on_material(dx_asset_definition_l
   if (!isEqualTo) {
     DX_UNREFERENCE(received_type);
     received_type = NULL;
-    Core_setError(Core_Error_SemanticalError);
+    Core_setError(Core_Error_SemanticalAnalysisFailed);
     return Core_Failure;
   }
   // name
@@ -472,7 +472,7 @@ Core_Result dx_asset_definition_language_enter_on_viewer_instance(dx_asset_defin
   if (!isEqualTo) {
     DX_UNREFERENCE(received_type);
     received_type = NULL;
-    Core_setError(Core_Error_SemanticalError);
+    Core_setError(Core_Error_SemanticalAnalysisFailed);
     return Core_Failure;
   }
   // generated name
@@ -517,7 +517,7 @@ Core_Result dx_asset_definition_language_enter_on_viewer(dx_asset_definition_lan
   if (!isEqualTo) {
     DX_UNREFERENCE(received_type);
     received_type = NULL;
-    Core_setError(Core_Error_SemanticalError);
+    Core_setError(Core_Error_SemanticalAnalysisFailed);
     return Core_Failure;
   }
   // name
@@ -567,7 +567,7 @@ Core_Result dx_asset_definition_language_enter_on_texture(dx_asset_definition_la
   if (!isEqualTo) {
     DX_UNREFERENCE(received_type);
     received_type = NULL;
-    Core_setError(Core_Error_SemanticalError);
+    Core_setError(Core_Error_SemanticalAnalysisFailed);
     return Core_Failure;
   }
   // name

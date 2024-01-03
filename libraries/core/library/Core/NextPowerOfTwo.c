@@ -9,14 +9,14 @@ Core_Result Core_nextPowerOfTwoGtN8(Core_Natural8* RETURN, Core_Natural8 x) {
     return Core_Success;
   }
   if (x >= greatestPowerOfTwo) {
-    Core_setError(Core_Error_Overflow);
+    Core_setError(Core_Error_NumericOverflow);
     return Core_Failure;
   }
   Core_Size i;
   Core_countLeadingZeroesN8(&i, x); // must succeed
   Core_Natural8 t = ((Core_Natural8)1) << (8 - i);
   if (i == 0 && t != x) {
-    Core_setError(Core_Error_Overflow);
+    Core_setError(Core_Error_NumericOverflow);
     return Core_Failure;
   }
   *RETURN = t;
@@ -31,7 +31,7 @@ Core_Result Core_nextPowerOfTwoGteN8(Core_Natural8* RETURN, Core_Natural8 x) {
     return Core_Success;
   }
   if (x > greatestPowerOfTwo) {
-    Core_setError(Core_Error_Overflow);
+    Core_setError(Core_Error_NumericOverflow);
     return Core_Failure;
   }
   // x is either smaller than or equal to greatest power of two representable by the type.
@@ -51,14 +51,14 @@ Core_Result Core_nextPowerOfTwoGtN16(Core_Natural16* RETURN, Core_Natural16 x) {
     return Core_Success;
   }
   if (x >= greatestPowerOfTwo) {
-    Core_setError(Core_Error_Overflow);
+    Core_setError(Core_Error_NumericOverflow);
     return Core_Failure;
   }
   Core_Size i;
   Core_countLeadingZeroesN16(&i, x); // must succeed
   Core_Natural16 t = ((Core_Natural16)1) << (16 - i);
   if (i == 0 && t != x) {
-    Core_setError(Core_Error_Overflow);
+    Core_setError(Core_Error_NumericOverflow);
     return Core_Failure;
   }
   *RETURN = t;
@@ -73,7 +73,7 @@ Core_Result Core_nextPowerOfTwoGteN16(Core_Natural16* RETURN, Core_Natural16 x) 
     return Core_Success;
   }
   if (x > greatestPowerOfTwo) {
-    Core_setError(Core_Error_Overflow);
+    Core_setError(Core_Error_NumericOverflow);
     return Core_Failure;
   }
   // x is either smaller than or equal to greatest power of two representable by the type.
@@ -93,14 +93,14 @@ Core_Result Core_nextPowerOfTwoGtN32(Core_Natural32* RETURN, Core_Natural32 x) {
     return Core_Success;
   }
   if (x >= greatestPowerOfTwo) {
-    Core_setError(Core_Error_Overflow);
+    Core_setError(Core_Error_NumericOverflow);
     return Core_Failure;
   }
   Core_Size i;
   Core_countLeadingZeroesN32(&i, x); // must succeed
   Core_Natural32 t = ((Core_Natural32)1) << (32 - i);
   if (i == 0 && t != x) {
-    Core_setError(Core_Error_Overflow);
+    Core_setError(Core_Error_NumericOverflow);
     return Core_Failure;
   }
   *RETURN = t;
@@ -115,7 +115,7 @@ Core_Result Core_nextPowerOfTwoGteN32(Core_Natural32* RETURN, Core_Natural32 x) 
     return Core_Success;
   }
   if (x > greatestPowerOfTwo) {
-    Core_setError(Core_Error_Overflow);
+    Core_setError(Core_Error_NumericOverflow);
     return Core_Failure;
   }
   // x is either smaller than or equal to greatest power of two representable by the type.
@@ -135,14 +135,14 @@ Core_Result Core_nextPowerOfTwoGtN64(Core_Natural64* RETURN, Core_Natural64 x) {
     return Core_Success;
   }
   if (x >= greatestPowerOfTwo) {
-    Core_setError(Core_Error_Overflow);
+    Core_setError(Core_Error_NumericOverflow);
     return Core_Failure;
   }
   Core_Size i;
   Core_countLeadingZeroesN64(&i, x); // must succeed
   Core_Natural64 t = ((Core_Natural64)1) << (64 - i);
   if (i == 0 && t != x) {
-    Core_setError(Core_Error_Overflow);
+    Core_setError(Core_Error_NumericOverflow);
     return Core_Failure;
   }
   *RETURN = t;
@@ -157,7 +157,7 @@ Core_Result Core_nextPowerOfTwoGteN64(Core_Natural64* RETURN, Core_Natural64 x) 
     return Core_Success;
   }
   if (x > greatestPowerOfTwo) {
-    Core_setError(Core_Error_Overflow);
+    Core_setError(Core_Error_NumericOverflow);
     return Core_Failure;
   }
   // x is either smaller than or equal to greatest power of two representable by the type.

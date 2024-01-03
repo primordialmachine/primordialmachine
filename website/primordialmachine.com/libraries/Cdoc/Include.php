@@ -45,7 +45,7 @@ class CDocFile {
       }
       $jsonData = json_decode($textData, true);
       if (null == $jsonData) {
-        throw new Exception("unable to load data (json) from file `" . $this->pathname . "`");
+        throw new Exception("unable to load data (json) from file `" . $this->pathname . "`: " . json_last_error_msg());
       }
       $this->jsonData = $jsonData;
     }
@@ -433,7 +433,7 @@ class CdocContext {
           if ($relativeEntry == "." || $relativeEntry == "..") {
             continue;
           }
-          $absoluteEntry  = $dir.'\\'.$relativeEntry; /** @todo Remove hardcoded directory separator. */
+          $absoluteEntry  = $dir. DIRECTORY_SEPARATOR  .$relativeEntry;
           // Skip non-file, non-directory fs objects.
           if (!is_dir($absoluteEntry) && !is_file($absoluteEntry)) {
             continue;
@@ -474,7 +474,7 @@ class CdocContext {
         if ($relativeEntry == "." || $relativeEntry == "..") {
           continue;
         }
-        $absoluteEntry  = $dir.'\\'.$relativeEntry; /** @todo Remove hardcoded directory separator. */
+        $absoluteEntry  = $dir. DIRECTORY_SEPARATOR .$relativeEntry;
         // Skip non-file fs objects.
         if (!is_file($absoluteEntry)) {
           continue;
