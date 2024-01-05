@@ -27,7 +27,7 @@ add_custom_command(TARGET ${name} POST_BUILD
                    ${CMAKE_CURRENT_BINARY_DIR}/../plugin/$<CONFIG>/freetype-plugin.dll $<TARGET_FILE_DIR:${name}>
                    COMMAND_EXPAND_LISTS)
 
-target_link_libraries(${name} "dailies.core")
+target_link_libraries(${name} "Core")
 
 # Copy the assets to the current binary directory.
 file(GLOB_RECURSE files_to_copy RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/assets" "${CMAKE_CURRENT_SOURCE_DIR}/assets/*.*" )

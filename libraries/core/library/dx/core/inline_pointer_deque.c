@@ -1,8 +1,8 @@
 #include "dx/core/inline_pointer_deque.h"
 
 #include "Core/Memory.h"
-#include "dx/core/safe_add_nx.h"
-#include "dx/core/safe_mul_nx.h"
+#include "Core/safeAddNx.h"
+#include "Core/safeMulNx.h"
 #include "Core/NextPowerOfTwo.h"
 #include "dx/core/_get_best_array_size.h"
 
@@ -193,7 +193,8 @@ static Core_Result _dx_impl_initialize(_dx_impl* SELF, Core_Size initial_capacit
     return Core_Failure;
   }
   Core_Size overflow;
-  Core_Size initial_capacity_bytes = dx_mul_sz(initial_capacity, sizeof(dx_inline_pointer_deque_element), &overflow);
+  Core_Size initial_capacity_bytes;
+  Core_safeMulSz(&initial_capacity_bytes, initial_capacity, sizeof(dx_inline_pointer_deque_element), &overflow); // must succeed
   if (overflow) {
     Core_setError(Core_Error_AllocationFailed);
     return Core_Failure;

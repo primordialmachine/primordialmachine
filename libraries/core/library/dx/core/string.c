@@ -5,8 +5,8 @@
 #include "dx/core/byte_array.h"
 #include "Core/Hash.h"
 #include "Core/Memory.h"
-#include "dx/core/safe_add_nx.h"
-#include "dx/core/safe_mul_nx.h"
+#include "Core/safeAddNx.h"
+#include "Core/safeMulNx.h"
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 

@@ -2,7 +2,7 @@
 #include "dx/core/inline_pointer_array.h"
 
 #include "Core/Memory.h"
-#include "dx/core/safe_mul_nx.h"
+#include "Core/safeMulNx.h"
 #include "dx/core/_get_best_array_size.h"
 
 /// @brief The greatest capacity, in elements, of a pointer array.
@@ -156,7 +156,8 @@ static Core_Result _dx_impl_initialize(_dx_impl* SELF, Core_Size initial_capacit
     return Core_Failure;
   }
   Core_Size overflow = 0;
-  Core_Size initial_capacity_bytes = dx_mul_sz(initial_capacity, sizeof(dx_inline_pointer_array_element), &overflow);
+  Core_Size initial_capacity_bytes;
+  Core_safeMulSz(&initial_capacity_bytes, initial_capacity, sizeof(dx_inline_pointer_array_element), &overflow); // must succeed
   if (overflow) {
     Core_setError(Core_Error_AllocationFailed);
     return Core_Failure;
@@ -221,7 +222,8 @@ static Core_Result _dx_impl_increase_capacity(_dx_impl* SELF, Core_Size addition
     return Core_Failure;
   }
   Core_Size overflow = 0;
-  Core_Size new_capacity_bytes = dx_mul_sz(new_capacity, sizeof(dx_inline_pointer_array_element), &overflow);
+  Core_Size new_capacity_bytes;
+  Core_safeMulSz(&new_capacity_bytes, new_capacity, sizeof(dx_inline_pointer_array_element), &overflow); // must succeed
   if (overflow) {
     Core_setError(Core_Error_AllocationFailed);
     return Core_Failure;

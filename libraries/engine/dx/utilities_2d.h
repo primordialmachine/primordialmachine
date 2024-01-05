@@ -186,7 +186,7 @@ static inline Core_Result dx_assets_extensions_create_texture_from_pixels(dx_ass
     return Core_Failure;
   }
   Core_Size number_of_bytes_per_pixel;
-  if (dx_pixel_format_get_number_of_bytes_per_pixel(&number_of_bytes_per_pixel, pixel_format)) {
+  if (Core_PixelFormat_getNumberOfBytes(&number_of_bytes_per_pixel, pixel_format)) {
     DX_UNREFERENCE(image);
     image = NULL;
     DX_UNREFERENCE(image_name);
@@ -194,7 +194,8 @@ static inline Core_Result dx_assets_extensions_create_texture_from_pixels(dx_ass
     return Core_Failure;
   }
   Core_Size overflow;
-  Core_Size number_of_pixels = dx_mul_sz(width, height, &overflow);
+  Core_Size number_of_pixels;
+  Core_safeMulSz(&number_of_pixels, width, height, &overflow); // must succeed
   if (overflow) {
     DX_UNREFERENCE(image);
     image = NULL;
@@ -204,7 +205,8 @@ static inline Core_Result dx_assets_extensions_create_texture_from_pixels(dx_ass
     return Core_Failure;
   }
 
-  Core_Size number_of_bytes = dx_mul_sz(number_of_pixels, number_of_bytes_per_pixel, &overflow);
+  Core_Size number_of_bytes;
+  Core_safeMulSz(&number_of_bytes, number_of_pixels, number_of_bytes_per_pixel, &overflow); // must succeed
   if (overflow) {
     DX_UNREFERENCE(image);
     image = NULL;

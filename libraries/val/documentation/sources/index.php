@@ -46,23 +46,19 @@ require_once($ROOT_DIR . '/libraries/Cdoc/Include.php');
           echo '<p>document directory:' . $DOCUMENT_DIR . '</p>';
           echo '<p>include directory: ' . $DOCUMENT_DIR . 'includes' . DIRECTORY_SEPARATOR . '</p>';
         }
-        $context = new CdocContext();
-        $context->findContentsRecursive($DOCUMENT_DIR . 'includes' . DIRECTORY_SEPARATOR);
-        $context->emit();
+        $context = CDocContext::getInstance();
+        $context->emitContents('val');
         ?>
       </div>
       <div class="right-column">
         <nav>
           <ul>
             <?php
+              $emitter = new CdocHtmlEmitter();
               $index = CdocIndexManager::getInstance()->getByName('val');
               $index->sortEntries();
               foreach ($index->getEntryList() as $entry) {
-                echo
-                  '<li>' .
-                  '<a href="' . $entry['href'] . '">' . $entry['text'] . '</a>' .
-                  '</li>'
-                  ;
+                $emitter->emitTableOfContentsEntry($entry);
               }
             ?>
           </ul>

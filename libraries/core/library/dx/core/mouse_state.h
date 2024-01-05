@@ -39,14 +39,14 @@ Core_Result dx_mouse_state_create(dx_mouse_state** RETURN);
 /// @param button The mouse button.
 /// @success <code>*RETURN</code> was assigned the state of the mouse button.
 /// @method-call
-Core_Result dx_mouse_state_get_button_state(Core_Boolean* RETURN, dx_mouse_state* SELF, dx_mouse_button button);
+Core_Result dx_mouse_state_get_button_state(Core_Boolean* RETURN, dx_mouse_state* SELF, Core_MouseButton button);
 
 /// @brief Set the state of a mouse button.
 /// @param SELF A pointer to this mouse state.
 /// @param button The mouse button.
 /// @param state The state of the mouse button.
 /// @method-call
-Core_Result dx_mouse_state_set_button_state(dx_mouse_state* SELF, dx_mouse_button button, Core_Boolean state);
+Core_Result dx_mouse_state_set_button_state(dx_mouse_state* SELF, Core_MouseButton button, Core_Boolean state);
 
 /// @brief Get the state of a mouse pointer.
 /// @param SELF A pointer to this mouse state.

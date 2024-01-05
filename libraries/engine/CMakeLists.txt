@@ -124,4 +124,4 @@ endfunction()
 
 dx_end_project(${name})
 
-target_link_libraries(${name} "dailies.core" "dailies.assets" "dailies.asset-definition-language" "dailies.data-definition-language" "dailies.document-definition-language")
+target_link_libraries(${name} "Core" "dailies.assets" "dailies.asset-definition-language" "dailies.data-definition-language" "dailies.document-definition-language")

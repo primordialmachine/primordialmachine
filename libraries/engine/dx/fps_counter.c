@@ -28,21 +28,31 @@ DX_DEFINE_OBJECT_TYPE("dx.default_fps_counter",
 
 static Core_Result dx_default_fps_counter_on_enter_frame(dx_default_fps_counter* SELF) {
   if (!SELF) {
+    Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
   }
   SELF->started = true;
   SELF->start = GetTickCount64();
+  if (Core_getNow(&SELF->start)) {
+    return Core_Failure;
+  }
   return Core_Success;
 }
 
 static Core_Result dx_default_fps_counter_on_leave_frame(dx_default_fps_counter* SELF) {
   if (!SELF) {
+    Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
   }
   if (!SELF->started) {
+    Core_setError(Core_Error_OperationInvalid);
     return Core_Failure;
   }
-  Core_Natural64 delta = GetTickCount64() - SELF->start;
+  Core_Natural64 now;
+  if (Core_getNow(&now)) {
+    return Core_Failure;
+  }
+  Core_Natural64 delta = now - SELF->start;
   SELF->started = false;
   SELF->durations[SELF->write] = delta;
   SELF->write = (SELF->write + 1) % 256;

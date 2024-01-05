@@ -3,7 +3,7 @@
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #include "Core/Memory.h"
-#include "dx/core/safe_add_nx.h"
+#include "Core/safeAddNx.h"
 
 #if !defined(Core_OperatingSystem)
 

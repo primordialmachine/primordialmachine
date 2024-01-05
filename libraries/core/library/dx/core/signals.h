@@ -6,7 +6,8 @@
 #if !defined(DX_CORE_SIGNALS_H_INCLUDED)
 #define DX_CORE_SIGNALS_H_INCLUDED
 
-#include "dx/core/error.h"
+#include "Core/Error.h"
+#include "Core/Result.h"
 #include "dx/core/object.h"
 
 /// @brief Add a signal to a type.

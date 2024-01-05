@@ -2,6 +2,7 @@
 /// @brief Mouse buttons and keyboard keys.
 #include "dx/core/hapticals.h"
 
+#include "Core/Time.h"
 #include <stdio.h>
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
@@ -27,17 +28,17 @@ char const* dx_keyboard_key_to_string(Core_KeyboardKey SELF) {
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-char const* dx_mouse_button_to_string(dx_mouse_button SELF) {
+char const* dx_mouse_button_to_string(Core_MouseButton SELF) {
   switch (SELF) {
-  #define ALIAS(aliased,alias)
-  #define DEFINE(name,value,description)\
-    case dx_mouse_button_##name: {\
+  #define Alias(aliased,alias)
+  #define Define(name,value,description)\
+    case Core_MouseButton_##name: {\
       static const char *STRING = description;\
       return STRING;\
     };
-  #include "dx/core/mouse_buttons.i"
-  #undef DEFINE
-  #undef ALIAS
+  #include "Core/MouseButton.i"
+  #undef Define
+  #undef Alias
     default: {
       Core_setError(Core_Error_ArgumentInvalid);
       return NULL;
@@ -57,14 +58,17 @@ static void dx_input_msg_destruct(dx_input_msg* SELF)
 static void dx_input_msg_constructDispatch(dx_input_msg_dispatch* SELF)
 {/*Intentionally empty.*/}
 
-Core_Result dx_input_msg_construct(dx_input_msg* SELF, dx_input_msg_kind kind, uint8_t modifiers) {
+Core_Result dx_input_msg_construct(dx_input_msg* SELF, dx_input_msg_kind kind, Core_ModifierKeys modifierKeys) {
   DX_CONSTRUCT_PREFIX(dx_input_msg);
-  if (Core_Message_construct(CORE_MESSAGE(SELF))) {
+  Core_Natural64 timeStamp;
+  if (Core_getNow(&timeStamp)) {
+    return Core_Failure;
+  }
+  if (Core_Message_construct(CORE_MESSAGE(SELF), timeStamp)) {
     return Core_Failure;
   }
   SELF->kind = kind;
-  SELF->modifiers = modifiers;
-  CORE_MESSAGE(SELF)->flags = DX_MSG_TYPE_INPUT;
+  SELF->modifierKeys = modifierKeys;
   CORE_OBJECT(SELF)->type = TYPE;
   return Core_Success;
 }
@@ -73,19 +77,19 @@ dx_input_msg_kind dx_input_msg_get_kind(dx_input_msg* SELF) {
   return SELF->kind;
 }
 
-Core_Result dx_input_msg_get_modifiers(uint8_t* RETURN, dx_input_msg* SELF) {
+Core_Result dx_input_msg_get_modifier_keys(Core_ModifierKeys* RETURN, dx_input_msg* SELF) {
   if (!RETURN || !SELF) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
   }
-  *RETURN = SELF->modifiers;
+  *RETURN = SELF->modifierKeys;
   return Core_Success;
 }
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-DX_DEFINE_ENUMERATION_TYPE("dx.keyboard_key_action",
-                           dx_keyboard_key_action);
+DX_DEFINE_ENUMERATION_TYPE("Core.KeyboardKeyAction",
+                           Core_KeyboardKeyAction);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
@@ -99,9 +103,9 @@ static void dx_keyboard_key_msg_destruct(dx_keyboard_key_msg* SELF)
 static void dx_keyboard_key_msg_constructDispatch(dx_keyboard_key_msg_dispatch* SELF)
 {/*Intentionally empty.*/}
 
-Core_Result dx_keyboard_key_msg_construct(dx_keyboard_key_msg* SELF, dx_keyboard_key_action action, Core_KeyboardKey key, uint8_t modifiers) {
+Core_Result dx_keyboard_key_msg_construct(dx_keyboard_key_msg* SELF, Core_KeyboardKeyAction action, Core_KeyboardKey key, Core_ModifierKeys modifierKeys) {
   DX_CONSTRUCT_PREFIX(dx_keyboard_key_msg);
-  if (dx_input_msg_construct(DX_INPUT_MSG(SELF), DX_INPUT_MSG_KIND_KEYBOARD_KEY, modifiers)) {
+  if (dx_input_msg_construct(DX_INPUT_MSG(SELF), DX_INPUT_MSG_KIND_KEYBOARD_KEY, modifierKeys)) {
     return Core_Failure;
   }
   SELF->action = action;
@@ -110,7 +114,7 @@ Core_Result dx_keyboard_key_msg_construct(dx_keyboard_key_msg* SELF, dx_keyboard
   return Core_Success;
 }
 
-Core_Result dx_keyboard_key_msg_get_action(dx_keyboard_key_action* RETURN, dx_keyboard_key_msg* SELF) {
+Core_Result dx_keyboard_key_msg_get_action(Core_KeyboardKeyAction* RETURN, dx_keyboard_key_msg* SELF) {
   *RETURN = SELF->action;
   return Core_Success;
 }
@@ -120,9 +124,9 @@ Core_Result dx_keyboard_key_msg_get_key(Core_KeyboardKey* RETURN, dx_keyboard_ke
   return Core_Success;
 }
 
-Core_Result dx_keyboard_key_msg_create(dx_keyboard_key_msg** RETURN, dx_keyboard_key_action action, Core_KeyboardKey key, uint8_t modifiers) {
+Core_Result dx_keyboard_key_msg_create(dx_keyboard_key_msg** RETURN, Core_KeyboardKeyAction action, Core_KeyboardKey key, Core_ModifierKeys modifierKeys) {
   DX_CREATE_PREFIX(dx_keyboard_key_msg);
-  if (dx_keyboard_key_msg_construct(SELF, action, key, modifiers)) {
+  if (dx_keyboard_key_msg_construct(SELF, action, key, modifierKeys)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
@@ -148,9 +152,9 @@ static void dx_mouse_button_msg_destruct(dx_mouse_button_msg* SELF)
 static void dx_mouse_button_msg_constructDispatch(dx_mouse_button_msg_dispatch* SELF)
 {/*Intentionally empty.*/}
 
-Core_Result dx_mouse_button_msg_construct(dx_mouse_button_msg* SELF, dx_mouse_button_action action, dx_mouse_button button, uint8_t modifiers, Core_Real32 x, Core_Real32 y) {
+Core_Result dx_mouse_button_msg_construct(dx_mouse_button_msg* SELF, dx_mouse_button_action action, Core_MouseButton button, Core_ModifierKeys modifierKeys, Core_Real32 x, Core_Real32 y) {
   DX_CONSTRUCT_PREFIX(dx_mouse_button_msg);
-  if (dx_input_msg_construct(DX_INPUT_MSG(SELF), DX_INPUT_MSG_KIND_MOUSE_BUTTON, modifiers)) {
+  if (dx_input_msg_construct(DX_INPUT_MSG(SELF), DX_INPUT_MSG_KIND_MOUSE_BUTTON, modifierKeys)) {
     return Core_Failure;
   }
   SELF->action = action;
@@ -165,13 +169,13 @@ dx_mouse_button_action dx_mouse_button_msg_get_action(dx_mouse_button_msg* SELF)
   return SELF->action;
 }
 
-dx_mouse_button dx_mouse_button_msg_get_button(dx_mouse_button_msg* SELF) {
+Core_MouseButton dx_mouse_button_msg_get_button(dx_mouse_button_msg* SELF) {
   return SELF->button;
 }
 
-Core_Result dx_mouse_button_msg_create(dx_mouse_button_msg** RETURN, dx_mouse_button_action action, dx_mouse_button button, uint8_t modifiers, Core_Real32 x, Core_Real32 y) {
+Core_Result dx_mouse_button_msg_create(dx_mouse_button_msg** RETURN, dx_mouse_button_action action, Core_MouseButton button, Core_ModifierKeys modifierKeys, Core_Real32 x, Core_Real32 y) {
   DX_CREATE_PREFIX(dx_mouse_button_msg);
-  if (dx_mouse_button_msg_construct(SELF, action, button, modifiers, x, y)) {
+  if (dx_mouse_button_msg_construct(SELF, action, button, modifierKeys, x, y)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
@@ -197,9 +201,9 @@ static void dx_mouse_pointer_msg_destruct(dx_mouse_pointer_msg* SELF)
 static void dx_mouse_pointer_msg_constructDispatch(dx_mouse_pointer_msg_dispatch* SELF)
 {/*Intentionally empty.*/}
 
-Core_Result dx_mouse_pointer_msg_construct(dx_mouse_pointer_msg* SELF, dx_mouse_pointer_action action, uint8_t modifiers, Core_Real32 x, Core_Real32 y) {
+Core_Result dx_mouse_pointer_msg_construct(dx_mouse_pointer_msg* SELF, dx_mouse_pointer_action action, Core_ModifierKeys modifierKeys, Core_Real32 x, Core_Real32 y) {
   DX_CONSTRUCT_PREFIX(dx_mouse_pointer_msg);
-  if (dx_input_msg_construct(DX_INPUT_MSG(SELF), DX_INPUT_MSG_KIND_MOUSE_POINTER, modifiers)) {
+  if (dx_input_msg_construct(DX_INPUT_MSG(SELF), DX_INPUT_MSG_KIND_MOUSE_POINTER, modifierKeys)) {
     return Core_Failure;
   }
   SELF->action = action;
@@ -214,9 +218,9 @@ Core_Result dx_mouse_pointer_msg_get_action(dx_mouse_pointer_action* RETURN, dx_
   return Core_Success;
 }
 
-Core_Result dx_mouse_pointer_msg_create(dx_mouse_pointer_msg** RETURN, dx_mouse_pointer_action action, uint8_t modifiers, Core_Real32 x, Core_Real32 y) {
+Core_Result dx_mouse_pointer_msg_create(dx_mouse_pointer_msg** RETURN, dx_mouse_pointer_action action, Core_ModifierKeys modifierKeys, Core_Real32 x, Core_Real32 y) {
   DX_CREATE_PREFIX(dx_mouse_pointer_msg);
-  if (dx_mouse_pointer_msg_construct(SELF, action, modifiers, x, y)) {
+  if (dx_mouse_pointer_msg_construct(SELF, action, modifierKeys, x, y)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;

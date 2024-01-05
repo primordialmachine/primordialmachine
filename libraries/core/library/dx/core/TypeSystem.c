@@ -476,7 +476,7 @@ bool dx_rti_type_is_leq(Core_Type* x, Core_Type* y) {
   return _dx_rti_type_is_leq(_DX_RTI_TYPE(x), _DX_RTI_TYPE(y));
 }
 
-void* dx_rti_type_get_dispatch(Core_Type* x) {
+void* Core_Type_getDispatch(Core_Type* x) {
   return _DX_RTI_TYPE(x)->object.dispatch;
 }
 

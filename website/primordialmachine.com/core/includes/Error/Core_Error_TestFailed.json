@@ -1,0 +1,9 @@
+{
+  "type" : "symbolic-constant",
+  "last-update" : "2023-12-13",
+  "indices" : "core",
+  "name" : "Core_Error_TestFailed",
+  "id" : "core-error-testfailed",
+  "signature" : "#define Core_Error_TestFailed &lt;implementation&gt;",
+  "description" : "Symbolic constant for a Core_Error value. That value indicates that an an error occurred because a test failed. The value is guaranteed to be a non-zero value."
+}

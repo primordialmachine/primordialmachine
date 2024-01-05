@@ -36,8 +36,24 @@ div.cdoc-entry h3 {
   line-height: 1.3;
   margin-top: 1rem;
   margin-bottom: 2rem;
+  word-break: break-all;
 }
 
 div.cdoc-entry h4 {
   font-size: 1.25rem;
+}
+
+main > div.container > div.right-column > nav > ul
+{
+  display: block;
+}
+
+main > div.container > div.right-column > nav > ul > li
+{
+  display: block;
+}
+
+main > div.container > div.right-column > nav > ul > li > a
+{
+  margin-right: 32px;
 }

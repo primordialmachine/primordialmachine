@@ -1,6 +1,6 @@
 {
   "type" : "function",
-  "last-update" : "2023-12-18",
+  "last-update" : "2024-01-08",
   "indices" : "core",
   "name" : "Core_safeAdd",
   "id" : "core-safeadd",
@@ -29,7 +29,7 @@
     {
       "name" : "y",
       "type" : "&lt;Type&gt;",
-      "description" : "The added/second summand." 
+      "description" : "The addend/second summand." 
     },
     {
       "name" : "overflow",
@@ -48,7 +48,7 @@
     }
   ],
   "description" : "Computes the sum of two <code>&lt;Type&gt;</code> values. The computation is conceptually performed using arbitrary precision arithmetic.",
-  "success" : "Let @{meta('n')} be the width of a value of type @{code('Type')}. The addition of @{code('x')} and @{code('y')} was performed as the value where an unsigned integer type of a width of @{meta('2n')} Bits. The lower @{code('n')} Bits of the result are assigned to @{code('*RETURN')}. The upper @{code('n')} Bits of the result are assigned to @{code('*overflow')}.",
+  "success" : "Let @{meta('n')} be the width of a value of type @{code('Type')}. The addition of @{code('x')} and @{code('y')} was performed as if the values were of width @{meta('2n')} Bits. The lower @{code('n')} Bits of the result are assigned to @{code('*RETURN')}. The upper @{code('n')} Bits of the result are assigned to @{code('*overflow')}.",
   "return" : "@{code('Core_Success')} on success. @{code('Core_Failure')} on failure.",
   "remarks" : "This function sets the by-thread error variable on failure."
 }

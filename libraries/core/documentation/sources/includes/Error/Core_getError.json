@@ -1,0 +1,15 @@
+{
+  "type" : "function",
+  "last-update" : "2024-01-06",
+  "indices" : "core",
+  "name" : "Core_getError",
+  "id" : "core-geterror",
+  "signature" : "Core_Error Core_getError();",
+  "signatureRemarks": null,
+  "parameters" : null,
+  "errors" : null,
+  "description" : "Get the value of the by-thread error variable.",
+  "success" : "This function cannot fail.",
+  "return" : "The value of the by-thread error variable.",
+  "remarks" : "The initial value is @{code('Core_Error_NoError')}."
+}

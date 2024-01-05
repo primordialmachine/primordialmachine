@@ -1,0 +1,54 @@
+{
+  "type" : "function",
+  "last-update" : "2024-01-08",
+  "indices" : "core",
+  "name" : "Core_safeMul",
+  "id" : "core-safemul",
+  "signature" : "Core_Result Core_safeMul&lt;Suffix&gt;(&lt;Type&gt;* RETURN, &lt;Type&gt; x, &lt;Type&gt; y, &lt;Type&gt;* overflow);",
+  "signatureRemarks": [
+    "<p>where <code>&lt;Suffix&gt;</code> and <code>&lt;Type&gt;</code> can assume the values of</p>",
+    "<table style='width: initial !important'>",
+    "<tr><td><code>&lt;Suffix&gt;</code></td> <td><code>&lt;Type&gt;</code>   </td></tr>",
+    "<tr><td><code>N8</code>            </td> <td><code>Core_Natural8 </code> </td></tr>",
+    "<tr><td><code>N16</code>           </td> <td><code>Core_Natural16</code> </td></tr>",
+    "<tr><td><code>N32</code>           </td> <td><code>Core_Natural32</code> </td></tr>",
+    "<tr><td><code>N64</code>           </td> <td><code>Core_Natural64</code> </td></tr>",
+    "</table>"
+  ],
+  "parameters" : [
+    {
+      "name" : "RETURN",
+      "type" : "&lt;Type&gt;*",
+      "description" : "A pointer to a <code>&lt;Type&gt;</code> variable"
+    },
+    {
+      "name" : "x",
+      "type" : "&lt;Type&gt;",
+      "description" : "The multiplier/first factor."
+    },
+    {
+      "name" : "y",
+      "type" : "&lt;Type&gt;",
+      "description" : "The multiplicand/second factor." 
+    },
+    {
+      "name" : "overflow",
+      "type" : "&lt;Type&gt;*",
+      "description" : "A pointer to a <code>&lt;Type&gt;</code> variable."
+    }
+  ],
+  "errors" : [
+    {
+      "errorCode" : "Core_Error_ArgumentInvalid",
+      "errorCondition" : "<code>RETURN</code> is a null pointer"
+    },
+    {
+      "errorCode" : "Core_Error_ArgumentInvalid",
+      "errorCondition" : "<code>overflow</code> is a null pointer"
+    }
+  ],
+  "description" : "Computes the product of two <code>&lt;Type&gt;</code> values. The computation is conceptually performed using arbitrary precision arithmetic.",
+  "success" : "Let @{meta('n')} be the width of a value of type @{code('Type')}. The multiplication of @{code('x')} and @{code('y')} was performed as if the values were of width @{meta('2n')} Bits. The lower @{code('n')} Bits of the result are assigned to @{code('*RETURN')}. The upper @{code('n')} Bits of the result are assigned to @{code('*overflow')}.",
+  "return" : "@{code('Core_Success')} on success. @{code('Core_Failure')} on failure.",
+  "remarks" : "This function sets the by-thread error variable on failure."
+}

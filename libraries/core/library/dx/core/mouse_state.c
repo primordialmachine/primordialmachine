@@ -32,12 +32,12 @@ Core_Result dx_mouse_state_create(dx_mouse_state** RETURN) {
   return Core_Success;
 }
 
-Core_Result dx_mouse_state_get_button_state(Core_Boolean* RETURN, dx_mouse_state* SELF, dx_mouse_button button) {
+Core_Result dx_mouse_state_get_button_state(Core_Boolean* RETURN, dx_mouse_state* SELF, Core_MouseButton button) {
   *RETURN = SELF->state[(Core_Size)button];
   return Core_Success;
 }
 
-Core_Result dx_mouse_state_set_button_state(dx_mouse_state* SELF, dx_mouse_button button, Core_Boolean state) {
+Core_Result dx_mouse_state_set_button_state(dx_mouse_state* SELF, Core_MouseButton button, Core_Boolean state) {
   SELF->state[(Core_Size)button] = state;
   return Core_Success;
 }

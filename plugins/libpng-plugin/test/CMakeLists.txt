@@ -27,4 +27,4 @@ add_custom_command(TARGET ${name} POST_BUILD
                    ${CMAKE_CURRENT_BINARY_DIR}/../plugin/$<CONFIG>/libpng-plugin.dll $<TARGET_FILE_DIR:${name}>
                    COMMAND_EXPAND_LISTS)
 
-target_link_libraries(${name} "dailies.core")
+target_link_libraries(${name} "Core")

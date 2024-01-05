@@ -1,0 +1,43 @@
+{
+  "type" : "enumeration",
+  "last-update" : "2024-01-05",
+  "indices" : "core",
+  "name" : "Core_MouseButton",
+  "id" : "core-mousebutton",
+  "signature" : "typedef enum Core_MouseButton &lt;implementation&gt; Core_MouseButton;",
+  "description":  "An enumeration of mouse buttons.",
+  "elements": [
+    {
+      "name" : "Core_MouseButton_Button0",
+      "description" : "The zeroeth mouse button."
+    },
+    {
+      "name" : "Core_MouseButton_Button1",
+      "description" : "The first mouse button."
+    },
+    {
+      "name" : "Core_MouseButton_Button2",
+      "description" : "The second mouse button."
+    },
+    {
+      "name" : "Core_MouseButton_Button3",
+      "description" : "The third mouse button."
+    },
+    {
+      "name" : "Core_MouseButton_Button4",
+      "description" : "The fourth mouse button."
+    },
+    {
+      "name" : "Core_MouseButton_Button5",
+      "description" : "The fifth mouse button."
+    },
+    {
+      "name" : "Core_MouseButton_Button6",
+      "description" : "The sixth mouse button."
+    },
+    {
+      "name" : "Core_MouseButton_Button7",
+      "description" : "The seventh mouse button."
+    }
+  ]
+}

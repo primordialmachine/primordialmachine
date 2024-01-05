@@ -1,0 +1,26 @@
+{
+  "type" : "function",
+  "last-update" : "2024-01-07",
+  "indices" : "core",
+  "name" : "Core_getNow",
+  "id" : "core-getnow",
+  "signature" : "Core_Result Core_getNow(Core_Natural64* RETURN);",
+  "signatureRemarks": null,
+  "parameters" : [
+    {
+      "name" : "RETURN",
+      "type" : "Core_Natural64*",
+      "description" : "A pointer to a @{code('Core_Natural64')} variable."
+    }
+  ],
+  "errors" : [
+    {
+      "errorCode" : "Core_Error_ArgumentInvalid",
+      "errorCondition" : "@{code('RETURN')} is a null pointer."
+    }
+  ],
+  "description" : "Retrieves the number of milliseconds that have elapsed since the system was started.",
+  "success" : "@{code('*RETURN')} was assigned the number of milliseconds that have elapsed since the system was started.",
+  "return" : "@{code('Core_Success')} on success. @{code('Core_Failure')} on failure.",
+  "remarks" : "This function sets the by-thread error variable on failure."
+}

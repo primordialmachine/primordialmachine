@@ -185,17 +185,17 @@
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-// If defined and evaluating to @a 1, then dx_mul_n8 uses an assembler implementation and otherwise a pure C implementation.
+// If defined and evaluating to @a 1, then Core_safeMulN7 uses an assembler implementation and otherwise a pure C implementation.
 // Currently, the assember implementation is preferred so keep this enabled.
-#define DX_MUL_N8_ASM (1)
+#define Core_safeMulN8_withAsm (1)
 
-// If defined and evaluating to @a 1, then dx_mul_n16 uses an assembler implementation and otherwise a pure C implementation.
+// If defined and evaluating to @a 1, then Core_safeMulN16 uses an assembler implementation and otherwise a pure C implementation.
 // Currently, the assember implementation is preferred so keep this enabled.
-#define DX_MUL_N16_ASM (1)
+#define Core_safeMulN16_withAsm (1)
 
-// If defined and evaluating to @a 1, then dx_mul_n32 uses an assembler implementation and otherwise a pure C implementation.
+// If defined and evaluating to @a 1, then Core_safeMulN32 uses an assembler implementation and otherwise a pure C implementation.
 // Currently, the assember implementation is preferred so keep this enabled.
-#define DX_MUL_N32_ASM (1)
+#define Core_safeMulN32_withAsm (1)
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 

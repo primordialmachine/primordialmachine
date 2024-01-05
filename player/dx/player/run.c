@@ -8,14 +8,6 @@
 
 #include "dx/data_definition_language.h"
 
-#if defined(_WIN32)
-  // GetTickCount64
-  #define WIN32_LEAN_AND_MEAN
-  #include <Windows.h>
-#else
-  #error("environment not (yet) supported")
-#endif
-
 #if Core_VisualsBackend_OpenGl4 == Core_VisualsBackend
   #include "dx/val/gl.h"
 #elif Core_VisualsBackend_Direct3d12 == Core_VisualsBackend
@@ -248,7 +240,7 @@ static Core_Result run() {
   {
     Core_Message* msg = NULL;
     //
-    if (dx_emit_msg_create((dx_emit_msg**)&msg, "Engine version: 0.1\n", sizeof("Engine: version 0.1\n") - 1)) {
+    if (Core_EmitMessage_create((Core_EmitMessage**)&msg, "Engine version: 0.1\n", sizeof("Engine: version 0.1\n") - 1)) {
       DX_UNREFERENCE(val_context);
       val_context = NULL;
       LEAVE(DX_C_FUNCTION_NAME);
@@ -278,7 +270,7 @@ static Core_Result run() {
       return Core_Failure;
     }
     //
-    if (dx_emit_msg_create((dx_emit_msg**)&msg, information->bytes, information->number_of_bytes)) {
+    if (Core_EmitMessage_create((Core_EmitMessage**)&msg, information->bytes, information->number_of_bytes)) {
       DX_UNREFERENCE(information);
       information = NULL;
       DX_UNREFERENCE(val_context);

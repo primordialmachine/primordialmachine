@@ -1,3 +1,5 @@
+// Copyright (c) 2019-2023 Michael Heilmann. All rights reserved.
+
 #include "Core/CountLeadingZeroes.h"
 
 #if defined(_MSC_VER)

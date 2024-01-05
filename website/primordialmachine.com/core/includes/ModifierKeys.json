@@ -1,0 +1,35 @@
+{
+  "type" : "enumeration",
+  "last-update" : "2024-01-05",
+  "indices" : "core",
+  "name" : "Core_ModifierKeys",
+  "id" : "core-modifierkeys",
+  "signature" : "typedef enum Core_ModifierKeys &lt;implementation&gt; Core_ModifierKeys;",
+  "description":  "An enumeration flags of modifier keys.",
+  "elements": [
+    {
+      "name" : "Core_ModifierKeys_LeftControl",
+      "description" : "The \"Left control\" modifier key."
+    },
+    {
+      "name" : "Core_ModifierKeys_LeftMenu",
+      "description" : "The \"Left menu\" modifier key."
+    },
+    {
+      "name" : "Core_ModifierKeys_LeftShift",
+      "description" : "The \"Left shift\" modifier key."
+    },
+    {
+      "name" : "Core_ModifierKeys_RightControl",
+      "description" : "The \"Right control\" modifier key."
+    },
+    {
+      "name" : "Core_ModifierKeys_RightMenu",
+      "description" : "The \"Right menu\" modifier key."
+    },
+    {
+      "name" : "Core_ModifierKeys_RightShift",
+      "description" : "The \"Right shift\" modifier key."
+    }
+  ]
+}

@@ -42,7 +42,7 @@ static Core_Result link(void** RETURN, char const* name) {
 static Core_Result enter_frame(dx_gl_wgl_context* SELF) {
   Core_Type* _parent_type = NULL;
   Core_Type_getParent(&_parent_type, CORE_OBJECT(SELF)->type);
-  dx_gl_wgl_context_dispatch* dispatch = (dx_gl_wgl_context_dispatch*)dx_rti_type_get_dispatch(_parent_type);
+  dx_gl_wgl_context_dispatch* dispatch = (dx_gl_wgl_context_dispatch*)Core_Type_getDispatch(_parent_type);
   if (DX_VAL_CONTEXT_DISPATCH(dispatch)->enter_frame(DX_VAL_CONTEXT(SELF))) {
     return Core_Failure;
   }

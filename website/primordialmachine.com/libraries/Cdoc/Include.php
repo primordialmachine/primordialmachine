@@ -1,98 +1,26 @@
 <?php
 
-/** 
- * Represents a "C documentation" file.
- * @author Michael Heilmann
- */
-class CDocFile {
-  
-  /**
-   * The pathname of the file.
-   */
-  private string $pathname;
-  
-  /**
-   * The JSON data of the contents file.
-   * @default null
-   */
-  private $jsonData;
-  
-  /**
-   * Construct this TlContentsFile object.
-   * @param $pathname The pathname of the contents file.
-   */
-  public function __construct(string $pathname) {
-    $this->pathname = $pathname;
-  }
-  
-  /**
-   * Get the pathname of the contents file.
-   * @return The pathname of the contents file.
-   */
-  public function getPathname() {
-    return $this->pathname;
-  }
-   
-  /**
-   * Get the JSON data of the contents file.
-   * @return The JSON data of the contents file.
-   */
-  public function getJsonData() {
-    if (null == $this->jsonData) {
-      $textData = file_get_contents($this->pathname);
-      if (null == $textData) {
-        throw new Exception("unable to load data (text) from file `" . $this->pathname . "`");
-      }
-      $jsonData = json_decode($textData, true);
-      if (null == $jsonData) {
-        throw new Exception("unable to load data (json) from file `" . $this->pathname . "`: " . json_last_error_msg());
-      }
-      $this->jsonData = $jsonData;
-    }
-    return $this->jsonData;
-  }
-  
-  /**
-   * Compare this TlContentsFile object with another TlContentsFile object.
-   * The string comparisong of their pathnames are used for comparison.
-   * @return
-   * A value smaller (greater) than 0 if
-   * the contents file represented to by this TlContentsFile object is smaller (greater) than
-   * the contents file represented by the other TlContentsFile object.
-   * 0 if the represented contents files are equivalent.
-   */
-  public function order(CdocFile $other) {
-    return strcmp($this->getJsonData()['name'], $other->getJsonData()['name']);
-  }
-  
-}; // class TlContentsFile
-
-
-/**
- * The base of all "C Documentation" emitters.
- * An emitter emit code (e.g., HTML, LaTeX, Markdown, ...) from "C Documentation" files.
- * @author Michael Heilmann
- */
-abstract class CdocEmitter {
-  
-  /**
-   * @brief Emit the code for a CdocFile object.
-   * @param $file The CdocFile object for which the code is emitted.
-   */
-  public abstract function emit(CdocFile $file);
-  
-}; // // class CdocEmitter
+$dir = __DIR__;
+if (str_ends_with($dir, DIRECTORY_SEPARATOR)) {
+  require_once($dir . './../App.php');
+  require_once($dir . 'CdocFile.php');
+  require_once($dir . 'CdocEmitter.php');
+} else {
+  require_once($dir . '/./../App.php');
+  require_once($dir . '/CdocFile.php');
+  require_once($dir . '/CdocEmitter.php');
+}
 
 /**
  * A "C Documentation" emitter emitting HTML code.
  */
 class CdocHtmlEmitter extends CdocEmitter {
-  
+
   /**
    * The "template language" interpreter.
    */
   private TlInterpreter $interpreter;
- 
+
   /**
    * Emit a 3rd level headline ("<h3>") with
    * - the HTML text $text
@@ -102,26 +30,36 @@ class CdocHtmlEmitter extends CdocEmitter {
   private function section($indexName, $id, $text) {
     $index = CdocIndexManager::getInstance()->getByName($indexName);
     $entry = $index->getEntryMap()[$text];
-    echo '<h3 class="cdoc-entry" id = "' . $entry['id'] . '">';
-    echo $entry['text'];
+    echo '<h3 class="cdoc-entry" id = "' . $entry['file']->getJsonData()['id'] . '">';
+    echo $entry['file']->getJsonData()['name'];
     echo '</h3>';
   }
- 
+
   public function __construct() {
     $this->interpreter = new TlInterpreter(new TlParser(new TlScanner()));
   }
   
-  public function emit(CdocFile $file) {
+  public function emitTableOfContentsEntry($entry) {
+    $linkHref = App::getInstance()->site_url_prefix . $entry['index']->getName() . '#' . $entry['file']->getJsonData()['id'];
+    $linkText = $entry['file']->getJsonData()['name'];
+    echo
+      '<li>' .
+      '<a href="' . $linkHref . '">' . $linkText . '</a>' .
+      '</li>'
+      ;
+  }
+
+  public function emitContentsEntry(CdocFile $file) {
     $jsonData = $file->getJsonData();
 
     $interpreter = new TlInterpreter(new TlParser(new TlScanner()));
-    
+
     echo '<div class="cdoc-entry">';
-    
+
     if (!isset($jsonData['indices'])) {
       throw new Exception($file->getPathname() . ': error: `indices` is not not defined.');
     }
-    
+
     if (is_array($jsonData['indices'])) {
       if (count($jsonData['indices']) > 1) {
         throw new Exception($file->getPathname() . ': error: multiple indices in `indices` not yet supported.');
@@ -132,14 +70,14 @@ class CdocHtmlEmitter extends CdocEmitter {
     } else {
         throw new Exception($file->getPathname() . ': error: `indices` must be an array of zero or more strings or a string or undefined.');
     }
-    
+
     // signature
     echo '<h4>Signature</h4>'
        . '<p><code>'
        ;
     echo $jsonData['signature'];
     echo '</code></p>';
-    
+
     // signature remarks (optional)
     if (isset($jsonData['signatureRemarks'])) {
       $signatureRemarks = $jsonData['signatureRemarks'];
@@ -172,16 +110,16 @@ class CdocHtmlEmitter extends CdocEmitter {
       echo '</p>';
     }
 
-    
+
     if ($jsonData['type'] !== 'structure' &&
         $jsonData['type'] !== 'enumeration' &&
         $jsonData['type'] !== 'function' &&
         $jsonData['type'] !== 'typedef' &&
-        $jsonData['type'] !== 'object' && 
+        $jsonData['type'] !== 'object' &&
         $jsonData['type'] !== 'symbolic-constant') {
       throw new Exception("`type` is `" . $jsonData['type'] . "`. `type` must be one of `enumeration`, `function`, `structure`, `typedef`, `object`, `symbolic-constant`");
     }
-    
+
     // handle enumerations
     if ($jsonData['type'] == 'enumeration') {
       if (isset($jsonData['elements'])) {
@@ -210,7 +148,7 @@ class CdocHtmlEmitter extends CdocEmitter {
         echo '</table>';
       }
     }
-    
+
     // handle functions
     if ($jsonData['type'] == 'function') {
       if (isset($jsonData['parameters'])) {
@@ -235,7 +173,7 @@ class CdocHtmlEmitter extends CdocEmitter {
         }
         echo '</table>';
       }
-      
+
       // success
       if (isset($jsonData['success'])) {
         $successJson = $jsonData['success'];
@@ -305,17 +243,22 @@ class CdocHtmlEmitter extends CdocEmitter {
         echo '</p>';
       }
     }
-    
+
     echo '</div>';
   }
 }; // class CdocHtmlEmitter
 
 class CdocIndex {
+
   /** The name of this index. */
   private string $name;
-  /** The entries in this index. */
+
+  /** List of entries in this index. Sorted lexicographically by the index entry names of the entries. */
   private array $entryList;
+
+  /** Map from index entry names to entries. */
   private array $entryMap;
+
   /**
    * Construct this CdocIndex object.
    * @param $name The name of this index.
@@ -325,6 +268,7 @@ class CdocIndex {
     $this->entryList = array();
     $this->entryMap = array();
   }
+
   /**
    * Get the name of this index.
    * @return The name of this index.
@@ -332,39 +276,43 @@ class CdocIndex {
   public function getName() : string {
     return $this->name;
   }
+
   /**
    * Add an entry.
    * @param $text The text of the entry.
    * @param $id The HTML id of the entry.
    */
-  public function addEntry(string $text, string $id) {
-    if (isset($this->entryMap[$text])) {
-      throw new Exception('entry of text `' . $text . '` is already in index `' . $this->name . '`');
+  public function addEntry(CdocFile $file) {
+    $jsonData = $file->getJsonData();
+    $name = $jsonData['name'];
+    $id = $jsonData['id'];
+    if (isset($this->entryMap[$name])) {
+      throw new Exception('entry of text `' . $name . '` is already in index `' . $this->name . '`');
     } else {
       $entry =
         array
           (
-            'text' => $text,
-            'id' => $id,
-            'href' => App::getInstance()->site_url_prefix . $this->name . '#' . $id
+            'index' => $this,
+            'file' => $file,
           );
       $this->entryList[] = $entry;
-      $this->entryMap[$text] = $entry;
+      $this->entryMap[$name] = $entry;
     }
   }
-  
+
   public function sortEntries() {
-    uasort($this->entryList, function($x, $y) { return strcmp($x['text'], $y['text']); });
+    setlocale (LC_COLLATE, 'en_US');
+    uasort($this->entryList, function($x, $y) { return strcoll(strtolower($x['file']->getJsonData()['name']), strtolower($y['file']->getJsonData()['name'])); });
   }
-  
+
   public function getEntryList() {
     return $this->entryList;
   }
-  
+
   public function getEntryMap() {
     return $this->entryMap;
   }
-  
+
 }; // class CdocIndex
 
 /**
@@ -374,22 +322,22 @@ class CdocIndex {
  * @todo Proper documentation.
  */
 class CdocIndexManager {
-  
+
   private static $instance = null;
-  
+
   public static function getInstance() {
     if (self::$instance == null) {
       self::$instance = new CdocIndexManager();
     }
- 
+
     return self::$instance;
   }
-  
+
   private array $indices = array();
-    
+
   private function __construct()
   {/*Intentionally empty.*/}
-    
+
   // get an index by its name.
   public function &getByName(string $name) : CdocIndex {
     if (!isset($this->indices[$name])) {
@@ -404,21 +352,47 @@ class CdocIndexManager {
 /// @author Michael Heilmann
 class CdocContext {
   
+  private static $instance = null;
+
+  public static function getInstance() {
+    if (self::$instance == null) {
+      self::$instance = new CdocContext();
+    }
+
+    return self::$instance;
+  }
+
+  protected function __construct() {
+  }
+
+  /// This is a map. An entry consists of the path name of a Cdoc file to a CdocFile object of that Cdoc file.
+  /// The values are sorted as specified by CDocFile::order.
   private $contents = array();
   
-  // register a json file contents file
-  // dies if this file is already registered
+  // register a contents file by its path
+  // registration means
+  // - add the file to the list of content files
+  // - add an entry for the content of the file to the indices specified by the content
+  // raises an exception if that contents file is already registered
   public function registerContents($pathname) {
     if (isset($this->contents[$pathname])) {
       throw new Exception("contents file `" . $pathname . "` already registered");
-    } else {
-      $this->contents[$pathname] = new CdocFile($pathname);
+    }
+    $file = new CdocFile($pathname);
+    $this->contents[$pathname] = $file;
+
+    // get the JSON data and add the contents of the file to its corresponding indices.
+    $jsonData = $file->getJsonData();
+    $indexNames = $jsonData['indices'];
+    foreach ($indexNames as $indexName) {
+      $index = CdocIndexManager::getInstance()->getByName($indexName);
+      $index->addEntry($file);
     }
   }
-  
+
   public function findContentsRecursive(string $dir) {
     $stack = array();
-    
+
     $dir = realpath($dir);
     $stack[] = $dir;
     while (count($stack) > 0) {
@@ -446,7 +420,7 @@ class CdocContext {
             if ($extension != 'json') {
               continue;
             }
-            
+
             // Finally, register the file.
             $this->registerContents($absoluteEntry);
           }
@@ -456,7 +430,7 @@ class CdocContext {
       }
     }
   }
-  
+
   /**
    * Find all "C documentation" files in a directory and add them to the list of contents.
    * If a "C documentation" file was already added, an exception is raised.
@@ -491,44 +465,44 @@ class CdocContext {
       closedir($dirHandle);
     }
   }
-  
+
   // get the registered json content files
   public function getContents() {
     return $this->contents;
   }
-  
-  public function sortContents() {
-    function cmp($x, $y) {
-      return $x->order($y);
-    }
-    uasort($this->contents, 'cmp');
-  }
-  
-  public function emit() {
-    foreach ($this->getContents() as $x) {
-      $jsonData = $x->getJsonData();
 
-      if (!isset($jsonData['indices'])) {
-        throw new Exception($file->getPathname() . ': error: `indices` is not not defined.');
-      }
-      
-      if (is_array($jsonData['indices'])) {
-        if (count($jsonData['indices']) > 1) {
-          throw new Exception($file->getPathname() . ': error: multiple indices in `indices` not yet supported.');
+  protected function sortContents() {
+    uasort($this->contents, function($x, $y) { return $x->order($y); });
+  }
+
+  // if $includedIndices is null, then it is ignored. Otherwise only contents in the listed indices is included.
+  public function emitContents($includedIndices = null) {
+    if (!is_null($includedIndices)) {
+      if (is_array($includedIndices)) {
+        foreach ($includedIndices as $includedIndex) {
+          if (!is_string($includedIndex)) {
+            throw new Error('invalid argument');
+          }
         }
-        $index = CdocIndexManager::getInstance()->getByName($jsonData['indices'][0]);
-        $index->addEntry($jsonData['name'], $jsonData['id']);
-      } else if (is_string($jsonData['indices'])) {
-        $index = CdocIndexManager::getInstance()->getByName($jsonData['indices']);
-        $index->addEntry($jsonData['name'], $jsonData['id']);
+      } else if (is_string($includedIndices)) {
+        $temporary = array();
+        array_push($temporary, $includedIndices);
+        $includedIndices = $temporary;
       } else {
-        throw new Exception($file->getPathname() . ': error: `indices` must be an array of zero or more strings or a string or undefined.');
+        throw new Error('invalid argument');
       }
     }
     $this->sortContents();
     $emitter = new CdocHtmlEmitter();
-    foreach ($this->getContents() as $x) {
-      $emitter->emit($x);
+    foreach ($this->getContents() as $contents) {
+      if (!is_null($includedIndices)) {
+        $jsonData = $contents->getJsonData();
+        $indices = $jsonData['indices'];
+        if (!count(array_intersect($indices, $includedIndices))) {
+          continue;
+        }
+      }
+      $emitter->emitContentsEntry($contents);
     }
   }
 };

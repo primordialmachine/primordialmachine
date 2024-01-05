@@ -1,0 +1,9 @@
+{
+  "type" : "symbolic-constant",
+  "last-update" : "2024-01-06",
+  "indices" : "core",
+  "name" : "Core_Failure",
+  "id" : "core-failure",
+  "signature" : "#define Core_Failure &lt;implementation&gt;",
+  "description" : "Symbolic constant for a non-zero value of type Core_Result indicating failure."
+}

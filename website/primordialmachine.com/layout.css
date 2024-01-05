@@ -37,8 +37,7 @@ main > div.container > div.left-column {
   align-items: flex-start;
 }
 
-main > div.container > div.right-column
-{
+main > div.container > div.right-column {
   display: block;
 
   max-width: 20%;

@@ -1,7 +1,5 @@
-/// @file Core/Visuals/TextureAddressMode.h
-/// @brief Enumeration of texture address modes.
-/// @author Michael Heilmann (michaelheilmann@primordialmachine.com)
-/// @copyright Copyright (c) 2018-2023 Michael Heilmann. All rights reserved.
+// Copyright (c) 2019-2023 Michael Heilmann. All rights reserved.
+
 #if !defined(CORE_VISUALS_TEXTUREADDRESSMODE_H_INCLUDED)
 #define CORE_VISUALS_TEXTUREADDRESSMODE_H_INCLUDED
 

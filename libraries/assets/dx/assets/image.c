@@ -72,7 +72,7 @@ static Core_Result _swap_pixels(dx_assets_image* SELF, Core_Size source_x, Core_
   }
 
   Core_Size bytes_per_pixel;
-  if (dx_pixel_format_get_number_of_bytes_per_pixel(&bytes_per_pixel, pixel_format)) {
+  if (Core_PixelFormat_getNumberOfBytes(&bytes_per_pixel, pixel_format)) {
     return Core_Failure;
   }
 
@@ -116,7 +116,7 @@ static void _fill_bgr8(void* pixels, OFFSET2 fill_offset, EXTEND2 fill_extend, E
     return;
   }
   Core_Size bytes_per_pixel;
-  if (dx_pixel_format_get_number_of_bytes_per_pixel(&bytes_per_pixel, Core_PixelFormat_Bgr8)) {
+  if (Core_PixelFormat_getNumberOfBytes(&bytes_per_pixel, Core_PixelFormat_Bgr8)) {
     return;
   }
   for (Core_Size y = fill_offset.top; y < fill_bottom; ++y) {
@@ -152,7 +152,7 @@ static void _fill_bgra8(void* pixels, OFFSET2 fill_offset, EXTEND2 fill_extend, 
     return;
   }
   Core_Size bytes_per_pixel;
-  if (dx_pixel_format_get_number_of_bytes_per_pixel(&bytes_per_pixel, Core_PixelFormat_Bgra8)) {
+  if (Core_PixelFormat_getNumberOfBytes(&bytes_per_pixel, Core_PixelFormat_Bgra8)) {
     return;
   }
   for (Core_Size y = fill_offset.top; y < fill_bottom; ++y) {
@@ -188,7 +188,7 @@ static void _fill_l8(void* pixels, OFFSET2 fill_offset, EXTEND2 fill_extend, EXT
     return;
   }
   Core_Size bytes_per_pixel;
-  if (dx_pixel_format_get_number_of_bytes_per_pixel(&bytes_per_pixel, Core_PixelFormat_L8)) {
+  if (Core_PixelFormat_getNumberOfBytes(&bytes_per_pixel, Core_PixelFormat_L8)) {
     return;
   }
   for (Core_Size y = fill_offset.top; y < fill_bottom; ++y) {
@@ -224,7 +224,7 @@ static void _fill_la8(void* pixels, OFFSET2 fill_offset, EXTEND2 fill_extend, EX
     return;
   }
   Core_Size bytes_per_pixel;
-  if (dx_pixel_format_get_number_of_bytes_per_pixel(&bytes_per_pixel, Core_PixelFormat_La8)) {
+  if (Core_PixelFormat_getNumberOfBytes(&bytes_per_pixel, Core_PixelFormat_La8)) {
     return;
   }
   for (Core_Size y = fill_offset.top; y < fill_bottom; ++y) {
@@ -260,7 +260,7 @@ static void _fill_rgb8(void* pixels, OFFSET2 fill_offset, EXTEND2 fill_extend, E
     return;
   }
   Core_Size bytes_per_pixel;
-  if (dx_pixel_format_get_number_of_bytes_per_pixel(&bytes_per_pixel, Core_PixelFormat_Rgb8)) {
+  if (Core_PixelFormat_getNumberOfBytes(&bytes_per_pixel, Core_PixelFormat_Rgb8)) {
     return;
   }
   for (Core_Size y = fill_offset.top; y < fill_bottom; ++y) {
@@ -296,7 +296,7 @@ static void _fill_rgba8(void* pixels, OFFSET2 fill_offset, EXTEND2 fill_extend, 
     return;
   }
   Core_Size bytes_per_pixel;
-  if (dx_pixel_format_get_number_of_bytes_per_pixel(&bytes_per_pixel, Core_PixelFormat_Rgba8)) {
+  if (Core_PixelFormat_getNumberOfBytes(&bytes_per_pixel, Core_PixelFormat_Rgba8)) {
     return;
   }
   for (Core_Size y = fill_offset.top; y < fill_bottom; ++y) {
@@ -392,15 +392,17 @@ Core_Result dx_assets_image_construct(dx_assets_image* SELF,
   SELF->height = height;
   SELF->pixel_format = pixel_format;
   Core_Size overflow;
-  Core_Size number_of_pixels = dx_mul_sz(SELF->width, SELF->height, &overflow);
+  Core_Size number_of_pixels;
+  Core_safeMulSz(&number_of_pixels, SELF->width, SELF->height, &overflow); // must succeed
   if (overflow) {
     return Core_Failure;
   }
   Core_Size bytes_per_pixel;
-  if (dx_pixel_format_get_number_of_bytes_per_pixel(&bytes_per_pixel, pixel_format)) {
+  if (Core_PixelFormat_getNumberOfBytes(&bytes_per_pixel, pixel_format)) {
     return Core_Failure;
   }
-  Core_Size number_of_bytes = dx_mul_sz(number_of_pixels, sizeof(uint8_t) * bytes_per_pixel, &overflow);
+  Core_Size number_of_bytes;
+  Core_safeMulSz(&number_of_bytes, number_of_pixels, sizeof(uint8_t) * bytes_per_pixel, &overflow); // must succeed
   if (overflow) {
     Core_setError(Core_Error_AllocationFailed);
     return Core_Failure;

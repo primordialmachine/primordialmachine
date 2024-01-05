@@ -34,7 +34,7 @@ Core_Boolean dx_rti_type_is_leq(Core_Type* x, Core_Type* y);
 /// 
 /// @undefined @a x does not pointed to a dx_type object.
 /// @undefined The runtime type system is not initialized.
-void* dx_rti_type_get_dispatch(Core_Type* x);
+void* Core_Type_getDispatch(Core_Type* x);
 
 /// @brief Get the parent type of a type.
 /// @param RETURN A pointer to a <code>Core_Type*</code> variable.

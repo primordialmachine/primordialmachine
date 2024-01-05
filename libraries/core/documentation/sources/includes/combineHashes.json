@@ -1,0 +1,38 @@
+{
+  "type" : "function",
+  "last-update" : "2024-01-06",
+  "indices" : "core",
+  "name" : "Core_combineHashes",
+  "id" : "core-combinehashes",
+  "signature" : "Core_Result Core_combineHashes(Core_Size* RETURN, Core_Size x, Core_Size x);",
+  "signatureRemarks": null,
+  "parameters" : [
+    {
+      "name" : "RETURN",
+      "type" : "Core_Size*",
+      "description" : "A pointer to a @{code('Core_Size')} variable."
+    },
+    {
+      "name" : "x",
+      "type" : "Core_Size",
+      "description" : "The first hash value."
+    },
+    {
+      "name" : "y",
+      "type" : "Core_Size",
+      "description" : "The second hash value."
+    }
+  ],
+  "errors" : [
+    {
+      "errorCode" : "@{code('Core_Error_ArgumentInvalid')}",
+      "errorCondition" : "@{code('RETURN')} is a null pointer"
+    }
+  ],
+  "description" : "Combine hash values.",
+  "success" : [
+    "@{code('*RETURN')} was assigned the combination of the hash value @{code('x')} and the hash values @{code('y')}."
+  ],
+  "return" : "@{code('Core_Success')} on success. @{code('Core_Failure')} on failure.",
+  "remarks" : "This function sets the by-thread error variable on failure."
+}

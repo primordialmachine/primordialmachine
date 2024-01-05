@@ -1,7 +1,5 @@
-/// @file Core/Hash.c
-/// @brief Compute the hash value of values.
-/// @author Michael Heilmann (michaelheilmann@primordialmachine.com)
-/// @copyright Copyright (c) 2018-2023 Michael Heilmann. All rights reserved.
+// Copyright (c) 2019-2023 Michael Heilmann. All rights reserved.
+
 #include "Core/Hash.h"
 
 #include <math.h>

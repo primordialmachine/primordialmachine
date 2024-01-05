@@ -1,13 +1,11 @@
-/// @file Core/FundamentalTypes.h
-/// @brief Aliases for fundamental types.
-/// @author Michael Heilmann (michaelheilmann@primordialmachine.com)
-/// @copyright Copyright (c) 2019-2023 Michael Heilmann. All rights reserved.
+// Copyright (c) 2019-2023 Michael Heilmann. All rights reserved.
 
 #if !defined(CORE_FUNDAMENTALTYPES_H_INCLUDED)
 #define CORE_FUNDAMENTALTYPES_H_INCLUDED
 
 #include "dx/core/configuration.h"
-#include "dx/core/error.h"
+#include "Core/Error.h"
+#include "Core/Result.h"
 
 // size_t, SIZE_MAX
 #include <stddef.h>

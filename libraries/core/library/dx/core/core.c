@@ -12,8 +12,8 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
-#include "dx/core/safe_mul_nx.h"
-#include "dx/core/safe_add_nx.h"
+#include "Core/safeMulNx.h"
+#include "Core/safeAddNx.h"
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 

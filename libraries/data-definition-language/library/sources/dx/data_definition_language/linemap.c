@@ -20,7 +20,8 @@ Core_Result dx_ddl_linemap_construct(dx_ddl_linemap* SELF, char const* start, ch
   Core_Size new_line_count = 0;
   {
     Core_Size overflow;
-    Core_Size number_of_bytes = dx_mul_sz(old_line_count, sizeof(LINE), &overflow);
+    Core_Size number_of_bytes;
+    Core_safeMulSz(&number_of_bytes, old_line_count, sizeof(LINE), &overflow); // must succeed
     if (overflow) {
       Core_setError(Core_Error_ArgumentInvalid);
       return Core_Failure;

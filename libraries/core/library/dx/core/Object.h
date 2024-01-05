@@ -137,7 +137,8 @@ static inline void DX_UNREFERENCE(void *p) {
 /// @endcode
 #define DX_OBJECT_VIRTUALCALL(_TYPE, _FUNCTION, ...) \
   Core_Type* TYPE = CORE_OBJECT(SELF)->type; \
-  _TYPE##_dispatch* dispatch = (_TYPE##_dispatch*)dx_rti_type_get_dispatch(TYPE); \
+  _TYPE##_dispatch* dispatch = NULL; \
+  dispatch = (_TYPE##_dispatch*)Core_Type_getDispatch(TYPE); \
   return dispatch->_FUNCTION(__VA_ARGS__);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
@@ -147,7 +148,7 @@ DX_DECLARE_OBJECT_TYPE("Core.WeakReference",
                        Core_WeakReference,
                        Core_Object);
 
-static inline Core_WeakReference* DX_WEAK_REFERENCE(void* p) {
+static inline Core_WeakReference* CORE_WEAKREFERENCE(void* p) {
   return (Core_WeakReference*)p;
 }
 
@@ -158,7 +159,7 @@ struct Core_WeakReference {
   Core_Object* object;
 };
 
-static inline Core_WeakReference_dispatch* DX_WEAK_REFERENCE_DISPATCH(void* p) {
+static inline Core_WeakReference_dispatch* CORE_WEAKREFERENCE_DISPATCH(void* p) {
   return (Core_WeakReference_dispatch*)p;
 }
 

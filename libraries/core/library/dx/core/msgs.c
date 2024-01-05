@@ -2,45 +2,10 @@
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
+#include "Core/Time.h"
 #include "Core/Memory.h"
 #include "dx/core/inline_pointer_deque.h"
 
-
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-
-#define DX_MSG_TRACE (0)
-
-#if defined(DX_MSG_TRACE) && 1 == DX_MSG_TRACE
-  #define TRACE(msg) dx_log(msg, sizeof(msg) - 1)
-#else
-  #define TRACE(msg)
-#endif
-
-DX_DEFINE_OBJECT_TYPE("Core.Message",
-                      Core_Message,
-                      Core_Object);
-
-Core_Result Core_Message_getFlags(uint32_t* RETURN, Core_Message const* SELF) {
-  *RETURN = SELF->flags;
-  return Core_Success;
-}
-
-static void Core_Message_destruct(Core_Message* SELF)
-{/*Intentionally empty.*/}
-
-static void Core_Message_constructDispatch(Core_Message_dispatch* SELF)
-{/*Intentionally empty.*/}
-
-Core_Result Core_Message_construct(Core_Message* SELF) {
-  TRACE("enter: dx_msg_construct\n");
-  DX_CONSTRUCT_PREFIX(Core_Message);
-  SELF->flags = DX_MSG_TYPE_UNDETERMINED;
-  CORE_OBJECT(SELF)->type = TYPE;
-  TRACE("leave: dx_msg_construct\n");
-  return Core_Success;
-}
-
-#undef TRACE
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
@@ -52,43 +17,46 @@ Core_Result Core_Message_construct(Core_Message* SELF) {
   #define TRACE(msg)
 #endif
 
-DX_DEFINE_OBJECT_TYPE("dx.emit_msg",
-                      dx_emit_msg,
+DX_DEFINE_OBJECT_TYPE("Core.EmitMessage",
+                      Core_EmitMessage,
                       Core_Message);
 
-static void dx_emit_msg_destruct(dx_emit_msg* SELF) {
-  TRACE("enter: dx_emit_msg_destruct\n");
+static void Core_EmitMessage_destruct(Core_EmitMessage* SELF) {
+  TRACE("enter: Core_EmitMessage_destruct\n");
   Core_Memory_deallocate(SELF->p);
   SELF->p = NULL;
-  TRACE("leave: dx_emit_msg_destruct\n");
+  TRACE("leave: Core_EmitMessage_destruct\n");
 }
 
-static void dx_emit_msg_constructDispatch(dx_emit_msg_dispatch* SELF)
+static void Core_EmitMessage_constructDispatch(Core_EmitMessage_dispatch* SELF)
 {/*Intentionally empty.*/}
 
-Core_Result dx_emit_msg_construct(dx_emit_msg* SELF, char const* p, Core_Size n) {
-  TRACE("enter: dx_emit_msg_construct\n");
-  DX_CONSTRUCT_PREFIX(dx_emit_msg);
-  if (Core_Message_construct(CORE_MESSAGE(SELF))) {
-    TRACE("leave: dx_emit_msg_construct\n");
+Core_Result Core_EmitMessage_construct(Core_EmitMessage* SELF, char const* p, Core_Size n) {
+  TRACE("enter: Core_EmitMessage_construct\n");
+  DX_CONSTRUCT_PREFIX(Core_EmitMessage);
+  Core_Natural64 timeStamp;
+  if (Core_getNow(&timeStamp)) {
+    return Core_Failure;
+  }
+  if (Core_Message_construct(CORE_MESSAGE(SELF), timeStamp)) {
+    TRACE("leave: Core_EmitMessage_construct\n");
     return Core_Failure;
   }
   SELF->p = NULL;
   if (Core_Memory_allocate(&SELF->p, n)) {
-    TRACE("leave: dx_emit_msg_construct\n");
+    TRACE("leave: Core_EmitMessage_construct\n");
     return Core_Failure;
   }
   Core_Memory_copy(SELF->p, p, n);
   SELF->n = n;
-  CORE_MESSAGE(SELF)->flags = DX_MSG_TYPE_EMIT;
   CORE_OBJECT(SELF)->type = TYPE;
-  TRACE("leave: dx_emit_msg_construct\n");
+  TRACE("leave: Core_EmitMessage_construct\n");
   return Core_Success;
 }
 
-Core_Result dx_emit_msg_create(dx_emit_msg** RETURN, char const* p, Core_Size n) {
-  DX_CREATE_PREFIX(dx_emit_msg);
-  if (dx_emit_msg_construct(SELF, p, n)) {
+Core_Result Core_EmitMessage_create(Core_EmitMessage** RETURN, char const* p, Core_Size n) {
+  DX_CREATE_PREFIX(Core_EmitMessage);
+  if (Core_EmitMessage_construct(SELF, p, n)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
@@ -97,7 +65,7 @@ Core_Result dx_emit_msg_create(dx_emit_msg** RETURN, char const* p, Core_Size n)
   return Core_Success;
 }
 
-Core_Result dx_emit_msg_get(dx_emit_msg* SELF, char const** p, Core_Size* n) {
+Core_Result Core_EmitMessage_get(Core_EmitMessage* SELF, char const** p, Core_Size* n) {
   *p = SELF->p;
   *n = SELF->n;
   return Core_Success;
@@ -107,6 +75,9 @@ Core_Result dx_emit_msg_get(dx_emit_msg* SELF, char const** p, Core_Size* n) {
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
+DX_DEFINE_ENUMERATION_TYPE("Core.ApplicationMessageKind",
+                           Core_ApplicationMessageKind);
+
 #define DX_QUIT_MSG_TRACE (0)
 
 #if defined(DX_QUIT_MSG_TRACE) && 1 == DX_QUIT_MSG_TRACE
@@ -115,32 +86,36 @@ Core_Result dx_emit_msg_get(dx_emit_msg* SELF, char const** p, Core_Size* n) {
   #define TRACE(msg)
 #endif
 
-DX_DEFINE_OBJECT_TYPE("dx.quit_msg",
-                      dx_quit_msg,
+DX_DEFINE_OBJECT_TYPE("Core.ApplicationMessage",
+                      Core_ApplicationMessage,
                       Core_Message);
 
-static void dx_quit_msg_destruct(dx_quit_msg* SELF)
+static void Core_ApplicationMessage_destruct(Core_ApplicationMessage* SELF)
 {/*Intentionally empty.*/}
 
-static void dx_quit_msg_constructDispatch(dx_quit_msg_dispatch* SELF)
+static void Core_ApplicationMessage_constructDispatch(Core_ApplicationMessage_dispatch* SELF)
 {/*Intentionally empty.*/}
 
-Core_Result dx_quit_msg_construct(dx_quit_msg* SELF) {
-  TRACE("enter: dx_quit_msg_construct\n");
-  DX_CONSTRUCT_PREFIX(dx_quit_msg);
-  if (Core_Message_construct(CORE_MESSAGE(SELF))) {
-    TRACE("leave: dx_quit_msg_construct\n");
+Core_Result Core_ApplicationMessage_construct(Core_ApplicationMessage* SELF, Core_ApplicationMessageKind kind) {
+  TRACE("enter: Core_ApplicationMessage_construct\n");
+  DX_CONSTRUCT_PREFIX(Core_ApplicationMessage);
+  Core_Natural64 timeStamp;
+  if (Core_getNow(&timeStamp)) {
     return Core_Failure;
   }
-  CORE_MESSAGE(SELF)->flags = DX_MSG_TYPE_QUIT;
+  if (Core_Message_construct(CORE_MESSAGE(SELF), timeStamp)) {
+    TRACE("leave: Core_ApplicationMessage_construct\n");
+    return Core_Failure;
+  }
+  SELF->kind = kind;
   CORE_OBJECT(SELF)->type = TYPE;
-  TRACE("leave: dx_quit_msg_construct\n");
+  TRACE("leave: Core_QuitMessage_construct\n");
   return Core_Success;
 }
 
-Core_Result dx_quit_msg_create(dx_quit_msg** RETURN) {
-  DX_CREATE_PREFIX(dx_quit_msg);
-  if (dx_quit_msg_construct(SELF)) {
+Core_Result Core_ApplicationMessage_create(Core_ApplicationMessage** RETURN, Core_ApplicationMessageKind kind) {
+  DX_CREATE_PREFIX(Core_ApplicationMessage);
+  if (Core_ApplicationMessage_construct(SELF, kind)) {
     DX_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;

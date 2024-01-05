@@ -1,0 +1,9 @@
+{
+  "type" : "typedef",
+  "last-update" : "2024-01-06",
+  "indices" : "core",
+  "name" : "Core_Result",
+  "id" : "core-result",
+  "signature" : "typedef &lt;implementation&gt; Core_Result;",
+  "description" : "An integer type. The only two values of this type are @{code('Core_Success')} and @{code('Core_Failure')}."
+}

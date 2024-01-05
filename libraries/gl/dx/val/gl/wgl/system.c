@@ -227,13 +227,13 @@ DX_DEFINE_OBJECT_TYPE("dx.val.gl.wgl.system",
 
 /// @internal
 /// @brief Determine the mouse button that was pressed/released given the msg, wparam, and lparam arguments of a WM_(L|M|R|X)BUTTON(DOWN|UP) message.
-/// @param RETURN A pointer to a <code>Core_KeyboardKey_A</code> value.
+/// @param RETURN A pointer to a <code>Core_MouseButton</code> value.
 /// @aram msg The msg value of the message.
 /// @param wparam The wparam value of the message.
 /// @param lparam The lparam value of the message.
 /// @procedure
 /// @error #Core_Error_NotFound if the button is not is not supported.
-static Core_Result map_mouse_button(dx_mouse_button* RETURN, dx_val_gl_wgl_system* SELF, UINT msg, WPARAM wparam, LPARAM lparam);
+static Core_Result map_mouse_button(Core_MouseButton* RETURN, dx_val_gl_wgl_system* SELF, UINT msg, WPARAM wparam, LPARAM lparam);
 
 /// @internal
 /// @brief Determine the keyboard key that was pressed/released given the msg, wparam, and lparam arguments of a WM_(KEY|SYSKEY)(DOWN|UP) message.
@@ -257,31 +257,31 @@ static Core_Result get_context(dx_gl_wgl_context** RETURN, dx_val_gl_wgl_system*
 
 static Core_Result get_window(dx_val_gl_wgl_window** RETURN, dx_val_gl_wgl_system* SELF);
 
-static Core_Result map_mouse_button(dx_mouse_button* RETURN, dx_val_gl_wgl_system* SELF, UINT msg, WPARAM wparam, LPARAM lparam) {
+static Core_Result map_mouse_button(Core_MouseButton* RETURN, dx_val_gl_wgl_system* SELF, UINT msg, WPARAM wparam, LPARAM lparam) {
   switch (msg) {
     case WM_LBUTTONDOWN:
-      *RETURN = dx_mouse_button_button_0;
+      *RETURN = Core_MouseButton_Button0;
       break;
     case WM_LBUTTONUP:
-      *RETURN = dx_mouse_button_button_0;
+      *RETURN = Core_MouseButton_Button0;
       break;
     case WM_MBUTTONDOWN:
-      *RETURN = dx_mouse_button_button_1;
+      *RETURN = Core_MouseButton_Button1;
       break;
     case WM_MBUTTONUP:
-      *RETURN = dx_mouse_button_button_1;
+      *RETURN = Core_MouseButton_Button1;
       break;
     case WM_RBUTTONDOWN:
-      *RETURN = dx_mouse_button_button_2;
+      *RETURN = Core_MouseButton_Button2;
       break;
     case WM_RBUTTONUP:
-      *RETURN = dx_mouse_button_button_2;
+      *RETURN = Core_MouseButton_Button2;
       break;
     case WM_XBUTTONDOWN:
-      *RETURN = dx_mouse_button_button_3;
+      *RETURN = Core_MouseButton_Button3;
       break;
     case WM_XBUTTONUP:
-      *RETURN = dx_mouse_button_button_3;
+      *RETURN = Core_MouseButton_Button3;
       break;
     default: {
       Core_setError(Core_Error_NotFound);
@@ -442,29 +442,29 @@ static Core_Result get_modifiers(uint8_t* RETURN, dx_val_gl_wgl_system* SELF) {
     return Core_Failure;
   }
   if (state) {
-    modifiers |= DX_MODIFIER_LSHIFT;
+    modifiers |= Core_ModifierKeys_LeftShift;
   }
   dx_keyboard_state_get_state(&state, keyboard_state, Core_KeyboardKey_RightShift);
   if (state) {
-    modifiers |= DX_MODIFIER_RSHIFT;
+    modifiers |= Core_ModifierKeys_RightShift;
   }
   //
   dx_keyboard_state_get_state(&state, keyboard_state, Core_KeyboardKey_LeftControl);
   if (state) {
-    modifiers |= DX_MODIFIER_LCTRL;
+    modifiers |= Core_ModifierKeys_LeftControl;
   }
   dx_keyboard_state_get_state(&state, keyboard_state, Core_KeyboardKey_RightControl);
   if (state) {
-    modifiers |= DX_MODIFIER_RCTRL;
+    modifiers |= Core_ModifierKeys_RightControl;
   }
   //
   dx_keyboard_state_get_state(&state, keyboard_state, Core_KeyboardKey_LeftMenu);
   if (state) {
-    modifiers |= DX_MODIFIER_LMENU;
+    modifiers |= Core_ModifierKeys_LeftMenu;
   }
   dx_keyboard_state_get_state(&state, keyboard_state, Core_KeyboardKey_RightMenu);
   if (state) {
-    modifiers |= DX_MODIFIER_RMENU;
+    modifiers |= Core_ModifierKeys_RightMenu;
   }
   *RETURN = modifiers;
   return Core_Success;
@@ -689,7 +689,7 @@ Core_Result dx_val_gl_wgl_system_create(dx_val_gl_wgl_system** RETURN, dx_msg_qu
 Core_Result dx_val_gl_wgl_system_on_mouse_button_message(dx_val_gl_wgl_system* SELF, HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam) {
   Core_Real32 x = (Core_Real32)(int)GET_X_LPARAM(lparam);
   Core_Real32 y = (Core_Real32)(int)GET_Y_LPARAM(lparam);
-  dx_mouse_button mouse_button;
+  Core_MouseButton mouse_button;
   if (map_mouse_button(&mouse_button, SELF, msg, wparam, lparam)) {
     return Core_Failure;
   }

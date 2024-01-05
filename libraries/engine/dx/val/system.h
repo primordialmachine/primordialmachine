@@ -53,41 +53,41 @@ static inline Core_Result dx_val_system_get_context(dx_val_context** RETURN, dx_
 /// @brief Emit a "keyboard key pressed" message.
 /// @param SELF A pointer to this VAL system object.
 /// @param key The keyboard key.
-/// @param modifiers The modifiers.
+/// @param modifierKeys The modifier keys.
 /// @method{dx_val_system}
-Core_Result dx_val_system_emit_keyboard_key_pressed_msg(dx_val_system* SELF, Core_KeyboardKey key, uint8_t modifiers);
+Core_Result dx_val_system_emit_keyboard_key_pressed_msg(dx_val_system* SELF, Core_KeyboardKey key, Core_ModifierKeys modifierKeys);
 
 /// @internal
 /// @brief Emit a "keyboard key released" message.
 /// @param SELF A pointer to this VAL system object.
 /// @param key The keyboard key.
-/// @param modifiers The modifiers.
+/// @param modifierKeys The modifier keys.
 /// @method{dx_val_system}
-Core_Result dx_val_system_emit_keyboard_key_released_msg(dx_val_system* SELF, Core_KeyboardKey key, uint8_t modifiers);
+Core_Result dx_val_system_emit_keyboard_key_released_msg(dx_val_system* SELF, Core_KeyboardKey key, Core_ModifierKeys modifierKeys);
 
 /// @internal
 /// @brief Emit a "mouse button pressed" message.
 /// @param SELF A pointer to this VAL system object.
 /// @param button The mouse button.
 /// @param x, y The position.
-/// @param modifiers The modifiers.
+/// @param modifierKeys The modifier keys.
 /// @method{dx_val_system}
-Core_Result dx_val_system_emit_mouse_button_pressed_msg(dx_val_system* SELF, dx_mouse_button button, Core_Real32 x, Core_Real32 y, uint8_t modifiers);
+Core_Result dx_val_system_emit_mouse_button_pressed_msg(dx_val_system* SELF, Core_MouseButton button, Core_Real32 x, Core_Real32 y, Core_ModifierKeys modifierKeys);
 
 /// @internal
 /// @brief Emit a "mouse button released" message.
 /// @param button The mouse button.
 /// @param x, y The position.
-/// @param modifiers The modifiers.
+/// @param modifierKeys The modifier keys.
 /// @method{dx_val_system}
-Core_Result dx_val_system_emit_mouse_button_released_msg(dx_val_system* SELF, dx_mouse_button button, Core_Real32 x, Core_Real32 y, uint8_t modifiers);
+Core_Result dx_val_system_emit_mouse_button_released_msg(dx_val_system* SELF, Core_MouseButton button, Core_Real32 x, Core_Real32 y, Core_ModifierKeys modifierKeys);
 
 /// @internal
 /// @brief Emit a "mouse pointer moved" message.
 /// @param x, y The position.
-/// @param modifiers The modifiers.
+/// @param modifierKeys The modifier keys.
 /// @method{dx_val_system}
-Core_Result dx_val_system_emit_mouse_pointer_moved_msg(dx_val_system* SELF, Core_Real32 x, Core_Real32 y, uint8_t modifiers);
+Core_Result dx_val_system_emit_mouse_pointer_moved_msg(dx_val_system* SELF, Core_Real32 x, Core_Real32 y, Core_ModifierKeys modifierKeys);
 
 /// @internal
 /// @brief Emit a "canvas size changed" message.

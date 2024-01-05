@@ -1,8 +1,9 @@
 #if !defined(DX_CORE_GET_BEST_ARRAY_SIZE_H_INCLUDED)
 #define DX_CORE_GET_BEST_ARRAY_SIZE_H_INCLUDED
 
-#include "dx/core/error.h"
 #include "Core/FundamentalTypes.h"
+#include "Core/Error.h"
+#include "Core/Result.h"
 
 /// @brief Get the best size.
 /// @param new A pointer to a <code>Core_Size</code> variable.

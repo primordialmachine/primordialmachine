@@ -5,7 +5,7 @@
 cmake_minimum_required(VERSION 3.20)
 
 
-set(name "dailies.core")
+set(name "Core")
 set(${name}.kind "static-library")
 set(${name}.languages "C" "ASM_MASM") # Enable C and MASM.
 set(${name}.public_include_directories "${CMAKE_CURRENT_SOURCE_DIR}")
@@ -42,8 +42,10 @@ list(APPEND ${name}.headers "dx/core/signals.h")
 list(APPEND ${name}.sources "dx/core/signals.library.c")
 list(APPEND ${name}.headers "dx/core/signals.library.h")
 
-list(APPEND ${name}.sources "dx/core/error.c")
-list(APPEND ${name}.headers "dx/core/error.h")
+list(APPEND ${name}.sources "Core/Error.c")
+list(APPEND ${name}.headers "Core/Error.h")
+list(APPEND ${name}.sources "Core/Result.c")
+list(APPEND ${name}.headers "Core/Result.h")
 
 list(APPEND ${name}.sources "dx/core/core.c")
 list(APPEND ${name}.headers "dx/core/core.h")
@@ -82,8 +84,9 @@ list(APPEND ${name}.sources "dx/core/file_system.c")
 list(APPEND ${name}.headers "dx/core/file_system.h")
 list(APPEND ${name}.sources "dx/core/visuals.c")
 list(APPEND ${name}.headers "dx/core/visuals.h")
-list(APPEND ${name}.sources "dx/core/safe_add_nx.c" "dx/core/safe_mul_ix.c" "dx/core/safe_mul_nx.c")
-list(APPEND ${name}.headers "dx/core/safe_add_nx.h" "dx/core/safe_mul_ix.h" "dx/core/safe_mul_nx.h")
+list(APPEND ${name}.sources "dx/core/safe_mul_ix.c")
+list(APPEND ${name}.headers "dx/core/safe_mul_ix.h")
+
 list(APPEND ${name}.sources "dx/core/convert.c")
 list(APPEND ${name}.headers "dx/core/convert.h")
 
@@ -92,8 +95,6 @@ list(APPEND ${name}.headers "dx/core/canvas_msgs.h")
 
 list(APPEND ${name}.sources "dx/core/hapticals.c")
 list(APPEND ${name}.headers "dx/core/hapticals.h")
-list(APPEND ${name}.inlays  "dx/core/keyboard_keys.i")
-list(APPEND ${name}.inlays  "dx/core/mouse_buttons.i")
 list(APPEND ${name}.sources "dx/core/keyboard_state.c")
 list(APPEND ${name}.headers "dx/core/keyboard_state.h")
 list(APPEND ${name}.sources "dx/core/mouse_state.c")
@@ -123,12 +124,38 @@ list(APPEND ${name}.sources "Core/Memory.c")
 list(APPEND ${name}.headers "Core/Memory.h")
 list(APPEND ${name}.sources "Core/NextPowerOfTwo.c")
 list(APPEND ${name}.headers "Core/NextPowerOfTwo.h")
+list(APPEND ${name}.sources "Core/Bits.c")
+list(APPEND ${name}.headers "Core/Bits.h")
 
+list(APPEND ${name}.sources "Core/Message.c")
+list(APPEND ${name}.headers "Core/Message.h")
 list(APPEND ${name}.sources "Core/KeyboardKey.c")
 list(APPEND ${name}.headers "Core/KeyboardKey.h")
 list(APPEND ${name}.inlays  "Core/KeyboardKey.i")
+list(APPEND ${name}.sources "Core/MouseButton.c")
+list(APPEND ${name}.headers "Core/MouseButton.h")
+list(APPEND ${name}.inlays  "Core/MouseButton.i")
+list(APPEND ${name}.sources "Core/ModifierKeys.c")
+list(APPEND ${name}.headers "Core/ModifierKeys.h")
+list(APPEND ${name}.inlays  "Core/ModifierKeys.i")
 
-# Folder "dx/core/visuals".
+list(APPEND ${name}.sources "Core/safeAddNx.c")
+list(APPEND ${name}.headers "Core/safeAddNx.h")
+list(APPEND ${name}.sources "Core/safeMulNx.c")
+list(APPEND ${name}.headers "Core/safeMulNx.h")
+
+list(APPEND ${name}.sources "Core/Time.c")
+list(APPEND ${name}.headers "Core/Time.h")
+
+# Folder "Core/FileSystem".
+list(APPEND ${name}.sources "Core/FileSystem/ExistingFilePolicy.c")
+list(APPEND ${name}.headers "Core/FileSystem/ExistingFilePolicy.h")
+list(APPEND ${name}.sources "Core/FileSystem/FileAccessMode.c")
+list(APPEND ${name}.headers "Core/FileSystem/FileAccessMode.h")
+list(APPEND ${name}.sources "Core/FileSystem/NonExistingFilePolicy.c")
+list(APPEND ${name}.headers "Core/FileSystem/NonExistingFilePolicy.h")
+
+# Folder "Core/Visuals".
 list(APPEND ${name}.sources "Core/Visuals/CullMode.c")
 list(APPEND ${name}.headers "Core/Visuals/CullMode.h")
 list(APPEND ${name}.sources "Core/Visuals/DepthCompareFunction.c")
@@ -141,6 +168,8 @@ list(APPEND ${name}.sources "Core/Visuals/VertexFormat.c")
 list(APPEND ${name}.headers "Core/Visuals/VertexFormat.h")
 list(APPEND ${name}.sources "Core/Visuals/WindingMode.c")
 list(APPEND ${name}.headers "Core/Visuals/WindingMode.h")
+list(APPEND ${name}.sources "Core/Visuals/CanvasMessageKind.c")
+list(APPEND ${name}.headers "Core/Visuals/CanvasMessageKind.h")
 
 # Folder "dx/core/text".
 list(APPEND ${name}.sources "dx/core/text/anchor.c")

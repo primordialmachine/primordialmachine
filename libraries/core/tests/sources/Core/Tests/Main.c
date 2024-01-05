@@ -1,5 +1,6 @@
 #include <stdlib.h>
 
+#include "Core/Tests/clearBits.h"
 #include "Core/Tests/countLeadingZeroes.h"
 #include "Core/Tests/fundamentalTypes.h"
 #include "Core/Tests/nextPowerOfTwo.h"
@@ -8,12 +9,15 @@
 
 #include "Core/Tests/Signals/Test1.h"
 
-static Core_Result Core_Tests_quitMsgTests() {
-  dx_quit_msg* msg = NULL;
+static Core_Result Core_Tests_applicationMsgsTests() {
+  Core_ApplicationMessage* msg = NULL;
   //
-  if (dx_quit_msg_create(&msg)) {
+  if (Core_ApplicationMessage_create(&msg, Core_ApplicationMessageKind_QuitRequested)) {
     return Core_Failure;
   }
+  //
+  DX_UNREFERENCE(msg);
+  msg = NULL;
   //
   return Core_Success;
 }
@@ -21,13 +25,13 @@ static Core_Result Core_Tests_quitMsgTests() {
 static Core_Result Core_Tests_mouseButtonMsgTests() {
   dx_mouse_button_msg* msg = NULL;
   //
-  if (dx_mouse_button_msg_create(&msg, DX_MOUSE_BUTTON_ACTION_PRESSED, dx_mouse_button_button_0, 0, 0, 0)) {
+  if (dx_mouse_button_msg_create(&msg, DX_MOUSE_BUTTON_ACTION_PRESSED, Core_MouseButton_Button0, 0, 0, 0)) {
     return Core_Failure;
   }
   DX_UNREFERENCE(msg);
   msg = NULL;
   //
-  if (dx_mouse_button_msg_create(&msg, DX_MOUSE_BUTTON_ACTION_RELEASED, dx_mouse_button_button_0, 0, 0, 0)) {
+  if (dx_mouse_button_msg_create(&msg, DX_MOUSE_BUTTON_ACTION_RELEASED, Core_MouseButton_Button0, 0, 0, 0)) {
     return Core_Failure;
   }
   DX_UNREFERENCE(msg);
@@ -63,13 +67,13 @@ static Core_Result Core_Tests_mousePointerMsgTests() {
 static Core_Result Core_Tests_keyboardKeyMsgTests() {
   dx_keyboard_key_msg* msg = NULL;
   //
-  if (dx_keyboard_key_msg_create(&msg, DX_KEYBOARD_KEY_ACTION_PRESSED, Core_KeyboardKey_A, 0)) {
+  if (dx_keyboard_key_msg_create(&msg, Core_KeyboardKeyAction_Pressed, Core_KeyboardKey_A, 0)) {
     return Core_Failure;
   }
   DX_UNREFERENCE(msg);
   msg = NULL;
   //
-  if (dx_keyboard_key_msg_create(&msg, DX_KEYBOARD_KEY_ACTION_RELEASED, Core_KeyboardKey_A, 0)) {
+  if (dx_keyboard_key_msg_create(&msg, Core_KeyboardKeyAction_Released, Core_KeyboardKey_A, 0)) {
     return Core_Failure;
   }
   DX_UNREFERENCE(msg);
@@ -81,6 +85,12 @@ static Core_Result Core_Tests_keyboardKeyMsgTests() {
 #include <stdio.h>
 
 static Core_Result run_tests() {
+  if (Core_Tests_clearBitsTests()) {
+    fprintf(stdout, "Core.Tests.clearBitsTests failed\n");
+    return Core_Failure;
+  }
+  fprintf(stdout, "Core.Tests.clearBitsTests succeeded\n");
+  
   if (Core_Tests_countLeadingZeroesTests()) {
     fprintf(stdout, "Core.Tests.countLeadingZeroesTests failed\n");
     return Core_Failure;
@@ -93,11 +103,11 @@ static Core_Result run_tests() {
   }
   fprintf(stdout, "Core.Tests.fundamentalTypesTests succeeded\n");
   
-  if (Core_Tests_quitMsgTests()) {
-    fprintf(stdout, "Core.Tests.quitMsgTests failed\n");
+  if (Core_Tests_applicationMsgsTests()) {
+    fprintf(stdout, "Core.Tests.applicationMsgsTests failed\n");
     return Core_Failure;
   }
-  fprintf(stdout, "Core.Tests.quitMsgTests succeeded\n");
+  fprintf(stdout, "Core.Tests.applicationMsgsTests succeeded\n");
   
   if (Core_Tests_mouseButtonMsgTests()) {
     fprintf(stdout, "Core.Tests.mouseButtonMsgTests failed\n");
@@ -130,8 +140,10 @@ static Core_Result run_tests() {
   fprintf(stdout, "Core.Tests.safeAddNxTests succeded\n");
 
   if (Core_Tests_safeMulNxTests()) {
+    fprintf(stdout, "Core.Tests.safeMulNxTests failed\n");
     return Core_Failure;
   }
+  fprintf(stdout, "Core.Tests.safeMulNxTests succeded\n");
 
 #if defined(DX_SAFE_MUL_IX_WITH_TESTS) && 1 == DX_SAFE_MUL_IX_WITH_TESTS
   if (dx_safe_mul_ix_tests()) {

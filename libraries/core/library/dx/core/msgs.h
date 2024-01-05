@@ -1,124 +1,88 @@
-#if !defined(DX_CORE_MSGS_H_INCLUDED)
-#define DX_CORE_MSGS_H_INCLUDED
+#if !defined(CORE_MESSAGES_H_INCLUDED)
+#define CORE_MESSAGES_H_INCLUDED
 
-#include "dx/core/object.h"
+#include "dx/core/Object.h"
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-/// @brief The "unknown" message.
-#define DX_MSG_TYPE_UNDETERMINED (0)
-
-/// @brief The "emit" message.
-#define DX_MSG_TYPE_EMIT (1)
-
-/// @brief The "quit" message.
-#define DX_MSG_TYPE_QUIT (2)
-
-/// @brief Messages pertaining to the canvas.
-#define DX_MSG_TYPE_CANVAS (3)
-
-/// @brief Messages pertaining to input.
-#define DX_MSG_TYPE_INPUT (4)
-
-/// @brief The opaque type of a message.
-DX_DECLARE_OBJECT_TYPE("Core.Message",
-                       Core_Message,
-                       Core_Object);
-
-static inline Core_Message* CORE_MESSAGE(void* p) {
-  return (Core_Message*)p;
-}
-
-struct Core_Message {
-  Core_Object _parent;
-  uint32_t flags;
-};
-
-static inline Core_Message_dispatch* CORE_MESSAGE_DISPATCH(void* p) {
-  return (Core_Message_dispatch*)p;
-}
-
-struct Core_Message_dispatch {
-  Core_Object_Dispatch _parent;
-};
-
-/// @brief Get the flags of this message.
-/// @param RETURN A pointer to a <code>uint32_t</code> variable.
-/// @param SELF This message.
-/// @method{Core_Message}
-Core_Result Core_Message_getFlags(uint32_t* RETURN, Core_Message const* SELF);
-
-/// @constructor{Core_Message}
-Core_Result Core_Message_construct(Core_Message* SELF);
+#include "Core/Message.h"
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 // The opaque type of an "emit" message.
-DX_DECLARE_OBJECT_TYPE("dx.emit_msg",
-                       dx_emit_msg,
-                       Core_Event);
+DX_DECLARE_OBJECT_TYPE("Core.EmitMessage",
+                       Core_EmitMessage,
+                       Core_Message);
 
-static inline dx_emit_msg* DX_EMIT_MSG(void* p) {
-  return (dx_emit_msg*)p;
+static inline Core_EmitMessage* CORE_EMITMESSAGE(void* p) {
+  return (Core_EmitMessage*)p;
 }
 
-struct dx_emit_msg {
+struct Core_EmitMessage {
   Core_Message _parent;
   char* p;
   Core_Size n;
 };
 
-static inline dx_emit_msg_dispatch* DX_EMIT_MSG_DISPATCH(void* p) {
-  return (dx_emit_msg_dispatch*)p;
+static inline Core_EmitMessage_dispatch* CORE_EMITMESSAGE_DISPATCH(void* p) {
+  return (Core_EmitMessage_dispatch*)p;
 }
 
-struct dx_emit_msg_dispatch {
+struct Core_EmitMessage_dispatch {
   Core_Message_dispatch _parent;
 };
 
-/// @constructor{dx_emit_msg}
-Core_Result dx_emit_msg_construct(dx_emit_msg* SELF, char const* p, Core_Size n);
+/// @constructor{Core_EmitMessage}
+Core_Result Core_EmitMessage_construct(Core_EmitMessage* SELF, char const* p, Core_Size n);
 
 /// @brief Create an "emit" message.
-/// @param RETURN A pointer to a <code>dx_emit_msg*</code> variable.
+/// @param RETURN A pointer to a <code>Core_EmitMessage*</code> variable.
 /// @param p A pointer to an utf-8 string of @a n Bytes.
 /// @param n The length of the utf-8 string in Bytes pointed to by @a p.
 /// @success
 /// <code>*RETURN</code> was assigned a pointer to the "emit" message object.
 /// The caller acquired a reference to the returned object.
-/// @create-operator
-Core_Result dx_emit_msg_create(dx_emit_msg** RETURN, char const* p, Core_Size n);
+/// @create-operator{Core_EmitMessage}
+Core_Result Core_EmitMessage_create(Core_EmitMessage** RETURN, char const* p, Core_Size n);
 
-Core_Result dx_emit_msg_get(dx_emit_msg* SELF, char const** p, Core_Size* n);
+Core_Result Core_EmitMessage_get(Core_EmitMessage* SELF, char const** p, Core_Size* n);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-// The opaque type of an "quit" message.
-DX_DECLARE_OBJECT_TYPE("dx.quit_msg",
-                       dx_quit_msg,
-                       dx_msg);
+DX_DECLARE_ENUMERATION_TYPE("Core.ApplicationMessageKind",
+                            Core_ApplicationMessageKind);
 
-static inline dx_quit_msg* DX_QUIT_MSG(void* p) {
-  return (dx_quit_msg*)p;
-}
-
-struct dx_quit_msg {
-  Core_Message _parent;
+enum Core_ApplicationMessageKind {
+  Core_ApplicationMessageKind_QuitRequested = 1,
 };
 
-static inline dx_quit_msg_dispatch* DX_QUIT_MSG_DISPATCH(void* p) {
-  return (dx_quit_msg_dispatch*)p;
+// The opaque type of an "quit" message.
+DX_DECLARE_OBJECT_TYPE("Core.ApplicationMessage",
+                       Core_ApplicationMessage,
+                       Core_Message);
+
+static inline Core_ApplicationMessage* CORE_APPLICATIONMESSAGE(void* p) {
+  return (Core_ApplicationMessage*)p;
 }
 
-struct dx_quit_msg_dispatch {
+struct Core_ApplicationMessage {
+  Core_Message _parent;
+  Core_ApplicationMessageKind kind;
+};
+
+static inline Core_ApplicationMessage_dispatch* CORE_APPLICATIONMESSAGE_DISPATCH(void* p) {
+  return (Core_ApplicationMessage_dispatch*)p;
+}
+
+struct Core_ApplicationMessage_dispatch {
   Core_Message_dispatch _parent;
 };
 
-/// @constructor{dx_quit_msg}
-Core_Result dx_quit_msg_construct(dx_quit_msg* SELF);
+/// @constructor{Core_ApplicationMessage}
+Core_Result Core_ApplicationMessage_construct(Core_ApplicationMessage* SELF, Core_ApplicationMessageKind kind);
 
-/// @create-operator{dx_quit_msg}
-Core_Result dx_quit_msg_create(dx_quit_msg** RETURN);
+/// @create-operator{Core_ApplicationMessage}
+Core_Result Core_ApplicationMessage_create(Core_ApplicationMessage** RETURN, Core_ApplicationMessageKind kind);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
@@ -140,7 +104,6 @@ Core_Result dx_msg_queue_push(dx_msg_queue* SELF, Core_Message* message);
 /// @method{dx_msg_queue}
 Core_Result dx_msg_queue_pop(Core_Message** RETURN, dx_msg_queue* SELF);
 
-
 // Destroy a message queue.
 // The message queue relinquishes all references to messages contained in the queue.
 void dx_msg_queue_destroy(dx_msg_queue* msg_queue);
@@ -150,4 +113,4 @@ Core_Result dx_msg_queue_create(dx_msg_queue** RETURN);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-#endif // DX_CORE_MSGS_H_INCLUDED
+#endif // CORE_MESSAGES_H_INCLUDED

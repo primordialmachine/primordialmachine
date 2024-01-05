@@ -1,123 +1,111 @@
-/// @file dx/core/canvas_msgs.h
+/// @file Core/Visuals/CanvasMessages.h
 /// @brief Messages pertaining to canvans.
 /// @author Michael Heilmann (michaelheilmann@primordialmachine.com)
 /// @copyright Copyright (c) 2018-2023 Michael Heilmann. All rights reserved.
 
-#if !defined(DX_CORE_CANVAS_MSGS_H_INCLUDED)
-#define DX_CORE_CANVAS_MSGS_H_INCLUDED
+#if !defined(CORE_VISUALS_CANVASMESSAGES_H_INCLUDED)
+#define CORE_VISUALS_CANVASMESSAGES_H_INCLUDED
 
 #include "dx/core/msgs.h"
+#include "Core/Visuals/CanvasMessageKind.h"
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-/// @brief An enumeration of the different kinds of canvas messages.
-DX_DECLARE_ENUMERATION_TYPE("dx.canvas_msg_kind",
-                            dx_canvas_msg_kind);
+DX_DECLARE_OBJECT_TYPE("Core.CanvasMessage",
+                       Core_CanvasMessage,
+                       Core_Message);
 
-enum dx_canvas_msg_kind {
-  /// @brief Kind of a a canvas activated message.
-  dx_canvas_msg_kind_activated,
-  /// @brief Kind of a canvas deactivated message.
-  dx_canvas_msg_kind_deactivated,
-  /// @brief Kind of a canvas size changed message.
-  dx_canvas_msg_kind_size_changed,
-  /// @brief Kind of a canvas DPI changed message.
-  dx_canvas_msg_kind_dpi_changed,
-};
-
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-
-DX_DECLARE_OBJECT_TYPE("dx.canvas_msg",
-                       dx_canvas_msg,
-                       dx_msg);
-
-static inline dx_canvas_msg* DX_CANVAS_MSG(void* p) {
-  return (dx_canvas_msg*)p;
+static inline Core_CanvasMessage* CORE_CANVASMESSAGE(void* p) {
+  return (Core_CanvasMessage*)p;
 }
 
-struct dx_canvas_msg {
+struct Core_CanvasMessage {
   Core_Message _parent;
   uint8_t kind;
 };
 
-static inline dx_canvas_msg_dispatch* DX_CANVAS_MSG_DISPATCH(void* p) {
-  return (dx_canvas_msg_dispatch*)p;
+static inline Core_CanvasMessage_dispatch* CORE_CANVASMESSAGE_DISPATCH(void* p) {
+  return (Core_CanvasMessage_dispatch*)p;
 }
 
-struct dx_canvas_msg_dispatch {
+struct Core_CanvasMessage_dispatch {
   Core_Message_dispatch _parent;
 };
 
+/// @remarks The canvas message is constructed with the specified Core_CanvasMessageKind.
 /// @param kind The kind of this canvas message.
-/// @constructor{dx_canvas_msg}
-Core_Result dx_canvas_msg_construct(dx_canvas_msg* SELF, dx_canvas_msg_kind kind);
+/// @constructor{Core_CanvasMessage}
+Core_Result Core_CanvasMessage_construct(Core_CanvasMessage* SELF, Core_CanvasMessageKind kind);
 
-Core_Result dx_canvas_msg_create(dx_canvas_msg** RETURN, dx_canvas_msg_kind kind);
+/// @remarks The canvas message is created with the specified Core_CanvasMessageKind.
+/// @param kind The kind of this canvas message. 
+/// @create-operator{Core_CanvasMessage}
+Core_Result Core_CanvasMessage_create(Core_CanvasMessage** RETURN, Core_CanvasMessageKind kind);
 
 /// @brief Get the kind of this canvas message.
-/// @param RETURN A pointer to a <code>dx_canvas_msg_kind</code> variable.
+/// @param RETURN A pointer to a <code>Core_CanvasMessageKind</code> variable.
 /// @success <code>*RETURN</code> was assigned the kind.
-/// @method{dx_canvas_msg}
-Core_Result dx_canvas_msg_get_kind(dx_canvas_msg_kind* RETURN, dx_canvas_msg* SELF);
+/// @method{Core_CanvasMessage}
+Core_Result Core_CanvasMessage_getKind(Core_CanvasMessageKind* RETURN, Core_CanvasMessage* SELF);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-/// @brief Send when the size of a canvas changed.
-DX_DECLARE_OBJECT_TYPE("dx.canvas_size_changed_msg",
-                       dx_canvas_size_changed_msg,
-                       dx_canvas_msg);
+/// @brief Sent when the size of a canvas changed.
+DX_DECLARE_OBJECT_TYPE("Core.CanvasSizeChangedMessage",
+                       Core_CanvasSizeChangedMessage,
+                       Core_CanvasMessage);
 
-static inline dx_canvas_size_changed_msg* DX_CANVAS_SIZE_CHANGED_MSG(void* p) {
-  return (dx_canvas_size_changed_msg*)p;
+static inline Core_CanvasSizeChangedMessage* CORE_CANVASSIZECHANGEDMESSAGE(void* p) {
+  return (Core_CanvasSizeChangedMessage*)p;
 }
 
-struct dx_canvas_size_changed_msg {
-  dx_canvas_msg _parent;
-  Core_Real32 width;
-  Core_Real32 height;
+struct Core_CanvasSizeChangedMessage {
+  Core_CanvasMessage _parent;
+  Core_Real32 horizontalSize;
+  Core_Real32 verticalSize;
 };
 
-static inline dx_canvas_size_changed_msg_dispatch* DX_CANVAS_SIZE_CHANGED_MSG_DISPATCH(void* p) {
-  return (dx_canvas_size_changed_msg_dispatch*)p;
+static inline Core_CanvasSizeChangedMessage_dispatch* CORE_CANVASSIZECHANGEDMESSAGE_DISPATCH(void* p) {
+  return (Core_CanvasSizeChangedMessage_dispatch*)p;
 }
 
-struct dx_canvas_size_changed_msg_dispatch {
-  dx_canvas_msg_dispatch _parent;
+struct Core_CanvasSizeChangedMessage_dispatch {
+  Core_CanvasMessage_dispatch _parent;
 };
 
-Core_Result dx_canvas_size_changed_msg_construct(dx_canvas_size_changed_msg* SELF, Core_Real32 width, Core_Real32 height);
+Core_Result Core_CanvasSizeChangedMessage_construct(Core_CanvasSizeChangedMessage* SELF, Core_Real32 horizontalSize, Core_Real32 verticalSize);
 
-Core_Result dx_canvas_size_changed_msg_create(dx_canvas_size_changed_msg** RETURN, Core_Real32 width, Core_Real32 height);
+Core_Result Core_CanvasSizeChangedMessage_create(Core_CanvasSizeChangedMessage** RETURN, Core_Real32 horizontalSize, Core_Real32 verticalSize);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-/// @brief Send when the DPI of a canvas changed.
-DX_DECLARE_OBJECT_TYPE("dx.canvas_dpi_changed_msg",
-                       dx_canvas_dpi_changed_msg,
-                       dx_canvas_msg);
+/// @brief Sent when the DPI of a canvas changed.
+DX_DECLARE_OBJECT_TYPE("Core.CanvasDpiChangedMessage",
+                       Core_CanvasDpiChangedMessage,
+                       Core_CanvasMessage);
 
-static inline dx_canvas_dpi_changed_msg* DX_CANVAS_DPI_CHANGED_MSG(void* p) {
-  return (dx_canvas_dpi_changed_msg*)p;
+static inline Core_CanvasDpiChangedMessage* CORE_CANVASDPICHANGEDMESSAGE(void* p) {
+  return (Core_CanvasDpiChangedMessage*)p;
 }
 
-struct dx_canvas_dpi_changed_msg {
-  dx_canvas_msg _parent;
-  Core_Real32 horizontal_dpi;
-  Core_Real32 vertical_dpi;
+struct Core_CanvasDpiChangedMessage {
+  Core_CanvasMessage _parent;
+  Core_Real32 horizontalDpi;
+  Core_Real32 verticalDpi;
 };
 
-static inline dx_canvas_dpi_changed_msg_dispatch* DX_CANVAS_DPI_CHANGED_MSG_DISPATCH(void* p) {
-  return (dx_canvas_dpi_changed_msg_dispatch*)p;
+static inline Core_CanvasDpiChangedMessage_dispatch* CORE_CANVASDPICHANGEDMESSAGE_DISPATCH(void* p) {
+  return (Core_CanvasDpiChangedMessage_dispatch*)p;
 }
 
-struct dx_canvas_dpi_changed_msg_dispatch {
-  dx_canvas_msg_dispatch _parent;
+struct Core_CanvasDpiChangedMessage_dispatch {
+  Core_CanvasMessage_dispatch _parent;
 };
 
-Core_Result dx_canvas_dpi_changed_msg_construct(dx_canvas_dpi_changed_msg* SELF, Core_Real32 horizontal_dpi, Core_Real32 vertical_dpi);
+Core_Result Core_CanvasDpiChangedMessage_construct(Core_CanvasDpiChangedMessage* SELF, Core_Real32 horizontalDpi, Core_Real32 verticalDpi);
 
-Core_Result dx_canvas_dpi_changed_msg_create(dx_canvas_dpi_changed_msg** RETURN, Core_Real32 horizontal_dpi, Core_Real32 vertical_dpi);
+Core_Result Core_CanvasDpiChangedMessage_create(Core_CanvasDpiChangedMessage** RETURN, Core_Real32 horizontalDpi, Core_Real32 verticalDpi);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-#endif // DX_CORE_CANVAS_MSGS_H_INCLUDED
+#endif // CORE_VISUALS_CANVASMESSAGES_H_INCLUDED

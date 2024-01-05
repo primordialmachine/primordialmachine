@@ -1,0 +1,9 @@
+{
+  "type" : "symbolic-constant",
+  "last-update" : "2024-01-06",
+  "indices" : "core",
+  "name" : "Core_Success",
+  "id" : "core-success",
+  "signature" : "#define Core_Success &lt;implementation&gt;",
+  "description" : "Symbolic constant for a zero value of type Core_Result indicating success."
+}

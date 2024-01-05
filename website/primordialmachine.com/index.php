@@ -1,4 +1,13 @@
 <?php
+
+require_once(__DIR__ . '/libraries/Template/Include.php');
+require_once(__DIR__ . '/libraries/Cdoc/Include.php');
+
+$context = CDocContext::getInstance();
+$context->findContentsRecursive(__DIR__ . '/core/includes' . DIRECTORY_SEPARATOR);
+$context->findContentsRecursive(__DIR__ . '/val/includes' . DIRECTORY_SEPARATOR);
+$context->findContentsRecursive(__DIR__ . '/aal/includes' . DIRECTORY_SEPARATOR);
+
 $requestUri = $_SERVER['REQUEST_URI'];
 $queryString = $_SERVER['QUERY_STRING'];
 if (str_starts_with($queryString, 'core')) {

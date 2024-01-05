@@ -1,7 +1,7 @@
 #include "dx/core/inline_pointer_hashmap.h"
 
 #include "Core/Memory.h"
-#include "dx/core/safe_mul_nx.h"
+#include "Core/safeMulNx.h"
 #include "dx/core/inline_pointer_array.h"
 #include "dx/core/_get_best_array_size.h"
 
@@ -137,7 +137,8 @@ struct _dx_impl {
 
 static _dx_impl_node** _dx_impl_allocate_bucket_array(Core_Size n) {
   Core_Size overflow;
-  Core_Size n_bytes = dx_mul_sz(n, sizeof(_dx_impl_bucket), &overflow);
+  Core_Size n_bytes;
+  Core_safeMulSz(&n_bytes, n, sizeof(_dx_impl_bucket), &overflow); // must succeed
   if (overflow) {
     Core_setError(Core_Error_AllocationFailed);
     return NULL;

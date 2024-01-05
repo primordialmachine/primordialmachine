@@ -7,14 +7,7 @@
 #include "dx/engine/console_commands.h"
 #include "dx/scenes/default_scene_presenter.h"
 #include <stdio.h>
-
-#if Core_OperatingSystem_Windows == Core_OperatingSystem
-  // GetTickCount64
-  #define WIN32_LEAN_AND_MEAN
-  #include <Windows.h>
-#else
-  #error("environment not (yet) supported")
-#endif
+#include <string.h>
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
@@ -62,79 +55,103 @@ static Core_Result quit_requested(Core_Boolean* RETURN, dx_default_application_p
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-static Core_Result on_msg(dx_default_application_presenter* SELF, Core_Message* msg) {
-  Core_Natural32 msg_flags;
-  if (Core_Message_getFlags(&msg_flags, msg)) {
+static Core_Result onApplicationMessage(dx_default_application_presenter * SELF, Core_ApplicationMessage* msg) {
+  if (msg->kind == Core_ApplicationMessageKind_QuitRequested) {
+    SELF->quit = true;
+  }
+  return Core_Success;
+}
+
+static Core_Result onEmitMessage(dx_default_application_presenter * SELF, Core_EmitMessage * msg) {
+  char const* p; Core_Size n;
+  if (Core_EmitMessage_get(msg, &p, &n)) {
     return Core_Failure;
   }
-  switch (msg_flags) {
-    case DX_MSG_TYPE_EMIT: {
-      dx_emit_msg* emit_msg = DX_EMIT_MSG(msg);
-      char const* p; Core_Size n;
-      if (dx_emit_msg_get(emit_msg, &p, &n)) {
+  dx_log(p, n);
+  return Core_Success;
+}
+
+static Core_Result onInputMessage(dx_default_application_presenter* SELF, dx_input_msg* msg) {
+  if (DX_INPUT_MSG_KIND_KEYBOARD_KEY == dx_input_msg_get_kind(msg)) {
+    dx_keyboard_key_msg* keyboard_key_msg = DX_KEYBOARD_KEY_MSG(msg);
+    Core_Boolean temporary;
+    if (dx_console_is_open(&temporary, SELF->console)) {
+      return Core_Failure;
+    }
+    if (temporary) {
+      // if the circumflex key is released, we close the console.
+      Core_KeyboardKeyAction action;
+      Core_KeyboardKey key;
+      if (dx_keyboard_key_msg_get_action(&action, keyboard_key_msg) || dx_keyboard_key_msg_get_key(&key, keyboard_key_msg)) {
         return Core_Failure;
       }
-      dx_log(p, n);
-    } break;
-    case DX_MSG_TYPE_INPUT: {
-      dx_input_msg* input_msg = DX_INPUT_MSG(msg);
-      if (DX_INPUT_MSG_KIND_KEYBOARD_KEY == dx_input_msg_get_kind(input_msg)) {
-        dx_keyboard_key_msg* keyboard_key_msg = DX_KEYBOARD_KEY_MSG(input_msg);
-        Core_Boolean temporary;
-        if (dx_console_is_open(&temporary, SELF->console)) {
+      if (Core_KeyboardKeyAction_Released == action && Core_KeyboardKey_DeadCircumflex == key) {
+        dx_console_toggle(SELF->console);
+      } else {
+        dx_console_on_keyboard_key_message(SELF->console, keyboard_key_msg);
+      }
+    } else {
+      Core_KeyboardKeyAction action;
+      Core_KeyboardKey key;
+      if (dx_keyboard_key_msg_get_action(&action, keyboard_key_msg) || dx_keyboard_key_msg_get_key(&key, keyboard_key_msg)) {
+        return Core_Failure;
+      }
+      if (Core_KeyboardKeyAction_Released == action && Core_KeyboardKey_Return == key) {
+        Core_Size n;
+        if (dx_inline_object_array_get_size(&n, SELF->scene_presenters)) {
           return Core_Failure;
         }
-        if (temporary) {
-          // if the circumflex key is released, we close the console.
-          dx_keyboard_key_action action;
-          Core_KeyboardKey key;
-          if (dx_keyboard_key_msg_get_action(&action, keyboard_key_msg) || dx_keyboard_key_msg_get_key(&key, keyboard_key_msg)) {
-            return Core_Failure;
-          }
-          if (DX_KEYBOARD_KEY_ACTION_RELEASED == action && Core_KeyboardKey_DeadCircumflex == key) {
-            dx_console_toggle(SELF->console);
-          } else {
-            dx_console_on_keyboard_key_message(SELF->console, keyboard_key_msg);
-          }
-        } else {
-          dx_keyboard_key_action action;
-          Core_KeyboardKey key;
-          if (dx_keyboard_key_msg_get_action(&action, keyboard_key_msg) || dx_keyboard_key_msg_get_key(&key, keyboard_key_msg)) {
-            return Core_Failure;
-          }
-          if (DX_KEYBOARD_KEY_ACTION_RELEASED == action && Core_KeyboardKey_Return == key) {
-            Core_Size n;
-            if (dx_inline_object_array_get_size(&n, SELF->scene_presenters)) {
-              return Core_Failure;
-            }
-            SELF->scene_index = (SELF->scene_index + 1) % n;
-          }
-          if (DX_KEYBOARD_KEY_ACTION_RELEASED == action && Core_KeyboardKey_DeadCircumflex == key) {
-            dx_console_open(SELF->console);
-          }
-          if (DX_KEYBOARD_KEY_ACTION_RELEASED == action && Core_KeyboardKey_Escape == key) {
-            Core_Message* msg = NULL;
-            if (dx_quit_msg_create((dx_quit_msg**)&msg)) {
-              return Core_Failure;
-            }
-            if (dx_msg_queue_push(SELF->message_queue, msg)) {
-              DX_UNREFERENCE(msg);
-              msg = NULL;
-              return Core_Failure;
-            }
-            DX_UNREFERENCE(msg);
-            msg = NULL;
-          }
-        }
+        SELF->scene_index = (SELF->scene_index + 1) % n;
       }
-    } break;
-    case DX_MSG_TYPE_QUIT: {
-      SELF->quit = true;
-    } break;
-    case DX_MSG_TYPE_UNDETERMINED:
-    default: {
-      return Core_Success;
-    } break;
+      if (Core_KeyboardKeyAction_Released == action && Core_KeyboardKey_DeadCircumflex == key) {
+        dx_console_open(SELF->console);
+      }
+      if (Core_KeyboardKeyAction_Released == action && Core_KeyboardKey_Escape == key) {
+        Core_Message* msg = NULL;
+        if (Core_ApplicationMessage_create((Core_ApplicationMessage**)&msg, Core_ApplicationMessageKind_QuitRequested)) {
+          return Core_Failure;
+        }
+        if (dx_msg_queue_push(SELF->message_queue, msg)) {
+          DX_UNREFERENCE(msg);
+          msg = NULL;
+          return Core_Failure;
+        }
+        DX_UNREFERENCE(msg);
+        msg = NULL;
+      }
+    }
+  }
+  return Core_Success;
+}
+
+static Core_Result on_msg(dx_default_application_presenter* SELF, Core_Message* msg) {
+  Core_Type* inputMsgType = NULL;
+  if (dx_input_msg_getType(&inputMsgType)) {
+    return Core_Failure;
+  }
+  Core_Type* emitMessageType = NULL;
+  if (Core_EmitMessage_getType(&emitMessageType)) {
+    return Core_Failure;
+  }
+  Core_Type* applicationMessageType = NULL;
+  if (Core_ApplicationMessage_getType(&applicationMessageType)) {
+    return Core_Failure;
+  }
+  if (dx_rti_type_is_leq(CORE_OBJECT(msg)->type, inputMsgType)) {
+    dx_input_msg* msg1 = DX_INPUT_MSG(msg);
+    if (onInputMessage(SELF, msg1)) {
+      return Core_Failure;
+    }
+  } else if (dx_rti_type_is_leq(CORE_OBJECT(msg)->type, emitMessageType)) {
+    Core_EmitMessage* msg1 = CORE_EMITMESSAGE(msg);
+    if (onEmitMessage(SELF, msg1)) {
+      return Core_Failure;
+    }
+  } else if (dx_rti_type_is_leq(CORE_OBJECT(msg)->type, applicationMessageType)) {
+    Core_ApplicationMessage* msg1 = CORE_APPLICATIONMESSAGE(msg);
+    if (onApplicationMessage(SELF, msg1)) {
+      return Core_Failure;
+    }
   }
   return Core_Success;
 }
@@ -257,11 +274,16 @@ static Core_Result startup(dx_default_application_presenter* SELF) {
 }
 
 static Core_Result run(dx_default_application_presenter* SELF) {
-  uint64_t last = GetTickCount64();
-  uint64_t now = last;
-  uint64_t delta = now - last;
+  Core_Natural64 last;
+  if (Core_getNow(&last)) {
+    return Core_Failure;
+  }
+  Core_Natural64 now = last;
+  Core_Natural64 delta = now - last;
   while (!SELF->quit) {
-    now = GetTickCount64();
+    if (Core_getNow(&now)) {
+      return Core_Failure;
+    }
     delta = now - last;
     last = now;
     if (dx_application_update(SELF->application)) {

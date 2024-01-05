@@ -9,72 +9,9 @@
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #include "dx/core/string.h"
-
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-
-/// @ingroup Core_FileSystem
-/// @brief An enumeration of file access modes to files.
-/// @remarks The enumeration elements can be combined.
-DX_DECLARE_ENUMERATION_TYPE("Core_FileAccessMode",
-                            Core_FileAccessMode);
-
-enum Core_FileAccessMode {
-
-  /// @brief Read access.
-  /// @remark Can be combined with dx_file_access_mode_write.
-  Core_FileAccessMode_Read = 1,
-
-  /// @brief Write access.
-  /// @remark Can be combined with dx_file_access_mode_read.
-  Core_FileAccessMode_Write = 2,
-
-  /// @brief Read and write access.
-  /// @remark Alias for @code{Core_FileAccessMode_Read|Core_FileAccessMode_Write}.
-  /// Alias for @code{Core_FileAccessMode_WriteRead}.
-  Core_FileAccessMode_ReadWrite = Core_FileAccessMode_Read | Core_FileAccessMode_Write,
-
-  /// @brief Write and read access.
-  /// @remark Alias for @code{Core_FileAccessMode_Write|Core_FileAccessMode_Read}.
-  /// Alias for @code{Core_FileAccessMode_ReadWrite}.
-  Core_FileAccessMode_WriteRead = Core_FileAccessMode_Write | Core_FileAccessMode_Read,
-
-};
-
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-
-/// @ingroup Core_FileSystem
-/// @brief An enumeration of policies for opening a file in case of that the file exists.
-/// @remarks The enumeration elements can not be combined.
-DX_DECLARE_ENUMERATION_TYPE("Core_ExistingFilePolicy",
-                            Core_ExistingFilePolicy);
-
-enum Core_ExistingFilePolicy {
-
-  /// @brief Retain the file contents.
-  Core_ExistingFilePolicy_Retain,
-
-  /// @brief Truncate the file contents.
-  Core_ExistingFilePolicy_Truncate,
-
-};
-
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-
-/// @ingroup Core_FileSystem
-/// @brief An enumeration of policies for opening a file in case of that the file does not exist.
-/// @remarks The enumeration elements can not be combined.
-DX_DECLARE_ENUMERATION_TYPE("Core_NonExistingFilePolicy",
-                            Core_NonExistingFilePolicy);
-
-enum Core_NonExistingFilePolicy {
-
-  /// @brief Fail if the file does not exist.
-  Core_NonExistingFilePolicy_Fail,
-
-  /// @brief Create the file if it does not exist.
-  Core_NonExistingFilePolicy_Create,
-
-};
+#include "Core/FileSystem/ExistingFilePolicy.h"
+#include "Core/FileSystem/FileAccessMode.h"
+#include "Core/FileSystem/NonExistingFilePolicy.h"
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 

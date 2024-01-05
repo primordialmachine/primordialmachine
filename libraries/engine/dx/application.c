@@ -187,7 +187,7 @@ Core_Result dx_application_create
 
 Core_Result dx_application_emit_quit_msg(dx_application* SELF) {
   Core_Message* msg = NULL;
-  if (dx_quit_msg_create((dx_quit_msg**)&msg)) {
+  if (Core_ApplicationMessage_create((Core_ApplicationMessage**)&msg, Core_ApplicationMessageKind_QuitRequested)) {
     return Core_Failure;
   }
   if (dx_msg_queue_push(SELF->msg_queue, msg)) {

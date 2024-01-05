@@ -1,0 +1,19 @@
+{
+  "type" : "function",
+  "last-update" : "2024-01-06",
+  "indices" : "core",
+  "name" : "Core_setError",
+  "id" : "core-seterror",
+  "signature" : "void Core_setError(Core_Error error);",
+  "signatureRemarks": null,
+  "parameters" : [
+    {
+      "name" : "error",
+      "type" : "Core_Error",
+      "description" : "The @{code('Core_Error')} value to be assigned to the by-thread error variable."
+    }
+  ],
+  "errors" : null,
+  "description" : "Set the value of the by-thread error variable.",
+  "success" : "This function cannot fail."
+}

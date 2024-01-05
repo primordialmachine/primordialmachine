@@ -1,0 +1,58 @@
+{
+  "type" : "function",
+  "last-update" : "2024-01-04",
+  "indices" : "core",
+  "name" : "Core_clearBits",
+  "id" : "core-clearbits",
+  "signature" : "Core_Result Core_clearBits&lt;Suffix&gt;(&lt;Type&gt;* RETURN, Core_Size i, Core_Size n);",
+  "signatureRemarks": [
+    "<p>where <code>&lt;Suffix&gt;</code> and <code>&lt;Type&gt;</code> can assume the values of</p>",
+    "<table style='width: initial !important'>",
+    "<tr><td><code>&lt;Suffix&gt;</code></td> <td><code>&lt;Type&gt;  </code></td></tr>",
+    "<tr><td><code>N8            </code></td> <td><code>Core_Natural8 </code></td></tr>",
+    "<tr><td><code>N16           </code></td> <td><code>Core_Natural16</code></td></tr>",
+    "<tr><td><code>N32           </code></td> <td><code>Core_Natural32</code></td></tr>",
+    "<tr><td><code>N64           </code></td> <td><code>Core_Natural64</code></td></tr>",
+    "</table>"
+  ],
+  "parameters" : [
+    {
+      "name" : "RETURN",
+      "type" : "&lt;Type&gt;*",
+      "description" : "A pointer to a <code>&lt;Type&gt;</code> variable."
+    },
+    {
+      "name" : "v",
+      "type" : "&lt;Type&gt;",
+      "description" : "The value."
+    },
+    {
+      "name" : "i",
+      "type" : "Core_Size",
+      "description" : "The index of the Bit in the range [i, i + n)."
+    },
+    {
+      "name" : "n",
+      "type" : "Core_Size",
+      "description" : "The number of Bits in the range [i, i + n)."
+    }
+  ],
+  "errors" : [
+    {
+      "errorCode" : "@{code('Core_Error_ArgumentInvalid')}",
+      "errorCondition" : "@{code('RETURN')} is a null pointer."
+    },
+    {
+      "errorCode" : "@{code('Core_Error_ArgumentInvalid')}",
+      "errorCondition" : "@{code('i')} is greater than the width of the type minus one."
+    },
+    {
+      "errorCode" : "@{code('Core_Error_ArgumentInvalid')}",
+      "errorCondition" : "@{code('i + n')} is greater than the width of the type."
+    }
+  ],
+  "description" : "Clear bits.",
+  "success" :  "@{code('*RETURN')} was assigned the value @{code('x')} with the Bits @{code('[i, i + n)')} all @{code('0')}.",
+  "return" : "@{code('Core_Success')} on success. @{code('Core_Failure')} on failure.",
+  "remarks" : "This function sets the by-thread error variable on failure."
+}

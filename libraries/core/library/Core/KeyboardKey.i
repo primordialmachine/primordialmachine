@@ -1,16 +1,7 @@
-// Copyright (c) 2018-2023 Michael Heilmann (michaelheilmann@primordialmachine.com). All rights reserved.
+// Copyright (c) 2019-2023 Michael Heilmann (michaelheilmann@primordialmachine.com). All rights reserved.
 
 // Keep the entries in this file in alphabetical order.
 // Key names must be unique. If two keys names have the same number, then they are aliases of each other.
-
-
-/*
-Define(Shift, 9, "Shift")
-Define(Control, 12, "Control")
-Define(Menu, 15, "Menu")
-*/
-
-
 
 Define(A, 65, "A")
 Define(Accept, 30, "IME Accept")

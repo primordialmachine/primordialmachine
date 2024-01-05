@@ -3,8 +3,9 @@
 
 #include "dx/core/annotations.h"
 #include "dx/core/configuration.h"
-#include "dx/core/error.h"
 #include "Core/FundamentalTypes.h"
+#include "Core/Error.h"
+#include "Core/Result.h"
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 

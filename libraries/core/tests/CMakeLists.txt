@@ -4,7 +4,7 @@
 
 cmake_minimum_required(VERSION 3.20)
 
-set(name "dailies.core.tests")
+set(name "Core.Tests")
 set(${name}.kind "executable")
 set(${name}.languages "C")
 set(${name}.private_include_directories "${CMAKE_CURRENT_SOURCE_DIR}/sources")
@@ -33,7 +33,9 @@ list(APPEND ${name}.sources "sources/Core/Tests/safeAddNx.c")
 list(APPEND ${name}.headers "sources/Core/Tests/safeAddNx.h")
 list(APPEND ${name}.sources "sources/Core/Tests/safeMulNx.c")
 list(APPEND ${name}.headers "sources/Core/Tests/safeMulNx.h")
+list(APPEND ${name}.sources "sources/Core/Tests/clearBits.c")
+list(APPEND ${name}.headers "sources/Core/Tests/clearBits.h")
 
 dx_end_project(${name})
 
-target_link_libraries(${name} dailies.core)
+target_link_libraries(${name} Core)

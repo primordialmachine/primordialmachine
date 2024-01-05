@@ -1,7 +1,5 @@
-/// @file Core/Visuals/VertexFormat.h
-/// @brief Enumeration of vertex formats.
-/// @author Michael Heilmann (michaelheilmann@primordialmachine.com)
-/// @copyright Copyright (c) 2018-2023 Michael Heilmann. All rights reserved.
+// Copyright (c) 2019-2023 Michael Heilmann. All rights reserved.
+
 #if !defined(CORE_VISUALS_VERTEXFORMAT_H_INCLUDED)
 #define CORE_VISUALS_VERTEXFORMAT_H_INCLUDED
 

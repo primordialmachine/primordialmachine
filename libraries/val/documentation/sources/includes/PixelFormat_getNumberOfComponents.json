@@ -1,0 +1,30 @@
+{
+  "type" : "function",
+  "last-update" : "2024-01-08",
+  "indices" : "val",
+  "name" : "Core_PixelFormat_getNumberOfComponents",
+  "id" : "core-pixelformat-getnumberofcomponents",
+  "signature" : "Core_Result Core_PixelFormat_getNumberOfComponents(Core_Size* RETURN, Core_PixelFormat SELF);",
+  "parameters" : [
+    {
+      "name" : "RETURN",
+      "type" : "@{code('Core_Size')}",
+      "description" : "A pointer to a @{code('Core_Size')} variable."
+    },
+    {
+      "name" : "SELF",
+      "type" : "@{code('Core_PixelFormat')}",
+      "description" : "This @{code('Core_PixelFormat')} value."
+    }
+  ],
+  "success": "@{code('*RETURN')} was assigned the number of components of a pixel of the pixel format specified by @{code('Core_PixelFormat')}.",
+  "errors" : [
+    {
+      "errorCode" : "Core_Error_ArgumentInvalid",
+      "errorCondition" : "@{code('RETURN')} is a null pointer"
+    }
+  ],
+  "description" : "Get the number of components of a pixel of a pixel format.",
+  "return" : "@{code('Core_Success')} on success. @{code('Core_Failure')} on failure.",
+  "remarks" : "This function sets the by-thread error variable on failure."
+}

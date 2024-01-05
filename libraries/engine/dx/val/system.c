@@ -32,9 +32,9 @@ Core_Result dx_val_system_construct(dx_val_system* SELF, dx_msg_queue* msg_queue
   return Core_Success;
 }
 
-Core_Result dx_val_system_emit_keyboard_key_pressed_msg(dx_val_system* SELF, Core_KeyboardKey key, uint8_t modifiers) {
+Core_Result dx_val_system_emit_keyboard_key_pressed_msg(dx_val_system* SELF, Core_KeyboardKey key, Core_ModifierKeys modifierKeys) {
   Core_Message* msg = NULL;
-  if (dx_keyboard_key_msg_create((dx_keyboard_key_msg**)&msg, DX_KEYBOARD_KEY_ACTION_PRESSED, key, modifiers)) {
+  if (dx_keyboard_key_msg_create((dx_keyboard_key_msg**)&msg, Core_KeyboardKeyAction_Pressed, key, modifierKeys)) {
     return Core_Failure;
   }
   if (dx_msg_queue_push(SELF->msg_queue, msg)) {
@@ -47,9 +47,9 @@ Core_Result dx_val_system_emit_keyboard_key_pressed_msg(dx_val_system* SELF, Cor
   return Core_Success;
 }
 
-Core_Result dx_val_system_emit_keyboard_key_released_msg(dx_val_system* SELF, Core_KeyboardKey key, uint8_t modifiers) {
+Core_Result dx_val_system_emit_keyboard_key_released_msg(dx_val_system* SELF, Core_KeyboardKey key, Core_ModifierKeys modifierKeys) {
   Core_Message* msg = NULL;
-  if (dx_keyboard_key_msg_create((dx_keyboard_key_msg**)&msg, DX_KEYBOARD_KEY_ACTION_RELEASED, key, modifiers)) {
+  if (dx_keyboard_key_msg_create((dx_keyboard_key_msg**)&msg, Core_KeyboardKeyAction_Released, key, modifierKeys)) {
     return Core_Failure;
   }
   if (dx_msg_queue_push(SELF->msg_queue, msg)) {
@@ -62,9 +62,9 @@ Core_Result dx_val_system_emit_keyboard_key_released_msg(dx_val_system* SELF, Co
   return Core_Success;
 }
 
-Core_Result dx_val_system_emit_mouse_button_pressed_msg(dx_val_system* SELF, dx_mouse_button button, Core_Real32 x, Core_Real32 y, uint8_t modifiers) {
+Core_Result dx_val_system_emit_mouse_button_pressed_msg(dx_val_system* SELF, Core_MouseButton button, Core_Real32 x, Core_Real32 y, Core_ModifierKeys modifierKeys) {
   Core_Message* msg = NULL;
-  if (dx_mouse_button_msg_create((dx_mouse_button_msg**)&msg, DX_MOUSE_BUTTON_ACTION_PRESSED, button, modifiers, x, y)) {
+  if (dx_mouse_button_msg_create((dx_mouse_button_msg**)&msg, DX_MOUSE_BUTTON_ACTION_PRESSED, button, modifierKeys, x, y)) {
     return Core_Failure;
   }
   if (dx_msg_queue_push(SELF->msg_queue, msg)) {
@@ -77,9 +77,9 @@ Core_Result dx_val_system_emit_mouse_button_pressed_msg(dx_val_system* SELF, dx_
   return Core_Success;
 }
 
-Core_Result dx_val_system_emit_mouse_button_released_msg(dx_val_system* SELF, dx_mouse_button button, Core_Real32 x, Core_Real32 y, uint8_t modifiers) {
+Core_Result dx_val_system_emit_mouse_button_released_msg(dx_val_system* SELF, Core_MouseButton button, Core_Real32 x, Core_Real32 y, Core_ModifierKeys modifierKeys) {
   Core_Message* msg = NULL;
-  if (dx_mouse_button_msg_create((dx_mouse_button_msg**)&msg, DX_MOUSE_BUTTON_ACTION_RELEASED, button, modifiers, x, y)) {
+  if (dx_mouse_button_msg_create((dx_mouse_button_msg**)&msg, DX_MOUSE_BUTTON_ACTION_RELEASED, button, modifierKeys, x, y)) {
     return Core_Failure;
   }
   if (dx_msg_queue_push(SELF->msg_queue, msg)) {
@@ -92,9 +92,9 @@ Core_Result dx_val_system_emit_mouse_button_released_msg(dx_val_system* SELF, dx
   return Core_Success;
 }
 
-Core_Result dx_val_system_emit_mouse_pointer_moved_msg(dx_val_system* SELF, Core_Real32 x, Core_Real32 y, uint8_t modifiers) {
+Core_Result dx_val_system_emit_mouse_pointer_moved_msg(dx_val_system* SELF, Core_Real32 x, Core_Real32 y, Core_ModifierKeys modifierKeys) {
   Core_Message* msg = NULL;
-  if (dx_mouse_pointer_msg_create((dx_mouse_pointer_msg**)&msg, DX_MOUSE_POINTER_ACTION_MOVED, modifiers, x, y)) {
+  if (dx_mouse_pointer_msg_create((dx_mouse_pointer_msg**)&msg, DX_MOUSE_POINTER_ACTION_MOVED, modifierKeys, x, y)) {
     return Core_Failure;
   }
   if (dx_msg_queue_push(SELF->msg_queue, msg)) {
@@ -109,7 +109,7 @@ Core_Result dx_val_system_emit_mouse_pointer_moved_msg(dx_val_system* SELF, Core
 
 Core_Result dx_val_system_emit_canvas_size_changed_msg(dx_val_system* SELF, Core_Real32 width, Core_Real32 height) {
   Core_Message* msg = NULL;
-  if (dx_canvas_size_changed_msg_create((dx_canvas_size_changed_msg**)&msg, width, height)) {
+  if (Core_CanvasSizeChangedMessage_create((Core_CanvasSizeChangedMessage**)&msg, width, height)) {
     return Core_Failure;
   }
   if (dx_msg_queue_push(SELF->msg_queue, msg)) {
@@ -124,7 +124,7 @@ Core_Result dx_val_system_emit_canvas_size_changed_msg(dx_val_system* SELF, Core
 
 Core_Result dx_val_system_emit_canvas_activated_msg(dx_val_system* SELF) {
   Core_Message* msg = NULL;
-  if (dx_canvas_msg_create((dx_canvas_msg**)&msg, dx_canvas_msg_kind_activated)) {
+  if (Core_CanvasMessage_create((Core_CanvasMessage**)&msg, Core_CanvasMessageKind_Activated)) {
     return Core_Failure;
   }
   if (dx_msg_queue_push(SELF->msg_queue, msg)) {
@@ -139,7 +139,7 @@ Core_Result dx_val_system_emit_canvas_activated_msg(dx_val_system* SELF) {
 
 Core_Result dx_val_system_emit_canvas_deactivated_msg(dx_val_system* SELF) {
   Core_Message* msg = NULL;
-  if (dx_canvas_msg_create((dx_canvas_msg**)&msg, dx_canvas_msg_kind_deactivated)) {
+  if (Core_CanvasMessage_create((Core_CanvasMessage**)&msg, Core_CanvasMessageKind_Deactivated)) {
     return Core_Failure;
   }
   if (dx_msg_queue_push(SELF->msg_queue, msg)) {

@@ -7,21 +7,6 @@
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-DX_DEFINE_ENUMERATION_TYPE("Core.FileAccessMode",
-                           Core_FileAccessMode);
-
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-
-DX_DEFINE_ENUMERATION_TYPE("Core.ExistingFilePolicy",
-                           Core_ExistingFilePolicy);
-
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-
-DX_DEFINE_ENUMERATION_TYPE("Core.NonExistingFilePolicy",
-                           Core_NonExistingFilePolicy);
-
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-
 DX_DEFINE_ENUMERATION_TYPE("Core.FileState",
                            Core_FileState);
 
