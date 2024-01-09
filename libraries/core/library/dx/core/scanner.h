@@ -11,7 +11,7 @@
 /// A scanner provides
 /// - the bytes of the scanned text (get_word_text_bytes, get_word_text_number_of_bytes).
 /// - the start offset and the end offset, in Bytes, of the scanned scanned text
-DX_DECLARE_OBJECT_TYPE("dx.scanner",
+Core_declareObjectType("dx.scanner",
                        dx_scanner,
                        Core_Object);
 
@@ -23,11 +23,11 @@ struct dx_scanner {
   Core_Object _parent;
 };
 
-static inline dx_scanner_dispatch* DX_SCANNER_DISPATCH(void* p) {
-  return (dx_scanner_dispatch*)p;
+static inline dx_scanner_Dispatch* DX_SCANNER_DISPATCH(void* p) {
+  return (dx_scanner_Dispatch*)p;
 }
 
-struct dx_scanner_dispatch {
+struct dx_scanner_Dispatch {
   Core_Object_Dispatch _parent;
   Core_Result(*set)(dx_scanner* SELF, char const* bytes, Core_Size number_of_bytes);
   Core_Result(*step)(dx_scanner* SELF);

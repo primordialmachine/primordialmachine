@@ -2,7 +2,7 @@
 
 #include <string.h>
 
-DX_DEFINE_OBJECT_TYPE("dx.ddl.node",
+Core_defineObjectType("dx.ddl.node",
                       dx_ddl_node,
                       Core_Object);
 
@@ -16,12 +16,12 @@ static Core_Result on_compare_keys(Core_Boolean* RETURN, Core_String** a, Core_S
 
 static void on_added(Core_Object** a) {
   DX_DEBUG_ASSERT(NULL != *a);
-  DX_REFERENCE(*a);
+  CORE_REFERENCE(*a);
 }
 
 static void on_removed(Core_Object** a) {
   DX_DEBUG_ASSERT(NULL != *a);
-  DX_UNREFERENCE(*a);
+  CORE_UNREFERENCE(*a);
 }
 
 static Core_Result on_hash_key(Core_Size* RETURN, Core_String** a) {
@@ -41,23 +41,23 @@ static void dx_ddl_node_destruct(dx_ddl_node* self) {
       dx_inline_pointer_array_uninitialize(&self->list);
     } break;
     case dx_ddl_node_kind_map: {
-      dx_inline_pointer_hashmap_uninitialize(&self->map);
+      Core_InlinePointerHashmap_uninitialize(&self->map);
     } break;
     case dx_ddl_node_kind_number: {
       DX_DEBUG_ASSERT(NULL != self->number);
       DX_DEBUG_ASSERT(NULL != self->string);
-      DX_UNREFERENCE(self->number);
+      CORE_UNREFERENCE(self->number);
       self->number = NULL;
     } break;
     case dx_ddl_node_kind_string: {
       DX_DEBUG_ASSERT(NULL != self->string);
-      DX_UNREFERENCE(self->string);
+      CORE_UNREFERENCE(self->string);
       self->string = NULL;
     } break;
   };
 }
 
-static void dx_ddl_node_constructDispatch(dx_ddl_node_dispatch* self)
+static void dx_ddl_node_constructDispatch(dx_ddl_node_Dispatch* self)
 {/*Intentionally empty.*/}
 
 Core_Result dx_ddl_node_construct(dx_ddl_node* SELF, dx_ddl_node_kind kind) {
@@ -77,15 +77,15 @@ Core_Result dx_ddl_node_construct(dx_ddl_node* SELF, dx_ddl_node_kind kind) {
       }
     } break;
     case dx_ddl_node_kind_map: {
-      static DX_INLINE_POINTER_HASHMAP_CONFIGURATION const configuration = {
-        .compare_keys_callback = (dx_inline_pointer_hashmap_compare_keys_callback*)&on_compare_keys,
-        .hash_key_callback = (dx_inline_pointer_hashmap_hash_key_callback*)&on_hash_key,
-        .key_added_callback = (dx_inline_pointer_hashmap_key_added_callback*)&on_added,
-        .key_removed_callback = (dx_inline_pointer_hashmap_key_removed_callback*)&on_removed,
-        .value_added_callback = (dx_inline_pointer_hashmap_value_added_callback*)&on_added,
-        .value_removed_callback = (dx_inline_pointer_hashmap_value_removed_callback*)&on_removed,
+      static Core_InlinePointerHashMap_Configuration const configuration = {
+        .compareKeysCallback = (Core_InlinePointerHashmap_compare_keys_callback*)&on_compare_keys,
+        .hashKeyCallback = (Core_InlinePointerHashmap_hash_key_callback*)&on_hash_key,
+        .keyAddedCallback = (Core_InlinePointerHashMap_KeyAddedCallback*)&on_added,
+        .keyRemovedCallback = (Core_InlinePointerHashMap_KeyRemovedCallback*)&on_removed,
+        .valueAddedCallback = (Core_InlinePointerHashmap_ValueAddedCallback*)&on_added,
+        .valueRemovedCallback = (Core_InlinePointerHashMap_ValueRemovedCallback*)&on_removed,
       };
-      if (dx_inline_pointer_hashmap_initialize(&SELF->map, &configuration)) {
+      if (Core_InlinePointerHashmap_initialize(&SELF->map, &configuration)) {
         return Core_Failure;
       }
     } break;
@@ -111,7 +111,7 @@ Core_Result dx_ddl_node_construct(dx_ddl_node* SELF, dx_ddl_node_kind kind) {
 Core_Result dx_ddl_node_create(dx_ddl_node** RETURN, dx_ddl_node_kind kind) {
   DX_CREATE_PREFIX(dx_ddl_node);
   if (dx_ddl_node_construct(SELF, kind)) {
-    DX_UNREFERENCE(SELF);
+    CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
   }
@@ -137,7 +137,7 @@ Core_Result dx_ddl_node_map_set(dx_ddl_node* SELF, Core_String* name, dx_ddl_nod
     Core_setError(Core_Error_OperationInvalid);
     return Core_Failure;
   }
-  return dx_inline_pointer_hashmap_set(&SELF->map, name, value);
+  return Core_InlinePointerHashmap_set(&SELF->map, name, value);
 }
 
 Core_Result dx_ddl_node_map_get(dx_ddl_node** RETURN, dx_ddl_node const* SELF, Core_String* name) {
@@ -150,10 +150,10 @@ Core_Result dx_ddl_node_map_get(dx_ddl_node** RETURN, dx_ddl_node const* SELF, C
     return Core_Failure;
   }
   dx_ddl_node* temporary = NULL;
-  if (dx_inline_pointer_hashmap_get(&temporary, &SELF->map, name)) {
+  if (Core_InlinePointerHashmap_get(&temporary, &SELF->map, name)) {
     return Core_Failure;
   }
-  DX_REFERENCE(temporary);
+  CORE_REFERENCE(temporary);
   *RETURN = temporary;
   return Core_Success;
 }
@@ -167,7 +167,7 @@ Core_Result dx_ddl_node_map_get_size(Core_Size* RETURN, dx_ddl_node* SELF) {
     Core_setError(Core_Error_OperationInvalid);
     return Core_Failure;
   }
-  return dx_inline_pointer_hashmap_get_size(RETURN, &SELF->map);
+  return Core_InlinePointerHashmap_getSize(RETURN, &SELF->map);
 }
 
 Core_Result dx_ddl_node_list_append(dx_ddl_node* SELF, dx_ddl_node* value) {
@@ -219,7 +219,7 @@ Core_Result dx_ddl_node_list_get(dx_ddl_node** RETURN, dx_ddl_node* SELF, Core_S
   if (dx_inline_pointer_array_get_at(&temporary, &SELF->list, index)) {
     return Core_Failure;
   }
-  DX_REFERENCE(temporary);
+  CORE_REFERENCE(temporary);
   *RETURN = temporary;
   return Core_Success;
 }
@@ -250,7 +250,7 @@ Core_Result dx_ddl_node_get_string(Core_String** RETURN, dx_ddl_node const* SELF
     Core_setError(Core_Error_OperationInvalid);
     return Core_Failure;
   }
-  DX_REFERENCE(SELF->string);
+  CORE_REFERENCE(SELF->string);
   *RETURN = SELF->string;
   return Core_Success;
 }
@@ -264,8 +264,8 @@ Core_Result dx_ddl_node_set_string(dx_ddl_node* SELF, Core_String* string) {
     Core_setError(Core_Error_OperationInvalid);
     return Core_Failure;
   }
-  DX_REFERENCE(string);
-  DX_UNREFERENCE(SELF->string);
+  CORE_REFERENCE(string);
+  CORE_UNREFERENCE(SELF->string);
   SELF->string = string;
   return Core_Success;
 }
@@ -279,7 +279,7 @@ Core_Result dx_ddl_node_get_number(Core_String** RETURN, dx_ddl_node const* SELF
     Core_setError(Core_Error_OperationInvalid);
     return Core_Failure;
   }
-  DX_REFERENCE(SELF->number);
+  CORE_REFERENCE(SELF->number);
   *RETURN = SELF->number;
   return Core_Success;
 }
@@ -293,8 +293,8 @@ Core_Result dx_ddl_node_set_number(dx_ddl_node* SELF, Core_String* number) {
     Core_setError(Core_Error_OperationInvalid);
     return Core_Failure;
   }
-  DX_REFERENCE(number);
-  DX_UNREFERENCE(SELF->number);
+  CORE_REFERENCE(number);
+  CORE_UNREFERENCE(SELF->number);
   SELF->number = number;
   return Core_Success;
 }

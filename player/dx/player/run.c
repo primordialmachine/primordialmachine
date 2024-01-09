@@ -62,7 +62,7 @@ static Core_Result dx_player_create_application(dx_application** RETURN, dx_msg_
 #if Core_AudialsBackend_OpenAl == Core_AudialsBackend
   dx_aal_system_factory* aal_system_factory = NULL;
   if (dx_aal_al_system_factory_create((dx_aal_al_system_factory**)&aal_system_factory)) {
-    DX_UNREFERENCE(val_system_factory);
+    CORE_UNREFERENCE(val_system_factory);
     val_system_factory = NULL;
     return Core_Failure;
   }
@@ -71,27 +71,27 @@ static Core_Result dx_player_create_application(dx_application** RETURN, dx_msg_
 #endif
   dx_assets_system_factory* assets_system_factory = NULL;
   if (dx_assets_system_factory_create(&assets_system_factory)) {
-    DX_UNREFERENCE(aal_system_factory);
+    CORE_UNREFERENCE(aal_system_factory);
     aal_system_factory = NULL;
-    DX_UNREFERENCE(val_system_factory);
+    CORE_UNREFERENCE(val_system_factory);
     val_system_factory = NULL;
     return Core_Failure;
   }
   dx_application* temporary = NULL;
   if (dx_application_create(&temporary, val_system_factory, aal_system_factory, assets_system_factory, msg_queue)) {
-    DX_UNREFERENCE(assets_system_factory);
+    CORE_UNREFERENCE(assets_system_factory);
     assets_system_factory = NULL;
-    DX_UNREFERENCE(aal_system_factory);
+    CORE_UNREFERENCE(aal_system_factory);
     aal_system_factory = NULL;
-    DX_UNREFERENCE(val_system_factory);
+    CORE_UNREFERENCE(val_system_factory);
     val_system_factory = NULL;
     return Core_Failure;
   }
-  DX_UNREFERENCE(assets_system_factory);
+  CORE_UNREFERENCE(assets_system_factory);
   assets_system_factory = NULL;
-  DX_UNREFERENCE(aal_system_factory);
+  CORE_UNREFERENCE(aal_system_factory);
   aal_system_factory = NULL;
-  DX_UNREFERENCE(val_system_factory);
+  CORE_UNREFERENCE(val_system_factory);
   val_system_factory = NULL;
   *RETURN = temporary;
   return Core_Success;
@@ -142,7 +142,7 @@ Core_Result dx_application_presenter_get(dx_application_presenter** RETURN) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
   }
-  DX_REFERENCE(g_application_presenter);
+  CORE_REFERENCE(g_application_presenter);
   *RETURN = g_application_presenter;
   return Core_Success;
 }
@@ -156,78 +156,78 @@ static Core_Result startup_managers() {
   }
   dx_aal_context* aal_context = NULL;
   if (dx_application_get_aal_context(&aal_context, g_application)) {
-    DX_UNREFERENCE(val_context);
+    CORE_UNREFERENCE(val_context);
     val_context = NULL;
     return Core_Failure;
   }
   if (dx_font_manager_create(&g_font_manager, val_context)) {
-    DX_UNREFERENCE(aal_context);
+    CORE_UNREFERENCE(aal_context);
     aal_context = NULL;
-    DX_UNREFERENCE(val_context);
+    CORE_UNREFERENCE(val_context);
     val_context = NULL;
     return Core_Failure;
   }
   if (dx_rectangle_presenter_create(&g_rectangle_presenter, val_context, aal_context)) {
-    DX_UNREFERENCE(g_font_manager);
+    CORE_UNREFERENCE(g_font_manager);
     g_font_manager = NULL;
-    DX_UNREFERENCE(aal_context);
+    CORE_UNREFERENCE(aal_context);
     aal_context = NULL;
-    DX_UNREFERENCE(val_context);
+    CORE_UNREFERENCE(val_context);
     val_context = NULL;
     return Core_Failure;
   }
   if (dx_font_presenter_create(&g_font_presenter, g_font_manager, g_rectangle_presenter)) {
-    DX_UNREFERENCE(g_rectangle_presenter);
+    CORE_UNREFERENCE(g_rectangle_presenter);
     g_rectangle_presenter = NULL;
-    DX_UNREFERENCE(g_font_manager);
+    CORE_UNREFERENCE(g_font_manager);
     g_font_manager = NULL;
-    DX_UNREFERENCE(aal_context);
+    CORE_UNREFERENCE(aal_context);
     aal_context = NULL;
-    DX_UNREFERENCE(val_context);
+    CORE_UNREFERENCE(val_context);
     val_context = NULL;
     return Core_Failure;
   }
   if (dx_cl_interpreter_create(&g_cl_interpreter)) {
-    DX_UNREFERENCE(g_font_presenter);
+    CORE_UNREFERENCE(g_font_presenter);
     g_font_presenter = NULL;
-    DX_UNREFERENCE(g_rectangle_presenter);
+    CORE_UNREFERENCE(g_rectangle_presenter);
     g_rectangle_presenter = NULL;
-    DX_UNREFERENCE(g_font_manager);
+    CORE_UNREFERENCE(g_font_manager);
     g_font_manager = NULL;
-    DX_UNREFERENCE(aal_context);
+    CORE_UNREFERENCE(aal_context);
     aal_context = NULL;
-    DX_UNREFERENCE(val_context);
+    CORE_UNREFERENCE(val_context);
     val_context = NULL;
     return Core_Failure;
   }
   if (dx_console_commands_register_all(g_cl_interpreter)) {
-    DX_UNREFERENCE(g_font_presenter);
+    CORE_UNREFERENCE(g_font_presenter);
     g_font_presenter = NULL;
-    DX_UNREFERENCE(g_rectangle_presenter);
+    CORE_UNREFERENCE(g_rectangle_presenter);
     g_rectangle_presenter = NULL;
-    DX_UNREFERENCE(g_font_manager);
+    CORE_UNREFERENCE(g_font_manager);
     g_font_manager = NULL;
-    DX_UNREFERENCE(aal_context);
+    CORE_UNREFERENCE(aal_context);
     aal_context = NULL;
-    DX_UNREFERENCE(val_context);
+    CORE_UNREFERENCE(val_context);
     val_context = NULL;
     return Core_Failure;
   }
-  DX_UNREFERENCE(aal_context);
+  CORE_UNREFERENCE(aal_context);
   aal_context = NULL;
-  DX_UNREFERENCE(val_context);
+  CORE_UNREFERENCE(val_context);
   val_context = NULL;
   return Core_Success;
 }
 
 static void shutdown_managers() {
-  DX_UNREFERENCE(g_font_presenter);
+  CORE_UNREFERENCE(g_font_presenter);
   g_font_presenter = NULL;
-  DX_UNREFERENCE(g_rectangle_presenter);
+  CORE_UNREFERENCE(g_rectangle_presenter);
   g_rectangle_presenter = NULL;
-  DX_UNREFERENCE(g_font_manager);
+  CORE_UNREFERENCE(g_font_manager);
   g_font_manager = NULL;
-  DX_UNREFERENCE(g_cl_interpreter);
+  CORE_UNREFERENCE(g_cl_interpreter);
   g_cl_interpreter = NULL;
 }
 
@@ -239,74 +239,85 @@ static Core_Result run() {
   }
   {
     Core_Message* msg = NULL;
-    //
-    if (Core_EmitMessage_create((Core_EmitMessage**)&msg, "Engine version: 0.1\n", sizeof("Engine: version 0.1\n") - 1)) {
-      DX_UNREFERENCE(val_context);
+    Core_String* msgText = NULL;
+    if (Core_String_create(&msgText, "Engine version: 0.1\n", sizeof("Engine: version 0.1\n") - 1)) {
+      CORE_UNREFERENCE(val_context);
       val_context = NULL;
       LEAVE(DX_C_FUNCTION_NAME);
       return Core_Failure;
     }
+    //
+    if (Core_EmitMessage_create((Core_EmitMessage**)&msg, msgText)) {
+      CORE_UNREFERENCE(msgText);
+      msgText = NULL;
+      CORE_UNREFERENCE(val_context);
+      val_context = NULL;
+      LEAVE(DX_C_FUNCTION_NAME);
+      return Core_Failure;
+    }
+    CORE_UNREFERENCE(msgText);
+    msgText = NULL;
     //
     if (dx_msg_queue_push(g_msg_queue, msg)) {
-      DX_UNREFERENCE(msg);
+      CORE_UNREFERENCE(msg);
       msg = NULL;
-      DX_UNREFERENCE(val_context);
+      CORE_UNREFERENCE(val_context);
       val_context = NULL;
       LEAVE(DX_C_FUNCTION_NAME);
       return Core_Failure;
     }
     //
-    DX_UNREFERENCE(msg);
+    CORE_UNREFERENCE(msg);
     msg = NULL;
   }
   {
     Core_Message* msg = NULL;
     //
-    Core_String* information = dx_val_context_get_information(val_context);
-    if (!information) {
-      DX_UNREFERENCE(val_context);
+    Core_String* msgText = dx_val_context_get_information(val_context);
+    if (!msgText) {
+      CORE_UNREFERENCE(val_context);
       val_context = NULL;
       LEAVE(DX_C_FUNCTION_NAME);
       return Core_Failure;
     }
     //
-    if (Core_EmitMessage_create((Core_EmitMessage**)&msg, information->bytes, information->number_of_bytes)) {
-      DX_UNREFERENCE(information);
-      information = NULL;
-      DX_UNREFERENCE(val_context);
+    if (Core_EmitMessage_create((Core_EmitMessage**)&msg, msgText)) {
+      CORE_UNREFERENCE(msgText);
+      msgText = NULL;
+      CORE_UNREFERENCE(val_context);
       val_context = NULL;
       LEAVE(DX_C_FUNCTION_NAME);
       return Core_Failure;
     }
-    DX_UNREFERENCE(information);
-    information = NULL;
+    CORE_UNREFERENCE(msgText);
+    msgText = NULL;
     //
     if (dx_msg_queue_push(g_msg_queue, msg)) {
-      DX_UNREFERENCE(msg);
+      CORE_UNREFERENCE(msg);
       msg = NULL;
-      DX_UNREFERENCE(val_context);
+      CORE_UNREFERENCE(val_context);
       val_context = NULL;
       LEAVE(DX_C_FUNCTION_NAME);
       return Core_Failure;
     }
     //
-    DX_UNREFERENCE(msg);
+    CORE_UNREFERENCE(msg);
     msg = NULL;
   }
   if (dx_application_presenter_startup(g_application_presenter)) {
-    DX_UNREFERENCE(val_context);
+    CORE_UNREFERENCE(val_context);
     val_context = NULL;
     LEAVE(DX_C_FUNCTION_NAME);
     return Core_Failure;
   }
   if (dx_application_presenter_run(g_application_presenter)) {
-    DX_UNREFERENCE(val_context);
+    CORE_UNREFERENCE(val_context);
     val_context = NULL;
     LEAVE(DX_C_FUNCTION_NAME);
     return Core_Failure;
   }
   dx_application_presenter_shutdown(g_application_presenter);
-  DX_UNREFERENCE(val_context);
+  CORE_UNREFERENCE(val_context);
   val_context = NULL;
   LEAVE(DX_C_FUNCTION_NAME);
   return Core_Success;
@@ -331,7 +342,7 @@ static Core_Result startup() {
     return Core_Failure;
   }
   if (dx_application_startup_systems(g_application)) {
-    DX_UNREFERENCE(g_application);
+    CORE_UNREFERENCE(g_application);
     g_application = NULL;
     dx_msg_queue_destroy(g_msg_queue);
     g_msg_queue = NULL;
@@ -341,7 +352,7 @@ static Core_Result startup() {
   }
   if (startup_managers()) {
     dx_application_shutdown_systems(g_application);
-    DX_UNREFERENCE(g_application);
+    CORE_UNREFERENCE(g_application);
     g_application = NULL;
     dx_msg_queue_destroy(g_msg_queue);
     g_msg_queue = NULL;
@@ -353,7 +364,7 @@ static Core_Result startup() {
   if (dx_application_get_val_context(&val_context, g_application)) {
     shutdown_managers();
     dx_application_shutdown_systems(g_application);
-    DX_UNREFERENCE(g_application);
+    CORE_UNREFERENCE(g_application);
     g_application = NULL;
     dx_msg_queue_destroy(g_msg_queue);
     g_msg_queue = NULL;
@@ -368,12 +379,12 @@ static Core_Result startup() {
                                               g_cl_interpreter,
                                               g_msg_queue,
                                               val_context)) {
-    DX_UNREFERENCE(val_context);
+    CORE_UNREFERENCE(val_context);
     val_context = NULL;
 
     shutdown_managers();
     dx_application_shutdown_systems(g_application);
-    DX_UNREFERENCE(g_application);
+    CORE_UNREFERENCE(g_application);
     g_application = NULL;
     dx_msg_queue_destroy(g_msg_queue);
     g_msg_queue = NULL;
@@ -381,7 +392,7 @@ static Core_Result startup() {
     LEAVE(DX_C_FUNCTION_NAME);
     return Core_Failure;
   }
-  DX_UNREFERENCE(val_context);
+  CORE_UNREFERENCE(val_context);
   val_context = NULL;
   LEAVE(DX_C_FUNCTION_NAME);
   return Core_Success;
@@ -389,11 +400,11 @@ static Core_Result startup() {
 
 static Core_Result shutdown() {
   ENTER(DX_C_FUNCTION_NAME);
-  DX_UNREFERENCE(g_application_presenter);
+  CORE_UNREFERENCE(g_application_presenter);
   g_application_presenter = NULL;
   shutdown_managers();
   dx_application_shutdown_systems(g_application);
-  DX_UNREFERENCE(g_application);
+  CORE_UNREFERENCE(g_application);
   g_application = NULL;
   dx_msg_queue_destroy(g_msg_queue);
   g_msg_queue = NULL;
@@ -405,11 +416,6 @@ static Core_Result shutdown() {
 static Core_Result dx_run_tests() {
 #if defined(DX_MATH_WITH_TESTS) && 1 == DX_MATH_WITH_TESTS
   if (dx_math_tests()) {
-    return Core_Failure;
-  }
-#endif
-#if defined(DX_SAFE_MUL_IX_WITH_TESTS) && 1 == DX_SAFE_MUL_IX_WITH_TESTS
-  if (dx_safe_mul_ix_tests()) {
     return Core_Failure;
   }
 #endif

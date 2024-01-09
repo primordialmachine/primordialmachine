@@ -2,7 +2,7 @@
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-DX_DEFINE_OBJECT_TYPE("dx.assets.scene",
+Core_defineObjectType("dx.assets.scene",
                       dx_assets_scene,
                       Core_Object);
 
@@ -10,7 +10,7 @@ static void dx_assets_scene_destruct(dx_assets_scene* SELF) {
   dx_inline_object_array_uninitialize(&SELF->assets);
 }
 
-static void dx_assets_scene_constructDispatch(dx_assets_scene_dispatch* self)
+static void dx_assets_scene_constructDispatch(dx_assets_scene_Dispatch* self)
 {/*Intentionally empty.*/}
 
 Core_Result dx_assets_scene_construct(dx_assets_scene* SELF) {
@@ -25,7 +25,7 @@ Core_Result dx_assets_scene_construct(dx_assets_scene* SELF) {
 Core_Result dx_assets_scene_create(dx_assets_scene** RETURN) {
   DX_CREATE_PREFIX(dx_assets_scene);
   if (dx_assets_scene_construct(SELF)) {
-    DX_UNREFERENCE(SELF);
+    CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
   }

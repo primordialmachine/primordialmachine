@@ -5,7 +5,7 @@
 
 /// @brief Enumeration of vertical text anchors.
 /// A text anchor determines the relation of a reference point and the bounding rectangle of the text.
-DX_DECLARE_ENUMERATION_TYPE("dx.text.anchor_vertical",
+Core_declareEnumerationType("dx.text.anchor_vertical",
                             dx_text_anchor_vertical);
 
 enum dx_text_anchor_vertical {
@@ -26,7 +26,7 @@ enum dx_text_anchor_vertical {
 
 /// @brief Enumeration of horiziontal text anchors.
 /// A text anchor determines the relation of a reference point and the bounding rectangle of the text.
-DX_DECLARE_ENUMERATION_TYPE("dx.text.anchor_horizontal",
+Core_declareEnumerationType("dx.text.anchor_horizontal",
                             dx_text_anchor_horizontal);
 
 enum dx_text_anchor_horizontal {

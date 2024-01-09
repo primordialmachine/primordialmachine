@@ -48,7 +48,10 @@
     }
   ],
   "description" : "Computes the sum of two <code>&lt;Type&gt;</code> values. The computation is conceptually performed using arbitrary precision arithmetic.",
-  "success" : "Let @{meta('n')} be the width of a value of type @{code('Type')}. The addition of @{code('x')} and @{code('y')} was performed as if the values were of width @{meta('2n')} Bits. The lower @{code('n')} Bits of the result are assigned to @{code('*RETURN')}. The upper @{code('n')} Bits of the result are assigned to @{code('*overflow')}.",
+  "success" : [
+    "The values @{code('x')} and @{code('y')} are extended to twice their previous number of Bits and added.",
+    "The lower half of the Bits of the result are assigned to @{code('*RETURN')}. The upper half of the Bits of the result are assigned to @{code('*overflow')}."
+  ],
   "return" : "@{code('Core_Success')} on success. @{code('Core_Failure')} on failure.",
   "remarks" : "This function sets the by-thread error variable on failure."
 }

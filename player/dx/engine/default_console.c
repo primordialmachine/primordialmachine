@@ -21,7 +21,7 @@ static DX_RGBA_F32 const CONSOLE_BACKGROUND_COLOR = { .r = 0.f, .g = 0.f, .b = 0
 // the text color
 static DX_RGBA_F32 const TEXT_COLOR = { .r = 1.f, .g = 1.f, .b = 1.f, .a = 1.f };
 
-DX_DEFINE_OBJECT_TYPE("dx.default_console",
+Core_defineObjectType("dx.default_console",
                       dx_default_console,
                       dx_console);
 
@@ -31,7 +31,7 @@ DX_DEFINE_OBJECT_TYPE("dx.default_console",
 /// @method{dx_default_console}
 static Core_Result on_execute_prompt(dx_default_console* SELF);
 
-static Core_Result on_keyboard_key_message(dx_default_console* SELF, dx_keyboard_key_msg* keyboard_key_message);
+static Core_Result on_keyboard_key_message(dx_default_console* SELF, Core_KeyboardKeyMessage* keyboard_key_message);
 
 static Core_Result render(dx_default_console* SELF, Core_Real32 delta_seconds, Core_Integer32 canvas_size_horizontal, Core_Integer32 canvas_size_vertical, Core_Integer32 dpi_horizontal, Core_Integer32 dpi_vertical);
 
@@ -60,50 +60,50 @@ static Core_Result on_execute_prompt(dx_default_console* SELF) {
   }
   dx_application_presenter* application_presenter = NULL;
   if (dx_application_presenter_get(&application_presenter)) {
-    DX_UNREFERENCE(string);
+    CORE_UNREFERENCE(string);
     string = NULL;
     return Core_Failure;
   }
   dx_cl_interpreter* cl_interpreter = NULL;
   if (dx_application_presenter_get_cl_interpreter(&cl_interpreter, application_presenter)) {
-    DX_UNREFERENCE(application_presenter);
+    CORE_UNREFERENCE(application_presenter);
     application_presenter = NULL;
-    DX_UNREFERENCE(string);
+    CORE_UNREFERENCE(string);
     string = NULL;
     return Core_Failure;
   }
   dx_console_append_output_text(DX_CONSOLE(SELF), string);
   Core_String* newline = NULL;
   if (Core_String_create(&newline, "\n", sizeof("\n") - 1)) {
-    DX_UNREFERENCE(string);
+    CORE_UNREFERENCE(string);
     string = NULL;
-    DX_UNREFERENCE(application_presenter);
+    CORE_UNREFERENCE(application_presenter);
     application_presenter = NULL;
-    DX_UNREFERENCE(string);
+    CORE_UNREFERENCE(string);
     string = NULL;
     return Core_Failure;
   }
   dx_console_append_output_text(DX_CONSOLE(SELF), newline);
-  DX_UNREFERENCE(newline);
+  CORE_UNREFERENCE(newline);
   newline = NULL;
 
   dx_string_buffer_clear(SELF->prompt);
   if (dx_cl_interpreter_execute(cl_interpreter, application_presenter, string)) {
     Core_setError(Core_Error_NoError);
   }
-  DX_UNREFERENCE(string);
+  CORE_UNREFERENCE(string);
   string = NULL;
-  DX_UNREFERENCE(cl_interpreter);
+  CORE_UNREFERENCE(cl_interpreter);
   cl_interpreter = NULL;
-  DX_UNREFERENCE(application_presenter);
+  CORE_UNREFERENCE(application_presenter);
   application_presenter = NULL;
   return Core_Success;
 }
 
-static Core_Result on_keyboard_key_message(dx_default_console* SELF, dx_keyboard_key_msg* keyboard_key_message) {
+static Core_Result on_keyboard_key_message(dx_default_console* SELF, Core_KeyboardKeyMessage* keyboard_key_message) {
   Core_KeyboardKeyAction action;
   Core_KeyboardKey key;
-  if (dx_keyboard_key_msg_get_action(&action, keyboard_key_message) || dx_keyboard_key_msg_get_key(&key, keyboard_key_message)) {
+  if (Core_KeyboardKeyMessage_getAction(&action, keyboard_key_message) || Core_KeyboardKeyMessage_getKey(&key, keyboard_key_message)) {
     return Core_Failure;
   }
   if (Core_KeyboardKeyAction_Released == action) {
@@ -125,7 +125,7 @@ static Core_Result on_keyboard_key_message(dx_default_console* SELF, dx_keyboard
     } else if (Core_KeyboardKey_Less == key) {
       char symbol;
       Core_ModifierKeys modifierKeys = 0;
-      if (dx_input_msg_get_modifier_keys(&modifierKeys, DX_INPUT_MSG(keyboard_key_message))) {
+      if (Core_InputMessage_getModifierKeys(&modifierKeys, CORE_INPUTMESSAGE(keyboard_key_message))) {
         return Core_Failure;
       }
       if (Core_KeyboardKey_Less == key) {
@@ -139,7 +139,7 @@ static Core_Result on_keyboard_key_message(dx_default_console* SELF, dx_keyboard
                Core_KeyboardKey_Period == key) {
       char symbol;
       Core_ModifierKeys modifierKeys = 0;
-      if (dx_input_msg_get_modifier_keys(&modifierKeys, DX_INPUT_MSG(keyboard_key_message))) {
+      if (Core_InputMessage_getModifierKeys(&modifierKeys, CORE_INPUTMESSAGE(keyboard_key_message))) {
         return Core_Failure;
       }
       if (Core_KeyboardKey_Minus == key) {
@@ -182,7 +182,7 @@ static Core_Result on_keyboard_key_message(dx_default_console* SELF, dx_keyboard
       };
       char symbol;
       Core_ModifierKeys modifierKeys = 0;
-      if (dx_input_msg_get_modifier_keys(&modifierKeys, DX_INPUT_MSG(keyboard_key_message))) {
+      if (Core_InputMessage_getModifierKeys(&modifierKeys, CORE_INPUTMESSAGE(keyboard_key_message))) {
         return Core_Failure;
       }
       if (modifierKeys & (Core_ModifierKeys_LeftShift | Core_ModifierKeys_RightShift)) {
@@ -251,7 +251,7 @@ static Core_Result on_keyboard_key_message(dx_default_console* SELF, dx_keyboard
       };
       char symbol;
       Core_ModifierKeys modifierKeys = 0;
-      if (dx_input_msg_get_modifier_keys(&modifierKeys, DX_INPUT_MSG(keyboard_key_message))) {
+      if (Core_InputMessage_getModifierKeys(&modifierKeys, CORE_INPUTMESSAGE(keyboard_key_message))) {
         return Core_Failure;
       }
       if (modifierKeys & (Core_ModifierKeys_LeftShift | Core_ModifierKeys_RightShift)) {
@@ -346,17 +346,17 @@ static Core_Result render(dx_default_console* SELF, Core_Real32 delta_seconds, C
         starty = console_position_y + insets_y - descender;
         static const char* SYMBOL = ">";
         if (dx_string_buffer_prepend_bytes(string_buffer, SYMBOL, strlen(SYMBOL))) {
-          DX_UNREFERENCE(string_buffer);
+          CORE_UNREFERENCE(string_buffer);
           string_buffer = NULL;
           return Core_Failure;
         }
         Core_String* string = NULL;
         if (dx_string_buffer_to_string(&string, string_buffer)) {
-          DX_UNREFERENCE(string_buffer);
+          CORE_UNREFERENCE(string_buffer);
           string_buffer = NULL;
           return Core_Failure;
         }
-        DX_UNREFERENCE(string_buffer);
+        CORE_UNREFERENCE(string_buffer);
         string_buffer = NULL;
         {
           dx_ui_text_field_set_text_color(SELF->ui_input_field, &TEXT_COLOR);
@@ -369,7 +369,7 @@ static Core_Result render(dx_default_console* SELF, Core_Real32 delta_seconds, C
         {
           dx_ui_text_field_set_text(SELF->ui_input_field, string);
         }
-        DX_UNREFERENCE(string);
+        CORE_UNREFERENCE(string);
         string = NULL;
 
         // console output
@@ -484,25 +484,25 @@ static Core_Result on_layout(dx_default_console* SELF, Core_Real32 console_x, Co
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 static void dx_default_console_destruct(dx_default_console* SELF) {
-  DX_UNREFERENCE(SELF->ui_output_field);
+  CORE_UNREFERENCE(SELF->ui_output_field);
   SELF->ui_output_field = NULL;
 
-  DX_UNREFERENCE(SELF->ui_input_field);
+  CORE_UNREFERENCE(SELF->ui_input_field);
   SELF->ui_input_field = NULL;
 
-  DX_UNREFERENCE(SELF->ui_group);
+  CORE_UNREFERENCE(SELF->ui_group);
   SELF->ui_group = NULL;
 
-  DX_UNREFERENCE(SELF->ui_manager);
+  CORE_UNREFERENCE(SELF->ui_manager);
   SELF->ui_manager = NULL;
 
-  DX_UNREFERENCE(SELF->prompt);
+  CORE_UNREFERENCE(SELF->prompt);
   SELF->prompt = NULL;
 }
 
-static void dx_default_console_constructDispatch(dx_default_console_dispatch* SELF) {
+static void dx_default_console_constructDispatch(dx_default_console_Dispatch* SELF) {
   DX_CONSOLE_DISPATCH(SELF)->close = (Core_Result(*)(dx_console*)) & close;
-  DX_CONSOLE_DISPATCH(SELF)->on_keyboard_key_message = (Core_Result(*)(dx_console*,dx_keyboard_key_msg*)) & on_keyboard_key_message;
+  DX_CONSOLE_DISPATCH(SELF)->on_keyboard_key_message = (Core_Result(*)(dx_console*, Core_KeyboardKeyMessage*)) & on_keyboard_key_message;
   DX_CONSOLE_DISPATCH(SELF)->open = (Core_Result(*)(dx_console*)) & open;
   DX_CONSOLE_DISPATCH(SELF)->close = (Core_Result(*)(dx_console*)) & close;
   DX_CONSOLE_DISPATCH(SELF)->render = (Core_Result(*)(dx_console*, Core_Real32, Core_Integer32, Core_Integer32, Core_Integer32, Core_Integer32)) & render;
@@ -523,46 +523,46 @@ Core_Result dx_default_console_construct(dx_default_console* SELF, dx_font_prese
   {
     Core_String* path = NULL;
     if (Core_String_create(&path, "./assets/console/console.ui", sizeof("./assets/console/console.ui") - 1)) {
-      DX_UNREFERENCE(SELF->ui_manager);
+      CORE_UNREFERENCE(SELF->ui_manager);
       SELF->ui_manager = NULL;
       return Core_Failure;
     }
     dx_ui_widget* temporary = NULL;
     if (dx_ui_manager_load(&temporary, SELF->ui_manager, path)) {
-      DX_UNREFERENCE(path);
+      CORE_UNREFERENCE(path);
       path = NULL;
-      DX_UNREFERENCE(SELF->ui_manager);
+      CORE_UNREFERENCE(SELF->ui_manager);
       SELF->ui_manager = NULL;
       return Core_Failure;
     }
     SELF->ui_group = DX_UI_GROUP(temporary);
-    DX_UNREFERENCE(path);
+    CORE_UNREFERENCE(path);
     path = NULL;
   }
   if (get_wigdget_by_name((dx_ui_widget**) & SELF->ui_input_field, SELF, "inputField")) {
-    DX_UNREFERENCE(SELF->ui_group);
+    CORE_UNREFERENCE(SELF->ui_group);
     SELF->ui_group = NULL;
-    DX_UNREFERENCE(SELF->ui_manager);
+    CORE_UNREFERENCE(SELF->ui_manager);
     SELF->ui_manager = NULL;
     return Core_Failure;
   }
   if (get_wigdget_by_name((dx_ui_widget**) & SELF->ui_output_field, SELF, "outputField")) {
-    DX_UNREFERENCE(SELF->ui_input_field);
+    CORE_UNREFERENCE(SELF->ui_input_field);
     SELF->ui_input_field = NULL;
-    DX_UNREFERENCE(SELF->ui_group);
+    CORE_UNREFERENCE(SELF->ui_group);
     SELF->ui_group = NULL;
-    DX_UNREFERENCE(SELF->ui_manager);
+    CORE_UNREFERENCE(SELF->ui_manager);
     SELF->ui_manager = NULL;
     return Core_Failure;
   }
   if (dx_string_buffer_create(&SELF->prompt)) {
-    DX_UNREFERENCE(SELF->ui_output_field);
+    CORE_UNREFERENCE(SELF->ui_output_field);
     SELF->ui_output_field = NULL;
-    DX_UNREFERENCE(SELF->ui_input_field);
+    CORE_UNREFERENCE(SELF->ui_input_field);
     SELF->ui_input_field = NULL;
-    DX_UNREFERENCE(SELF->ui_group);
+    CORE_UNREFERENCE(SELF->ui_group);
     SELF->ui_group = NULL;
-    DX_UNREFERENCE(SELF->ui_manager);
+    CORE_UNREFERENCE(SELF->ui_manager);
     SELF->ui_manager = NULL;
     return Core_Failure;
   }
@@ -575,7 +575,7 @@ Core_Result dx_default_console_construct(dx_default_console* SELF, dx_font_prese
 Core_Result dx_default_console_create(dx_default_console** RETURN, dx_font_presenter* font_presenter, dx_rectangle_presenter* rectangle_presenter) {
   DX_CREATE_PREFIX(dx_default_console);
   if (dx_default_console_construct(SELF, font_presenter, rectangle_presenter)) {
-    DX_UNREFERENCE(SELF);
+    CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
   }

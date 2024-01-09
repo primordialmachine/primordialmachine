@@ -6,7 +6,7 @@ typedef struct dx_ddl_node dx_ddl_node;
 typedef struct dx_ui_widget dx_ui_widget;
 typedef struct dx_ui_manager dx_ui_manager;
 
-DX_DECLARE_OBJECT_TYPE("dx.ui.type_handler",
+Core_declareObjectType("dx.ui.type_handler",
                        dx_ui_type_handler,
                        Core_Object);
 
@@ -18,11 +18,11 @@ struct dx_ui_type_handler {
   Core_Object _parent;
 };
 
-static inline dx_ui_type_handler_dispatch* DX_UI_TYPE_HANDLER_DISPATCH(void* p) {
-  return (dx_ui_type_handler_dispatch*)p;
+static inline dx_ui_type_handler_Dispatch* DX_UI_TYPE_HANDLER_DISPATCH(void* p) {
+  return (dx_ui_type_handler_Dispatch*)p;
 }
 
-struct dx_ui_type_handler_dispatch {
+struct dx_ui_type_handler_Dispatch {
   Core_Object_Dispatch _parent;
   Core_Result(*parse)(dx_ui_widget** RETURN, dx_ui_type_handler* SELF, dx_ui_manager* manager, dx_ddl_node* source);
   Core_Result(*parse_widget_name)(dx_ui_type_handler* SELF, dx_ui_manager* manager, dx_ddl_node* source, dx_ui_widget* widget);

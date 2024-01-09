@@ -2,12 +2,12 @@
 #define DX_MOUSE_STATE_H_INCLUDED
 
 #include "dx/core/object.h"
-#include "dx/core/hapticals.h"
+#include "Core/Input/MouseButton.h"
 
 /// @warning Keep this synchronized with mouse_buttons.i.
 #define dx_mouse_state_configuration_number_of_mouse_buttons (7)
 
-DX_DECLARE_OBJECT_TYPE("dx.mouse_state",
+Core_declareObjectType("dx.mouse_state",
                        dx_mouse_state,
                        Core_Object);
 
@@ -21,11 +21,11 @@ struct dx_mouse_state {
   Core_Boolean state[dx_mouse_state_configuration_number_of_mouse_buttons];
 };
 
-static inline dx_mouse_state_dispatch* DX_MOUSE_STATE_DISPATCH(void* p) {
-  return (dx_mouse_state_dispatch*)p;
+static inline dx_mouse_state_Dispatch* DX_MOUSE_STATE_DISPATCH(void* p) {
+  return (dx_mouse_state_Dispatch*)p;
 }
 
-struct dx_mouse_state_dispatch {
+struct dx_mouse_state_Dispatch {
   Core_Object_Dispatch _parent;
 };
 

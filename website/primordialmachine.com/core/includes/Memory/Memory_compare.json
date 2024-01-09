@@ -39,9 +39,9 @@
   ],
   "description" : "Compare the Bytes of memory blocks.",
   "success" : [
-    "This function compares the Byte values of the memory blocks pointed to by @{code('p')} and @{code('q')} from the Byte.</br>",
-    "If all Byte values are equal, @{code('*RETURN')} was assigned @{code('0')}.</br>",
-    "If there are Byte values that are not equal, then the first mismatching Byte values are compared:</br>",
+    "This function compares the Byte values of the memory blocks pointed to by @{code('p')} and @{code('q')} from the Byte.@(newline())",
+    "If all Byte values are equal, @{code('*RETURN')} was assigned @{code('0')}.@(newline())",
+    "If there are Byte values that are not equal, then the first mismatching Byte values are compared:@(newline())",
     "@{code('*RETURN')} is assigned @{code('-1')} if the Byte value in @{code('p')} is smaller than the Byte value in @{code('q')}.",
     "@{code('*RETURN')} is assigned @{code('+1')} if the Byte value in @{code('p')} is greater than the Byte value in @{code('q')}."
    ]

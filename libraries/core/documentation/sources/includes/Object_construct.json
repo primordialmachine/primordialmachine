@@ -1,48 +1,31 @@
 {
-  "type" : "function",
-  "last-update" : "2023-12-28",
-  "indices" : "val",
-  "name" : "Core_PixelBuffer_create",
-  "id" : "core-pixelbuffer-create",
-  "signature" : "Core_Result Core_PixelBuffer_create(Core_PixelBuffer** RETURN, Core_PixelFormat pixelFormat, Core_Natural32 width, Core_Natural32 height);",
+  "type" : "constructor",
+  "last-update" : "2024-01-08",
+  "indices" : "core",
+  "name" : "Core_Object_construct",
+  "id" : "core-object-construct",
+  "signature" : "Core_Result Core_Object_construct(Core_Object* SELF);",
   "parameters" : [
     {
-      "name" : "RETURN",
-      "type" : "@{code('Core_PixelBuffer**')}",
-      "description" : "A pointer to a @{code('Core_PixelBuffer*')} variable."
-    },
-    {
-      "name" : "pixelFormat",
-      "type" : "@{code('Core_PixelFormat')}",
-      "description" : "The pixel format of the pixel buffer."
-    },
-    {
-      "name" : "width",
-      "type" : "@{code('Core_Natural32')}",
-      "description" : "The width, in pixels, of the pixel buffer. This can be @{code('0')}."
-    },
-    {
-      "name" : "height",
-      "type" : "@{code('Core_Natural32')}",
-      "description" : "The height, in pixels, of the pixel buffer. This can be @{code('0')}."
+      "name" : "SELF",
+      "type" : "@{code('Core_Object*')}",
+      "description" : "A pointer to this @{code('Core_Object')} object."
     }
   ],
-  "success": "@{code('*RETURN')} was assigned the height, in pixels, of this pixel buffer.",
+  "success": "This @{code('Core_Object')} object was constructed.",
   "errors" : [
     {
       "errorCode" : "Core_Error_ArgumentInvalid",
-      "errorCondition" : "@{code('RETURN')} is a null pointer."
+      "errorCondition" : "@{code('SELF')} is a null pointer."
     },
     {
       "errorCode" : "Core_Error_AllocationFailed",
       "errorCondition" : "An allocation failed."
     }
   ],
-  "description" : "Create a pixel buffer.",
+  "description" : "Construct a @{code('Core_Object')} object.",
   "return" : "@{code('Core_Success')} on success. @{code('Core_Failure')} on failure.",
   "remarks" : [
-    "All pixels are assigned the color black with full opacity",
     "This function sets the by-thread error variable on failure."
   ]
 }
-

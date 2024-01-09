@@ -31,16 +31,16 @@ static Core_Result _parse(Core_Object** RETURN, dx_adl_type_handlers_mesh_operat
 
 static Core_Result _resolve(dx_adl_type_handlers_mesh_operations* SELF, dx_adl_symbol* symbol, dx_adl_context* context);
 
-DX_DEFINE_OBJECT_TYPE("dx.adl.type_handlers.mesh_operations",
+Core_defineObjectType("dx.adl.type_handlers.mesh_operations",
                       dx_adl_type_handlers_mesh_operations,
                       dx_adl_type_handler);
 
 static void _on_expected_key_key_added(void** a) {
-  DX_REFERENCE(*a);
+  CORE_REFERENCE(*a);
 }
 
 static void _on_expected_key_key_removed(void** a) {
-  DX_UNREFERENCE(*a);
+  CORE_UNREFERENCE(*a);
 }
 
 static Core_Result _on_hash_expected_key_key(Core_Size* RETURN, Core_String** a) {
@@ -52,20 +52,20 @@ static Core_Result _on_compare_expected_key_keys(Core_Boolean* RETURN, Core_Stri
 }
 
 static Core_Result _uninitialize_expected_keys(dx_adl_type_handlers_mesh_operations* SELF) {
-  dx_inline_pointer_hashmap_uninitialize(&SELF->expected_keys);
+  Core_InlinePointerHashmap_uninitialize(&SELF->expected_keys);
   return Core_Success;
 }
 
 static Core_Result _initialize_expected_keys(dx_adl_type_handlers_mesh_operations* SELF) {
-  DX_INLINE_POINTER_HASHMAP_CONFIGURATION cfg = {
-    .key_added_callback = &_on_expected_key_key_added,
-    .key_removed_callback = &_on_expected_key_key_removed,
-    .value_added_callback = NULL,
-    .value_removed_callback = NULL,
-    .hash_key_callback = (dx_inline_pointer_hashmap_hash_key_callback*)&_on_hash_expected_key_key,
-    .compare_keys_callback = (dx_inline_pointer_hashmap_compare_keys_callback*)&_on_compare_expected_key_keys,
+  Core_InlinePointerHashMap_Configuration cfg = {
+    .keyAddedCallback = &_on_expected_key_key_added,
+    .keyRemovedCallback = &_on_expected_key_key_removed,
+    .valueAddedCallback = NULL,
+    .valueRemovedCallback = NULL,
+    .hashKeyCallback = (Core_InlinePointerHashmap_hash_key_callback*)&_on_hash_expected_key_key,
+    .compareKeysCallback = (Core_InlinePointerHashmap_compare_keys_callback*)&_on_compare_expected_key_keys,
   };
-  if (dx_inline_pointer_hashmap_initialize(&SELF->expected_keys, &cfg)) {
+  if (Core_InlinePointerHashmap_initialize(&SELF->expected_keys, &cfg)) {
     return Core_Failure;
   }
 
@@ -73,16 +73,16 @@ static Core_Result _initialize_expected_keys(dx_adl_type_handlers_mesh_operation
   { \
     Core_String* expected_key = NULL; \
     if (Core_String_create(&expected_key, EXPECTED_KEY, sizeof(EXPECTED_KEY)-1)) { \
-      dx_inline_pointer_hashmap_uninitialize(&SELF->expected_keys); \
+      Core_InlinePointerHashmap_uninitialize(&SELF->expected_keys); \
       return Core_Failure; \
     } \
-    if (dx_inline_pointer_hashmap_set(&SELF->expected_keys, expected_key, expected_key)) {\
-      DX_UNREFERENCE(expected_key); \
+    if (Core_InlinePointerHashmap_set(&SELF->expected_keys, expected_key, expected_key)) {\
+      CORE_UNREFERENCE(expected_key); \
       expected_key = NULL; \
-      dx_inline_pointer_hashmap_uninitialize(&SELF->expected_keys); \
+      Core_InlinePointerHashmap_uninitialize(&SELF->expected_keys); \
       return Core_Failure; \
     } \
-    DX_UNREFERENCE(expected_key); \
+    CORE_UNREFERENCE(expected_key); \
     expected_key = NULL; \
   }
   DEFINE("type");
@@ -91,11 +91,11 @@ static Core_Result _initialize_expected_keys(dx_adl_type_handlers_mesh_operation
 }
 
 static void on_received_key_added(void** p) {
-  DX_REFERENCE(*p);
+  CORE_REFERENCE(*p);
 }
 
 static void on_received_key_removed(void** p) {
-  DX_UNREFERENCE(*p);
+  CORE_UNREFERENCE(*p);
 }
 
 static Core_Result _check_keys(dx_adl_type_handlers_mesh_operations* SELF, dx_ddl_node* node) {
@@ -107,7 +107,7 @@ static Core_Result _check_keys(dx_adl_type_handlers_mesh_operations* SELF, dx_dd
   if (dx_inline_pointer_array_initialize(&received_keys, 0, &configuration)) {
     return Core_Failure;
   }
-  if (dx_inline_pointer_hashmap_get_keys(&node->map, &received_keys)) {
+  if (Core_InlinePointerHashmap_getKeys(&node->map, &received_keys)) {
     dx_inline_pointer_array_uninitialize(&received_keys);
     return Core_Failure;
   }
@@ -123,7 +123,7 @@ static Core_Result _check_keys(dx_adl_type_handlers_mesh_operations* SELF, dx_dd
       return Core_Failure;
     }
     Core_String* expected_key = NULL;
-    if (dx_inline_pointer_hashmap_get(&expected_key, &SELF->expected_keys, received_key)) {
+    if (Core_InlinePointerHashmap_get(&expected_key, &SELF->expected_keys, received_key)) {
       dx_inline_pointer_array_uninitialize(&received_keys);
       return Core_Failure;
     }
@@ -146,7 +146,7 @@ static Core_Result _parse(Core_Object** RETURN, dx_adl_type_handlers_mesh_operat
   }
   Core_Boolean isEqualTo = Core_False;
   if (Core_String_isEqualTo(&isEqualTo, received_type, NAME(mesh_operations_set_vertex_colors_type))) {
-    DX_UNREFERENCE(received_type);
+    CORE_UNREFERENCE(received_type);
     received_type = NULL;
     return Core_Failure;
   }
@@ -187,7 +187,7 @@ static void dx_adl_type_handlers_mesh_operations_destruct(dx_adl_type_handlers_m
   _uninitialize_expected_keys(SELF);
 }
 
-static void dx_adl_type_handlers_mesh_operations_constructDispatch(dx_adl_type_handlers_mesh_operations_dispatch* SELF) {
+static void dx_adl_type_handlers_mesh_operations_constructDispatch(dx_adl_type_handlers_mesh_operations_Dispatch* SELF) {
   DX_ADL_TYPE_HANDLER_DISPATCH(SELF)->read = (Core_Result (*)(Core_Object**, dx_adl_type_handler*, dx_ddl_node*, dx_adl_context*)) & _parse;
   DX_ADL_TYPE_HANDLER_DISPATCH(SELF)->resolve = (Core_Result(*)(dx_adl_type_handler*, dx_adl_symbol*, dx_adl_context*)) & _resolve;
 }
@@ -195,7 +195,7 @@ static void dx_adl_type_handlers_mesh_operations_constructDispatch(dx_adl_type_h
 Core_Result dx_adl_type_handlers_mesh_operations_create(dx_adl_type_handlers_mesh_operations** RETURN) {
   DX_CREATE_PREFIX(dx_adl_type_handlers_mesh_operations);
   if (dx_adl_type_handlers_mesh_operations_construct(SELF)) {
-    DX_UNREFERENCE(SELF);
+    CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
   }

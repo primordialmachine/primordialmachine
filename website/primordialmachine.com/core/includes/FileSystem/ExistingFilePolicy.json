@@ -1,0 +1,22 @@
+{
+  "type" : "enumeration",
+  "last-update" : "2024-01-08",
+  "indices" : "core",
+  "name" : "Core_ExistingFilePolicy",
+  "id" : "core-existingfilepolicy",
+  "signature" : "typedef enum Core_ExistingFilePolicy &lt;implementation&gt; Core_ExistingFilePolicy;",
+  "description": [
+    "An enumeration of policies for opening a file in case of that the file exists.@(newline())",
+    "The enumeration elements cannot be combined."
+  ],
+  "elements": [
+    {
+      "name" : "Core_ExistingFilePolicy_Retain",
+      "description" : "Retain the file contents."
+    },
+    {
+      "name" : "Core_ExistingFilePolicy_Truncate",
+      "description" : "Truncate the file contants."
+    }
+  ]
+}

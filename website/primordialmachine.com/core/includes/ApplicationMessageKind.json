@@ -1,0 +1,15 @@
+{
+  "type" : "enumeration",
+  "last-update" : "2024-01-09",
+  "indices" : "core",
+  "name" : "Core_ApplicationMessageKind",
+  "id" : "core-applicationmessagekind",
+  "signature" : "typedef enum Core_ApplicationMessageKind &lt;implementation&gt; Core_ApplicationMessageKind;",
+  "description": "An enumeration of kinds of application messages.",
+  "elements": [
+    {
+      "name" : "Core_ApplicationMessageKind_QuitRequested",
+      "description" : "Kind of  canvas state changed message."
+    }
+  ]
+}

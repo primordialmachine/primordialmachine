@@ -50,7 +50,7 @@ static dx_val_gl_wgl_window* g_window = NULL;
 static dx_gl_wgl_context* g_context = NULL;
 
 static void gl_wgl_close_window_internal(dx_val_gl_wgl_window* window) {
-  DX_UNREFERENCE(window);
+  CORE_UNREFERENCE(window);
   window = NULL;
 }
 
@@ -61,15 +61,15 @@ static Core_Result gl_wgl_open_window_internal(dx_val_gl_wgl_window** window, dx
   }
   dx_val_gl_wgl_window* window1 = NULL;
   if (dx_gl_wgl_window_create(&window1, application)) {
-    DX_UNREFERENCE(application);
+    CORE_UNREFERENCE(application);
     application = NULL;
     return Core_Failure;
   }
-  DX_UNREFERENCE(application);
+  CORE_UNREFERENCE(application);
   application = NULL;
   if (init_wgl) {
     if (init_wgl(window1, existing)) {
-      DX_UNREFERENCE(window1);
+      CORE_UNREFERENCE(window1);
       window1 = NULL;
       return Core_Failure;
     }
@@ -221,7 +221,7 @@ static Core_Result gl_wgl_init_wgl_v1(dx_val_gl_wgl_window* window, dx_val_gl_wg
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-DX_DEFINE_OBJECT_TYPE("dx.val.gl.wgl.system",
+Core_defineObjectType("dx.val.gl.wgl.system",
                       dx_val_gl_wgl_system,
                       dx_val_gl_system);
 
@@ -483,11 +483,11 @@ static LRESULT CALLBACK window_procedure(HWND wnd, UINT msg, WPARAM wparam, LPAR
       }
       if (dx_val_gl_wgl_system_on_keyboard_key_message(DX_VAL_GL_WGL_SYSTEM(app->val_system), wnd, msg, wparam, lparam)) {
         Core_setError(Core_Error_NoError); // Ignore the error.
-        DX_UNREFERENCE(app);
+        CORE_UNREFERENCE(app);
         app = NULL;
         return 0;
       }
-      DX_UNREFERENCE(app);
+      CORE_UNREFERENCE(app);
       app = NULL;
       return 0;
     } break;
@@ -506,11 +506,11 @@ static LRESULT CALLBACK window_procedure(HWND wnd, UINT msg, WPARAM wparam, LPAR
       }
       if (dx_val_gl_wgl_system_on_mouse_button_message(DX_VAL_GL_WGL_SYSTEM(app->val_system), wnd, msg, wparam, lparam)) {
         Core_setError(Core_Error_NoError); // Ignore the error.
-        DX_UNREFERENCE(app);
+        CORE_UNREFERENCE(app);
         app = NULL;
         return 0;
       }
-      DX_UNREFERENCE(app);
+      CORE_UNREFERENCE(app);
       app = NULL;
       return 0;
     } break;
@@ -522,11 +522,11 @@ static LRESULT CALLBACK window_procedure(HWND wnd, UINT msg, WPARAM wparam, LPAR
       }
       if (dx_val_gl_wgl_system_on_mouse_pointer_message(DX_VAL_GL_WGL_SYSTEM(app->val_system), wnd, msg, wparam, lparam)) {
         Core_setError(Core_Error_NoError); // Ignore the error.
-        DX_UNREFERENCE(app);
+        CORE_UNREFERENCE(app);
         app = NULL;
         return 0;
       }
-      DX_UNREFERENCE(app);
+      CORE_UNREFERENCE(app);
       app = NULL;
       return 0;
     } break;
@@ -538,11 +538,11 @@ static LRESULT CALLBACK window_procedure(HWND wnd, UINT msg, WPARAM wparam, LPAR
         return 0;
       }
       if (dx_val_gl_wgl_system_on_window_message(DX_VAL_GL_WGL_SYSTEM(app->val_system), wnd, msg, wparam, lparam)) {
-        DX_UNREFERENCE(app);
+        CORE_UNREFERENCE(app);
         app = NULL;
         return 0;
       }
-      DX_UNREFERENCE(app);
+      CORE_UNREFERENCE(app);
       app = NULL;
       return 0;
     } break;
@@ -552,11 +552,11 @@ static LRESULT CALLBACK window_procedure(HWND wnd, UINT msg, WPARAM wparam, LPAR
         return 0;
       }
       if (dx_application_emit_quit_msg(DX_APPLICATION(app))) {
-        DX_UNREFERENCE(app);
+        CORE_UNREFERENCE(app);
         app = NULL;
         return 0;
       }
-      DX_UNREFERENCE(app);
+      CORE_UNREFERENCE(app);
       app = NULL;
       return 0;
     } break;
@@ -578,7 +578,7 @@ static Core_Result startup(dx_val_gl_wgl_system* SELF) {
 }
 
 static Core_Result shutdown(dx_val_gl_wgl_system* SELF) {
-  DX_UNREFERENCE(g_context);
+  CORE_UNREFERENCE(g_context);
   g_context = NULL;
   gl_wgl_close_window();
   return Core_Success;
@@ -589,7 +589,7 @@ static Core_Result get_context(dx_gl_wgl_context** RETURN, dx_val_gl_wgl_system*
     Core_setError(Core_Error_NotInitialized);
     return Core_Failure;
   }
-  DX_REFERENCE(g_context);
+  CORE_REFERENCE(g_context);
   *RETURN = g_context;
   return Core_Success;
 }
@@ -599,7 +599,7 @@ static Core_Result get_window(dx_val_gl_wgl_window** RETURN, dx_val_gl_wgl_syste
     Core_setError(Core_Error_NotInitialized);
     return Core_Failure;
   }
-  DX_REFERENCE(g_window);
+  CORE_REFERENCE(g_window);
   *RETURN = g_window;
   return Core_Success;
 }
@@ -618,7 +618,7 @@ static void dx_val_gl_wgl_system_destruct(dx_val_gl_wgl_system* SELF) {
   SELF->instance_handle = NULL;
 }
 
-static void dx_val_gl_wgl_system_constructDispatch(dx_val_gl_wgl_system_dispatch* SELF) {
+static void dx_val_gl_wgl_system_constructDispatch(dx_val_gl_wgl_system_Dispatch* SELF) {
   DX_SYSTEM_DISPATCH(SELF)->startup = (Core_Result(*)(dx_system*)) & startup;
   DX_SYSTEM_DISPATCH(SELF)->shutdown = (Core_Result(*)(dx_system*)) & shutdown;
   DX_VAL_SYSTEM_DISPATCH(SELF)->get_context = (Core_Result(*)(dx_val_context**,dx_val_system*)) & get_context;
@@ -678,7 +678,7 @@ Core_Result dx_val_gl_wgl_system_construct(dx_val_gl_wgl_system* SELF, dx_msg_qu
 Core_Result dx_val_gl_wgl_system_create(dx_val_gl_wgl_system** RETURN, dx_msg_queue* msg_queue) {
   DX_CREATE_PREFIX(dx_val_gl_wgl_system);
   if (dx_val_gl_wgl_system_construct(SELF, msg_queue)) {
-    DX_UNREFERENCE(SELF);
+    CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
   }

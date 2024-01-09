@@ -3,7 +3,7 @@
 
 #include "dx/core.h"
 
-DX_DECLARE_OBJECT_TYPE("dx.aal.context",
+Core_declareObjectType("dx.aal.context",
                        dx_aal_context,
                        Core_Object);
 
@@ -15,12 +15,12 @@ struct dx_aal_context {
   dx_context _parent;
 };
 
-static inline dx_aal_context_dispatch* DX_AAL_CONTEXT_DISPATCH(void* p) {
-  return (dx_aal_context_dispatch*)p;
+static inline dx_aal_context_Dispatch* DX_AAL_CONTEXT_DISPATCH(void* p) {
+  return (dx_aal_context_Dispatch*)p;
 }
 
-struct dx_aal_context_dispatch {
-  dx_context_dispatch _parent;
+struct dx_aal_context_Dispatch {
+  dx_context_Dispatch _parent;
   Core_Result(*start)(dx_aal_context* SELF);
   Core_Result(*stop)(dx_aal_context* SELF);
 };

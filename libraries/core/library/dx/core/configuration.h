@@ -197,6 +197,22 @@
 // Currently, the assember implementation is preferred so keep this enabled.
 #define Core_safeMulN32_withAsm (1)
 
+// If defined and evaluating to @a 1, then Core_safeMulI8 uses an assembler implementation and otherwise a pure C implementation.
+// Currently, the assember implementation is preferred so keep this enabled.
+#define Core_safeMulI8_withAsm (1)
+
+// If defined and evaluating to @a 1, then Core_safeMulI16 uses an assembler implementation and otherwise a pure C implementation.
+// Currently, the assember implementation is preferred so keep this enabled.
+#define Core_safeMulI16_withAsm (1)
+
+// If defined and evaluating to @a 1, then Core_safeMulI32 uses an assembler implementation and otherwise a pure C implementation.
+// Currently, the assember implementation is preferred so keep this enabled.
+#define Core_safeMulI32_withAsm (1)
+
+// If defined and evaluating to @a 1, then Core_safeMulI64 uses an assembler implementation and otherwise a pure C implementation.
+// Currently, the assember implementation is the only implementation so keep this enabled.
+#define Core_safeMulI64_withAsm (1)
+
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 /// If defined and evaluating to @a 1,
@@ -205,21 +221,9 @@
 /// This function succeeds if all such tests succeed, otherwise it fails.
 #define DX_SAFE_MUL_IX_WITH_TESTS (1)
 
-// If defined and evaluating to @a 1, then dx_mul_i8 uses an assembler implementation and otherwise a pure C implementation.
-// Currently, the assember implementation is preferred so keep this enabled.
-#define DX_MUL_I8_ASM (1)
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-// If defined and evaluating to @a 1, then dx_mul_i16 uses an assembler implementation and otherwise a pure C implementation.
-// Currently, the assember implementation is preferred so keep this enabled.
-#define DX_MUL_I16_ASM (1)
 
-// If defined and evaluating to @a 1, then dx_mul_i32 uses an assembler implementation and otherwise a pure C implementation.
-// Currently, the assember implementation is preferred so keep this enabled.
-#define DX_MUL_I32_ASM (1)
-
-// If defined and evaluating to @a 1, then dx_mul_i64 uses an assembler implementation and otherwise a pure C implementation.
-// Currently, the assember implementation is the only implementation so keep this enabled.
-#define DX_MUL_I64_ASM (1)
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 

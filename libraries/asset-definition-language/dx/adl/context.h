@@ -9,7 +9,7 @@
 #include "dx/adl/names.h"
 
 /// @brief The state maintained of a compiler when compiling an "Asset Definition Language" program from a "Data Definition Language" program.
-DX_DECLARE_OBJECT_TYPE("dx.adl.context",
+Core_declareObjectType("dx.adl.context",
                        dx_adl_context,
                        Core_Object);
 
@@ -25,7 +25,7 @@ struct dx_adl_context {
   dx_assets_scene* scene;
 
   /// @brief Map from names (Core_String) to type handlers (dx_adl_type_handler).
-  dx_inline_pointer_hashmap type_handlers;
+  Core_InlinePointerHashmap type_handlers;
   /// @brief A pointer to the names.
   dx_adl_names* names;
   /// @brief A pointer to the parser object.
@@ -34,7 +34,7 @@ struct dx_adl_context {
   dx_asset_definition_language_diagnostics* diagnostics;
 };
 
-struct dx_adl_context_dispatch {
+struct dx_adl_context_Dispatch {
   Core_Object_Dispatch _parent;
 };
 

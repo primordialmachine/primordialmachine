@@ -4,7 +4,7 @@
 #include "dx/val/gl/system.h"
 #include "dx/val/gl/wgl/context.h"
 
-DX_DECLARE_OBJECT_TYPE("dx.val.gl.wgl.system",
+Core_declareObjectType("dx.val.gl.wgl.system",
                        dx_val_gl_wgl_system,
                        dx_val_gl_system);
 
@@ -22,12 +22,12 @@ struct dx_val_gl_wgl_system {
   ATOM class_handle;
 };
 
-static inline dx_val_gl_wgl_system_dispatch* DX_VAL_GL_WGL_SYSTEM_DISPATCH(void* p) {
-  return (dx_val_gl_wgl_system_dispatch*)p;
+static inline dx_val_gl_wgl_system_Dispatch* DX_VAL_GL_WGL_SYSTEM_DISPATCH(void* p) {
+  return (dx_val_gl_wgl_system_Dispatch*)p;
 }
 
-struct dx_val_gl_wgl_system_dispatch {
-  dx_val_gl_system_dispatch _parent;
+struct dx_val_gl_wgl_system_Dispatch {
+  dx_val_gl_system_Dispatch _parent;
 };
 
 /// @param msq_queue A pointer to the message queue.

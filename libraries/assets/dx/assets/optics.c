@@ -2,14 +2,14 @@
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-DX_DEFINE_OBJECT_TYPE("dx.assets.optics",
+Core_defineObjectType("dx.assets.optics",
                       dx_assets_optics,
                       Core_Object);
 
 static void dx_assets_optics_destruct(dx_assets_optics* SELF)
 {/*Intentionally empty.*/}
 
-static void dx_assets_optics_constructDispatch(dx_assets_optics_dispatch* SELF)
+static void dx_assets_optics_constructDispatch(dx_assets_optics_Dispatch* SELF)
 {/*Intentionally empty.*/}
 
 Core_Result dx_assets_optics_construct(dx_assets_optics* SELF) {
@@ -20,7 +20,7 @@ Core_Result dx_assets_optics_construct(dx_assets_optics* SELF) {
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-DX_DEFINE_OBJECT_TYPE("dx.asset.optics_orthographic",
+Core_defineObjectType("dx.asset.optics_orthographic",
                       dx_asset_optics_orthographic,
                       dx_assets_optics)
 
@@ -39,7 +39,7 @@ static void dx_asset_optics_orthographic_destruct(dx_asset_optics_orthographic* 
   }
 }
 
-static void dx_asset_optics_orthographic_constructDispatch(dx_asset_optics_orthographic_dispatch* SELF)
+static void dx_asset_optics_orthographic_constructDispatch(dx_asset_optics_orthographic_Dispatch* SELF)
 {/*Intentionally empty.*/}
 
 Core_Result dx_asset_optics_orthographic_construct(dx_asset_optics_orthographic* SELF) {
@@ -72,7 +72,7 @@ Core_Result dx_asset_optics_orthographic_construct(dx_asset_optics_orthographic*
 Core_Result dx_asset_optics_orthographic_create(dx_asset_optics_orthographic** RETURN) {
   DX_CREATE_PREFIX(dx_asset_optics_orthographic);
   if (dx_asset_optics_orthographic_construct(SELF)) {
-    DX_UNREFERENCE(SELF);
+    CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
   }
@@ -82,7 +82,7 @@ Core_Result dx_asset_optics_orthographic_create(dx_asset_optics_orthographic** R
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-DX_DEFINE_OBJECT_TYPE("dx.asset.optics_perspective",
+Core_defineObjectType("dx.asset.optics_perspective",
                       dx_asset_optics_perspective,
                       dx_assets_optics);
 
@@ -93,7 +93,7 @@ static void dx_asset_optics_perspective_destruct(dx_asset_optics_perspective* SE
   }
 }
 
-static void dx_asset_optics_perspective_constructDispatch(dx_asset_optics_perspective_dispatch* SELF)
+static void dx_asset_optics_perspective_constructDispatch(dx_asset_optics_perspective_Dispatch* SELF)
 {/*Intentionally empty.*/}
 
 Core_Result dx_asset_optics_perspective_construct(dx_asset_optics_perspective* SELF) {
@@ -115,7 +115,7 @@ Core_Result dx_asset_optics_perspective_construct(dx_asset_optics_perspective* S
 Core_Result dx_asset_optics_perspective_create(dx_asset_optics_perspective** RETURN) {
   DX_CREATE_PREFIX(dx_asset_optics_perspective);
   if (dx_asset_optics_perspective_construct(SELF)) {
-    DX_UNREFERENCE(SELF);
+    CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
   }

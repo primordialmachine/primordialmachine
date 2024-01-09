@@ -1,0 +1,23 @@
+{
+  "type" : "enumeration",
+  "last-update" : "2024-01-13",
+  "indices" : "core",
+  "name" : "Core_MousePointerAction",
+  "id" : "core-mousepointeraction",
+  "signature" : "typedef enum Core_MousePointerAction &lt;implementation&gt; Core_MousePointerAction;",
+  "description": "An enumeration of mouse pointer actions.",
+  "elements": [
+    {
+      "name" : "Core_MousePointerAction_Entered",
+      "description" : "A mouse pointer entered a canvas."
+    },
+    {
+      "name" : "Core_MousePointerAction_Exited",
+      "description" : "A mouse pointer exited a canvas."
+    },
+    {
+      "name" : "Core_MousePointerAction_Moved",
+      "description" : "A mouse pointer moved."
+    }
+  ]
+}

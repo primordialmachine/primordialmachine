@@ -5,14 +5,14 @@
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-DX_DEFINE_OBJECT_TYPE("dx.assets.viewer_controller",
+Core_defineObjectType("dx.assets.viewer_controller",
                       dx_assets_viewer_controller,
                       Core_Object);
 
 static void dx_assets_viewer_controller_destruct(dx_assets_viewer_controller* SELF)
 {/*Intentionally empty.*/}
 
-static void dx_assets_viewer_controller_constructDispatch(dx_assets_viewer_controller_dispatch* SELF)
+static void dx_assets_viewer_controller_constructDispatch(dx_assets_viewer_controller_Dispatch* SELF)
 {/*Intentionally empty.*/}
 
 Core_Result dx_assets_viewer_controller_construct(dx_assets_viewer_controller* SELF) {
@@ -28,7 +28,7 @@ Core_Result dx_assets_viewer_controller_update(dx_assets_viewer_controller* SELF
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-DX_DEFINE_OBJECT_TYPE("dx.asset.viewer_controllers.rotate_y",
+Core_defineObjectType("dx.asset.viewer_controllers.rotate_y",
                       dx_asset_viewer_controllers_rotate_y,
                       dx_assets_viewer_controller);
 
@@ -44,7 +44,7 @@ static Core_Result dx_asset_viewer_controllers_rotate_y_update(dx_asset_viewer_c
 static void dx_asset_viewer_controllers_rotate_y_destruct(dx_asset_viewer_controllers_rotate_y* SELF)
 {/*Intentionally empty.*/}
 
-static void dx_asset_viewer_controllers_rotate_y_constructDispatch(dx_asset_viewer_controllers_rotate_y_dispatch* self)
+static void dx_asset_viewer_controllers_rotate_y_constructDispatch(dx_asset_viewer_controllers_rotate_y_Dispatch* self)
 {/*Intentionally empty.*/}
 
 Core_Result dx_asset_viewer_controllers_rotate_y_construct(dx_asset_viewer_controllers_rotate_y* SELF) {
@@ -65,7 +65,7 @@ Core_Result dx_asset_viewer_controllers_rotate_y_construct(dx_asset_viewer_contr
 Core_Result dx_asset_viewer_controllers_rotate_y_create(dx_asset_viewer_controllers_rotate_y** RETURN) {
   DX_CREATE_PREFIX(dx_asset_viewer_controllers_rotate_y);
   if (dx_asset_viewer_controllers_rotate_y_construct(SELF)) {
-    DX_UNREFERENCE(SELF);
+    CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
   }

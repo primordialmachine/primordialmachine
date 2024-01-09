@@ -1,0 +1,23 @@
+{
+  "type" : "enumeration",
+  "last-update" : "2024-01-08",
+  "indices" : "val",
+  "name" : "Core_CanvasMessageKind",
+  "id" : "core-canvasmessagekind",
+  "signature" : "typedef enum Core_CanvasMessageKind &lt;implementation&gt; Core_CanvasMessageKind;",
+  "description": "An enumeration of kinds of canvas messages.",
+  "elements": [
+    {
+      "name" : "Core_CanvasMessageKind_StateChanged",
+      "description" : "Kind of  canvas state changed message."
+    },
+    {
+      "name" : "Core_CanvasMessageKind_SizeChanged",
+      "description" : "Kind of a canvas size changed message."
+    },
+    {
+      "name" : "Core_CanvasMessageKind_DpiChanged",
+      "description" : "Kind of a canvas DPI changed message."
+    }
+  ]
+}

@@ -1,13 +1,13 @@
 #include "dx/assets/vector_3_f32.h"
 
-DX_DEFINE_OBJECT_TYPE("dx.assets.vector_3_f32",
+Core_defineObjectType("dx.assets.vector_3_f32",
                       dx_assets_vector_3_f32,
                       Core_Object);
 
 static void dx_assets_vector_3_f32_destruct(dx_assets_vector_3_f32* SELF)
 {/*Intentionally empty.*/}
 
-static void dx_assets_vector_3_f32_constructDispatch(dx_assets_vector_3_f32_dispatch* SELF)
+static void dx_assets_vector_3_f32_constructDispatch(dx_assets_vector_3_f32_Dispatch* SELF)
 {/*Intentionally empty.*/}
 
 Core_Result dx_assets_vector_3_f32_construct(dx_assets_vector_3_f32* SELF, DX_VEC3 const* value) {
@@ -24,7 +24,7 @@ Core_Result dx_assets_vector_3_f32_construct(dx_assets_vector_3_f32* SELF, DX_VE
 Core_Result dx_assets_vector_3_f32_create(dx_assets_vector_3_f32** RETURN, DX_VEC3 const* value) {
   DX_CREATE_PREFIX(dx_assets_vector_3_f32);
   if (dx_assets_vector_3_f32_construct(SELF, value)) {
-    DX_UNREFERENCE(SELF);
+    CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
   }

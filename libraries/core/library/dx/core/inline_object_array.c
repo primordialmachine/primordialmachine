@@ -1,11 +1,11 @@
 #include "dx/core/inline_object_array.h"
 
 static void added_callback(Core_Object **p) {
-  if (*p) DX_REFERENCE(*p);
+  if (*p) CORE_REFERENCE(*p);
 }
 
 static void removed_callback(Core_Object** p) {
-  if (*p) DX_UNREFERENCE(*p);
+  if (*p) CORE_UNREFERENCE(*p);
 }
 
 Core_Result dx_inline_object_array_initialize(dx_inline_object_array* SELF, Core_Size initial_capacity) {

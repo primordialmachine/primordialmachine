@@ -3,7 +3,7 @@
 
 #include "dx/ui/widget.h"
 
-DX_DECLARE_OBJECT_TYPE("dx.ui.group",
+Core_declareObjectType("dx.ui.group",
                        dx_ui_group,
                        dx_ui_widget);
 
@@ -23,12 +23,12 @@ struct dx_ui_group {
   dx_object_array* children;
 };
 
-static dx_ui_group_dispatch* DX_UI_GROUP_DISPATCH(void* p) {
-  return (dx_ui_group_dispatch*)p;
+static dx_ui_group_Dispatch* DX_UI_GROUP_DISPATCH(void* p) {
+  return (dx_ui_group_Dispatch*)p;
 }
 
-struct dx_ui_group_dispatch {
-  dx_ui_widget_dispatch _parent;
+struct dx_ui_group_Dispatch {
+  dx_ui_widget_Dispatch _parent;
 };
 
 /// @constructor{dx_ui_group}

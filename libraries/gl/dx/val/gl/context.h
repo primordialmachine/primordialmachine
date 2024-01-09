@@ -30,7 +30,7 @@ typedef void (APIENTRY *PFNGLCULLFACEPROC)(GLenum);
 typedef void (APIENTRY* PFNGLBLENDFUNCPROC)(GLenum, GLenum);
 typedef void (APIENTRY *PFNGLFLUSHPROC)();
 
-DX_DECLARE_OBJECT_TYPE("dx.val.gl.context",
+Core_declareObjectType("dx.val.gl.context",
                        dx_val_gl_context,
                        dx_val_context);
 
@@ -47,8 +47,8 @@ struct dx_val_gl_context {
 #undef DEFINE
 };
 
-struct dx_val_gl_context_dispatch {
-  dx_val_context_dispatch _parent;
+struct dx_val_gl_context_Dispatch {
+  dx_val_context_Dispatch _parent;
 };
 
 Core_Result dx_val_gl_context_construct(dx_val_gl_context* SELF, Core_Result (*link)(void** RETURN, char const* name));

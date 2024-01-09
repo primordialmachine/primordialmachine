@@ -9,7 +9,7 @@
 /// { ... color : "malachite" ... }
 /// @endcode
 /// is a reference to an object of name @code{malachite}.
-DX_DECLARE_OBJECT_TYPE("dx.asset.reference",
+Core_declareObjectType("dx.asset.reference",
                        dx_asset_reference,
                        Core_Object);
 
@@ -25,7 +25,7 @@ struct dx_asset_reference {
   Core_Object* object;
 };
 
-struct dx_asset_reference_dispatch {
+struct dx_asset_reference_Dispatch {
   Core_Object_Dispatch _parent;
 };
 

@@ -8,7 +8,7 @@
 #include "dx/data_definition_language/word_kind.h"
 
 /// @brief An word for programs of the Data Definition Language (DDL).
-DX_DECLARE_OBJECT_TYPE("dx.ddl.word",
+Core_declareObjectType("dx.ddl.word",
                        dx_ddl_word,
                        Core_Object);
 
@@ -22,11 +22,11 @@ struct dx_ddl_word {
   Core_String* text;
 };
 
-static inline dx_ddl_word_dispatch* DX_DDL_WORD_DISPATCH(void* p) {
-  return (dx_ddl_word_dispatch*)p;
+static inline dx_ddl_word_Dispatch* DX_DDL_WORD_DISPATCH(void* p) {
+  return (dx_ddl_word_Dispatch*)p;
 }
 
-struct dx_ddl_word_dispatch {
+struct dx_ddl_word_Dispatch {
   Core_Object_Dispatch _parent;
 };
 

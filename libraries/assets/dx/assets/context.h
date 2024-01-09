@@ -4,7 +4,7 @@
 #include "dx/core.h"
 
 /// @extends dx_context
-DX_DECLARE_OBJECT_TYPE("dx.assets.context",
+Core_declareObjectType("dx.assets.context",
                        dx_assets_context,
                        dx_context);
 
@@ -16,12 +16,12 @@ struct dx_assets_context {
   dx_context _parent;
 };
 
-static inline dx_assets_context_dispatch* DX_ASSETS_CONTEXT_DISPATCH(void* p) {
-  return (dx_assets_context_dispatch*)p;
+static inline dx_assets_context_Dispatch* DX_ASSETS_CONTEXT_DISPATCH(void* p) {
+  return (dx_assets_context_Dispatch*)p;
 }
 
-struct dx_assets_context_dispatch {
-  dx_context_dispatch _parent;
+struct dx_assets_context_Dispatch {
+  dx_context_Dispatch _parent;
 };
 
 /// @constructor{dx_assets_context}

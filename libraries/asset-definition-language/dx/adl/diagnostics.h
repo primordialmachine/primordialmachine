@@ -5,7 +5,7 @@
 
 #include "dx/core.h"
 
-DX_DECLARE_OBJECT_TYPE("dx.asset_definition_language.diagnostics",
+Core_declareObjectType("dx.asset_definition_language.diagnostics",
                        dx_asset_definition_language_diagnostics,
                        Core_Object);
 
@@ -17,11 +17,11 @@ struct dx_asset_definition_language_diagnostics {
   Core_Object _parent;
 };
 
-static inline dx_asset_definition_language_diagnostics_dispatch* DX_ASSET_DEFINITION_LANGUAGE_DIAGNOSTICS_DISPATCH(void* p) {
-  return (dx_asset_definition_language_diagnostics_dispatch*)p;
+static inline dx_asset_definition_language_diagnostics_Dispatch* DX_ASSET_DEFINITION_LANGUAGE_DIAGNOSTICS_DISPATCH(void* p) {
+  return (dx_asset_definition_language_diagnostics_Dispatch*)p;
 }
 
-struct dx_asset_definition_language_diagnostics_dispatch {
+struct dx_asset_definition_language_diagnostics_Dispatch {
   Core_Object_Dispatch _parent;
 };
 

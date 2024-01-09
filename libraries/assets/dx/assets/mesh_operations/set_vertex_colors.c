@@ -1,6 +1,6 @@
 #include "dx/assets/mesh_operations/set_vertex_colors.h"
 
-DX_DEFINE_OBJECT_TYPE("dx.assets.mesh_operations.set_vertex_colors",
+Core_defineObjectType("dx.assets.mesh_operations.set_vertex_colors",
                       dx_assets_mesh_operations_set_vertex_colors,
                       dx_asset_mesh_operation);
 
@@ -37,14 +37,14 @@ Core_Result dx_assets_mesh_operations_set_vertex_colors_construct(dx_assets_mesh
 static void dx_assets_mesh_operations_set_vertex_colors_destruct(dx_assets_mesh_operations_set_vertex_colors* SELF)
 {/*Intentionally empty.*/}
 
-static void dx_assets_mesh_operations_set_vertex_colors_constructDispatch(dx_assets_mesh_operations_set_vertex_colors_dispatch* SELF) {
+static void dx_assets_mesh_operations_set_vertex_colors_constructDispatch(dx_assets_mesh_operations_set_vertex_colors_Dispatch* SELF) {
   DX_ASSET_MESH_OPERATION_DISPATCH(SELF)->apply = (Core_Result(*)(dx_asset_mesh_operation*, dx_assets_mesh*)) & apply;
 }
 
 Core_Result dx_assets_mesh_operations_set_vertex_colors_create(dx_assets_mesh_operations_set_vertex_colors** RETURN) {
   DX_CREATE_PREFIX(dx_assets_mesh_operations_set_vertex_colors);
   if (dx_assets_mesh_operations_set_vertex_colors_construct(SELF)) {
-    DX_UNREFERENCE(SELF);
+    CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
   }

@@ -4,7 +4,7 @@
 #include "dx/assets/color_rgb_n8.h"
 
 /// @brief An image operation asset.
-DX_DECLARE_OBJECT_TYPE("dx.assets.image_operation",
+Core_declareObjectType("dx.assets.image_operation",
                        dx_assets_image_operation,
                        Core_Object);
 
@@ -16,11 +16,11 @@ struct dx_assets_image_operation {
   Core_Object _parent;
 };
 
-static inline dx_assets_image_operation_dispatch* DX_ASSETS_IMAGE_OPERATION_DISPATCH(void* p) {
-  return (dx_assets_image_operation_dispatch*)p;
+static inline dx_assets_image_operation_Dispatch* DX_ASSETS_IMAGE_OPERATION_DISPATCH(void* p) {
+  return (dx_assets_image_operation_Dispatch*)p;
 }
 
-struct dx_assets_image_operation_dispatch {
+struct dx_assets_image_operation_Dispatch {
   Core_Object_Dispatch _parent;
 };
 

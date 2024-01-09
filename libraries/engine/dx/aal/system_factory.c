@@ -1,13 +1,13 @@
 #include "dx/aal/system_factory.h"
 
-DX_DEFINE_OBJECT_TYPE("dx.aal.system_factory",
+Core_defineObjectType("dx.aal.system_factory",
                       dx_aal_system_factory,
                       dx_system_factory);
 
 static void dx_aal_system_factory_destruct(dx_aal_system_factory* SELF)
 {/*Intentionally empty.*/}
 
-static void dx_aal_system_factory_constructDispatch(dx_aal_system_factory_dispatch* SELF)
+static void dx_aal_system_factory_constructDispatch(dx_aal_system_factory_Dispatch* SELF)
 {/*Intentionally empty.*/}
 
 Core_Result dx_aal_system_factory_construct(dx_aal_system_factory* SELF) {

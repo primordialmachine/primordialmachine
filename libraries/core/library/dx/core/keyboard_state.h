@@ -2,12 +2,12 @@
 #define DX_KEYBOARD_STATE_H_INCLUDED
 
 #include "dx/core/object.h"
-#include "dx/core/hapticals.h"
+#include "Core/Input/KeyboardKey.h"
 
 /// @warning Keep this synchronized with keyboard_keys.i.
 #define dx_keyboard_state_configuration_number_of_keyboard_keys (255 + 1)
 
-DX_DECLARE_OBJECT_TYPE("dx.keyboard_state",
+Core_declareObjectType("dx.keyboard_state",
                        dx_keyboard_state,
                        Core_Object);
 
@@ -20,11 +20,11 @@ struct dx_keyboard_state {
   Core_Boolean state[dx_keyboard_state_configuration_number_of_keyboard_keys];
 };
 
-static inline dx_keyboard_state_dispatch* DX_KEYBOARD_STATE_DISPATCH(void* p) {
-  return (dx_keyboard_state_dispatch*)p;
+static inline dx_keyboard_state_Dispatch* DX_KEYBOARD_STATE_DISPATCH(void* p) {
+  return (dx_keyboard_state_Dispatch*)p;
 }
 
-struct dx_keyboard_state_dispatch {
+struct dx_keyboard_state_Dispatch {
   Core_Object_Dispatch _parent;
 };
 

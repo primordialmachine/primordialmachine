@@ -39,9 +39,9 @@
   ],
   "description" : "Reallocate a memory block.",
   "success" : [
-    "@{code('*RETURN')} was assigned a pointer to a new memory block of size @{code('n')}.</br>",
-    "The old memory block was deallocated.</br>",
-    "A new memory block of size @{code('n')} was allocated by a call to @{code('Core_Memory_allocate')}.</br>",
+    "@{code('*RETURN')} was assigned a pointer to a new memory block of size @{code('n')}.@(newline())",
+    "The old memory block was deallocated.@(newline())",
+    "A new memory block of size @{code('n')} was allocated by a call to @{code('Core_Memory_allocate')}.@(newline())",
     "The first @{code('min(x,y)')} Bytes of the new memory block and the old memory block are equal where ",
     "@{code('x')} is the size of the new memory block and @{code('y')} is the size of the old memory block."
   ],

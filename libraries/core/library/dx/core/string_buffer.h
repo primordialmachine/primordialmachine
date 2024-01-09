@@ -1,14 +1,14 @@
 #if !defined (DX_STRING_BUFFER_H_INCLUDED)
 #define DX_STRING_BUFFER_H_INCLUDED
 
-#include "dx/core/byte_array.h"
+#include "dx/core/inline_byte_array.h"
 #include "dx/core/object.h"
 #include "dx/core/string_iterator.h"
 typedef struct Core_String Core_String;
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-DX_DECLARE_OBJECT_TYPE("dx.string_buffer",
+Core_declareObjectType("dx.string_buffer",
                        dx_string_buffer,
                        Core_Object);
 
@@ -18,14 +18,14 @@ static inline dx_string_buffer* DX_STRING_BUFFER(void* p) {
 
 struct dx_string_buffer {
   Core_Object _parent;
-  dx_inline_byte_array backend;
+  Core_InlineArrayN8 backend;
 };
 
-static inline dx_string_buffer_dispatch* DX_STRING_BUFFER_DISPATCH(void* p) {
-  return (dx_string_buffer_dispatch*)p;
+static inline dx_string_buffer_Dispatch* DX_STRING_BUFFER_DISPATCH(void* p) {
+  return (dx_string_buffer_Dispatch*)p;
 }
 
-struct dx_string_buffer_dispatch {
+struct dx_string_buffer_Dispatch {
   Core_Object_Dispatch _parent;
 };
 

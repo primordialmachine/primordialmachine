@@ -3,7 +3,7 @@
 
 #include "dx/core.h"
 
-DX_DECLARE_OBJECT_TYPE("dx.assets.color_rgb_n8",
+Core_declareObjectType("dx.assets.color_rgb_n8",
                        dx_assets_color_rgb_n8,
                        Core_Object);
 
@@ -16,11 +16,11 @@ struct dx_assets_color_rgb_n8 {
   DX_RGB_N8 value;
 };
 
-static inline dx_assets_color_rgb_n8_dispatch* DX_ASSETS_COLOR_RGB_N8_DISPATCH(void* p) {
-  return (dx_assets_color_rgb_n8_dispatch*)p;
+static inline dx_assets_color_rgb_n8_Dispatch* DX_ASSETS_COLOR_RGB_N8_DISPATCH(void* p) {
+  return (dx_assets_color_rgb_n8_Dispatch*)p;
 }
 
-struct dx_assets_color_rgb_n8_dispatch {
+struct dx_assets_color_rgb_n8_Dispatch {
   Core_Object_Dispatch _parent;
 };
 

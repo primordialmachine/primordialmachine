@@ -18,30 +18,30 @@ static Core_Result _create_scene_from_text(dx_assets_scene** RETURN, char const*
   }
   dx_assets_context* context = NULL;
   if (dx_application_get_assets_context(&context, application)) {
-    DX_UNREFERENCE(application);
+    CORE_UNREFERENCE(application);
     application = NULL;
     return Core_Failure;
   }
-  DX_UNREFERENCE(application);
+  CORE_UNREFERENCE(application);
   application = NULL;
 
   dx_ddl_node* ddl_node = dx_ddl_compile(adl_text, adl_text_length);
   if (!ddl_node) {
-    DX_UNREFERENCE(context);
+    CORE_UNREFERENCE(context);
     context = NULL;
     return Core_Failure;
   }
   dx_assets_scene* asset_scene = NULL;
   if (dx_adl_compile(&asset_scene, ddl_node)) {
-    DX_UNREFERENCE(ddl_node);
+    CORE_UNREFERENCE(ddl_node);
     ddl_node = NULL;
-    DX_UNREFERENCE(context);
+    CORE_UNREFERENCE(context);
     context = NULL;
     return Core_Failure;
   }
-  DX_UNREFERENCE(ddl_node);
+  CORE_UNREFERENCE(ddl_node);
   ddl_node = NULL;
-  DX_UNREFERENCE(context);
+  CORE_UNREFERENCE(context);
   context = NULL;
   *RETURN = asset_scene; 
   return Core_Success;

@@ -1,10 +1,10 @@
 #if !defined(DX_CORE_CONTEXT_H_INCLUDED)
 #define DX_CORE_CONTEXT_H_INCLUDED
 
-#include "dx/core.h"
+#include "dx/core/string.h"
 
 /// @brief Base of all contexts. A context is a provides access to functionality.
-DX_DECLARE_OBJECT_TYPE("dx.context",
+Core_declareObjectType("dx.context",
                        dx_context,
                        Core_Object);
 
@@ -16,11 +16,11 @@ struct dx_context {
   Core_Object _parent;
 };
 
-static inline dx_context_dispatch* DX_CONTEXT_DISPATCH(void* p) {
-  return (dx_context_dispatch*)p;
+static inline dx_context_Dispatch* DX_CONTEXT_DISPATCH(void* p) {
+  return (dx_context_Dispatch*)p;
 }
 
-struct dx_context_dispatch {
+struct dx_context_Dispatch {
   Core_Object_Dispatch _parent;
 };
 

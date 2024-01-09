@@ -1,21 +1,21 @@
 #include "dx/core/file_system.h"
 
-#include "dx/core/byte_array.h"
+#include "dx/core/inline_byte_array.h"
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-DX_DEFINE_ENUMERATION_TYPE("Core.FileState",
+Core_defineEnumerationType("Core.FileState",
                            Core_FileState);
 
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 Core_Result dx_get_file_contents(char const *path, char **bytes, Core_Size*number_of_bytes) {
-  dx_inline_byte_array byte_array;
-  if (dx_inline_byte_array_initialize(&byte_array)) {
+  Core_InlineArrayN8 byte_array;
+  if (Core_InlineArrayN8_initialize(&byte_array)) {
     return Core_Failure;
   }
   HANDLE file = CreateFile(path,
@@ -26,7 +26,7 @@ Core_Result dx_get_file_contents(char const *path, char **bytes, Core_Size*numbe
                            FILE_ATTRIBUTE_NORMAL,
                            0);
   if (INVALID_HANDLE_VALUE == file) {
-    dx_inline_byte_array_uninitialize(&byte_array);
+    Core_InlineArrayN8_uninitialize(&byte_array);
     return Core_Failure;
   }
   while (true) {
@@ -36,7 +36,7 @@ Core_Result dx_get_file_contents(char const *path, char **bytes, Core_Size*numbe
     if (!result) {
       CloseHandle(file);
       file = INVALID_HANDLE_VALUE;
-      dx_inline_byte_array_uninitialize(&byte_array);
+      Core_InlineArrayN8_uninitialize(&byte_array);
       return Core_Failure;
     }
     // eof
@@ -45,20 +45,20 @@ Core_Result dx_get_file_contents(char const *path, char **bytes, Core_Size*numbe
       file = INVALID_HANDLE_VALUE;
       break;
     }
-    if (dx_inline_byte_array_append(&byte_array, temporary, received)) {
+    if (Core_InlineArrayN8_append(&byte_array, temporary, received)) {
       CloseHandle(file);
       file = INVALID_HANDLE_VALUE;
-      dx_inline_byte_array_uninitialize(&byte_array);
+      Core_InlineArrayN8_uninitialize(&byte_array);
       return Core_Failure;
     }
   }
   
   char *bytes_1; Core_Size number_of_bytes_1;
-  if (dx_inline_byte_array_steal(&byte_array, &bytes_1, &number_of_bytes_1)) {
-    dx_inline_byte_array_uninitialize(&byte_array);
+  if (Core_InlineArrayN8_steal(&byte_array, &bytes_1, &number_of_bytes_1)) {
+    Core_InlineArrayN8_uninitialize(&byte_array);
     return Core_Failure;
   }
-  dx_inline_byte_array_uninitialize(&byte_array);
+  Core_InlineArrayN8_uninitialize(&byte_array);
   *bytes = bytes_1;
   *number_of_bytes = number_of_bytes_1;
   
@@ -67,7 +67,9 @@ Core_Result dx_get_file_contents(char const *path, char **bytes, Core_Size*numbe
 
 Core_Result dx_get_file_contents_s(Core_String* path, char** bytes, Core_Size* number_of_bytes) {
   //
-  if (dx_string_contains_symbol(path, '\0')) {
+  Core_Boolean containsSymbol;
+  containsSymbol = dx_string_contains_symbol(path, '\0');
+  if (containsSymbol) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
   }
@@ -76,19 +78,19 @@ Core_Result dx_get_file_contents_s(Core_String* path, char** bytes, Core_Size* n
     return Core_Failure;
   }
   if (Core_String_printf(&path, format, path)) {
-    DX_UNREFERENCE(format);
+    CORE_UNREFERENCE(format);
     format = NULL;
     return Core_Failure;
   }
-  DX_UNREFERENCE(format);
+  CORE_UNREFERENCE(format);
   format = NULL;
   //
   if (dx_get_file_contents(path->bytes, bytes, number_of_bytes)) {
-    DX_UNREFERENCE(path);
+    CORE_UNREFERENCE(path);
     path = NULL;
     return Core_Failure;
   }
-  DX_UNREFERENCE(path);
+  CORE_UNREFERENCE(path);
   path = NULL;
   return Core_Success;
 }
@@ -128,7 +130,9 @@ Core_Result dx_get_file_state(Core_FileState* RETURN, char const* path) {
 
 Core_Result dx_get_file_state_s(Core_FileState* RETURN, Core_String* path) {
   //
-  if (dx_string_contains_symbol(path, '\0')) {
+  Core_Boolean containsSymbol;
+  containsSymbol = dx_string_contains_symbol(path, '\0');
+  if (containsSymbol) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
   }
@@ -137,20 +141,20 @@ Core_Result dx_get_file_state_s(Core_FileState* RETURN, Core_String* path) {
     return Core_Failure;
   }
   if (Core_String_printf(&path, format, path)) {
-    DX_UNREFERENCE(format);
+    CORE_UNREFERENCE(format);
     format = NULL;
     return Core_Failure;
   }
-  DX_UNREFERENCE(format);
+  CORE_UNREFERENCE(format);
   format = NULL;
   //
   Core_FileState file_state;
   if (dx_get_file_state(&file_state, path->bytes)) {
-    DX_UNREFERENCE(path);
+    CORE_UNREFERENCE(path);
     path = NULL;
     return Core_Failure;
   }
-  DX_UNREFERENCE(path);
+  CORE_UNREFERENCE(path);
   path = NULL;
   *RETURN = file_state;
   return Core_Success;

@@ -23,7 +23,7 @@
 /// It is terminated by a newline or by an end of the input.
 /// The terminating newline belongs to the line.
 ///
-DX_DECLARE_ENUMERATION_TYPE("dx.document_definition_language.word_kind",
+Core_declareEnumerationType("dx.document_definition_language.word_kind",
                             dx_document_definition_language_word_kind);
 
 enum dx_document_definition_language_word_kind {

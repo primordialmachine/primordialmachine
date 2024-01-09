@@ -10,7 +10,7 @@
 /// Logical bounds are important for laying out text relative to other text and other components, particularly those which also contain text.
 /// The logical bounds are not specific to the text being rendered, and so will report heights which account for the potential ascent and descent of text using the font at its specified size.
 /// Also leading and trailing spaces are part of the logical advance width of the text. 
-DX_DECLARE_ENUMERATION_TYPE("dx.text.bounds_type",
+Core_declareEnumerationType("dx.text.bounds_type",
                             dx_text_bounds_type);
 
 enum dx_text_bounds_type {

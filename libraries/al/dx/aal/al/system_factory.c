@@ -2,7 +2,7 @@
 
 #include "dx/aal/al/system.h"
 
-DX_DEFINE_OBJECT_TYPE("dx.aal.al.system_factory",
+Core_defineObjectType("dx.aal.al.system_factory",
                       dx_aal_al_system_factory,
                       dx_aal_system_factory);
 
@@ -15,7 +15,7 @@ static Core_Result create_system(dx_aal_al_system** RETURN, dx_aal_al_system_fac
 static void dx_aal_al_system_factory_destruct(dx_aal_al_system_factory* SELF)
 {/*Intentionally empty.*/}
 
-static void dx_aal_al_system_factory_constructDispatch(dx_aal_al_system_factory_dispatch* SELF) {
+static void dx_aal_al_system_factory_constructDispatch(dx_aal_al_system_factory_Dispatch* SELF) {
   DX_SYSTEM_FACTORY_DISPATCH(SELF)->create_system = (Core_Result(*)(dx_system**, dx_system_factory*, dx_msg_queue*)) & create_system;
 }
 
@@ -31,7 +31,7 @@ Core_Result dx_aal_al_system_factory_construct(dx_aal_al_system_factory* SELF) {
 Core_Result dx_aal_al_system_factory_create(dx_aal_al_system_factory** RETURN) {
   DX_CREATE_PREFIX(dx_aal_al_system_factory);
   if (dx_aal_al_system_factory_construct(SELF)) {
-    DX_UNREFERENCE(SELF);
+    CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
   }

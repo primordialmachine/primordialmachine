@@ -2,24 +2,24 @@
 
 #include "dx/assets/optics.h"
 
-DX_DEFINE_OBJECT_TYPE("dx.assets.viewer",
+Core_defineObjectType("dx.assets.viewer",
                       dx_assets_viewer,
                       Core_Object);
 
 static void dx_assets_viewer_destruct(dx_assets_viewer* self) {
   if (self->controller) {
-    DX_UNREFERENCE(self->controller);
+    CORE_UNREFERENCE(self->controller);
     self->controller = NULL;
   }
   if (self->optics) {
-    DX_UNREFERENCE(self->optics);
+    CORE_UNREFERENCE(self->optics);
     self->optics = NULL;
   }
-  DX_UNREFERENCE(self->name);
+  CORE_UNREFERENCE(self->name);
   self->name = NULL;
 }
 
-static void dx_assets_viewer_constructDispatch(dx_assets_viewer_dispatch* self)
+static void dx_assets_viewer_constructDispatch(dx_assets_viewer_Dispatch* self)
 {/*Intentionally empty.*/}
 
 Core_Result dx_assets_viewer_construct(dx_assets_viewer* SELF, Core_String* name) {
@@ -31,10 +31,10 @@ Core_Result dx_assets_viewer_construct(dx_assets_viewer* SELF, Core_String* name
   }
 
   SELF->name = name;
-  DX_REFERENCE(name);
+  CORE_REFERENCE(name);
 
   if (dx_asset_optics_perspective_create((dx_asset_optics_perspective**)&SELF->optics)) {
-    DX_UNREFERENCE(SELF->name);
+    CORE_UNREFERENCE(SELF->name);
     SELF->name = NULL;
     return Core_Failure;
   }
@@ -52,7 +52,7 @@ Core_Result dx_assets_viewer_construct(dx_assets_viewer* SELF, Core_String* name
 Core_Result dx_assets_viewer_create(dx_assets_viewer** RETURN, Core_String* name) {
   DX_CREATE_PREFIX(dx_assets_viewer);
   if (dx_assets_viewer_construct(SELF, name)) {
-    DX_UNREFERENCE(SELF);
+    CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
   }

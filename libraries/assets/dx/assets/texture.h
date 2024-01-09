@@ -5,7 +5,7 @@
 #include "dx/assets/reference.h"
 
 /// @brief A texture asset.
-DX_DECLARE_OBJECT_TYPE("dx.assets.texture",
+Core_declareObjectType("dx.assets.texture",
                        dx_assets_texture,
                        Core_Object);
 
@@ -21,11 +21,11 @@ struct dx_assets_texture {
   dx_asset_reference* image_reference;
 };
 
-static inline dx_assets_texture_dispatch* DX_ASSETS_TEXTURE_DISPATCH(void* p) {
-  return (dx_assets_texture_dispatch*)p;
+static inline dx_assets_texture_Dispatch* DX_ASSETS_TEXTURE_DISPATCH(void* p) {
+  return (dx_assets_texture_Dispatch*)p;
 }
 
-struct dx_assets_texture_dispatch {
+struct dx_assets_texture_Dispatch {
   Core_Object_Dispatch _parent;
 };
 

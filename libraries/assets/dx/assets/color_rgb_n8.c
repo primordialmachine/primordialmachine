@@ -1,13 +1,13 @@
 #include "dx/assets/color_rgb_n8.h"
 
-DX_DEFINE_OBJECT_TYPE("dx.assets.color_rgb_n8",
+Core_defineObjectType("dx.assets.color_rgb_n8",
                       dx_assets_color_rgb_n8,
                       Core_Object);
 
 static void dx_assets_color_rgb_n8_destruct(dx_assets_color_rgb_n8* SELF)
 {/*Intentionally empty.*/}
 
-static void dx_assets_color_rgb_n8_constructDispatch(dx_assets_color_rgb_n8_dispatch* SELF)
+static void dx_assets_color_rgb_n8_constructDispatch(dx_assets_color_rgb_n8_Dispatch* SELF)
 {/*Intentionally empty.*/}
 
 Core_Result dx_assets_color_rgb_n8_construct(dx_assets_color_rgb_n8* SELF, DX_RGB_N8 const* value) {
@@ -24,7 +24,7 @@ Core_Result dx_assets_color_rgb_n8_construct(dx_assets_color_rgb_n8* SELF, DX_RG
 Core_Result dx_assets_color_rgb_n8_create(dx_assets_color_rgb_n8** RETURN, DX_RGB_N8 const* value) {
   DX_CREATE_PREFIX(dx_assets_color_rgb_n8);
   if (dx_assets_color_rgb_n8_construct(SELF, value)) {
-    DX_UNREFERENCE(SELF);
+    CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
   }

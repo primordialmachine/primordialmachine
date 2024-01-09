@@ -6,7 +6,7 @@
 #include "dx/val/cbinding.h"
 #include "dx/val/gl/context.h"
 
-DX_DEFINE_OBJECT_TYPE("dx.val.gl.program",
+Core_defineObjectType("dx.val.gl.program",
                       dx_val_gl_program,
                       dx_val_program);
 
@@ -58,20 +58,20 @@ create_shader
   }
   GLuint id1 = ctx->glCreateShader(type);
   {
-    dx_inline_byte_array byte_array;
-    if (dx_inline_byte_array_initialize(&byte_array)) {
+    Core_InlineArrayN8 byte_array;
+    if (Core_InlineArrayN8_initialize(&byte_array)) {
       ctx->glDeleteShader(id1);
       id1 = 0;
       return Core_Failure;
     }
-    if (dx_inline_byte_array_append(&byte_array, "#version 330 core\n", sizeof("#version 330 core\n") - 1)) {
-      dx_inline_byte_array_uninitialize(&byte_array);
+    if (Core_InlineArrayN8_append(&byte_array, "#version 330 core\n", sizeof("#version 330 core\n") - 1)) {
+      Core_InlineArrayN8_uninitialize(&byte_array);
       ctx->glDeleteShader(id1);
       id1 = 0;
       return Core_Failure;
     }
-    if (dx_inline_byte_array_append(&byte_array, program_text->bytes, program_text->number_of_bytes)) {
-      dx_inline_byte_array_uninitialize(&byte_array);
+    if (Core_InlineArrayN8_append(&byte_array, program_text->bytes, program_text->number_of_bytes)) {
+      Core_InlineArrayN8_uninitialize(&byte_array);
       ctx->glDeleteShader(id1);
       id1 = 0;
       return Core_Failure;
@@ -79,7 +79,7 @@ create_shader
     GLint const m[] = { (GLint)byte_array.size };
     GLchar const *q[] = { byte_array.elements };
     ctx->glShaderSource(id1, 1, q, m);
-    dx_inline_byte_array_uninitialize(&byte_array);
+    Core_InlineArrayN8_uninitialize(&byte_array);
   }
   ctx->glCompileShader(id1);
   GLint success;
@@ -143,7 +143,7 @@ static Core_Result dx_val_gl_program_bind(dx_val_gl_program* SELF, dx_val_cbindi
       return Core_Failure;
     }
     GLint location = ctx->glGetUniformLocation(SELF->program_id, bytes);
-    DX_UNREFERENCE(name);
+    CORE_UNREFERENCE(name);
     name = NULL;
     if (-1 == location) {
       dx_val_cbinding_iter_next(&it);
@@ -242,7 +242,7 @@ static void dx_val_gl_program_destruct(dx_val_gl_program* SELF) {
   }
 }
 
-static void dx_val_gl_program_constructDispatch(dx_val_gl_program_dispatch* SELF) {
+static void dx_val_gl_program_constructDispatch(dx_val_gl_program_Dispatch* SELF) {
   DX_VAL_PROGRAM_DISPATCH(SELF)->bind = (Core_Result(*)(dx_val_program*, dx_val_cbinding*)) & dx_val_gl_program_bind;
   DX_VAL_PROGRAM_DISPATCH(SELF)->activate = (Core_Result(*)(dx_val_program*)) & dx_val_gl_program_activate;
 }
@@ -293,7 +293,7 @@ Core_Result dx_val_gl_program_create(dx_val_gl_program** RETURN,
                                      Core_String* fragment_program_text) {
   DX_CREATE_PREFIX(dx_val_gl_program);
   if (dx_val_gl_program_construct(SELF, ctx, vertex_program_text, fragment_program_text)) {
-    DX_UNREFERENCE(SELF);
+    CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
   }

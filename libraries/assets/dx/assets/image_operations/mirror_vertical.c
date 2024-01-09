@@ -1,13 +1,13 @@
 #include "dx/assets/image_operations/mirror_vertical.h"
 
-DX_DEFINE_OBJECT_TYPE("dx.assets.image_operations.mirror_vertical",
+Core_defineObjectType("dx.assets.image_operations.mirror_vertical",
                       dx_assets_image_operations_mirror_vertical,
                       dx_assets_image_operation);
 
 static void dx_assets_image_operations_mirror_vertical_destruct(dx_assets_image_operations_mirror_vertical* SELF)
 {/*Intentionally empty.*/}
 
-static void dx_assets_image_operations_mirror_vertical_constructDispatch(dx_assets_image_operations_mirror_vertical_dispatch* SELF)
+static void dx_assets_image_operations_mirror_vertical_constructDispatch(dx_assets_image_operations_mirror_vertical_Dispatch* SELF)
 {/*Intentionally empty.*/}
 
 Core_Result dx_assets_image_operations_mirror_vertical_construct(dx_assets_image_operations_mirror_vertical* SELF) {
@@ -22,7 +22,7 @@ Core_Result dx_assets_image_operations_mirror_vertical_construct(dx_assets_image
 Core_Result dx_assets_image_operations_mirror_vertical_create(dx_assets_image_operations_mirror_vertical** RETURN) {
   DX_CREATE_PREFIX(dx_assets_image_operations_mirror_vertical);
   if (dx_assets_image_operations_mirror_vertical_construct(SELF)) {
-    DX_UNREFERENCE(SELF);
+    CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
   }

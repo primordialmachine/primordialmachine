@@ -10,7 +10,7 @@
 #include "dx/assets.h"
 
 /// @brief The default scene presenter
-DX_DECLARE_OBJECT_TYPE("dx.default_scene_presenter",
+Core_declareObjectType("dx.default_scene_presenter",
                        dx_default_scene_presenter,
                        dx_scene_presenter);
 
@@ -34,12 +34,12 @@ struct dx_default_scene_presenter {
   dx_val_command_list* commands;
 };
 
-static inline dx_default_scene_presenter_dispatch* DX_DEFAULT_SCENE_PRESENTER_DISPATCH(void* p) {
-  return (dx_default_scene_presenter_dispatch*)p;
+static inline dx_default_scene_presenter_Dispatch* DX_DEFAULT_SCENE_PRESENTER_DISPATCH(void* p) {
+  return (dx_default_scene_presenter_Dispatch*)p;
 }
 
-struct dx_default_scene_presenter_dispatch {
-  dx_scene_presenter_dispatch _parent;
+struct dx_default_scene_presenter_Dispatch {
+  dx_scene_presenter_Dispatch _parent;
 };
 
 /// @brief Construct this default scene presenter.

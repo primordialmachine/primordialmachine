@@ -1,8 +1,8 @@
-// Copyright (c) 2019-2023 Michael Heilmann. All rights reserved.
+// Copyright (c) 2018-2024 Michael Heilmann. All rights reserved.
 
 #include "Core/Visuals/PixelFormat.h"
 
-DX_DEFINE_ENUMERATION_TYPE("Core.PixelFormat",
+Core_defineEnumerationType("Core.PixelFormat",
                            Core_PixelFormat);
 
 Core_Result Core_PixelFormat_getNumberOfBytes(Core_Size* RETURN, Core_PixelFormat SELF) {

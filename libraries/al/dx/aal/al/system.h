@@ -7,7 +7,7 @@ typedef struct dx_aal_al_context dx_aal_al_context;
 #define AL_LIBTYPE_STATIC
 #include <AL/alc.h>
 
-DX_DECLARE_OBJECT_TYPE("dx.aal.al.system",
+Core_declareObjectType("dx.aal.al.system",
                        dx_aal_al_system,
                        dx_aal_system);
 
@@ -20,12 +20,12 @@ struct dx_aal_al_system {
   ALCdevice* device;
 };
 
-static inline dx_aal_al_system_dispatch* DX_AAL_AL_SYSTEM_DISPATCH(void* p) {
-  return (dx_aal_al_system_dispatch*)p;
+static inline dx_aal_al_system_Dispatch* DX_AAL_AL_SYSTEM_DISPATCH(void* p) {
+  return (dx_aal_al_system_Dispatch*)p;
 }
 
-struct dx_aal_al_system_dispatch {
-  dx_aal_system_dispatch _parent;
+struct dx_aal_al_system_Dispatch {
+  dx_aal_system_Dispatch _parent;
 };
 
 /// @brief Construct this AAL AL system.

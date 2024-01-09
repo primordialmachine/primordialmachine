@@ -6,7 +6,7 @@ typedef struct dx_assets_color_rgb_n8 dx_assets_color_rgb_n8;
 typedef struct dx_assets_material_controller dx_assets_material_controller;
 
 /// @brief A material asset.
-DX_DECLARE_OBJECT_TYPE("dx.assets.material",
+Core_declareObjectType("dx.assets.material",
                        dx_assets_material,
                        Core_Object);
 
@@ -27,11 +27,11 @@ struct dx_assets_material {
   dx_assets_material_controller* controller;
 };
 
-static inline dx_assets_material_dispatch* DX_ASSETS_MATERIAL_DISPATCH(void* p) {
-  return (dx_assets_material_dispatch*)p;
+static inline dx_assets_material_Dispatch* DX_ASSETS_MATERIAL_DISPATCH(void* p) {
+  return (dx_assets_material_Dispatch*)p;
 }
 
-struct dx_assets_material_dispatch {
+struct dx_assets_material_Dispatch {
   Core_Object_Dispatch _parent;
 };
 

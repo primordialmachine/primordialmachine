@@ -4,7 +4,7 @@
 #include "dx/ui/manager.h"
 #include "dx/val/cbinding.h"
 
-DX_DEFINE_OBJECT_TYPE("dx.ui.scrollbar",
+Core_defineObjectType("dx.ui.scrollbar",
                        dx_ui_scrollbar,
                        dx_ui_widget);
 
@@ -27,7 +27,7 @@ static Core_Result render(dx_ui_scrollbar* SELF, Core_Real32 canvas_horizontal_s
 static void dx_ui_scrollbar_destruct(dx_ui_scrollbar* SELF)
 {/*Intentionally empty.*/}
 
-static void dx_ui_scrollbar_constructDispatch(dx_ui_scrollbar_dispatch* SELF) {
+static void dx_ui_scrollbar_constructDispatch(dx_ui_scrollbar_Dispatch* SELF) {
   DX_UI_WIDGET_DISPATCH(SELF)->get_relative_position = (Core_Result(*)(DX_VEC2_F32*,dx_ui_widget*)) & get_relative_position;
   DX_UI_WIDGET_DISPATCH(SELF)->get_relative_size = (Core_Result(*)(DX_VEC2_F32*, dx_ui_widget*)) & get_relative_size;
   DX_UI_WIDGET_DISPATCH(SELF)->render = (Core_Result(*)(dx_ui_widget*,Core_Real32,Core_Real32,Core_Real32,Core_Real32)) & render;
@@ -53,7 +53,7 @@ Core_Result dx_ui_scrollbar_construct(dx_ui_scrollbar* SELF, dx_ui_manager* mana
 Core_Result dx_ui_scrollbar_create(dx_ui_scrollbar** RETURN, dx_ui_manager* manager) {
   DX_CREATE_PREFIX(dx_ui_scrollbar);
   if (dx_ui_scrollbar_construct(SELF, manager)) {
-    DX_UNREFERENCE(SELF);
+    CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
   }

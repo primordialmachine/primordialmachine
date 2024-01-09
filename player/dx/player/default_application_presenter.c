@@ -55,25 +55,37 @@ static Core_Result quit_requested(Core_Boolean* RETURN, dx_default_application_p
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-static Core_Result onApplicationMessage(dx_default_application_presenter * SELF, Core_ApplicationMessage* msg) {
-  if (msg->kind == Core_ApplicationMessageKind_QuitRequested) {
+static Core_Result onApplicationMessage(dx_default_application_presenter * SELF, Core_ApplicationMessage* applicationMessage) {
+  if (applicationMessage->kind == Core_ApplicationMessageKind_QuitRequested) {
     SELF->quit = true;
   }
   return Core_Success;
 }
 
-static Core_Result onEmitMessage(dx_default_application_presenter * SELF, Core_EmitMessage * msg) {
-  char const* p; Core_Size n;
-  if (Core_EmitMessage_get(msg, &p, &n)) {
+static Core_Result onEmitMessage(dx_default_application_presenter * SELF, Core_EmitMessage * emitMessage) {
+  Core_String* text = NULL;
+  if (Core_EmitMessage_get(&text, emitMessage)) {
     return Core_Failure;
   }
-  dx_log(p, n);
+  void* bytes = NULL;
+  if (Core_String_getBytes(&bytes, text)) {
+    return Core_Failure;
+  }
+  Core_Size numberOfBytes = 0;
+  if (Core_String_getNumberOfBytes(&numberOfBytes, text)) {
+    return Core_Failure;
+  }
+  dx_log(bytes, numberOfBytes);
   return Core_Success;
 }
 
-static Core_Result onInputMessage(dx_default_application_presenter* SELF, dx_input_msg* msg) {
-  if (DX_INPUT_MSG_KIND_KEYBOARD_KEY == dx_input_msg_get_kind(msg)) {
-    dx_keyboard_key_msg* keyboard_key_msg = DX_KEYBOARD_KEY_MSG(msg);
+static Core_Result onInputMessage(dx_default_application_presenter* SELF, Core_InputMessage* message) {
+  Core_InputMessageKind kind;
+  if (Core_InputMessage_getKind(&kind, message)) {
+    return Core_Failure;
+  }
+  if (Core_InputMessageKind_KeyboardKey == kind) {
+    Core_KeyboardKeyMessage* keyboard_key_msg = CORE_KEYBOARDKEYMESSAGE(message);
     Core_Boolean temporary;
     if (dx_console_is_open(&temporary, SELF->console)) {
       return Core_Failure;
@@ -82,7 +94,7 @@ static Core_Result onInputMessage(dx_default_application_presenter* SELF, dx_inp
       // if the circumflex key is released, we close the console.
       Core_KeyboardKeyAction action;
       Core_KeyboardKey key;
-      if (dx_keyboard_key_msg_get_action(&action, keyboard_key_msg) || dx_keyboard_key_msg_get_key(&key, keyboard_key_msg)) {
+      if (Core_KeyboardKeyMessage_getAction(&action, keyboard_key_msg) || Core_KeyboardKeyMessage_getKey(&key, keyboard_key_msg)) {
         return Core_Failure;
       }
       if (Core_KeyboardKeyAction_Released == action && Core_KeyboardKey_DeadCircumflex == key) {
@@ -93,7 +105,7 @@ static Core_Result onInputMessage(dx_default_application_presenter* SELF, dx_inp
     } else {
       Core_KeyboardKeyAction action;
       Core_KeyboardKey key;
-      if (dx_keyboard_key_msg_get_action(&action, keyboard_key_msg) || dx_keyboard_key_msg_get_key(&key, keyboard_key_msg)) {
+      if (Core_KeyboardKeyMessage_getAction(&action, keyboard_key_msg) || Core_KeyboardKeyMessage_getKey(&key, keyboard_key_msg)) {
         return Core_Failure;
       }
       if (Core_KeyboardKeyAction_Released == action && Core_KeyboardKey_Return == key) {
@@ -107,52 +119,72 @@ static Core_Result onInputMessage(dx_default_application_presenter* SELF, dx_inp
         dx_console_open(SELF->console);
       }
       if (Core_KeyboardKeyAction_Released == action && Core_KeyboardKey_Escape == key) {
-        Core_Message* msg = NULL;
-        if (Core_ApplicationMessage_create((Core_ApplicationMessage**)&msg, Core_ApplicationMessageKind_QuitRequested)) {
+        Core_Message* applicationMessage = NULL;
+        if (Core_ApplicationMessage_create((Core_ApplicationMessage**)&applicationMessage, Core_ApplicationMessageKind_QuitRequested)) {
           return Core_Failure;
         }
-        if (dx_msg_queue_push(SELF->message_queue, msg)) {
-          DX_UNREFERENCE(msg);
-          msg = NULL;
+        if (dx_msg_queue_push(SELF->message_queue, applicationMessage)) {
+          CORE_UNREFERENCE(applicationMessage);
+          applicationMessage = NULL;
           return Core_Failure;
         }
-        DX_UNREFERENCE(msg);
-        msg = NULL;
+        CORE_UNREFERENCE(applicationMessage);
+        applicationMessage = NULL;
       }
     }
   }
   return Core_Success;
 }
 
-static Core_Result on_msg(dx_default_application_presenter* SELF, Core_Message* msg) {
+static Core_Result on_msg(dx_default_application_presenter* SELF, Core_Message* message) {
+  Core_Boolean result;
+  //
   Core_Type* inputMsgType = NULL;
-  if (dx_input_msg_getType(&inputMsgType)) {
+  if (Core_InputMessage_getType(&inputMsgType)) {
     return Core_Failure;
   }
+  //
   Core_Type* emitMessageType = NULL;
   if (Core_EmitMessage_getType(&emitMessageType)) {
     return Core_Failure;
   }
+  //
   Core_Type* applicationMessageType = NULL;
   if (Core_ApplicationMessage_getType(&applicationMessageType)) {
     return Core_Failure;
   }
-  if (dx_rti_type_is_leq(CORE_OBJECT(msg)->type, inputMsgType)) {
-    dx_input_msg* msg1 = DX_INPUT_MSG(msg);
-    if (onInputMessage(SELF, msg1)) {
+  //
+  if (Core_Type_isLowerThanOrEqualTo(&result, CORE_OBJECT(message)->type, inputMsgType)) {
+    return Core_Failure;
+  }
+  if (result) {
+    Core_InputMessage* inputMessage = CORE_INPUTMESSAGE(message);
+    if (onInputMessage(SELF, inputMessage)) {
       return Core_Failure;
     }
-  } else if (dx_rti_type_is_leq(CORE_OBJECT(msg)->type, emitMessageType)) {
-    Core_EmitMessage* msg1 = CORE_EMITMESSAGE(msg);
-    if (onEmitMessage(SELF, msg1)) {
-      return Core_Failure;
-    }
-  } else if (dx_rti_type_is_leq(CORE_OBJECT(msg)->type, applicationMessageType)) {
-    Core_ApplicationMessage* msg1 = CORE_APPLICATIONMESSAGE(msg);
-    if (onApplicationMessage(SELF, msg1)) {
+    return Core_Success;
+  }
+  //
+  if (Core_Type_isLowerThanOrEqualTo(&result, CORE_OBJECT(message)->type, emitMessageType)) {
+    return Core_Failure;
+  }
+  if (result) {
+    Core_EmitMessage* emitMessage = CORE_EMITMESSAGE(message);
+    if (onEmitMessage(SELF, emitMessage)) {
       return Core_Failure;
     }
   }
+  //
+  if (Core_Type_isLowerThanOrEqualTo(&result, CORE_OBJECT(message)->type, applicationMessageType)) {
+    return Core_Failure;
+  }
+  if (result) {
+    Core_ApplicationMessage* applicationMessage = CORE_APPLICATIONMESSAGE(message);
+    if (onApplicationMessage(SELF, applicationMessage)) {
+      return Core_Failure;
+    }
+  }
+  //
   return Core_Success;
 }
 
@@ -165,7 +197,7 @@ static Core_Result get_console(dx_console** RETURN, dx_default_application_prese
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
   }
-  DX_REFERENCE(SELF->console);
+  CORE_REFERENCE(SELF->console);
   *RETURN = SELF->console;
   return Core_Success;
 }
@@ -179,7 +211,7 @@ static Core_Result get_cl_interpreter(dx_cl_interpreter** RETURN, dx_default_app
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
   }
-  DX_REFERENCE(SELF->cl_interpreter);
+  CORE_REFERENCE(SELF->cl_interpreter);
   *RETURN = SELF->cl_interpreter;
   return Core_Success;
 }
@@ -198,11 +230,11 @@ static Core_Result print_info(dx_default_application_presenter* SELF) {
       return Core_Failure;
     }
     if (dx_cl_interpreter_execute(SELF->cl_interpreter, DX_APPLICATION_PRESENTER(SELF), f)) {
-      DX_UNREFERENCE(f);
+      CORE_UNREFERENCE(f);
       f = NULL;
       return Core_Failure;
     }
-    DX_UNREFERENCE(f);
+    CORE_UNREFERENCE(f);
     f = NULL;
   }
   Core_String* f = NULL;
@@ -210,11 +242,11 @@ static Core_Result print_info(dx_default_application_presenter* SELF) {
     return Core_Failure;
   }
   if (dx_console_append_output_text(SELF->console, f)) {
-    DX_UNREFERENCE(f);
+    CORE_UNREFERENCE(f);
     f = NULL;
     return Core_Failure;
   }
-  DX_UNREFERENCE(f);
+  CORE_UNREFERENCE(f);
   f = NULL;
   return Core_Success;
 }
@@ -231,19 +263,19 @@ static Core_Result startup(dx_default_application_presenter* SELF) {
     }
     dx_scene_presenter* scene_presenter = NULL;
     if (dx_default_scene_presenter_create((dx_default_scene_presenter**)&scene_presenter, path)) {
-      DX_UNREFERENCE(path);
+      CORE_UNREFERENCE(path);
       path = NULL;
       dx_inline_object_array_clear(SELF->scene_presenters);
       return Core_Failure;
     }
-    DX_UNREFERENCE(path);
+    CORE_UNREFERENCE(path);
     path = NULL;
     if (dx_inline_object_array_append(SELF->scene_presenters, CORE_OBJECT(scene_presenter))) {
-      DX_UNREFERENCE(scene_presenter);
+      CORE_UNREFERENCE(scene_presenter);
       scene_presenter = NULL;
       return Core_Failure;
     }
-    DX_UNREFERENCE(scene_presenter);
+    CORE_UNREFERENCE(scene_presenter);
     scene_presenter = NULL;
   }
   //
@@ -296,11 +328,11 @@ static Core_Result run(dx_default_application_presenter* SELF) {
       }
       if (msg) {
         if (on_msg(SELF, msg)) {
-          DX_UNREFERENCE(msg);
+          CORE_UNREFERENCE(msg);
           msg = NULL;
           return Core_Failure;
         }
-        DX_UNREFERENCE(msg);
+        CORE_UNREFERENCE(msg);
         msg = NULL;
       } else {
         break;
@@ -351,7 +383,7 @@ static Core_Result run(dx_default_application_presenter* SELF) {
       }
       Core_Real64 value;
       if (dx_fps_counter_get_fps(&value, SELF->fps_counter)) {
-        DX_UNREFERENCE(format);
+        CORE_UNREFERENCE(format);
         format = NULL;
         dx_val_context_leave_frame(SELF->val_context);
         dx_fps_counter_on_leave_frame(SELF->fps_counter);
@@ -359,13 +391,13 @@ static Core_Result run(dx_default_application_presenter* SELF) {
       }
       Core_String* msg = NULL;
       if (Core_String_printf(&msg, format, value)) {
-        DX_UNREFERENCE(format);
+        CORE_UNREFERENCE(format);
         format = NULL;
         dx_val_context_leave_frame(SELF->val_context);
         dx_fps_counter_on_leave_frame(SELF->fps_counter);
         return Core_Failure;
       }
-      DX_UNREFERENCE(format);
+      CORE_UNREFERENCE(format);
       format = NULL;
     #if 0
       if (!msg) {
@@ -380,7 +412,7 @@ static Core_Result run(dx_default_application_presenter* SELF) {
     #endif
       dx_overlay_clear_messages(SELF->overlay);
       dx_overlay_add_message(SELF->overlay, msg);
-      DX_UNREFERENCE(msg);
+      CORE_UNREFERENCE(msg);
       msg = NULL;
     }
 
@@ -421,29 +453,29 @@ static Core_Result quit_requested(Core_Boolean* RETURN, dx_default_application_p
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-DX_DEFINE_OBJECT_TYPE("dx.default_application_presenter",
-                      dx_default_application_presenter,
-                      dx_application_presenter);
+ Core_defineObjectType("dx.default_application_presenter",
+                       dx_default_application_presenter,
+                       dx_application_presenter);
 
 static void dx_default_application_presenter_destruct(dx_default_application_presenter* SELF) {
   SELF->message_queue = NULL;
-  DX_UNREFERENCE(SELF->cl_interpreter);
+  CORE_UNREFERENCE(SELF->cl_interpreter);
   SELF->cl_interpreter = NULL;
-  DX_UNREFERENCE(SELF->application);
+  CORE_UNREFERENCE(SELF->application);
   SELF->application = NULL;
-  DX_UNREFERENCE(SELF->val_context);
+  CORE_UNREFERENCE(SELF->val_context);
   SELF->val_context = NULL;
-  DX_UNREFERENCE(SELF->overlay);
+  CORE_UNREFERENCE(SELF->overlay);
   SELF->overlay = NULL;
-  DX_UNREFERENCE(SELF->console);
+  CORE_UNREFERENCE(SELF->console);
   SELF->console = NULL;
-  DX_UNREFERENCE(SELF->fps_counter);
+  CORE_UNREFERENCE(SELF->fps_counter);
   SELF->fps_counter = NULL;
   dx_inline_object_array_uninitialize(SELF->scene_presenters);
   Core_Memory_deallocate(SELF->scene_presenters);
 }
 
-static void dx_default_application_presenter_constructDispatch(dx_default_application_presenter_dispatch* SELF) {
+static void dx_default_application_presenter_constructDispatch(dx_default_application_presenter_Dispatch* SELF) {
   DX_APPLICATION_PRESENTER_DISPATCH(SELF)->run = (Core_Result(*)(dx_application_presenter*)) & run;
   DX_APPLICATION_PRESENTER_DISPATCH(SELF)->shutdown = (Core_Result(*)(dx_application_presenter*)) &shutdown;
   DX_APPLICATION_PRESENTER_DISPATCH(SELF)->startup = (Core_Result(*)(dx_application_presenter*)) &startup;
@@ -476,7 +508,7 @@ Core_Result dx_default_application_presenter_construct(dx_default_application_pr
     return Core_Failure;
   }
   if (dx_default_console_create((dx_default_console**)&SELF->console, font_presenter, rectangle_presenter)) {
-    DX_UNREFERENCE(SELF->fps_counter);
+    CORE_UNREFERENCE(SELF->fps_counter);
     SELF->fps_counter = NULL;
     dx_inline_object_array_uninitialize(SELF->scene_presenters);
     Core_Memory_deallocate(SELF->scene_presenters);
@@ -484,9 +516,9 @@ Core_Result dx_default_application_presenter_construct(dx_default_application_pr
     return Core_Failure;
   }
   if (dx_overlay_create(&SELF->overlay, font_presenter, rectangle_presenter)) {
-    DX_UNREFERENCE(SELF->console);
+    CORE_UNREFERENCE(SELF->console);
     SELF->console = NULL;
-    DX_UNREFERENCE(SELF->fps_counter);
+    CORE_UNREFERENCE(SELF->fps_counter);
     SELF->fps_counter = NULL;
     dx_inline_object_array_uninitialize(SELF->scene_presenters);
     Core_Memory_deallocate(SELF->scene_presenters);
@@ -495,11 +527,11 @@ Core_Result dx_default_application_presenter_construct(dx_default_application_pr
   }
   //
   SELF->application = application;
-  DX_REFERENCE(SELF->application);
+  CORE_REFERENCE(SELF->application);
   SELF->val_context = val_context;
-  DX_REFERENCE(SELF->val_context);
+  CORE_REFERENCE(SELF->val_context);
   SELF->cl_interpreter = cl_interpreter;
-  DX_REFERENCE(SELF->cl_interpreter);
+  CORE_REFERENCE(SELF->cl_interpreter);
   //
   SELF->message_queue = message_queue;
   //
@@ -510,7 +542,7 @@ Core_Result dx_default_application_presenter_construct(dx_default_application_pr
 Core_Result dx_default_application_presenter_create(dx_default_application_presenter** RETURN, dx_font_presenter* font_presenter, dx_rectangle_presenter* rectangle_presenter, dx_application* application, dx_cl_interpreter* cl_interpreter, dx_msg_queue* message_queue, dx_val_context* val_context) {
   DX_CREATE_PREFIX(dx_default_application_presenter);
   if (dx_default_application_presenter_construct(SELF, font_presenter, rectangle_presenter, application, cl_interpreter, message_queue, val_context)) {
-    DX_UNREFERENCE(SELF);
+    CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
   }

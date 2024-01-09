@@ -1,13 +1,10 @@
 {
   "type" : "object",
-  "last-update" : "2023-12-28",
-  "indices" : "val",
-  "name" : "Core_PixelBuffer",
-  "id" : "core-pixelbuffer",
-  "signature" : "typedef struct Core_PixelBuffer &lt;implementation&gt; Core_PixelBuffer;",
-  "extends" : "Core_Object",
-  "description": [
-    "A rectangular pixel buffer.",
-    "This is an object type as defined by the framework."
-  ]
+  "last-update" : "2024-01-08",
+  "indices" : "core",
+  "name" : "Core_Object",
+  "id" : "core-object",
+  "signature" : "typedef struct Core_Object Core_Object;",
+  "extends" : null,
+  "description": "The base of all <em>Objects</em>."
 }

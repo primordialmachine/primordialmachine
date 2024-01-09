@@ -19,7 +19,7 @@ static Core_Result _uninitialize_expected_keys(dx_ui_type_handlers_text_field* S
 
 static Core_Result _check_keys(dx_ui_type_handlers_text_field* SELF, dx_ddl_node* node);
 
-DX_DEFINE_OBJECT_TYPE("dx.ui.type_handlers.text_field",
+Core_defineObjectType("dx.ui.type_handlers.text_field",
                       dx_ui_type_handlers_text_field,
                       dx_ui_type_handler);
 
@@ -32,7 +32,7 @@ static Core_Result _parse(dx_ui_text_field** RETURN, dx_ui_type_handlers_text_fi
     return Core_Failure;
   }
   if (dx_ui_type_handler_parse_widget_name(DX_UI_TYPE_HANDLER(SELF), manager, node, DX_UI_WIDGET(widget))) {
-    DX_UNREFERENCE(widget);
+    CORE_UNREFERENCE(widget);
     widget = NULL;
     return Core_Failure;
   }
@@ -41,11 +41,11 @@ static Core_Result _parse(dx_ui_text_field** RETURN, dx_ui_type_handlers_text_fi
 }
 
 static void _on_expected_key_key_added(void** a) {
-  DX_REFERENCE(*a);
+  CORE_REFERENCE(*a);
 }
 
 static void _on_expected_key_key_removed(void** a) {
-  DX_UNREFERENCE(*a);
+  CORE_UNREFERENCE(*a);
 }
 
 static Core_Result _on_hash_expected_key_key(Core_Size* RETURN, Core_String** a) {
@@ -57,20 +57,20 @@ static Core_Result _on_compare_expected_key_keys(Core_Boolean* RETURN, Core_Stri
 }
 
 static Core_Result _uninitialize_expected_keys(dx_ui_type_handlers_text_field* SELF) {
-  dx_inline_pointer_hashmap_uninitialize(&SELF->expected_keys);
+  Core_InlinePointerHashmap_uninitialize(&SELF->expected_keys);
   return Core_Success;
 }
 
 static Core_Result _initialize_expected_keys(dx_ui_type_handlers_text_field* SELF) {
-  DX_INLINE_POINTER_HASHMAP_CONFIGURATION cfg = {
-    .key_added_callback = (dx_inline_pointer_hashmap_key_added_callback*)&_on_expected_key_key_added,
-    .key_removed_callback = (dx_inline_pointer_hashmap_key_removed_callback*)&_on_expected_key_key_removed,
-    .value_added_callback = NULL,
-    .value_removed_callback = NULL,
-    .hash_key_callback = (dx_inline_pointer_hashmap_hash_key_callback*)&_on_hash_expected_key_key,
-    .compare_keys_callback = (dx_inline_pointer_hashmap_compare_keys_callback*)&_on_compare_expected_key_keys,
+  Core_InlinePointerHashMap_Configuration cfg = {
+    .keyAddedCallback = (Core_InlinePointerHashMap_KeyAddedCallback*)&_on_expected_key_key_added,
+    .keyRemovedCallback = (Core_InlinePointerHashMap_KeyRemovedCallback*)&_on_expected_key_key_removed,
+    .valueAddedCallback = NULL,
+    .valueRemovedCallback = NULL,
+    .hashKeyCallback = (Core_InlinePointerHashmap_hash_key_callback*)&_on_hash_expected_key_key,
+    .compareKeysCallback = (Core_InlinePointerHashmap_compare_keys_callback*)&_on_compare_expected_key_keys,
   };
-  if (dx_inline_pointer_hashmap_initialize(&SELF->expected_keys, &cfg)) {
+  if (Core_InlinePointerHashmap_initialize(&SELF->expected_keys, &cfg)) {
     return Core_Failure;
   }
 
@@ -78,16 +78,16 @@ static Core_Result _initialize_expected_keys(dx_ui_type_handlers_text_field* SEL
   { \
     Core_String* expected_key = NULL; \
     if (Core_String_create(&expected_key, EXPECTED_KEY, sizeof(EXPECTED_KEY)-1)) { \
-      dx_inline_pointer_hashmap_uninitialize(&SELF->expected_keys); \
+      Core_InlinePointerHashmap_uninitialize(&SELF->expected_keys); \
       return Core_Failure; \
     } \
-    if (dx_inline_pointer_hashmap_set(&SELF->expected_keys, expected_key, expected_key)) {\
-      DX_UNREFERENCE(expected_key); \
+    if (Core_InlinePointerHashmap_set(&SELF->expected_keys, expected_key, expected_key)) {\
+      CORE_UNREFERENCE(expected_key); \
       expected_key = NULL; \
-      dx_inline_pointer_hashmap_uninitialize(&SELF->expected_keys); \
+      Core_InlinePointerHashmap_uninitialize(&SELF->expected_keys); \
       return Core_Failure; \
     } \
-    DX_UNREFERENCE(expected_key); \
+    CORE_UNREFERENCE(expected_key); \
     expected_key = NULL; \
   }
   DEFINE("type");
@@ -97,11 +97,11 @@ static Core_Result _initialize_expected_keys(dx_ui_type_handlers_text_field* SEL
 }
 
 static void on_received_key_added(void** p) {
-  DX_REFERENCE(*p);
+  CORE_REFERENCE(*p);
 }
 
 static void on_received_key_removed(void** p) {
-  DX_UNREFERENCE(*p);
+  CORE_UNREFERENCE(*p);
 }
 
 static Core_Result _check_keys(dx_ui_type_handlers_text_field* SELF, dx_ddl_node* node) {
@@ -113,7 +113,7 @@ static Core_Result _check_keys(dx_ui_type_handlers_text_field* SELF, dx_ddl_node
   if (dx_inline_pointer_array_initialize(&received_keys, 0, &configuration)) {
     return Core_Failure;
   }
-  if (dx_inline_pointer_hashmap_get_keys(&node->map, &received_keys)) {
+  if (Core_InlinePointerHashmap_getKeys(&node->map, &received_keys)) {
     dx_inline_pointer_array_uninitialize(&received_keys);
     return Core_Failure;
   }
@@ -129,7 +129,7 @@ static Core_Result _check_keys(dx_ui_type_handlers_text_field* SELF, dx_ddl_node
       return Core_Failure;
     }
     Core_String* expected_key = NULL;
-    if (dx_inline_pointer_hashmap_get(&expected_key, &SELF->expected_keys, received_key)) {
+    if (Core_InlinePointerHashmap_get(&expected_key, &SELF->expected_keys, received_key)) {
       dx_inline_pointer_array_uninitialize(&received_keys);
       return Core_Failure;
     }
@@ -142,7 +142,7 @@ static void dx_ui_type_handlers_text_field_destruct(dx_ui_type_handlers_text_fie
   _uninitialize_expected_keys(SELF);
 }
 
-static void dx_ui_type_handlers_text_field_constructDispatch(dx_ui_type_handlers_text_field_dispatch* SELF) {
+static void dx_ui_type_handlers_text_field_constructDispatch(dx_ui_type_handlers_text_field_Dispatch* SELF) {
   DX_UI_TYPE_HANDLER_DISPATCH(SELF)->parse = (Core_Result(*)(dx_ui_widget**, dx_ui_type_handler*, dx_ui_manager*, dx_ddl_node*)) & _parse;
 }
 
@@ -161,7 +161,7 @@ Core_Result dx_ui_type_handlers_text_field_construct(dx_ui_type_handlers_text_fi
 Core_Result dx_ui_type_handlers_text_field_create(dx_ui_type_handlers_text_field** RETURN) {
   DX_CREATE_PREFIX(dx_ui_type_handlers_text_field);
   if (dx_ui_type_handlers_text_field_construct(SELF)) {
-    DX_UNREFERENCE(SELF);
+    CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
   }

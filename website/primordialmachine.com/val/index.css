@@ -10,25 +10,24 @@ div.example {
 }
 
 main > div.container > div.right-column {
-  margin-top: 64px;
   border-left-style: solid;
   border-left-width: 1px;
-  padding-left: 16px;
+  /*padding-left: 16px;*/
 }
 
 main > div.container > div.right-column > nav {
   overflow-y: scroll;
   overflow-x: scroll;
-  padding-right: 16px;
-  padding-left: 16px;
+  padding-right: 1vw;
+  padding-left: 1vw;
 }
 
 div.cdoc-entry {
   border-top-style: solid;
   border-top-color: black;
   border-top-width: 1px;
-  margin-top: 1rem;
-  padding-top: 1rem;
+  margin-top: 1vw;
+  padding-top: 1vw;
 }
 
 div.cdoc-entry h3 {
@@ -39,21 +38,9 @@ div.cdoc-entry h3 {
   word-break: break-all;
 }
 
+/*
 div.cdoc-entry h4 {
   font-size: 1.25rem;
 }
+*/
 
-main > div.container > div.right-column > nav > ul
-{
-  display: block;
-}
-
-main > div.container > div.right-column > nav > ul > li
-{
-  display: block;
-}
-
-main > div.container > div.right-column > nav > ul > li > a
-{
-  margin-right: 32px;
-}

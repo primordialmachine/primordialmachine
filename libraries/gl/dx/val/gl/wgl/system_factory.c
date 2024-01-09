@@ -3,7 +3,7 @@
 #include "dx/application.h"
 #include "dx/val/gl/wgl/system.h"
 
-DX_DEFINE_OBJECT_TYPE("dx.val.gl.wgl.system_factory",
+Core_defineObjectType("dx.val.gl.wgl.system_factory",
                       dx_val_gl_wgl_system_factory,
                       dx_val_gl_system_factory);
 
@@ -16,7 +16,7 @@ static Core_Result create_system(dx_val_gl_wgl_system** RETURN, dx_val_gl_wgl_sy
 static void dx_val_gl_wgl_system_factory_destruct(dx_val_gl_wgl_system_factory* SELF)
 {/*Intentionally empty.*/}
 
-static void dx_val_gl_wgl_system_factory_constructDispatch(dx_val_gl_wgl_system_factory_dispatch* SELF) {
+static void dx_val_gl_wgl_system_factory_constructDispatch(dx_val_gl_wgl_system_factory_Dispatch* SELF) {
   DX_SYSTEM_FACTORY_DISPATCH(SELF)->create_system = (Core_Result(*)(dx_system**, dx_system_factory*, dx_msg_queue*)) & create_system;
 }
 
@@ -32,7 +32,7 @@ Core_Result dx_val_gl_wgl_system_factory_construct(dx_val_gl_wgl_system_factory*
 Core_Result dx_val_gl_wgl_system_factory_create(dx_val_gl_wgl_system_factory** RETURN) {
   DX_CREATE_PREFIX(dx_val_gl_wgl_system_factory);
   if (dx_val_gl_wgl_system_factory_construct(SELF)) {
-    DX_UNREFERENCE(SELF);
+    CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
   }

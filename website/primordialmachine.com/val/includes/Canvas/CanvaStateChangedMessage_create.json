@@ -1,0 +1,37 @@
+{
+  "type" : "function",
+  "last-update" : "2024-01-09",
+  "indices" : "val",
+  "name" : "Core_CanvasStateChangedMessage_create",
+  "id" : "core-canvasstatechangedmessage-create",
+  "signature" : "Core_Result Core_CanvasStateChangedMessage_create(Core_CanvasStateChangedMessage** RETURN, Core_Boolean active);",
+  "parameters" : [
+    {
+      "name" : "RETURN",
+      "type" : "@{code('Core_CanvasStateChangedMessage**')}",
+      "description" : "A pointer to a @{code('Core_CanvasStateChangedMessage*')} variable."
+    },
+    {
+      "name" : "active",
+      "type" : "@{code('Core_Boolean')}",
+      "description" : "The activation state of the canvas."
+    }
+  ],
+  "success": "@{code('*RETURN')} was assigned a pointer to the @{code('Core_CanvasStateChangedMessage')} object.",
+  "errors" : [
+    {
+      "errorCode" : "Core_Error_ArgumentInvalid",
+      "errorCondition" : "@{code('RETURN')} is a null pointer."
+    },
+    {
+      "errorCode" : "Core_Error_AllocationFailed",
+      "errorCondition" : "An allocation failed."
+    }
+  ],
+  "description" : "Create a @{code('Core_CanvasStateChangedMessage')} object.",
+  "return" : "@{code('Core_Success')} on success. @{code('Core_Failure')} on failure.",
+  "remarks" : [
+    "This function sets the by-thread error variable on failure."
+  ]
+}
+

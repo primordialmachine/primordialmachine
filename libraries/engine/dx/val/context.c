@@ -1,13 +1,13 @@
 #include "dx/val/context.h"
 
-DX_DEFINE_OBJECT_TYPE("dx.val.context",
+Core_defineObjectType("dx.val.context",
                       dx_val_context,
                       dx_context);
 
 static void dx_val_context_destruct(dx_val_context* SELF)
 {/*Intentionally empty.*/}
 
-static void dx_val_context_constructDispatch(dx_val_context_dispatch* SELF) {
+static void dx_val_context_constructDispatch(dx_val_context_Dispatch* SELF) {
   SELF->get_information = NULL;
   SELF->bind_texture = NULL;
   SELF->create_vbinding = NULL;

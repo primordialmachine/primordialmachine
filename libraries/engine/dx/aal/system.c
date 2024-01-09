@@ -1,13 +1,13 @@
 #include "dx/aal/system.h"
 
-DX_DEFINE_OBJECT_TYPE("dx.aal.system",
+Core_defineObjectType("dx.aal.system",
                       dx_aal_system,
                       dx_system);
 
 static void dx_aal_system_destruct(dx_aal_system* SELF)
 {/*Intentionally empty.*/}
 
-static void dx_aal_system_constructDispatch(dx_aal_system_dispatch* SELF)
+static void dx_aal_system_constructDispatch(dx_aal_system_Dispatch* SELF)
 {/*Intentionally empty.*/}
 
 Core_Result dx_aal_system_construct(dx_aal_system* SELF, dx_msg_queue* msg_queue) {

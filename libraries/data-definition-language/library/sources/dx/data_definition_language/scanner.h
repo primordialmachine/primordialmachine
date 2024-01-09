@@ -12,7 +12,7 @@
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 /// @brief A scanner used for scanning programs of the Data Definition Language.
-DX_DECLARE_OBJECT_TYPE("dx.data_definition_language.scanner",
+Core_declareObjectType("dx.data_definition_language.scanner",
                        dx_data_definition_language_scanner,
                        dx_scanner);
 
@@ -42,17 +42,17 @@ struct dx_data_definition_language_scanner {
   } range;
 
   /// @brief The text of the current word.
-  dx_inline_byte_array text;
+  Core_InlineArrayN8 text;
   /// @brief The kind of the current word.
   dx_data_definition_language_word_kind kind;
 };
 
-static inline dx_data_definition_language_scanner_dispatch* DX_DATA_DEFINITION_LANGUAGE_SCANNER_DISPATCH(void* p) {
-  return (dx_data_definition_language_scanner_dispatch*)p;
+static inline dx_data_definition_language_scanner_Dispatch* DX_DATA_DEFINITION_LANGUAGE_SCANNER_DISPATCH(void* p) {
+  return (dx_data_definition_language_scanner_Dispatch*)p;
 }
 
-struct dx_data_definition_language_scanner_dispatch {
-  dx_scanner_dispatch _parent;
+struct dx_data_definition_language_scanner_Dispatch {
+  dx_scanner_Dispatch _parent;
 };
 
 /// @brief Construct this scanner with an empty input.

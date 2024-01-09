@@ -5,7 +5,7 @@
 #include "dx/val/buffer.h"
 #include "dx/val/material.h"
 
-DX_DECLARE_OBJECT_TYPE("dx.rectangle_presenter",
+Core_declareObjectType("dx.rectangle_presenter",
                        dx_rectangle_presenter,
                        dx_presenter);
 
@@ -29,12 +29,12 @@ struct dx_rectangle_presenter {
   dx_val_command_list* val_command_list;
 };
 
-static inline dx_rectangle_presenter_dispatch* DX_RECTANGLE_PRESENTER_DISPATCH(void* p) {
-  return (dx_rectangle_presenter_dispatch*)p;
+static inline dx_rectangle_presenter_Dispatch* DX_RECTANGLE_PRESENTER_DISPATCH(void* p) {
+  return (dx_rectangle_presenter_Dispatch*)p;
 }
 
-struct dx_rectangle_presenter_dispatch {
-  dx_presenter_dispatch _parent;
+struct dx_rectangle_presenter_Dispatch {
+  dx_presenter_Dispatch _parent;
 };
 
 Core_Result dx_rectangle_presenter_construct(dx_rectangle_presenter* SELf, dx_val_context* val_context, dx_aal_context* aal_context);

@@ -5,7 +5,7 @@
 
 /// A "constant binding" (dx_val_cbinding) provides inputs to "constants" in "programs"
 /// (like the "variable binding" (dx_val_vbinding) provides inputs to "variables" in "programs").
-DX_DECLARE_OBJECT_TYPE("dx.val.cbinding",
+Core_declareObjectType("dx.val.cbinding",
                        dx_val_cbinding,
                        Core_Object);
 
@@ -15,10 +15,10 @@ static inline dx_val_cbinding* DX_VAL_CBINDING(void* p) {
 
 struct dx_val_cbinding {
   Core_Object _parent;
-  dx_inline_pointer_hashmap kvs;
+  Core_InlinePointerHashmap kvs;
 };
 
-struct dx_val_cbinding_dispatch {
+struct dx_val_cbinding_Dispatch {
   Core_Object_Dispatch _parent;
 };
 
@@ -68,7 +68,7 @@ Core_Result dx_val_cbinding_construct(dx_val_cbinding* self);
 
 Core_Result dx_val_cbinding_create(dx_val_cbinding** RETURN);
 
-typedef dx_inline_pointer_hashmap_iterator dx_val_cbinding_iter;
+typedef Core_InlinePointerHashmapIterator dx_val_cbinding_iter;
 
 int dx_val_cbinding_iter_initialize(dx_val_cbinding_iter* SELF, dx_val_cbinding* target);
 

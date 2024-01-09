@@ -1,0 +1,34 @@
+{
+  "type" : "method",
+  "last-update" : "2024-01-14",
+  "indices" : "core",
+  "name" : "Core_MouseButtonMessage_getButton",
+  "id" : "core-mousebuttonmessage-getbutton",
+  "signature" : "Core_Result Core_MouseButtonMessage_getButton(Core_MouseButton* RETURN, Core_MouseButtonMessage* SELF);",
+  "parameters" : [
+    {
+      "name" : "RETURN",
+      "type" : "@{code('Core_MouseButton*')}",
+      "description" : "A pointer to a @{code('Core_MouseButton')} variable."  
+    },
+    {
+      "name" : "SELF",
+      "type" : "@{code('Core_MouseButtonMessage*')}",
+      "description" : "A pointer to this @{code('Core_MouseButtonMessage')} object."
+    }
+  ],
+  "success": "@{code('*RETURN')} was assigned the mouse button.",
+  "errors" : [
+    {
+      "errorCode" : "Core_Error_ArgumentInvalid",
+      "errorCondition" : "@{code('RETURN')} is a null pointer."
+    },
+    {
+      "errorCode" : "Core_Error_ArgumentInvalid",
+      "errorCondition" : "@{code('SELF')} is a null pointer."
+    }
+  ],
+  "description" : "Get the mouse button.",
+  "return" : "@{code('Core_Success')} on success. @{code('Core_Failure')} on failure.",
+  "remarks" : "This function sets the by-thread error variable on failure."
+}

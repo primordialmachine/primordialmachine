@@ -116,17 +116,17 @@ void Core_Object_reference(Core_Object *object);
 /// A pointer to the Core_Object object.
 void Core_Object_unreference(Core_Object* object);
 
-static inline void DX_REFERENCE(void *p) {
+static inline void CORE_REFERENCE(void *p) {
   Core_Object_reference(CORE_OBJECT(p));
 }
 
-static inline void DX_UNREFERENCE(void *p) {
+static inline void CORE_UNREFERENCE(void *p) {
   Core_Object_unreference(CORE_OBJECT(p));
 }
 
 /// @brief Utility macro to facilate the definition of functions.
 /// @code
-/// struct dx_foo_dispatch {
+/// struct dx_foo_Dispatch {
 ///   dx_bar* (*create_bar)(dx_foo*, dx_quu*);
 /// };
 /// 
@@ -137,14 +137,14 @@ static inline void DX_UNREFERENCE(void *p) {
 /// @endcode
 #define DX_OBJECT_VIRTUALCALL(_TYPE, _FUNCTION, ...) \
   Core_Type* TYPE = CORE_OBJECT(SELF)->type; \
-  _TYPE##_dispatch* dispatch = NULL; \
-  dispatch = (_TYPE##_dispatch*)Core_Type_getDispatch(TYPE); \
+  _TYPE##_Dispatch* dispatch = NULL; \
+  dispatch = (_TYPE##_Dispatch*)Core_Type_getDispatch(TYPE); \
   return dispatch->_FUNCTION(__VA_ARGS__);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 /// A weak reference.
-DX_DECLARE_OBJECT_TYPE("Core.WeakReference",
+Core_declareObjectType("Core.WeakReference",
                        Core_WeakReference,
                        Core_Object);
 
@@ -159,11 +159,11 @@ struct Core_WeakReference {
   Core_Object* object;
 };
 
-static inline Core_WeakReference_dispatch* CORE_WEAKREFERENCE_DISPATCH(void* p) {
-  return (Core_WeakReference_dispatch*)p;
+static inline Core_WeakReference_Dispatch* CORE_WEAKREFERENCE_DISPATCH(void* p) {
+  return (Core_WeakReference_Dispatch*)p;
 }
 
-struct Core_WeakReference_dispatch {
+struct Core_WeakReference_Dispatch {
   Core_Object_Dispatch _parent;
 };
 

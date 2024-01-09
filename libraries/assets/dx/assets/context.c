@@ -1,13 +1,13 @@
 #include "dx/assets/context.h"
 
-DX_DEFINE_OBJECT_TYPE("dx.assets.context",
+Core_defineObjectType("dx.assets.context",
                       dx_assets_context,
                       dx_context);
 
 static void dx_assets_context_destruct(dx_assets_context* SELF)
 {/*Intentionally empty.*/}
 
-static void dx_assets_context_constructDispatch(dx_assets_context_dispatch* SELF)
+static void dx_assets_context_constructDispatch(dx_assets_context_Dispatch* SELF)
 {/*Intentionally empty.*/}
 
 Core_Result dx_assets_context_construct(dx_assets_context* SELF) {
@@ -22,7 +22,7 @@ Core_Result dx_assets_context_construct(dx_assets_context* SELF) {
 Core_Result dx_assets_context_create(dx_assets_context** RETURN) {
   DX_CREATE_PREFIX(dx_assets_context);
   if (dx_assets_context_construct(SELF)) {
-    DX_UNREFERENCE(SELF);
+    CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
   }

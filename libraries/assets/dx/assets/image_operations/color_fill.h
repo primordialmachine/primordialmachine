@@ -7,7 +7,7 @@
 /// @extends dx_assets_image_operation
 /// @brief An image operation.
 /// Fills an image with a color.
-DX_DECLARE_OBJECT_TYPE("dx.assets.image_operations.color_fill",
+Core_declareObjectType("dx.assets.image_operations.color_fill",
                        dx_assets_image_operations_color_fill,
                        dx_assets_image_operation);
 
@@ -23,12 +23,12 @@ struct dx_assets_image_operations_color_fill {
   dx_asset_reference* color;
 };
 
-static inline dx_assets_image_operations_color_fill_dispatch* DX_ASSETS_IMAGE_OPERATIONS_COLOR_FILL_DISPATCH(void* p) {
-  return (dx_assets_image_operations_color_fill_dispatch*)p;
+static inline dx_assets_image_operations_color_fill_Dispatch* DX_ASSETS_IMAGE_OPERATIONS_COLOR_FILL_DISPATCH(void* p) {
+  return (dx_assets_image_operations_color_fill_Dispatch*)p;
 }
 
-struct dx_assets_image_operations_color_fill_dispatch {
-  dx_assets_image_operation_dispatch _parent;
+struct dx_assets_image_operations_color_fill_Dispatch {
+  dx_assets_image_operation_Dispatch _parent;
 };
 
 /// @detail The object is constructed with default values.

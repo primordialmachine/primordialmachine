@@ -1,0 +1,44 @@
+{
+  "type" : "create-operator",
+  "last-update" : "2024-01-15",
+  "indices" : "core",
+  "name" : "Core_KeyboardKeyMessage_create",
+  "id" : "core-keyboardkeymessage-create",
+  "signature" : "Core_Result Core_KeyboardKeyMessage_create(Core_KeyboardKeyMessage** RETURN, Core_KeyboardKeyAction action, Core_KeyboardKey key, Core_ModifiersKey modifierKeys);",
+  "parameters" : [
+    {
+      "name" : "RETURN",
+      "type" : "@{code('Core_KeyboardKeyMessage**')}",
+      "description" : "A pointer to a @{code('Core_KeyboardKeyMessage*')} variable."
+    },
+    {
+      "name" : "action",
+      "type" : "@{code('Core_KeyboardKeyAction')}",
+      "description" : "The action of the key."  
+    },
+    {
+      "name" : "key",
+      "type" : "@{code('Core_KeyboardKey')}",
+      "description" : "The keyboard key."
+    },
+    {
+      "name" : "modifierKeys",
+      "type" : "@{code('Core_ModifierKeys')}",
+      "description" : "The modifier keys by the time the key was operated."  
+    }
+  ],
+  "success": "@{code('*RETURN')} was assigned a pointer to the @{code('Core_KeyboardKeyMessage')} object.",
+  "errors" : [
+    {
+      "errorCode" : "Core_Error_ArgumentInvalid",
+      "errorCondition" : "@{code('RETURN')} is a null pointer."
+    },
+    {
+      "errorCode" : "Core_Error_AllocationFailed",
+      "errorCondition" : "An allocation failed."
+    }
+  ],
+  "description" : "Create a @{code('Core_KeyboardKeyMessage')} object.",
+  "return" : "@{code('Core_Success')} on success. @{code('Core_Failure')} on failure.",
+  "remarks" : "This function sets the by-thread error variable on failure."
+}

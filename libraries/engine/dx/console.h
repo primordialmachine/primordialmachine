@@ -3,7 +3,7 @@
 
 #include "dx/core.h"
 
-DX_DECLARE_OBJECT_TYPE("dx.console",
+Core_declareObjectType("dx.console",
                        dx_console,
                        Core_Object);
 
@@ -15,13 +15,13 @@ struct dx_console {
   Core_Object _parent;
 };
 
-static inline dx_console_dispatch* DX_CONSOLE_DISPATCH(void* p) {
-  return (dx_console_dispatch*)p;
+static inline dx_console_Dispatch* DX_CONSOLE_DISPATCH(void* p) {
+  return (dx_console_Dispatch*)p;
 }
 
-struct dx_console_dispatch {
+struct dx_console_Dispatch {
   Core_Object_Dispatch _parent;
-  Core_Result (*on_keyboard_key_message)(dx_console*, dx_keyboard_key_msg*);
+  Core_Result (*on_keyboard_key_message)(dx_console*, Core_KeyboardKeyMessage*);
   Core_Result (*render)(dx_console*, Core_Real32, Core_Integer32, Core_Integer32, Core_Integer32, Core_Integer32);
   Core_Result (*open)(dx_console*);
   Core_Result (*close)(dx_console*);
@@ -35,7 +35,7 @@ Core_Result dx_console_construct(dx_console* SELF);
 
 /// @brief Handle a keyboard key message.
 /// @method{dx_console}
-static inline Core_Result dx_console_on_keyboard_key_message(dx_console* SELF, dx_keyboard_key_msg* keyboard_key_message) {
+static inline Core_Result dx_console_on_keyboard_key_message(dx_console* SELF, Core_KeyboardKeyMessage* keyboard_key_message) {
   DX_OBJECT_VIRTUALCALL(dx_console, on_keyboard_key_message, SELF, keyboard_key_message);
 }
 

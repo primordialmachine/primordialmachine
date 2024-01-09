@@ -2,28 +2,28 @@
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-DX_DEFINE_OBJECT_TYPE("dx.val.command",
+Core_defineObjectType("dx.val.command",
                       dx_val_command,
                       Core_Object);
 
 static void dx_val_command_destruct(dx_val_command* SELF) {
   switch (SELF->kind) {
     case DX_VAL_COMMAND_KIND_DRAW: {
-      DX_UNREFERENCE(SELF->draw_command.program);
+      CORE_UNREFERENCE(SELF->draw_command.program);
       SELF->draw_command.program = NULL;
-      DX_UNREFERENCE(SELF->draw_command.cbinding);
+      CORE_UNREFERENCE(SELF->draw_command.cbinding);
       SELF->draw_command.cbinding = NULL;
       if (SELF->draw_command.texture) {
-        DX_UNREFERENCE(SELF->draw_command.texture);
+        CORE_UNREFERENCE(SELF->draw_command.texture);
         SELF->draw_command.texture = NULL;
       }
-      DX_UNREFERENCE(SELF->draw_command.vbinding);
+      CORE_UNREFERENCE(SELF->draw_command.vbinding);
       SELF->draw_command.vbinding = NULL;
     } break;
   };
 }
 
-static void dx_val_command_constructDispatch(dx_val_command_dispatch* SELF)
+static void dx_val_command_constructDispatch(dx_val_command_Dispatch* SELF)
 {/*Intentionally empty.*/}
 
 Core_Result dx_val_command_construct_clear_color(dx_val_command* SELF, Core_Real32 l, Core_Real32 b, Core_Real32 w, Core_Real32 h, DX_RGBA_F32 const* color) {
@@ -41,7 +41,7 @@ Core_Result dx_val_command_construct_clear_color(dx_val_command* SELF, Core_Real
 Core_Result dx_val_command_create_clear_color(dx_val_command** RETURN, Core_Real32 l, Core_Real32 b, Core_Real32 w, Core_Real32 h, DX_RGBA_F32 const* color) {
   DX_CREATE_PREFIX(dx_val_command);
   if (dx_val_command_construct_clear_color(SELF, l, b, w, h, color)) {
-    DX_UNREFERENCE(SELF);
+    CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
   }
@@ -64,7 +64,7 @@ Core_Result dx_val_command_construct_clear_depth(dx_val_command* SELF, Core_Real
 Core_Result dx_val_command_create_clear_depth(dx_val_command** RETURN, Core_Real32 l, Core_Real32 b, Core_Real32 w, Core_Real32 h, Core_Real32 depth) {
   DX_CREATE_PREFIX(dx_val_command);
   if (dx_val_command_construct_clear_depth(SELF, l, b, w, h, depth)) {
-    DX_UNREFERENCE(SELF);
+    CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
   }
@@ -76,17 +76,17 @@ Core_Result dx_val_command_construct_draw(dx_val_command* SELF, dx_val_vbinding*
   DX_CONSTRUCT_PREFIX(dx_val_command);
   SELF->kind = DX_VAL_COMMAND_KIND_DRAW;
   SELF->draw_command.vbinding = vbinding;
-  DX_REFERENCE(vbinding);
+  CORE_REFERENCE(vbinding);
   if (texture) {
     SELF->draw_command.texture = texture;
-    DX_REFERENCE(texture);
+    CORE_REFERENCE(texture);
   } else {
     SELF->draw_command.texture = NULL;
   }
   SELF->draw_command.cbinding = cbinding;
-  DX_REFERENCE(cbinding);
+  CORE_REFERENCE(cbinding);
   SELF->draw_command.program = program;
-  DX_REFERENCE(program);
+  CORE_REFERENCE(program);
   SELF->draw_command.start = start;
   SELF->draw_command.length = length;
 
@@ -97,7 +97,7 @@ Core_Result dx_val_command_construct_draw(dx_val_command* SELF, dx_val_vbinding*
 Core_Result dx_val_command_create_draw(dx_val_command** RETURN, dx_val_vbinding* vbinding, dx_val_texture* texture, dx_val_cbinding* cbinding, dx_val_program* program, Core_Natural32 start, Core_Natural32 length) {
   DX_CREATE_PREFIX(dx_val_command);
   if (dx_val_command_construct_draw(SELF, vbinding, texture, cbinding, program, start, length)) {
-    DX_UNREFERENCE(SELF);
+    CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
   }
@@ -119,7 +119,7 @@ Core_Result dx_val_command_construct_viewport(dx_val_command* SELF, Core_Real32 
 Core_Result dx_val_command_create_viewport(dx_val_command** RETURN, Core_Real32 l, Core_Real32 b, Core_Real32 w, Core_Real32 h) {
   DX_CREATE_PREFIX(dx_val_command);
   if (dx_val_command_construct_viewport(SELF, l, b, w, h)) {
-    DX_UNREFERENCE(SELF);
+    CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
   }
@@ -142,7 +142,7 @@ Core_Result dx_val_command_construct_scissor_test(dx_val_command* SELF, Core_Boo
 Core_Result dx_val_command_create_scissor_test(dx_val_command** RETURN, Core_Boolean enabled, Core_Real32 l, Core_Real32 b, Core_Real32 w, Core_Real32 h) {
   DX_CREATE_PREFIX(dx_val_command);
   if (dx_val_command_construct_scissor_test(SELF, enabled, l, b, w, h)) {
-    DX_UNREFERENCE(SELF);
+    CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
   }
@@ -164,7 +164,7 @@ Core_Result dx_val_command_construct_pipeline_state(dx_val_command* SELF, Core_C
 Core_Result dx_val_command_create_pipeline_state(dx_val_command** RETURN, Core_CullMode cull_mode, Core_DepthCompareFunction depthCompareFunction, Core_Boolean depth_write_enabled) {
   DX_CREATE_PREFIX(dx_val_command);
   if (dx_val_command_construct_pipeline_state(SELF, cull_mode, depthCompareFunction, depth_write_enabled)) {
-    DX_UNREFERENCE(SELF);
+    CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
   }
@@ -174,7 +174,7 @@ Core_Result dx_val_command_create_pipeline_state(dx_val_command** RETURN, Core_C
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-DX_DEFINE_OBJECT_TYPE("dx.val.command_list",
+Core_defineObjectType("dx.val.command_list",
                       dx_val_command_list,
                       Core_Object);
 
@@ -182,7 +182,7 @@ static void dx_val_command_list_destruct(dx_val_command_list* SELF) {
   dx_inline_object_array_uninitialize(&SELF->backend);
 }
 
-static void dx_val_command_list_constructDispatch(dx_val_command_list_dispatch* SELF)
+static void dx_val_command_list_constructDispatch(dx_val_command_list_Dispatch* SELF)
 {/*Intentionally empty.*/}
 
 Core_Result dx_val_command_list_construct(dx_val_command_list* SELF) {
@@ -197,7 +197,7 @@ Core_Result dx_val_command_list_construct(dx_val_command_list* SELF) {
 Core_Result dx_val_command_list_create(dx_val_command_list** RETURN) {
   DX_CREATE_PREFIX(dx_val_command_list);
   if (dx_val_command_list_construct(SELF)) {
-    DX_UNREFERENCE(SELF);
+    CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
   }

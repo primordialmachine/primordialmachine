@@ -4,17 +4,17 @@
 #include <string.h>
 #include <stdio.h>
 
-DX_DECLARE_ENUMERATION_TYPE("dx.adl.name_index",
+Core_defineEnumerationType("dx.adl.name_index",
                             dx_adl_name_index);
 
-DX_DEFINE_OBJECT_TYPE("dx.adl.names",
+Core_defineObjectType("dx.adl.names",
                       dx_adl_names,
                       Core_Object);
 
 static void dx_adl_names_destruct(dx_adl_names* SELF) {
   for (Core_Size i = 0, n = DX_ADL_NAMES_NUMBER_OF_NAMES; i < n; ++i) {
     DX_DEBUG_ASSERT(SELF->names[i]);
-    DX_UNREFERENCE(SELF->names[i]);
+    CORE_UNREFERENCE(SELF->names[i]);
     SELF->names[i] = NULL;
   }
   if (SELF->names) {
@@ -23,7 +23,7 @@ static void dx_adl_names_destruct(dx_adl_names* SELF) {
   }
 }
 
-static void dx_adl_names_constructDispatch(dx_adl_names_dispatch* SELF)
+static void dx_adl_names_constructDispatch(dx_adl_names_Dispatch* SELF)
 {/*Intentionally empty.*/}
 
 Core_Result dx_adl_names_construct(dx_adl_names* SELF) {
@@ -47,7 +47,7 @@ ERROR:
   if (SELF->names) {
     for (Core_Size i = 0, n = dx_adl_name_index_z_key + 1; i < n; ++i) {
       if (SELF->names[i]) {
-        DX_UNREFERENCE(SELF->names[i]);
+        CORE_UNREFERENCE(SELF->names[i]);
         SELF->names[i] = NULL;
       }
     }
@@ -62,7 +62,7 @@ ERROR:
 Core_Result dx_adl_names_create(dx_adl_names** RETURN) {
   DX_CREATE_PREFIX(dx_adl_names);
   if (dx_adl_names_construct(SELF)) {
-    DX_UNREFERENCE(SELF);
+    CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
   }

@@ -1,6 +1,6 @@
 #include "dx/document_definition_language/word_kind.h"
 
-DX_DEFINE_ENUMERATION_TYPE("dx.document_definition_language.word_kind",
+Core_defineEnumerationType("dx.document_definition_language.word_kind",
                            dx_document_definition_language_word_kind);
 
 Core_Result dx_document_definition_language_word_kind_to_string(Core_String** RETURN, dx_document_definition_language_word_kind SELF) {

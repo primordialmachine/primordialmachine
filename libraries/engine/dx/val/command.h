@@ -31,7 +31,7 @@
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-DX_DECLARE_OBJECT_TYPE("dx.val.command",
+Core_declareObjectType("dx.val.command",
                        dx_val_command,
                        Core_Object);
 
@@ -133,11 +133,11 @@ struct dx_val_command {
   };
 };
 
-static inline dx_val_command_dispatch* DX_VAL_COMMAND_DISPATCH(void* p) {
-  return (dx_val_command_dispatch*)p;
+static inline dx_val_command_Dispatch* DX_VAL_COMMAND_DISPATCH(void* p) {
+  return (dx_val_command_Dispatch*)p;
 }
 
-struct dx_val_command_dispatch {
+struct dx_val_command_Dispatch {
   Core_Object_Dispatch _parent;
 };
 
@@ -223,7 +223,7 @@ Core_Result dx_val_command_create_pipeline_state(dx_val_command** RETURN, Core_C
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-DX_DECLARE_OBJECT_TYPE("dx.val.command_list",
+Core_declareObjectType("dx.val.command_list",
                        dx_val_command_list,
                        Core_Object);
 
@@ -236,11 +236,11 @@ struct dx_val_command_list {
   dx_inline_object_array backend;
 };
 
-static inline dx_val_command_list_dispatch* DV_VAL_COMMAND_LIST_DISPATCH(void* p) {
-  return (dx_val_command_list_dispatch*)p;
+static inline dx_val_command_list_Dispatch* DV_VAL_COMMAND_LIST_DISPATCH(void* p) {
+  return (dx_val_command_list_Dispatch*)p;
 }
 
-struct dx_val_command_list_dispatch {
+struct dx_val_command_list_Dispatch {
   Core_Object_Dispatch _parent;
 };
 

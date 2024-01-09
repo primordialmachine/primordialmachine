@@ -3,7 +3,7 @@
 
 #include "dx/core.h"
 
-DX_DECLARE_OBJECT_TYPE("dx.val.gl.window",
+Core_declareObjectType("dx.val.gl.window",
                        dx_val_gl_window,
                        Core_Object);
 
@@ -15,11 +15,11 @@ struct dx_val_gl_window {
   Core_Object _parent;
 };
 
-static inline dx_val_gl_window_dispatch* DX_VAL_GL_WINDOW_DISPATCH(void* p) {
-  return (dx_val_gl_window_dispatch*)p;
+static inline dx_val_gl_window_Dispatch* DX_VAL_GL_WINDOW_DISPATCH(void* p) {
+  return (dx_val_gl_window_Dispatch*)p;
 }
 
-struct dx_val_gl_window_dispatch {
+struct dx_val_gl_window_Dispatch {
   Core_Object_Dispatch _parent;
   Core_Result(*get_canvas_size)(dx_val_gl_window*, Core_Integer32*, Core_Integer32*);
 };

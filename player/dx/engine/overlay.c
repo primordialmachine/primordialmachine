@@ -13,19 +13,19 @@ static DX_RGBA_F32 const TEXT_UI_BACKGROUND_COLOR = { .r = 0.f, .g = 0.f, .b = 0
 /// The text ui text color.
 static DX_RGBA_F32 const TEXT_UI_TEXT_COLOR = { .r = 0.f, .g = 0.f, .b = 0.f, .a = 1.f };
 
-DX_DEFINE_OBJECT_TYPE("dx.overlay",
+Core_defineObjectType("dx.overlay",
                       dx_overlay,
                       Core_Object);
 
 static void dx_overlay_destruct(dx_overlay* SELF) {
-  DX_UNREFERENCE(SELF->text_field);
+  CORE_UNREFERENCE(SELF->text_field);
   SELF->text_field = NULL;
 
-  DX_UNREFERENCE(SELF->ui_manager);
+  CORE_UNREFERENCE(SELF->ui_manager);
   SELF->ui_manager = NULL;
 }
 
-static void dx_overlay_constructDispatch(dx_overlay_dispatch* SELF)
+static void dx_overlay_constructDispatch(dx_overlay_Dispatch* SELF)
 {/*Intentionally empty.*/}
 
 Core_Result dx_overlay_construct(dx_overlay* SELF, dx_font_presenter* font_presenter, dx_rectangle_presenter* rectangle_presenter) {
@@ -35,7 +35,7 @@ Core_Result dx_overlay_construct(dx_overlay* SELF, dx_font_presenter* font_prese
     return Core_Failure;
   }
   if (dx_ui_text_field_create(&SELF->text_field, SELF->ui_manager)) {
-    DX_UNREFERENCE(SELF->ui_manager);
+    CORE_UNREFERENCE(SELF->ui_manager);
     SELF->ui_manager = NULL;
     return Core_Failure;
   }
@@ -46,7 +46,7 @@ Core_Result dx_overlay_construct(dx_overlay* SELF, dx_font_presenter* font_prese
 Core_Result dx_overlay_create(dx_overlay** RETURN, dx_font_presenter* font_presenter, dx_rectangle_presenter* rectangle_presenter) {
   DX_CREATE_PREFIX(dx_overlay)
   if (dx_overlay_construct(SELF, font_presenter, rectangle_presenter)) {
-    DX_UNREFERENCE(SELF);
+    CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
   }
@@ -64,11 +64,11 @@ Core_Result dx_overlay_clear_messages(dx_overlay* SELF) {
     return Core_Failure;
   }
   if (dx_ui_text_field_set_text(SELF->text_field, text)) {
-    DX_UNREFERENCE(text);
+    CORE_UNREFERENCE(text);
     text = NULL;
     return Core_Failure;
   }
-  DX_UNREFERENCE(text);
+  CORE_UNREFERENCE(text);
   text = NULL;
   return Core_Success;
 }

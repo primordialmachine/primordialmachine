@@ -1,0 +1,37 @@
+{
+  "type" : "function",
+  "last-update" : "2024-01-13",
+  "indices" : "core",
+  "name" : "Core_KeyboardKey_toString",
+  "id" : "core-keyboardkey-tostring",
+  "signature" : "Core_Result Core_KeyboardKey_toString(Core_String** RETURN, Core_KeyboardKey SELF);",
+  "parameters" : [
+    {
+      "name" : "RETURN",
+      "type" : "@{code('Core_String**')}",
+      "description" : "A pointer to a @{code('Core_String*')} variable."
+    },
+    {
+      "name" : "SELF",
+      "type" : "@{code('Core_KeyboardKey')}",
+      "description" : "This @{code('Core_KeyboardKey')} value."
+    }
+  ],
+  "success": [
+    "This @{code('*RETURN')} was assigned a pointer to a @{code('Core_String')} object which is a human-readable description of the specified keyboard key.@(newline())",
+    "The caller acquired a reference to that object."
+  ],
+  "errors" : [
+    {
+      "errorCode" : "Core_Error_ArgumentInvalid",
+      "errorCondition" : "@{code('RETURN')} is a null pointer."
+    },
+    {
+      "errorCode" : "Core_Error_AllocationFailed",
+      "errorCondition" : "An allocation failed."
+    }
+  ],
+  "description" : "Get a human-readable description of this @{code('Core_KeyboardKey')} value.",
+  "return" : "@{code('Core_Success')} on success. @{code('Core_Failure')} on failure.",
+  "remarks" : "This function sets the by-thread error variable on failure."
+}

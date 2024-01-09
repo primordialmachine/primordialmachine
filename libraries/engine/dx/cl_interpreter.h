@@ -8,7 +8,7 @@ typedef Core_Result(dx_cl_function)(dx_application_presenter* application_presen
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 /// @brief A CL interpreter procedure.
-DX_DECLARE_OBJECT_TYPE("dx.cl.interpreter_procedure",
+Core_declareObjectType("dx.cl.interpreter_procedure",
                        dx_cl_interpreter_procedure,
                        Core_Object);
 
@@ -22,11 +22,11 @@ struct dx_cl_interpreter_procedure {
   dx_cl_function* pointer;
 };
 
-static inline dx_cl_interpreter_procedure_dispatch* DX_CL_INTERPRETER_PROCEDURE_DISPATCH(void* p) {
-  return (dx_cl_interpreter_procedure_dispatch*)p;
+static inline dx_cl_interpreter_procedure_Dispatch* DX_CL_INTERPRETER_PROCEDURE_DISPATCH(void* p) {
+  return (dx_cl_interpreter_procedure_Dispatch*)p;
 }
 
-struct dx_cl_interpreter_procedure_dispatch {
+struct dx_cl_interpreter_procedure_Dispatch {
   Core_Object_Dispatch _parent;
 };
 
@@ -37,7 +37,7 @@ Core_Result dx_cl_interpreter_procedure_create(dx_cl_interpreter_procedure** RET
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 /// @brief The CL interpreter.
-DX_DECLARE_OBJECT_TYPE("dx.cl.interpreter",
+Core_declareObjectType("dx.cl.interpreter",
                        dx_cl_interpreter,
                        Core_Object);
 
@@ -47,14 +47,14 @@ static inline dx_cl_interpreter* DX_CL_INTERPRETER(void* p) {
 
 struct dx_cl_interpreter {
   Core_Object _parent;
-  dx_inline_pointer_hashmap procedures;
+  Core_InlinePointerHashmap procedures;
 };
 
-static inline dx_cl_interpreter_dispatch* DX_CL_INTERPRETER_DISPATCH(void* p) {
-  return (dx_cl_interpreter_dispatch*)p;
+static inline dx_cl_interpreter_Dispatch* DX_CL_INTERPRETER_DISPATCH(void* p) {
+  return (dx_cl_interpreter_Dispatch*)p;
 }
 
-struct dx_cl_interpreter_dispatch {
+struct dx_cl_interpreter_Dispatch {
   Core_Object_Dispatch _parent;
 };
 

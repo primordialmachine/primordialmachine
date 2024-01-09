@@ -5,7 +5,7 @@
 #include "dx/assets/reference.h"
 
 /// @brief A viewer instance asset.
-DX_DECLARE_OBJECT_TYPE("dx.assets.viewer_instance",
+Core_declareObjectType("dx.assets.viewer_instance",
                        dx_assets_viewer_instance,
                        Core_Object);
 
@@ -21,11 +21,11 @@ struct dx_assets_viewer_instance {
   DX_MAT4 world_matrix;
 };
 
-static inline dx_assets_viewer_instance_dispatch* DX_ASSETS_VIEWER_INSTANCE_DISPATCH(void* p) {
-  return (dx_assets_viewer_instance_dispatch*)p;
+static inline dx_assets_viewer_instance_Dispatch* DX_ASSETS_VIEWER_INSTANCE_DISPATCH(void* p) {
+  return (dx_assets_viewer_instance_Dispatch*)p;
 }
 
-struct dx_assets_viewer_instance_dispatch {
+struct dx_assets_viewer_instance_Dispatch {
   Core_Object_Dispatch _parent;
 };
 

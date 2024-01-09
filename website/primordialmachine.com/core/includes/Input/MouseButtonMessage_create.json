@@ -1,0 +1,58 @@
+{
+  "type" : "create-operator",
+  "last-update" : "2024-01-15",
+  "indices" : "core",
+  "name" : "Core_MouseButtonMessage_create",
+  "id" : "core-mousebuttonmessage-create",
+  "signature" : "Core_Result Core_MouseButtonMessage_create(Core_MouseButtonMessage** RETURN, Core_MouseButtonAction action, Core_MouseButton button, Core_ModifiersKey modifierKeys, Core_Real32 x, Core_Real32 y);",
+  "parameters" : [
+    {
+      "name" : "RETURN",
+      "type" : "@{code('Core_MouseButtonMessage**')}",
+      "description" : "A pointer to a @{code('Core_MouseButtonMessage*')} variable."
+    },
+    {
+      "name" : "action",
+      "type" : "@{code('Core_MouseButtonAction')}",
+      "description" : "The action of the button."  
+    },
+    {
+      "name" : "button",
+      "type" : "@{code('Core_MouseButton')}",
+      "description" : "The mouse button."
+    },
+    {
+      "name" : "modifierKeys",
+      "type" : "@{code('Core_ModifierKeys')}",
+      "description" : "The modifier keys by the time the button was operated."  
+    },
+    {
+      "name" : "x",
+      "type" : "@{code('Core_Real32')}",
+      "description" : "The position of the mouse pointer, in canvas coordinates, by the time the button was operated."  
+    },
+    {
+      "name" : "y",
+      "type" : "@{code('Core_Real32')}",
+      "description" : "The position of the mouse pointer, in canvas coordinates, by the time the button was operated."  
+    }
+  ],
+  "success": "@{code('*RETURN')} was assigned a pointer to the @{code('Core_MouseButtonMessage')}.",
+  "errors" : [
+    {
+      "errorCode" : "Core_Error_ArgumentInvalid",
+      "errorCondition" : "@{code('RETURN')} is a null pointer."
+    },
+    {
+      "errorCode" : "Core_Error_AllocationFailed",
+      "errorCondition" : "An allocation failed."
+    }
+  ],
+  "description" : "Create a @{code('Core_MouseButtonMessage')} object.",
+  "return" : "@{code('Core_Success')} on success. @{code('Core_Failure')} on failure.",
+  "remarks" : [
+    "This function sets the by-thread error variable on failure.@(newline())",
+    "In the <em>canvas coordinate system</em>, the origin (0,0) is at the left/top of the canvas,",
+    "the positive x-axis is pointing right, and the positive y-axis is pointing down."
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "type" : "enumeration",
+  "last-update" : "2024-01-13",
+  "indices" : "core",
+  "name" : "Core_MouseButtonAction",
+  "id" : "core-mousebuttonaction",
+  "signature" : "typedef enum Core_MouseButtonAction &lt;implementation&gt; Core_MouseButtonAction;",
+  "description": "An enumeration of mouse button actions.",
+  "elements": [
+    {
+      "name" : "Core_MouseButtonAction_Pressed",
+      "description" : "A mouse button was pressed."
+    },
+    {
+      "name" : "Core_MouseButtonAction_Released",
+      "description" : "A mouse button was released."
+    }
+  ]
+}

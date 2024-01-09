@@ -1,13 +1,13 @@
 #include "dx/console.h"
 
-DX_DEFINE_OBJECT_TYPE("dx.console",
+Core_defineObjectType("dx.console",
                       dx_console,
                       Core_Object);
 
 static void dx_console_destruct(dx_console* SELF)
 {/*Intentionally empty.*/}
 
-static void dx_console_constructDispatch(dx_console_dispatch* SELF)
+static void dx_console_constructDispatch(dx_console_Dispatch* SELF)
 {/*Intentionally empty.*/}
 
 Core_Result dx_console_construct(dx_console* SELF) {

@@ -8,7 +8,7 @@
 typedef struct dx_asset_definition_language_diagnostics dx_asset_definition_language_diagnostics;
 
 /// "enter" phase: Enter symbols into the symbol table.
-DX_DECLARE_OBJECT_TYPE("dx.asset_definition_language.enter",
+Core_declareObjectType("dx.asset_definition_language.enter",
                        dx_asset_definition_language_enter,
                        Core_Object);
 
@@ -23,11 +23,11 @@ struct dx_asset_definition_language_enter {
   dx_adl_context* context;
 };
 
-static inline dx_asset_definition_language_enter_dispatch* DX_ASSET_DEFINITION_LANGUAGE_ENTER_DISPATCH(void* p) {
-  return (dx_asset_definition_language_enter_dispatch*)p;
+static inline dx_asset_definition_language_enter_Dispatch* DX_ASSET_DEFINITION_LANGUAGE_ENTER_DISPATCH(void* p) {
+  return (dx_asset_definition_language_enter_Dispatch*)p;
 }
 
-struct dx_asset_definition_language_enter_dispatch {
+struct dx_asset_definition_language_enter_Dispatch {
   Core_Object_Dispatch _parent;
 };
 

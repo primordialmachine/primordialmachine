@@ -7,7 +7,7 @@
 /// @extends dx_assets_image_operation
 /// @brief An image operation.
 /// Fills an image with the a checkerboard pattern.
-DX_DECLARE_OBJECT_TYPE("dx.assets.image_operations.checkerboard_pattern_fill",
+Core_declareObjectType("dx.assets.image_operations.checkerboard_pattern_fill",
                        dx_assets_image_operations_checkerboard_pattern_fill,
                        dx_assets_image_operation);
 
@@ -35,12 +35,12 @@ struct dx_assets_image_operations_checkerboard_pattern_fill {
   dx_asset_reference* second_checker_color;
 };
 
-static inline dx_assets_image_operations_checkerboard_pattern_fill_dispatch* DX_ASSETS_IMAGE_OPERATIONS_CHECKERBOARD_PATTERN_FILL_DISPATCH(void* p) {
-  return (dx_assets_image_operations_checkerboard_pattern_fill_dispatch*)p;
+static inline dx_assets_image_operations_checkerboard_pattern_fill_Dispatch* DX_ASSETS_IMAGE_OPERATIONS_CHECKERBOARD_PATTERN_FILL_DISPATCH(void* p) {
+  return (dx_assets_image_operations_checkerboard_pattern_fill_Dispatch*)p;
 }
 
-struct dx_assets_image_operations_checkerboard_pattern_fill_dispatch {
-  dx_assets_image_operation_dispatch _parent;
+struct dx_assets_image_operations_checkerboard_pattern_fill_Dispatch {
+  dx_assets_image_operation_Dispatch _parent;
 };
 
 /// @detail The object is constructed with default values.

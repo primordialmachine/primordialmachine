@@ -6,7 +6,7 @@
 #include "dx/document.h"
 typedef struct dx_font dx_font;
 
-DX_DECLARE_OBJECT_TYPE("dx.ui.text_field",
+Core_declareObjectType("dx.ui.text_field",
                        dx_ui_text_field,
                        dx_ui_widget);
 
@@ -48,12 +48,12 @@ struct dx_ui_text_field {
   dx_text_document* text;
 };
 
-static dx_ui_text_field_dispatch* DX_UI_TEXT_FIELD_DISPATCH(void* p) {
-  return (dx_ui_text_field_dispatch*)p;
+static dx_ui_text_field_Dispatch* DX_UI_TEXT_FIELD_DISPATCH(void* p) {
+  return (dx_ui_text_field_Dispatch*)p;
 }
 
-struct dx_ui_text_field_dispatch {
-  dx_ui_widget_dispatch _parent;
+struct dx_ui_text_field_Dispatch {
+  dx_ui_widget_Dispatch _parent;
 };
 
 /// @constructor{dx_ui_text_field}

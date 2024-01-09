@@ -1,6 +1,6 @@
 #include "dx/data_definition_language/linemap.h"
 
-DX_DEFINE_OBJECT_TYPE("dx.ddl.linemap",
+Core_defineObjectType("dx.ddl.linemap",
                       dx_ddl_linemap,
                       Core_Object);
 
@@ -10,7 +10,7 @@ static void dx_ddl_linemap_destruct(dx_ddl_linemap* SELF) {
   SELF->number_of_lines = 0;
 }
 
-static void dx_ddl_linemap_constructDispatch(dx_ddl_linemap_dispatch* SELF)
+static void dx_ddl_linemap_constructDispatch(dx_ddl_linemap_Dispatch* SELF)
 {/*Intentionally empty.*/}
 
 Core_Result dx_ddl_linemap_construct(dx_ddl_linemap* SELF, char const* start, char const* end) {
@@ -84,7 +84,7 @@ Core_Result dx_ddl_linemap_get_column_index(Core_Size* RETURN, dx_ddl_linemap* S
 Core_Result dx_ddl_linemap_create(dx_ddl_linemap** RETURN, char const* start, char const* end) {
   DX_CREATE_PREFIX(dx_ddl_linemap);
   if (dx_ddl_linemap_construct(SELF, start, end)) {
-    DX_UNREFERENCE(SELF);
+    CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
   }
@@ -102,18 +102,18 @@ static Core_Result test(char const* p, Core_Size n, Core_Size expected, Core_Res
     return Core_Failure;
   }
   if (expected != linemap->number_of_lines) {
-    DX_UNREFERENCE(linemap);
+    CORE_UNREFERENCE(linemap);
     linemap = NULL;
     return Core_Failure;
   }
   if (check) {
     if (check(linemap)) {
-      DX_UNREFERENCE(linemap);
+      CORE_UNREFERENCE(linemap);
       linemap = NULL;
       return Core_Failure;
     }
   }
-  DX_UNREFERENCE(linemap);
+  CORE_UNREFERENCE(linemap);
   linemap = NULL;
   return Core_Success;
 }

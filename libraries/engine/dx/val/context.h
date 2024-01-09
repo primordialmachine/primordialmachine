@@ -13,7 +13,7 @@ typedef struct dx_val_program_text dx_val_program_text;
 typedef struct dx_val_texture dx_val_texture;
 typedef struct dx_val_vbinding dx_val_vbinding;
 
-DX_DECLARE_OBJECT_TYPE("dx.val.context",
+Core_declareObjectType("dx.val.context",
                        dx_val_context,
                        dx_context);
 
@@ -25,12 +25,12 @@ struct dx_val_context {
   dx_context _parent;
 };
 
-static inline dx_val_context_dispatch* DX_VAL_CONTEXT_DISPATCH(void* p) {
-  return (dx_val_context_dispatch*)p;
+static inline dx_val_context_Dispatch* DX_VAL_CONTEXT_DISPATCH(void* p) {
+  return (dx_val_context_Dispatch*)p;
 }
 
-struct dx_val_context_dispatch {
-  dx_context_dispatch _parent;
+struct dx_val_context_Dispatch {
+  dx_context_Dispatch _parent;
   Core_Result (*bind_texture)(dx_val_context*, Core_Size, dx_val_texture*);
   Core_Result (*create_buffer)(dx_val_buffer**,dx_val_context*);
   Core_Result (*create_cbinding)(dx_val_cbinding**,dx_val_context*);

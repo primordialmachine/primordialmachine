@@ -14,7 +14,7 @@
 /// A glyph atlas returns for a font and Unicode codepoint
 /// - a texture containing the glyph as a subtexture and
 /// - the texture coordinates for the subtexture.
-DX_DECLARE_OBJECT_TYPE("dx.glyph_atlas",
+Core_declareObjectType("dx.glyph_atlas",
                        dx_glyph_atlas,
                        Core_Object);
 
@@ -32,11 +32,11 @@ struct dx_glyph_atlas {
   dx_val_context* val_context;
 };
 
-static inline dx_glyph_atlas_dispatch* DX_GLYPH_ATLAS_DISPATCH(void* p) {
-  return (dx_glyph_atlas_dispatch*)p;
+static inline dx_glyph_atlas_Dispatch* DX_GLYPH_ATLAS_DISPATCH(void* p) {
+  return (dx_glyph_atlas_Dispatch*)p;
 }
 
-struct dx_glyph_atlas_dispatch {
+struct dx_glyph_atlas_Dispatch {
   Core_Object_Dispatch _parent;
 };
 
@@ -53,7 +53,7 @@ Core_Result dx_glyph_atlas_get_texture(dx_glyph_atlas* SELF, dx_font_glyph* glyp
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-DX_DECLARE_OBJECT_TYPE("dx.font_presenter",
+Core_declareObjectType("dx.font_presenter",
                        dx_font_presenter,
                        dx_presenter);
 
@@ -83,12 +83,12 @@ struct dx_font_presenter {
   } text;
 };
 
-static inline dx_font_presenter_dispatch* DX_FONT_RENDERER_DISPATCH(void* p) {
-  return (dx_font_presenter_dispatch*)p;
+static inline dx_font_presenter_Dispatch* DX_FONT_RENDERER_DISPATCH(void* p) {
+  return (dx_font_presenter_Dispatch*)p;
 }
 
-struct dx_font_presenter_dispatch {
-  dx_presenter_dispatch _parent;
+struct dx_font_presenter_Dispatch {
+  dx_presenter_Dispatch _parent;
 };
 
 Core_Result dx_font_presenter_construct(dx_font_presenter* SELf, dx_font_manager* font_manager, dx_rectangle_presenter* rectangle_presenter);

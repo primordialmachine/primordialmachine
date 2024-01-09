@@ -1,0 +1,19 @@
+{
+  "type" : "enumeration",
+  "last-update" : "2024-01-13",
+  "indices" : "core",
+  "name" : "Core_KeyboardKeyAction",
+  "id" : "core-keyboardkeyaction",
+  "signature" : "typedef enum Core_KeyboardKeyAction &lt;implementation&gt; Core_KeyboardKeyAction;",
+  "description": "An enumeration of keyboard key actions.",
+  "elements": [
+    {
+      "name" : "Core_KeyboardKeyAction_Pressed",
+      "description" : "A keyboard key was pressed."
+    },
+    {
+      "name" : "Core_KeyboardKeyAction_Released",
+      "description" : "A keyboard key was released."
+    }
+  ]
+}

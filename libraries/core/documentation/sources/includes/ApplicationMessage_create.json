@@ -1,0 +1,36 @@
+{
+  "type" : "function",
+  "last-update" : "2024-01-09",
+  "indices" : "core",
+  "name" : "Core_ApplicationMessage_create",
+  "id" : "core-applicationmessage-create",
+  "signature" : "Core_Result Core_ApplicationMessage_create(Core_ApplicationMessage** RETURN, Core_ApplicationMessageKind kind);",
+  "parameters" : [
+    {
+      "name" : "RETURN",
+      "type" : "@{code('Core_ApplicationMessage**')}",
+      "description" : "A pointer to a @{code('Core_ApplicationMessage*')} variable."
+    },
+    {
+      "name" : "kind",
+      "type" : "@{code('Core_ApplicationMessageKind')}",
+      "description" : "The kind of this application message."
+    }
+  ],
+  "success": "@{code('*RETURN')} was assigned a pointer to the @{code('Core_ApplicationMessage')} object.",
+  "errors" : [
+    {
+      "errorCode" : "Core_Error_ArgumentInvalid",
+      "errorCondition" : "@{code('RETURN')} is a null pointer."
+    },
+    {
+      "errorCode" : "Core_Error_AllocationFailed",
+      "errorCondition" : "An allocation failed."
+    }
+  ],
+  "description" : "Create a @{code('Core_ApplicationMessage')} object.",
+  "return" : "@{code('Core_Success')} on success. @{code('Core_Failure')} on failure.",
+  "remarks" : [
+    "This function sets the by-thread error variable on failure."
+  ]
+}

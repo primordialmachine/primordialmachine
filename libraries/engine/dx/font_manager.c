@@ -111,28 +111,28 @@ static Core_Result _backend_impl_initialize(_backend_impl* SELF) {
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-DX_DEFINE_OBJECT_TYPE("dx.font_key",
+Core_defineObjectType("dx.font_key",
                       dx_font_key,
                       Core_Object);
 
 static void dx_font_key_destruct(dx_font_key* SELF) {
-  DX_UNREFERENCE(SELF->font_file);
+  CORE_UNREFERENCE(SELF->font_file);
   SELF->font_file = NULL;
 }
 
-static void dx_font_key_constructDispatch(dx_font_key_dispatch* SELF)
+static void dx_font_key_constructDispatch(dx_font_key_Dispatch* SELF)
 {/*Intentionally empty.*/}
 
 Core_Result dx_font_key_construct(dx_font_key* SELF, Core_String* font_file, Core_Natural8 font_size) {
   DX_CONSTRUCT_PREFIX(dx_font_key);
   
   SELF->font_file = font_file;
-  DX_REFERENCE(font_file);
+  CORE_REFERENCE(font_file);
 
   SELF->font_size = font_size;
 
   if (Core_String_getHashValue(&SELF->hash_value, font_file)) {
-    DX_UNREFERENCE(SELF->font_file);
+    CORE_UNREFERENCE(SELF->font_file);
     SELF->font_file = NULL;
     return Core_Failure;
   }
@@ -146,7 +146,7 @@ Core_Result dx_font_key_construct(dx_font_key* SELF, Core_String* font_file, Cor
 Core_Result dx_font_key_create(dx_font_key** RETURN, Core_String* font_file, Core_Natural8 font_size) {
   DX_CREATE_PREFIX(dx_font_key)
   if (dx_font_key_construct(SELF, font_file, font_size)) {
-    DX_UNREFERENCE(SELF);
+    CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
   }
@@ -180,7 +180,7 @@ Core_Result dx_font_key_get_hash_value(Core_Size* RETURN, dx_font_key* SELF) {
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-DX_DEFINE_OBJECT_TYPE("dx.font_glyph",
+Core_defineObjectType("dx.font_glyph",
                       dx_font_glyph,
                       Core_Object);
 
@@ -188,11 +188,11 @@ static void dx_font_glyph_destruct(dx_font_glyph* SELF) {
   _backend_impl* pimpl = (_backend_impl*)SELF->font->font_manager->pimpl;
   pimpl->plugin_unreference_glyph((dx_font_loader_plugin_glyph*)SELF->glyph_pimpl);
   SELF->glyph_pimpl = NULL;
-  DX_UNREFERENCE(SELF->font);
+  CORE_UNREFERENCE(SELF->font);
   SELF->font = NULL;
 }
 
-static void dx_font_glyph_constructDispatch(dx_font_glyph_dispatch* SELF)
+static void dx_font_glyph_constructDispatch(dx_font_glyph_Dispatch* SELF)
 {/*Intentionally empty.*/}
 
 Core_Result dx_font_glyph_construct(dx_font_glyph* SELF, uint32_t code_point, dx_font* font) {
@@ -201,11 +201,11 @@ Core_Result dx_font_glyph_construct(dx_font_glyph* SELF, uint32_t code_point, dx
   SELF->code_point = code_point;
 
   SELF->font = font;
-  DX_REFERENCE(font);
+  CORE_REFERENCE(font);
 
   _backend_impl* pimpl = (_backend_impl*)SELF->font->font_manager->pimpl;
   if (pimpl->plugin_get_glyph(&SELF->glyph_pimpl, (dx_font_loader_plugin_font*)SELF->font->font_pimpl, SELF->code_point)) {
-    DX_UNREFERENCE(SELF->font);
+    CORE_UNREFERENCE(SELF->font);
     SELF->font = NULL;
     return Core_Failure;
   }
@@ -217,7 +217,7 @@ Core_Result dx_font_glyph_construct(dx_font_glyph* SELF, uint32_t code_point, dx
 Core_Result dx_font_glyph_create(dx_font_glyph** RETURN, uint32_t code_point, dx_font* font) {
   DX_CREATE_PREFIX(dx_font_glyph)
   if (dx_font_glyph_construct(SELF, code_point, font)) {
-    DX_UNREFERENCE(SELF);
+    CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
   }
@@ -269,25 +269,25 @@ Core_Result dx_font_glyph_get_texture_coordinates(dx_font_glyph* SELF, DX_RECT2_
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-DX_DEFINE_OBJECT_TYPE("dx.font",
+Core_defineObjectType("dx.font",
                       dx_font,
                       Core_Object);
 
 static void dx_font_destruct(dx_font* SELF) {
-  dx_inline_pointer_hashmap_remove(&SELF->font_manager->fonts, SELF->key);
+  Core_InlinePointerHashmap_remove(&SELF->font_manager->fonts, SELF->key);
   
   _backend_impl* pimpl = (_backend_impl*)SELF->font_manager->pimpl;
   pimpl->plugin_unreference_font((dx_font_loader_plugin_font*)SELF->font_pimpl);
   SELF->font_pimpl = NULL;
 
-  DX_UNREFERENCE(SELF->key);
+  CORE_UNREFERENCE(SELF->key);
   SELF->key = NULL;
 
-  DX_UNREFERENCE(SELF->font_manager);
+  CORE_UNREFERENCE(SELF->font_manager);
   SELF->font_manager = NULL;
 }
 
-static void dx_font_constructDispatch(dx_font_dispatch* SELF)
+static void dx_font_constructDispatch(dx_font_Dispatch* SELF)
 {/*Intentionally empty.*/}
 
 static void* allocate_callback(void* context, size_t number_of_bytes) {
@@ -302,7 +302,9 @@ static void deallocate_callback(void* context, void* bytes) {
 
 Core_Result dx_font_construct(dx_font* SELF, dx_font_key* key, dx_font_manager* font_manager) {
   DX_CONSTRUCT_PREFIX(dx_font);
-  if (dx_string_contains_symbol(key->font_file, '\0')) {
+  Core_Boolean containsSymbol;
+  containsSymbol = dx_string_contains_symbol(key->font_file, '\0');
+  if (containsSymbol) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
   }
@@ -312,42 +314,42 @@ Core_Result dx_font_construct(dx_font* SELF, dx_font_key* key, dx_font_manager* 
   }
   Core_String* format = NULL;
   if (Core_String_create(&format, "${s}${s}", sizeof("${s}${s}") - 1)) {
-    DX_UNREFERENCE(zero_terminator);
+    CORE_UNREFERENCE(zero_terminator);
     zero_terminator = NULL;
     return Core_Failure;
   }
   Core_String* path = NULL;
   if (Core_String_printf(&path, format, key->font_file, zero_terminator)) {
-    DX_UNREFERENCE(zero_terminator);
+    CORE_UNREFERENCE(zero_terminator);
     zero_terminator = NULL;
-    DX_UNREFERENCE(format);
+    CORE_UNREFERENCE(format);
     format = NULL;
     return Core_Failure;
   }
-  DX_UNREFERENCE(zero_terminator);
+  CORE_UNREFERENCE(zero_terminator);
   zero_terminator = NULL;
-  DX_UNREFERENCE(format);
+  CORE_UNREFERENCE(format);
   format = NULL;
   void const* path_bytes = NULL;
   if (Core_String_getBytes(&path_bytes, path)) {
-    DX_UNREFERENCE(path);
+    CORE_UNREFERENCE(path);
     path = NULL;
     return Core_Failure;
   }
   _backend_impl* pimpl = (_backend_impl*)font_manager->pimpl;
   if (pimpl->plugin_create_font((dx_font_loader_plugin_font**)&SELF->font_pimpl, path_bytes, key->font_size, NULL, &allocate_callback, &deallocate_callback)) {
-    DX_UNREFERENCE(path);
+    CORE_UNREFERENCE(path);
     path = NULL;
     return Core_Failure;
   }
-  DX_UNREFERENCE(path);
+  CORE_UNREFERENCE(path);
   path = NULL;
 
   SELF->key = key;
-  DX_REFERENCE(key);
+  CORE_REFERENCE(key);
 
   SELF->font_manager = font_manager;
-  DX_REFERENCE(font_manager);
+  CORE_REFERENCE(font_manager);
 
   CORE_OBJECT(SELF)->type = TYPE;
   return Core_Success;
@@ -356,7 +358,7 @@ Core_Result dx_font_construct(dx_font* SELF, dx_font_key* key, dx_font_manager* 
 Core_Result dx_font_create(dx_font** RETURN, dx_font_key* key, dx_font_manager* font_manager) {
   DX_CREATE_PREFIX(dx_font)
   if (dx_font_construct(SELF, key, font_manager)) {
-    DX_UNREFERENCE(SELF);
+    CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
   }
@@ -395,7 +397,7 @@ Core_Result dx_font_get_descender(Core_Real32* RETURN, dx_font* SELF) {
 
 static dx_font_manager* g_font_manager = NULL;
 
-DX_DEFINE_OBJECT_TYPE("dx.font_manager",
+Core_defineObjectType("dx.font_manager",
                       dx_font_manager,
                       Core_Object);
 
@@ -405,13 +407,13 @@ static void dx_font_manager_destruct(dx_font_manager* SELF) {
   free(SELF->pimpl);
   SELF->pimpl = NULL;
 
-  DX_UNREFERENCE(SELF->context);
+  CORE_UNREFERENCE(SELF->context);
   SELF->context = NULL;
 
   g_font_manager = NULL;
 }
 
-static void dx_font_manager_constructDispatch(dx_font_manager_dispatch* SELF)
+static void dx_font_manager_constructDispatch(dx_font_manager_Dispatch* SELF)
 {/*Intentionally empty.*/}
 
 static Core_Result compare_font_key(Core_Boolean* RETURN, dx_font_key**a, dx_font_key** b) {
@@ -423,43 +425,43 @@ static Core_Result hash_font_key(Core_Size* RETURN, dx_font_key * *a) {
 }
 
 static void font_key_added(dx_font_key** a) {
-  DX_REFERENCE(*a);
+  CORE_REFERENCE(*a);
 }
 
 static void font_key_removed(dx_font_key** a) {
-  DX_UNREFERENCE(*a);
+  CORE_UNREFERENCE(*a);
 }
 
 Core_Result dx_font_manager_construct(dx_font_manager* SELF, dx_val_context* context) {
   DX_CONSTRUCT_PREFIX(dx_font_manager);
 
-  DX_INLINE_POINTER_HASHMAP_CONFIGURATION configuration = {
-    .compare_keys_callback = (dx_inline_pointer_hashmap_compare_keys_callback*) & compare_font_key,
-    .hash_key_callback = (dx_inline_pointer_hashmap_hash_key_callback*) & hash_font_key,
-    .key_added_callback = (dx_inline_pointer_hashmap_key_added_callback*) & font_key_added,
-    .key_removed_callback = (dx_inline_pointer_hashmap_key_removed_callback*) & font_key_removed,
-    .value_added_callback = NULL,
-    .value_removed_callback = NULL,
+  Core_InlinePointerHashMap_Configuration configuration = {
+    .compareKeysCallback = (Core_InlinePointerHashmap_compare_keys_callback*) & compare_font_key,
+    .hashKeyCallback = (Core_InlinePointerHashmap_hash_key_callback*) & hash_font_key,
+    .keyAddedCallback = (Core_InlinePointerHashMap_KeyAddedCallback*) & font_key_added,
+    .keyRemovedCallback = (Core_InlinePointerHashMap_KeyRemovedCallback*) & font_key_removed,
+    .valueAddedCallback = NULL,
+    .valueRemovedCallback = NULL,
   };
-  if (dx_inline_pointer_hashmap_initialize(&SELF->fonts, &configuration)) {
+  if (Core_InlinePointerHashmap_initialize(&SELF->fonts, &configuration)) {
     return Core_Failure;
   }
 
   SELF->pimpl = malloc(sizeof(_backend_impl));
   if (!SELF->pimpl) {
-    dx_inline_pointer_hashmap_uninitialize(&SELF->fonts);
+    Core_InlinePointerHashmap_uninitialize(&SELF->fonts);
     Core_setError(Core_Error_AllocationFailed);
     return Core_Failure;
   }
   if (_backend_impl_initialize((_backend_impl*)SELF->pimpl)) {
     free(SELF->pimpl);
     SELF->pimpl = NULL;
-    dx_inline_pointer_hashmap_uninitialize(&SELF->fonts);
+    Core_InlinePointerHashmap_uninitialize(&SELF->fonts);
     return Core_Failure;
   }
 
   SELF->context = context;
-  DX_REFERENCE(context);
+  CORE_REFERENCE(context);
 
   CORE_OBJECT(SELF)->type = TYPE;
   return Core_Success;
@@ -467,13 +469,13 @@ Core_Result dx_font_manager_construct(dx_font_manager* SELF, dx_val_context* con
 
 Core_Result dx_font_manager_create(dx_font_manager** RETURN, dx_val_context* context) {
   if (g_font_manager) {
-    DX_REFERENCE(g_font_manager);
+    CORE_REFERENCE(g_font_manager);
     *RETURN = g_font_manager;
     return Core_Success;
   } else {
     DX_CREATE_PREFIX(dx_font_manager)
     if (dx_font_manager_construct(SELF, context)) {
-      DX_UNREFERENCE(SELF);
+      CORE_UNREFERENCE(SELF);
       SELF = NULL;
       return Core_Failure;
     }
@@ -489,7 +491,7 @@ Core_Result dx_font_manager_get_or_create_font(dx_font** RETURN, dx_font_manager
     return Core_Failure;
   }
   dx_font* font = NULL;
-  if (dx_inline_pointer_hashmap_get(&font, &SELF->fonts, font_key)) {
+  if (Core_InlinePointerHashmap_get(&font, &SELF->fonts, font_key)) {
     if (Core_Error_NotFound != Core_getError()) {
       return Core_Failure;
     } else {
@@ -500,17 +502,17 @@ Core_Result dx_font_manager_get_or_create_font(dx_font** RETURN, dx_font_manager
     if (dx_font_create(&font, font_key, SELF)) {
       return Core_Failure;
     }
-    if (dx_inline_pointer_hashmap_set(&SELF->fonts, font_key, font)) {
-      DX_UNREFERENCE(font_key);
+    if (Core_InlinePointerHashmap_set(&SELF->fonts, font_key, font)) {
+      CORE_UNREFERENCE(font_key);
       font_key = NULL;
-      DX_UNREFERENCE(font);
+      CORE_UNREFERENCE(font);
       font = NULL;
       return Core_Failure;
     }
   }
-  DX_UNREFERENCE(font_key);
+  CORE_UNREFERENCE(font_key);
   font_key = NULL;
-  DX_REFERENCE(font);
+  CORE_REFERENCE(font);
   *RETURN = font;
   return Core_Success;
 }

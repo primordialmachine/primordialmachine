@@ -4,7 +4,7 @@
 #include "dx/core.h"
 #include "dx/aal/context.h"
 
-DX_DECLARE_OBJECT_TYPE("dx.val.system",
+Core_declareObjectType("dx.val.system",
                        dx_aal_system,
                        dx_system);
 
@@ -18,12 +18,12 @@ struct dx_aal_system {
   dx_msg_queue* msg_queue;
 };
 
-static inline dx_aal_system_dispatch* DX_AAL_SYSTEM_DISPATCH(void* p) {
-  return (dx_aal_system_dispatch*)p;
+static inline dx_aal_system_Dispatch* DX_AAL_SYSTEM_DISPATCH(void* p) {
+  return (dx_aal_system_Dispatch*)p;
 }
 
-struct dx_aal_system_dispatch {
-  dx_system_dispatch _parent;
+struct dx_aal_system_Dispatch {
+  dx_system_Dispatch _parent;
   Core_Result (*get_context)(dx_aal_context**, dx_aal_system*);
 };
 

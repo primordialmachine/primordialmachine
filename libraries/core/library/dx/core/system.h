@@ -13,7 +13,7 @@
 ///   A call to dx_system_startup on a "started up" system is undefined behavior
 /// - a call to dx_system_shutdown on a "started up" system puts the system in the "shutted down" state.
 ///   A call to dx_system_shutdown on a "shutted down" system or a failure of this call is undefined behavior.
-DX_DECLARE_OBJECT_TYPE("dx.system",
+Core_declareObjectType("dx.system",
                        dx_system,
                        Core_Object);
 
@@ -25,11 +25,11 @@ struct dx_system {
   Core_Object _parent;
 };
 
-static inline dx_system_dispatch* DX_SYSTEM_DISPATCH(void* p) {
-  return (dx_system_dispatch*)p;
+static inline dx_system_Dispatch* DX_SYSTEM_DISPATCH(void* p) {
+  return (dx_system_Dispatch*)p;
 }
 
-struct dx_system_dispatch {
+struct dx_system_Dispatch {
   Core_Object_Dispatch _parent;
   Core_Result (*startup)(dx_system*);
   Core_Result (*shutdown)(dx_system*);

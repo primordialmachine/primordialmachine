@@ -9,7 +9,7 @@
 #include "dx/adl/context.h"
 
 /// "resolve" phase: Resolve references.
-DX_DECLARE_OBJECT_TYPE("dx.adl.resolve",
+Core_declareObjectType("dx.adl.resolve",
                        dx_adl_resolve,
                        Core_Object);
 
@@ -23,7 +23,7 @@ struct dx_adl_resolve {
   dx_inline_pointer_array queue;
 };
 
-struct dx_adl_resolve_dispatch {
+struct dx_adl_resolve_Dispatch {
   Core_Object_Dispatch _parent;
 };
 

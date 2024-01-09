@@ -7,7 +7,7 @@
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-DX_DECLARE_OBJECT_TYPE("dx.overlay",
+Core_declareObjectType("dx.overlay",
                        dx_overlay,
                        Core_Object);
 
@@ -25,11 +25,11 @@ struct dx_overlay {
   Core_Boolean visible;
 };
 
-static inline dx_overlay_dispatch* DX_OVERLAY_DISPATCH(void* p) {
-  return (dx_overlay_dispatch*)p;
+static inline dx_overlay_Dispatch* DX_OVERLAY_DISPATCH(void* p) {
+  return (dx_overlay_Dispatch*)p;
 }
 
-struct dx_overlay_dispatch {
+struct dx_overlay_Dispatch {
   Core_Object_Dispatch _parent;
 };
 

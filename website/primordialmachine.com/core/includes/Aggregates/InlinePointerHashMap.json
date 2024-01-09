@@ -1,0 +1,9 @@
+{
+  "type" : "structure",
+  "last-update" : "2024-01-15",
+  "indices" : "core",
+  "name" : "Core_InlinePointerHashMap",
+  "id" : "core-inlinepointerhashmap",
+  "signature" : "typedef struct Core_InlinePointerHashMap { &lt;Implementation&gt; } Core_InlinePointerHashMap;",
+  "description" : "The type of an inline pointer hashmap."
+}

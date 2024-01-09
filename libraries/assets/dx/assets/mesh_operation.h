@@ -5,7 +5,7 @@
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-DX_DECLARE_ENUMERATION_TYPE("dx.asset.mesh_operation_kind",
+Core_declareEnumerationType("dx.asset.mesh_operation_kind",
                             dx_asset_mesh_operation_kind);
 
 enum dx_asset_mesh_operation_kind {
@@ -15,7 +15,7 @@ enum dx_asset_mesh_operation_kind {
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-DX_DECLARE_OBJECT_TYPE("dx.asset.mesh_operation",
+Core_declareObjectType("dx.asset.mesh_operation",
                        dx_asset_mesh_operation,
                        Core_Object);
 
@@ -28,11 +28,11 @@ struct dx_asset_mesh_operation {
   dx_asset_mesh_operation_kind kind;
 };
 
-static inline dx_asset_mesh_operation_dispatch* DX_ASSET_MESH_OPERATION_DISPATCH(void* p) {
-  return (dx_asset_mesh_operation_dispatch*)p;
+static inline dx_asset_mesh_operation_Dispatch* DX_ASSET_MESH_OPERATION_DISPATCH(void* p) {
+  return (dx_asset_mesh_operation_Dispatch*)p;
 }
 
-struct dx_asset_mesh_operation_dispatch {
+struct dx_asset_mesh_operation_Dispatch {
   Core_Object_Dispatch _parent;
   Core_Result (*apply)(dx_asset_mesh_operation* SELF, dx_assets_mesh* mesh);
 };

@@ -1,0 +1,23 @@
+{
+  "type" : "enumeration",
+  "last-update" : "2024-01-13",
+  "indices" : "core",
+  "name" : "Core_InputMessageKind",
+  "id" : "core-inputmessagekind",
+  "signature" : "typedef enum Core_InputMessageKind &lt;implementation&gt; Core_InputMessageKind;",
+  "description": "An enumeration of kinds of canvas messages.",
+  "elements": [
+    {
+      "name" : "Core_InputMessageKind_KeyboardKey",
+      "description" : "Kind of keyboard key message."
+    },
+    {
+      "name" : "Core_InputMessageKind_MouseButton",
+      "description" : "Kind of a mouse button message."
+    },
+    {
+      "name" : "Core_InputMessageKind_MousePointer",
+      "description" : "Kind of a mouse pointer message."
+    }
+  ]
+}

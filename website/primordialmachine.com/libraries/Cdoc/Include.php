@@ -5,10 +5,12 @@ if (str_ends_with($dir, DIRECTORY_SEPARATOR)) {
   require_once($dir . './../App.php');
   require_once($dir . 'CdocFile.php');
   require_once($dir . 'CdocEmitter.php');
+  require_once($dir . 'CdocIndexManager.php');
 } else {
   require_once($dir . '/./../App.php');
   require_once($dir . '/CdocFile.php');
   require_once($dir . '/CdocEmitter.php');
+  require_once($dir . '/CdocIndexManager.php');
 }
 
 /**
@@ -87,13 +89,12 @@ class CdocHtmlEmitter extends CdocEmitter {
     }
 
     if ($jsonData['type'] == 'object') {
-      echo '<h4>Extends</h4>';
-      if (!isset($jsonData['extends'])) {
-        throw new Exception('`extends` is not set');
+      if (isset($jsonData['extends'])) {
+        echo '<h4>Extends</h4>';
+        echo '<p>';
+        echo $interpreter->execute($jsonData['extends'], $file->getPathname());
+        echo '</p>';
       }
-      echo '<p>';
-      echo $jsonData['extends'];
-      echo '</p>';
     }
 
     // description
@@ -101,23 +102,36 @@ class CdocHtmlEmitter extends CdocEmitter {
     if (is_array($jsonData['description'])) {
       echo '<p>';
       foreach ($jsonData['description'] as $x) {
-        $interpreter->execute($x);
+        $interpreter->execute($x, $file->getPathname());
       }
       echo '</p>';
     } else {
       echo '<p>';
-      $interpreter->execute($jsonData['description']);
+      $interpreter->execute($jsonData['description'], $file->getPathname());
       echo '</p>';
     }
 
+    $clangTypes = array('function', 'function-prototype', 'structure', 'symbolic-constant', 'typedef');
+    $clangExTypes = array('constructor', 'create-operator', 'enumeration', 'method', 'object');
+    $types = array_merge($clangTypes, $clangExTypes);
 
-    if ($jsonData['type'] !== 'structure' &&
-        $jsonData['type'] !== 'enumeration' &&
-        $jsonData['type'] !== 'function' &&
-        $jsonData['type'] !== 'typedef' &&
-        $jsonData['type'] !== 'object' &&
-        $jsonData['type'] !== 'symbolic-constant') {
-      throw new Exception("`type` is `" . $jsonData['type'] . "`. `type` must be one of `enumeration`, `function`, `structure`, `typedef`, `object`, `symbolic-constant`");
+    if (!in_array($jsonData['type'], $types)) {
+      $msg = '';
+      if (0 == count($types)) {
+        throw new Exception("internal error");
+      } else if (1 == count($types)) {
+        $msg = '`' . $types[0] . '`';
+      } else if (2 == count($types)) {
+        $msg = '`' . $types[0] . '` or `' . $types[1] . '`';
+      } else {
+        $msg = '`' . $types[0] . '`';
+        for ($i = 1; $i < count($types) - 1; ++$i) {
+          $msg = $msg . ', `' . $types[$i] . '`';
+        }
+        $msg = $msg . ' or `' . $types[count($types) - 1] . '`';
+      }
+      throw new Exception($file->getPathname() . ": error: `type` is `" . $jsonData['type'] .
+                          "`. `type` must be one of " . $msg);
     }
 
     // handle enumerations
@@ -126,21 +140,21 @@ class CdocHtmlEmitter extends CdocEmitter {
         $elementsJson = $jsonData['elements'];
         echo '<h4>Elements</h4>';
         if (!is_array($elementsJson)) {
-          throw new Exception('`elements` must be an array');
+          throw new Exception($file->getPathname() . ": error: `elements` must be an array");
         }
         echo '<table style="width: initial !important">';
         foreach ($elementsJson as $elementJson) {
           echo '<tr>';
           echo '<td><code>';
-          $interpreter->execute($elementJson['name']);
+          $interpreter->execute($elementJson['name'], $file->getPathname());
           echo '</code></td>';
           echo '<td style="width: 100%">';
           if (is_array($elementJson['description'])) {
             foreach ($elementJson['description'] as $x) {
-              $interpreter->execute($x);
+              $interpreter->execute($x, $file->getPathname());
             }
           } else {
-            $interpreter->execute($elementJson['description']);
+            $interpreter->execute($elementJson['description'], $file->getPathname());
           }
           echo '</td>';
           echo '</tr>';
@@ -150,24 +164,24 @@ class CdocHtmlEmitter extends CdocEmitter {
     }
 
     // handle functions
-    if ($jsonData['type'] == 'function') {
+    if ($jsonData['type'] == 'create-operator' || $jsonData['type'] == 'constructor' || $jsonData['type'] == 'function' || $jsonData['type'] == 'function-prototype'|| $jsonData['type'] == 'method') {
       if (isset($jsonData['parameters'])) {
         $parametersJson = $jsonData['parameters'];
         echo '<h4>Parameters</h4>';
         if (!is_array($parametersJson)) {
-          throw new Exception('`parameters` must be an array');
+          throw new Exception($file->getPathname() . ": error: `parameters` must be an array");
         }
         echo '<table style="width: initial !important">';
         foreach ($parametersJson as $parameterJson) {
           echo '<tr>';
           echo '<td><code>';
-          $interpreter->execute($parameterJson['name']);
+          $interpreter->execute($parameterJson['name'], $file->getPathname());
           echo '</code></td>';
           echo '<td>';
-          $interpreter->execute($parameterJson['type']);
+          $interpreter->execute($parameterJson['type'], $file->getPathname());
           echo '</td>';
           echo '<td style="width: 100%">';
-          $interpreter->execute($parameterJson['description']);
+          $interpreter->execute($parameterJson['description'], $file->getPathname());
           echo '</td>';
           echo '</tr>';
         }
@@ -181,12 +195,12 @@ class CdocHtmlEmitter extends CdocEmitter {
         if (is_array($successJson)) {
           foreach ($successJson as $element) {
             echo '<p>';
-            $interpreter->execute($element);
+            $interpreter->execute($element, $file->getPathname());
             echo '</p>';
           }
         } else {
           echo '<p>';
-          $interpreter->execute($jsonData['success']);
+          $interpreter->execute($jsonData['success'], $file->getPathname());
           echo '</p>';
         }
       }
@@ -199,10 +213,10 @@ class CdocHtmlEmitter extends CdocEmitter {
         foreach ($errorsJson as $errorJson) {
           echo '<tr>';
           echo '<td><code>';
-          $interpreter->execute($errorJson['errorCode']);
+          $interpreter->execute($errorJson['errorCode'], $file->getPathname());
           echo '</code></td>';
           echo '<td style="width: 100%">';
-          $interpreter->execute($errorJson['errorCondition']);
+          $interpreter->execute($errorJson['errorCondition'], $file->getPathname());
           echo '</td>';
           echo '</tr>';
         }
@@ -216,12 +230,12 @@ class CdocHtmlEmitter extends CdocEmitter {
         if (is_array($values)) {
           foreach ($values as $value) {
             echo '<p>';
-            $interpreter->execute($value);
+            $interpreter->execute($value, $file->getPathname());
             echo '</p>';
           }
         } else {
           echo '<p>';
-          $interpreter->execute($jsonData['return']);
+          $interpreter->execute($jsonData['return'], $file->getPathname());
           echo '</p>';
         }
       }
@@ -232,14 +246,14 @@ class CdocHtmlEmitter extends CdocEmitter {
       $remarksJson = $jsonData['remarks'];
       echo '<h4>Remarks</h4>';
       if (is_array($remarksJson)) {
+        echo '<p>';
         foreach ($remarksJson as $remarkJson) {
-          echo '<p>';
-          $interpreter->execute($remarkJson);
-          echo '</p>';
+          $interpreter->execute($remarkJson, $file->getPathname());
         }
+        echo '</p>';
       } else {
         echo '<p>';
-        $interpreter->execute($remarksJson);
+        $interpreter->execute($remarksJson, $file->getPathname());
         echo '</p>';
       }
     }
@@ -247,105 +261,6 @@ class CdocHtmlEmitter extends CdocEmitter {
     echo '</div>';
   }
 }; // class CdocHtmlEmitter
-
-class CdocIndex {
-
-  /** The name of this index. */
-  private string $name;
-
-  /** List of entries in this index. Sorted lexicographically by the index entry names of the entries. */
-  private array $entryList;
-
-  /** Map from index entry names to entries. */
-  private array $entryMap;
-
-  /**
-   * Construct this CdocIndex object.
-   * @param $name The name of this index.
-   */
-  public function __construct(string $name) {
-    $this->name = $name;
-    $this->entryList = array();
-    $this->entryMap = array();
-  }
-
-  /**
-   * Get the name of this index.
-   * @return The name of this index.
-   */
-  public function getName() : string {
-    return $this->name;
-  }
-
-  /**
-   * Add an entry.
-   * @param $text The text of the entry.
-   * @param $id The HTML id of the entry.
-   */
-  public function addEntry(CdocFile $file) {
-    $jsonData = $file->getJsonData();
-    $name = $jsonData['name'];
-    $id = $jsonData['id'];
-    if (isset($this->entryMap[$name])) {
-      throw new Exception('entry of text `' . $name . '` is already in index `' . $this->name . '`');
-    } else {
-      $entry =
-        array
-          (
-            'index' => $this,
-            'file' => $file,
-          );
-      $this->entryList[] = $entry;
-      $this->entryMap[$name] = $entry;
-    }
-  }
-
-  public function sortEntries() {
-    setlocale (LC_COLLATE, 'en_US');
-    uasort($this->entryList, function($x, $y) { return strcoll(strtolower($x['file']->getJsonData()['name']), strtolower($y['file']->getJsonData()['name'])); });
-  }
-
-  public function getEntryList() {
-    return $this->entryList;
-  }
-
-  public function getEntryMap() {
-    return $this->entryMap;
-  }
-
-}; // class CdocIndex
-
-/**
- * A map from names to data.
- * @author Michael Heilmann
- * @singleton
- * @todo Proper documentation.
- */
-class CdocIndexManager {
-
-  private static $instance = null;
-
-  public static function getInstance() {
-    if (self::$instance == null) {
-      self::$instance = new CdocIndexManager();
-    }
-
-    return self::$instance;
-  }
-
-  private array $indices = array();
-
-  private function __construct()
-  {/*Intentionally empty.*/}
-
-  // get an index by its name.
-  public function &getByName(string $name) : CdocIndex {
-    if (!isset($this->indices[$name])) {
-      $this->indices[$name] = new CdocIndex($name);
-    }
-    return $this->indices[$name];
-  }
-}; // class CdocIndexManager
 
 /// @brief The "C documentation" translater.
 /// It organizes all the tasks from finding the "C documentation" files to the emission of HTML, LaTeX, Markdown, ... code.

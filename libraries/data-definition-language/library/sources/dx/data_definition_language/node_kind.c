@@ -1,6 +1,6 @@
 #include "dx/data_definition_language/node_kind.h"
 
-DX_DEFINE_ENUMERATION_TYPE("dx.ddl.node_kind",
+Core_defineEnumerationType("dx.ddl.node_kind",
                            dx_ddl_node_kind);
 
 Core_Result dx_ddl_node_kind_to_string(Core_String** RETURN, dx_ddl_node_kind SELF) {

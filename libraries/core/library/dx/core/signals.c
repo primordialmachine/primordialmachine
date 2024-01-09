@@ -129,28 +129,28 @@ static Core_Result _SignalKey_compareKeys(Core_Boolean* RETURN, _SignalKey** SEL
 
 static Core_Boolean g_initialized = false;
 
-static dx_inline_pointer_hashmap* g_signals = NULL;
+static Core_InlinePointerHashmap* g_signals = NULL;
 
 Core_Result Core_Signals_initialize() {
-  if (Core_Memory_allocate(&g_signals, sizeof(dx_inline_pointer_hashmap))) {
+  if (Core_Memory_allocate(&g_signals, sizeof(Core_InlinePointerHashmap))) {
     return Core_Failure;
   }
-  DX_INLINE_POINTER_HASHMAP_CONFIGURATION configuration = {
-    .compare_keys_callback = (dx_inline_pointer_hashmap_compare_keys_callback*) & _SignalKey_compareKeys,
-    .hash_key_callback = (dx_inline_pointer_hashmap_hash_key_callback*)&_SignalKey_hashKey,
-    .key_added_callback = NULL,
-    .key_removed_callback = NULL,
-    .value_added_callback = (dx_inline_pointer_hashmap_key_added_callback*)&_Signal_valueAdded,
-    .value_removed_callback = (dx_inline_pointer_hashmap_key_removed_callback*)&_Signal_valueRemoved,
+  Core_InlinePointerHashMap_Configuration configuration = {
+    .compareKeysCallback = (Core_InlinePointerHashmap_compare_keys_callback*) & _SignalKey_compareKeys,
+    .hashKeyCallback = (Core_InlinePointerHashmap_hash_key_callback*)&_SignalKey_hashKey,
+    .keyAddedCallback = NULL,
+    .keyRemovedCallback = NULL,
+    .valueAddedCallback = (Core_InlinePointerHashMap_KeyAddedCallback*)&_Signal_valueAdded,
+    .valueRemovedCallback = (Core_InlinePointerHashMap_KeyRemovedCallback*)&_Signal_valueRemoved,
   };
-  if (dx_inline_pointer_hashmap_initialize(g_signals, &configuration)) {
+  if (Core_InlinePointerHashmap_initialize(g_signals, &configuration)) {
     return Core_Failure;
   }
   return Core_Success;
 }
 
 Core_Result Core_Signals_uninitialize() {
-  dx_inline_pointer_hashmap_uninitialize(g_signals);
+  Core_InlinePointerHashmap_uninitialize(g_signals);
   Core_Memory_deallocate(g_signals);
   g_signals = NULL;
   return Core_Success;
@@ -167,7 +167,11 @@ static Core_Result create(Core_Type* type, char const* p, Core_Size n) {
   Core_Size nameHashValue = 0;
   Core_hashBytes(&nameHashValue, p, n); // must succeed
   nameHashValue *= 37;
-  if (Core_TypeSystem_isObjectType(type)) {
+  Core_Boolean isObjectType;
+  if (Core_TypeSystem_isObjectType(&isObjectType, type)) {
+    return Core_Failure;
+  }
+  if (isObjectType) {
     // object
     Core_Type* t = type;
     do {
@@ -181,7 +185,7 @@ static Core_Result create(Core_Type* type, char const* p, Core_Size n) {
 
       /*check*/
       _Signal* signal = NULL;
-      if (dx_inline_pointer_hashmap_get(&signal, g_signals, &key)) {
+      if (Core_InlinePointerHashmap_get(&signal, g_signals, &key)) {
         if (Core_Error_NotFound != Core_getError()) {
           return Core_Failure;
         }
@@ -203,7 +207,7 @@ static Core_Result create(Core_Type* type, char const* p, Core_Size n) {
 
     /*check*/
     _Signal* signal = NULL;
-    if (dx_inline_pointer_hashmap_get(&signal, g_signals, &key)) {
+    if (Core_InlinePointerHashmap_get(&signal, g_signals, &key)) {
       if (Core_Error_NotFound != Core_getError()) {
         return Core_Failure;
       }
@@ -240,7 +244,7 @@ static Core_Result create(Core_Type* type, char const* p, Core_Size n) {
   signal->key.type = type;
   signal->connections = NULL;
   signal->referenceCount = 0;
-  if (dx_inline_pointer_hashmap_set(g_signals, &signal->key, signal)) {
+  if (Core_InlinePointerHashmap_set(g_signals, &signal->key, signal)) {
     Core_Memory_deallocate(signal->key.name.p);
     signal->key.name.p = NULL;
     Core_Memory_deallocate(signal);
@@ -259,7 +263,11 @@ static Core_Result get(_Signal** RETURN, Core_Type* type, char const* p, Core_Si
     return Core_Failure;
   }
   nameHashValue *= 37;
-  if (Core_TypeSystem_isObjectType(type)) {
+  Core_Boolean isObjectType;
+  if (Core_TypeSystem_isObjectType(&isObjectType, type)) {
+    return Core_Failure;
+  }
+  if (isObjectType) {
     // object
     Core_Type* t = type;
     do {
@@ -273,7 +281,7 @@ static Core_Result get(_Signal** RETURN, Core_Type* type, char const* p, Core_Si
 
       /*check*/
       _Signal* signal = NULL;
-      if (dx_inline_pointer_hashmap_get(&signal, g_signals, &key)) {
+      if (Core_InlinePointerHashmap_get(&signal, g_signals, &key)) {
         if (Core_Error_NotFound != Core_getError()) {
           return Core_Failure;
         }
@@ -295,7 +303,7 @@ static Core_Result get(_Signal** RETURN, Core_Type* type, char const* p, Core_Si
 
     /*check*/
     _Signal* signal = NULL;
-    if (dx_inline_pointer_hashmap_get(&signal, g_signals, &key)) {
+    if (Core_InlinePointerHashmap_get(&signal, g_signals, &key)) {
       if (Core_Error_NotFound != Core_getError()) {
         return Core_Failure;
       }

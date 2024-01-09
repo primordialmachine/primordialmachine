@@ -8,7 +8,7 @@ static Core_Result fill_rectangle(dx_rectangle_presenter* SELF, DX_RECT2_F32 con
 
 static Core_Result stroke_rectangle(dx_rectangle_presenter* SELF, DX_RECT2_F32 const* target_rectangle, Core_Real32 target_depth, DX_RGBA_F32 const* color);
 
-DX_DEFINE_OBJECT_TYPE("dx.rectangle_presenter",
+Core_defineObjectType("dx.rectangle_presenter",
                       dx_rectangle_presenter,
                       dx_presenter);
 
@@ -47,11 +47,11 @@ static Core_Result fill_rectangle(dx_rectangle_presenter* SELF, DX_RECT2_F32 con
     return Core_Failure;
   }
   if (dx_val_command_list_append(SELF->val_command_list, command)) {
-    DX_UNREFERENCE(command);
+    CORE_UNREFERENCE(command);
     command = NULL;
     return Core_Failure;
   }
-  DX_UNREFERENCE(command);
+  CORE_UNREFERENCE(command);
   command = NULL;
 
   // draw command
@@ -59,11 +59,11 @@ static Core_Result fill_rectangle(dx_rectangle_presenter* SELF, DX_RECT2_F32 con
     return Core_Failure;
   }
   if (dx_val_command_list_append(SELF->val_command_list, command)) {
-    DX_UNREFERENCE(command);
+    CORE_UNREFERENCE(command);
     command = NULL;
     return Core_Failure;
   }
-  DX_UNREFERENCE(command);
+  CORE_UNREFERENCE(command);
   command = NULL;
 
   // execute the commands
@@ -127,11 +127,11 @@ static Core_Result stroke_rectangle(dx_rectangle_presenter* SELF, DX_RECT2_F32 c
     return Core_Failure;
   }
   if (dx_val_command_list_append(SELF->val_command_list, command)) {
-    DX_UNREFERENCE(command);
+    CORE_UNREFERENCE(command);
     command = NULL;
     return Core_Failure;
   }
-  DX_UNREFERENCE(command);
+  CORE_UNREFERENCE(command);
   command = NULL;
 
   // draw command
@@ -139,11 +139,11 @@ static Core_Result stroke_rectangle(dx_rectangle_presenter* SELF, DX_RECT2_F32 c
     return Core_Failure;
   }
   if (dx_val_command_list_append(SELF->val_command_list, command)) {
-    DX_UNREFERENCE(command);
+    CORE_UNREFERENCE(command);
     command = NULL;
     return Core_Failure;
   }
-  DX_UNREFERENCE(command);
+  CORE_UNREFERENCE(command);
   command = NULL;
 
   // execute the commands
@@ -154,26 +154,26 @@ static Core_Result stroke_rectangle(dx_rectangle_presenter* SELF, DX_RECT2_F32 c
 }
 
 static void dx_rectangle_presenter_destruct(dx_rectangle_presenter* SELF) {
-  DX_UNREFERENCE(SELF->val_material);
+  CORE_UNREFERENCE(SELF->val_material);
   SELF->val_material = NULL;
 
-  DX_UNREFERENCE(SELF->val_command_list);
+  CORE_UNREFERENCE(SELF->val_command_list);
   SELF->val_command_list = NULL;
 
-  DX_UNREFERENCE(SELF->val_vbinding);
+  CORE_UNREFERENCE(SELF->val_vbinding);
   SELF->val_vbinding = NULL;
 
-  DX_UNREFERENCE(SELF->val_buffer);
+  CORE_UNREFERENCE(SELF->val_buffer);
   SELF->val_buffer = NULL;
 
-  DX_UNREFERENCE(SELF->val_cbinding);
+  CORE_UNREFERENCE(SELF->val_cbinding);
   SELF->val_cbinding = NULL;
 
-  DX_UNREFERENCE(SELF->val_program);
+  CORE_UNREFERENCE(SELF->val_program);
   SELF->val_program = NULL;
 }
 
-static void dx_rectangle_presenter_constructDispatch(dx_rectangle_presenter_dispatch* SELF)
+static void dx_rectangle_presenter_constructDispatch(dx_rectangle_presenter_Dispatch* SELF)
 {/*Intentionally empty.*/}
 
 Core_Result dx_rectangle_presenter_construct(dx_rectangle_presenter* SELF, dx_val_context* val_context, dx_aal_context* aal_context) {
@@ -187,76 +187,76 @@ Core_Result dx_rectangle_presenter_construct(dx_rectangle_presenter* SELF, dx_va
   }
   Core_String* filename = NULL;
   if (Core_String_create(&filename, "rectangle", sizeof("rectangle") - 1)) {
-    DX_UNREFERENCE(path);
+    CORE_UNREFERENCE(path);
     path = NULL;
     //
     return Core_Failure;
   }
   dx_val_program_text* val_program_text = NULL;
   if (dx_engine_utilities_2d_create_program_text(&val_program_text, DX_PRESENTER(SELF)->val_context, path, filename)) {
-    DX_UNREFERENCE(filename);
+    CORE_UNREFERENCE(filename);
     filename = NULL;
     //
-    DX_UNREFERENCE(path);
+    CORE_UNREFERENCE(path);
     path = NULL;
     //
     return Core_Failure;
   }
-  DX_UNREFERENCE(filename);
+  CORE_UNREFERENCE(filename);
   filename = NULL;
   //
-  DX_UNREFERENCE(path);
+  CORE_UNREFERENCE(path);
   path = NULL;
   //
   if (dx_val_context_create_program(&SELF->val_program, DX_PRESENTER(SELF)->val_context, val_program_text)) {
-    DX_UNREFERENCE(val_program_text);
+    CORE_UNREFERENCE(val_program_text);
     val_program_text = NULL;
     //
     return Core_Failure;
   }
-  DX_UNREFERENCE(val_program_text);
+  CORE_UNREFERENCE(val_program_text);
   val_program_text = NULL;
   //
   if (dx_val_cbinding_create(&SELF->val_cbinding)) {
-    DX_UNREFERENCE(SELF->val_program);
+    CORE_UNREFERENCE(SELF->val_program);
     SELF->val_program = NULL;
     //
     return Core_Failure;
   }
   if (dx_val_context_create_buffer(&SELF->val_buffer, DX_PRESENTER(SELF)->val_context)) {
-    DX_UNREFERENCE(SELF->val_cbinding);
+    CORE_UNREFERENCE(SELF->val_cbinding);
     SELF->val_cbinding = NULL;
     //
-    DX_UNREFERENCE(SELF->val_program);
+    CORE_UNREFERENCE(SELF->val_program);
     SELF->val_program = NULL;
     //
     return Core_Failure;
   }
   //
   if (dx_val_context_create_vbinding(&SELF->val_vbinding, DX_PRESENTER(SELF)->val_context, Core_VertexFormat_position_xyz, SELF->val_buffer)) {
-    DX_UNREFERENCE(SELF->val_buffer);
+    CORE_UNREFERENCE(SELF->val_buffer);
     SELF->val_buffer = NULL;
     //
-    DX_UNREFERENCE(SELF->val_cbinding);
+    CORE_UNREFERENCE(SELF->val_cbinding);
     SELF->val_cbinding = NULL;
     //
-    DX_UNREFERENCE(SELF->val_program);
+    CORE_UNREFERENCE(SELF->val_program);
     SELF->val_program = NULL;
     //
     return Core_Failure;
   }
   //
   if (dx_val_command_list_create(&SELF->val_command_list)) {
-    DX_UNREFERENCE(SELF->val_vbinding);
+    CORE_UNREFERENCE(SELF->val_vbinding);
     SELF->val_vbinding = NULL;
     //
-    DX_UNREFERENCE(SELF->val_buffer);
+    CORE_UNREFERENCE(SELF->val_buffer);
     SELF->val_buffer = NULL;
     //
-    DX_UNREFERENCE(SELF->val_cbinding);
+    CORE_UNREFERENCE(SELF->val_cbinding);
     SELF->val_cbinding = NULL;
     //
-    DX_UNREFERENCE(SELF->val_program);
+    CORE_UNREFERENCE(SELF->val_program);
     SELF->val_program = NULL;
     //
     return Core_Failure;
@@ -264,19 +264,19 @@ Core_Result dx_rectangle_presenter_construct(dx_rectangle_presenter* SELF, dx_va
   //
   {
     if (dx_engine_utilities_2d_create_material(&SELF->val_material, DX_PRESENTER(SELF)->val_context, "<font-material>")) {
-      DX_UNREFERENCE(SELF->val_command_list);
+      CORE_UNREFERENCE(SELF->val_command_list);
       SELF->val_command_list = NULL;
       //
-      DX_UNREFERENCE(SELF->val_vbinding);
+      CORE_UNREFERENCE(SELF->val_vbinding);
       SELF->val_vbinding = NULL;
       //
-      DX_UNREFERENCE(SELF->val_buffer);
+      CORE_UNREFERENCE(SELF->val_buffer);
       SELF->val_buffer = NULL;
       //
-      DX_UNREFERENCE(SELF->val_cbinding);
+      CORE_UNREFERENCE(SELF->val_cbinding);
       SELF->val_cbinding = NULL;
       //
-      DX_UNREFERENCE(SELF->val_program);
+      CORE_UNREFERENCE(SELF->val_program);
       SELF->val_program = NULL;
       //
       return Core_Failure;
@@ -291,7 +291,7 @@ Core_Result dx_rectangle_presenter_construct(dx_rectangle_presenter* SELF, dx_va
 Core_Result dx_rectangle_presenter_create(dx_rectangle_presenter** RETURN, dx_val_context* val_context, dx_aal_context* aal_context) {
   DX_CREATE_PREFIX(dx_rectangle_presenter)
   if (dx_rectangle_presenter_construct(SELF, val_context, aal_context)) {
-    DX_UNREFERENCE(SELF);
+    CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
   }

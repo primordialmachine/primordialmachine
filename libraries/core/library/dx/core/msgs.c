@@ -6,126 +6,6 @@
 #include "Core/Memory.h"
 #include "dx/core/inline_pointer_deque.h"
 
-
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-
-#define DX_EMIT_MSG_TRACE (0)
-
-#if defined(DX_EMIT_MSG_TRACE) && 1 == DX_EMIT_MSG_TRACE
-  #define TRACE(msg) dx_log(msg, sizeof(msg) - 1)
-#else
-  #define TRACE(msg)
-#endif
-
-DX_DEFINE_OBJECT_TYPE("Core.EmitMessage",
-                      Core_EmitMessage,
-                      Core_Message);
-
-static void Core_EmitMessage_destruct(Core_EmitMessage* SELF) {
-  TRACE("enter: Core_EmitMessage_destruct\n");
-  Core_Memory_deallocate(SELF->p);
-  SELF->p = NULL;
-  TRACE("leave: Core_EmitMessage_destruct\n");
-}
-
-static void Core_EmitMessage_constructDispatch(Core_EmitMessage_dispatch* SELF)
-{/*Intentionally empty.*/}
-
-Core_Result Core_EmitMessage_construct(Core_EmitMessage* SELF, char const* p, Core_Size n) {
-  TRACE("enter: Core_EmitMessage_construct\n");
-  DX_CONSTRUCT_PREFIX(Core_EmitMessage);
-  Core_Natural64 timeStamp;
-  if (Core_getNow(&timeStamp)) {
-    return Core_Failure;
-  }
-  if (Core_Message_construct(CORE_MESSAGE(SELF), timeStamp)) {
-    TRACE("leave: Core_EmitMessage_construct\n");
-    return Core_Failure;
-  }
-  SELF->p = NULL;
-  if (Core_Memory_allocate(&SELF->p, n)) {
-    TRACE("leave: Core_EmitMessage_construct\n");
-    return Core_Failure;
-  }
-  Core_Memory_copy(SELF->p, p, n);
-  SELF->n = n;
-  CORE_OBJECT(SELF)->type = TYPE;
-  TRACE("leave: Core_EmitMessage_construct\n");
-  return Core_Success;
-}
-
-Core_Result Core_EmitMessage_create(Core_EmitMessage** RETURN, char const* p, Core_Size n) {
-  DX_CREATE_PREFIX(Core_EmitMessage);
-  if (Core_EmitMessage_construct(SELF, p, n)) {
-    DX_UNREFERENCE(SELF);
-    SELF = NULL;
-    return Core_Failure;
-  }
-  *RETURN = SELF;
-  return Core_Success;
-}
-
-Core_Result Core_EmitMessage_get(Core_EmitMessage* SELF, char const** p, Core_Size* n) {
-  *p = SELF->p;
-  *n = SELF->n;
-  return Core_Success;
-}
-
-#undef TRACE
-
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-
-DX_DEFINE_ENUMERATION_TYPE("Core.ApplicationMessageKind",
-                           Core_ApplicationMessageKind);
-
-#define DX_QUIT_MSG_TRACE (0)
-
-#if defined(DX_QUIT_MSG_TRACE) && 1 == DX_QUIT_MSG_TRACE
-  #define TRACE(msg) dx_log(msg, sizeof(msg) - 1)
-#else
-  #define TRACE(msg)
-#endif
-
-DX_DEFINE_OBJECT_TYPE("Core.ApplicationMessage",
-                      Core_ApplicationMessage,
-                      Core_Message);
-
-static void Core_ApplicationMessage_destruct(Core_ApplicationMessage* SELF)
-{/*Intentionally empty.*/}
-
-static void Core_ApplicationMessage_constructDispatch(Core_ApplicationMessage_dispatch* SELF)
-{/*Intentionally empty.*/}
-
-Core_Result Core_ApplicationMessage_construct(Core_ApplicationMessage* SELF, Core_ApplicationMessageKind kind) {
-  TRACE("enter: Core_ApplicationMessage_construct\n");
-  DX_CONSTRUCT_PREFIX(Core_ApplicationMessage);
-  Core_Natural64 timeStamp;
-  if (Core_getNow(&timeStamp)) {
-    return Core_Failure;
-  }
-  if (Core_Message_construct(CORE_MESSAGE(SELF), timeStamp)) {
-    TRACE("leave: Core_ApplicationMessage_construct\n");
-    return Core_Failure;
-  }
-  SELF->kind = kind;
-  CORE_OBJECT(SELF)->type = TYPE;
-  TRACE("leave: Core_QuitMessage_construct\n");
-  return Core_Success;
-}
-
-Core_Result Core_ApplicationMessage_create(Core_ApplicationMessage** RETURN, Core_ApplicationMessageKind kind) {
-  DX_CREATE_PREFIX(Core_ApplicationMessage);
-  if (Core_ApplicationMessage_construct(SELF, kind)) {
-    DX_UNREFERENCE(SELF);
-    SELF = NULL;
-    return Core_Failure;
-  }
-  *RETURN = SELF;
-  return Core_Success;
-}
-
-#undef TRACE
-
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #define DX_MSG_QUEUE_TRACE (0)
@@ -137,11 +17,11 @@ Core_Result Core_ApplicationMessage_create(Core_ApplicationMessage** RETURN, Cor
 #endif
 
 static void added(void** p) {
-  DX_REFERENCE(*p);
+  CORE_REFERENCE(*p);
 }
 
 static void removed(void** p) {
-  DX_UNREFERENCE(*p);
+  CORE_UNREFERENCE(*p);
 }
 
 typedef struct dx_msg_queue {

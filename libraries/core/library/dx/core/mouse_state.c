@@ -1,13 +1,13 @@
 #include "dx/core/mouse_state.h"
 
-DX_DEFINE_OBJECT_TYPE("dx.mouse_state",
+Core_defineObjectType("dx.mouse_state",
                       dx_mouse_state,
                       Core_Object);
 
 static void dx_mouse_state_destruct(dx_mouse_state* SELF)
 {/*Intentionally empty.*/}
 
-static void dx_mouse_state_constructDispatch(dx_mouse_state_dispatch* SELF)
+static void dx_mouse_state_constructDispatch(dx_mouse_state_Dispatch* SELF)
 {/*Intentionally empty.*/}
 
 Core_Result dx_mouse_state_construct(dx_mouse_state* SELF) {
@@ -24,7 +24,7 @@ Core_Result dx_mouse_state_construct(dx_mouse_state* SELF) {
 Core_Result dx_mouse_state_create(dx_mouse_state** RETURN) {
   DX_CREATE_PREFIX(dx_mouse_state);
   if (dx_mouse_state_construct(SELF)) {
-    DX_UNREFERENCE(SELF);
+    CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
   }

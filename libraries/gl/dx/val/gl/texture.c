@@ -3,7 +3,7 @@
 #include "dx/val/gl/context.h"
 #include "dx/assets.h"
 
-DX_DEFINE_OBJECT_TYPE("dx.val.gl.texture",
+Core_defineObjectType("dx.val.gl.texture",
                       dx_val_gl_texture,
                       dx_val_texture);
 
@@ -272,7 +272,7 @@ static void dx_val_gl_texture_destruct(dx_val_gl_texture* SELF) {
   }
 }
 
-static void dx_val_gl_texture_constructDispatch(dx_val_gl_texture_dispatch* self) {
+static void dx_val_gl_texture_constructDispatch(dx_val_gl_texture_Dispatch* self) {
   DX_VAL_TEXTURE_DISPATCH(self)->set_data = (Core_Result(*)(dx_val_texture*, dx_assets_texture*)) & dx_val_gl_texture_set_data;
 
   DX_VAL_TEXTURE_DISPATCH(self)->set_texture_address_mode_u = (Core_Result(*)(dx_val_texture*, Core_TextureAddressMode)) & dx_val_gl_texture_set_texture_address_mode_u;
@@ -298,25 +298,25 @@ static Core_Result fill_amber(dx_assets_image* image_value) {
   }
   dx_assets_image_operations_color_fill* image_operation_value = NULL;
   if (dx_assets_image_operations_color_fill_create(&image_operation_value)) {
-    DX_UNREFERENCE(color_value);
+    CORE_UNREFERENCE(color_value);
     color_value = NULL;
     return Core_Failure;
   }
   if (dx_assets_image_operations_color_fill_set_color(image_operation_value, color_value)) {
-    DX_UNREFERENCE(image_operation_value);
+    CORE_UNREFERENCE(image_operation_value);
     image_operation_value = NULL;
-    DX_UNREFERENCE(color_value);
+    CORE_UNREFERENCE(color_value);
     color_value = NULL;
     return Core_Failure;
   }
-  DX_UNREFERENCE(color_value);
+  CORE_UNREFERENCE(color_value);
   color_value = NULL;
   if (dx_assets_image_apply(image_value, 0, 0, image_value->width, image_value->height, DX_ASSETS_IMAGE_OPERATION(image_operation_value))) {
-    DX_UNREFERENCE(image_operation_value);
+    CORE_UNREFERENCE(image_operation_value);
     image_operation_value = NULL;
     return Core_Failure;
   }
-  DX_UNREFERENCE(image_operation_value);
+  CORE_UNREFERENCE(image_operation_value);
   image_operation_value = NULL;
   return Core_Success;
 }
@@ -360,16 +360,16 @@ Core_Result dx_val_gl_texture_construct(dx_val_gl_texture* SELF, dx_val_gl_conte
   }
   dx_assets_image* image = NULL;
   if (dx_assets_image_create(&image, name, Core_PixelFormat_Rgb8, 8, 8)) {
-    DX_UNREFERENCE(name);
+    CORE_UNREFERENCE(name);
     name = NULL;
     context->glDeleteTextures(1, &SELF->id);
     SELF->id = 0;
     return Core_Failure;
   }
-  DX_UNREFERENCE(name);
+  CORE_UNREFERENCE(name);
   name = NULL;
   if (fill_amber(image)) {
-    DX_UNREFERENCE(image);
+    CORE_UNREFERENCE(image);
     image = NULL;
     context->glDeleteTextures(1, &SELF->id);
     SELF->id = 0;
@@ -382,14 +382,14 @@ Core_Result dx_val_gl_texture_construct(dx_val_gl_texture* SELF, dx_val_gl_conte
   } break;
   default: {
     Core_setError(Core_Error_EnvironmentFailed);
-    DX_UNREFERENCE(image);
+    CORE_UNREFERENCE(image);
     image = NULL;
     context->glDeleteTextures(1, &SELF->id);
     SELF->id = 0;
     return Core_Failure;
   } break;
   }
-  DX_UNREFERENCE(image);
+  CORE_UNREFERENCE(image);
   image = NULL;
 
   if (GL_NO_ERROR != context->glGetError()) {
@@ -413,7 +413,7 @@ Core_Result dx_val_gl_texture_construct(dx_val_gl_texture* SELF, dx_val_gl_conte
 Core_Result dx_val_gl_texture_create(dx_val_gl_texture** RETURN, dx_val_gl_context* context) {
   DX_CREATE_PREFIX(dx_val_gl_texture);
   if (dx_val_gl_texture_construct(SELF, context)) {
-    DX_UNREFERENCE(SELF);
+    CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
   }

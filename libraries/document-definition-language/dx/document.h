@@ -6,7 +6,7 @@
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 /// @brief A range of a text given by its start offset in Bytes from the beginning of the text and its length in Bytes.
-DX_DECLARE_OBJECT_TYPE("dx.text.range",
+Core_declareObjectType("dx.text.range",
                        dx_text_range,
                        Core_Object);
 
@@ -20,11 +20,11 @@ struct dx_text_range {
   Core_Size length;
 };
 
-static inline dx_text_range_dispatch* DX_TEXT_RANGE_DISPATCH(void* p) {
-  return (dx_text_range_dispatch*)p;
+static inline dx_text_range_Dispatch* DX_TEXT_RANGE_DISPATCH(void* p) {
+  return (dx_text_range_Dispatch*)p;
 }
 
-struct dx_text_range_dispatch {
+struct dx_text_range_Dispatch {
   Core_Object_Dispatch _parent;
 };
 
@@ -34,7 +34,7 @@ Core_Result dx_text_range_create(dx_text_range** RETURN, Core_Size start, Core_S
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-DX_DECLARE_OBJECT_TYPE("dx.text.document",
+Core_declareObjectType("dx.text.document",
                        dx_text_document,
                        Core_Object);
 
@@ -48,11 +48,11 @@ struct dx_text_document {
   dx_object_array *lines;
 };
 
-static inline dx_text_document_dispatch* DX_TEXT_DOCUMENT_DISPATCH(void* p) {
-  return (dx_text_document_dispatch*)p;
+static inline dx_text_document_Dispatch* DX_TEXT_DOCUMENT_DISPATCH(void* p) {
+  return (dx_text_document_Dispatch*)p;
 }
 
-struct dx_text_document_dispatch {
+struct dx_text_document_Dispatch {
   Core_Object_Dispatch _parent;
 };
 

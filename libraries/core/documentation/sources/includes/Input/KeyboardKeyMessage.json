@@ -1,0 +1,10 @@
+{
+  "type" : "object",
+  "last-update" : "2024-01-13",
+  "indices" : "core",
+  "name" : "Core_KeyboardKeyMessage",
+  "id" : "core-keyboardkeymessage",
+  "signature" : "typedef struct Core_KeyboardKeyMessage Core_KeyboardKeyMessage;",
+  "extends" : "@{code('Core_InputMessage')}",
+  "description": "A keyboard key message."
+}

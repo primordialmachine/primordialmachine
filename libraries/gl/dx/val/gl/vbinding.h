@@ -6,7 +6,7 @@
 typedef struct dx_val_gl_context dx_val_gl_context;
 typedef struct dx_val_gl_buffer dx_val_gl_buffer;
 
-DX_DECLARE_OBJECT_TYPE("dx.val.gl.vbinding",
+Core_declareObjectType("dx.val.gl.vbinding",
                        dx_val_gl_vbinding,
                        dx_val_vbinding);
 
@@ -20,12 +20,12 @@ struct dx_val_gl_vbinding {
   GLuint id;
 };
 
-static inline dx_val_gl_vbinding_dispatch* DX_VAL_GL_VBINDING_DISPATCH(void* p) {
-  return (dx_val_gl_vbinding_dispatch*)p;
+static inline dx_val_gl_vbinding_Dispatch* DX_VAL_GL_VBINDING_DISPATCH(void* p) {
+  return (dx_val_gl_vbinding_Dispatch*)p;
 }
 
-struct dx_val_gl_vbinding_dispatch {
-  dx_val_vbinding_dispatch _parent;
+struct dx_val_gl_vbinding_Dispatch {
+  dx_val_vbinding_Dispatch _parent;
 };
 
 Core_Result dx_val_gl_vbinding_create(dx_val_gl_vbinding** RETURN, Core_VertexFormat vertex_format, dx_val_gl_buffer* buffer);

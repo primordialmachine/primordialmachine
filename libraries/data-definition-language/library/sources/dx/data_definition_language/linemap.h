@@ -18,7 +18,7 @@
 // Line indices are zero based.
 // Column indices are zero based.
 // Input byte indices are zero based.
-DX_DECLARE_OBJECT_TYPE("dx.ddl.linemap",
+Core_declareObjectType("dx.ddl.linemap",
                        dx_ddl_linemap,
                        Core_Object);
 
@@ -37,11 +37,11 @@ struct dx_ddl_linemap {
   Core_Size number_of_lines;
 };
 
-static inline dx_ddl_linemap_dispatch* DX_DDL_LINEMAP_DISPATCH(void* p) {
-  return (dx_ddl_linemap_dispatch*)p;
+static inline dx_ddl_linemap_Dispatch* DX_DDL_LINEMAP_DISPATCH(void* p) {
+  return (dx_ddl_linemap_Dispatch*)p;
 }
 
-struct dx_ddl_linemap_dispatch {
+struct dx_ddl_linemap_Dispatch {
   Core_Object_Dispatch _parent;
 };
 

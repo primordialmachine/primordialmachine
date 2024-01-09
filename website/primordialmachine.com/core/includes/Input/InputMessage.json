@@ -1,0 +1,10 @@
+{
+  "type" : "object",
+  "last-update" : "2024-01-13",
+  "indices" : "core",
+  "name" : "Core_InputMessage",
+  "id" : "core-inputmessage",
+  "signature" : "typedef struct Core_InputMessage Core_InputMessage;",
+  "extends" : "@{code('Core_Message')}",
+  "description": "An input message."
+}

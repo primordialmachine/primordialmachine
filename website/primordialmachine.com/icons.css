@@ -7,7 +7,7 @@
  */
 
 :root {
-  --icon-size: 64px;
+  --icon-size: 2.5vw;
 }
 
 a.icon-bitbucket {
@@ -40,13 +40,14 @@ ul.social-icons {
   display: flex;
   flex-wrap: wrap;
   flex-direction: column;
-  row-gap: 64px;
-  column-gap: 64px;
+  row-gap: 2vw;
+  /*column-gap: 64px;*/
 
   align-items: center;
+  
+  margin-top: 1vw;
 
-  margin-right: 38px;
-  margin-left: 38px;
-
+  /*margin-right: 38px;*/
+  /*margin-left: 38px;*/
   width: 100%;
 }

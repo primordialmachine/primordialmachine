@@ -17,26 +17,26 @@ static inline Core_String* _get_name(dx_adl_names* names, Core_Size index) {
   { \
     Core_Boolean isEqualTo = Core_False; \
     if (Core_String_isEqualTo(&isEqualTo, received_type, NAME(_NAME))) { \
-      DX_UNREFERENCE(received_type); \
+      CORE_UNREFERENCE(received_type); \
       received_type = NULL; \
       return Core_Failure; \
     } \
     if (isEqualTo) { \
       if (dx_asset_definition_language_enter_on_##_DISPATCH(SELF, source, context)) { \
-        DX_UNREFERENCE(received_type); \
+        CORE_UNREFERENCE(received_type); \
         received_type = NULL; \
         return Core_Failure; \
       } \
     } else { \
       if (Core_getError()) { \
-        DX_UNREFERENCE(received_type); \
+        CORE_UNREFERENCE(received_type); \
         received_type = NULL; \
         return Core_Failure; \
       } \
     } \
   }
 
-DX_DEFINE_OBJECT_TYPE("dx.dx_asset_definition_language.enter",
+Core_defineObjectType("dx.dx_asset_definition_language.enter",
                       dx_asset_definition_language_enter,
                       Core_Object);
 
@@ -47,24 +47,24 @@ static Core_Result add_symbol(dx_asset_definition_language_enter* SELF, Core_Str
   }
   if (node) {
     symbol->node = node;
-    DX_REFERENCE(symbol->node);
+    CORE_REFERENCE(symbol->node);
   }
   if (dx_asset_definitions_set(SELF->context->definitions, name, symbol)) {
-    DX_UNREFERENCE(symbol);
+    CORE_UNREFERENCE(symbol);
     symbol = NULL;
     return Core_Failure;
   }
-  DX_UNREFERENCE(symbol);
+  CORE_UNREFERENCE(symbol);
   symbol = NULL;
   return Core_Success;
 }
 
 static void dx_asset_definition_language_enter_destruct(dx_asset_definition_language_enter* SELF) {
-  DX_UNREFERENCE(SELF->diagnostics);
+  CORE_UNREFERENCE(SELF->diagnostics);
   SELF->diagnostics = NULL;
 }
 
-static void dx_asset_definition_language_enter_constructDispatch(dx_asset_definition_language_enter_dispatch* SELF)
+static void dx_asset_definition_language_enter_constructDispatch(dx_asset_definition_language_enter_Dispatch* SELF)
 {/*Intentionally empty.*/}
 
 Core_Result dx_asset_definition_language_enter_construct(dx_asset_definition_language_enter* SELF, dx_asset_definition_language_diagnostics* diagnostics, dx_adl_context* context) {
@@ -75,7 +75,7 @@ Core_Result dx_asset_definition_language_enter_construct(dx_asset_definition_lan
     return Core_Failure;
   }
   SELF->diagnostics = diagnostics;
-  DX_REFERENCE(SELF->diagnostics);
+  CORE_REFERENCE(SELF->diagnostics);
 
   CORE_OBJECT(SELF)->type = TYPE;
   return Core_Success;
@@ -84,7 +84,7 @@ Core_Result dx_asset_definition_language_enter_construct(dx_asset_definition_lan
 Core_Result dx_asset_definition_language_enter_create(dx_asset_definition_language_enter** RETURN, dx_asset_definition_language_diagnostics* diagnostics, dx_adl_context* context) {
   DX_CREATE_PREFIX(dx_asset_definition_language_enter);
   if (dx_asset_definition_language_enter_construct(SELF, diagnostics, context)) {
-    DX_UNREFERENCE(SELF);
+    CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
   }
@@ -105,16 +105,16 @@ static bool is_of_type(dx_ddl_node* source, Core_String* expected_type, dx_adl_c
   }
   Core_Boolean isEqualTo = Core_False;
   if (Core_String_isEqualTo(&isEqualTo, received_type, expected_type)) {
-    DX_UNREFERENCE(received_type);
+    CORE_UNREFERENCE(received_type);
     received_type = NULL;
     return false;
   }
   if (!isEqualTo) {
-    DX_UNREFERENCE(received_type);
+    CORE_UNREFERENCE(received_type);
     received_type = NULL;
     return false;
   }
-  DX_UNREFERENCE(received_type);
+  CORE_UNREFERENCE(received_type);
   received_type = NULL;
   return true;
 }
@@ -142,7 +142,7 @@ Core_Result dx_asset_definition_language_enter_on_scene_element(dx_asset_definit
   CASEOF(texture_type, texture);
   CASEOF(viewer_type, viewer);
   CASEOF(viewer_instance_type, viewer_instance)
-  DX_UNREFERENCE(received_type);
+  CORE_UNREFERENCE(received_type);
   received_type = NULL;
   return Core_Success;
 }
@@ -155,12 +155,12 @@ Core_Result dx_asset_definition_language_enter_on_color(dx_asset_definition_lang
   }
   Core_Boolean isEqualTo = Core_False;
   if (Core_String_isEqualTo(&isEqualTo, received_type, NAME(color_type))) {
-    DX_UNREFERENCE(received_type);
+    CORE_UNREFERENCE(received_type);
     received_type = NULL;
     return Core_Failure;
   }
   if (!isEqualTo) {
-    DX_UNREFERENCE(received_type);
+    CORE_UNREFERENCE(received_type);
     received_type = NULL;
     Core_setError(Core_Error_SemanticalAnalysisFailed);
     return Core_Failure;
@@ -168,7 +168,7 @@ Core_Result dx_asset_definition_language_enter_on_color(dx_asset_definition_lang
   // name
   Core_String* name = NULL;
   if (dx_asset_definition_language_parser_parse_name(&name, source, context)) {
-    DX_UNREFERENCE(received_type);
+    CORE_UNREFERENCE(received_type);
     received_type = NULL;
     return Core_Failure;
   }
@@ -181,17 +181,17 @@ Core_Result dx_asset_definition_language_enter_on_color(dx_asset_definition_lang
       dx_log(name->bytes, name->number_of_bytes);
       dx_log("` already exists", sizeof("` already exists") - 1);
     } else {
-      DX_UNREFERENCE(name);
+      CORE_UNREFERENCE(name);
       name = NULL;
-      DX_UNREFERENCE(received_type);
+      CORE_UNREFERENCE(received_type);
       received_type = NULL;
       return Core_Failure;
     }
   }
   //
-  DX_UNREFERENCE(name);
+  CORE_UNREFERENCE(name);
   name = NULL;
-  DX_UNREFERENCE(received_type);
+  CORE_UNREFERENCE(received_type);
   received_type = NULL;
   //
   return Core_Success;
@@ -205,12 +205,12 @@ Core_Result dx_asset_definition_language_enter_on_scene(dx_asset_definition_lang
   }
   Core_Boolean isEqualTo = Core_False;
   if (Core_String_isEqualTo(&isEqualTo, received_type, NAME(scene_type))) {
-    DX_UNREFERENCE(received_type);
+    CORE_UNREFERENCE(received_type);
     received_type = NULL;
     return Core_Failure;
   }
   if (!isEqualTo) {
-    DX_UNREFERENCE(received_type);
+    CORE_UNREFERENCE(received_type);
     received_type = NULL;
     Core_setError(Core_Error_LexicalAnalysisFailed);
     return Core_Failure;
@@ -227,36 +227,36 @@ Core_Result dx_asset_definition_language_enter_on_scene(dx_asset_definition_lang
   if (child_source) {
     Core_Size n;
     if (dx_ddl_node_list_get_size(&n, child_source)) {
-      DX_UNREFERENCE(child_source);
+      CORE_UNREFERENCE(child_source);
       child_source = NULL;
-      DX_UNREFERENCE(received_type);
+      CORE_UNREFERENCE(received_type);
       received_type = NULL;
       return Core_Failure;
     }
     for (Core_Size i = 0; i < n; ++i) {
       dx_ddl_node* temporary;
       if (dx_ddl_node_list_get(&temporary, child_source, i)) {
-        DX_UNREFERENCE(child_source);
+        CORE_UNREFERENCE(child_source);
         child_source = NULL;
-        DX_UNREFERENCE(received_type);
+        CORE_UNREFERENCE(received_type);
         received_type = NULL;
         return Core_Failure;
       }
       if (dx_asset_definition_language_enter_on_scene_element(SELF, temporary, context)) {
-        DX_UNREFERENCE(temporary);
+        CORE_UNREFERENCE(temporary);
         temporary = NULL;
-        DX_UNREFERENCE(child_source);
+        CORE_UNREFERENCE(child_source);
         child_source = NULL;
-        DX_UNREFERENCE(received_type);
+        CORE_UNREFERENCE(received_type);
         received_type = NULL;
         return Core_Failure;
       }
-      DX_UNREFERENCE(temporary);
+      CORE_UNREFERENCE(temporary);
       temporary = NULL;
     }
   }
   //
-  DX_UNREFERENCE(received_type);
+  CORE_UNREFERENCE(received_type);
   received_type = NULL;
   //
   return Core_Success;
@@ -270,12 +270,12 @@ Core_Result dx_asset_definition_language_enter_on_image(dx_asset_definition_lang
   }
   Core_Boolean isEqualTo = Core_False;
   if (Core_String_isEqualTo(&isEqualTo, received_type, NAME(image_type))) {
-    DX_UNREFERENCE(received_type);
+    CORE_UNREFERENCE(received_type);
     received_type = NULL;
     return Core_Failure;
   }
   if (!isEqualTo) {
-    DX_UNREFERENCE(received_type);
+    CORE_UNREFERENCE(received_type);
     received_type = NULL;
     Core_setError(Core_Error_SemanticalAnalysisFailed);
     return Core_Failure;
@@ -283,7 +283,7 @@ Core_Result dx_asset_definition_language_enter_on_image(dx_asset_definition_lang
   // name
   Core_String* name = NULL;
   if (dx_asset_definition_language_parser_parse_name(&name, source, context)) {
-    DX_UNREFERENCE(received_type);
+    CORE_UNREFERENCE(received_type);
     received_type = NULL;
     return Core_Failure;
   }
@@ -296,17 +296,17 @@ Core_Result dx_asset_definition_language_enter_on_image(dx_asset_definition_lang
       dx_log(name->bytes, name->number_of_bytes);
       dx_log("` already exists", sizeof("` already exists") - 1);
     } else {
-      DX_UNREFERENCE(name);
+      CORE_UNREFERENCE(name);
       name = NULL;
-      DX_UNREFERENCE(received_type);
+      CORE_UNREFERENCE(received_type);
       received_type = NULL;
       return Core_Failure;
     }
   }
   //
-  DX_UNREFERENCE(name);
+  CORE_UNREFERENCE(name);
   name = NULL;
-  DX_UNREFERENCE(received_type);
+  CORE_UNREFERENCE(received_type);
   received_type = NULL;
   //
   return Core_Success;
@@ -320,12 +320,12 @@ Core_Result dx_asset_definition_language_enter_on_mesh(dx_asset_definition_langu
   }
   Core_Boolean isEqualTo = Core_False;
   if (Core_String_isEqualTo(&isEqualTo, received_type, NAME(mesh_type))) {
-    DX_UNREFERENCE(received_type);
+    CORE_UNREFERENCE(received_type);
     received_type = NULL;
     return Core_Failure;
   }
   if (!isEqualTo) {
-    DX_UNREFERENCE(received_type);
+    CORE_UNREFERENCE(received_type);
     received_type = NULL;
     Core_setError(Core_Error_SemanticalAnalysisFailed);
     return Core_Failure;
@@ -333,7 +333,7 @@ Core_Result dx_asset_definition_language_enter_on_mesh(dx_asset_definition_langu
   // name
   Core_String* name = NULL;
   if (dx_asset_definition_language_parser_parse_name(&name, source, context)) {
-    DX_UNREFERENCE(received_type);
+    CORE_UNREFERENCE(received_type);
     received_type = NULL;
     return Core_Failure;
   }
@@ -346,17 +346,17 @@ Core_Result dx_asset_definition_language_enter_on_mesh(dx_asset_definition_langu
       dx_log(name->bytes, name->number_of_bytes);
       dx_log("` already exists", sizeof("` already exists") - 1);
     } else {
-      DX_UNREFERENCE(name);
+      CORE_UNREFERENCE(name);
       name = NULL;
-      DX_UNREFERENCE(received_type);
+      CORE_UNREFERENCE(received_type);
       received_type = NULL;
       return Core_Failure;
     }
   }
   //
-  DX_UNREFERENCE(name);
+  CORE_UNREFERENCE(name);
   name = NULL;
-  DX_UNREFERENCE(received_type);
+  CORE_UNREFERENCE(received_type);
   received_type = NULL;
   //
   return Core_Success;
@@ -370,12 +370,12 @@ Core_Result dx_asset_definition_language_enter_on_mesh_instance(dx_asset_definit
   }
   Core_Boolean isEqualTo = Core_False;
   if (Core_String_isEqualTo(&isEqualTo, received_type, NAME(mesh_instance_type))) {
-    DX_UNREFERENCE(received_type);
+    CORE_UNREFERENCE(received_type);
     received_type = NULL;
     return Core_Failure;
   }
   if (!isEqualTo) {
-    DX_UNREFERENCE(received_type);
+    CORE_UNREFERENCE(received_type);
     received_type = NULL;
     Core_setError(Core_Error_SemanticalAnalysisFailed);
     return Core_Failure;
@@ -391,17 +391,17 @@ Core_Result dx_asset_definition_language_enter_on_mesh_instance(dx_asset_definit
       dx_log(name->bytes, name->number_of_bytes);
       dx_log("` already exists", sizeof("` already exists") - 1);
     } else {
-      DX_UNREFERENCE(name);
+      CORE_UNREFERENCE(name);
       name = NULL;
-      DX_UNREFERENCE(received_type);
+      CORE_UNREFERENCE(received_type);
       received_type = NULL;
       return Core_Failure;
     }
   }
   //
-  DX_UNREFERENCE(name);
+  CORE_UNREFERENCE(name);
   name = NULL;
-  DX_UNREFERENCE(received_type);
+  CORE_UNREFERENCE(received_type);
   received_type = NULL;
   //
   return Core_Success;
@@ -415,12 +415,12 @@ Core_Result dx_asset_definition_language_enter_on_material(dx_asset_definition_l
   }
   Core_Boolean isEqualTo = Core_False;
   if (Core_String_isEqualTo(&isEqualTo, received_type, NAME(material_type))) {
-    DX_UNREFERENCE(received_type);
+    CORE_UNREFERENCE(received_type);
     received_type = NULL;
     return Core_Failure;
   }
   if (!isEqualTo) {
-    DX_UNREFERENCE(received_type);
+    CORE_UNREFERENCE(received_type);
     received_type = NULL;
     Core_setError(Core_Error_SemanticalAnalysisFailed);
     return Core_Failure;
@@ -428,7 +428,7 @@ Core_Result dx_asset_definition_language_enter_on_material(dx_asset_definition_l
   // name
   Core_String* name = NULL;
   if (dx_asset_definition_language_parser_parse_name(&name, source, context)) {
-    DX_UNREFERENCE(received_type);
+    CORE_UNREFERENCE(received_type);
     received_type = NULL;
     return Core_Failure;
   }
@@ -441,17 +441,17 @@ Core_Result dx_asset_definition_language_enter_on_material(dx_asset_definition_l
       dx_log(name->bytes, name->number_of_bytes);
       dx_log("` already exists", sizeof("` already exists") - 1);
     } else {
-      DX_UNREFERENCE(name);
+      CORE_UNREFERENCE(name);
       name = NULL;
-      DX_UNREFERENCE(received_type);
+      CORE_UNREFERENCE(received_type);
       received_type = NULL;
       return Core_Failure;
     }
   }
   //
-  DX_UNREFERENCE(name);
+  CORE_UNREFERENCE(name);
   name = NULL;
-  DX_UNREFERENCE(received_type);
+  CORE_UNREFERENCE(received_type);
   received_type = NULL;
   //
   return Core_Success;
@@ -465,12 +465,12 @@ Core_Result dx_asset_definition_language_enter_on_viewer_instance(dx_asset_defin
   }
   Core_Boolean isEqualTo = Core_False;
   if (Core_String_isEqualTo(&isEqualTo, received_type, NAME(viewer_instance_type))) {
-    DX_UNREFERENCE(received_type);
+    CORE_UNREFERENCE(received_type);
     received_type = NULL;
     return Core_Failure;
   }
   if (!isEqualTo) {
-    DX_UNREFERENCE(received_type);
+    CORE_UNREFERENCE(received_type);
     received_type = NULL;
     Core_setError(Core_Error_SemanticalAnalysisFailed);
     return Core_Failure;
@@ -486,17 +486,17 @@ Core_Result dx_asset_definition_language_enter_on_viewer_instance(dx_asset_defin
       dx_log(name->bytes, name->number_of_bytes);
       dx_log("` already exists", sizeof("` already exists") - 1);
     } else {
-      DX_UNREFERENCE(name);
+      CORE_UNREFERENCE(name);
       name = NULL;
-      DX_UNREFERENCE(received_type);
+      CORE_UNREFERENCE(received_type);
       received_type = NULL;
       return Core_Failure;
     }
   }
   //
-  DX_UNREFERENCE(name);
+  CORE_UNREFERENCE(name);
   name = NULL;
-  DX_UNREFERENCE(received_type);
+  CORE_UNREFERENCE(received_type);
   received_type = NULL;
   //
   return Core_Success;
@@ -510,12 +510,12 @@ Core_Result dx_asset_definition_language_enter_on_viewer(dx_asset_definition_lan
   }
   Core_Boolean isEqualTo = Core_False;
   if (Core_String_isEqualTo(&isEqualTo, received_type, NAME(viewer_type))) {
-    DX_UNREFERENCE(received_type);
+    CORE_UNREFERENCE(received_type);
     received_type = NULL;
     return Core_Failure;
   }
   if (!isEqualTo) {
-    DX_UNREFERENCE(received_type);
+    CORE_UNREFERENCE(received_type);
     received_type = NULL;
     Core_setError(Core_Error_SemanticalAnalysisFailed);
     return Core_Failure;
@@ -523,7 +523,7 @@ Core_Result dx_asset_definition_language_enter_on_viewer(dx_asset_definition_lan
   // name
   Core_String* name = NULL;
   if (dx_asset_definition_language_parser_parse_name(&name, source, context)) {
-    DX_UNREFERENCE(received_type);
+    CORE_UNREFERENCE(received_type);
     received_type = NULL;
     return Core_Failure;
   }
@@ -536,17 +536,17 @@ Core_Result dx_asset_definition_language_enter_on_viewer(dx_asset_definition_lan
       dx_log(name->bytes, name->number_of_bytes);
       dx_log("` already exists", sizeof("` already exists") - 1);
     } else {
-      DX_UNREFERENCE(name);
+      CORE_UNREFERENCE(name);
       name = NULL;
-      DX_UNREFERENCE(received_type);
+      CORE_UNREFERENCE(received_type);
       received_type = NULL;
       return Core_Failure;
     }
   }
   //
-  DX_UNREFERENCE(name);
+  CORE_UNREFERENCE(name);
   name = NULL;
-  DX_UNREFERENCE(received_type);
+  CORE_UNREFERENCE(received_type);
   received_type = NULL;
   //
   return Core_Success;
@@ -560,12 +560,12 @@ Core_Result dx_asset_definition_language_enter_on_texture(dx_asset_definition_la
   }
   Core_Boolean isEqualTo = Core_False;
   if (Core_String_isEqualTo(&isEqualTo, received_type, NAME(texture_type))) {
-    DX_UNREFERENCE(received_type);
+    CORE_UNREFERENCE(received_type);
     received_type = NULL;
     return Core_Failure;
   }
   if (!isEqualTo) {
-    DX_UNREFERENCE(received_type);
+    CORE_UNREFERENCE(received_type);
     received_type = NULL;
     Core_setError(Core_Error_SemanticalAnalysisFailed);
     return Core_Failure;
@@ -573,7 +573,7 @@ Core_Result dx_asset_definition_language_enter_on_texture(dx_asset_definition_la
   // name
   Core_String* name = NULL;
   if (dx_asset_definition_language_parser_parse_name(&name, source, context)) {
-    DX_UNREFERENCE(received_type);
+    CORE_UNREFERENCE(received_type);
     received_type = NULL;
     return Core_Failure;
   }
@@ -586,17 +586,17 @@ Core_Result dx_asset_definition_language_enter_on_texture(dx_asset_definition_la
       dx_log(name->bytes, name->number_of_bytes);
       dx_log("` already exists", sizeof("` already exists") - 1);
     } else {
-      DX_UNREFERENCE(name);
+      CORE_UNREFERENCE(name);
       name = NULL;
-      DX_UNREFERENCE(received_type);
+      CORE_UNREFERENCE(received_type);
       received_type = NULL;
       return Core_Failure;
     }
   }
   //
-  DX_UNREFERENCE(name);
+  CORE_UNREFERENCE(name);
   name = NULL;
-  DX_UNREFERENCE(received_type);
+  CORE_UNREFERENCE(received_type);
   received_type = NULL;
   //
   return Core_Success;

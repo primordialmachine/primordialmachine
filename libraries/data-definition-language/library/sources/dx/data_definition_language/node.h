@@ -8,7 +8,7 @@
 #include "dx/data_definition_language/node_kind.h"
 
 /// @brief An node for programs of the Data Definition Language (DDL).
-DX_DECLARE_OBJECT_TYPE("dx.ddl.node",
+Core_declareObjectType("dx.ddl.node",
                        dx_ddl_node,
                        Core_Object);
 
@@ -21,17 +21,17 @@ struct dx_ddl_node {
   dx_ddl_node_kind kind;
   union {
     dx_inline_pointer_array list;
-    dx_inline_pointer_hashmap map;
+    Core_InlinePointerHashmap map;
     Core_String* string;
     Core_String* number;
   };
 };
 
-static inline dx_ddl_node_dispatch* DX_DDL_NODE_DISPATCH(void* p) {
-  return (dx_ddl_node_dispatch*)p;
+static inline dx_ddl_node_Dispatch* DX_DDL_NODE_DISPATCH(void* p) {
+  return (dx_ddl_node_Dispatch*)p;
 }
 
-struct dx_ddl_node_dispatch {
+struct dx_ddl_node_Dispatch {
   Core_Object_Dispatch _parent;
 };
 

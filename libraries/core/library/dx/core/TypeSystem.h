@@ -26,7 +26,7 @@ typedef struct Core_Type Core_Type;
 /// 
 /// @undefined @a x does not pointed to a dx_type object.
 /// @undefined The runtime type system is not initialized.
-Core_Boolean dx_rti_type_is_leq(Core_Type* x, Core_Type* y);
+Core_Result Core_Type_isLowerThanOrEqualTo(Core_Boolean* RETURN, Core_Type* x, Core_Type* y);
 
 /// @brief Get a pointer to the dispatch of an object type.
 /// @param x The type.
@@ -74,11 +74,16 @@ Core_Result Core_Type_getName(Core_Type* SELF, char const** p, Core_Size* n);
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 /// @brief Get if a type is an enumeration type.
+/// @param RETURN A pointer to a <code>Core_Boolean</code> variable.
 /// @param type A pointer to the type.
-/// @return @a true if the type is an enumeration type. @a false otherwise.
-/// @undefined @a type does not point to a type.
+/// @return
+/// #Core_Success on success. #Core_Failure on failure.
+/// @success
+/// <code>*RETURN</code> was assigned @a Core_Boolean if the type pointed to by @a type is an enumeration type.
+/// Otherwise it was assigned @a Core_False.
+/// @error Core_Error_ArgumentInvalid @a type is null pointer.
 /// @undefined The runtime type system is not initialized.
-Core_Boolean Core_TypeSystem_isEnumerationType(Core_Type* type);
+Core_Result Core_TypeSystem_isEnumerationType(Core_Boolean* RETURN, Core_Type* type);
 
 /// @brief Used to register enumeration types.
 /// 
@@ -97,19 +102,9 @@ Core_Boolean Core_TypeSystem_isEnumerationType(Core_Type* type);
 /// @error #Core_Error_Exists A type of the same name already exists.
 Core_Result Core_TypeSystem_defineEnumerationType(Core_Type** RETURN, char const* p, Core_Size n, void(*on_type_destroyed)());
 
-#if defined(Core_Version_Major) && Core_Version_Major < 4
-#define DX_DECLARE_ENUMERATION_TYPE(NAME, CNAME) \
-    Core_declareEnumerationType(NAME, CNAME)
-#endif
-
 #define Core_declareEnumerationType(NAME, C_NAME) \
   Core_Result C_NAME##_getType(Core_Type** RETURN); \
   typedef enum C_NAME C_NAME;
-
-#if defined(Core_Version_Major) && Core_Version_Major < 4
-#define DX_DEFINE_ENUMERATION_TYPE(NAME, CNAME) \
-    Core_defineEnumerationType(NAME, CNAME)
-#endif
 
 #define Core_defineEnumerationType(NAME, CNAME) \
   static Core_Type* _##CNAME##_type = NULL; \
@@ -134,12 +129,17 @@ Core_Result Core_TypeSystem_defineEnumerationType(Core_Type** RETURN, char const
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-/// @brief Get if a type is a fundemental type.
+/// @brief Get if a type is an fundamental type.
+/// @param RETURN A pointer to a <code>Core_Boolean</code> variable.
 /// @param type A pointer to the type.
-/// @return @a true if the type is a fundamental type. @a false otherwise.
-/// @undefined @a type does not point to a type.
+/// @return
+/// #Core_Success on success. #Core_Failure on failure.
+/// @success
+/// <code>*RETURN</code> was assigned @a Core_Boolean if the type pointed to by @a type is an fundamental type.
+/// Otherwise it was assigned @a Core_False.
+/// @error Core_Error_ArgumentInvalid @a type is null pointer.
 /// @undefined The runtime type system is not initialized.
-Core_Boolean Core_TypeSystem_isFundamentalType(Core_Type* type);
+Core_Result Core_TypeSystem_isFundamentalType(Core_Boolean* RETURN, Core_Type* type);
 
 /// @brief Used to register types like Core_(Integer|Natural)(8|16|32|64), Core_Real(32|64), Core_Size, and Core_Boolean.
 /// 
@@ -158,18 +158,8 @@ Core_Boolean Core_TypeSystem_isFundamentalType(Core_Type* type);
 /// @error #Core_Error_Exists a type of the same name already exists
 Core_Result Core_TypeSystem_defineFundamentalType(Core_Type** RETURN, char const* p, Core_Size n, void(*on_type_destroyed)(), Core_Size value_size);
 
-#if defined(Core_Version_Major) && Core_Version_Major < 4
-#define DX_DECLARE_FUNDAMENTAL_TYPE(NAME, CNAME) \
-    Core_declareFundamentalType(NAME, CNAME)
-#endif
-
 #define Core_declareFundamentalType(NAME, CNAME) \
   Core_Result CNAME##_getType(Core_Type** RETURN); \
-
-#if defined(Core_Version_Major) && Core_Version_Major < 4
-#define DX_DEFINE_FUNDAMENTAL_TYPE(NAME, CNAME) \
-    Core_defineFundamentalType(NAME, CNAME)
-#endif
 
 #define Core_defineFundamentalType(NAME, CNAME) \
   static Core_Type* _##CNAME##_type = NULL; \
@@ -195,11 +185,16 @@ Core_Result Core_TypeSystem_defineFundamentalType(Core_Type** RETURN, char const
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 /// @brief Get if a type is an object type.
+/// @param RETURN A pointer to a <code>Core_Boolean</code> variable.
 /// @param type A pointer to the type.
-/// @return @a true if the type is an object type. @a false otherwise.
-/// @undefined @a type does not point to a type.
+/// @return
+/// #Core_Success on success. #Core_Failure on failure.
+/// @success
+/// <code>*RETURN</code> was assigned @a Core_Boolean if the type pointed to by @a type is an object type.
+/// Otherwise it was assigned @a Core_False.
+/// @error Core_Error_ArgumentInvalid @a type is null pointer.
 /// @undefined The runtime type system is not initialized.
-Core_Boolean Core_TypeSystem_isObjectType(Core_Type* type);
+Core_Result Core_TypeSystem_isObjectType(Core_Boolean* RETURN, Core_Type* type);
 
 /// @brief Used to register object types.
 /// 
@@ -224,17 +219,17 @@ Core_Result Core_TypeSystem_defineObjectType(Core_Type** RETURN, char const* p, 
                                              Core_Size object_size, void (*object_destruct)(Core_Object*), \
                                              Core_Size dispatch_size, void (*dispatch_construct)(Core_Object_Dispatch*));
 
-#define DX_DECLARE_OBJECT_TYPE(NAME, C_NAME, C_PARENT_NAME) \
+#define Core_declareObjectType(NAME, C_NAME, C_PARENT_NAME) \
   Core_Result C_NAME##_getType(Core_Type** RETURN); \
-  typedef struct C_NAME##_dispatch C_NAME##_dispatch; \
+  typedef struct C_NAME##_Dispatch C_NAME##_Dispatch; \
   typedef struct C_NAME C_NAME;
 
-#define DX_DEFINE_OBJECT_TYPE(NAME, C_NAME, C_PARENT_NAME) \
+#define Core_defineObjectType(NAME, C_NAME, C_PARENT_NAME) \
   static Core_Type* _##C_NAME##_type = NULL; \
 \
   static void C_NAME##_destruct(C_NAME* SELF); \
 \
-  static void C_NAME##_constructDispatch(C_NAME##_dispatch* SELF); \
+  static void C_NAME##_constructDispatch(C_NAME##_Dispatch* SELF); \
 \
   static void C_NAME##_onTypeDestroyed() { \
     _##C_NAME##_type = NULL; \
@@ -251,7 +246,7 @@ Core_Result Core_TypeSystem_defineObjectType(Core_Type** RETURN, char const* p, 
                                            &C_NAME##_onTypeDestroyed, \
                                            parent, \
                                            sizeof(C_NAME), (void(*)(Core_Object*))&C_NAME##_destruct, \
-                                           sizeof(C_NAME##_dispatch), (void(*)(Core_Object_Dispatch*))&C_NAME##_constructDispatch)) { \
+                                           sizeof(C_NAME##_Dispatch), (void(*)(Core_Object_Dispatch*))&C_NAME##_constructDispatch)) { \
         return Core_Failure; \
       } \
     } \

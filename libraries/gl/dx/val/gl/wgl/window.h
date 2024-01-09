@@ -6,7 +6,7 @@
 #include <Windows.h>
 typedef struct dx_gl_wgl_application dx_gl_wgl_application;
 
-DX_DECLARE_OBJECT_TYPE("dx.val.gl.wgl.window",
+Core_declareObjectType("dx.val.gl.wgl.window",
                         dx_val_gl_wgl_window,
                         dx_val_gl_window);
 
@@ -22,8 +22,8 @@ struct dx_val_gl_wgl_window {
   dx_gl_wgl_application* application;
 };
 
-struct dx_val_gl_wgl_window_dispatch {
-  dx_val_gl_window_dispatch _parent;
+struct dx_val_gl_wgl_window_Dispatch {
+  dx_val_gl_window_Dispatch _parent;
 };
 
 /// @internal

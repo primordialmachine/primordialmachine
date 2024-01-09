@@ -3,7 +3,7 @@
 
 #include "dx/core.h"
 
-DX_DECLARE_ENUMERATION_TYPE("dx.val_program_text_type",
+Core_declareEnumerationType("dx.val_program_text_type",
                             dx_val_program_text_type);
 
 enum dx_val_program_text_type {
@@ -20,7 +20,7 @@ enum dx_val_program_text_type {
 /// - If the tag #DX_VAL_PROGRAM_TEXT_TYPE_VERTEX_FRAGMENT is specified,
 ///   then dx_val_program_text::fragment_program_text and dx_val_program_text::vertex_program_text contain references to
 ///   dx_val_program_text objects of the type #DX_VAL_PROGRAM_TEXT_TYPE_FRAGMENT and #DX_VAL_PROGRAM_TEXT_TYPE_VERTEX, respectively.
-DX_DECLARE_OBJECT_TYPE("dx.val.program_text",
+Core_declareObjectType("dx.val.program_text",
                        dx_val_program_text,
                        Core_Object);
 
@@ -43,11 +43,11 @@ struct dx_val_program_text {
   };
 };
 
-static inline dx_val_program_text_dispatch* DX_VAL_PROGRAM_TEXT_DISPATCH(void* p) {
-  return (dx_val_program_text_dispatch*)p;
+static inline dx_val_program_text_Dispatch* DX_VAL_PROGRAM_TEXT_DISPATCH(void* p) {
+  return (dx_val_program_text_Dispatch*)p;
 }
 
-struct dx_val_program_text_dispatch {
+struct dx_val_program_text_Dispatch {
   Core_Object_Dispatch _parent;
 };
 

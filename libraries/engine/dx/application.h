@@ -21,7 +21,7 @@ typedef struct dx_assets_system_factory dx_assets_system_factory;
 /// - AAL (audials abstraction layer) system
 /// - Assets system
 /// These systems are started up and shut down through the application object's functions (dx_application_startup and dx_application_shutdown).
-DX_DECLARE_OBJECT_TYPE("dx.application",
+Core_declareObjectType("dx.application",
                        dx_application,
                        Core_Object);
 
@@ -41,11 +41,11 @@ struct dx_application {
   dx_assets_system* assets_system;
 };
 
-static dx_application_dispatch* DX_APPLICATION_DISPATCH(void* p) {
-  return (dx_application_dispatch*)p;
+static dx_application_Dispatch* DX_APPLICATION_DISPATCH(void* p) {
+  return (dx_application_Dispatch*)p;
 }
 
-struct dx_application_dispatch {
+struct dx_application_Dispatch {
   Core_Object_Dispatch _parent;
   Core_Result (*update)(dx_application*);
   Core_Result(*startup_systems)(dx_application*);

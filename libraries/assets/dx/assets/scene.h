@@ -4,7 +4,7 @@
 #include "dx/core.h"
 
 /// @brief A scene asset.
-DX_DECLARE_OBJECT_TYPE("dx.assets.scene",
+Core_declareObjectType("dx.assets.scene",
                        dx_assets_scene,
                        Core_Object);
 
@@ -18,7 +18,7 @@ struct dx_assets_scene {
   dx_inline_object_array assets;
 };
 
-struct dx_assets_scene_dispatch {
+struct dx_assets_scene_Dispatch {
   Core_Object_Dispatch _parent;
 };
 

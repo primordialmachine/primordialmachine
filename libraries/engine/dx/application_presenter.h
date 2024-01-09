@@ -20,7 +20,7 @@
 /// 4) dx_application_presenter_shutdown is called for the "application presenter" by the "application execution environment".
 /// Go to 5.
 /// 5) the "application presenter" is destroyed by the "application execution environment".
-DX_DECLARE_OBJECT_TYPE("dx.application_presenter",
+Core_declareObjectType("dx.application_presenter",
                        dx_application_presenter,
                        Core_Object);
 
@@ -32,11 +32,11 @@ struct dx_application_presenter {
   Core_Object _parent;
 };
 
-static inline dx_application_presenter_dispatch* DX_APPLICATION_PRESENTER_DISPATCH(void* p) {
-  return (dx_application_presenter_dispatch*)p;
+static inline dx_application_presenter_Dispatch* DX_APPLICATION_PRESENTER_DISPATCH(void* p) {
+  return (dx_application_presenter_Dispatch*)p;
 }
 
-struct dx_application_presenter_dispatch {
+struct dx_application_presenter_Dispatch {
   Core_Object_Dispatch _parent;
   Core_Result(*startup)(dx_application_presenter* SELF);
   Core_Result(*run)(dx_application_presenter* SELF);

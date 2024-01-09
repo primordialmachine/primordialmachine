@@ -3,7 +3,7 @@
 
 #include "dx/aal/system_factory.h"
 
-DX_DECLARE_OBJECT_TYPE("dx.aal.al.system_factory",
+Core_declareObjectType("dx.aal.al.system_factory",
                        dx_aal_al_system_factory,
                        dx_aal_system_factory);
 
@@ -15,12 +15,12 @@ struct dx_aal_al_system_factory {
   dx_aal_system_factory _parent;
 };
 
-static inline dx_aal_al_system_factory_dispatch* DX_AAL_AL_SYSTEM_FACTORY_DISPATCH(void* p) {
-  return (dx_aal_al_system_factory_dispatch*)p;
+static inline dx_aal_al_system_factory_Dispatch* DX_AAL_AL_SYSTEM_FACTORY_DISPATCH(void* p) {
+  return (dx_aal_al_system_factory_Dispatch*)p;
 }
 
-struct dx_aal_al_system_factory_dispatch {
-  dx_aal_system_factory_dispatch _parent;
+struct dx_aal_al_system_factory_Dispatch {
+  dx_aal_system_factory_Dispatch _parent;
 };
 
 /// @brief Construct this AAL AL system factory.

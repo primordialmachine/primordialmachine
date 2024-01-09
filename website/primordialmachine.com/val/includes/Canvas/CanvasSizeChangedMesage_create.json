@@ -1,0 +1,41 @@
+{
+  "type" : "function",
+  "last-update" : "2024-01-09",
+  "indices" : "val",
+  "name" : "Core_CanvasSizeChangedMessage_create",
+  "id" : "core-canvassizechangedMessage-create",
+  "signature" : "Core_Result Core_CanvaSizeChangedMessage_create(Core_CanvaSizeChangedMessage** RETURN, Core_Real32 horizontalSize, Core_Real32 verticalSize);",
+  "parameters" : [
+    {
+      "name" : "RETURN",
+      "type" : "@{code('Core_CanvaSizeChangedMessage**')}",
+      "description" : "A pointer to a @{code('Core_CanvaSizeChangedMessage*')} variable."
+    },
+    {
+      "name" : "horizontalSize",
+      "type" : "@{code('Core_Real32')}",
+      "description" : "The horizontal size, in pixels, of the canvas."
+    },
+    {
+      "name" : "verticalSize",
+      "type" : "@{code('Core_Real32')}",
+      "description" : "The vertical size, in pixels, of the canvas."
+    }
+  ],
+  "success": "@{code('*RETURN')} was assigned a pointer to the @{code('Core_CanvasSizeChangedMessage')} object.",
+  "errors" : [
+    {
+      "errorCode" : "Core_Error_ArgumentInvalid",
+      "errorCondition" : "@{code('RETURN')} is a null pointer."
+    },
+    {
+      "errorCode" : "Core_Error_AllocationFailed",
+      "errorCondition" : "An allocation failed."
+    }
+  ],
+  "description" : "Create a @{code('Core_CanvasSizeChangedMessage')} object.",
+  "return" : "@{code('Core_Success')} on success. @{code('Core_Failure')} on failure.",
+  "remarks" : [
+    "This function sets the by-thread error variable on failure."
+  ]
+}

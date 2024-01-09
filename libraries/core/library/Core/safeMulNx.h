@@ -1,4 +1,4 @@
-// Copyright (c) 2019-2023 Michael Heilmann. All rights reserved.
+// Copyright (c) 2018-2024 Michael Heilmann. All rights reserved.
 
 #if !defined(CORE_SAFEMULNX_H_INCLUDED)
 #define CORE_SAFEMULNX_H_INCLUDED

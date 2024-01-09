@@ -5,7 +5,7 @@
 #include "dx/val/gl/context.h"
 #include "dx/val/gl/window.h"
 
-DX_DECLARE_OBJECT_TYPE("dx.val.gl.system",
+Core_declareObjectType("dx.val.gl.system",
                        dx_val_gl_system,
                        dx_val_system);
 
@@ -17,12 +17,12 @@ struct dx_val_gl_system {
   dx_val_system _parent;
 };
 
-static inline dx_val_gl_system_dispatch* DX_VAL_GL_SYSTEM_DISPATCH(void* p) {
-  return (dx_val_gl_system_dispatch*)p;
+static inline dx_val_gl_system_Dispatch* DX_VAL_GL_SYSTEM_DISPATCH(void* p) {
+  return (dx_val_gl_system_Dispatch*)p;
 }
 
-struct dx_val_gl_system_dispatch {
-  dx_val_system_dispatch _parent;
+struct dx_val_gl_system_Dispatch {
+  dx_val_system_Dispatch _parent;
   Core_Result(*get_window)(dx_val_gl_window**, dx_val_gl_system*);
 };
 

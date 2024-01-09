@@ -61,7 +61,7 @@ static inline Core_Result create_font(dx_ui_text_field* SELF) {
   dx_font* font = NULL;
   Core_Size font_size = get_font_size();
   Core_Result result = dx_font_manager_get_or_create_font(&font, DX_UI_WIDGET(SELF)->manager->font_presenter->font_manager, font_file, font_size);
-  DX_UNREFERENCE(font_file);
+  CORE_UNREFERENCE(font_file);
   font_file = NULL;
   if (result) {
     return Core_Failure;
@@ -70,7 +70,7 @@ static inline Core_Result create_font(dx_ui_text_field* SELF) {
   return Core_Success;
 }
 
-DX_DEFINE_OBJECT_TYPE("dx.ui.text_field",
+Core_defineObjectType("dx.ui.text_field",
                        dx_ui_text_field,
                        dx_ui_widget);
 
@@ -91,14 +91,14 @@ static Core_Result get_child_by_name(dx_ui_widget** RETURN, dx_ui_text_field* SE
 static Core_Result render(dx_ui_text_field* SELF, Core_Real32 canvas_horizontal_size, Core_Real32 canvas_vertical_size, Core_Real32 dpi_horizontal, Core_Real32 dpi_vertical);
 
 static void dx_ui_text_field_destruct(dx_ui_text_field* SELF) {
-  DX_UNREFERENCE(SELF->font);
+  CORE_UNREFERENCE(SELF->font);
   SELF->font = NULL;
 
-  DX_UNREFERENCE(SELF->text);
+  CORE_UNREFERENCE(SELF->text);
   SELF->text = NULL;
 }
 
-static void dx_ui_text_field_constructDispatch(dx_ui_text_field_dispatch* SELF) {
+static void dx_ui_text_field_constructDispatch(dx_ui_text_field_Dispatch* SELF) {
   DX_UI_WIDGET_DISPATCH(SELF)->get_relative_position = (Core_Result(*)(DX_VEC2_F32*,dx_ui_widget*)) & get_relative_position;
   DX_UI_WIDGET_DISPATCH(SELF)->get_relative_size = (Core_Result(*)(DX_VEC2_F32*, dx_ui_widget*)) & get_relative_size;
   DX_UI_WIDGET_DISPATCH(SELF)->render = (Core_Result(*)(dx_ui_widget*,Core_Real32,Core_Real32,Core_Real32,Core_Real32)) & render;
@@ -132,7 +132,7 @@ Core_Result dx_ui_text_field_construct(dx_ui_text_field* SELF, dx_ui_manager* ma
     return Core_Failure;
   }
   if (create_font(SELF)) {
-    DX_UNREFERENCE(SELF->text);
+    CORE_UNREFERENCE(SELF->text);
     SELF->text = NULL;
     return Core_Failure;
   }
@@ -143,7 +143,7 @@ Core_Result dx_ui_text_field_construct(dx_ui_text_field* SELF, dx_ui_manager* ma
 Core_Result dx_ui_text_field_create(dx_ui_text_field** RETURN, dx_ui_manager* manager) {
   DX_CREATE_PREFIX(dx_ui_text_field)
   if (dx_ui_text_field_construct(SELF, manager)) {
-    DX_UNREFERENCE(SELF);
+    CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
   }
@@ -400,7 +400,7 @@ static Core_Result update_text_bounds(dx_ui_text_field* SELF) {
       return Core_Failure;
     }
     dx_rect2_f32_union(&text_bounds1, &text_bounds1, &line_bounds);
-    DX_UNREFERENCE(string);
+    CORE_UNREFERENCE(string);
     string = NULL;
     p.e[1] += baseline_distance;
   }
@@ -491,7 +491,7 @@ static Core_Result on_render(dx_ui_text_field* SELF, DX_UI_RENDER_ARGS const* ar
     }
     dx_font_presenter_render_line_string(DX_UI_WIDGET(SELF)->manager->font_presenter,
                                          &p, string, &SELF->text_color, SELF->font, &TEXT_PRESENTATION_OPTIONS);
-    DX_UNREFERENCE(string);
+    CORE_UNREFERENCE(string);
     string = NULL;
     p.e[1] += baseline_distance;
   }
@@ -591,14 +591,14 @@ static Core_Result render(dx_ui_text_field* SELF, Core_Real32 canvas_horizontal_
 }
 
 Core_Result dx_ui_text_get_font(dx_font** RETURN, dx_ui_text_field* SELF) {
-  DX_REFERENCE(SELF->font);
+  CORE_REFERENCE(SELF->font);
   *RETURN = SELF->font;
   return Core_Success;
 }
 
 Core_Result dx_ui_text_set_font(dx_ui_text_field* SELF, dx_font* font) {
-  DX_REFERENCE(font);
-  DX_UNREFERENCE(SELF->font);
+  CORE_REFERENCE(font);
+  CORE_UNREFERENCE(SELF->font);
   SELF->font = font;
   return Core_Success;
 }

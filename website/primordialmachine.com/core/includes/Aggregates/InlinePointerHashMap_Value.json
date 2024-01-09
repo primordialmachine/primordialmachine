@@ -1,0 +1,9 @@
+{
+  "type" : "typedef",
+  "last-update" : "2024-01-15",
+  "indices" : "core",
+  "name" : "Core_InlinePointerHashMap_Value",
+  "id" : "core-inlinepointerhashmap-value",
+  "signature" : "typedef void* Core_InlinePointerHashMap_Key;",
+  "description" : "The type of a value stored in a @{code('Core_InlinePointerHashMap')}."
+}

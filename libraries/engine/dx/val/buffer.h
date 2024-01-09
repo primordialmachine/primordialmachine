@@ -3,7 +3,7 @@
 
 #include "dx/val/context.h"
 
-DX_DECLARE_OBJECT_TYPE("dx.val.buffer",
+Core_declareObjectType("dx.val.buffer",
                        dx_val_buffer,
                        Core_Object);
 
@@ -16,11 +16,11 @@ struct dx_val_buffer {
   dx_val_context* context;
 };
 
-static inline dx_val_buffer_dispatch* DX_VAL_BUFFER_DISPATCH(void* p) {
-  return (dx_val_buffer_dispatch*)p;
+static inline dx_val_buffer_Dispatch* DX_VAL_BUFFER_DISPATCH(void* p) {
+  return (dx_val_buffer_Dispatch*)p;
 }
 
-struct dx_val_buffer_dispatch {
+struct dx_val_buffer_Dispatch {
   Core_Object_Dispatch _parent;
   Core_Result(*set_data)(dx_val_buffer*, void const*, Core_Size);
 };

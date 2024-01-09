@@ -1,0 +1,44 @@
+{
+  "type" : "constructor",
+  "last-update" : "2024-01-15",
+  "indices" : "core",
+  "name" : "Core_KeyboardKeyMessage_construct",
+  "id" : "core-keyboardkeymessage-construct",
+  "signature" : "Core_Result Core_KeyboardKeyMessage_construct(Core_KeyboardKeyMessage* SELF, Core_KeyboardKeyAction action, Core_KeyboardKey key, Core_ModifiersKey modifierKeys);",
+  "parameters" : [
+    {
+      "name" : "SELF",
+      "type" : "@{code('Core_KeyboardKeyMessage*')}",
+      "description" : "A pointer to this @{code('Core_KeyboardKeyMessage')} object."
+    },
+    {
+      "name" : "action",
+      "type" : "@{code('Core_KeyboardKeyAction')}",
+      "description" : "The action of the key."  
+    },
+    {
+      "name" : "key",
+      "type" : "@{code('Core_KeyboardKey')}",
+      "description" : "The keyboard key."
+    },
+    {
+      "name" : "modifierKeys",
+      "type" : "@{code('Core_ModifierKeys')}",
+      "description" : "The modifier keys by the time the key was operated."  
+    }
+  ],
+  "success": "This @{code('Core_KeyboardKeyMessage')} object was constructed.",
+  "errors" : [
+    {
+      "errorCode" : "Core_Error_ArgumentInvalid",
+      "errorCondition" : "@{code('SELF')} is a null pointer."
+    },
+    {
+      "errorCode" : "Core_Error_AllocationFailed",
+      "errorCondition" : "An allocation failed."
+    }
+  ],
+  "description" : "Construct a @{code('Core_KeyboardKeyMessage')} object.",
+  "return" : "@{code('Core_Success')} on success. @{code('Core_Failure')} on failure.",
+  "remarks" : "This function sets the by-thread error variable on failure."
+}

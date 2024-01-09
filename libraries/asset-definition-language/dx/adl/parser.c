@@ -13,16 +13,16 @@ static inline Core_String* _get_name(dx_adl_names* names, Core_Size index) {
 
 #define NAME(name) _get_name(context->names, dx_adl_name_index_##name)
 
-DX_DEFINE_OBJECT_TYPE("dx.asset_definition_language.parser",
+Core_defineObjectType("dx.asset_definition_language.parser",
                       dx_asset_definition_language_parser,
                       Core_Object);
 
 static void dx_asset_definition_language_parser_destruct(dx_asset_definition_language_parser* SELF) {
-  DX_UNREFERENCE(SELF->diagnostics);
+  CORE_UNREFERENCE(SELF->diagnostics);
   SELF->diagnostics = NULL;
 }
 
-static void dx_asset_definition_language_parser_constructDispatch(dx_asset_definition_language_parser_dispatch* SELF)
+static void dx_asset_definition_language_parser_constructDispatch(dx_asset_definition_language_parser_Dispatch* SELF)
 {/*Intentionally empty.*/}
 
 Core_Result dx_asset_definition_language_parser_construct(dx_asset_definition_language_parser* SELF, dx_asset_definition_language_diagnostics* diagnostics) {
@@ -32,7 +32,7 @@ Core_Result dx_asset_definition_language_parser_construct(dx_asset_definition_la
     return Core_Failure;
   }
   SELF->diagnostics = diagnostics;
-  DX_REFERENCE(SELF->diagnostics);
+  CORE_REFERENCE(SELF->diagnostics);
   CORE_OBJECT(SELF)->type = TYPE;
   return Core_Success;
 }
@@ -40,7 +40,7 @@ Core_Result dx_asset_definition_language_parser_construct(dx_asset_definition_la
 Core_Result dx_asset_definition_language_parser_create(dx_asset_definition_language_parser** RETURN, dx_asset_definition_language_diagnostics* diagnostics) {
   DX_CREATE_PREFIX(dx_asset_definition_language_parser);
   if (dx_asset_definition_language_parser_construct(SELF, diagnostics)) {
-    DX_UNREFERENCE(SELF);
+    CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
   }
@@ -95,17 +95,17 @@ Core_Result dx_asset_definition_language_parser_parse_translation(dx_assets_matr
   }
   Core_Boolean isEqualTo = Core_False;
   if (Core_String_isEqualTo(&isEqualTo, received_type, NAME(translation_type))) {
-    DX_UNREFERENCE(received_type);
+    CORE_UNREFERENCE(received_type);
     received_type = NULL;
     return Core_Failure;
   }
   if (!isEqualTo) {
-    DX_UNREFERENCE(received_type);
+    CORE_UNREFERENCE(received_type);
     received_type = NULL;
     Core_setError(Core_Error_LexicalAnalysisFailed);
     return Core_Failure;
   }
-  DX_UNREFERENCE(received_type);
+  CORE_UNREFERENCE(received_type);
   received_type = NULL;
   DX_MAT4 value;
   Core_Memory_zero(&value, sizeof(DX_MAT4));
@@ -128,11 +128,11 @@ Core_Result dx_asset_definition_language_parser_parse_vector_3_f32(dx_assets_vec
   }
   Core_Boolean isEqualTo = Core_False;
   if (Core_String_isEqualTo(&isEqualTo, received_type, NAME(vector3_type))) {
-    DX_UNREFERENCE(received_type);
+    CORE_UNREFERENCE(received_type);
     received_type = NULL;
     return Core_Failure;
   }
-  DX_UNREFERENCE(received_type);
+  CORE_UNREFERENCE(received_type);
   received_type = NULL;
   if (!isEqualTo) {
     Core_setError(Core_Error_SemanticalAnalysisFailed);
@@ -157,17 +157,17 @@ Core_Result dx_asset_definition_language_parser_parse_vector_3_f32_field(dx_asse
     return Core_Failure;
   }
   if (child_node->kind != dx_ddl_node_kind_map) {
-    DX_UNREFERENCE(child_node);
+    CORE_UNREFERENCE(child_node);
     child_node = NULL;
     Core_setError(Core_Error_SemanticalAnalysisFailed);
     return Core_Failure;
   }
   if (dx_asset_definition_language_parser_parse_vector_3_f32(RETURN, child_node, context)) {
-    DX_UNREFERENCE(child_node);
+    CORE_UNREFERENCE(child_node);
     child_node = NULL;
     return Core_Failure;
   }
-  DX_UNREFERENCE(child_node);
+  CORE_UNREFERENCE(child_node);
   child_node = NULL;
   return Core_Success;
 }
@@ -179,18 +179,18 @@ Core_Result dx_asset_definition_language_parser_parse_type(Core_String** RETURN,
     return Core_Failure;
   }
   if (child_node->kind != dx_ddl_node_kind_string) {
-    DX_UNREFERENCE(child_node);
+    CORE_UNREFERENCE(child_node);
     child_node = NULL;
     Core_setError(Core_Error_SemanticalAnalysisFailed);
     return Core_Failure;
   }
   Core_String* type = NULL;
   if (dx_ddl_node_get_string(&type, child_node)) {
-    DX_UNREFERENCE(child_node);
+    CORE_UNREFERENCE(child_node);
     child_node = NULL;
     return Core_Failure;
   }
-  DX_UNREFERENCE(child_node);
+  CORE_UNREFERENCE(child_node);
   child_node = NULL;
   DX_DEBUG_CHECK_OBJECT_MAGIC_BYTES(type);
   *RETURN = type;
@@ -201,22 +201,22 @@ Core_Result dx_asset_definition_language_parser_parse_name(Core_String** RETURN,
   Core_String* key = NAME(name_key);
   dx_ddl_node* child_node = NULL;
   if (dx_ddl_node_map_get(&child_node, node, key)) {
-    DX_UNREFERENCE(child_node);
+    CORE_UNREFERENCE(child_node);
     child_node = NULL;
     return Core_Failure;
   }
   if (!child_node || child_node->kind != dx_ddl_node_kind_string) {
-    DX_UNREFERENCE(child_node);
+    CORE_UNREFERENCE(child_node);
     child_node = NULL;
     return Core_Failure;
   }
   Core_String* temporary = NULL;
   if (dx_ddl_node_get_string(&temporary, child_node)) {
-    DX_UNREFERENCE(child_node);
+    CORE_UNREFERENCE(child_node);
     child_node = NULL;
     return Core_Failure;
   }
-  DX_UNREFERENCE(child_node);
+  CORE_UNREFERENCE(child_node);
   child_node = NULL;
   *RETURN = temporary;
   return Core_Success;
@@ -225,21 +225,21 @@ Core_Result dx_asset_definition_language_parser_parse_name(Core_String** RETURN,
 Core_Result dx_adl_semantical_read_n8(Core_Natural8* RETURN, dx_ddl_node* node, Core_String* key) {
   dx_ddl_node* child_node = NULL;
   if (dx_ddl_node_map_get(&child_node, node, key)) {
-    DX_UNREFERENCE(child_node);
+    CORE_UNREFERENCE(child_node);
     child_node = NULL;
     return Core_Failure;
   }
   if (!child_node || child_node->kind != dx_ddl_node_kind_number) {
-    DX_UNREFERENCE(child_node);
+    CORE_UNREFERENCE(child_node);
     child_node = NULL;
     return Core_Failure;
   }
   if (dx_convert_utf8bytes_to_n8(child_node->number->bytes, child_node->number->number_of_bytes, RETURN)) {
-    DX_UNREFERENCE(child_node);
+    CORE_UNREFERENCE(child_node);
     child_node = NULL;
     return Core_Failure;
   }
-  DX_UNREFERENCE(child_node);
+  CORE_UNREFERENCE(child_node);
   child_node = NULL;
   return Core_Success;
 }
@@ -250,16 +250,16 @@ Core_Result dx_adl_semantical_read_sz(Core_Size* RETURN, dx_ddl_node* node, Core
     return Core_Failure;
   }
   if (!child_node || child_node->kind != dx_ddl_node_kind_number) {
-    DX_UNREFERENCE(child_node);
+    CORE_UNREFERENCE(child_node);
     child_node = NULL;
     return Core_Failure;
   }
   if (dx_convert_utf8bytes_to_sz(child_node->number->bytes, child_node->number->number_of_bytes, RETURN)) {
-    DX_UNREFERENCE(child_node);
+    CORE_UNREFERENCE(child_node);
     child_node = NULL;
     return Core_Failure;
   }
-  DX_UNREFERENCE(child_node);
+  CORE_UNREFERENCE(child_node);
   child_node = NULL;
   return Core_Success;
 }
@@ -270,16 +270,16 @@ Core_Result dx_adl_semantical_read_f32(Core_Real32* RETURN, dx_ddl_node* node, C
     return Core_Failure;
   }
   if (!child_node || child_node->kind != dx_ddl_node_kind_number) {
-    DX_UNREFERENCE(child_node);
+    CORE_UNREFERENCE(child_node);
     child_node = NULL;
     return Core_Failure;
   }
   if (dx_convert_utf8bytes_to_f32(child_node->number->bytes, child_node->number->number_of_bytes, RETURN)) {
-    DX_UNREFERENCE(child_node);
+    CORE_UNREFERENCE(child_node);
     child_node = NULL;
     return Core_Failure;
   }
-  DX_UNREFERENCE(child_node);
+  CORE_UNREFERENCE(child_node);
   child_node = NULL;
   return Core_Success;
 }
@@ -290,16 +290,16 @@ Core_Result dx_adl_semantical_read_f64(Core_Real64* RETURN, dx_ddl_node* node, C
     return Core_Failure;
   }
   if (!child_node || child_node->kind != dx_ddl_node_kind_number) {
-    DX_UNREFERENCE(child_node);
+    CORE_UNREFERENCE(child_node);
     child_node = NULL;
     return Core_Failure;
   }
   if (dx_convert_utf8bytes_to_f64(child_node->number->bytes, child_node->number->number_of_bytes, RETURN)) {
-    DX_UNREFERENCE(child_node);
+    CORE_UNREFERENCE(child_node);
     child_node = NULL;
     return Core_Failure;
   }
-  DX_UNREFERENCE(child_node);
+  CORE_UNREFERENCE(child_node);
   child_node = NULL;
   return Core_Success;
 }
@@ -310,17 +310,17 @@ Core_String* dx_adl_semantical_read_string_field(dx_ddl_node* node, Core_String*
     return NULL;
   }
   if (!child_node || child_node->kind != dx_ddl_node_kind_string) {
-    DX_UNREFERENCE(child_node);
+    CORE_UNREFERENCE(child_node);
     child_node = NULL;
     return NULL;
   }
   Core_String* value = NULL;
   if (dx_ddl_node_get_string(&value, child_node)) {
-    DX_UNREFERENCE(child_node);
+    CORE_UNREFERENCE(child_node);
     child_node = NULL;
     return NULL;
   }
-  DX_UNREFERENCE(child_node);
+  CORE_UNREFERENCE(child_node);
   child_node = NULL;
   return value;
 }
@@ -333,11 +333,11 @@ static Core_Result dx_adl_semantical_read_instance(dx_asset_reference** RETURN, 
   }
   Core_Boolean isEqualTo = Core_False;
   if (Core_String_isEqualTo(&isEqualTo, received_type, expected_type)) {
-    DX_UNREFERENCE(received_type);
+    CORE_UNREFERENCE(received_type);
     received_type = NULL;
     return Core_Failure;
   }
-  DX_UNREFERENCE(received_type);
+  CORE_UNREFERENCE(received_type);
   received_type = NULL;
   if (!isEqualTo) {
     Core_setError(Core_Error_SemanticalAnalysisFailed);
@@ -349,11 +349,11 @@ static Core_Result dx_adl_semantical_read_instance(dx_asset_reference** RETURN, 
   }
   dx_asset_reference* reference = NULL;
   if (dx_asset_reference_create(&reference, value)) {
-    DX_UNREFERENCE(value);
+    CORE_UNREFERENCE(value);
     value = NULL;
     return Core_Failure;
   }
-  DX_UNREFERENCE(value);
+  CORE_UNREFERENCE(value);
   value = NULL;
   *RETURN = reference;
   return Core_Success;
@@ -367,11 +367,11 @@ Core_Result dx_asset_definition_language_parser_parse_color_instance(dx_asset_re
   Core_String* expected_type = NAME(color_instance_type);
   Core_Boolean isEqualTo = Core_False;
   if (Core_String_isEqualTo(&isEqualTo, received_type, expected_type)) {
-    DX_UNREFERENCE(received_type);
+    CORE_UNREFERENCE(received_type);
     received_type = NULL;
     return Core_Failure;
   }
-  DX_UNREFERENCE(received_type);
+  CORE_UNREFERENCE(received_type);
   received_type = NULL;
   if (!isEqualTo) {
     Core_setError(Core_Error_SemanticalAnalysisFailed);
@@ -383,11 +383,11 @@ Core_Result dx_asset_definition_language_parser_parse_color_instance(dx_asset_re
   }
   dx_asset_reference* reference = NULL;
   if (dx_asset_reference_create(&reference, value)) {
-    DX_UNREFERENCE(value);
+    CORE_UNREFERENCE(value);
     value = NULL;
     return Core_Failure;
   }
-  DX_UNREFERENCE(value);
+  CORE_UNREFERENCE(value);
   value = NULL;
   *RETURN = reference;
   return Core_Success;
@@ -405,11 +405,11 @@ Core_Result dx_adl_semantical_read_color_instance_field(dx_asset_reference** RET
   }
   dx_asset_reference* temporary = NULL;
   if (dx_asset_definition_language_parser_parse_color_instance(&temporary, child_node, context)) {
-    DX_UNREFERENCE(child_node);
+    CORE_UNREFERENCE(child_node);
     child_node = NULL;
     return Core_Failure;
   }
-  DX_UNREFERENCE(child_node);
+  CORE_UNREFERENCE(child_node);
   child_node = NULL;
   *RETURN = temporary;
   return Core_Success;
@@ -431,11 +431,11 @@ Core_Result dx_asset_definition_language_parser_parse_image_instance_field(dx_as
   }
   dx_asset_reference* temporary = NULL;
   if (dx_asset_definition_language_parser_parse_image_instance(&temporary, child_node, context)) {
-    DX_UNREFERENCE(child_node);
+    CORE_UNREFERENCE(child_node);
     child_node = NULL;
     return Core_Failure;
   }
-  DX_UNREFERENCE(child_node);
+  CORE_UNREFERENCE(child_node);
   child_node = NULL;
   *RETURN = temporary;
   return Core_Success;
@@ -457,11 +457,11 @@ Core_Result dx_asset_definition_language_parser_parse_texture_instance_field(dx_
   }
   dx_asset_reference* temporary = NULL;
   if (dx_asset_definition_language_parser_parse_texture_instance(&temporary, child_node, context)) {
-    DX_UNREFERENCE(child_node);
+    CORE_UNREFERENCE(child_node);
     child_node = NULL;
     return Core_Failure;
   }
-  DX_UNREFERENCE(child_node);
+  CORE_UNREFERENCE(child_node);
   child_node = NULL;
   *RETURN = temporary;
   return Core_Success;

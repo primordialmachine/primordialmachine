@@ -6,7 +6,7 @@ typedef struct dx_font_presenter dx_font_presenter;
 typedef struct dx_rectangle_presenter dx_rectangle_presenter;
 typedef struct dx_ui_manager dx_ui_manager;
 
-DX_DECLARE_OBJECT_TYPE("dx.ui.widget",
+Core_declareObjectType("dx.ui.widget",
                        dx_ui_widget,
                        Core_Object);
 
@@ -24,11 +24,11 @@ struct dx_ui_widget {
   dx_ui_widget* parent;
 };
 
-static dx_ui_widget_dispatch* DX_UI_WIDGET_DISPATCH(void* p) {
-  return (dx_ui_widget_dispatch*)p;
+static dx_ui_widget_Dispatch* DX_UI_WIDGET_DISPATCH(void* p) {
+  return (dx_ui_widget_Dispatch*)p;
 }
 
-struct dx_ui_widget_dispatch {
+struct dx_ui_widget_Dispatch {
   Core_Object_Dispatch _parent;
   Core_Result(*set_name)(dx_ui_widget*, Core_String*);
   Core_Result(*get_name)(Core_String**, dx_ui_widget*);

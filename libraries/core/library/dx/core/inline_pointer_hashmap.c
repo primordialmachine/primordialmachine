@@ -27,7 +27,7 @@ static Core_Result _dx_impl_maybe_resize(_dx_impl* SELF);
 /// @param SELF A pointer to an uninitialized _dx_impl object.
 /// @param configuration A pointer to a DX_POINTER_HASHMAP_CONFIGURATION object.
 /// @return #Core_Success on success. #Core_Failure on failure.
-static inline Core_Result _dx_impl_initialize(_dx_impl* SELF, DX_INLINE_POINTER_HASHMAP_CONFIGURATION const* configuration);
+static inline Core_Result _dx_impl_initialize(_dx_impl* SELF, Core_InlinePointerHashMap_Configuration const* configuration);
 
 /// @brief Uninitialize this implementation.
 /// @param SELF A pointer to an initialized _dx_impl object.
@@ -45,17 +45,17 @@ static inline Core_Result _dx_impl_clear(_dx_impl* self);
 /// @param replace 
 /// @error #DX_ERROR_ALREADY_EXISTS @a replace is Core_False and an entry for the specified key already exists
 /// @error #Core_Error_ArgumentInvalid @a SELF was a null pointer
-static inline Core_Result _dx_impl_set(_dx_impl* SELF, dx_inline_pointer_hashmap_key key, dx_inline_pointer_hashmap_value value, bool replace);
+static inline Core_Result _dx_impl_set(_dx_impl* SELF, Core_InlinePointerHashmap_Key key, Core_InlinePointerHashmap_Value value, bool replace);
 
 /// @brief Get the value of an entry in this hashmap.
-/// @param RETURN A pointer to a <code>dx_inline_pointer_hashmap_value*</code> variable.
+/// @param RETURN A pointer to a <code>Core_InlinePointerHashmap_value*</code> variable.
 /// @param SELF A pointer to this hashmap.
 /// @param key The key.
 /// @success <code>*RETURN</code> was assigned a pointer to the value.
 /// @method-call
 /// @error #Core_Error_NotFound no entry for the specified key was found
 /// @error #Core_Error_ArgumentInvalid @a SELF was a null pointer
-static inline Core_Result _dx_impl_get(dx_inline_pointer_hashmap_value* RETURN, _dx_impl* SELF, dx_inline_pointer_hashmap_key key);
+static inline Core_Result _dx_impl_get(Core_InlinePointerHashmap_Value* RETURN, _dx_impl* SELF, Core_InlinePointerHashmap_Key key);
 
 /// @brief Remove an entry from this hashmap.
 /// @param SELF A pointer to this hashmap.
@@ -63,7 +63,7 @@ static inline Core_Result _dx_impl_get(dx_inline_pointer_hashmap_value* RETURN, 
 /// @method-call
 /// @error #Core_Error_NotFound no entry for the specified key was found
 /// @error #Core_Error_ArgumentInvalid @a self was a null pointer.
-static inline Core_Result _dx_impl_remove(_dx_impl* SELF, dx_inline_pointer_hashmap_key key);
+static inline Core_Result _dx_impl_remove(_dx_impl* SELF, Core_InlinePointerHashmap_Key key);
 
 /// @brief Get the size, in elements.
 /// @param RETURN A pointer to a Core_Size variable.
@@ -97,9 +97,9 @@ struct _dx_impl_node {
   /// @brief The hash value.
   Core_Size hash_value;
   /// @brief The key.
-  dx_inline_pointer_hashmap_key key;
+  Core_InlinePointerHashmap_Key key;
   /// @brief The value.
-  dx_inline_pointer_hashmap_value value;
+  Core_InlinePointerHashmap_Value value;
 };
 
 typedef _dx_impl_node* _dx_impl_bucket;
@@ -114,20 +114,20 @@ struct _dx_impl {
   Core_Size capacity;
   
   /// @brief A pointer to the @a _dx_key_added_callback_impl1 function or a null pointer.
-  dx_inline_pointer_hashmap_key_added_callback* key_added_callback;
+  Core_InlinePointerHashMap_KeyAddedCallback* key_added_callback;
   /// @brief A pointer to the @a _dx_key_removed_callback_impl1 function or  a null pointer.
-  dx_inline_pointer_hashmap_key_removed_callback* key_removed_callback;
+  Core_InlinePointerHashMap_KeyRemovedCallback* key_removed_callback;
   
   /// @brief A pointer to the @a _dx_value_added_callback_impl1 function or a null pointer.
-  dx_inline_pointer_hashmap_value_added_callback* value_added_callback;
+  Core_InlinePointerHashmap_ValueAddedCallback* value_added_callback;
   /// @brief A pointer to the @a _dx_value_removed_callback_impl1 function or  a null pointer.
-  dx_inline_pointer_hashmap_value_removed_callback* value_removed_callback;
+  Core_InlinePointerHashMap_ValueRemovedCallback* value_removed_callback;
   
   /// @brief A pointer to the @a dx_hash_key_callback function or a null pointer.
-  dx_inline_pointer_hashmap_hash_key_callback* hash_key_callback;
+  Core_InlinePointerHashmap_hash_key_callback* hash_key_callback;
   
   /// @brief A pointer to the @a dx_compare_keys_callback function or a null pointer.
-  dx_inline_pointer_hashmap_compare_keys_callback* compare_keys_callback;
+  Core_InlinePointerHashmap_compare_keys_callback* compare_keys_callback;
 
 };
 
@@ -192,7 +192,7 @@ static Core_Result _dx_impl_maybe_resize(_dx_impl* SELF) {
   return Core_Success;
 }
 
-static inline Core_Result _dx_impl_initialize(_dx_impl* SELF, DX_INLINE_POINTER_HASHMAP_CONFIGURATION const* configuration) {
+static inline Core_Result _dx_impl_initialize(_dx_impl* SELF, Core_InlinePointerHashMap_Configuration const* configuration) {
   if (!SELF || !configuration) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
@@ -204,13 +204,12 @@ static inline Core_Result _dx_impl_initialize(_dx_impl* SELF, DX_INLINE_POINTER_
   }
   SELF->size = 0;
   SELF->capacity = INITIAL_CAPACITY;
-  SELF->key_added_callback = configuration->key_added_callback;
-  SELF->key_removed_callback = configuration->key_removed_callback;
-  SELF->hash_key_callback = configuration->hash_key_callback;
-  SELF->compare_keys_callback = configuration->compare_keys_callback;
-  
-  SELF->value_added_callback = configuration->value_added_callback;
-  SELF->value_removed_callback = configuration->value_removed_callback;
+  SELF->key_added_callback = configuration->keyAddedCallback;
+  SELF->key_removed_callback = configuration->keyRemovedCallback;
+  SELF->hash_key_callback = configuration->hashKeyCallback;
+  SELF->compare_keys_callback = configuration->compareKeysCallback;
+  SELF->value_added_callback = configuration->valueAddedCallback;
+  SELF->value_removed_callback = configuration->valueRemovedCallback;
   return Core_Success;
 }
 
@@ -245,7 +244,7 @@ static inline Core_Result _dx_impl_clear(_dx_impl* self) {
   return Core_Success;
 }
 
-static inline Core_Result _dx_impl_set(_dx_impl* SELF, dx_inline_pointer_hashmap_key key, dx_inline_pointer_hashmap_value value, Core_Boolean replace) {
+static inline Core_Result _dx_impl_set(_dx_impl* SELF, Core_InlinePointerHashmap_Key key, Core_InlinePointerHashmap_Value value, Core_Boolean replace) {
   if (!SELF) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
@@ -308,7 +307,7 @@ static inline Core_Result _dx_impl_set(_dx_impl* SELF, dx_inline_pointer_hashmap
   return Core_Success;
 }
 
-static inline Core_Result _dx_impl_get(dx_inline_pointer_hashmap_value* RETURN, _dx_impl* SELF, dx_inline_pointer_hashmap_key key) {
+static inline Core_Result _dx_impl_get(Core_InlinePointerHashmap_Value* RETURN, _dx_impl* SELF, Core_InlinePointerHashmap_Key key) {
   if (!RETURN || !SELF) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
@@ -331,7 +330,7 @@ static inline Core_Result _dx_impl_get(dx_inline_pointer_hashmap_value* RETURN, 
   return Core_Failure;
 }
 
-static inline Core_Result _dx_impl_remove(_dx_impl* SELF, dx_inline_pointer_hashmap_key key) {
+static inline Core_Result _dx_impl_remove(_dx_impl* SELF, Core_InlinePointerHashmap_Key key) {
   if (!SELF) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
@@ -395,7 +394,7 @@ static inline _dx_impl* _DX_IMPL(void* p) {
   return (_dx_impl*)p;
 }
 
-Core_Result dx_inline_pointer_hashmap_initialize(dx_inline_pointer_hashmap* SELF, DX_INLINE_POINTER_HASHMAP_CONFIGURATION const* configuration) {
+Core_Result Core_InlinePointerHashmap_initialize(Core_InlinePointerHashmap* SELF, Core_InlinePointerHashMap_Configuration const* configuration) {
   if (!SELF || !configuration) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
@@ -412,7 +411,7 @@ Core_Result dx_inline_pointer_hashmap_initialize(dx_inline_pointer_hashmap* SELF
   return Core_Success;
 }
 
-void dx_inline_pointer_hashmap_uninitialize(dx_inline_pointer_hashmap* self) {
+void Core_InlinePointerHashmap_uninitialize(Core_InlinePointerHashmap* self) {
   DX_DEBUG_ASSERT(NULL != self);
   DX_DEBUG_ASSERT(NULL != self->pimpl);
   _dx_impl_uninitialize(_DX_IMPL(self->pimpl));
@@ -420,7 +419,7 @@ void dx_inline_pointer_hashmap_uninitialize(dx_inline_pointer_hashmap* self) {
   self->pimpl = NULL;
 }
 
-Core_Result dx_inline_pointer_hashmap_clear(dx_inline_pointer_hashmap* self) {
+Core_Result Core_InlinePointerHashmap_clear(Core_InlinePointerHashmap* self) {
   if (!self) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
@@ -428,7 +427,7 @@ Core_Result dx_inline_pointer_hashmap_clear(dx_inline_pointer_hashmap* self) {
   return _dx_impl_clear(_DX_IMPL(self->pimpl));
 }
 
-Core_Result dx_inline_pointer_hashmap_set(dx_inline_pointer_hashmap* SELF, dx_inline_pointer_hashmap_key key, dx_inline_pointer_hashmap_value value) {
+Core_Result Core_InlinePointerHashmap_set(Core_InlinePointerHashmap* SELF, Core_InlinePointerHashmap_Key key, Core_InlinePointerHashmap_Value value) {
   if (!SELF) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
@@ -436,7 +435,7 @@ Core_Result dx_inline_pointer_hashmap_set(dx_inline_pointer_hashmap* SELF, dx_in
   return _dx_impl_set(_DX_IMPL(SELF->pimpl), key, value, false);
 }
 
-Core_Result dx_inline_pointer_hashmap_get(dx_inline_pointer_hashmap_value* RETURN, dx_inline_pointer_hashmap const* SELF, dx_inline_pointer_hashmap_key key) {
+Core_Result Core_InlinePointerHashmap_get(Core_InlinePointerHashmap_Value* RETURN, Core_InlinePointerHashmap const* SELF, Core_InlinePointerHashmap_Key key) {
   if (!SELF) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
@@ -444,7 +443,7 @@ Core_Result dx_inline_pointer_hashmap_get(dx_inline_pointer_hashmap_value* RETUR
   return _dx_impl_get(RETURN, _DX_IMPL(SELF->pimpl), key);
 }
 
-Core_Result dx_inline_pointer_hashmap_remove(dx_inline_pointer_hashmap* SELF, dx_inline_pointer_hashmap_key key) {
+Core_Result Core_InlinePointerHashmap_remove(Core_InlinePointerHashmap* SELF, Core_InlinePointerHashmap_Key key) {
   if (!SELF) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
@@ -452,7 +451,7 @@ Core_Result dx_inline_pointer_hashmap_remove(dx_inline_pointer_hashmap* SELF, dx
   return _dx_impl_remove(_DX_IMPL(SELF->pimpl), key);
 }
 
-Core_Result dx_inline_pointer_hashmap_get_size(Core_Size* RETURN, dx_inline_pointer_hashmap const* SELF) {
+Core_Result Core_InlinePointerHashmap_getSize(Core_Size* RETURN, Core_InlinePointerHashmap const* SELF) {
   if (!SELF) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
@@ -460,7 +459,7 @@ Core_Result dx_inline_pointer_hashmap_get_size(Core_Size* RETURN, dx_inline_poin
   return _dx_impl_get_size(RETURN, _DX_IMPL(SELF->pimpl));
 }
 
-Core_Result dx_inline_pointer_hashmap_get_capacity(Core_Size* RETURN, dx_inline_pointer_hashmap const* SELF) {
+Core_Result Core_InlinePointerHashmap_getCapacity(Core_Size* RETURN, Core_InlinePointerHashmap const* SELF) {
   if (!SELF) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
@@ -468,7 +467,7 @@ Core_Result dx_inline_pointer_hashmap_get_capacity(Core_Size* RETURN, dx_inline_
   return _dx_impl_get_capacity(RETURN, _DX_IMPL(SELF->pimpl));
 }
 
-Core_Result dx_inline_pointer_hashmap_get_free_capacity(Core_Size* RETURN, dx_inline_pointer_hashmap const* SELF) {
+Core_Result Core_InlinePointerHashmap_getFreeCapacity(Core_Size* RETURN, Core_InlinePointerHashmap const* SELF) {
   if (!SELF) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
@@ -520,7 +519,7 @@ static inline void _dx_impl_increment(_dx_impl_iterator* self) {
   }
 }
 
-Core_Result dx_inline_pointer_hashmap_iterator_initialize(dx_inline_pointer_hashmap_iterator* SELF, dx_inline_pointer_hashmap* target) {
+Core_Result Core_InlinePointerHashmapIterator_initialize(Core_InlinePointerHashmapIterator* SELF, Core_InlinePointerHashmap* target) {
   if (!SELF) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
@@ -538,18 +537,18 @@ Core_Result dx_inline_pointer_hashmap_iterator_initialize(dx_inline_pointer_hash
   return Core_Success;
 }
 
-void dx_inline_pointer_hashmap_iterator_uninitialize(dx_inline_pointer_hashmap_iterator* SELF) {
+void Core_InlinePointerHashmapIterator_uninitialize(Core_InlinePointerHashmapIterator* SELF) {
   _dx_impl_iterator* pimpl = _DX_IMPL_ITERATOR(SELF->pimpl);
   Core_Memory_deallocate(pimpl);
 }
 
-Core_Result dx_inline_pointer_hashmap_iterator_next(dx_inline_pointer_hashmap_iterator* SELF) {
+Core_Result Core_InlinePointerHashmapIterator_next(Core_InlinePointerHashmapIterator* SELF) {
   _dx_impl_iterator* pimpl = _DX_IMPL_ITERATOR(SELF->pimpl);
   _dx_impl_increment(pimpl);
   return Core_Success;
 }
 
-Core_Result dx_inline_pointer_hashmap_iterator_has_entry(Core_Boolean* RETURN, dx_inline_pointer_hashmap_iterator* SELF) {
+Core_Result Core_InlinePointerHashmapIterator_hasEntry(Core_Boolean* RETURN, Core_InlinePointerHashmapIterator* SELF) {
   if (!RETURN || !SELF) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
@@ -559,7 +558,7 @@ Core_Result dx_inline_pointer_hashmap_iterator_has_entry(Core_Boolean* RETURN, d
   return Core_Success;
 }
 
-Core_Result dx_inline_pointer_hashmap_iterator_get_value(dx_inline_pointer_hashmap_value* RETURN, dx_inline_pointer_hashmap_iterator* SELF) {
+Core_Result Core_InlinePointerHashmapIterator_getValue(Core_InlinePointerHashmap_Value* RETURN, Core_InlinePointerHashmapIterator* SELF) {
   if (!RETURN || !SELF) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
@@ -573,7 +572,7 @@ Core_Result dx_inline_pointer_hashmap_iterator_get_value(dx_inline_pointer_hashm
   return Core_Success;
 }
 
-Core_Result dx_inline_pointer_hashmap_iterator_get_key(dx_inline_pointer_hashmap_key* RETURN, dx_inline_pointer_hashmap_iterator* SELF) {
+Core_Result Core_InlinePointerHashmapIterator_getKey(Core_InlinePointerHashmap_Key* RETURN, Core_InlinePointerHashmapIterator* SELF) {
   if (!RETURN || !SELF) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
@@ -587,7 +586,7 @@ Core_Result dx_inline_pointer_hashmap_iterator_get_key(dx_inline_pointer_hashmap
   return Core_Success;
 }
 
-Core_Result dx_inline_pointer_hashmap_iterator_remove(dx_inline_pointer_hashmap_iterator* SELF) {
+Core_Result Core_InlinePointerHashmapIterator_remove(Core_InlinePointerHashmapIterator* SELF) {
   if (!SELF) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
@@ -615,77 +614,77 @@ Core_Result dx_inline_pointer_hashmap_iterator_remove(dx_inline_pointer_hashmap_
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-Core_Result dx_inline_pointer_hashmap_get_keys(dx_inline_pointer_hashmap* SELF, dx_inline_pointer_array* target) {
+Core_Result Core_InlinePointerHashmap_getKeys(Core_InlinePointerHashmap* SELF, dx_inline_pointer_array* target) {
   _dx_impl* pimpl = _DX_IMPL(SELF->pimpl);
-  dx_inline_pointer_hashmap_iterator it;
+  Core_InlinePointerHashmapIterator it;
   if (dx_inline_pointer_array_ensure_free_capacity(target, pimpl->size)) {
     return Core_Failure;
   }
-  if (dx_inline_pointer_hashmap_iterator_initialize(&it, SELF)) {
+  if (Core_InlinePointerHashmapIterator_initialize(&it, SELF)) {
     return Core_Failure;
   }
   Core_Boolean has_entry;
-  if (dx_inline_pointer_hashmap_iterator_has_entry(&has_entry, &it)) {
-    dx_inline_pointer_hashmap_iterator_uninitialize(&it);
+  if (Core_InlinePointerHashmapIterator_hasEntry(&has_entry, &it)) {
+    Core_InlinePointerHashmapIterator_uninitialize(&it);
     return Core_Failure;
   }
   while (has_entry) {
-    dx_inline_pointer_hashmap_key key = NULL;
-    if (dx_inline_pointer_hashmap_iterator_get_key(&key, &it)) {
-      dx_inline_pointer_hashmap_iterator_uninitialize(&it);
+    Core_InlinePointerHashmap_Key key = NULL;
+    if (Core_InlinePointerHashmapIterator_getKey(&key, &it)) {
+      Core_InlinePointerHashmapIterator_uninitialize(&it);
       return Core_Failure;
     }
     if (dx_inline_pointer_array_append(target, key)) {
-      dx_inline_pointer_hashmap_iterator_uninitialize(&it);
+      Core_InlinePointerHashmapIterator_uninitialize(&it);
       return Core_Failure;
     }
-    if (dx_inline_pointer_hashmap_iterator_next(&it)) {
-      dx_inline_pointer_hashmap_iterator_uninitialize(&it);
+    if (Core_InlinePointerHashmapIterator_next(&it)) {
+      Core_InlinePointerHashmapIterator_uninitialize(&it);
       return Core_Failure;
     }
-    if (dx_inline_pointer_hashmap_iterator_has_entry(&has_entry, &it)) {
-      dx_inline_pointer_hashmap_iterator_uninitialize(&it);
+    if (Core_InlinePointerHashmapIterator_hasEntry(&has_entry, &it)) {
+      Core_InlinePointerHashmapIterator_uninitialize(&it);
       return Core_Failure;
     }
   }
-  dx_inline_pointer_hashmap_iterator_uninitialize(&it);
+  Core_InlinePointerHashmapIterator_uninitialize(&it);
   return Core_Success;
 }
 
-Core_Result dx_inline_pointer_hashmap_get_values(dx_inline_pointer_hashmap* SELF, dx_inline_pointer_array* target) {
+Core_Result Core_InlinePointerHashmap_getValues(Core_InlinePointerHashmap* SELF, dx_inline_pointer_array* target) {
   _dx_impl* pimpl = _DX_IMPL(SELF->pimpl);
-  dx_inline_pointer_hashmap_iterator it;
+  Core_InlinePointerHashmapIterator it;
   if (dx_inline_pointer_array_ensure_free_capacity(target, pimpl->size)) {
     return Core_Failure;
   }
-  if (dx_inline_pointer_hashmap_iterator_initialize(&it, SELF)) {
+  if (Core_InlinePointerHashmapIterator_initialize(&it, SELF)) {
     return Core_Failure;
   }
   Core_Boolean has_entry;
-  if (dx_inline_pointer_hashmap_iterator_has_entry(&has_entry, &it)) {
-    dx_inline_pointer_hashmap_iterator_uninitialize(&it);
+  if (Core_InlinePointerHashmapIterator_hasEntry(&has_entry, &it)) {
+    Core_InlinePointerHashmapIterator_uninitialize(&it);
     return Core_Failure;
   }
   while (has_entry) {
-    dx_inline_pointer_hashmap_value value = NULL;
-    if (dx_inline_pointer_hashmap_iterator_get_value(&value, &it)) {
-      dx_inline_pointer_hashmap_iterator_uninitialize(&it);
+    Core_InlinePointerHashmap_Value value = NULL;
+    if (Core_InlinePointerHashmapIterator_getValue(&value, &it)) {
+      Core_InlinePointerHashmapIterator_uninitialize(&it);
       return Core_Failure;
     }
     if (dx_inline_pointer_array_append(target, value)) {
-      dx_inline_pointer_hashmap_iterator_uninitialize(&it);
+      Core_InlinePointerHashmapIterator_uninitialize(&it);
       return Core_Failure;
     }
-    if (dx_inline_pointer_hashmap_iterator_next(&it)) {
-      dx_inline_pointer_hashmap_iterator_uninitialize(&it);
+    if (Core_InlinePointerHashmapIterator_next(&it)) {
+      Core_InlinePointerHashmapIterator_uninitialize(&it);
       return Core_Failure;
     }
-    if (dx_inline_pointer_hashmap_iterator_has_entry(&has_entry, &it)) {
-      dx_inline_pointer_hashmap_iterator_uninitialize(&it);
+    if (Core_InlinePointerHashmapIterator_hasEntry(&has_entry, &it)) {
+      Core_InlinePointerHashmapIterator_uninitialize(&it);
       return Core_Failure;
     }
   }
-  dx_inline_pointer_hashmap_iterator_uninitialize(&it);
+  Core_InlinePointerHashmapIterator_uninitialize(&it);
   return Core_Success;
 }
 

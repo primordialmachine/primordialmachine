@@ -9,7 +9,7 @@ typedef struct dx_assets_optics dx_assets_optics;
 typedef struct dx_assets_viewer_controller dx_assets_viewer_controller;
 
 /// @brief A viewer asset.
-DX_DECLARE_OBJECT_TYPE("dx.assets.viewer",
+Core_declareObjectType("dx.assets.viewer",
                        dx_assets_viewer,
                        Core_Object);
 
@@ -34,11 +34,11 @@ struct dx_assets_viewer {
   dx_assets_viewer_controller* controller;
 };
 
-static inline dx_assets_viewer_dispatch* DX_ASSETS_VIEWER_DISPATCH(void* p) {
-  return (dx_assets_viewer_dispatch*)p;
+static inline dx_assets_viewer_Dispatch* DX_ASSETS_VIEWER_DISPATCH(void* p) {
+  return (dx_assets_viewer_Dispatch*)p;
 }
 
-struct dx_assets_viewer_dispatch {
+struct dx_assets_viewer_Dispatch {
   Core_Object_Dispatch _parent;
 };
 

@@ -14,7 +14,7 @@
 #include "dx/data_definition_language/node.h"
 
 /// @brief A parser used for parsing programs of the language "2023-06-01".
-DX_DECLARE_OBJECT_TYPE("dx.ddl.parser",
+Core_declareObjectType("dx.ddl.parser",
                        dx_ddl_parser,
                        Core_Object);
 
@@ -30,11 +30,11 @@ struct dx_ddl_parser {
   dx_data_definition_language_diagnostics* diagnostics;
 };
 
-static inline dx_ddl_parser_dispatch* DX_DATA_DEFINITION_LANGUAGE_PARSER_DISPATCH(void* p) {
-  return (dx_ddl_parser_dispatch*)p;
+static inline dx_ddl_parser_Dispatch* DX_DATA_DEFINITION_LANGUAGE_PARSER_DISPATCH(void* p) {
+  return (dx_ddl_parser_Dispatch*)p;
 }
 
-struct dx_ddl_parser_dispatch {
+struct dx_ddl_parser_Dispatch {
   Core_Object_Dispatch _parent;
 };
 

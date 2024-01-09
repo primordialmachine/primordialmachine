@@ -4,8 +4,8 @@ $ROOT_DIR = $_SERVER['DOCUMENT_ROOT'];
 $DOCUMENT_DIR = $_SERVER['DOCUMENT_ROOT'] . '/asset-definition-language/';
 require_once($ROOT_DIR . '/site.php');
 $options = [];
-$options['site_title'] = $SITE_TITLE;
-$options['site_url_prefix'] = $SITE_URL_PREFIX;
+$options['site_title'] = App::getInstance()->site_title;
+$options['site_url_prefix'] = App::getInstance()->site_url_prefix;
 $options['additional_css_stylesheets']= array('asset-definition-language/index.css?v=1');
 on_enter_document($options);
 ?>

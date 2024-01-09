@@ -19,40 +19,40 @@ static Core_Result print_library_info(dx_application_presenter* application_pres
   }
   //
   if (Core_String_create(&name_string, name, strlen(name))) {
-    DX_UNREFERENCE(format_string);
+    CORE_UNREFERENCE(format_string);
     format_string = NULL;
     return Core_Failure;
   }
   //
   message_string = NULL;
   if (Core_String_printf(&message_string, format_string, name_string, (Core_Natural64)major_version, (Core_Natural64)minor_version)) {
-    DX_UNREFERENCE(name_string);
+    CORE_UNREFERENCE(name_string);
     name_string = NULL;
-    DX_UNREFERENCE(format_string);
+    CORE_UNREFERENCE(format_string);
     format_string = NULL;
     return Core_Failure;
   }
-  DX_UNREFERENCE(name_string);
+  CORE_UNREFERENCE(name_string);
   name_string = NULL;
-  DX_UNREFERENCE(format_string);
+  CORE_UNREFERENCE(format_string);
   format_string = NULL;
   //
   dx_console* console = NULL;
   if (dx_application_presenter_get_console(&console, application_presenter)) {
-    DX_UNREFERENCE(message_string);
+    CORE_UNREFERENCE(message_string);
     message_string = NULL;
     return Core_Failure;
   }
   if (dx_console_append_output_text(console, message_string)) {
-    DX_UNREFERENCE(console);
+    CORE_UNREFERENCE(console);
     console = NULL;
-    DX_UNREFERENCE(message_string);
+    CORE_UNREFERENCE(message_string);
     message_string = NULL;
     return Core_Failure;
   }
-  DX_UNREFERENCE(console);
+  CORE_UNREFERENCE(console);
   console = NULL;
-  DX_UNREFERENCE(message_string);
+  CORE_UNREFERENCE(message_string);
   message_string = NULL;
   //
   return Core_Success;
@@ -98,11 +98,11 @@ static Core_Result command_application_request_quit(dx_application_presenter* ap
     return Core_Failure;
   }
   if (dx_application_emit_quit_msg(application)) {
-    DX_UNREFERENCE(application);
+    CORE_UNREFERENCE(application);
     application = NULL;
     return Core_Failure;
   }
-  DX_UNREFERENCE(application);
+  CORE_UNREFERENCE(application);
   application = NULL;
   return Core_Success;
 }
@@ -117,11 +117,11 @@ Core_Result dx_console_commands_register_all(dx_cl_interpreter* cl_interpreter) 
       return Core_Failure; \
     } \
     if (dx_cl_interpreter_register_function(cl_interpreter, cel_name, &CXX_NAME)) { \
-      DX_UNREFERENCE(cel_name); \
+      CORE_UNREFERENCE(cel_name); \
       cel_name = NULL; \
       return Core_Failure; \
     } \
-    DX_UNREFERENCE(cel_name); \
+    CORE_UNREFERENCE(cel_name); \
     cel_name = NULL; \
   }
   DEFINE("assetLibrary.printInfo", command_assets_library_print_info);

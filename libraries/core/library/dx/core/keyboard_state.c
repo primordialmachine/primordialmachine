@@ -1,13 +1,13 @@
 #include "dx/core/keyboard_state.h"
 
-DX_DEFINE_OBJECT_TYPE("dx.keyboard_state",
+Core_defineObjectType("dx.keyboard_state",
                       dx_keyboard_state,
                       Core_Object);
 
 static void dx_keyboard_state_destruct(dx_keyboard_state* SELF)
 {/*Intentionally empty.*/}
 
-static void dx_keyboard_state_constructDispatch(dx_keyboard_state_dispatch* SELF)
+static void dx_keyboard_state_constructDispatch(dx_keyboard_state_Dispatch* SELF)
 {/*Intentionally empty.*/}
 
 Core_Result dx_keyboard_state_construct(dx_keyboard_state* SELF) {
@@ -22,7 +22,7 @@ Core_Result dx_keyboard_state_construct(dx_keyboard_state* SELF) {
 Core_Result dx_keyboard_state_create(dx_keyboard_state** RETURN) {
   DX_CREATE_PREFIX(dx_keyboard_state);
   if (dx_keyboard_state_construct(SELF)) {
-    DX_UNREFERENCE(SELF);
+    CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
   }

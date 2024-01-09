@@ -22,7 +22,7 @@ static Core_Result dx_document_definition_language_scanner_save_and_next(dx_docu
 
 static Core_Result dx_document_definition_language_scanner_skip_nls(dx_document_definition_language_scanner* SELF);
 
-DX_DEFINE_OBJECT_TYPE("dx.document_definition_language.scanner",
+Core_defineObjectType("dx.document_definition_language.scanner",
                       dx_document_definition_language_scanner,
                       dx_scanner);
 
@@ -33,7 +33,7 @@ static Core_Result set(dx_document_definition_language_scanner* SELF, char const
   SELF->end = p + l;
   SELF->current = p;
   SELF->kind = dx_document_definition_language_word_kind_start_of_input;
-  dx_inline_byte_array_clear(&SELF->text);
+  Core_InlineArrayN8_clear(&SELF->text);
   return Core_Success;
 }
 
@@ -49,13 +49,15 @@ START:
   }
   SELF->range.start = SELF->current;
   SELF->range.end = SELF->current;
-  dx_inline_byte_array_clear(&SELF->text);
+  Core_InlineArrayN8_clear(&SELF->text);
   while (true) {
     // end of input
     if (SELF->current == SELF->end) {
       SELF->range.end = SELF->current;
       if (SELF->range.start < SELF->current) {
-        dx_inline_byte_array_append(&SELF->text, SELF->range.start, SELF->range.end - SELF->range.start);
+        if (Core_InlineArrayN8_append(&SELF->text, SELF->range.start, SELF->range.end - SELF->range.start)) {
+          return Core_Failure;
+        }
         SELF->kind = dx_document_definition_language_word_kind_line;
       } else {
         SELF->kind = dx_document_definition_language_word_kind_end_of_input;
@@ -70,7 +72,9 @@ START:
         SELF->current++;
       }
       SELF->range.end = SELF->current;
-      dx_inline_byte_array_append(&SELF->text, SELF->range.start, SELF->range.end - SELF->range.start);
+      if (Core_InlineArrayN8_append(&SELF->text, SELF->range.start, SELF->range.end - SELF->range.start)) {
+        return Core_Failure;
+      }
       SELF->kind = dx_document_definition_language_word_kind_line;
       break;
     } else {
@@ -104,9 +108,10 @@ static Core_Result get_word_end_offset(Core_Size* RETURN, dx_document_definition
 
 static Core_Result dx_document_definition_language_scanner_save_and_next(dx_document_definition_language_scanner* SELF) {
   if (SELF->current == SELF->end) {
+    Core_setError(Core_Error_OperationInvalid);
     return Core_Failure;
   }
-  if (dx_inline_byte_array_append(&SELF->text, SELF->current, 1)) {
+  if (Core_InlineArrayN8_append(&SELF->text, SELF->current, 1)) {
     return Core_Failure;
   }
   SELF->current++;
@@ -114,10 +119,10 @@ static Core_Result dx_document_definition_language_scanner_save_and_next(dx_docu
 }
 
 static void dx_document_definition_language_scanner_destruct(dx_document_definition_language_scanner* SELF) {
-  dx_inline_byte_array_uninitialize(&SELF->text);
+  Core_InlineArrayN8_uninitialize(&SELF->text);
 }
 
-static void dx_document_definition_language_scanner_constructDispatch(dx_document_definition_language_scanner_dispatch* SELF) {
+static void dx_document_definition_language_scanner_constructDispatch(dx_document_definition_language_scanner_Dispatch* SELF) {
   DX_SCANNER_DISPATCH(SELF)->get_word_end_offset = (Core_Result(*)(Core_Size*,dx_scanner*)) & get_word_end_offset;
   DX_SCANNER_DISPATCH(SELF)->get_word_start_offset = (Core_Result(*)(Core_Size*, dx_scanner*)) & get_word_start_offset;
   DX_SCANNER_DISPATCH(SELF)->get_word_text_bytes = (Core_Result(*)(char const**, dx_scanner*)) & get_word_text_bytes;
@@ -133,7 +138,7 @@ Core_Result dx_document_definition_language_scanner_construct(dx_document_defini
     return Core_Failure;
   }
 
-  if (dx_inline_byte_array_initialize(&SELF->text)) {
+  if (Core_InlineArrayN8_initialize(&SELF->text)) {
     return Core_Failure;
   } 
 
@@ -167,7 +172,7 @@ static Core_Result dx_document_definition_language_scanner_skip_nls(dx_document_
 Core_Result dx_document_definition_language_scanner_create(dx_document_definition_language_scanner** RETURN) {
   DX_CREATE_PREFIX(dx_document_definition_language_scanner);
   if (dx_document_definition_language_scanner_construct(SELF)) {
-    DX_UNREFERENCE(SELF);
+    CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
   }

@@ -2,7 +2,7 @@
 
 #include "dx/core/_is_utf8_sequence.h"
 #include "dx/core/_string_format.h"
-#include "dx/core/byte_array.h"
+#include "dx/core/inline_byte_array.h"
 #include "Core/Hash.h"
 #include "Core/Memory.h"
 #include "Core/safeAddNx.h"
@@ -11,7 +11,7 @@
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 /// @internal 
-DX_DECLARE_OBJECT_TYPE("dx.string_iterator_impl",
+Core_declareObjectType("dx.string_iterator_impl",
                        dx_string_iterator_impl,
                        dx_string_iterator);
 
@@ -28,13 +28,13 @@ struct dx_string_iterator_impl {
 };
 
 /// @internal 
-static inline dx_string_iterator_impl_dispatch* DX_STRING_ITERATOR_IMPL_DISPATCH(void* p) {
-  return (dx_string_iterator_impl_dispatch*)p;
+static inline dx_string_iterator_impl_Dispatch* DX_STRING_ITERATOR_IMPL_DISPATCH(void* p) {
+  return (dx_string_iterator_impl_Dispatch*)p;
 }
 
 /// @internal 
-struct dx_string_iterator_impl_dispatch {
-  dx_string_iterator_dispatch _parent;
+struct dx_string_iterator_impl_Dispatch {
+  dx_string_iterator_Dispatch _parent;
 };
 
 /// @internal 
@@ -45,25 +45,25 @@ Core_Result dx_string_iterator_impl_create(dx_string_iterator_impl** RETURN, Cor
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-DX_DEFINE_OBJECT_TYPE("Core.String",
+Core_defineObjectType("Core.String",
                       Core_String,
                       Core_Object);
 
 Core_Result Core_String_printfv(Core_String** RETURN, Core_String* format, va_list arguments) {
-  dx_inline_byte_array buffer;
-  if (dx_inline_byte_array_initialize(&buffer)) {
+  Core_InlineArrayN8 buffer;
+  if (Core_InlineArrayN8_initialize(&buffer)) {
     return Core_Failure;
   }
   if (dx__format_v(&buffer, format->bytes, format->bytes + format->number_of_bytes, arguments)) {
-    dx_inline_byte_array_uninitialize(&buffer);
+    Core_InlineArrayN8_uninitialize(&buffer);
     return Core_Failure;
   }
   Core_String* string = NULL;
   if (Core_String_create(&string, buffer.elements, buffer.size)) {
-    dx_inline_byte_array_uninitialize(&buffer);
+    Core_InlineArrayN8_uninitialize(&buffer);
     return Core_Failure;
   }
-  dx_inline_byte_array_uninitialize(&buffer);
+  Core_InlineArrayN8_uninitialize(&buffer);
   *RETURN = string;
   return Core_Success;
 }
@@ -86,7 +86,7 @@ static void Core_String_destruct(Core_String* SELF) {
   SELF->bytes = NULL;
 }
 
-static void Core_String_constructDispatch(Core_String_dispatch* SELF)
+static void Core_String_constructDispatch(Core_String_Dispatch* SELF)
 {/*Intentionally emtpy.*/}
 
 Core_Result Core_String_construct(Core_String* SELF, char const* bytes, Core_Size number_of_bytes) {
@@ -117,7 +117,7 @@ Core_Result Core_String_construct(Core_String* SELF, char const* bytes, Core_Siz
 Core_Result Core_String_create(Core_String** RETURN, char const* bytes, Core_Size number_of_bytes) {
   DX_CREATE_PREFIX(Core_String);
   if (Core_String_construct(SELF, bytes, number_of_bytes)) {
-    DX_UNREFERENCE(SELF);
+    CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
   }
@@ -280,7 +280,7 @@ Core_Result Core_String_create_iterator(dx_string_iterator** RETURN, Core_String
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-DX_DEFINE_OBJECT_TYPE("dx.string_iterator_impl",
+Core_defineObjectType("dx.string_iterator_impl",
                        dx_string_iterator_impl,
                        dx_string_iterator);
 
@@ -291,11 +291,11 @@ static Core_Result dx_string_iterator_impl_get_value(uint32_t* RETURN, dx_string
 static Core_Result dx_string_iterator_impl_next(dx_string_iterator_impl* SELF);
 
 static void dx_string_iterator_impl_destruct(dx_string_iterator_impl* SELF) {
-  DX_UNREFERENCE(SELF->string);
+  CORE_UNREFERENCE(SELF->string);
   SELF->string = NULL;
 }
 
-static void dx_string_iterator_impl_constructDispatch(dx_string_iterator_impl_dispatch* SELF) {
+static void dx_string_iterator_impl_constructDispatch(dx_string_iterator_impl_Dispatch* SELF) {
   DX_STRING_ITERATOR_DISPATCH(SELF)->has_value = (Core_Result(*)(Core_Boolean*,dx_string_iterator*))dx_string_iterator_impl_has_value;
   DX_STRING_ITERATOR_DISPATCH(SELF)->get_value = (Core_Result(*)(uint32_t*,dx_string_iterator*))dx_string_iterator_impl_get_value;
   DX_STRING_ITERATOR_DISPATCH(SELF)->next = (Core_Result(*)(dx_string_iterator*))dx_string_iterator_impl_next;
@@ -311,7 +311,7 @@ Core_Result dx_string_iterator_impl_construct(dx_string_iterator_impl* SELF, Cor
     return Core_Failure;
   }
   SELF->string = string;
-  DX_REFERENCE(SELF->string);
+  CORE_REFERENCE(SELF->string);
   SELF->index = 0;
   CORE_OBJECT(SELF)->type = TYPE;
   return Core_Success;
@@ -320,7 +320,7 @@ Core_Result dx_string_iterator_impl_construct(dx_string_iterator_impl* SELF, Cor
 Core_Result dx_string_iterator_impl_create(dx_string_iterator_impl** RETURN, Core_String* string) {
   DX_CREATE_PREFIX(dx_string_iterator_impl);
   if (dx_string_iterator_impl_construct(SELF, string)) {
-    DX_UNREFERENCE(SELF);
+    CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
   }

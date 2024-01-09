@@ -1,13 +1,13 @@
 #include "dx/data_definition_language/diagnostics.h"
 
-DX_DEFINE_OBJECT_TYPE("dx.ddl.diagnostics",
+Core_defineObjectType("dx.ddl.diagnostics",
                       dx_data_definition_language_diagnostics,
                       Core_Object);
 
 static void dx_data_definition_language_diagnostics_destruct(dx_data_definition_language_diagnostics* SELF)
 {/*Intentionally empty.*/}
 
-static void dx_data_definition_language_diagnostics_constructDispatch(dx_data_definition_language_diagnostics_dispatch* SELF)
+static void dx_data_definition_language_diagnostics_constructDispatch(dx_data_definition_language_diagnostics_Dispatch* SELF)
 {/*Intentionally empty.*/}
 
 Core_Result dx_data_definition_language_diagnostics_construct(dx_data_definition_language_diagnostics* SELF) {
@@ -19,7 +19,7 @@ Core_Result dx_data_definition_language_diagnostics_construct(dx_data_definition
 Core_Result dx_data_definition_language_diagnostics_create(dx_data_definition_language_diagnostics** RETURN) {
   DX_CREATE_PREFIX(dx_data_definition_language_diagnostics);
   if (dx_data_definition_language_diagnostics_construct(SELF)) {
-    DX_UNREFERENCE(SELF);
+    CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
   }
@@ -32,7 +32,7 @@ Core_Result dx_data_definition_language_diagnostics_on_lexical(dx_data_definitio
   if (Core_String_create(&format, "lexical error:\n", sizeof("lexical error:\n") - 1)) {
     return Core_Failure;
   }
-  DX_UNREFERENCE(format);
+  CORE_UNREFERENCE(format);
   format = NULL;
   return Core_Success;
 }
@@ -43,7 +43,7 @@ Core_Result dx_data_definition_language_diagnostics_on_unclosed_string_literal(d
     return Core_Failure;
   }
   dx_log(format->bytes, format->number_of_bytes);
-  DX_UNREFERENCE(format);
+  CORE_UNREFERENCE(format);
   format = NULL;
   return Core_Success;
 }
@@ -54,7 +54,7 @@ Core_Result dx_data_definition_language_diagnostics_on_invalid_number_literal(dx
     return Core_Failure;
   }
   dx_log(format->bytes, format->number_of_bytes);
-  DX_UNREFERENCE(format);
+  CORE_UNREFERENCE(format);
   format = NULL;
   return Core_Success;
 }
@@ -65,7 +65,7 @@ Core_Result dx_data_definition_language_diagnostics_on_unclosed_multi_line_comme
     return Core_Failure;
   }
   dx_log(format->bytes, format->number_of_bytes);
-  DX_UNREFERENCE(format);
+  CORE_UNREFERENCE(format);
   format = NULL;
   return Core_Success;
 }
@@ -76,7 +76,7 @@ Core_Result dx_data_definition_language_diagnostics_on_invalid_name(dx_data_defi
     return Core_Failure;
   }
   dx_log(format->bytes, format->number_of_bytes);
-  DX_UNREFERENCE(format);
+  CORE_UNREFERENCE(format);
   format = NULL;
   return Core_Success;
 }
@@ -88,7 +88,7 @@ Core_Result dx_data_definition_language_diagnostics_on_unexpected_symbol(dx_data
     return Core_Failure;
   }
   dx_log(format->bytes, format->number_of_bytes);
-  DX_UNREFERENCE(format);
+  CORE_UNREFERENCE(format);
   format = NULL;
   return Core_Success;
 }

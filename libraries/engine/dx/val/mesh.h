@@ -9,7 +9,7 @@
 
 /// @brief The backend-representation of a mesh.
 /// A dx.mesh usually represents a dx.asset.mesh.
-DX_DECLARE_OBJECT_TYPE("dx.val.mesh",
+Core_declareObjectType("dx.val.mesh",
                        dx_val_mesh,
                        Core_Object);
 
@@ -30,11 +30,11 @@ struct dx_val_mesh {
   dx_val_program* program;
 };
 
-static inline dx_val_mesh_dispatch* DX_VAL_MESH_DISPATCH(void* p) {
-  return (dx_val_mesh_dispatch*)p;
+static inline dx_val_mesh_Dispatch* DX_VAL_MESH_DISPATCH(void* p) {
+  return (dx_val_mesh_Dispatch*)p;
 }
 
-struct dx_val_mesh_dispatch {
+struct dx_val_mesh_Dispatch {
   Core_Object_Dispatch _parent;
 };
 

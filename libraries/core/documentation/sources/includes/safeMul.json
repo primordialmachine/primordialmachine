@@ -9,6 +9,10 @@
     "<p>where <code>&lt;Suffix&gt;</code> and <code>&lt;Type&gt;</code> can assume the values of</p>",
     "<table style='width: initial !important'>",
     "<tr><td><code>&lt;Suffix&gt;</code></td> <td><code>&lt;Type&gt;</code>   </td></tr>",
+    "<tr><td><code>I8</code>            </td> <td><code>Core_Integer8 </code> </td></tr>",
+    "<tr><td><code>I16</code>           </td> <td><code>Core_Integer16</code> </td></tr>",
+    "<tr><td><code>I32</code>           </td> <td><code>Core_Integer32</code> </td></tr>",
+    "<tr><td><code>I64</code>           </td> <td><code>Core_Integer64</code> </td></tr>",
     "<tr><td><code>N8</code>            </td> <td><code>Core_Natural8 </code> </td></tr>",
     "<tr><td><code>N16</code>           </td> <td><code>Core_Natural16</code> </td></tr>",
     "<tr><td><code>N32</code>           </td> <td><code>Core_Natural32</code> </td></tr>",
@@ -48,7 +52,15 @@
     }
   ],
   "description" : "Computes the product of two <code>&lt;Type&gt;</code> values. The computation is conceptually performed using arbitrary precision arithmetic.",
-  "success" : "Let @{meta('n')} be the width of a value of type @{code('Type')}. The multiplication of @{code('x')} and @{code('y')} was performed as if the values were of width @{meta('2n')} Bits. The lower @{code('n')} Bits of the result are assigned to @{code('*RETURN')}. The upper @{code('n')} Bits of the result are assigned to @{code('*overflow')}.",
+  "success" : [
+    "If &lt;Type&gt; is @{code('Core_Natural(8|16|32|64)')}:",
+    "The values @{code('x')} and @{code('y')} are extended to twice their previous number of bits and multiplied.",
+    "The lower half of the Bits of the result are assigned to @{code('*RETURN')}. The upper half of the Bits of the result are assigned to @{code('*overflow')}.",
+    "@(newline())",
+    "If &lt;Type&gt; is @{code('Core_Integer(8|16|32|64)')}:",
+    "The values @{code('x')} and @{code('y')} are sign extended to twice their previous number of Bits and multiplied.",
+    "The lower half of the Bits of the result are assigned to @{code('*RETURN')}. The upper half of the Bits of the result are assigned to @{code('*overflow')}."
+  ],
   "return" : "@{code('Core_Success')} on success. @{code('Core_Failure')} on failure.",
   "remarks" : "This function sets the by-thread error variable on failure."
 }

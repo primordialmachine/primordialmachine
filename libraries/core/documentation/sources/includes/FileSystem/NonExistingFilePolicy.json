@@ -1,0 +1,22 @@
+{
+  "type" : "enumeration",
+  "last-update" : "2024-01-08",
+  "indices" : "core",
+  "name" : "Core_NonExistingFilePolicy",
+  "id" : "core-nonexistingfilepolicy",
+  "signature" : "typedef enum Core_NonExistingFilePolicy &lt;implementation&gt; Core_NonExistingFilePolicy;",
+  "description": [
+    "An enumeration of policies for opening a file in case of that the file does not exist.@(newline())",
+    "The enumeration elements cannot be combined."
+  ],
+  "elements": [
+    {
+      "name" : "Core_NonExistingFilePolicy_Fail",
+      "description" : "Fail if the file does not exist."
+    },
+    {
+      "name" : "Core_NonExistingFilePolicy_Create",
+      "description" : "Create the file if it does not exist."
+    }
+  ]
+}

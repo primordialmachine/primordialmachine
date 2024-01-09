@@ -5,7 +5,7 @@
 #include "dx/val/buffer.h"
 typedef struct dx_val_gl_context dx_val_gl_context;
 
-DX_DECLARE_OBJECT_TYPE("dx.val.gl.buffer",
+Core_declareObjectType("dx.val.gl.buffer",
                        dx_val_gl_buffer,
                        dx_val_buffer);
 
@@ -18,12 +18,12 @@ struct dx_val_gl_buffer {
   GLuint id;
 };
 
-static inline dx_val_gl_buffer_dispatch* DX_VAL_GL_BUFFER_DISPATCH(void* p) {
-  return (dx_val_gl_buffer_dispatch*)p;
+static inline dx_val_gl_buffer_Dispatch* DX_VAL_GL_BUFFER_DISPATCH(void* p) {
+  return (dx_val_gl_buffer_Dispatch*)p;
 }
 
-struct dx_val_gl_buffer_dispatch {
-  dx_val_buffer_dispatch _parent;
+struct dx_val_gl_buffer_Dispatch {
+  dx_val_buffer_Dispatch _parent;
 };
 
 Core_Result dx_val_gl_buffer_create(dx_val_gl_buffer** RETURN, dx_val_gl_context* context);

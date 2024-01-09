@@ -17,7 +17,7 @@ _TEXT SEGMENT
 
   ; Perform multiplication ecx * edx such that
   ; - the lower word of the product is in eax
-  ; - the higher word in edx
+  ; - the higher word of the product is in edx
   ; - overflow and carry flags are 1 if an overflow occurs, otherwise they are 0.
   MOV eax, ecx                  ; eax@1 := ecx@1
   IMUL edx                      ; edx@2 := hi(eax@1 * edx@1), eax@2 = lo(eax@1 * edx@1)

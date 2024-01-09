@@ -5,7 +5,7 @@
 
 /// @brief A policy for scrollbars.
 /// Denotes under which condition a scrollbar is show.
-DX_DECLARE_ENUMERATION_TYPE("dx.ui.scrollbar_policy",
+Core_declareEnumerationType("dx.ui.scrollbar_policy",
                             dx_ui_scrollbar_policy);
 
 enum dx_scrollbar_policy {

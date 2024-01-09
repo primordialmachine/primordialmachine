@@ -2,16 +2,16 @@
 
 #include "dx/assets.h"
 
-DX_DEFINE_OBJECT_TYPE("dx.val.viewer",
+Core_defineObjectType("dx.val.viewer",
                       dx_val_viewer,
                       Core_Object);
 
 static void dx_val_viewer_destruct(dx_val_viewer* SELF) {
-  DX_UNREFERENCE(SELF->asset_viewer_instance);
+  CORE_UNREFERENCE(SELF->asset_viewer_instance);
   SELF->asset_viewer_instance = NULL;
 }
 
-static void dx_val_viewer_constructDispatch(dx_val_viewer_dispatch* SELF)
+static void dx_val_viewer_constructDispatch(dx_val_viewer_Dispatch* SELF)
 {/*Intentionally empty.*/}
 
 Core_Result dx_val_viewer_construct(dx_val_viewer* SELF, dx_assets_viewer_instance* asset_viewer_instance) {
@@ -22,7 +22,7 @@ Core_Result dx_val_viewer_construct(dx_val_viewer* SELF, dx_assets_viewer_instan
   SELF->asset_viewer_instance = asset_viewer_instance;
   dx_mat4_set_identity(&SELF->view_matrix);
   dx_mat4_set_identity(&SELF->projection_matrix);
-  DX_REFERENCE(asset_viewer_instance);
+  CORE_REFERENCE(asset_viewer_instance);
   CORE_OBJECT(SELF)->type = _type;
   return Core_Success;
 }
@@ -30,7 +30,7 @@ Core_Result dx_val_viewer_construct(dx_val_viewer* SELF, dx_assets_viewer_instan
 Core_Result dx_val_viewer_create(dx_val_viewer** RETURN, dx_assets_viewer_instance* asset_viewer_instance) {
   DX_CREATE_PREFIX(dx_val_viewer);
   if (dx_val_viewer_construct(SELF, asset_viewer_instance)) {
-    DX_UNREFERENCE(SELF);
+    CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
   }
@@ -47,11 +47,16 @@ Core_Result dx_val_viewer_get_projection_matrix(DX_MAT4* RETURN, dx_val_viewer* 
   if (!optics) {
     return Core_Failure;
   }
+  Core_Boolean result;
   Core_Type* type = NULL;
+  //
   if (dx_asset_optics_perspective_getType(&type)) {
     return Core_Failure;
   }
-  if (dx_rti_type_is_leq(CORE_OBJECT(optics)->type, type)) {
+  if (Core_Type_isLowerThanOrEqualTo(&result, CORE_OBJECT(optics)->type, type)) {
+    return Core_Failure;
+  }
+  if (result) {
     dx_asset_optics_perspective* optics1 = DX_ASSET_OPTICS_PERSPECTIVE(optics);
     // use actual aspect ratio
     if (optics1->aspect_ratio) {
@@ -66,11 +71,14 @@ Core_Result dx_val_viewer_get_projection_matrix(DX_MAT4* RETURN, dx_val_viewer* 
     *RETURN = SELF->projection_matrix;
     return Core_Success;
   }
-  
+  //
   if (dx_asset_optics_orthographic_getType(&type)) {
     return Core_Failure;
   }
-  if (dx_rti_type_is_leq(CORE_OBJECT(optics)->type, type)) {
+  if (Core_Type_isLowerThanOrEqualTo(&result, CORE_OBJECT(optics)->type, type)) {
+    return Core_Failure;
+  }
+  if (result) {
     dx_asset_optics_orthographic* optics1 = DX_ASSET_OPTICS_ORTHOGRAPHIC(optics);
     Core_Real32 left = -1.f;
     Core_Real32 right = +1.f;
@@ -88,7 +96,7 @@ Core_Result dx_val_viewer_get_projection_matrix(DX_MAT4* RETURN, dx_val_viewer* 
     *RETURN = SELF->projection_matrix;
     return Core_Success;
   }
-
+  //
   Core_setError(Core_Error_SemanticalAnalysisFailed);
   return Core_Failure;
 }

@@ -4,7 +4,7 @@
 #include "dx/core.h"
 #include "dx/val/context.h"
 
-DX_DECLARE_OBJECT_TYPE("dx.val.system",
+Core_declareObjectType("dx.val.system",
                        dx_val_system,
                        dx_system);
 
@@ -24,12 +24,12 @@ struct dx_val_system {
   dx_mouse_state* mouse_state;
 };
 
-static inline dx_val_system_dispatch* DX_VAL_SYSTEM_DISPATCH(void* p) {
-  return (dx_val_system_dispatch*)p;
+static inline dx_val_system_Dispatch* DX_VAL_SYSTEM_DISPATCH(void* p) {
+  return (dx_val_system_Dispatch*)p;
 }
 
-struct dx_val_system_dispatch {
-  dx_system_dispatch _parent;
+struct dx_val_system_Dispatch {
+  dx_system_Dispatch _parent;
   Core_Result (*get_context)(dx_val_context**, dx_val_system*);
 };
 

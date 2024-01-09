@@ -18,7 +18,7 @@
 /// That is, it is not verified that
 /// - the buffer is big enough to provide th specified sub-sequence of variable value to present and
 /// - the program has ariables of the right types declared to receive the variables values.
-DX_DECLARE_OBJECT_TYPE("dx.val.vbinding",
+Core_declareObjectType("dx.val.vbinding",
                        dx_val_vbinding,
                        Core_Object);
 
@@ -32,11 +32,11 @@ struct dx_val_vbinding {
   dx_val_context* context;
 };
 
-static inline dx_val_vbinding_dispatch* DX_VAL_VBINDING_DISPATCH(void* p) {
-  return (dx_val_vbinding_dispatch*)p;
+static inline dx_val_vbinding_Dispatch* DX_VAL_VBINDING_DISPATCH(void* p) {
+  return (dx_val_vbinding_Dispatch*)p;
 }
 
-struct dx_val_vbinding_dispatch {
+struct dx_val_vbinding_Dispatch {
   Core_Object_Dispatch _parent;
   Core_Result(*activate)(dx_val_vbinding*);
 };

@@ -5,7 +5,7 @@
 typedef struct dx_assets_image_operation dx_assets_image_operation;
 
 /// @brief An image asset.
-DX_DECLARE_OBJECT_TYPE("Core.Assets.Image",
+Core_declareObjectType("Core.Assets.Image",
                        dx_assets_image,
                        Core_Object);
 
@@ -35,11 +35,11 @@ struct dx_assets_image {
   dx_inline_object_array operations;
 };
 
-static inline dx_assets_image_dispatch* DX_ASSETS_IMAGE_DISPATCH(void* p) {
-  return (dx_assets_image_dispatch*)p;
+static inline dx_assets_image_Dispatch* DX_ASSETS_IMAGE_DISPATCH(void* p) {
+  return (dx_assets_image_Dispatch*)p;
 }
 
-struct dx_assets_image_dispatch {
+struct dx_assets_image_Dispatch {
   Core_Object_Dispatch _parent;
 };
 

@@ -41,12 +41,14 @@
 
 
 :root {
-  --default-font-size: default;
+  --default-font-size: 5vm;
+
   --default-font-family: /*'Montserrat',*/'Noto Sans Display', sans-serif;
   --default-font-weight: 200;
 
   --logo-font-family: 'Gelasio', serif;
   --logo-font-weight: 400;
+  --logo-font-size: 4vw;
 
   --code-font-family: 'Inconsolata', monospace;
   --code-font-weight: 300;
@@ -56,6 +58,13 @@
 
   --headline-font-family: 'Gelasio', serif;
   --headline-font-weight: 400;
+  
+  --normal-font-size: max(16px, 1.0vw);
+  --small-font-size: max(12px, 0.6vw);
+  
+  
+  /* The width of borders. */
+  --border-width: 0.1vmin;
 }
 
 
@@ -78,7 +87,8 @@ p {
   font-weight: var(--body-font-weight);
 
   line-height: 1.5;
-  margin-bottom: 1rem;
+  margin-bottom: calc(var(--normal-font-size) * 1.5);
+  font-size: var(--normal-font-size);
 }
 
 em {
@@ -93,32 +103,32 @@ em {
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--headline-font-family);
   font-weight: var(--headline-font-weight);
-  margin-bottom: .5rem;
+  margin-bottom: .5vw;
   line-height: 1.2;
 }
 
 h1 {
-  font-size: 2.5rem;
+  font-size: max(24px, 2.5vw);
 }
 
 h2 {
-  font-size: 2rem;
+  font-size: max(20px, 2.0vw);
 }
 
 h3 {
-  font-size: 1.75rem;
+  font-size: max(18px, 1.75vw);
 }
 
 h4 {
-  font-size: 1.5rem;
+  font-size: max(16px, 1.5vw);
 }
 
 h5 {
-  font-size: 1.25rem;
+  font-size: max(14px, 1.25vw);
 }
 
 h6 {
-  font-size: 1rem;
+  font-size: max(12px, 1vw);
 }
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
@@ -126,7 +136,7 @@ h6 {
 code {
   font-family: var(--code-font-family);
   font-weight: var(--code-font-weight);
-  font-size: 80%;
+  font-size: var(--normal-font-size);
 }
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
@@ -134,6 +144,7 @@ code {
 table {
   font-family: var(--body-font-family);
   font-weight: var(--body-font-weight);
+  font-size: var(--normal-font-size);
 
   line-height: 1.5;
   margin-bottom: 1rem;
@@ -162,7 +173,7 @@ th {
 dl, ul {
   font-weight: 200;
   line-height: 1.5;
-  margin-bottom: 1rem;
+  margin-bottom: 1vw;
 }
 
 dl > dt {
@@ -179,11 +190,23 @@ dl > dd {
 
 ul.p-list {
   font-family: var(--body-font-family);
-  list-style: square !important;
+  font-weight: var(--body-font-weight);
+  font-size: var(--normal-font-size);
+
+  list-style-position: inside !important;
+  list-style-type: square !important;
 }
 
 ul.p-list > li {
-  margin-left: 1rem;
+  /*margin-left: 1rem;*/
+}
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+div.right-column nav ul li a {
+  font-family: var(--body-font-family);
+  font-weight: var(--body-font-weight);
+  font-size: var(--small-font-size);
 }
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
@@ -196,10 +219,19 @@ div.section {
 div.logo {
   font-family: var(--logo-font-family);
   font-weight: var(--logo-font-weight);
-  font-size: 200%;
+  font-size: var(--logo-font-size);
 }
 
+/*
+div.logo {
+  font-family: var(--logo-font-family);
+  font-weight: var(--logo-font-weight);
+  font-size: 200%;
+}
+*/
+
 /* Only on normal screens. */
+/*
 @media (min-width: 800px) {
   div.logo {
     font-family: var(--logo-font-family);
@@ -207,6 +239,7 @@ div.logo {
     font-size: 400%;
   }
 }
+*/
 
 div.logo a,
 div.logo a:visited,

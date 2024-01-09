@@ -4,14 +4,14 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
-DX_DEFINE_OBJECT_TYPE("dx.fps_counter",
+Core_defineObjectType("dx.fps_counter",
                       dx_fps_counter,
                       Core_Object);
 
 static void dx_fps_counter_destruct(dx_fps_counter* self)
 {/*Intentionally empty.*/}
 
-static void dx_fps_counter_constructDispatch(dx_fps_counter_dispatch* self)
+static void dx_fps_counter_constructDispatch(dx_fps_counter_Dispatch* self)
 {/*Intentionally empty.*/}
 
 Core_Result dx_fps_counter_construct(dx_fps_counter* SELF) {
@@ -22,7 +22,7 @@ Core_Result dx_fps_counter_construct(dx_fps_counter* SELF) {
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-DX_DEFINE_OBJECT_TYPE("dx.default_fps_counter",
+Core_defineObjectType("dx.default_fps_counter",
                       dx_default_fps_counter,
                       dx_fps_counter);
 
@@ -88,7 +88,7 @@ static Core_Result dx_default_fps_counter_get_fps(Core_Real64* RETURN, dx_defaul
 static void dx_default_fps_counter_destruct(dx_default_fps_counter* self)
 {/*Intentionally empty.*/}
 
-static void dx_default_fps_counter_constructDispatch(dx_default_fps_counter_dispatch* self) {
+static void dx_default_fps_counter_constructDispatch(dx_default_fps_counter_Dispatch* self) {
   DX_FPS_COUNTER_DISPATCH(self)->get_fps = (Core_Result(*)(Core_Real64*, dx_fps_counter*))dx_default_fps_counter_get_fps;
   DX_FPS_COUNTER_DISPATCH(self)->on_enter_frame = (Core_Result(*)(dx_fps_counter*))dx_default_fps_counter_on_enter_frame;
   DX_FPS_COUNTER_DISPATCH(self)->on_leave_frame = (Core_Result(*)(dx_fps_counter*))dx_default_fps_counter_on_leave_frame;
@@ -110,7 +110,7 @@ Core_Result dx_default_fps_counter_construct(dx_default_fps_counter* SELF) {
 Core_Result dx_default_fps_counter_create(dx_default_fps_counter** RETURN) {
   DX_CREATE_PREFIX(dx_default_fps_counter)
   if (dx_default_fps_counter_construct(SELF)) {
-    DX_UNREFERENCE(SELF);
+    CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
   }

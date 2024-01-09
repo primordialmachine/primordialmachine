@@ -3,7 +3,7 @@
 
 #include "dx/core.h"
 
-DX_DECLARE_OBJECT_TYPE("dx.assets.matrix_4x4_f32",
+Core_declareObjectType("dx.assets.matrix_4x4_f32",
                        dx_assets_matrix_4x4_f32,
                        Core_Object);
 
@@ -16,11 +16,11 @@ struct dx_assets_matrix_4x4_f32 {
   DX_MAT4 value;
 };
 
-static inline dx_assets_matrix_4x4_f32_dispatch* DX_ASSETS_MATRIX_4X4_F32_DISPATCH(void* p) {
-  return (dx_assets_matrix_4x4_f32_dispatch*)p;
+static inline dx_assets_matrix_4x4_f32_Dispatch* DX_ASSETS_MATRIX_4X4_F32_DISPATCH(void* p) {
+  return (dx_assets_matrix_4x4_f32_Dispatch*)p;
 }
 
-struct dx_assets_matrix_4x4_f32_dispatch {
+struct dx_assets_matrix_4x4_f32_Dispatch {
   Core_Object_Dispatch _parent;
 };
 

@@ -1,21 +1,21 @@
 #include "dx/assets/image_operations/checkerboard_pattern_fill.h"
 
-DX_DEFINE_OBJECT_TYPE("dx.assets.image_operations.checkerboard_pattern_fill",
+Core_defineObjectType("dx.assets.image_operations.checkerboard_pattern_fill",
                       dx_assets_image_operations_checkerboard_pattern_fill,
                       dx_assets_image_operation);
 
 static void dx_assets_image_operations_checkerboard_pattern_fill_destruct(dx_assets_image_operations_checkerboard_pattern_fill* SELF) {
   if (SELF->second_checker_color) {
-    DX_UNREFERENCE(SELF->second_checker_color);
+    CORE_UNREFERENCE(SELF->second_checker_color);
     SELF->second_checker_color = NULL;
   }
   if (SELF->first_checker_color) {
-    DX_UNREFERENCE(SELF->first_checker_color);
+    CORE_UNREFERENCE(SELF->first_checker_color);
     SELF->first_checker_color = NULL;
   }
 }
 
-static void dx_assets_image_operations_checkerboard_pattern_fill_constructDispatch(dx_assets_image_operations_checkerboard_pattern_fill_dispatch* SELF)
+static void dx_assets_image_operations_checkerboard_pattern_fill_constructDispatch(dx_assets_image_operations_checkerboard_pattern_fill_Dispatch* SELF)
 {/*Intentionally empty.*/}
 
 Core_Result dx_assets_image_operations_checkerboard_pattern_fill_construct(dx_assets_image_operations_checkerboard_pattern_fill* SELF) {
@@ -32,7 +32,7 @@ Core_Result dx_assets_image_operations_checkerboard_pattern_fill_construct(dx_as
 Core_Result dx_assets_image_operations_checkerboard_pattern_fill_create(dx_assets_image_operations_checkerboard_pattern_fill** RETURN) {
   DX_CREATE_PREFIX(dx_assets_image_operations_checkerboard_pattern_fill);
   if (dx_assets_image_operations_checkerboard_pattern_fill_construct(SELF)) {
-    DX_UNREFERENCE(SELF);
+    CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
   }
@@ -62,16 +62,16 @@ Core_Result dx_assets_image_operations_checkerboard_pattern_fill_set_first_check
       return Core_Failure;
     }
     if (dx_asset_reference_create(&SELF->first_checker_color, name)) {
-      DX_UNREFERENCE(name);
+      CORE_UNREFERENCE(name);
       name = NULL;
       return Core_Failure;
     }
-    DX_UNREFERENCE(name);
+    CORE_UNREFERENCE(name);
     name = NULL;
   }
-  DX_REFERENCE(first_checker_color);
+  CORE_REFERENCE(first_checker_color);
   if (SELF->first_checker_color->object) {
-    DX_UNREFERENCE(SELF->first_checker_color->object);
+    CORE_UNREFERENCE(SELF->first_checker_color->object);
   }
   SELF->first_checker_color->object = CORE_OBJECT(first_checker_color);
   return Core_Success;
@@ -91,16 +91,16 @@ Core_Result dx_assets_image_operations_checkerboard_pattern_fill_set_second_chec
       return Core_Failure;
     }
     if (dx_asset_reference_create(&SELF->second_checker_color, name)) {
-      DX_UNREFERENCE(name);
+      CORE_UNREFERENCE(name);
       name = NULL;
       return Core_Failure;
     }
-    DX_UNREFERENCE(name);
+    CORE_UNREFERENCE(name);
     name = NULL;
   }
-  DX_REFERENCE(second_checker_color);
+  CORE_REFERENCE(second_checker_color);
   if (SELF->second_checker_color->object) {
-    DX_UNREFERENCE(SELF->second_checker_color->object);
+    CORE_UNREFERENCE(SELF->second_checker_color->object);
   }
   SELF->second_checker_color->object = CORE_OBJECT(second_checker_color);
   return Core_Success;

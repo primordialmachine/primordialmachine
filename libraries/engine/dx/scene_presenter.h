@@ -20,7 +20,7 @@
 /// 4) dx_scene_presenter_shutdown is called for the "scene presenter" by the "scene execution environment".
 /// Go to 5.
 /// 5) the "scene presenter" is destroyed by the "scene execution environment".
-DX_DECLARE_OBJECT_TYPE("dx.scene_presenter",
+Core_declareObjectType("dx.scene_presenter",
                        dx_scene_presenter,
                        Core_Object);
 
@@ -33,11 +33,11 @@ struct dx_scene_presenter {
   dx_val_context* context;
 };
 
-static inline dx_scene_presenter_dispatch* DX_SCENE_PRESENTER_DISPATCH(void* p) {
-  return (dx_scene_presenter_dispatch*)p;
+static inline dx_scene_presenter_Dispatch* DX_SCENE_PRESENTER_DISPATCH(void* p) {
+  return (dx_scene_presenter_Dispatch*)p;
 }
 
-struct dx_scene_presenter_dispatch {
+struct dx_scene_presenter_Dispatch {
   Core_Object_Dispatch _parent;
   Core_Result(*startup)(dx_scene_presenter* SELF, dx_val_context* context);
   Core_Result(*render)(dx_scene_presenter* SELF, dx_val_context* context, Core_Real32 delta_seconds, Core_Integer32 canvas_width, Core_Integer32 canvas_height);

@@ -9,7 +9,7 @@ typedef struct dx_font_manager dx_font_manager;
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-DX_DECLARE_OBJECT_TYPE("dx.font_key",
+Core_declareObjectType("dx.font_key",
                        dx_font_key,
                        Core_Object);
 
@@ -24,11 +24,11 @@ struct dx_font_key {
   Core_Size hash_value;
 };
 
-static inline dx_font_key_dispatch* DX_FONT_KEY_DISPATCH(void* p) {
-  return (dx_font_key_dispatch*)p;
+static inline dx_font_key_Dispatch* DX_FONT_KEY_DISPATCH(void* p) {
+  return (dx_font_key_Dispatch*)p;
 }
 
-struct dx_font_key_dispatch {
+struct dx_font_key_Dispatch {
   Core_Object_Dispatch _parent;
 };
 
@@ -42,7 +42,7 @@ Core_Result dx_font_key_get_hash_value(Core_Size* RETURN, dx_font_key* SELF);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-DX_DECLARE_OBJECT_TYPE("dx.font_glyph",
+Core_declareObjectType("dx.font_glyph",
                        dx_font_glyph,
                        Core_Object);
 
@@ -57,11 +57,11 @@ struct dx_font_glyph {
   dx_font* font;
 };
 
-static inline dx_font_glyph_dispatch* DX_FONT_GLYPH_DISPATCH(void* p) {
-  return (dx_font_glyph_dispatch*)p;
+static inline dx_font_glyph_Dispatch* DX_FONT_GLYPH_DISPATCH(void* p) {
+  return (dx_font_glyph_Dispatch*)p;
 }
 
-struct dx_font_glyph_dispatch {
+struct dx_font_glyph_Dispatch {
   Core_Object_Dispatch _parent;
 };
 
@@ -81,7 +81,7 @@ Core_Result dx_font_glyph_get_texture_coordinates(dx_font_glyph* SELF, DX_RECT2_
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-DX_DECLARE_OBJECT_TYPE("dx.font",
+Core_declareObjectType("dx.font",
                        dx_font,
                        Core_Object);
 
@@ -96,11 +96,11 @@ struct dx_font {
   void* font_pimpl;
 };
 
-static inline dx_font_dispatch* DX_FONT_DISPATCH(void* p) {
-  return (dx_font_dispatch*)p;
+static inline dx_font_Dispatch* DX_FONT_DISPATCH(void* p) {
+  return (dx_font_Dispatch*)p;
 }
 
-struct dx_font_dispatch {
+struct dx_font_Dispatch {
   Core_Object_Dispatch _parent;
 };
 
@@ -119,7 +119,7 @@ Core_Result dx_font_get_descender(Core_Real32* RETURN, dx_font* SELF);
 // when a font object (for a font) is created, it is added to the cache of the font manager.
 // when a font object is destroyed, it is removed from the cache of the font manager.
 // if an entity requests a font and its font object is in the cache, then the cached font object is returned.
-DX_DECLARE_OBJECT_TYPE("dx.font_manager",
+Core_declareObjectType("dx.font_manager",
                        dx_font_manager,
                        Core_Object);
 
@@ -134,14 +134,14 @@ struct dx_font_manager {
   /// @brief The VAL context.
   dx_val_context* context;
   /// @brief Map from names to font objects.
-  dx_inline_pointer_hashmap fonts;
+  Core_InlinePointerHashmap fonts;
 };
 
-static inline dx_font_manager_dispatch* DX_FONT_MANAGER_DISPATCH(void* p) {
-  return (dx_font_manager_dispatch*)p;
+static inline dx_font_manager_Dispatch* DX_FONT_MANAGER_DISPATCH(void* p) {
+  return (dx_font_manager_Dispatch*)p;
 }
 
-struct dx_font_manager_dispatch {
+struct dx_font_manager_Dispatch {
   Core_Object_Dispatch _parent;
 };
 

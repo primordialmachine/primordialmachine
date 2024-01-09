@@ -278,29 +278,29 @@ static int parse(format_spec_t* format_spec, char const** start, char const* end
 
 #undef IS
 
-int dx__format_v(dx_inline_byte_array* buffer, char const* start, char const* end, va_list arguments) {
+Core_Result dx__format_v(Core_InlineArrayN8* buffer, char const* start, char const* end, va_list arguments) {
   char const* current = start;
   while (current != end) {
     if (*current == '$') {
       // We encountered a format symbol. Store all the bytes up to and excluding the format symbol in the buffer.
-      if (dx_inline_byte_array_append(buffer, start, current - start)) {
-        return 1;
+      if (Core_InlineArrayN8_append(buffer, start, current - start)) {
+        return Core_Failure;
       }
       format_spec_t format_spec;
       parse(&format_spec, &current, end);
       if (format_spec.type == PRINT_ERROR) {
         Core_setError(Core_Error_ArgumentInvalid);
-        return 1;
+        return Core_Failure;
       }
       switch (format_spec.type) {
       case PRINT_STRING: {
         Core_String* argument = va_arg(arguments, Core_String*);
         if (!argument) {
           Core_setError(Core_Error_ArgumentInvalid);
-          return 1;
+          return Core_Failure;
         }
-        if (dx_inline_byte_array_append(buffer, argument->bytes, argument->number_of_bytes)) {
-          return 1;
+        if (Core_InlineArrayN8_append(buffer, argument->bytes, argument->number_of_bytes)) {
+          return Core_Failure;
         }
       } break;
       case PRINT_I8: {
@@ -308,10 +308,11 @@ int dx__format_v(dx_inline_byte_array* buffer, char const* start, char const* en
         char temporary[44];
         int result = snprintf(temporary, 44, "%"PRIi8, argument);
         if (result < 0 || result >= 44) {
-          return 1;
+          Core_setError(Core_Error_ArgumentInvalid);
+          return Core_Failure;
         }
-        if (dx_inline_byte_array_append(buffer, temporary, strlen(temporary))) {
-          return 1;
+        if (Core_InlineArrayN8_append(buffer, temporary, strlen(temporary))) {
+          return Core_Failure;
         }
       } break;
       case PRINT_I16: {
@@ -319,10 +320,11 @@ int dx__format_v(dx_inline_byte_array* buffer, char const* start, char const* en
         char temporary[44];
         int result = snprintf(temporary, 44, "%"PRIi16, argument);
         if (result < 0 || result >= 44) {
-          return 1;
+          Core_setError(Core_Error_ArgumentInvalid);
+          return Core_Failure;
         }
-        if (dx_inline_byte_array_append(buffer, temporary, strlen(temporary))) {
-          return 1;
+        if (Core_InlineArrayN8_append(buffer, temporary, strlen(temporary))) {
+          return Core_Failure;
         }
       } break;
       case PRINT_I32: {
@@ -330,10 +332,11 @@ int dx__format_v(dx_inline_byte_array* buffer, char const* start, char const* en
         char temporary[44];
         int result = snprintf(temporary, 44, "%"PRIi32, argument);
         if (result < 0 || result >= 44) {
-          return 1;
+          Core_setError(Core_Error_ConversionFailed);
+          return Core_Failure;
         }
-        if (dx_inline_byte_array_append(buffer, temporary, strlen(temporary))) {
-          return 1;
+        if (Core_InlineArrayN8_append(buffer, temporary, strlen(temporary))) {
+          return Core_Failure;
         }
       } break;
       case PRINT_I64: {
@@ -341,10 +344,11 @@ int dx__format_v(dx_inline_byte_array* buffer, char const* start, char const* en
         char temporary[44];
         int result = snprintf(temporary, 44, "%"PRIi64, argument);
         if (result < 0 || result >= 44) {
-          return 1;
+          Core_setError(Core_Error_ArgumentInvalid);
+          return Core_Failure;
         }
-        if (dx_inline_byte_array_append(buffer, temporary, strlen(temporary))) {
-          return 1;
+        if (Core_InlineArrayN8_append(buffer, temporary, strlen(temporary))) {
+          return Core_Failure;
         }
       } break;
       case PRINT_N8: {
@@ -352,10 +356,11 @@ int dx__format_v(dx_inline_byte_array* buffer, char const* start, char const* en
         char temporary[44];
         int result = snprintf(temporary, 44, "%"PRIu8, argument);
         if (result < 0 || result >= 44) {
-          return 1;
+          Core_setError(Core_Error_ArgumentInvalid);
+          return Core_Failure;
         }
-        if (dx_inline_byte_array_append(buffer, temporary, strlen(temporary))) {
-          return 1;
+        if (Core_InlineArrayN8_append(buffer, temporary, strlen(temporary))) {
+          return Core_Failure;
         }
       } break;
       case PRINT_N16: {
@@ -363,10 +368,11 @@ int dx__format_v(dx_inline_byte_array* buffer, char const* start, char const* en
         char temporary[44];
         int result = snprintf(temporary, 44, "%"PRIu16, argument);
         if (result < 0 || result >= 44) {
-          return 1;
+          Core_setError(Core_Error_ArgumentInvalid);
+          return Core_Failure;
         }
-        if (dx_inline_byte_array_append(buffer, temporary, strlen(temporary))) {
-          return 1;
+        if (Core_InlineArrayN8_append(buffer, temporary, strlen(temporary))) {
+          return Core_Failure;
         }
       } break;
       case PRINT_N32: {
@@ -374,10 +380,11 @@ int dx__format_v(dx_inline_byte_array* buffer, char const* start, char const* en
         char temporary[44];
         int result = snprintf(temporary, 44, "%"PRIu32, argument);
         if (result < 0 || result >= 44) {
-          return 1;
+          Core_setError(Core_Error_ArgumentInvalid);
+          return Core_Failure;
         }
-        if (dx_inline_byte_array_append(buffer, temporary, strlen(temporary))) {
-          return 1;
+        if (Core_InlineArrayN8_append(buffer, temporary, strlen(temporary))) {
+          return Core_Failure;
         }
       } break;
       case PRINT_N64: {
@@ -385,10 +392,11 @@ int dx__format_v(dx_inline_byte_array* buffer, char const* start, char const* en
         char temporary[44];
         int result = snprintf(temporary, 44, "%"PRIu64, argument);
         if (result < 0 || result >= 44) {
-          return 1;
+          Core_setError(Core_Error_ArgumentInvalid);
+          return Core_Failure;
         }
-        if (dx_inline_byte_array_append(buffer, temporary, strlen(temporary))) {
-          return 1;
+        if (Core_InlineArrayN8_append(buffer, temporary, strlen(temporary))) {
+          return Core_Failure;
         }
       } break;
       case PRINT_R32: {
@@ -396,10 +404,11 @@ int dx__format_v(dx_inline_byte_array* buffer, char const* start, char const* en
         char temporary[44];
         int result = snprintf(temporary, 44, "%.*f", (int)format_spec.fractional_digits, argument);
         if (result < 0 || result >= 44) {
-          return 1;
+          Core_setError(Core_Error_ArgumentInvalid);
+          return Core_Failure;
         }
-        if (dx_inline_byte_array_append(buffer, temporary, strlen(temporary))) {
-          return 1;
+        if (Core_InlineArrayN8_append(buffer, temporary, strlen(temporary))) {
+          return Core_Failure;
         }
       } break;
       case PRINT_R64: {
@@ -407,22 +416,23 @@ int dx__format_v(dx_inline_byte_array* buffer, char const* start, char const* en
         char temporary[44];
         int result = snprintf(temporary, 44, "%.*lf", (int)format_spec.fractional_digits, argument);
         if (result < 0 || result >= 44) {
-          return 1;
+          Core_setError(Core_Error_ArgumentInvalid);
+          return Core_Failure;
         }
-        if (dx_inline_byte_array_append(buffer, temporary, strlen(temporary))) {
-          return 1;
+        if (Core_InlineArrayN8_append(buffer, temporary, strlen(temporary))) {
+          return Core_Failure;
         }
       } break;
       case PRINT_DOLLAR: {
         static char const bytes[] = "$";
-        if (dx_inline_byte_array_append(buffer, bytes, sizeof(bytes) - 1)) {
-          return 1;
+        if (Core_InlineArrayN8_append(buffer, bytes, sizeof(bytes) - 1)) {
+          return Core_Failure;
         }
       } break;
       default: {
         // Expected: Format specifier. Received: Unknown format specifier prefix.
         Core_setError(Core_Error_ArgumentInvalid);
-        return 1;
+        return Core_Failure;
       } break;
       };
       start = current;
@@ -431,9 +441,9 @@ int dx__format_v(dx_inline_byte_array* buffer, char const* start, char const* en
     }
   }
   if (start != current) {
-    if (dx_inline_byte_array_append(buffer, start, current - start)) {
-      return 1;
+    if (Core_InlineArrayN8_append(buffer, start, current - start)) {
+      return Core_Failure;
     }
   }
-  return 0;
+  return Core_Success;
 }

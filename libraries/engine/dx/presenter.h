@@ -1,7 +1,7 @@
 /// @file dx/engine/presenter.h
 /// @brief An object used to present audial-visual aspects of an entity.
 /// @author Michael Heilmann (michaelheilmann@primordialmachine.com)
-/// @copyright Copyright (c) 2018-2023 Michael Heilmann. All rights reserved.
+/// @copyright Copyright (c) 2018-2024 Michael Heilmann. All rights reserved.
 #if !defined(DX_PRESENTER_H_INCLUDED)
 #define DX_PRESENTER_INCLUDED
 
@@ -9,7 +9,7 @@
 typedef struct dx_aal_context dx_aal_context;
 typedef struct dx_val_context dx_val_context;
 
-DX_DECLARE_OBJECT_TYPE("dx.presenter",
+Core_declareObjectType("dx.presenter",
                        dx_presenter,
                        Core_Object);
 
@@ -25,11 +25,11 @@ struct dx_presenter {
   dx_aal_context* aal_context;
 };
 
-static inline dx_presenter_dispatch* DX_PRESENTER_DISPATCH(void* p) {
-  return (dx_presenter_dispatch*)p;
+static inline dx_presenter_Dispatch* DX_PRESENTER_DISPATCH(void* p) {
+  return (dx_presenter_Dispatch*)p;
 }
 
-struct dx_presenter_dispatch {
+struct dx_presenter_Dispatch {
   Core_Object_Dispatch _parent;
 };
 

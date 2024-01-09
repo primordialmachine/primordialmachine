@@ -7,7 +7,7 @@
 /// @brief The backend-representation of a viewer.
 /// A dx.val.viewer usually represents a dx.asset.viewer_instance.
 /// There was not use in introducing a dx.val.viewer_instance object (yet).
-DX_DECLARE_OBJECT_TYPE("dx.val.viewer",
+Core_declareObjectType("dx.val.viewer",
                        dx_val_viewer,
                        Core_Object);
 
@@ -31,11 +31,11 @@ struct dx_val_viewer {
   DX_VEC3 up;
 };
 
-static inline dx_val_viewer_dispatch* DX_VAL_VIEWER_DISPATCH(void* p) {
-  return (dx_val_viewer_dispatch*)p;
+static inline dx_val_viewer_Dispatch* DX_VAL_VIEWER_DISPATCH(void* p) {
+  return (dx_val_viewer_Dispatch*)p;
 }
 
-struct dx_val_viewer_dispatch {
+struct dx_val_viewer_Dispatch {
   Core_Object_Dispatch _parent;
 };
 

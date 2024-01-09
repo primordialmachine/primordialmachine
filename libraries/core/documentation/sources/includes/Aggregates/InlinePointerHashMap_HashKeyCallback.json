@@ -1,0 +1,34 @@
+{
+  "type" : "function-prototype",
+  "last-update" : "2024-01-16",
+  "indices" : "core",
+  "name" : "Core_InlinePointerHashMap_HashKeyCallback",
+  "id" : "core-inlinepointerhashmap-hashkeycallback",
+  "signature" : "typedef Core_Result (Core_InlinePointerHashMap_KeyAddedCallback)(Core_Size* RETURN, Core_InlinePointerHashMap_Key* x);",
+  "description" : "The type of a callback invoked to get the hash value for a key.",
+  "success": "@{code('*RETURN')} was assigned the hash value of the key.",
+  "parameters" : [
+    {
+      "name" : "RETURN",
+      "type" : "@{code('Core_Size*')}",
+      "description" : "A pointer to a @{code('Core_Size')} variable."
+    },
+    {
+      "name" : "x",
+      "type" : "@{code('Core_InlinePointerHashMap_Key*')}",
+      "description" : "A pointer to a @{code('Core_InlinePointerHashMap_Key')} value."
+    }
+  ],
+  "errors" : [
+    {
+      "errorCode" : "Core_Error_ArgumentInvalid",
+      "errorCondition" : "@{code('RETURN')} is a null pointer."
+    },
+    {
+      "errorCode" : "Core_Error_ArgumentInvalid",
+      "errorCondition" : "@{code('x')} is a null pointer."
+    }
+  ],
+  "return" : "@{code('Core_Success')} on success. @{code('Core_Failure')} on failure.",
+  "remarks" : "This function sets the by-thread error variable on failure."
+}

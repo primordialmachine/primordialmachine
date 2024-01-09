@@ -13,7 +13,7 @@
 // strlen()
 #include <string.h>
 
-DX_DEFINE_OBJECT_TYPE("dx.ui.manager",
+Core_defineObjectType("dx.ui.manager",
                       dx_ui_manager,
                       Core_Object);
 
@@ -54,31 +54,31 @@ static Core_Result hash_key_callback(Core_Size* RETURN, Core_String** a) {
 }
 
 static void key_added_callback(Core_String** a) {
-  DX_REFERENCE(*a);
+  CORE_REFERENCE(*a);
 }
 
 static void key_removed_callback(Core_String** a) {
-  DX_UNREFERENCE(*a);
+  CORE_UNREFERENCE(*a);
 }
 
 static void value_added_callback(Core_Object** a) {
-  DX_REFERENCE(*a);
+  CORE_REFERENCE(*a);
 }
 
 static void value_removed_callback(Core_Object** a) {
-  DX_UNREFERENCE(*a);
+  CORE_UNREFERENCE(*a);
 }
 
 static Core_Result initialize_type_handlers(dx_ui_manager* SELF) {
-  static DX_INLINE_POINTER_HASHMAP_CONFIGURATION const configuration = {
-    .compare_keys_callback = (dx_inline_pointer_hashmap_compare_keys_callback*)&compare_keys_callback,
-    .hash_key_callback = (dx_inline_pointer_hashmap_hash_key_callback*)&hash_key_callback,
-    .key_added_callback = (dx_inline_pointer_hashmap_key_added_callback*)&key_added_callback,
-    .key_removed_callback = (dx_inline_pointer_hashmap_key_removed_callback*)&key_removed_callback,
-    .value_added_callback = (dx_inline_pointer_hashmap_value_added_callback*)&value_added_callback,
-    .value_removed_callback = (dx_inline_pointer_hashmap_value_removed_callback*)&value_removed_callback,
+  static Core_InlinePointerHashMap_Configuration const configuration = {
+    .compareKeysCallback = (Core_InlinePointerHashmap_compare_keys_callback*)&compare_keys_callback,
+    .hashKeyCallback = (Core_InlinePointerHashmap_hash_key_callback*)&hash_key_callback,
+    .keyAddedCallback = (Core_InlinePointerHashMap_KeyAddedCallback*)&key_added_callback,
+    .keyRemovedCallback = (Core_InlinePointerHashMap_KeyRemovedCallback*)&key_removed_callback,
+    .valueAddedCallback = (Core_InlinePointerHashmap_ValueAddedCallback*)&value_added_callback,
+    .valueRemovedCallback = (Core_InlinePointerHashMap_ValueRemovedCallback*)&value_removed_callback,
   };
-  if (dx_inline_pointer_hashmap_initialize(&SELF->type_handlers, &configuration)) {
+  if (Core_InlinePointerHashmap_initialize(&SELF->type_handlers, &configuration)) {
     return Core_Failure;
   }
 
@@ -90,22 +90,22 @@ static Core_Result initialize_type_handlers(dx_ui_manager* SELF) {
       } \
       dx_ui_type_handler* v = NULL; \
       if (VALUE##_create((VALUE**)&v)) { \
-        DX_UNREFERENCE(k); \
+        CORE_UNREFERENCE(k); \
         k = NULL; \
-        dx_inline_pointer_hashmap_uninitialize(&SELF->type_handlers); \
+        Core_InlinePointerHashmap_uninitialize(&SELF->type_handlers); \
         return Core_Failure; \
       } \
-      if (dx_inline_pointer_hashmap_set(&SELF->type_handlers, k, v)) { \
-        DX_UNREFERENCE(v); \
+      if (Core_InlinePointerHashmap_set(&SELF->type_handlers, k, v)) { \
+        CORE_UNREFERENCE(v); \
         v = NULL; \
-        DX_UNREFERENCE(k); \
+        CORE_UNREFERENCE(k); \
         k = NULL; \
-        dx_inline_pointer_hashmap_uninitialize(&SELF->type_handlers); \
+        Core_InlinePointerHashmap_uninitialize(&SELF->type_handlers); \
         return Core_Failure; \
       } \
-      DX_UNREFERENCE(v); \
+      CORE_UNREFERENCE(v); \
       v = NULL; \
-      DX_UNREFERENCE(k); \
+      CORE_UNREFERENCE(k); \
       k = NULL; \
     }
 
@@ -118,21 +118,21 @@ static Core_Result initialize_type_handlers(dx_ui_manager* SELF) {
 }
 
 static Core_Result uninitialize_type_handlers(dx_ui_manager* SELF) {
-  dx_inline_pointer_hashmap_uninitialize(&SELF->type_handlers);
+  Core_InlinePointerHashmap_uninitialize(&SELF->type_handlers);
   return Core_Success;
 }
 
 static void dx_ui_manager_destruct(dx_ui_manager* SELF) {
   uninitialize_type_handlers(SELF);
-  DX_UNREFERENCE(SELF->rectangle_presenter);
+  CORE_UNREFERENCE(SELF->rectangle_presenter);
   SELF->rectangle_presenter = NULL;
-  DX_UNREFERENCE(SELF->font_presenter);
+  CORE_UNREFERENCE(SELF->font_presenter);
   SELF->font_presenter = NULL;
-  DX_UNREFERENCE(SELF->command_list);
+  CORE_UNREFERENCE(SELF->command_list);
   SELF->command_list = NULL;
 }
 
-static void dx_ui_manager_constructDispatch(dx_ui_manager_dispatch* SELF)
+static void dx_ui_manager_constructDispatch(dx_ui_manager_Dispatch* SELF)
 {/*Intentionally empty.*/}
 
 Core_Result dx_ui_manager_construct(dx_ui_manager* SELF, dx_font_presenter* font_presenter, dx_rectangle_presenter* rectangle_presenter) {
@@ -145,32 +145,32 @@ Core_Result dx_ui_manager_construct(dx_ui_manager* SELF, dx_font_presenter* font
   // create the set viewport command
   dx_val_command* command = NULL;
   if (dx_val_command_create_viewport(&command, 0.f, 0.f, 640.f, 480.f)) {
-    DX_UNREFERENCE(SELF->command_list);
+    CORE_UNREFERENCE(SELF->command_list);
     SELF->command_list = NULL;
     return Core_Failure;
   }
   if (dx_val_command_list_append(SELF->command_list, command)) {
-    DX_UNREFERENCE(command);
+    CORE_UNREFERENCE(command);
     command = NULL;
-    DX_UNREFERENCE(SELF->command_list);
+    CORE_UNREFERENCE(SELF->command_list);
     SELF->command_list = NULL;
     return Core_Failure;
   }
-  DX_UNREFERENCE(command);
+  CORE_UNREFERENCE(command);
   command = NULL;
 
   SELF->font_presenter = font_presenter;
-  DX_REFERENCE(font_presenter);
+  CORE_REFERENCE(font_presenter);
 
   SELF->rectangle_presenter = rectangle_presenter;
-  DX_REFERENCE(rectangle_presenter);
+  CORE_REFERENCE(rectangle_presenter);
   
   if (initialize_type_handlers(SELF)) {
-    DX_UNREFERENCE(SELF->rectangle_presenter);
+    CORE_UNREFERENCE(SELF->rectangle_presenter);
     SELF->rectangle_presenter = NULL;
-    DX_UNREFERENCE(SELF->font_presenter);
+    CORE_UNREFERENCE(SELF->font_presenter);
     SELF->font_presenter = NULL;
-    DX_UNREFERENCE(SELF->command_list);
+    CORE_UNREFERENCE(SELF->command_list);
     SELF->command_list = NULL;
     return Core_Failure;
   }
@@ -186,7 +186,7 @@ Core_Result dx_ui_manager_construct(dx_ui_manager* SELF, dx_font_presenter* font
 Core_Result dx_ui_manager_create(dx_ui_manager** RETURN, dx_font_presenter* font_presenter, dx_rectangle_presenter* rectangle_presenter) {
   DX_CREATE_PREFIX(dx_ui_manager)
     if (dx_ui_manager_construct(SELF, font_presenter, rectangle_presenter)) {
-      DX_UNREFERENCE(SELF);
+      CORE_UNREFERENCE(SELF);
       SELF = NULL;
       return Core_Failure;
     }
@@ -234,7 +234,11 @@ static Core_Result on_render_widget(dx_ui_manager* SELF, dx_ui_widget* widget) {
   if (dx_ui_group_getType(&type)) {
     return Core_Failure;
   }
-  if (dx_rti_type_is_leq(CORE_OBJECT(widget)->type, type)) {
+  Core_Boolean result = Core_False;
+  if (Core_Type_isLowerThanOrEqualTo(&result, CORE_OBJECT(widget)->type, type)) {
+    return Core_Failure;
+  }
+  if (result) {
     if (on_render_group_children(SELF, DX_UI_GROUP(widget))) {
       return Core_Failure;
     }
@@ -299,23 +303,23 @@ static Core_Result _parse_widget(dx_ui_widget** RETURN, dx_ui_manager* SELF, dx_
   }
   dx_ddl_node* type_node = NULL;
   if (dx_ddl_node_map_get(&type_node, node, type_field_name)) {
-    DX_UNREFERENCE(type_field_name);
+    CORE_UNREFERENCE(type_field_name);
     type_field_name = NULL;
     return Core_Failure;
   }
-  DX_UNREFERENCE(type_field_name);
+  CORE_UNREFERENCE(type_field_name);
   type_field_name = NULL;
   Core_String* received_type = NULL;
   if (dx_ddl_node_get_string(&received_type, type_node)) {
     return Core_Failure;
   }
   dx_ui_type_handler* type_handler = NULL;
-  if (dx_inline_pointer_hashmap_get(&type_handler, &SELF->type_handlers, received_type)) {
-    DX_UNREFERENCE(received_type);
+  if (Core_InlinePointerHashmap_get(&type_handler, &SELF->type_handlers, received_type)) {
+    CORE_UNREFERENCE(received_type);
     received_type = NULL;
     return Core_Failure;
   }
-  DX_UNREFERENCE(received_type);
+  CORE_UNREFERENCE(received_type);
   received_type = NULL;
   dx_ui_widget* temporary;
   if (dx_ui_type_handler_parse(&temporary, type_handler, SELF, node)) {
@@ -343,11 +347,11 @@ Core_Result dx_ui_manager_load(dx_ui_widget** RETURN, dx_ui_manager* SELF, Core_
   }
   dx_ui_widget* widget = NULL;
   if (_parse(&widget, SELF, ddl_node)) {
-    DX_UNREFERENCE(ddl_node);
+    CORE_UNREFERENCE(ddl_node);
     ddl_node = NULL;
     return Core_Failure;
   }
-  DX_UNREFERENCE(ddl_node);
+  CORE_UNREFERENCE(ddl_node);
   ddl_node = NULL;
   *RETURN = widget;
   return Core_Success;

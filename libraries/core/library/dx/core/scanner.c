@@ -1,13 +1,13 @@
 #include "dx/core/scanner.h"
 
-DX_DEFINE_OBJECT_TYPE("dx.scanner",
+Core_defineObjectType("dx.scanner",
                       dx_scanner,
                       Core_Object);
 
 static void dx_scanner_destruct(dx_scanner* SELF)
 {/*Intentionally empty.*/}
 
-static void dx_scanner_constructDispatch(dx_scanner_dispatch* SELF)
+static void dx_scanner_constructDispatch(dx_scanner_Dispatch* SELF)
 {/*Intentionally empty.*/}
 
 Core_Result dx_scanner_construct(dx_scanner* SELF) {

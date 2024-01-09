@@ -1,3 +1,6 @@
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/compilers.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/languages.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/detect_void_pointer_size.cmake)
 
 # Macro which ensures that certain compiler warnings are treated as compiler errors.
 macro(dx_configure_warnings target)
@@ -45,6 +48,10 @@ endmacro()
 #
 # Furthermore, it defines the public and private include directories of the project.
 macro(dx_begin_project target)
+  message(${target})
+  
+  core_detect_void_pointer_size(${target})
+
   if( CMAKE_SIZEOF_VOID_P EQUAL 8 )
     #message( STATUS "${target}:\n  ${target}.target_architecture := x64" )
     set( infix "x64" )
@@ -62,6 +69,10 @@ macro(dx_begin_project target)
   endif()
 
   project(${target} LANGUAGES ${${target}.languages})
+  
+  core_detect_compiler(${target} CORE_LANGUAGE_ID_C)
+  core_detect_compiler(${target} CORE_LANGUAGE_ID_CPP)
+  core_detect_compiler(${target} CORE_LANGUAGE_ID_MASM)
 
   # Define the variables for assemblers, header, inlay, readme, and source files.
   set(${target}.asms "")
@@ -111,18 +122,23 @@ macro(dx_end_project target)
   # Configure warnings for the source files.
   dx_configure_warnings(${target})
 
-  message( STATUS "${target}:" )
-  message( STATUS "  ${target}.kind                := ${${target}.kind}" )
-  message( STATUS "  ${target}.target_architecture := ${${target}.target_architecture}" )
+  #message( STATUS "${target}:" )
+  message(" - kind: ${${target}.kind}" )
+  message(" - target_architecture: ${${target}.target_architecture}" )
+  message(" - void pointer size: ${${target}.sizeof_void_pointer}" )
   
   if (DEFINED ${target}.private_include_directories)
-    message( STATUS "  private include directories specified" )
+    message(" - private include directories specified: yes" )
     target_include_directories(${target} PRIVATE ${${target}.private_include_directories})
+  else()
+    message(" - private include directories specified: no" ) 
   endif()
 
   if (DEFINED ${target}.public_include_directories)
-    message( STATUS "  public include directories specified" )
+    message(" - public include directories specified: yes" )
     target_include_directories(${target} PUBLIC ${${target}.public_include_directories})  
+  else()
+    message(" - public include directories specified: no" )
   endif()
 
 endmacro()

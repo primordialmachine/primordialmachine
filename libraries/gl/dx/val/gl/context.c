@@ -39,32 +39,32 @@ static Core_String* get_information(dx_val_gl_context* self) {
   }
   Core_String* vendor = NULL;
   if (get_vendor(&vendor, self)) {
-    DX_UNREFERENCE(renderer);
+    CORE_UNREFERENCE(renderer);
     renderer = NULL;
     return NULL;
   }
   Core_Boolean vsync_enabled;
   if (dx_val_context_get_vsync_enabled(&vsync_enabled, DX_VAL_CONTEXT(self))) {
-    DX_UNREFERENCE(vendor);
+    CORE_UNREFERENCE(vendor);
     vendor = NULL;
-    DX_UNREFERENCE(renderer);
+    CORE_UNREFERENCE(renderer);
     renderer = NULL;
     return NULL;
   }
   Core_Integer32 major_version, minor_version;
   if (get_major_version(&major_version, self) || get_minor_version(&minor_version, self)) {
-    DX_UNREFERENCE(vendor);
+    CORE_UNREFERENCE(vendor);
     vendor = NULL;
-    DX_UNREFERENCE(renderer);
+    CORE_UNREFERENCE(renderer);
     renderer = NULL;
     return NULL;
   }
   static const char* FORMAT = "renderer: ${s}\nvendor: ${s}\nOpenGL version: ${i32}.${i32}\nvsync enabled: ${i32}\n";
   Core_String* format = NULL;
   if (Core_String_create(&format, FORMAT, strlen(FORMAT))) {
-    DX_UNREFERENCE(vendor);
+    CORE_UNREFERENCE(vendor);
     vendor = NULL;
-    DX_UNREFERENCE(renderer);
+    CORE_UNREFERENCE(renderer);
     renderer = NULL;
     return NULL;
   }
@@ -75,24 +75,24 @@ static Core_String* get_information(dx_val_gl_context* self) {
                          major_version,
                          minor_version,
                          vsync_enabled ? 1 : 0)) {
-    DX_UNREFERENCE(format);
+    CORE_UNREFERENCE(format);
     format = NULL;
-    DX_UNREFERENCE(vendor);
+    CORE_UNREFERENCE(vendor);
     vendor = NULL;
-    DX_UNREFERENCE(renderer);
+    CORE_UNREFERENCE(renderer);
     renderer = NULL;
     return NULL;
   }
-  DX_UNREFERENCE(format);
+  CORE_UNREFERENCE(format);
   format = NULL;
-  DX_UNREFERENCE(vendor);
+  CORE_UNREFERENCE(vendor);
   vendor = NULL;
-  DX_UNREFERENCE(renderer);
+  CORE_UNREFERENCE(renderer);
   renderer = NULL;
   return information;
 }
 
-DX_DEFINE_OBJECT_TYPE("dx.val.gl.context",
+Core_defineObjectType("dx.val.gl.context",
                       dx_val_gl_context,
                       dx_val_context);
 
@@ -279,7 +279,7 @@ static void dx_val_gl_context_destruct(dx_val_gl_context* SELF) {
 #undef DEFINE
 }
 
-static void dx_val_gl_context_constructDispatch(dx_val_gl_context_dispatch* SELF) {
+static void dx_val_gl_context_constructDispatch(dx_val_gl_context_Dispatch* SELF) {
   DX_VAL_CONTEXT_DISPATCH(SELF)->get_information = (Core_String * (*)(dx_val_context*)) & get_information;
   DX_VAL_CONTEXT_DISPATCH(SELF)->bind_texture = (Core_Result(*)(dx_val_context*, Core_Size, dx_val_texture*)) & bind_texture;
   DX_VAL_CONTEXT_DISPATCH(SELF)->create_buffer = (Core_Result (*)(dx_val_buffer**, dx_val_context*)) & create_buffer;

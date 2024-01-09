@@ -7,8 +7,16 @@
  */
 
 :root {
-    --nav-menu-level-1-padding: 0.725rem;
-    --nav-menu-level-2-padding: 0.725rem;
+  --left-column-width: 10vw;
+
+  /* 100vw minus the widths of the left and right columns. Factor in a margin of 2vw. */
+  --center-column-width: calc(100vw - var(--right-column-width) - var(--left-column-width) - 2vw);
+  /* Assume at most 17 characters. Factor in a padding of 2vw. */
+  --right-column-width: calc(var(--small-font-size) * 17 + 2vw);
+  
+  --column-margin-top: 2vw;
+  --nav-menu-level-1-padding: 0.5vw;
+  --nav-menu-level-2-padding: 0.5vw;
 }
 
 main > div.container
@@ -28,9 +36,9 @@ main > div.container
 
 main > div.container > div.left-column {
   display: block;
-  max-width: 164px;
-  min-width: 164px;
-  width: 164px;
+  max-width: var(--left-column-width);
+  min-width: var(--left-column-width);
+  width: var(--left-column-width);
 
   display: flex;
   flex-direction: row;
@@ -39,24 +47,24 @@ main > div.container > div.left-column {
 
 main > div.container > div.right-column {
   display: block;
-
-  max-width: 20%;
-  min-width: 200px;
+  
+  width: var(--right-column-width);
+  max-width: var(--right-column-width);
+  min-width: var(--right-column-width);
 }
 
-main > div.container > div.center-column
-{
+main > div.container > div.right-column {
+  margin-top: var(--column-margin-top);
+}
+
+main > div.container > div.center-column {
   display: block;
-
-  min-width: 400px;
-
-  margin-left: 32px;
-  margin-right: 32px;
-
-
-  margin-top: 64px;
-  margin-bottom: 16px;
-
+  min-width: var(--center-column-width);
+  /*max-width: var(--center-column-width);*/ /*No maximum width. Let it  grow. */
+  width: var(--center-column-width);
+  padding-left: 2vw;
+  padding-right: 2vw;
+  margin-top: var(--column-margin-top);
   flex-grow: 1;
 }
 
@@ -69,7 +77,13 @@ body {
   height: 100vh;
 }
 
-header, footer {
+header {
+  min-height 6vw:
+  height: 6vw;
+  
+}
+
+footer {
   min-height: 96px;
 }
 
@@ -79,7 +93,7 @@ header {
   align-items: center;
   justify-content: center;
 
-  padding: 16px;
+  padding: 3vw;
 }
 
 /*
@@ -136,10 +150,11 @@ li.nav-menu-element-level-1 > a:visited {
   padding: var(--nav-menu-level-1-padding);
   
   white-space: nowrap;
+  font-size: var(--normal-font-size);
 }
 
 li.nav-menu-element-level-1 {
-  margin-left: 1rem;
+  margin-left: 1vw;
   position: relative
 }
 
@@ -163,6 +178,8 @@ li.nav-menu-element-level-2 a:visited {
   padding: var(--nav-menu-level-2-padding);
   
   white-space: nowrap;
+  
+  font-size: var(--normal-font-size);
 }
 
 .nav-menu-level-2 {
@@ -175,9 +192,7 @@ li.nav-menu-element-level-2 a:visited {
   border-color: white;
   border-radius: 0.25rem;
   
-  margin-top: 1rem;
-  
-    padding: var(--nav-menu-level-2-padding);
+  padding: var(--nav-menu-level-2-padding);
 }
 
 .nav-menu-level-2.opened {
@@ -191,4 +206,19 @@ li.nav-menu-element-level-2 a:visited {
 .nav-menu-level-2.open-left {
   position: absolute;
   right: 0;
+}
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+main > div.container > div.right-column > nav > ul {
+  display: block;
+}
+
+main > div.container > div.right-column > nav > ul > li {
+  display: block;
+  height: calc(var(--small-font-size) * 1.5);
+}
+
+main > div.container > div.right-column > nav > ul > li > a {
+  /*margin-right: 32px;*/
 }

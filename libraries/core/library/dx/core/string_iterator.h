@@ -6,7 +6,7 @@
 /// @brief The base of all string iterators for UTF-8 strings.
 /// String iterators of dx.string and dx.string_buffer are all based on this.
 /// @extends dx.object
-DX_DECLARE_OBJECT_TYPE("dx.string_iterator",
+Core_declareObjectType("dx.string_iterator",
                        dx_string_iterator,
                        Core_Object);
 
@@ -18,11 +18,11 @@ struct dx_string_iterator {
   Core_Object _parent;
 };
 
-static inline dx_string_iterator_dispatch* DX_STRING_ITERATOR_DISPATCH(void* p) {
-  return (dx_string_iterator_dispatch*)p;
+static inline dx_string_iterator_Dispatch* DX_STRING_ITERATOR_DISPATCH(void* p) {
+  return (dx_string_iterator_Dispatch*)p;
 }
 
-struct dx_string_iterator_dispatch {
+struct dx_string_iterator_Dispatch {
   Core_Object_Dispatch _parent;
   Core_Result (*has_value)(Core_Boolean *RETURN, dx_string_iterator* SELF);
   Core_Result (*get_value)(uint32_t* RETURN, dx_string_iterator* SELF);

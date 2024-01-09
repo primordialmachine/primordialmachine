@@ -148,7 +148,7 @@
 /// double_quoted_string := double_quote, {NOT(newline | double_quote)}, double_quote
 /// single_quoted_string := single_quote, {NOT(newline | single_quote)}, single_quote
 /// @endcode
-DX_DECLARE_ENUMERATION_TYPE("dx.data_definition_language.word_kind",
+Core_declareEnumerationType("dx.data_definition_language.word_kind",
                             dx_data_definition_language_word_kind);
 
 enum dx_data_definition_language_word_kind {

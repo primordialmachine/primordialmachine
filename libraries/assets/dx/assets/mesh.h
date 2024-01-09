@@ -9,7 +9,7 @@
 /// If the number of indices is three, then a face is called a triangle.
 /// If the number of indices is greater than three, then the face is called a polygon.
 /// A face of four indices is also called a quadriliteral.
-DX_DECLARE_OBJECT_TYPE("dx.assets.face",
+Core_declareObjectType("dx.assets.face",
                        dx_assets_face,
                        Core_Object);
 
@@ -23,11 +23,11 @@ struct dx_assets_face {
   uint32_t *indices;
 };
 
-static inline dx_assets_face_dispatch* DX_ASSETS_FACE_DISPATCH(void* p) {
-  return (dx_assets_face_dispatch*)p;
+static inline dx_assets_face_Dispatch* DX_ASSETS_FACE_DISPATCH(void* p) {
+  return (dx_assets_face_Dispatch*)p;
 }
 
-struct dx_assets_face_dispatch {
+struct dx_assets_face_Dispatch {
   Core_Object_Dispatch _parent;
 };
 
@@ -73,7 +73,7 @@ Core_Result dx_assets_face_to_triangles(dx_assets_face* SELF, dx_inline_object_a
 /// rgba ambient denotes the color coordinates and the alpha of the vertex in the non-pbr lighting model.
 /// uv ambient denotes the texture coordinates for the rgba ambient texture in the non-pbr ligthting model.
 /// A mesh always has a dx_asset_material associated.
-DX_DECLARE_OBJECT_TYPE("dx.assets.mesh",
+Core_declareObjectType("dx.assets.mesh",
                        dx_assets_mesh,
                        Core_Object);
 
@@ -117,11 +117,11 @@ struct dx_assets_mesh {
   dx_inline_object_array operations;
 };
 
-static inline dx_assets_mesh_dispatch* DX_ASSETS_MESH_DISPATCH(void* p) {
-  return (dx_assets_mesh_dispatch*)p;
+static inline dx_assets_mesh_Dispatch* DX_ASSETS_MESH_DISPATCH(void* p) {
+  return (dx_assets_mesh_Dispatch*)p;
 }
 
-struct dx_assets_mesh_dispatch {
+struct dx_assets_mesh_Dispatch {
   Core_Object_Dispatch _parent;
 };
 

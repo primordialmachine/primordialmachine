@@ -5,6 +5,7 @@ class TlScanner {
   private $i;
   private $tokens = array();
   private $buffer;
+  private $inputName = '<empty>';
 
   function __construct()
   {}
@@ -98,7 +99,7 @@ class TlScanner {
         throw new Exception($msg);
       }
     } else {
-      throw new Exception("expected `" . $expected . "`, received `" . $received . "`");
+      throw new Exception($this->inputName . ": expected `" . $expected . "`, received `" . $received . "`");
     }
   }
 
@@ -170,18 +171,6 @@ class TlScanner {
     $balance++;
 
     while ($this->i < $this->n) {
-      if ($this->IS(')')) {
-        $balance--;
-        if ($balance == 0) {
-          $this->tokens[] = new TlToken(TlTokenType::ClosingCodeExpressionDelimiter, ')');
-          $this->i++;
-          break;
-        } else {
-          $this->tokens[] = new TlToken(TlTokenType::RightParenthesis, ')');
-          $this->i++;
-          continue; // start from beginning
-        }
-      }
       if ($this->IS(' ') || $this->IS('\t')) {
         do {
           // skip ws
@@ -190,13 +179,21 @@ class TlScanner {
         continue; // start from beginning
       }
       switch ($this->s[$this->i]) {
-        case '{': {
-          $this->tokens[] = new TlToken(TlTokenType::CodeLeftCurlyBracket, '{');
+        case '(': {
+          $this->tokens[] = new TlToken(TlTokenType::CodeLeftParenthesis, '(');
+          $balance++;
           $this->i++;
         } break;
-        case '}': {
-          $this->tokens[] = new TlToken(TlTokenType::CodeRightCurlyBracket, '}');
-          $this->i++;
+        case ')': {
+          $balance--;
+          if ($balance == 0) {
+            $this->tokens[] = new TlToken(TlTokenType::ClosingCodeExpressionDelimiter, ')');
+            $this->i++;
+            return;
+          } else {
+            $this->tokens[] = new TlToken(TlTokenType::CodeRightParenthesis, ')');
+            $this->i++;
+          }
         } break;
         case '\'': {
           $this->onString('\'');
@@ -222,7 +219,7 @@ class TlScanner {
         }
         $this->i++;
         if ($this->i == $this->n) {
-          $this->error(array('@', '{'));
+          $this->error(array('@', '{', '('));
         }
         if ($this->IS('@')) {
           // @@
@@ -252,7 +249,8 @@ class TlScanner {
     }
   }
 
-  function execute($input) {
+  function execute($input, $inputName) {
+    $this->inputName = $inputName;
     $this->s = $input;
     $this->i = 0;
     $this->n = strlen($this->s);
@@ -260,6 +258,10 @@ class TlScanner {
     $this->tokens[] = new TlToken(TlTokenType::InputStart, '<start of input>');
     $this->execute1();
     $this->tokens[] = new TlToken(TlTokenType::InputEnd, '<end of input>');
+  }
+  
+  function getInputName() : string {
+    return $this->inputName;
   }
 };
 

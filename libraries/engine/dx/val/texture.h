@@ -5,7 +5,7 @@
 #include "dx/assets.h"
 
 /// @brief The base of all textures.
-DX_DECLARE_OBJECT_TYPE("dx.val.texture",
+Core_declareObjectType("dx.val.texture",
                        dx_val_texture,
                        dx_val_object);
   
@@ -18,11 +18,11 @@ struct dx_val_texture {
   dx_val_context* context;
 };
 
-static inline dx_val_texture_dispatch* DX_VAL_TEXTURE_DISPATCH(void* p) {
-  return (dx_val_texture_dispatch*)p;
+static inline dx_val_texture_Dispatch* DX_VAL_TEXTURE_DISPATCH(void* p) {
+  return (dx_val_texture_Dispatch*)p;
 }
 
-struct dx_val_texture_dispatch {
+struct dx_val_texture_Dispatch {
   Core_Object_Dispatch _parent;
   Core_Result(*set_data)(dx_val_texture*, dx_assets_texture*);
   Core_Result(*set_texture_address_mode_u)(dx_val_texture*, Core_TextureAddressMode);

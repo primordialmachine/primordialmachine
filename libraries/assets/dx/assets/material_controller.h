@@ -6,7 +6,7 @@ typedef struct dx_assets_material dx_assets_material;
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-DX_DECLARE_OBJECT_TYPE("dx.assets.material_controller",
+Core_declareObjectType("dx.assets.material_controller",
                        dx_assets_material_controller,
                        Core_Object);
 
@@ -18,11 +18,11 @@ struct dx_assets_material_controller {
   Core_Object _parent;
 };
 
-static inline dx_assets_material_controller_dispatch* DX_ASSETS_MATERIAL_CONTROLLER_DISPATCH(void* p) {
-  return (dx_assets_material_controller_dispatch*)p;
+static inline dx_assets_material_controller_Dispatch* DX_ASSETS_MATERIAL_CONTROLLER_DISPATCH(void* p) {
+  return (dx_assets_material_controller_Dispatch*)p;
 }
 
-struct dx_assets_material_controller_dispatch {
+struct dx_assets_material_controller_Dispatch {
   Core_Object_Dispatch parent;
   Core_Result (*update)(dx_assets_material_controller* SELF, dx_assets_material* material, Core_Real32 delta_seconds);
 };
@@ -37,7 +37,7 @@ static inline Core_Result dx_assets_material_controller_update(dx_assets_materia
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 /// @brief Controller that interpolates the ambient color of a material.
-DX_DECLARE_OBJECT_TYPE("dx.assets.material_controllers.ambient_color",
+Core_declareObjectType("dx.assets.material_controllers.ambient_color",
                        dx_assets_material_controllers_ambient_color,
                        dx_assets_material_controller);
 
@@ -54,12 +54,12 @@ struct dx_assets_material_controllers_ambient_color {
   DX_RGB_N8 current;
 };
 
-static inline dx_assets_material_controllers_ambient_color_dispatch* DX_ASSETS_MATERIAL_CONTROLLERS_AMBIENT_COLOR_DISPATCH(void* p) {
-  return (dx_assets_material_controllers_ambient_color_dispatch*)p;
+static inline dx_assets_material_controllers_ambient_color_Dispatch* DX_ASSETS_MATERIAL_CONTROLLERS_AMBIENT_COLOR_DISPATCH(void* p) {
+  return (dx_assets_material_controllers_ambient_color_Dispatch*)p;
 }
 
-struct dx_assets_material_controllers_ambient_color_dispatch {
-  dx_assets_material_controller_dispatch _parent;
+struct dx_assets_material_controllers_ambient_color_Dispatch {
+  dx_assets_material_controller_Dispatch _parent;
 };
 
 /// @detail

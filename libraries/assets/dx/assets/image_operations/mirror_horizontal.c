@@ -1,14 +1,14 @@
 #include "dx/assets/image_operations/mirror_horizontal.h"
 
 
-DX_DEFINE_OBJECT_TYPE("dx.assets.image_operations.mirror_horizontal",
+Core_defineObjectType("dx.assets.image_operations.mirror_horizontal",
                       dx_asset_image_operations_mirror_horizontal,
                       dx_assets_image_operation)
 
 static void dx_asset_image_operations_mirror_horizontal_destruct(dx_asset_image_operations_mirror_horizontal* SELF)
 {/*Intentionally empty.*/}
 
-static void dx_asset_image_operations_mirror_horizontal_constructDispatch(dx_asset_image_operations_mirror_horizontal_dispatch* SELF)
+static void dx_asset_image_operations_mirror_horizontal_constructDispatch(dx_asset_image_operations_mirror_horizontal_Dispatch* SELF)
 {/*Intentionally empty.*/}
 
 Core_Result dx_asset_image_operations_mirror_horizontal_construct(dx_asset_image_operations_mirror_horizontal* SELF) {
@@ -23,7 +23,7 @@ Core_Result dx_asset_image_operations_mirror_horizontal_construct(dx_asset_image
 Core_Result dx_asset_image_operations_mirror_horizontal_create(dx_asset_image_operations_mirror_horizontal** RETURN) {
   DX_CREATE_PREFIX(dx_asset_image_operations_mirror_horizontal);
   if (dx_asset_image_operations_mirror_horizontal_construct(SELF)) {
-    DX_UNREFERENCE(SELF);
+    CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
   }

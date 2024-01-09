@@ -5,79 +5,80 @@
 #include "Core/Tests/fundamentalTypes.h"
 #include "Core/Tests/nextPowerOfTwo.h"
 #include "Core/Tests/safeAddNx.h"
+#include "Core/Tests/safeMulIx.h"
 #include "Core/Tests/safeMulNx.h"
 
 #include "Core/Tests/Signals/Test1.h"
 
 static Core_Result Core_Tests_applicationMsgsTests() {
-  Core_ApplicationMessage* msg = NULL;
+  Core_ApplicationMessage* message = NULL;
   //
-  if (Core_ApplicationMessage_create(&msg, Core_ApplicationMessageKind_QuitRequested)) {
+  if (Core_ApplicationMessage_create(&message, Core_ApplicationMessageKind_QuitRequested)) {
     return Core_Failure;
   }
   //
-  DX_UNREFERENCE(msg);
-  msg = NULL;
+  CORE_UNREFERENCE(message);
+  message = NULL;
   //
   return Core_Success;
 }
 
 static Core_Result Core_Tests_mouseButtonMsgTests() {
-  dx_mouse_button_msg* msg = NULL;
+  Core_MouseButtonMessage* message = NULL;
   //
-  if (dx_mouse_button_msg_create(&msg, DX_MOUSE_BUTTON_ACTION_PRESSED, Core_MouseButton_Button0, 0, 0, 0)) {
+  if (Core_MouseButtonMessage_create(&message, Core_MouseButtonAction_Pressed, Core_MouseButton_Button0, 0, 0, 0)) {
     return Core_Failure;
   }
-  DX_UNREFERENCE(msg);
-  msg = NULL;
+  CORE_UNREFERENCE(message);
+  message = NULL;
   //
-  if (dx_mouse_button_msg_create(&msg, DX_MOUSE_BUTTON_ACTION_RELEASED, Core_MouseButton_Button0, 0, 0, 0)) {
+  if (Core_MouseButtonMessage_create(&message, Core_MouseButtonAction_Released, Core_MouseButton_Button0, 0, 0, 0)) {
     return Core_Failure;
   }
-  DX_UNREFERENCE(msg);
-  msg = NULL;
+  CORE_UNREFERENCE(message);
+  message = NULL;
   //
   return Core_Success;
 }
 
 static Core_Result Core_Tests_mousePointerMsgTests() {
-  dx_mouse_pointer_msg* msg = NULL;
+  Core_MousePointerMessage* message = NULL;
   //
-  if (dx_mouse_pointer_msg_create(&msg, DX_MOUSE_POINTER_ACTION_MOVED, 0, 0, 0)) {
+  if (Core_MousePointerMessage_create(&message, Core_MousePointerAction_Moved, 0, 0, 0)) {
     return Core_Failure;
   }
-  DX_UNREFERENCE(msg);
-  msg = NULL;
+  CORE_UNREFERENCE(message);
+  message = NULL;
   //
-  if (dx_mouse_pointer_msg_create(&msg, DX_MOUSE_POINTER_ACTION_ENTERED, 0, 0, 0)) {
+  if (Core_MousePointerMessage_create(&message, Core_MousePointerAction_Entered, 0, 0, 0)) {
     return Core_Failure;
   }
-  DX_UNREFERENCE(msg);
-  msg = NULL;
+  CORE_UNREFERENCE(message);
+  message = NULL;
   //
-  if (dx_mouse_pointer_msg_create(&msg, DX_MOUSE_POINTER_ACTION_EXITED, 0, 0, 0)) {
+  if (Core_MousePointerMessage_create(&message, Core_MousePointerAction_Exited, 0, 0, 0)) {
     return Core_Failure;
   }
-  DX_UNREFERENCE(msg);
-  msg = NULL;
+  CORE_UNREFERENCE(message);
+  message = NULL;
   //
   return Core_Success;
 }
 
 static Core_Result Core_Tests_keyboardKeyMsgTests() {
-  dx_keyboard_key_msg* msg = NULL;
+  Core_KeyboardKeyMessage* message = NULL;
   //
-  if (dx_keyboard_key_msg_create(&msg, Core_KeyboardKeyAction_Pressed, Core_KeyboardKey_A, 0)) {
+  if (Core_KeyboardKeyMessage_create(&message, Core_KeyboardKeyAction_Pressed, Core_KeyboardKey_A, 0)) {
     return Core_Failure;
   }
-  DX_UNREFERENCE(msg);
-  msg = NULL;
+  CORE_UNREFERENCE(message);
+  message = NULL;
   //
-  if (dx_keyboard_key_msg_create(&msg, Core_KeyboardKeyAction_Released, Core_KeyboardKey_A, 0)) {
+  if (Core_KeyboardKeyMessage_create(&message, Core_KeyboardKeyAction_Released, Core_KeyboardKey_A, 0)) {
     return Core_Failure;
   }
-  DX_UNREFERENCE(msg);
-  msg = NULL;
+  CORE_UNREFERENCE(message);
+  message = NULL;
   //
   return Core_Success;
 }
@@ -146,7 +147,7 @@ static Core_Result run_tests() {
   fprintf(stdout, "Core.Tests.safeMulNxTests succeded\n");
 
 #if defined(DX_SAFE_MUL_IX_WITH_TESTS) && 1 == DX_SAFE_MUL_IX_WITH_TESTS
-  if (dx_safe_mul_ix_tests()) {
+  if (Core_Tests_safeMulIxTests()) {
     fprintf(stdout, "Core.Tests.safeMulIxTests failed\n");
     return Core_Failure;
   }

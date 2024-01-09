@@ -1,4 +1,4 @@
-// Copyright (c) 2019-2023 Michael Heilmann. All rights reserved.
+// Copyright (c) 2018-2024 Michael Heilmann. All rights reserved.
 
 #if !defined(CORE_VISUALS_TEXTUREADDRESSMODE_H_INCLUDED)
 #define CORE_VISUALS_TEXTUREADDRESSMODE_H_INCLUDED
@@ -6,7 +6,7 @@
 #include "dx/core/TypeSystem.h"
 
 /* http://localhost/val#core-textureaddressmode */
-DX_DECLARE_ENUMERATION_TYPE("Core.TextureAddressMode",
+Core_declareEnumerationType("Core.TextureAddressMode",
                             Core_TextureAddressMode);
 
 enum Core_TextureAddressMode {

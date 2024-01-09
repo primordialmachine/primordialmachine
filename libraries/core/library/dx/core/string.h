@@ -6,13 +6,27 @@
 
 /// @ingroup Core_Strings
 /// @brief The type of a string.
-DX_DECLARE_OBJECT_TYPE("Core.String",
+Core_declareObjectType("Core.String",
                        Core_String,
                        Core_Object);
 
-static inline Core_String* DX_STRING(void* p) {
+static inline Core_String* CORE_STRING(void* p) {
   return (Core_String*)p;
 }
+
+struct Core_String {
+  Core_Object _parent;
+  Core_Size number_of_bytes;
+  char* bytes;
+};
+
+static inline Core_String* CORE_STRING_DISPATCH(void* p) {
+  return (Core_String*)p;
+}
+
+struct Core_String_Dispatch {
+  Core_Object_Dispatch _parent;
+};
 
 /// @brief Create a formatted string.
 /// @param RETURN A pointer to a <code>Core_String*</code> variable.
@@ -106,15 +120,5 @@ Core_Result Core_String_getHashValue(Core_Size* RETURN, Core_String const* SELF)
 /// @success <code>*RETURN</code> was assigned the iterator.
 /// @method{Core_String}
 Core_Result Core_String_create_iterator(dx_string_iterator** RETURN, Core_String* SELF);
-
-struct Core_String {
-  Core_Object _parent;
-  Core_Size number_of_bytes;
-  char *bytes;
-};
-
-struct Core_String_dispatch {
-  Core_Object_Dispatch _parent;
-};
 
 #endif // DX_CORE_STRING_H_INCLUDED

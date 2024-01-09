@@ -7,7 +7,7 @@
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-DX_DEFINE_OBJECT_TYPE("dx.assets.face",
+Core_defineObjectType("dx.assets.face",
                       dx_assets_face,
                       Core_Object);
 
@@ -19,7 +19,7 @@ static void dx_assets_face_destruct(dx_assets_face* SELF) {
   SELF->number_of_indices = 0;
 }
 
-static void dx_assets_face_constructDispatch(dx_assets_face_dispatch* SELF)
+static void dx_assets_face_constructDispatch(dx_assets_face_Dispatch* SELF)
 {/*Intentionally empty.*/}
 
 Core_Result dx_assets_face_construct_triangle(dx_assets_face* SELF, uint32_t a, uint32_t b, uint32_t c) {
@@ -38,7 +38,7 @@ Core_Result dx_assets_face_construct_triangle(dx_assets_face* SELF, uint32_t a, 
 Core_Result dx_assets_face_create_triangle(dx_assets_face** RETURN, uint32_t a, uint32_t b, uint32_t c) {
   DX_CREATE_PREFIX(dx_assets_face);
   if (dx_assets_face_construct_triangle(SELF, a, b, c)) {
-    DX_UNREFERENCE(SELF);
+    CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
   }
@@ -63,7 +63,7 @@ Core_Result dx_assets_face_construct_quadriliteral(dx_assets_face* SELF, uint32_
 Core_Result dx_assets_face_create_quadriliteral(dx_assets_face** RETURN, uint32_t a, uint32_t b, uint32_t c, uint32_t d) {
   DX_CREATE_PREFIX(dx_assets_face);
   if (dx_assets_face_construct_quadriliteral(SELF, a, b, c, d)) {
-    DX_UNREFERENCE(SELF);
+    CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
   }
@@ -89,7 +89,7 @@ Core_Result dx_assets_face_construct_copy(dx_assets_face* SELF, dx_assets_face* 
 Core_Result dx_assets_face_create_copy(dx_assets_face** RETURN, dx_assets_face* other) {
   DX_CREATE_PREFIX(dx_assets_face);
   if (dx_assets_face_construct_copy(SELF, other)) {
-    DX_UNREFERENCE(SELF);
+    CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
   }
@@ -108,11 +108,11 @@ Core_Result dx_assets_face_to_triangles(dx_assets_face* SELF, dx_inline_object_a
       return Core_Failure;
     }
     if (dx_inline_object_array_append(faces, CORE_OBJECT(a))) {
-      DX_UNREFERENCE(a);
+      CORE_UNREFERENCE(a);
       a = NULL;
       return Core_Failure;
     }
-    DX_UNREFERENCE(a);
+    CORE_UNREFERENCE(a);
     a = NULL;
     return 0;
   } else if (SELF->number_of_indices == 4) {
@@ -122,22 +122,22 @@ Core_Result dx_assets_face_to_triangles(dx_assets_face* SELF, dx_inline_object_a
       return Core_Failure;
     }
     if (dx_inline_object_array_append(faces, CORE_OBJECT(a))) {
-      DX_UNREFERENCE(a);
+      CORE_UNREFERENCE(a);
       a = NULL;
       return Core_Failure;
     }
-    DX_UNREFERENCE(a);
+    CORE_UNREFERENCE(a);
     a = NULL;
     //
     if (dx_assets_face_create_triangle(&a, SELF->indices[3], SELF->indices[2], SELF->indices[0])) {
       return Core_Failure;
     }
     if (dx_inline_object_array_append(faces, CORE_OBJECT(a))) {
-      DX_UNREFERENCE(a);
+      CORE_UNREFERENCE(a);
       a = NULL;
       return Core_Failure;
     }
-    DX_UNREFERENCE(a);
+    CORE_UNREFERENCE(a);
     a = NULL;
     return Core_Success;
   } else {
@@ -148,7 +148,7 @@ Core_Result dx_assets_face_to_triangles(dx_assets_face* SELF, dx_inline_object_a
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-DX_DEFINE_OBJECT_TYPE("dx.assets.mesh",
+Core_defineObjectType("dx.assets.mesh",
                       dx_assets_mesh,
                       Core_Object);
 
@@ -207,11 +207,11 @@ static Core_Result resize_vertex_arrays(dx_assets_mesh* SELF, Core_Boolean shrin
 static void dx_assets_mesh_destruct(dx_assets_mesh* SELF) {
   dx_inline_object_array_uninitialize(&SELF->operations);
   if (SELF->name) {
-    DX_UNREFERENCE(SELF->name);
+    CORE_UNREFERENCE(SELF->name);
     SELF->name = NULL;
   }
   if (SELF->material_reference) {
-    DX_UNREFERENCE(SELF->material_reference);
+    CORE_UNREFERENCE(SELF->material_reference);
     SELF->material_reference = NULL;
   }
   if (SELF->vertices.ambient_uv) {
@@ -228,7 +228,7 @@ static void dx_assets_mesh_destruct(dx_assets_mesh* SELF) {
   }
 }
 
-static void dx_assets_mesh_constructDispatch(dx_assets_mesh_dispatch* SELF)
+static void dx_assets_mesh_constructDispatch(dx_assets_mesh_Dispatch* SELF)
 {/*Intentionally empty.*/}
 
 static Core_Result dx_assets_mesh_construct(dx_assets_mesh* SELF, Core_String* name, Core_String* specifier, Core_VertexFormat vertex_format, dx_asset_reference* material_reference) {
@@ -274,7 +274,7 @@ static Core_Result dx_assets_mesh_construct(dx_assets_mesh* SELF, Core_String* n
     } \
     Core_Boolean isEqualTo = Core_False; \
     if (Core_String_isEqualTo(&isEqualTo, specifier, temporary)) { \
-      DX_UNREFERENCE(temporary); \
+      CORE_UNREFERENCE(temporary); \
       temporary = NULL; \
       Core_Memory_deallocate(SELF->vertices.ambient_uv); \
       SELF->vertices.ambient_uv = NULL; \
@@ -287,7 +287,7 @@ static Core_Result dx_assets_mesh_construct(dx_assets_mesh* SELF, Core_String* n
     if (isEqualTo) { \
       generator = &dx_assets_mesh_on_##name; \
     } \
-    DX_UNREFERENCE(temporary); \
+    CORE_UNREFERENCE(temporary); \
     temporary = NULL; \
   }
 
@@ -329,17 +329,17 @@ SELECT_GENERATOR(octahedron)
     return Core_Failure;
   }
   SELF->material_reference = material_reference;
-  DX_REFERENCE(SELF->material_reference);
+  CORE_REFERENCE(SELF->material_reference);
 
   SELF->name = name;
-  DX_REFERENCE(name);
+  CORE_REFERENCE(name);
 
   SELF->vertex_format = vertex_format;
 
   if (dx_inline_object_array_initialize(&SELF->operations, 0)) {
-    DX_UNREFERENCE(SELF->name);
+    CORE_UNREFERENCE(SELF->name);
     SELF->name = NULL;
-    DX_UNREFERENCE(SELF->material_reference);
+    CORE_UNREFERENCE(SELF->material_reference);
     SELF->material_reference = NULL;
     Core_Memory_deallocate(SELF->vertices.ambient_uv);
     SELF->vertices.ambient_uv = NULL;
@@ -357,7 +357,7 @@ SELECT_GENERATOR(octahedron)
 Core_Result dx_assets_mesh_create(dx_assets_mesh** RETURN, Core_String * name, Core_String* specifier, Core_VertexFormat vertex_format, dx_asset_reference* material_reference) {
   DX_CREATE_PREFIX(dx_assets_mesh);
   if (dx_assets_mesh_construct(SELF, name, specifier, vertex_format, material_reference)) {
-    DX_UNREFERENCE(SELF);
+    CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
   }

@@ -3,7 +3,7 @@
 #include "dx/data_definition_language.h"
 #include "dx/ui/widget.h"
 
-DX_DEFINE_OBJECT_TYPE("dx.ui.type_handler",
+Core_defineObjectType("dx.ui.type_handler",
                       dx_ui_type_handler,
                       Core_Object);
 
@@ -13,7 +13,7 @@ static Core_Result _parse_widget_name(dx_ui_type_handler* SELF, dx_ui_manager* m
 static void dx_ui_type_handler_destruct(dx_ui_type_handler* SELF)
 {/*Intentionally empty.*/}
 
-static void dx_ui_type_handler_constructDispatch(dx_ui_type_handler_dispatch* SELF) {
+static void dx_ui_type_handler_constructDispatch(dx_ui_type_handler_Dispatch* SELF) {
   SELF->parse_widget_name = &_parse_widget_name;
 }
 
@@ -24,27 +24,27 @@ static Core_Result _parse_widget_name(dx_ui_type_handler* SELF, dx_ui_manager* m
   }
   dx_ddl_node* node_value = NULL;
   if (dx_ddl_node_map_get(&node_value, node, node_key)) {
-    DX_UNREFERENCE(node_key);
+    CORE_UNREFERENCE(node_key);
     node_key = NULL;
     return Core_Failure;
   }
-  DX_UNREFERENCE(node_key);
+  CORE_UNREFERENCE(node_key);
   node_key = NULL;
   Core_String* string_value = NULL;
   if (dx_ddl_node_get_string(&string_value, node_value)) {
-    DX_UNREFERENCE(node_value);
+    CORE_UNREFERENCE(node_value);
     node_value = NULL;
     return Core_Failure;
   }
-  DX_UNREFERENCE(node_value);
+  CORE_UNREFERENCE(node_value);
   node_value = NULL;
 
   if (dx_ui_widget_set_name(widget, string_value)) {
-    DX_UNREFERENCE(string_value);
+    CORE_UNREFERENCE(string_value);
     string_value = NULL;
     return Core_Failure;
   }
-  DX_UNREFERENCE(string_value);
+  CORE_UNREFERENCE(string_value);
   string_value = NULL;
   return Core_Success;
 }

@@ -5,7 +5,7 @@
 
 #include "dx/core.h"
 
-DX_DECLARE_ENUMERATION_TYPE("dx.ddl.node_kind",
+Core_declareEnumerationType("dx.ddl.node_kind",
                             dx_ddl_node_kind);
 
 enum dx_ddl_node_kind {

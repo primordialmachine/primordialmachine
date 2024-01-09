@@ -5,7 +5,7 @@
 #define AL_LIBTYPE_STATIC
 #include <AL/al.h>
 
-DX_DEFINE_OBJECT_TYPE("dx.aal.al.context",
+Core_defineObjectType("dx.aal.al.context",
                       dx_aal_al_context,
                       dx_aal_context);
 
@@ -20,7 +20,7 @@ static void dx_aal_al_context_destruct(dx_aal_al_context* SELF) {
   SELF->context = NULL;
 }
 
-static void dx_aal_al_context_constructDispatch(dx_aal_al_context_dispatch* SELF) {
+static void dx_aal_al_context_constructDispatch(dx_aal_al_context_Dispatch* SELF) {
   DX_AAL_CONTEXT_DISPATCH(SELF)->start = (Core_Result(*)(dx_aal_context*)) & start;
   DX_AAL_CONTEXT_DISPATCH(SELF)->stop = (Core_Result(*)(dx_aal_context*)) & stop;
 }
@@ -97,7 +97,7 @@ Core_Result dx_aal_al_context_construct(dx_aal_al_context * SELF, dx_aal_al_syst
 Core_Result dx_aal_al_context_create(dx_aal_al_context** RETURN, dx_aal_al_system* system) {
   DX_CREATE_PREFIX(dx_aal_al_context);
   if (dx_aal_al_context_construct(SELF, system)) {
-    DX_UNREFERENCE(SELF);
+    CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
   }

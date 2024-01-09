@@ -3,7 +3,7 @@
 
 #include "dx/core.h"
 
-DX_DECLARE_OBJECT_TYPE("dx.fps_counter",
+Core_declareObjectType("dx.fps_counter",
                        dx_fps_counter,
                        Core_Object);
 
@@ -15,11 +15,11 @@ struct dx_fps_counter {
   Core_Object _parent;
 };
 
-static inline dx_fps_counter_dispatch* DX_FPS_COUNTER_DISPATCH(void* p) {
-  return (dx_fps_counter_dispatch*)p;
+static inline dx_fps_counter_Dispatch* DX_FPS_COUNTER_DISPATCH(void* p) {
+  return (dx_fps_counter_Dispatch*)p;
 }
 
-struct dx_fps_counter_dispatch {
+struct dx_fps_counter_Dispatch {
   Core_Object_Dispatch _parent;
   Core_Result(*on_enter_frame)(dx_fps_counter*);
   Core_Result(*on_leave_frame)(dx_fps_counter*);
@@ -42,7 +42,7 @@ static inline Core_Result dx_fps_counter_get_fps(Core_Real64* RETURN, dx_fps_cou
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-DX_DECLARE_OBJECT_TYPE("dx.default_fps_counter",
+Core_declareObjectType("dx.default_fps_counter",
                        dx_default_fps_counter,
                        Core_Object);
 
@@ -66,12 +66,12 @@ struct dx_default_fps_counter {
   Core_Natural64 start;
 };
 
-static inline dx_default_fps_counter_dispatch* DX_DEFAULT_FPS_COUNTER_DISPATCH(void* p) {
-  return (dx_default_fps_counter_dispatch*)p;
+static inline dx_default_fps_counter_Dispatch* DX_DEFAULT_FPS_COUNTER_DISPATCH(void* p) {
+  return (dx_default_fps_counter_Dispatch*)p;
 }
 
-struct dx_default_fps_counter_dispatch {
-  dx_fps_counter_dispatch _parent;
+struct dx_default_fps_counter_Dispatch {
+  dx_fps_counter_Dispatch _parent;
 };
 
 Core_Result dx_default_fps_counter_construct(dx_default_fps_counter* SELF);

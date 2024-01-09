@@ -13,7 +13,7 @@
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-DX_DECLARE_OBJECT_TYPE("dx.default_application_presenter",
+Core_declareObjectType("dx.default_application_presenter",
                        dx_default_application_presenter,
                        dx_application_presenter);
 
@@ -49,12 +49,12 @@ struct dx_default_application_presenter {
   Core_Size scene_index;
 };
 
-static inline dx_default_application_presenter_dispatch* DX_DEFAULT_APPLICATION_PRESENTER_DISPATCH(void* p) {
-  return (dx_default_application_presenter_dispatch*)p;
+static inline dx_default_application_presenter_Dispatch* DX_DEFAULT_APPLICATION_PRESENTER_DISPATCH(void* p) {
+  return (dx_default_application_presenter_Dispatch*)p;
 }
 
-struct dx_default_application_presenter_dispatch {
-  dx_application_presenter_dispatch _parent;
+struct dx_default_application_presenter_Dispatch {
+  dx_application_presenter_Dispatch _parent;
 };
 
 Core_Result dx_default_application_presenter_construct(dx_default_application_presenter* SELF, dx_font_presenter* font_presenter, dx_rectangle_presenter* rectangle_presenter, dx_application* application, dx_cl_interpreter* cl_interpreter, dx_msg_queue* message_queue, dx_val_context* val_context);

@@ -32,7 +32,7 @@ struct _dx_rti_type {
       void (*destruct_object)(Core_Object*);
 
       Core_Size dispatch_size;
-      void (*construct_dispatch)(Core_Object_Dispatch*);
+      void (*constructDispatch)(Core_Object_Dispatch*);
 
       /// @brief Pointer to the dispatch or a null pointer.
       void* dispatch;

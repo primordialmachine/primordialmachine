@@ -3,7 +3,7 @@
 
 #include "dx/adl/context.h"
 
-DX_DECLARE_OBJECT_TYPE("dx.adl.type_handlers.image_reader",
+Core_declareObjectType("dx.adl.type_handlers.image_reader",
                        dx_adl_type_handlers_image,
                        dx_adl_type_handler);
 
@@ -16,15 +16,15 @@ struct dx_adl_type_handlers_image {
   /// @brief
   /// Set of expected keys.
   /// If a key is not in that set, then this is a semantical error.
-  dx_inline_pointer_hashmap expected_keys;
+  Core_InlinePointerHashmap expected_keys;
 };
 
-static inline dx_adl_type_handlers_image_dispatch* DX_ADL_TYPE_HANDLERS_DISPATCH(void* p) {
-  return (dx_adl_type_handlers_image_dispatch*)p;
+static inline dx_adl_type_handlers_image_Dispatch* DX_ADL_TYPE_HANDLERS_DISPATCH(void* p) {
+  return (dx_adl_type_handlers_image_Dispatch*)p;
 }
 
-struct dx_adl_type_handlers_image_dispatch {
-  dx_adl_type_handler_dispatch _parent;
+struct dx_adl_type_handlers_image_Dispatch {
+  dx_adl_type_handler_Dispatch _parent;
 };
 
 Core_Result dx_adl_type_handlers_image_construct(dx_adl_type_handlers_image* SELF);

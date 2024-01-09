@@ -1,0 +1,30 @@
+{
+  "type" : "enumeration",
+  "last-update" : "2024-01-08",
+  "indices" : "core",
+  "name" : "Core_FileAccessMode",
+  "id" : "core-fileaccessmode",
+  "signature" : "typedef enum Core_FileAccessMode &lt;implementation&gt; Core_FileAccessMode;",
+  "description": [
+    "An enumeration of file access modes.@(newline())",
+    "The enumeration elements can be combined."
+  ],
+  "elements": [
+    {
+      "name" : "Core_FileAccessMode_Read",
+      "description" : "Read access. Can be combined with @{code('Core_FileAccessMode_Write')}."
+    },
+    {
+      "name" : "Core_FileAccessMode_Write",
+      "description" : "Write access. Can be combined with @{code('Core_FileAccessMode_Read')}."
+    },
+    {
+      "name" : "Core_FileAccessMode_ReadWrite",
+      "description" : "Read and write access. Alias for @{code('Core_FileAccessMode_Read|Core_FileAccessMode_Write')} and for @{code('Core_FileAccessMode_WriteRead')}."
+    },
+    {
+      "name" : "Core_FileAccessMode_WriteRead",
+      "description" : "Write and read access. Alias for @{code('Core_FileAccessMode_Write|Core_FileAccessMode_Read')} and for @{code('Core_FileAccessMode_ReadWrite')}."
+    }
+  ]
+}

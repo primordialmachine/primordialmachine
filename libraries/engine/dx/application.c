@@ -16,7 +16,7 @@
 
 static dx_application* g_application = NULL;
 
-DX_DEFINE_OBJECT_TYPE("dx.application",
+Core_defineObjectType("dx.application",
                       dx_application,
                       Core_Object);
 
@@ -33,19 +33,19 @@ static Core_Result get_aal_context(dx_aal_context** RETURN, dx_application* SELF
 static Core_Result get_assets_context(dx_assets_context** RETURN, dx_application* SELF);
 
 static void dx_application_destruct(dx_application* SELF) {
-  DX_UNREFERENCE(SELF->assets_system);
+  CORE_UNREFERENCE(SELF->assets_system);
   SELF->assets_system = NULL;
 
-  DX_UNREFERENCE(SELF->aal_system);
+  CORE_UNREFERENCE(SELF->aal_system);
   SELF->aal_system = NULL;
   
-  DX_UNREFERENCE(SELF->val_system);
+  CORE_UNREFERENCE(SELF->val_system);
   SELF->val_system = NULL;
   
   g_application = NULL; // Singleton guard.
 }
 
-static void dx_application_constructDispatch(dx_application_dispatch* SELF) {
+static void dx_application_constructDispatch(dx_application_Dispatch* SELF) {
   DX_APPLICATION_DISPATCH(SELF)->startup_systems = (Core_Result(*)(dx_application*)) & startup_systems;
   DX_APPLICATION_DISPATCH(SELF)->shutdown_systems = (Core_Result(*)(dx_application*)) & shutdown_systems;
   DX_APPLICATION_DISPATCH(SELF)->update = (Core_Result(*)(dx_application*))&update;
@@ -146,15 +146,15 @@ Core_Result dx_application_construct
   }
   //
   if (dx_system_factory_create_system((dx_system**)&SELF->aal_system, DX_SYSTEM_FACTORY(aal_system_factory), msg_queue)) {
-    DX_UNREFERENCE(SELF->val_system);
+    CORE_UNREFERENCE(SELF->val_system);
     SELF->val_system = NULL;
     return Core_Failure;
   }
   //
   if (dx_system_factory_create_system((dx_system**)&SELF->assets_system, DX_SYSTEM_FACTORY(assets_system_factory), msg_queue)) {
-    DX_UNREFERENCE(SELF->aal_system);
+    CORE_UNREFERENCE(SELF->aal_system);
     SELF->aal_system = NULL;
-    DX_UNREFERENCE(SELF->val_system);
+    CORE_UNREFERENCE(SELF->val_system);
     SELF->val_system = NULL;
     return Core_Failure;
   }
@@ -177,7 +177,7 @@ Core_Result dx_application_create
 {
   DX_CREATE_PREFIX(dx_application);
   if (dx_application_construct(SELF, val_system_factory, aal_system_factory, assets_system_factory, msg_queue)) {
-    DX_UNREFERENCE(SELF);
+    CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
   }
@@ -191,11 +191,11 @@ Core_Result dx_application_emit_quit_msg(dx_application* SELF) {
     return Core_Failure;
   }
   if (dx_msg_queue_push(SELF->msg_queue, msg)) {
-    DX_UNREFERENCE(msg);
+    CORE_UNREFERENCE(msg);
     msg = NULL;
     return Core_Failure;
   }
-  DX_UNREFERENCE(msg);
+  CORE_UNREFERENCE(msg);
   msg = NULL;
   return Core_Success;
 }
@@ -209,7 +209,7 @@ Core_Result dx_application_get(dx_application** RETURN) {
     Core_setError(Core_Error_NotInitialized);
     return Core_Failure;
   }
-  DX_REFERENCE(g_application);
+  CORE_REFERENCE(g_application);
   *RETURN = g_application;
   return Core_Success;
 }

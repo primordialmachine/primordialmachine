@@ -4,14 +4,14 @@
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-DX_DEFINE_OBJECT_TYPE("dx.text_line",
+Core_defineObjectType("dx.text_line",
                       dx_text_range,
                       Core_Object);
 
 static void dx_text_range_destruct(dx_text_range* SELF)
 {/*Intentionally empty.*/}
 
-static void dx_text_range_constructDispatch(dx_text_range_dispatch* SELF)
+static void dx_text_range_constructDispatch(dx_text_range_Dispatch* SELF)
 {/*Intentionally empty.*/}
 
 Core_Result dx_text_range_construct(dx_text_range* SELF, Core_Size start, Core_Size length) {
@@ -25,7 +25,7 @@ Core_Result dx_text_range_construct(dx_text_range* SELF, Core_Size start, Core_S
 Core_Result dx_text_range_create(dx_text_range** RETURN, Core_Size start, Core_Size length) {
   DX_CREATE_PREFIX(dx_text_range);
   if (dx_text_range_construct(SELF, start, length)) {
-    DX_UNREFERENCE(SELF);
+    CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
   }
@@ -35,18 +35,18 @@ Core_Result dx_text_range_create(dx_text_range** RETURN, Core_Size start, Core_S
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-DX_DEFINE_OBJECT_TYPE("dx.text_document",
+Core_defineObjectType("dx.text_document",
                       dx_text_document,
                       Core_Object);
 
 static void dx_text_document_destruct(dx_text_document* SELF) {
-  DX_UNREFERENCE(SELF->lines);
+  CORE_UNREFERENCE(SELF->lines);
   SELF->lines = NULL;
-  DX_UNREFERENCE(SELF->text);
+  CORE_UNREFERENCE(SELF->text);
   SELF->text = NULL;
 }
 
-static void dx_text_document_constructDispatch(dx_text_document_dispatch* SELF)
+static void dx_text_document_constructDispatch(dx_text_document_Dispatch* SELF)
 {/*Intentionally empty.*/}
 
 Core_Result dx_text_document_construct(dx_text_document* SELF) {
@@ -55,7 +55,7 @@ Core_Result dx_text_document_construct(dx_text_document* SELF) {
     return Core_Failure;
   }
   if (dx_string_buffer_create(&SELF->text)) {
-    DX_UNREFERENCE(SELF->lines);
+    CORE_UNREFERENCE(SELF->lines);
     SELF->lines = NULL;
     return Core_Failure;
   }
@@ -66,7 +66,7 @@ Core_Result dx_text_document_construct(dx_text_document* SELF) {
 Core_Result dx_text_document_create(dx_text_document** RETURN) {
   DX_CREATE_PREFIX(dx_text_document);
   if (dx_text_document_construct(SELF)) {
-    DX_UNREFERENCE(SELF);
+    CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
   }
@@ -147,57 +147,57 @@ static Core_Result parse(dx_object_array** RETURN, Core_String* text) {
   // Scan the text.
   dx_document_definition_language_scanner* scanner = NULL;
   if (dx_document_definition_language_scanner_create(&scanner)) {
-    DX_UNREFERENCE(lines);
+    CORE_UNREFERENCE(lines);
     lines = NULL;
     return Core_Failure;
   }
   Core_Size number_of_bytes = 0;
   if (Core_String_getNumberOfBytes(&number_of_bytes, text)) {
-    DX_UNREFERENCE(scanner);
+    CORE_UNREFERENCE(scanner);
     scanner = NULL;
-    DX_UNREFERENCE(lines);
+    CORE_UNREFERENCE(lines);
     lines = NULL;
     return Core_Failure;
   }
   void const* bytes = NULL;
   if (Core_String_getBytes(&bytes, text)) {
-    DX_UNREFERENCE(scanner);
+    CORE_UNREFERENCE(scanner);
     scanner = NULL;
-    DX_UNREFERENCE(lines);
+    CORE_UNREFERENCE(lines);
     lines = NULL;
     return Core_Failure;
   }
   if (dx_scanner_set(DX_SCANNER(scanner), bytes, number_of_bytes)) {
-    DX_UNREFERENCE(scanner);
+    CORE_UNREFERENCE(scanner);
     scanner = NULL;
-    DX_UNREFERENCE(lines);
+    CORE_UNREFERENCE(lines);
     lines = NULL;
     return Core_Failure;
   }
   dx_document_definition_language_word_kind word_kind;
   // start of input
   if (dx_document_definition_language_scanner_get_word_kind(&word_kind, scanner)) {
-    DX_UNREFERENCE(scanner);
+    CORE_UNREFERENCE(scanner);
     scanner = NULL;
-    DX_UNREFERENCE(lines);
+    CORE_UNREFERENCE(lines);
     lines = NULL;
     return Core_Failure;
   }
   if (word_kind != dx_document_definition_language_word_kind_start_of_input) {
-    DX_UNREFERENCE(scanner);
+    CORE_UNREFERENCE(scanner);
     scanner = NULL;
     return Core_Failure;
   }
   if (dx_scanner_step(DX_SCANNER(scanner))) {
-    DX_UNREFERENCE(scanner);
+    CORE_UNREFERENCE(scanner);
     scanner = NULL;
-    DX_UNREFERENCE(lines);
+    CORE_UNREFERENCE(lines);
     lines = NULL;
     return Core_Failure;
   }
   // lines*
   if (dx_document_definition_language_scanner_get_word_kind(&word_kind, scanner)) {
-    DX_UNREFERENCE(scanner);
+    CORE_UNREFERENCE(scanner);
     scanner = NULL;
     return Core_Failure;
   }
@@ -205,62 +205,62 @@ static Core_Result parse(dx_object_array** RETURN, Core_String* text) {
     Core_Size word_start_offset = 0,
       word_end_offset = 0;
     if (dx_scanner_get_word_start_offset(&word_start_offset, DX_SCANNER(scanner))) {
-      DX_UNREFERENCE(scanner);
+      CORE_UNREFERENCE(scanner);
       scanner = NULL;
-      DX_UNREFERENCE(lines);
+      CORE_UNREFERENCE(lines);
       lines = NULL;
       return Core_Failure;
     }
     if (dx_scanner_get_word_end_offset(&word_end_offset, DX_SCANNER(scanner))) {
-      DX_UNREFERENCE(scanner);
+      CORE_UNREFERENCE(scanner);
       scanner = NULL;
-      DX_UNREFERENCE(lines);
+      CORE_UNREFERENCE(lines);
       lines = NULL;
       return Core_Failure;
     }
     dx_text_range* current_line = NULL;
     if (dx_text_range_create(&current_line, word_start_offset, word_end_offset - word_start_offset)) {
-      DX_UNREFERENCE(scanner);
+      CORE_UNREFERENCE(scanner);
       scanner = NULL;
-      DX_UNREFERENCE(lines);
+      CORE_UNREFERENCE(lines);
       lines = NULL;
       return Core_Failure;
     }
     if (dx_object_array_append(lines, CORE_OBJECT(current_line))) {
-      DX_UNREFERENCE(current_line);
+      CORE_UNREFERENCE(current_line);
       current_line = NULL;
-      DX_UNREFERENCE(scanner);
+      CORE_UNREFERENCE(scanner);
       scanner = NULL;
-      DX_UNREFERENCE(lines);
+      CORE_UNREFERENCE(lines);
       lines = NULL;
       return Core_Failure;
     }
-    DX_UNREFERENCE(current_line);
+    CORE_UNREFERENCE(current_line);
     current_line = NULL;
     if (dx_scanner_step(DX_SCANNER(scanner))) {
-      DX_UNREFERENCE(scanner);
+      CORE_UNREFERENCE(scanner);
       scanner = NULL;
-      DX_UNREFERENCE(lines);
+      CORE_UNREFERENCE(lines);
       lines = NULL;
       return Core_Failure;
     }
     if (dx_document_definition_language_scanner_get_word_kind(&word_kind, scanner)) {
-      DX_UNREFERENCE(scanner);
+      CORE_UNREFERENCE(scanner);
       scanner = NULL;
-      DX_UNREFERENCE(lines);
+      CORE_UNREFERENCE(lines);
       lines = NULL;
       return Core_Failure;
     }
   }
   // end of input
   if (word_kind != dx_document_definition_language_word_kind_end_of_input) {
-    DX_UNREFERENCE(scanner);
+    CORE_UNREFERENCE(scanner);
     scanner = NULL;
-    DX_UNREFERENCE(lines);
+    CORE_UNREFERENCE(lines);
     lines = NULL;
     return Core_Failure;
   }
-  DX_UNREFERENCE(scanner);
+  CORE_UNREFERENCE(scanner);
   scanner = NULL;
   
   *RETURN = lines;
@@ -275,17 +275,17 @@ Core_Result dx_text_document_set_text(dx_text_document* SELF, Core_String* text)
   }
   Core_Size number_of_lines;
   if (dx_object_array_get_size(&number_of_lines, lines)) {
-    DX_UNREFERENCE(lines);
+    CORE_UNREFERENCE(lines);
     lines = NULL;
     return Core_Failure;
   }
   dx_object_array_clear(SELF->lines);
   if (dx_text_document_append_lines(SELF, lines)) {
-    DX_UNREFERENCE(lines);
+    CORE_UNREFERENCE(lines);
     lines = NULL;
     return Core_Failure;
   }
-  DX_UNREFERENCE(lines);
+  CORE_UNREFERENCE(lines);
   lines = NULL;
   if (dx_string_buffer_set_string(SELF->text, text)) {
     /// @todo Can we recover?
@@ -310,7 +310,7 @@ Core_Result dx_text_document_append_text(dx_text_document* SELF, Core_String* te
   }
   Core_Size number_of_lines;
   if (dx_object_array_get_size(&number_of_lines, lines)) {
-    DX_UNREFERENCE(lines);
+    CORE_UNREFERENCE(lines);
     lines = NULL;
     return Core_Failure;
   }
@@ -318,7 +318,7 @@ Core_Result dx_text_document_append_text(dx_text_document* SELF, Core_String* te
   for (Core_Size i = 0; i < number_of_lines; ++i) {
     dx_text_range* line = NULL;
     if (dx_object_array_get_at((Core_Object**) & line, lines, i)) {
-      DX_UNREFERENCE(lines);
+      CORE_UNREFERENCE(lines);
       lines = NULL;
       return Core_Failure;
     }
@@ -326,11 +326,11 @@ Core_Result dx_text_document_append_text(dx_text_document* SELF, Core_String* te
   }
 
   if (dx_text_document_append_lines(SELF, lines)) {
-    DX_UNREFERENCE(lines);
+    CORE_UNREFERENCE(lines);
     lines = NULL;
     return Core_Failure;
   }
-  DX_UNREFERENCE(lines);
+  CORE_UNREFERENCE(lines);
   lines = NULL;
   if (dx_string_buffer_append_string(SELF->text, text)) {
     /// @todo Can we recover?

@@ -1,0 +1,10 @@
+{
+  "type" : "object",
+  "last-update" : "2024-01-09",
+  "indices" : "val",
+  "name" : "Core_CanvasStateChangedMessage",
+  "id" : "core-canvasstatechangedmessage",
+  "signature" : "typedef struct Core_CanvasStateChangedMessage Core_CanvasStateChangedMessage;",
+  "extends" : "@{code('Core_CanvasMessage')}",
+  "description": "A message pertaining to a <em>canvas state changed</em> event."
+}

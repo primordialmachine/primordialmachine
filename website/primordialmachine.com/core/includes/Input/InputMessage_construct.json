@@ -1,0 +1,39 @@
+{
+  "type" : "constructor",
+  "last-update" : "2024-01-08",
+  "indices" : "core",
+  "name" : "Core_InputMessage_construct",
+  "id" : "core-inputmessage-construct",
+  "signature" : "Core_Result Core_InputMessage_construct(Core_InputMessage* SELF, Core_InputMessageKind kind, Core_ModifiersKey modifierKeys);",
+  "parameters" : [
+    {
+      "name" : "SELF",
+      "type" : "@{code('Core_InputMessage*')}",
+      "description" : "A pointer to this @{code('Core_InputMessage')} object."
+    },
+    {
+      "name" : "kind",
+      "type" : "@{code('Core_InputMessageKind')}",
+      "description" : "The kind of this input message object."  
+    },
+    {
+      "name" : "modifierKeys",
+      "type" : "@{code('Core_ModifierKeys')}",
+      "description" : "The modifier keys of this input message object."  
+    }
+  ],
+  "success": "This @{code('Core_InputMessage')} object was constructed.",
+  "errors" : [
+    {
+      "errorCode" : "Core_Error_ArgumentInvalid",
+      "errorCondition" : "@{code('SELF')} is a null pointer."
+    },
+    {
+      "errorCode" : "Core_Error_AllocationFailed",
+      "errorCondition" : "An allocation failed."
+    }
+  ],
+  "description" : "Construct a @{code('Core_InputMessage')} object.",
+  "return" : "@{code('Core_Success')} on success. @{code('Core_Failure')} on failure.",
+  "remarks" : "This function sets the by-thread error variable on failure."
+}

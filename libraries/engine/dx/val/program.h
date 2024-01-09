@@ -5,7 +5,7 @@
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-DX_DECLARE_OBJECT_TYPE("dx.val.program",
+Core_declareObjectType("dx.val.program",
                        dx_val_program,
                        Core_Object);
 
@@ -18,11 +18,11 @@ struct dx_val_program {
   dx_val_context* ctx;
 };
 
-static inline dx_val_program_dispatch* DX_VAL_PROGRAM_DISPATCH(void* p) {
-  return (dx_val_program_dispatch*)p;
+static inline dx_val_program_Dispatch* DX_VAL_PROGRAM_DISPATCH(void* p) {
+  return (dx_val_program_Dispatch*)p;
 }
 
-struct dx_val_program_dispatch {
+struct dx_val_program_Dispatch {
   Core_Object_Dispatch _parent;
   Core_Result (*activate)(dx_val_program*);
   Core_Result (*bind)(dx_val_program*, dx_val_cbinding*);

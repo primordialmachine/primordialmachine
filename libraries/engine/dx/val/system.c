@@ -1,17 +1,17 @@
 #include "dx/val/system.h"
 
-DX_DEFINE_OBJECT_TYPE("dx.val.system",
+Core_defineObjectType("dx.val.system",
                       dx_val_system,
                       dx_system);
 
 static void dx_val_system_destruct(dx_val_system* SELF) {
-  DX_UNREFERENCE(SELF->mouse_state);
+  CORE_UNREFERENCE(SELF->mouse_state);
   SELF->mouse_state = NULL;
-  DX_UNREFERENCE(SELF->keyboard_state);
+  CORE_UNREFERENCE(SELF->keyboard_state);
   SELF->keyboard_state = NULL;
 }
 
-static void dx_val_system_constructDispatch(dx_val_system_dispatch* SELF)
+static void dx_val_system_constructDispatch(dx_val_system_Dispatch* SELF)
 {/*Intentionally empty.*/}
 
 Core_Result dx_val_system_construct(dx_val_system* SELF, dx_msg_queue* msg_queue) {
@@ -24,7 +24,7 @@ Core_Result dx_val_system_construct(dx_val_system* SELF, dx_msg_queue* msg_queue
     return Core_Failure;
   }
   if (dx_mouse_state_create(&SELF->mouse_state)) {
-    DX_UNREFERENCE(SELF->keyboard_state);
+    CORE_UNREFERENCE(SELF->keyboard_state);
     SELF->keyboard_state = NULL;
     return Core_Failure;
   }
@@ -33,121 +33,121 @@ Core_Result dx_val_system_construct(dx_val_system* SELF, dx_msg_queue* msg_queue
 }
 
 Core_Result dx_val_system_emit_keyboard_key_pressed_msg(dx_val_system* SELF, Core_KeyboardKey key, Core_ModifierKeys modifierKeys) {
-  Core_Message* msg = NULL;
-  if (dx_keyboard_key_msg_create((dx_keyboard_key_msg**)&msg, Core_KeyboardKeyAction_Pressed, key, modifierKeys)) {
+  Core_Message* message = NULL;
+  if (Core_KeyboardKeyMessage_create((Core_KeyboardKeyMessage**)&message, Core_KeyboardKeyAction_Pressed, key, modifierKeys)) {
     return Core_Failure;
   }
-  if (dx_msg_queue_push(SELF->msg_queue, msg)) {
-    DX_UNREFERENCE(msg);
-    msg = NULL;
+  if (dx_msg_queue_push(SELF->msg_queue, message)) {
+    CORE_UNREFERENCE(message);
+    message = NULL;
     return Core_Failure;
   }
-  DX_UNREFERENCE(msg);
-  msg = NULL;
+  CORE_UNREFERENCE(message);
+  message = NULL;
   return Core_Success;
 }
 
 Core_Result dx_val_system_emit_keyboard_key_released_msg(dx_val_system* SELF, Core_KeyboardKey key, Core_ModifierKeys modifierKeys) {
-  Core_Message* msg = NULL;
-  if (dx_keyboard_key_msg_create((dx_keyboard_key_msg**)&msg, Core_KeyboardKeyAction_Released, key, modifierKeys)) {
+  Core_Message* message = NULL;
+  if (Core_KeyboardKeyMessage_create((Core_KeyboardKeyMessage**)&message, Core_KeyboardKeyAction_Released, key, modifierKeys)) {
     return Core_Failure;
   }
-  if (dx_msg_queue_push(SELF->msg_queue, msg)) {
-    DX_UNREFERENCE(msg);
-    msg = NULL;
+  if (dx_msg_queue_push(SELF->msg_queue, message)) {
+    CORE_UNREFERENCE(message);
+    message = NULL;
     return Core_Failure;
   }
-  DX_UNREFERENCE(msg);
-  msg = NULL;
+  CORE_UNREFERENCE(message);
+  message = NULL;
   return Core_Success;
 }
 
 Core_Result dx_val_system_emit_mouse_button_pressed_msg(dx_val_system* SELF, Core_MouseButton button, Core_Real32 x, Core_Real32 y, Core_ModifierKeys modifierKeys) {
-  Core_Message* msg = NULL;
-  if (dx_mouse_button_msg_create((dx_mouse_button_msg**)&msg, DX_MOUSE_BUTTON_ACTION_PRESSED, button, modifierKeys, x, y)) {
+  Core_Message* message = NULL;
+  if (Core_MouseButtonMessage_create((Core_MouseButtonMessage**)&message, Core_MouseButtonAction_Pressed, button, modifierKeys, x, y)) {
     return Core_Failure;
   }
-  if (dx_msg_queue_push(SELF->msg_queue, msg)) {
-    DX_UNREFERENCE(msg);
-    msg = NULL;
+  if (dx_msg_queue_push(SELF->msg_queue, message)) {
+    CORE_UNREFERENCE(message);
+    message = NULL;
     return Core_Failure;
   }
-  DX_UNREFERENCE(msg);
-  msg = NULL;
+  CORE_UNREFERENCE(message);
+  message = NULL;
   return Core_Success;
 }
 
 Core_Result dx_val_system_emit_mouse_button_released_msg(dx_val_system* SELF, Core_MouseButton button, Core_Real32 x, Core_Real32 y, Core_ModifierKeys modifierKeys) {
-  Core_Message* msg = NULL;
-  if (dx_mouse_button_msg_create((dx_mouse_button_msg**)&msg, DX_MOUSE_BUTTON_ACTION_RELEASED, button, modifierKeys, x, y)) {
+  Core_Message* message = NULL;
+  if (Core_MouseButtonMessage_create((Core_MouseButtonMessage**)&message, Core_MouseButtonAction_Released, button, modifierKeys, x, y)) {
     return Core_Failure;
   }
-  if (dx_msg_queue_push(SELF->msg_queue, msg)) {
-    DX_UNREFERENCE(msg);
-    msg = NULL;
+  if (dx_msg_queue_push(SELF->msg_queue, message)) {
+    CORE_UNREFERENCE(message);
+    message = NULL;
     return Core_Failure;
   }
-  DX_UNREFERENCE(msg);
-  msg = NULL;
+  CORE_UNREFERENCE(message);
+  message = NULL;
   return Core_Success;
 }
 
 Core_Result dx_val_system_emit_mouse_pointer_moved_msg(dx_val_system* SELF, Core_Real32 x, Core_Real32 y, Core_ModifierKeys modifierKeys) {
-  Core_Message* msg = NULL;
-  if (dx_mouse_pointer_msg_create((dx_mouse_pointer_msg**)&msg, DX_MOUSE_POINTER_ACTION_MOVED, modifierKeys, x, y)) {
+  Core_Message* message = NULL;
+  if (Core_MousePointerMessage_create((Core_MousePointerMessage**)&message, Core_MousePointerAction_Moved, x, y, modifierKeys)) {
     return Core_Failure;
   }
-  if (dx_msg_queue_push(SELF->msg_queue, msg)) {
-    DX_UNREFERENCE(msg);
-    msg = NULL;
+  if (dx_msg_queue_push(SELF->msg_queue, message)) {
+    CORE_UNREFERENCE(message);
+    message = NULL;
     return Core_Failure;
   }
-  DX_UNREFERENCE(msg);
-  msg = NULL;
+  CORE_UNREFERENCE(message);
+  message = NULL;
   return Core_Success;
 }
 
-Core_Result dx_val_system_emit_canvas_size_changed_msg(dx_val_system* SELF, Core_Real32 width, Core_Real32 height) {
-  Core_Message* msg = NULL;
-  if (Core_CanvasSizeChangedMessage_create((Core_CanvasSizeChangedMessage**)&msg, width, height)) {
+Core_Result dx_val_system_emit_canvas_size_changed_msg(dx_val_system* SELF, Core_Real32 horizontalSize, Core_Real32 verticalSize) {
+  Core_Message* message = NULL;
+  if (Core_CanvasSizeChangedMessage_create((Core_CanvasSizeChangedMessage**)&message, horizontalSize, verticalSize)) {
     return Core_Failure;
   }
-  if (dx_msg_queue_push(SELF->msg_queue, msg)) {
-    DX_UNREFERENCE(msg);
-    msg = NULL;
+  if (dx_msg_queue_push(SELF->msg_queue, message)) {
+    CORE_UNREFERENCE(message);
+    message = NULL;
     return Core_Failure;
   }
-  DX_UNREFERENCE(msg);
-  msg = NULL;
+  CORE_UNREFERENCE(message);
+  message = NULL;
   return Core_Success;
 }
 
 Core_Result dx_val_system_emit_canvas_activated_msg(dx_val_system* SELF) {
-  Core_Message* msg = NULL;
-  if (Core_CanvasMessage_create((Core_CanvasMessage**)&msg, Core_CanvasMessageKind_Activated)) {
+  Core_Message* message = NULL;
+  if (Core_CanvasStateChangedMessage_create((Core_CanvasStateChangedMessage**)&message, Core_True)) {
     return Core_Failure;
   }
-  if (dx_msg_queue_push(SELF->msg_queue, msg)) {
-    DX_UNREFERENCE(msg);
-    msg = NULL;
+  if (dx_msg_queue_push(SELF->msg_queue, message)) {
+    CORE_UNREFERENCE(message);
+    message = NULL;
     return Core_Failure;
   }
-  DX_UNREFERENCE(msg);
-  msg = NULL;
+  CORE_UNREFERENCE(message);
+  message = NULL;
   return Core_Success;
 }
 
 Core_Result dx_val_system_emit_canvas_deactivated_msg(dx_val_system* SELF) {
-  Core_Message* msg = NULL;
-  if (Core_CanvasMessage_create((Core_CanvasMessage**)&msg, Core_CanvasMessageKind_Deactivated)) {
+  Core_Message* message = NULL;
+  if (Core_CanvasStateChangedMessage_create((Core_CanvasStateChangedMessage**)&message, Core_False)) {
     return Core_Failure;
   }
-  if (dx_msg_queue_push(SELF->msg_queue, msg)) {
-    DX_UNREFERENCE(msg);
-    msg = NULL;
+  if (dx_msg_queue_push(SELF->msg_queue, message)) {
+    CORE_UNREFERENCE(message);
+    message = NULL;
     return Core_Failure;
   }
-  DX_UNREFERENCE(msg);
-  msg = NULL;
+  CORE_UNREFERENCE(message);
+  message = NULL;
   return Core_Success;
 }

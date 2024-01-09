@@ -4,7 +4,7 @@
 #include "dx/ui/manager.h"
 #include "dx/val/cbinding.h"
 
-DX_DEFINE_OBJECT_TYPE("dx.ui.group",
+Core_defineObjectType("dx.ui.group",
                        dx_ui_group,
                        dx_ui_widget);
 
@@ -25,11 +25,11 @@ static Core_Result get_child_by_name(dx_ui_widget** RETURN, dx_ui_group* SELF, C
 static Core_Result render(dx_ui_group* SELF, Core_Real32 canvas_horizontal_size, Core_Real32 canvas_vertical_size, Core_Real32 dpi_horizontal, Core_Real32 dpi_vertical);
 
 static void dx_ui_group_destruct(dx_ui_group* SELF) {
-  DX_UNREFERENCE(SELF->children);
+  CORE_UNREFERENCE(SELF->children);
   SELF->children = NULL;
 }
 
-static void dx_ui_group_constructDispatch(dx_ui_group_dispatch* SELF) {
+static void dx_ui_group_constructDispatch(dx_ui_group_Dispatch* SELF) {
   DX_UI_WIDGET_DISPATCH(SELF)->get_relative_position = (Core_Result(*)(DX_VEC2_F32*,dx_ui_widget*)) & get_relative_position;
   DX_UI_WIDGET_DISPATCH(SELF)->get_relative_size = (Core_Result(*)(DX_VEC2_F32*, dx_ui_widget*)) & get_relative_size;
   DX_UI_WIDGET_DISPATCH(SELF)->render = (Core_Result(*)(dx_ui_widget*,Core_Real32,Core_Real32,Core_Real32,Core_Real32)) & render;
@@ -58,7 +58,7 @@ Core_Result dx_ui_group_construct(dx_ui_group* SELF, dx_ui_manager* manager) {
 Core_Result dx_ui_group_create(dx_ui_group** RETURN, dx_ui_manager* manager) {
   DX_CREATE_PREFIX(dx_ui_group);
   if (dx_ui_group_construct(SELF, manager)) {
-    DX_UNREFERENCE(SELF);
+    CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
   }
@@ -151,7 +151,7 @@ static Core_Result get_child_by_name(dx_ui_widget** RETURN, dx_ui_group* SELF, C
         return Core_Failure;
       }
       if (isEqualTo) {
-        DX_REFERENCE(child);
+        CORE_REFERENCE(child);
         *RETURN = child;
         return Core_Success;
       }

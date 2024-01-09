@@ -1,6 +1,6 @@
 #include "dx/ui/widget.h"
 
-DX_DEFINE_OBJECT_TYPE("dx.ui.widget",
+Core_defineObjectType("dx.ui.widget",
                       dx_ui_widget,
                       Core_Object);
 
@@ -45,7 +45,7 @@ static Core_Result get_name(Core_String** RETURN, dx_ui_widget* SELF) {
     return Core_Failure;
   }
   if (SELF->name) {
-    DX_REFERENCE(SELF->name);
+    CORE_REFERENCE(SELF->name);
   }
   *RETURN = SELF->name;
   return Core_Success;
@@ -57,10 +57,10 @@ static Core_Result set_name(dx_ui_widget* SELF, Core_String* name) {
     return Core_Failure;
   }
   if (name) {
-    DX_REFERENCE(name);
+    CORE_REFERENCE(name);
   }
   if (SELF->name) {
-    DX_UNREFERENCE(SELF->name);
+    CORE_UNREFERENCE(SELF->name);
   }
   SELF->name = name;
   return Core_Success;
@@ -68,15 +68,15 @@ static Core_Result set_name(dx_ui_widget* SELF, Core_String* name) {
 
 static void dx_ui_widget_destruct(dx_ui_widget* SELF) {
   if (SELF->name) {
-    DX_UNREFERENCE(SELF->name);
+    CORE_UNREFERENCE(SELF->name);
     SELF->name = NULL;
   }
-  DX_UNREFERENCE(SELF->manager);
+  CORE_UNREFERENCE(SELF->manager);
   SELF->manager = NULL;
   SELF->parent = NULL;
 }
 
-static void dx_ui_widget_constructDispatch(dx_ui_widget_dispatch* SELF) {
+static void dx_ui_widget_constructDispatch(dx_ui_widget_Dispatch* SELF) {
   SELF->set_name = &set_name;
   SELF->get_name = &get_name;
   SELF->get_relative_rectangle = &get_relative_rectangle;
@@ -91,7 +91,7 @@ Core_Result dx_ui_widget_construct(dx_ui_widget* SELF, dx_ui_manager* manager) {
     return Core_Failure;
   }
   SELF->manager = manager;
-  DX_REFERENCE(manager);
+  CORE_REFERENCE(manager);
   SELF->name = NULL;
   CORE_OBJECT(SELF)->type = TYPE;
   return Core_Success;

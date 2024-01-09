@@ -5,7 +5,7 @@
 #include <GL/wglext.h>
 typedef struct dx_val_gl_wgl_window dx_val_gl_wgl_window;
 
-DX_DECLARE_OBJECT_TYPE("dx.gl.wgl.context",
+Core_declareObjectType("dx.gl.wgl.context",
                        dx_gl_wgl_context,
                        dx_val_gl_context);
 
@@ -21,12 +21,12 @@ struct dx_gl_wgl_context {
 #undef DEFINE
 };
 
-static inline dx_gl_wgl_context_dispatch* DX_GL_WGL_CONTEXT_DISPATCH(void* p) {
-  return (dx_gl_wgl_context_dispatch*)p;
+static inline dx_gl_wgl_context_Dispatch* DX_GL_WGL_CONTEXT_DISPATCH(void* p) {
+  return (dx_gl_wgl_context_Dispatch*)p;
 }
 
-struct dx_gl_wgl_context_dispatch {
-  dx_val_gl_context_dispatch _parent;
+struct dx_gl_wgl_context_Dispatch {
+  dx_val_gl_context_Dispatch _parent;
 };
 
 /// @constructor{dx_gl_wgl_context}

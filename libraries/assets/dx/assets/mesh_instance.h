@@ -8,7 +8,7 @@
 #include "dx/assets/mesh.h"
 
 /// @brief A mesh instance asset.
-DX_DECLARE_OBJECT_TYPE("dx.asset.mesh_instance",
+Core_declareObjectType("dx.asset.mesh_instance",
                        dx_asset_mesh_instance,
                        Core_Object);
 
@@ -24,11 +24,11 @@ struct dx_asset_mesh_instance {
   dx_assets_matrix_4x4_f32* world_matrix;
 };
 
-static inline dx_asset_mesh_instance_dispatch* DX_ASSET_MESH_INSTANCE_DISPATCH(void* p) {
-  return (dx_asset_mesh_instance_dispatch*)p;
+static inline dx_asset_mesh_instance_Dispatch* DX_ASSET_MESH_INSTANCE_DISPATCH(void* p) {
+  return (dx_asset_mesh_instance_Dispatch*)p;
 }
 
-struct dx_asset_mesh_instance_dispatch {
+struct dx_asset_mesh_instance_Dispatch {
   Core_Object_Dispatch _parent;
 };
 

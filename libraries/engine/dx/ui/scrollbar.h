@@ -3,7 +3,7 @@
 
 #include "dx/ui/widget.h"
 
-DX_DECLARE_OBJECT_TYPE("dx.ui.scrollbar",
+Core_declareObjectType("dx.ui.scrollbar",
                        dx_ui_scrollbar,
                        dx_ui_widget);
 
@@ -21,12 +21,12 @@ struct dx_ui_scrollbar {
   DX_RGBA_F32 background_color;
 };
 
-static dx_ui_scrollbar_dispatch* DX_UI_SCROLLBAR_DISPATCH(void* p) {
-  return (dx_ui_scrollbar_dispatch*)p;
+static dx_ui_scrollbar_Dispatch* DX_UI_SCROLLBAR_DISPATCH(void* p) {
+  return (dx_ui_scrollbar_Dispatch*)p;
 }
 
-struct dx_ui_scrollbar_dispatch {
-  dx_ui_widget_dispatch _parent;
+struct dx_ui_scrollbar_Dispatch {
+  dx_ui_widget_Dispatch _parent;
 };
 
 Core_Result dx_ui_scrollbar_construct(dx_ui_scrollbar* SELF, dx_ui_manager* manager);

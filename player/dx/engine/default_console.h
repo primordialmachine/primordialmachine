@@ -9,7 +9,7 @@
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-DX_DECLARE_OBJECT_TYPE("dx.default_console",
+Core_declareObjectType("dx.default_console",
                        dx_default_console,
                        dx_console);
 
@@ -38,12 +38,12 @@ struct dx_default_console {
   dx_string_buffer *prompt;
 };
 
-static inline dx_default_console_dispatch* DX_DEFAULT_CONSOLE_DISPATCH(void* p) {
-  return (dx_default_console_dispatch*)p;
+static inline dx_default_console_Dispatch* DX_DEFAULT_CONSOLE_DISPATCH(void* p) {
+  return (dx_default_console_Dispatch*)p;
 }
 
-struct dx_default_console_dispatch {
-  dx_console_dispatch _parent;
+struct dx_default_console_Dispatch {
+  dx_console_Dispatch _parent;
 };
 
 Core_Result dx_default_console_construct(dx_default_console* SELf, dx_font_presenter* font_presenter, dx_rectangle_presenter* rectangle_presenter);

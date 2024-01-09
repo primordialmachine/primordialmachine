@@ -6,14 +6,14 @@ static Core_Result on_checkerboard_pattern_fill_image_operation(dx_assets_image*
   }
   dx_assets_image_operations_color_fill* second = NULL;
   if (dx_assets_image_operations_color_fill_create(&second)) {
-    DX_UNREFERENCE(first);
+    CORE_UNREFERENCE(first);
     first = NULL;
     return Core_Failure;
   }
 
   if (dx_assets_image_operations_color_fill_set_color(first, DX_ASSETS_COLOR_RGB_N8(image_operation->first_checker_color->object)) ||
       dx_assets_image_operations_color_fill_set_color(second, DX_ASSETS_COLOR_RGB_N8(image_operation->second_checker_color->object))) {
-    DX_UNREFERENCE(first);
+    CORE_UNREFERENCE(first);
     first = NULL;
     return Core_Failure;
   }
@@ -52,10 +52,10 @@ static Core_Result on_checkerboard_pattern_fill_image_operation(dx_assets_image*
     }
   }
 
-  DX_UNREFERENCE(second);
+  CORE_UNREFERENCE(second);
   second = NULL;
 
-  DX_UNREFERENCE(first);
+  CORE_UNREFERENCE(first);
   first = NULL;
 
   return Core_Success;

@@ -9,7 +9,7 @@ typedef struct dx_asset_definition_language_diagnostics dx_asset_definition_lang
 typedef struct dx_adl_context dx_adl_context;
 typedef struct dx_adl_names dx_adl_names;
 
-DX_DECLARE_OBJECT_TYPE("dx.asset_definition_language.parser",
+Core_declareObjectType("dx.asset_definition_language.parser",
                        dx_asset_definition_language_parser,
                        Core_Object);
 
@@ -22,11 +22,11 @@ struct dx_asset_definition_language_parser {
   dx_asset_definition_language_diagnostics* diagnostics;
 };
 
-static inline dx_asset_definition_language_parser_dispatch* DX_ASSET_DEFINITION_LANGUAGE_PARSER_DISPATCH(void* p) {
-  return (dx_asset_definition_language_parser_dispatch*)p;
+static inline dx_asset_definition_language_parser_Dispatch* DX_ASSET_DEFINITION_LANGUAGE_PARSER_DISPATCH(void* p) {
+  return (dx_asset_definition_language_parser_Dispatch*)p;
 }
 
-struct dx_asset_definition_language_parser_dispatch {
+struct dx_asset_definition_language_parser_Dispatch {
   Core_Object_Dispatch parent;
 };
 

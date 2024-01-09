@@ -13,7 +13,7 @@ static inline Core_String* _get_name(dx_adl_names* names, Core_Size index) {
 
 #define NAME(name) _get_name(self->context->names, dx_adl_name_index_##name)
 
-DX_DEFINE_OBJECT_TYPE("dx.adl.resolve",
+Core_defineObjectType("dx.adl.resolve",
                       dx_adl_resolve,
                       Core_Object);
 
@@ -21,7 +21,7 @@ static void dx_adl_resolve_destruct(dx_adl_resolve* SELF) {
   dx_inline_pointer_array_uninitialize(&SELF->queue);
 }
 
-static void dx_adl_resolve_constructDispatch(dx_adl_resolve_dispatch* SELF)
+static void dx_adl_resolve_constructDispatch(dx_adl_resolve_Dispatch* SELF)
 {/*Intentionally empty.*/}
 
 Core_Result dx_adl_resolve_construct(dx_adl_resolve* SELF, dx_adl_context* context) {
@@ -40,7 +40,7 @@ Core_Result dx_adl_resolve_construct(dx_adl_resolve* SELF, dx_adl_context* conte
 Core_Result dx_adl_resolve_create(dx_adl_resolve** RETURN, dx_adl_context* context) {
   DX_CREATE_PREFIX(dx_adl_resolve);
   if (dx_adl_resolve_construct(SELF, context)) {
-    DX_UNREFERENCE(SELF);
+    CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
   }
@@ -50,32 +50,32 @@ Core_Result dx_adl_resolve_create(dx_adl_resolve** RETURN, dx_adl_context* conte
 
 static Core_Result setup_queue(dx_adl_resolve* SELF, bool include_unloaded, bool include_unresolved) {
   dx_inline_pointer_array_clear(&SELF->queue);
-  dx_inline_pointer_hashmap_iterator iterator;
-  dx_inline_pointer_hashmap_iterator_initialize(&iterator, &SELF->context->definitions->map);
+  Core_InlinePointerHashmapIterator iterator;
+  Core_InlinePointerHashmapIterator_initialize(&iterator, &SELF->context->definitions->map);
   Core_Boolean has_entry = false;
-  if (dx_inline_pointer_hashmap_iterator_has_entry(&has_entry, &iterator)) {
-    dx_inline_pointer_hashmap_iterator_uninitialize(&iterator);
+  if (Core_InlinePointerHashmapIterator_hasEntry(&has_entry, &iterator)) {
+    Core_InlinePointerHashmapIterator_uninitialize(&iterator);
     return Core_Failure;
   }
   while (has_entry) {
     dx_adl_symbol* symbol = NULL;
-    if (dx_inline_pointer_hashmap_iterator_get_value(&symbol, &iterator)) {
-      dx_inline_pointer_hashmap_iterator_uninitialize(&iterator);
+    if (Core_InlinePointerHashmapIterator_getValue(&symbol, &iterator)) {
+      Core_InlinePointerHashmapIterator_uninitialize(&iterator);
       return Core_Failure;
     }
     if ((!symbol->asset && include_unloaded) || (!symbol->resolved && include_unresolved)) {
       if (dx_inline_pointer_array_append(&SELF->queue, symbol)) {
-        dx_inline_pointer_hashmap_iterator_uninitialize(&iterator);
+        Core_InlinePointerHashmapIterator_uninitialize(&iterator);
         return Core_Failure;
       }
     }
-    dx_inline_pointer_hashmap_iterator_next(&iterator);
-    if (dx_inline_pointer_hashmap_iterator_has_entry(&has_entry, &iterator)) {
-      dx_inline_pointer_hashmap_iterator_uninitialize(&iterator);
+    Core_InlinePointerHashmapIterator_next(&iterator);
+    if (Core_InlinePointerHashmapIterator_hasEntry(&has_entry, &iterator)) {
+      Core_InlinePointerHashmapIterator_uninitialize(&iterator);
       return Core_Failure;
     }
   }
-  dx_inline_pointer_hashmap_iterator_uninitialize(&iterator);
+  Core_InlinePointerHashmapIterator_uninitialize(&iterator);
   return Core_Success;
 }
 
@@ -97,7 +97,7 @@ Core_Result dx_adl_resolve_run(dx_adl_resolve* SELF) {
     }
     if (!symbol->asset) {
       dx_adl_type_handler* type_handler = NULL;
-      if (dx_inline_pointer_hashmap_get(&type_handler, &SELF->context->type_handlers, symbol->type)) {
+      if (Core_InlinePointerHashmap_get(&type_handler, &SELF->context->type_handlers, symbol->type)) {
         return Core_Failure;
       }
       if (dx_adl_type_handler_read(&symbol->asset, type_handler, symbol->node, SELF->context)) {
@@ -120,7 +120,7 @@ Core_Result dx_adl_resolve_run(dx_adl_resolve* SELF) {
         return Core_Failure;
       }
       dx_adl_type_handler* type_handler = NULL;
-      if (dx_inline_pointer_hashmap_get(&type_handler, &SELF->context->type_handlers, symbol->type)) {
+      if (Core_InlinePointerHashmap_get(&type_handler, &SELF->context->type_handlers, symbol->type)) {
         return Core_Failure;
       }
       if (!symbol->asset) {

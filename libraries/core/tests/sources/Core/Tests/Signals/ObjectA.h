@@ -3,7 +3,7 @@
 
 #include "dx/core.h"
 
-DX_DECLARE_OBJECT_TYPE("Core.Tests.Signals.ObjectA",
+Core_declareObjectType("Core.Tests.Signals.ObjectA",
                        Core_Tests_Signals_ObjectA,
                        Core_Object);
 
@@ -15,11 +15,11 @@ struct Core_Tests_Signals_ObjectA {
   Core_Object _parent;
 };
 
-static inline Core_Tests_Signals_ObjectA_dispatch* CORE_TESTS_SIGNALS_OBJECTA_DISPATCH(void* p) {
-  return (Core_Tests_Signals_ObjectA_dispatch*)p;
+static inline Core_Tests_Signals_ObjectA_Dispatch* CORE_TESTS_SIGNALS_OBJECTA_DISPATCH(void* p) {
+  return (Core_Tests_Signals_ObjectA_Dispatch*)p;
 }
 
-struct Core_Tests_Signals_ObjectA_dispatch {
+struct Core_Tests_Signals_ObjectA_Dispatch {
   Core_Object_Dispatch _parent;
 };
 

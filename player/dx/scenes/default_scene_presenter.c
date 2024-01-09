@@ -12,17 +12,21 @@
 #include "dx/data_definition_language.h"
 #include "dx/assets.h"
 
-DX_DEFINE_OBJECT_TYPE("dx.default_scene_presenter",
+Core_defineObjectType("dx.default_scene_presenter",
                       dx_default_scene_presenter,
                       dx_scene_presenter);
 
 static Core_Result on_scene_asset_object(dx_default_scene_presenter* SELF, dx_val_context* context, Core_Object* asset_object) {
   Core_Type* type = NULL;
+  Core_Boolean result = Core_False;
   // mesh instance
   if (dx_asset_mesh_instance_getType(&type)) {
     return Core_Failure;
   }
-  if (dx_rti_type_is_leq(asset_object->type, type)) {
+  if (Core_Type_isLowerThanOrEqualTo(&result, asset_object->type, type)) {
+    return Core_Failure;
+  }
+  if (result) {
     dx_asset_mesh_instance* asset_mesh_instance = DX_ASSET_MESH_INSTANCE(asset_object);
     dx_val_mesh* mesh = NULL;
     if (dx_val_mesh_create(&mesh, context, DX_ASSETS_MESH(asset_mesh_instance->mesh_reference->object))) {
@@ -30,18 +34,18 @@ static Core_Result on_scene_asset_object(dx_default_scene_presenter* SELF, dx_va
     }
     dx_val_mesh_instance* mesh_instance = NULL;
     if (dx_val_mesh_instance_create(&mesh_instance, asset_mesh_instance->world_matrix->value, mesh)) {
-      DX_UNREFERENCE(mesh);
+      CORE_UNREFERENCE(mesh);
       mesh = NULL;
       return Core_Failure;
     }
-    DX_UNREFERENCE(mesh);
+    CORE_UNREFERENCE(mesh);
     mesh = NULL;
     if (dx_inline_object_array_append(&SELF->mesh_instances, CORE_OBJECT(mesh_instance))) {
-      DX_UNREFERENCE(mesh_instance);
+      CORE_UNREFERENCE(mesh_instance);
       mesh_instance = NULL;
       return Core_Failure;
     }
-    DX_UNREFERENCE(mesh_instance);
+    CORE_UNREFERENCE(mesh_instance);
     mesh_instance = NULL;
     return Core_Error_NoError != Core_getError() ? Core_Failure : Core_Success;
   }
@@ -52,10 +56,13 @@ static Core_Result on_scene_asset_object(dx_default_scene_presenter* SELF, dx_va
   if (dx_assets_material_getType(&type)) {
     return Core_Failure;
   }
-  if (dx_rti_type_is_leq(asset_object->type, type)) {
+  if (Core_Type_isLowerThanOrEqualTo(&result, asset_object->type, type)) {
+    return Core_Failure;
+  }
+  if (result) {
     dx_assets_material* material_asset = DX_ASSETS_MATERIAL(asset_object);
     if (dx_inline_object_array_append(&SELF->material_assets, CORE_OBJECT(material_asset))) {
-      DX_UNREFERENCE(material_asset);
+      CORE_UNREFERENCE(material_asset);
       material_asset = NULL;
       return Core_Failure;
     }
@@ -65,18 +72,21 @@ static Core_Result on_scene_asset_object(dx_default_scene_presenter* SELF, dx_va
   if (dx_assets_viewer_instance_getType(&type)) {
     return Core_Failure;
   }
-  if (dx_rti_type_is_leq(asset_object->type, type)) {
+  if (Core_Type_isLowerThanOrEqualTo(&result, asset_object->type, type)) {
+    return Core_Failure;
+  }
+  if (result) {
     dx_assets_viewer_instance* viewer_instance_asset = DX_ASSETS_VIEWER_INSTANCE(asset_object);
     dx_val_viewer* viewer;
     if (dx_val_viewer_create(&viewer, viewer_instance_asset)) {
       return Core_Failure;
     }
     if (dx_inline_object_array_append(&SELF->viewers, CORE_OBJECT(viewer))) {
-      DX_UNREFERENCE(viewer);
+      CORE_UNREFERENCE(viewer);
       viewer = NULL;
       return Core_Failure;
     }
-    DX_UNREFERENCE(viewer);
+    CORE_UNREFERENCE(viewer);
     viewer = NULL;
     return Core_Error_NoError != Core_getError() ? Core_Failure : Core_Success;
   }
@@ -240,11 +250,11 @@ static Core_Result make_commands_1(dx_val_command_list* commands) {
     return Core_Failure;
   }
   if (dx_val_command_list_append(commands, command)) {
-    DX_UNREFERENCE(command);
+    CORE_UNREFERENCE(command);
     command = NULL;
     return Core_Failure;
   }
-  DX_UNREFERENCE(command);
+  CORE_UNREFERENCE(command);
   command = NULL;
 
   // clear depth command
@@ -253,11 +263,11 @@ static Core_Result make_commands_1(dx_val_command_list* commands) {
     return Core_Failure;
   }
   if (dx_val_command_list_append(commands, command)) {
-    DX_UNREFERENCE(command);
+    CORE_UNREFERENCE(command);
     command = NULL;
     return Core_Failure;
   }
-  DX_UNREFERENCE(command);
+  CORE_UNREFERENCE(command);
   command = NULL;
 
   // set viewport command
@@ -265,11 +275,11 @@ static Core_Result make_commands_1(dx_val_command_list* commands) {
     return Core_Failure;
   }
   if (dx_val_command_list_append(commands, command)) {
-    DX_UNREFERENCE(command);
+    CORE_UNREFERENCE(command);
     command = NULL;
     return Core_Failure;
   }
-  DX_UNREFERENCE(command);
+  CORE_UNREFERENCE(command);
   command = NULL;
 
   // pipeline state command
@@ -277,11 +287,11 @@ static Core_Result make_commands_1(dx_val_command_list* commands) {
     return Core_Failure;
   }
   if (dx_val_command_list_append(commands, command)) {
-    DX_UNREFERENCE(command);
+    CORE_UNREFERENCE(command);
     command = NULL;
     return Core_Failure;
   }
-  DX_UNREFERENCE(command);
+  CORE_UNREFERENCE(command);
   command = NULL;
 
   return Core_Success;
@@ -293,7 +303,7 @@ static Core_Result dx_default_scene_presenter_startup(dx_default_scene_presenter
   }
   //
   if (mesh_instance_on_startup(SELF, context, SELF->asset_scene)) {
-    DX_UNREFERENCE(SELF->asset_scene);
+    CORE_UNREFERENCE(SELF->asset_scene);
     SELF->asset_scene = NULL;
     return Core_Failure;
   }
@@ -304,15 +314,15 @@ static Core_Result dx_default_scene_presenter_startup(dx_default_scene_presenter
     dx_val_command_list* commands = NULL;
     if (dx_val_command_list_create(&commands)) {
       mesh_instance_on_shutdown(SELF);
-      DX_UNREFERENCE(SELF->asset_scene);
+      CORE_UNREFERENCE(SELF->asset_scene);
       SELF->asset_scene = NULL;
       return Core_Failure;
     }
     if (make_commands_1(commands)) {
-      DX_UNREFERENCE(commands);
+      CORE_UNREFERENCE(commands);
       commands = NULL;
       mesh_instance_on_shutdown(SELF);
-      DX_UNREFERENCE(SELF->asset_scene);
+      CORE_UNREFERENCE(SELF->asset_scene);
       SELF->asset_scene = NULL;
       return Core_Failure;
     }
@@ -383,11 +393,11 @@ static Core_Result dx_default_scene_presenter_render(dx_default_scene_presenter*
 static Core_Result dx_default_scene_presenter_shutdown(dx_default_scene_presenter* SELF, dx_val_context* context) {
   mesh_instance_on_shutdown(SELF);
   if (SELF->asset_scene) {
-    DX_UNREFERENCE(SELF->asset_scene);
+    CORE_UNREFERENCE(SELF->asset_scene);
     SELF->asset_scene = NULL;
   }
   if (SELF->commands) {
-    DX_UNREFERENCE(SELF->commands);
+    CORE_UNREFERENCE(SELF->commands);
     SELF->commands = NULL;
   }
   return Core_Success;
@@ -395,12 +405,12 @@ static Core_Result dx_default_scene_presenter_shutdown(dx_default_scene_presente
 
 static void dx_default_scene_presenter_destruct(dx_default_scene_presenter* SELF) {
   if (SELF->path) {
-    DX_UNREFERENCE(SELF->path);
+    CORE_UNREFERENCE(SELF->path);
     SELF->path = NULL;
   }
 }
 
-static void dx_default_scene_presenter_constructDispatch(dx_default_scene_presenter_dispatch* SELF) {
+static void dx_default_scene_presenter_constructDispatch(dx_default_scene_presenter_Dispatch* SELF) {
   DX_SCENE_PRESENTER_DISPATCH(SELF)->startup = (Core_Result (*)(dx_scene_presenter*, dx_val_context*)) & dx_default_scene_presenter_startup;
   DX_SCENE_PRESENTER_DISPATCH(SELF)->render = (Core_Result(*)(dx_scene_presenter*, dx_val_context*, Core_Real32, Core_Integer32, Core_Integer32)) & dx_default_scene_presenter_render;
   DX_SCENE_PRESENTER_DISPATCH(SELF)->shutdown = (Core_Result(*)(dx_scene_presenter*, dx_val_context*)) dx_default_scene_presenter_shutdown;
@@ -416,7 +426,7 @@ Core_Result dx_default_scene_presenter_construct(dx_default_scene_presenter* SEL
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
   }
-  DX_REFERENCE(path);
+  CORE_REFERENCE(path);
   SELF->path = path;
 
   SELF->asset_scene = NULL;
@@ -429,7 +439,7 @@ Core_Result dx_default_scene_presenter_construct(dx_default_scene_presenter* SEL
 Core_Result dx_default_scene_presenter_create(dx_default_scene_presenter** RETURN, Core_String* path) {
   DX_CREATE_PREFIX(dx_default_scene_presenter);
   if (dx_default_scene_presenter_construct(SELF, path)) {
-    DX_UNREFERENCE(SELF);
+    CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
   }

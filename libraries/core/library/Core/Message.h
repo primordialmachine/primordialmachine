@@ -1,4 +1,4 @@
-// Copyright (c) 2019-2023 Michael Heilmann. All rights reserved.
+// Copyright (c) 2018-2024 Michael Heilmann. All rights reserved.
 
 #if !defined(CORE_MESSAGE_H_INCLUDED)
 #define CORE_MESSAGE_H_INCLUDED
@@ -6,7 +6,7 @@
 #include "dx/core/Object.h"
 
 /// @brief The opaque type of a message.
-DX_DECLARE_OBJECT_TYPE("Core.Message",
+Core_declareObjectType("Core.Message",
                        Core_Message,
                        Core_Object);
 
@@ -19,11 +19,11 @@ struct Core_Message {
   Core_Natural64 timeStamp;
 };
 
-static inline Core_Message_dispatch* CORE_MESSAGE_DISPATCH(void* p) {
-  return (Core_Message_dispatch*)p;
+static inline Core_Message_Dispatch* CORE_MESSAGE_DISPATCH(void* p) {
+  return (Core_Message_Dispatch*)p;
 }
 
-struct Core_Message_dispatch {
+struct Core_Message_Dispatch {
   Core_Object_Dispatch _parent;
 };
 

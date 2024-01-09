@@ -1,4 +1,4 @@
-// Copyright (c) 2019-2023 Michael Heilmann. All rights reserved.
+// Copyright (c) 2018-2024 Michael Heilmann. All rights reserved.
 
 #if !defined(CORE_VISUALS_PIXELFORMAT_H_INCLUDED)
 #define CORE_VISUALS_PIXELFORMAT_H_INCLUDED
@@ -6,7 +6,7 @@
 #include "dx/core/TypeSystem.h"
 
 /* http://localhost/val#core-pixelformat */
-DX_DECLARE_ENUMERATION_TYPE("Core.PixelFormat",
+Core_declareEnumerationType("Core.PixelFormat",
                             Core_PixelFormat);
 
 enum Core_PixelFormat {

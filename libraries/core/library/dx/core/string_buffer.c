@@ -6,7 +6,7 @@
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-DX_DECLARE_OBJECT_TYPE("dx.string_buffer_iterator_impl",
+Core_declareObjectType("dx.string_buffer_iterator_impl",
                        dx_string_buffer_iterator_impl,
                        dx_string_iterator);
 
@@ -20,12 +20,12 @@ struct dx_string_buffer_iterator_impl {
   Core_Size index;
 };
 
-static inline dx_string_buffer_iterator_impl_dispatch* DX_STRING_BUFFER_ITERATOR_IMPL_DISPATCH(void* p) {
-  return (dx_string_buffer_iterator_impl_dispatch*)p;
+static inline dx_string_buffer_iterator_impl_Dispatch* DX_STRING_BUFFER_ITERATOR_IMPL_DISPATCH(void* p) {
+  return (dx_string_buffer_iterator_impl_Dispatch*)p;
 }
 
-struct dx_string_buffer_iterator_impl_dispatch {
-  dx_string_iterator_dispatch _parent;
+struct dx_string_buffer_iterator_impl_Dispatch {
+  dx_string_iterator_Dispatch _parent;
 };
 
 Core_Result dx_string_buffer_iterator_impl_construct(dx_string_buffer_iterator_impl* SELF, dx_string_buffer* string_buffer);
@@ -34,20 +34,20 @@ Core_Result dx_string_buffer_iterator_impl_create(dx_string_buffer_iterator_impl
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-DX_DEFINE_OBJECT_TYPE("dx.string_buffer",
+Core_defineObjectType("dx.string_buffer",
                       dx_string_buffer,
                       Core_Object);
 
 static void dx_string_buffer_destruct(dx_string_buffer* SELF) {
-  dx_inline_byte_array_uninitialize(&SELF->backend);
+  Core_InlineArrayN8_uninitialize(&SELF->backend);
 }
 
-static void dx_string_buffer_constructDispatch(dx_string_buffer_dispatch* SELF)
+static void dx_string_buffer_constructDispatch(dx_string_buffer_Dispatch* SELF)
 {/*Intentionally emtpy.*/}
 
 Core_Result dx_string_buffer_construct(dx_string_buffer* SELF) {
   DX_CONSTRUCT_PREFIX(dx_string_buffer);
-  if (dx_inline_byte_array_initialize(&SELF->backend)) {
+  if (Core_InlineArrayN8_initialize(&SELF->backend)) {
     return Core_Failure;
   }
   CORE_OBJECT(SELF)->type = TYPE;
@@ -57,7 +57,7 @@ Core_Result dx_string_buffer_construct(dx_string_buffer* SELF) {
 Core_Result dx_string_buffer_create(dx_string_buffer** RETURN) {
   DX_CREATE_PREFIX(dx_string_buffer);
   if (dx_string_buffer_construct(SELF)) {
-    DX_UNREFERENCE(SELF);
+    CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
   }
@@ -71,7 +71,7 @@ Core_Result dx_string_buffer_clone(dx_string_buffer** RETURN, dx_string_buffer c
     return Core_Failure;
   }
   if (dx_string_buffer_append_bytes(clone, SELF->backend.elements, SELF->backend.size)) {
-    DX_UNREFERENCE(clone);
+    CORE_UNREFERENCE(clone);
     clone = NULL;
     return Core_Failure;
   }
@@ -80,20 +80,20 @@ Core_Result dx_string_buffer_clone(dx_string_buffer** RETURN, dx_string_buffer c
 }
 
 Core_Result dx_string_buffer_get_bytes(void** RETURN, dx_string_buffer* SELF) {
-  return dx_inline_byte_array_get_bytes(RETURN, &SELF->backend);
+  return Core_InlineArrayN8_getElements(RETURN, &SELF->backend);
 }
 
 Core_Result dx_string_buffer_get_number_of_bytes(Core_Size* RETURN, dx_string_buffer* SELF) {
-  return dx_inline_byte_array_get_size(RETURN, &SELF->backend);
+  return Core_InlineArrayN8_getSize(RETURN, &SELF->backend);
 }
 
 Core_Result dx_string_buffer_to_string(Core_String** RETURN, dx_string_buffer* SELF) {
   Core_Size size;
-  if (dx_inline_byte_array_get_size(&size, &SELF->backend)) {
+  if (Core_InlineArrayN8_getSize(&size, &SELF->backend)) {
     return Core_Failure;
   }
   void* bytes;
-  if (dx_inline_byte_array_get_bytes(&bytes, &SELF->backend)) {
+  if (Core_InlineArrayN8_getElements(&bytes, &SELF->backend)) {
     return Core_Failure;
   }
   // @todo Add a constructor dx_string_from_byte_buffer in order to avoid the UTF-8 validity recheck that Core_String_create(char const*, Core_Size) performs.
@@ -109,7 +109,7 @@ Core_Result dx_string_buffer_set_bytes(dx_string_buffer* SELF, char const* p, Co
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
   }
-  return dx_inline_byte_array_set(&SELF->backend, p, n);
+  return Core_InlineArrayN8_set(&SELF->backend, p, n);
 }
 
 Core_Result dx_string_buffer_set_string(dx_string_buffer* SELF, Core_String* string) {
@@ -121,7 +121,7 @@ Core_Result dx_string_buffer_set_string(dx_string_buffer* SELF, Core_String* str
   if (Core_String_getBytes(&bytes, string)) {
     return Core_Failure;
   }
-  return dx_inline_byte_array_set(&SELF->backend, bytes, number_of_bytes);
+  return Core_InlineArrayN8_set(&SELF->backend, bytes, number_of_bytes);
 }
 
 Core_Result dx_string_buffer_prepend_bytes(dx_string_buffer* SELF, char const* p, Core_Size n) {
@@ -129,7 +129,7 @@ Core_Result dx_string_buffer_prepend_bytes(dx_string_buffer* SELF, char const* p
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
   }
-  return dx_inline_byte_array_prepend(&SELF->backend, p, n);
+  return Core_InlineArrayN8_prepend(&SELF->backend, p, n);
 }
 
 Core_Result dx_string_buffer_prepend_string(dx_string_buffer* SELF, Core_String* string) {
@@ -141,7 +141,7 @@ Core_Result dx_string_buffer_prepend_string(dx_string_buffer* SELF, Core_String*
   if (Core_String_getBytes(&bytes, string)) {
     return Core_Failure;
   }
-  return dx_inline_byte_array_prepend(&SELF->backend, bytes, number_of_bytes);
+  return Core_InlineArrayN8_prepend(&SELF->backend, bytes, number_of_bytes);
 }
 
 Core_Result dx_string_buffer_append_bytes(dx_string_buffer* SELF, char const* p, Core_Size n) {
@@ -149,7 +149,7 @@ Core_Result dx_string_buffer_append_bytes(dx_string_buffer* SELF, char const* p,
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
   }
-  return dx_inline_byte_array_append(&SELF->backend, p, n);
+  return Core_InlineArrayN8_append(&SELF->backend, p, n);
 }
 
 Core_Result dx_string_buffer_append_string(dx_string_buffer* SELF, Core_String* string) {
@@ -161,7 +161,7 @@ Core_Result dx_string_buffer_append_string(dx_string_buffer* SELF, Core_String* 
   if (Core_String_getBytes(&bytes, string)) {
     return Core_Failure;
   }
-  return dx_inline_byte_array_append(&SELF->backend, bytes, number_of_bytes);
+  return Core_InlineArrayN8_append(&SELF->backend, bytes, number_of_bytes);
 }
 
 Core_Result dx_string_buffer_append_fv(dx_string_buffer* SELF, Core_String* format, va_list arguments) {
@@ -190,7 +190,7 @@ Core_Result dx_string_buffer_remove_last(dx_string_buffer* SELF) {
     return Core_Failure;
   }
   Core_Size size;
-  if (dx_inline_byte_array_get_size(&size, &SELF->backend)) {
+  if (Core_InlineArrayN8_getSize(&size, &SELF->backend)) {
     return Core_Failure;
   }
   if (!size) {
@@ -198,7 +198,7 @@ Core_Result dx_string_buffer_remove_last(dx_string_buffer* SELF) {
     return Core_Failure;
   }
   void* bytes;
-  if (dx_inline_byte_array_get_bytes(&bytes, &SELF->backend)) {
+  if (Core_InlineArrayN8_getElements(&bytes, &SELF->backend)) {
     return Core_Failure;
   }
   char const* start = (char const*)bytes;
@@ -218,7 +218,7 @@ Core_Result dx_string_buffer_remove_last(dx_string_buffer* SELF) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
   }
-  return dx_inline_byte_array_remove(&SELF->backend, size - received, received);
+  return Core_InlineArrayN8_remove(&SELF->backend, size - received, received);
 }
 
 Core_Result dx_string_buffer_clear(dx_string_buffer* SELF) {
@@ -226,12 +226,12 @@ Core_Result dx_string_buffer_clear(dx_string_buffer* SELF) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
   }
-  return dx_inline_byte_array_clear(&SELF->backend);
+  return Core_InlineArrayN8_clear(&SELF->backend);
 }
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-DX_DEFINE_OBJECT_TYPE("dx.string_buffer_iterator_impl",
+Core_defineObjectType("dx.string_buffer_iterator_impl",
                       dx_string_buffer_iterator_impl,
                       dx_string_iterator);
 
@@ -242,11 +242,11 @@ static Core_Result dx_string_buffer_iterator_impl_get_value(uint32_t* RETURN, dx
 static Core_Result dx_string_buffer_iterator_impl_next(dx_string_buffer_iterator_impl* SELF);
 
 static void dx_string_buffer_iterator_impl_destruct(dx_string_buffer_iterator_impl* SELF) {
-  DX_UNREFERENCE(SELF->string_buffer);
+  CORE_UNREFERENCE(SELF->string_buffer);
   SELF->string_buffer = NULL;
 }
 
-static void dx_string_buffer_iterator_impl_constructDispatch(dx_string_buffer_iterator_impl_dispatch* SELF) {
+static void dx_string_buffer_iterator_impl_constructDispatch(dx_string_buffer_iterator_impl_Dispatch* SELF) {
   DX_STRING_ITERATOR_DISPATCH(SELF)->has_value = (Core_Result(*)(Core_Boolean*,dx_string_iterator*))dx_string_buffer_iterator_impl_has_value;
   DX_STRING_ITERATOR_DISPATCH(SELF)->get_value = (Core_Result(*)(uint32_t*,dx_string_iterator*))dx_string_buffer_iterator_impl_get_value;
   DX_STRING_ITERATOR_DISPATCH(SELF)->next = (Core_Result(*)(dx_string_iterator*))dx_string_buffer_iterator_impl_next;
@@ -262,7 +262,7 @@ Core_Result dx_string_buffer_iterator_impl_construct(dx_string_buffer_iterator_i
     return Core_Failure;
   }
   SELF->string_buffer = string_buffer;
-  DX_REFERENCE(SELF->string_buffer);
+  CORE_REFERENCE(SELF->string_buffer);
   SELF->index = 0;
   CORE_OBJECT(SELF)->type = TYPE;
   return Core_Success;
@@ -271,7 +271,7 @@ Core_Result dx_string_buffer_iterator_impl_construct(dx_string_buffer_iterator_i
 Core_Result dx_string_buffer_iterator_impl_create(dx_string_buffer_iterator_impl** RETURN, dx_string_buffer* string_buffer) {
   DX_CREATE_PREFIX(dx_string_buffer_iterator_impl);
   if (dx_string_buffer_iterator_impl_construct(SELF, string_buffer)) {
-    DX_UNREFERENCE(SELF);
+    CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
   }

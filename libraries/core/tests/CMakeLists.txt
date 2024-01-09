@@ -31,6 +31,8 @@ list(APPEND ${name}.headers "sources/Core/Tests/nextPowerOfTwo.h")
 
 list(APPEND ${name}.sources "sources/Core/Tests/safeAddNx.c")
 list(APPEND ${name}.headers "sources/Core/Tests/safeAddNx.h")
+list(APPEND ${name}.sources "sources/Core/Tests/safeMulIx.c")
+list(APPEND ${name}.headers "sources/Core/Tests/safeMulIx.h")
 list(APPEND ${name}.sources "sources/Core/Tests/safeMulNx.c")
 list(APPEND ${name}.headers "sources/Core/Tests/safeMulNx.h")
 list(APPEND ${name}.sources "sources/Core/Tests/clearBits.c")

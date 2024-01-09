@@ -6,14 +6,14 @@
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-DX_DEFINE_OBJECT_TYPE("dx.assets.material_controller",
+Core_defineObjectType("dx.assets.material_controller",
                       dx_assets_material_controller,
                       Core_Object);
 
 static void dx_assets_material_controller_destruct(dx_assets_material_controller* SELF)
 {/*Intentionally empty.*/}
 
-static void dx_assets_material_controller_constructDispatch(dx_assets_material_controller_dispatch* SELF)
+static void dx_assets_material_controller_constructDispatch(dx_assets_material_controller_Dispatch* SELF)
 {/*Intentionally empty.*/}
 
 Core_Result dx_assets_material_controller_construct(dx_assets_material_controller* SELF) {
@@ -24,7 +24,7 @@ Core_Result dx_assets_material_controller_construct(dx_assets_material_controlle
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-DX_DEFINE_OBJECT_TYPE("dx.assets.material_controllers.ambient_color",
+Core_defineObjectType("dx.assets.material_controllers.ambient_color",
                       dx_assets_material_controllers_ambient_color,
                       dx_assets_material_controller);
 
@@ -69,7 +69,7 @@ static Core_Result dx_assets_material_controllers_ambient_color_update(dx_assets
 static void dx_assets_material_controllers_ambient_color_destruct(dx_assets_material_controllers_ambient_color* SELF)
 {/*Intentionally empty.*/}
 
-static void dx_assets_material_controllers_ambient_color_constructDispatch(dx_assets_material_controllers_ambient_color_dispatch* SELF) {
+static void dx_assets_material_controllers_ambient_color_constructDispatch(dx_assets_material_controllers_ambient_color_Dispatch* SELF) {
   DX_ASSETS_MATERIAL_CONTROLLER_DISPATCH(SELF)->update = (Core_Result(*)(dx_assets_material_controller*, dx_assets_material*, Core_Real32)) & dx_assets_material_controllers_ambient_color_update;
 }
 
@@ -86,7 +86,7 @@ Core_Result dx_assets_material_controllers_ambient_color_construct(dx_assets_mat
 Core_Result dx_assets_material_controllers_ambient_color_create(dx_assets_material_controllers_ambient_color** RETURN) {
   DX_CREATE_PREFIX(dx_assets_material_controllers_ambient_color);
   if (dx_assets_material_controllers_ambient_color_construct(SELF)) {
-    DX_UNREFERENCE(SELF);
+    CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
   }

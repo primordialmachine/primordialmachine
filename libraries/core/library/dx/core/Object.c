@@ -162,7 +162,7 @@ void Core_Object_unreference(Core_Object* object) {
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-DX_DEFINE_OBJECT_TYPE("Core.WeakReference",
+Core_defineObjectType("Core.WeakReference",
                        Core_WeakReference,
                        Core_Object);
 
@@ -203,7 +203,7 @@ static void Core_WeakReference_destruct(Core_WeakReference* SELF) {
   _relinquish_weak_references_lock();
 }
 
-static void Core_WeakReference_constructDispatch(Core_WeakReference_dispatch* SELF)
+static void Core_WeakReference_constructDispatch(Core_WeakReference_Dispatch* SELF)
 {/*Intentionally empty.*/}
 
 Core_Result Core_WeakReference_construct(Core_WeakReference* SELF, Core_Object* object) {
@@ -225,7 +225,7 @@ Core_Result Core_WeakReference_construct(Core_WeakReference* SELF, Core_Object* 
 Core_Result Core_WeakReference_create(Core_WeakReference** RETURN, Core_Object* object) {
   DX_CREATE_PREFIX(Core_WeakReference);
   if (Core_WeakReference_construct(SELF, object)) {
-    DX_UNREFERENCE(SELF);
+    CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
   }
@@ -247,7 +247,7 @@ Core_Result Core_WeakReference_set(Core_WeakReference* SELF, Core_Object* object
 
 Core_Result Core_WeakReference_acquire(Core_Object** RETURN, Core_WeakReference* SELF) {
   if (SELF->object) {
-    DX_REFERENCE(SELF->object);
+    CORE_REFERENCE(SELF->object);
   }
   *RETURN = SELF->object;
   return Core_Success;
@@ -257,25 +257,25 @@ Core_Result Core_WeakReference_acquire(Core_Object** RETURN, Core_WeakReference*
 
 
 
-DX_DEFINE_FUNDAMENTAL_TYPE
+Core_defineFundamentalType
   (
     "Core.Natural8",
     Core_Natural8
   );
 
-DX_DEFINE_FUNDAMENTAL_TYPE
+Core_defineFundamentalType
   (
     "Core.Natural16",
     Core_Natural16
   );
 
-DX_DEFINE_FUNDAMENTAL_TYPE
+Core_defineFundamentalType
   (
     "Core.Natural32",
     Core_Natural32
   );
 
-DX_DEFINE_FUNDAMENTAL_TYPE
+Core_defineFundamentalType
   (
     "Core.Natural64",
     Core_Natural64
@@ -283,25 +283,25 @@ DX_DEFINE_FUNDAMENTAL_TYPE
 
 
 
-DX_DEFINE_FUNDAMENTAL_TYPE
+Core_defineFundamentalType
   (
     "Core.Integer8",
     Core_Integer8
   );
 
-DX_DEFINE_FUNDAMENTAL_TYPE
+Core_defineFundamentalType
   (
     "Core.Integer16",
     Core_Integer16
   );
 
-DX_DEFINE_FUNDAMENTAL_TYPE
+Core_defineFundamentalType
   (
     "Core.Integer32",
     Core_Integer32
   );
 
-DX_DEFINE_FUNDAMENTAL_TYPE
+Core_defineFundamentalType
   (
     "Core.Integer64",
     Core_Integer64
@@ -309,13 +309,13 @@ DX_DEFINE_FUNDAMENTAL_TYPE
 
 
 
-DX_DEFINE_FUNDAMENTAL_TYPE
+Core_defineFundamentalType
   (
     "Core.Real32",
     Core_Real32
   );
 
-DX_DEFINE_FUNDAMENTAL_TYPE
+Core_defineFundamentalType
   (
     "Core.Real64",
     Core_Real64
@@ -323,7 +323,7 @@ DX_DEFINE_FUNDAMENTAL_TYPE
 
 
 
-DX_DEFINE_FUNDAMENTAL_TYPE
+Core_defineFundamentalType
   (
     "Core.Boolean",
     Core_Boolean
@@ -331,7 +331,7 @@ DX_DEFINE_FUNDAMENTAL_TYPE
 
 
 
-DX_DEFINE_FUNDAMENTAL_TYPE
+Core_defineFundamentalType
   (
     "Core.Size",
     Core_Size

@@ -3,7 +3,7 @@
 
 #include "dx/val/system_factory.h"
 
-DX_DECLARE_OBJECT_TYPE("dx.val.gl.system_factory",
+Core_declareObjectType("dx.val.gl.system_factory",
                        dx_val_gl_system_factory,
                        dx_val_system_factory);
 
@@ -15,12 +15,12 @@ struct dx_val_gl_system_factory {
   dx_val_system_factory _parent;
 };
 
-static inline dx_val_gl_system_factory_dispatch* DX_VAL_GL_SYSTEM_FACTORY_DISPATCH(void* p) {
-  return (dx_val_gl_system_factory_dispatch*)p;
+static inline dx_val_gl_system_factory_Dispatch* DX_VAL_GL_SYSTEM_FACTORY_DISPATCH(void* p) {
+  return (dx_val_gl_system_factory_Dispatch*)p;
 }
 
-struct dx_val_gl_system_factory_dispatch {
-  dx_val_system_factory_dispatch _parent;
+struct dx_val_gl_system_factory_Dispatch {
+  dx_val_system_factory_Dispatch _parent;
 };
 
 /// @constructor{dx_val_gl_system_factory}

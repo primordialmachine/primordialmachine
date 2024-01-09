@@ -1,0 +1,40 @@
+{
+  "type" : "function",
+  "last-update" : "2024-01-09",
+  "indices" : "core",
+  "name" : "Core_EmitMessage_create",
+  "id" : "core-emitmessage-create",
+  "signature" : "Core_Result Core_EmitMessage_create(Core_EmitMessage** RETURN, Core_ApplicationMessageKind kind);",
+  "parameters" : [
+    {
+      "name" : "RETURN",
+      "type" : "@{code('Core_EmitMessage**')}",
+      "description" : "A pointer to a @{code('Core_EmitMessage*')} variable."
+    },
+    {
+      "name" : "message",
+      "type" : "@{code('Core_String*')}",
+      "description" : "The message to emit."
+    }
+  ],
+  "success": "@{code('*RETURN')} was assigned a pointer to the @{code('Core_EmitMessage')} object.",
+  "errors" : [
+    {
+      "errorCode" : "Core_Error_ArgumentInvalid",
+      "errorCondition" : "@{code('RETURN')} is a null pointer."
+    },
+    {
+      "errorCode" : "Core_Error_ArgumentInvalid",
+      "errorCondition" : "@{code('message')} is a null pointer."
+    },
+    {
+      "errorCode" : "Core_Error_AllocationFailed",
+      "errorCondition" : "An allocation failed."
+    }
+  ],
+  "description" : "Create a @{code('Core_EmitMessage')} object.",
+  "return" : "@{code('Core_Success')} on success. @{code('Core_Failure')} on failure.",
+  "remarks" : [
+    "This function sets the by-thread error variable on failure."
+  ]
+}

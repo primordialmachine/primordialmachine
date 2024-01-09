@@ -3,7 +3,7 @@
 
 #include "Core/Tests/Signals/ObjectB.h"
 
-DX_DECLARE_OBJECT_TYPE("Core.Tests.Signals.ObjectC",
+Core_declareObjectType("Core.Tests.Signals.ObjectC",
                        Core_Tests_Signals_ObjectC,
                        Core_Tests_Signals_ObjectB);
 
@@ -15,12 +15,12 @@ struct Core_Tests_Signals_ObjectC {
   Core_Tests_Signals_ObjectB _parent;
 };
 
-static inline Core_Tests_Signals_ObjectC_dispatch* CORE_TESTS_SIGNALS_OBJECTC_DISPATCH(void* p) {
-  return (Core_Tests_Signals_ObjectC_dispatch*)p;
+static inline Core_Tests_Signals_ObjectC_Dispatch* CORE_TESTS_SIGNALS_OBJECTC_DISPATCH(void* p) {
+  return (Core_Tests_Signals_ObjectC_Dispatch*)p;
 }
 
-struct Core_Tests_Signals_ObjectC_dispatch {
-  Core_Tests_Signals_ObjectB_dispatch _parent;
+struct Core_Tests_Signals_ObjectC_Dispatch {
+  Core_Tests_Signals_ObjectB_Dispatch _parent;
 };
 
 Core_Result Core_Tests_Signals_ObjectC_construct(Core_Tests_Signals_ObjectC* SELF);

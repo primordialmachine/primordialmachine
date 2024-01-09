@@ -5,7 +5,7 @@
 #include "dx/val/mesh.h"
 
 /// @brief The instance of a mesh in world space.
-DX_DECLARE_OBJECT_TYPE("dx.val.mesh_instance",
+Core_declareObjectType("dx.val.mesh_instance",
                        dx_val_mesh_instance,
                        Core_Object);
 
@@ -23,11 +23,11 @@ struct dx_val_mesh_instance {
   dx_val_command_list* commands;
 };
 
-static dx_val_mesh_instance_dispatch* DX_VAL_MESH_INSTANCE_DISPATCH(void* p) {
-  return (dx_val_mesh_instance_dispatch*)p;
+static dx_val_mesh_instance_Dispatch* DX_VAL_MESH_INSTANCE_DISPATCH(void* p) {
+  return (dx_val_mesh_instance_Dispatch*)p;
 }
 
-struct dx_val_mesh_instance_dispatch {
+struct dx_val_mesh_instance_Dispatch {
   Core_Object_Dispatch _parent;
 };
 

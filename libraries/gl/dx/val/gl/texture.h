@@ -5,7 +5,7 @@
 #include "dx/val/texture.h"
 typedef struct dx_val_gl_context dx_val_gl_context;
 
-DX_DECLARE_OBJECT_TYPE("dx.val.gl.texture",
+Core_declareObjectType("dx.val.gl.texture",
                        dx_val_gl_texture,
                        dx_val_texture);
 
@@ -31,12 +31,12 @@ struct dx_val_gl_texture {
   DX_VEC4 texture_border_color;
 };
 
-static inline dx_val_gl_texture_dispatch* DX_VAL_GL_TEXTURE_DISPATCH(void* p) {
-  return (dx_val_gl_texture_dispatch*)p;
+static inline dx_val_gl_texture_Dispatch* DX_VAL_GL_TEXTURE_DISPATCH(void* p) {
+  return (dx_val_gl_texture_Dispatch*)p;
 }
 
-struct dx_val_gl_texture_dispatch {
-  dx_val_texture_dispatch _parent;
+struct dx_val_gl_texture_Dispatch {
+  dx_val_texture_Dispatch _parent;
 };
 
 /// @method-call

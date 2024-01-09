@@ -4,7 +4,7 @@
 #include "dx/core/object.h"
 #include "dx/core/inline_object_array.h"
 
-DX_DECLARE_OBJECT_TYPE("dx.object_array",
+Core_declareObjectType("dx.object_array",
                        dx_object_array,
                        Core_Object);
 
@@ -17,11 +17,11 @@ struct dx_object_array {
   dx_inline_object_array backend;
 };
 
-static inline dx_object_array_dispatch* DX_OBJECT_ARRAY_DISPATCH(void* p) {
-  return (dx_object_array_dispatch*)p;
+static inline dx_object_array_Dispatch* DX_OBJECT_ARRAY_DISPATCH(void* p) {
+  return (dx_object_array_Dispatch*)p;
 }
 
-struct dx_object_array_dispatch {
+struct dx_object_array_Dispatch {
   Core_Object_Dispatch _parent;
 };
 

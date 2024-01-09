@@ -1,13 +1,13 @@
 #include "dx/val/system_factory.h"
 
-DX_DEFINE_OBJECT_TYPE("dx.val.system_factory",
+Core_defineObjectType("dx.val.system_factory",
                       dx_val_system_factory,
                       dx_system_factory);
 
 static void dx_val_system_factory_destruct(dx_val_system_factory* SELF)
 {/*Intentionally empty.*/}
 
-static void dx_val_system_factory_constructDispatch(dx_val_system_factory_dispatch* SELF)
+static void dx_val_system_factory_constructDispatch(dx_val_system_factory_Dispatch* SELF)
 {/*Intentionally empty.*/}
 
 Core_Result dx_val_system_factory_construct(dx_val_system_factory* SELF) {

@@ -5,7 +5,7 @@
 #include "dx/val/program.h"
 typedef struct dx_val_gl_context dx_val_gl_context;
 
-DX_DECLARE_OBJECT_TYPE("dx.val.gl.program",
+Core_declareObjectType("dx.val.gl.program",
                        dx_val_gl_program,
                        dx_val_program);
 
@@ -20,11 +20,11 @@ struct dx_val_gl_program {
   GLuint program_id;
 };
 
-static inline dx_val_gl_program_dispatch* DX_VAL_GL_PROGRAM_DISPATCH(void* p) {
-  return (dx_val_gl_program_dispatch*)p;
+static inline dx_val_gl_program_Dispatch* DX_VAL_GL_PROGRAM_DISPATCH(void* p) {
+  return (dx_val_gl_program_Dispatch*)p;
 }
 
-struct dx_val_gl_program_dispatch {
+struct dx_val_gl_program_Dispatch {
   dx_val_program _parent;
 };
 

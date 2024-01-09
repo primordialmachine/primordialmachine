@@ -1,0 +1,16 @@
+{
+  "type" : "function-prototype",
+  "last-update" : "2024-01-15",
+  "indices" : "core",
+  "name" : "Core_InlinePointerHashMap_ValueRemovedCallback",
+  "id" : "core-inlinepointerhashmap-valueremovedcallback",
+  "signature" : "typedef void (Core_InlinePointerHashMap_ValueRemovedCallback)(Core_InlinePointerHashMap_Value* value);",
+  "description" : "The type of a callback invoked if a value is removed from an inline pointer hash map.",
+  "parameters" : [
+    {
+      "name" : "value",
+      "type" : "@{code('Core_InlinePointerHashMap_Value*')}",
+      "description" : "A pointer to a @{code('Core_InlinePointerHashMap_Value')} value."
+    }
+  ]
+}

@@ -4,7 +4,7 @@
 #include "dx/core.h"
 typedef struct dx_system dx_system;
 
-DX_DECLARE_OBJECT_TYPE("dx.system_factory",
+Core_declareObjectType("dx.system_factory",
                        dx_system_factory,
                        Core_Object);
 
@@ -16,11 +16,11 @@ struct dx_system_factory {
   Core_Object _parent;
 };
 
-static inline dx_system_factory_dispatch* DX_SYSTEM_FACTORY_DISPATCH(void* p) {
-  return (dx_system_factory_dispatch*)p;
+static inline dx_system_factory_Dispatch* DX_SYSTEM_FACTORY_DISPATCH(void* p) {
+  return (dx_system_factory_Dispatch*)p;
 }
 
-struct dx_system_factory_dispatch {
+struct dx_system_factory_Dispatch {
   Core_Object_Dispatch _parent;
   Core_Result(*create_system)(dx_system**,dx_system_factory*, dx_msg_queue*);
 };

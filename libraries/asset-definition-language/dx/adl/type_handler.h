@@ -7,7 +7,7 @@
 #include "dx/data_definition_language.h"
 typedef struct dx_adl_context dx_adl_context;
 
-DX_DECLARE_OBJECT_TYPE("dx.adl.type_handler",
+Core_declareObjectType("dx.adl.type_handler",
                        dx_adl_type_handler,
                        Core_Object);
 
@@ -19,12 +19,12 @@ struct dx_adl_type_handler {
   Core_Object _parent;
 };
 
-static inline dx_adl_type_handler_dispatch* DX_ADL_TYPE_HANDLER_DISPATCH(void* p) {
-  return (dx_adl_type_handler_dispatch*)p;
+static inline dx_adl_type_handler_Dispatch* DX_ADL_TYPE_HANDLER_DISPATCH(void* p) {
+  return (dx_adl_type_handler_Dispatch*)p;
 }
 
 
-struct dx_adl_type_handler_dispatch {
+struct dx_adl_type_handler_Dispatch {
   Core_Object_Dispatch _parent;
   Core_Result(*read)(Core_Object** RETURN, dx_adl_type_handler* SELF, dx_ddl_node* node, dx_adl_context* context);
   Core_Result (*resolve)(dx_adl_type_handler* SELF, dx_adl_symbol* symbol, dx_adl_context* context);

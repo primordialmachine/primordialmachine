@@ -3,7 +3,7 @@
 
 #include "dx/adl/context.h"
 
-DX_DECLARE_OBJECT_TYPE("dx.adl.type_handlers.color",
+Core_declareObjectType("dx.adl.type_handlers.color",
                        dx_adl_type_handlers_color,
                        dx_adl_type_handler);
 
@@ -16,15 +16,15 @@ struct dx_adl_type_handlers_color {
   /// @brief
   /// Set of expected keys.
   /// If a key is not in that set, then this is a semantical error.
-  dx_inline_pointer_hashmap expected_keys;
+  Core_InlinePointerHashmap expected_keys;
 };
 
-static inline dx_adl_type_handlers_color_dispatch* DX_ADL_TYPE_HANDLERS_COLOR_DISPATCH(void* p) {
-  return (dx_adl_type_handlers_color_dispatch*)p;
+static inline dx_adl_type_handlers_color_Dispatch* DX_ADL_TYPE_HANDLERS_COLOR_DISPATCH(void* p) {
+  return (dx_adl_type_handlers_color_Dispatch*)p;
 }
 
-struct dx_adl_type_handlers_color_dispatch {
-  dx_adl_type_handler_dispatch _parent;
+struct dx_adl_type_handlers_color_Dispatch {
+  dx_adl_type_handler_Dispatch _parent;
 };
 
 Core_Result dx_adl_type_handlers_color_construct(dx_adl_type_handlers_color* SELF);

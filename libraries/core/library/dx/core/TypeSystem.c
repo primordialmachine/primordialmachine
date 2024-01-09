@@ -60,7 +60,7 @@ static Core_Boolean _dx_rti_type_is_object(_dx_rti_type* ty);
 /// This function does nothing if the type is not an object type.
 /// @param ty A pointer to the type.
 /// @default-return
-static Core_Result _dx_rti_type_ensure_dispatches_created(_dx_rti_type* ty);
+static Core_Result _dx_rti_type_ensure_Dispatches_created(_dx_rti_type* ty);
 
 /// @internal
 /// @brief Ensure the dispatches of a type are destroyed.
@@ -70,7 +70,7 @@ static Core_Result _dx_rti_type_ensure_dispatches_created(_dx_rti_type* ty);
 /// Always succeeds.
 /// @undefined
 /// @a ty does not point to a type.
-static Core_Result _dx_rti_type_ensure_dispatches_destroyed(_dx_rti_type* ty);
+static Core_Result _dx_rti_type_ensure_Dispatches_destroyed(_dx_rti_type* ty);
 
 static Core_Boolean _dx_rti_type_is_fundamental(_dx_rti_type* ty) {
   return _DX_RTI_TYPE_NODE_FLAGS_FUNDAMENTAL == (ty->flags & _DX_RTI_TYPE_NODE_FLAGS_FUNDAMENTAL);
@@ -84,7 +84,7 @@ static Core_Boolean _dx_rti_type_is_object(_dx_rti_type* ty) {
   return _DX_RTI_TYPE_NODE_FLAGS_OBJECT == (ty->flags & _DX_RTI_TYPE_NODE_FLAGS_OBJECT);
 }
 
-static Core_Result _dx_rti_type_ensure_dispatches_created(_dx_rti_type* ty) {
+static Core_Result _dx_rti_type_ensure_Dispatches_created(_dx_rti_type* ty) {
   if (!_dx_rti_type_is_object(ty)) {
     return Core_Success;
   }
@@ -92,7 +92,7 @@ static Core_Result _dx_rti_type_ensure_dispatches_created(_dx_rti_type* ty) {
     return Core_Success;
   }
   if (ty->object.parent) {
-    if (_dx_rti_type_ensure_dispatches_created(ty->object.parent)) {
+    if (_dx_rti_type_ensure_Dispatches_created(ty->object.parent)) {
       return Core_Failure;
     }
   }
@@ -104,13 +104,13 @@ static Core_Result _dx_rti_type_ensure_dispatches_created(_dx_rti_type* ty) {
   if (ty->object.parent) {
     Core_Memory_copy(ty->object.dispatch, ty->object.parent->object.dispatch, ty->object.parent->object.dispatch_size);
   }
-  if (ty->object.construct_dispatch) {
-    ty->object.construct_dispatch(ty->object.dispatch);
+  if (ty->object.constructDispatch) {
+    ty->object.constructDispatch(ty->object.dispatch);
   }
   return Core_Success;
 }
 
-static Core_Result _dx_rti_type_ensure_dispatches_destroyed(_dx_rti_type* ty) {
+static Core_Result _dx_rti_type_ensure_Dispatches_destroyed(_dx_rti_type* ty) {
   if (!_dx_rti_type_is_object(ty)) {
     return Core_Success;
   }
@@ -196,7 +196,7 @@ static void _dx_rti_type_unreference(_dx_rti_type* a) {
         _dx_rti_type_unreference(a->object.parent);
         a->object.parent = NULL;
       }
-      _dx_rti_type_ensure_dispatches_destroyed(a);
+      _dx_rti_type_ensure_Dispatches_destroyed(a);
     }
     _dx_rti_type_name_unreference(a->name);
     a->name = NULL;
@@ -217,21 +217,21 @@ static void _dx_rti_type_unreference_callback(_dx_rti_type** a) {
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-static dx_inline_pointer_hashmap* g_types = NULL;
+static Core_InlinePointerHashmap* g_types = NULL;
 
 Core_Result Core_TypeSystem_initialize() {
-  static DX_INLINE_POINTER_HASHMAP_CONFIGURATION const configuration = {
-    .compare_keys_callback = (dx_inline_pointer_hashmap_compare_keys_callback*) & _dx_rti_type_name_compare_keys_callback,
-    .hash_key_callback = (dx_inline_pointer_hashmap_hash_key_callback*) & _dx_rti_type_name_hash_key_callback,
-    .key_added_callback = (dx_inline_pointer_hashmap_key_added_callback*) & _dx_rti_type_name_reference_callback,
-    .key_removed_callback = (dx_inline_pointer_hashmap_key_removed_callback*) & _dx_rti_type_name_unreference_callback,
-    .value_added_callback = (dx_inline_pointer_hashmap_value_added_callback*) & _dx_rti_type_reference_callback,
-    .value_removed_callback = (dx_inline_pointer_hashmap_value_removed_callback*) & _dx_rti_type_unreference_callback,
+  static Core_InlinePointerHashMap_Configuration const configuration = {
+    .compareKeysCallback = (Core_InlinePointerHashmap_compare_keys_callback*) & _dx_rti_type_name_compare_keys_callback,
+    .hashKeyCallback = (Core_InlinePointerHashmap_hash_key_callback*) & _dx_rti_type_name_hash_key_callback,
+    .keyAddedCallback = (Core_InlinePointerHashMap_KeyAddedCallback*) & _dx_rti_type_name_reference_callback,
+    .keyRemovedCallback = (Core_InlinePointerHashMap_KeyRemovedCallback*) & _dx_rti_type_name_unreference_callback,
+    .valueAddedCallback = (Core_InlinePointerHashmap_ValueAddedCallback*) & _dx_rti_type_reference_callback,
+    .valueRemovedCallback = (Core_InlinePointerHashMap_ValueRemovedCallback*) & _dx_rti_type_unreference_callback,
   };
-  if (Core_Memory_allocate(&g_types, sizeof(dx_inline_pointer_hashmap))) {
+  if (Core_Memory_allocate(&g_types, sizeof(Core_InlinePointerHashmap))) {
     return Core_Failure;
   }
-  if (dx_inline_pointer_hashmap_initialize(g_types, &configuration)) {
+  if (Core_InlinePointerHashmap_initialize(g_types, &configuration)) {
     Core_Memory_deallocate(g_types);
     g_types = NULL;
     return Core_Failure;
@@ -240,22 +240,37 @@ Core_Result Core_TypeSystem_initialize() {
 }
 
 Core_Result Core_TypeSystem_uninitialize() {
-  dx_inline_pointer_hashmap_uninitialize(g_types);
+  Core_InlinePointerHashmap_uninitialize(g_types);
   Core_Memory_deallocate(g_types);
   g_types = NULL;
   return Core_Success;
 }
 
-Core_Boolean Core_TypeSystem_isFundamentalType(Core_Type* type) {
-  return _dx_rti_type_is_fundamental(_DX_RTI_TYPE(type));
+Core_Result Core_TypeSystem_isFundamentalType(Core_Boolean* RETURN, Core_Type* type) {
+  if (!RETURN || !type) {
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
+  }
+  *RETURN = _dx_rti_type_is_fundamental(_DX_RTI_TYPE(type));
+  return Core_Success;
 }
 
-Core_Boolean Core_TypeSystem_isEnumerationType(Core_Type* type) {
-  return _dx_rti_type_is_enumeration(_DX_RTI_TYPE(type));
+Core_Result Core_TypeSystem_isEnumerationType(Core_Boolean* RETURN, Core_Type* type) {
+  if (!RETURN || !type) {
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
+  }
+  *RETURN = _dx_rti_type_is_enumeration(_DX_RTI_TYPE(type));
+  return Core_Success;
 }
 
-Core_Boolean Core_TypeSystem_isObjectType(Core_Type* type) {
-  return _dx_rti_type_is_object(_DX_RTI_TYPE(type));
+Core_Result Core_TypeSystem_isObjectType(Core_Boolean* RETURN, Core_Type* type) {
+  if (!RETURN || !type) {
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
+  }
+  *RETURN = _dx_rti_type_is_object(_DX_RTI_TYPE(type));
+  return Core_Success;
 }
 
 Core_Result Core_TypeSystem_defineEnumerationType(Core_Type** RETURN, char const* p, Core_Size n, void (*on_type_destroyed)()) {
@@ -264,7 +279,7 @@ Core_Result Core_TypeSystem_defineEnumerationType(Core_Type** RETURN, char const
     return Core_Failure;
   }
   _dx_rti_type* type = NULL;
-  if (dx_inline_pointer_hashmap_get(&type, g_types, name)) {
+  if (Core_InlinePointerHashmap_get(&type, g_types, name)) {
     if (Core_Error_NotFound != Core_getError()) {
       return Core_Failure;
     } else {
@@ -287,7 +302,7 @@ Core_Result Core_TypeSystem_defineEnumerationType(Core_Type** RETURN, char const
   type->name = name;
   type->reference_count = 1;
   // add the type
-  if (dx_inline_pointer_hashmap_set(g_types, name, type)) {
+  if (Core_InlinePointerHashmap_set(g_types, name, type)) {
     _dx_rti_type_unreference(type);
     type = NULL;
     return Core_Failure;
@@ -306,7 +321,7 @@ Core_Result Core_TypeSystem_defineFundamentalType(Core_Type** RETURN, char const
     return Core_Failure;
   }
   _dx_rti_type* type = NULL;
-  if (dx_inline_pointer_hashmap_get(&type, g_types, name)) {
+  if (Core_InlinePointerHashmap_get(&type, g_types, name)) {
     if (Core_Error_NotFound != Core_getError()) {
       return Core_Failure;
     } else {
@@ -331,7 +346,7 @@ Core_Result Core_TypeSystem_defineFundamentalType(Core_Type** RETURN, char const
   type->reference_count = 1;
   type->fundamental.value_size = value_size;
   // add the type
-  if (dx_inline_pointer_hashmap_set(g_types, name, type)) {
+  if (Core_InlinePointerHashmap_set(g_types, name, type)) {
     _dx_rti_type_unreference(type);
     type = NULL;
     return Core_Failure;
@@ -342,13 +357,13 @@ Core_Result Core_TypeSystem_defineFundamentalType(Core_Type** RETURN, char const
 
 Core_Result Core_TypeSystem_defineObjectType(Core_Type** RETURN, char const* p, Core_Size n, void (*on_type_destroyed)(), Core_Type* parent,
   Core_Size object_size, void (*destruct_object)(Core_Object*),
-  Core_Size dispatch_size, void (*construct_dispatch)(Core_Object_Dispatch*)) {
+  Core_Size dispatch_size, void (*constructDispatch)(Core_Object_Dispatch*)) {
   _dx_rti_type_name* name = NULL;
   if (_dx_rti_type_name_create(&name, p, n)) {
     return Core_Failure;
   }
   _dx_rti_type* type = NULL;
-  if (dx_inline_pointer_hashmap_get(&type, g_types, name)) {
+  if (Core_InlinePointerHashmap_get(&type, g_types, name)) {
     if (Core_Error_NotFound != Core_getError()) {
       return Core_Failure;
     } else {
@@ -421,7 +436,7 @@ Core_Result Core_TypeSystem_defineObjectType(Core_Type** RETURN, char const* p, 
   type->object.destruct_object = destruct_object;
 
   type->object.dispatch_size = dispatch_size;
-  type->object.construct_dispatch = construct_dispatch;
+  type->object.constructDispatch = constructDispatch;
   type->object.dispatch = NULL;
 
   type->object.parent = _DX_RTI_TYPE(parent);
@@ -429,7 +444,7 @@ Core_Result Core_TypeSystem_defineObjectType(Core_Type** RETURN, char const* p, 
     _dx_rti_type_reference(type->object.parent);
   }
   // add the type
-  if (dx_inline_pointer_hashmap_set(g_types, name, type)) {
+  if (Core_InlinePointerHashmap_set(g_types, name, type)) {
     _dx_rti_type_unreference(type);
     type = NULL;
     return Core_Failure;
@@ -439,8 +454,8 @@ Core_Result Core_TypeSystem_defineObjectType(Core_Type** RETURN, char const* p, 
   g_debug_number_of_types++;
 #endif
   // Simply revert everything if this goes wrong.
-  if (_dx_rti_type_ensure_dispatches_created(type)) {
-    dx_inline_pointer_hashmap_remove(g_types, name);
+  if (_dx_rti_type_ensure_Dispatches_created(type)) {
+    Core_InlinePointerHashmap_remove(g_types, name);
     return Core_Failure;
   }
   *RETURN = (Core_Type*)type;
@@ -472,8 +487,9 @@ static inline bool _dx_rti_type_is_leq(_dx_rti_type* x, _dx_rti_type* y) {
   return false;
 }
 
-bool dx_rti_type_is_leq(Core_Type* x, Core_Type* y) {
-  return _dx_rti_type_is_leq(_DX_RTI_TYPE(x), _DX_RTI_TYPE(y));
+Core_Result Core_Type_isLowerThanOrEqualTo(Core_Boolean* RETURN, Core_Type* x, Core_Type* y) {
+  *RETURN = _dx_rti_type_is_leq(_DX_RTI_TYPE(x), _DX_RTI_TYPE(y));
+  return Core_Success;
 }
 
 void* Core_Type_getDispatch(Core_Type* x) {

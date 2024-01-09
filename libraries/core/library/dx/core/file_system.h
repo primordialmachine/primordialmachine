@@ -1,7 +1,7 @@
 /// @file dx/core/file_system.h
 /// @brief Core functionality related to the file system.
 /// @author Michael Heilmann (michaelheilmann@primordialmachine.com)
-/// @copyright Copyright (c) 2018-2023 Michael Heilmann. All rights reserved.
+/// @copyright Copyright (c) 2018-2024 Michael Heilmann. All rights reserved.
 
 #if !defined(DX_CORE_FILE_SYSTEM_H_INCLUDED)
 #define DX_CORE_FILE_SYSTEM_H_INCLUDED
@@ -15,7 +15,7 @@
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-DX_DECLARE_ENUMERATION_TYPE("Core.FileState",
+Core_declareEnumerationType("Core.FileState",
                             Core_FileState);
 
 /// @ingroup Core_FileSystem

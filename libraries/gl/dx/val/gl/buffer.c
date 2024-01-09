@@ -2,7 +2,7 @@
 
 #include "dx/val/gl/context.h"
 
-DX_DEFINE_OBJECT_TYPE("dx.val.gl.buffer",
+Core_defineObjectType("dx.val.gl.buffer",
                       dx_val_gl_buffer,
                       dx_val_buffer);
 
@@ -16,7 +16,7 @@ static void dx_val_gl_buffer_destruct(dx_val_gl_buffer* SELF) {
   }
 }
 
-static void dx_val_gl_buffer_constructDispatch(dx_val_gl_buffer_dispatch* SELF) {
+static void dx_val_gl_buffer_constructDispatch(dx_val_gl_buffer_Dispatch* SELF) {
   DX_VAL_BUFFER_DISPATCH(SELF)->set_data = (Core_Result(*)(dx_val_buffer*, void const*, Core_Size)) & dx_val_gl_buffer_set_data;
 }
 
@@ -50,7 +50,7 @@ static Core_Result dx_val_gl_buffer_set_data(dx_val_gl_buffer* SELF, void const*
 Core_Result dx_val_gl_buffer_create(dx_val_gl_buffer** RETURN, dx_val_gl_context* context) {
   DX_CREATE_PREFIX(dx_val_gl_buffer);
   if (dx_val_gl_buffer_construct(SELF, context)) {
-    DX_UNREFERENCE(SELF);
+    CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
   }

@@ -5,7 +5,7 @@
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-DX_DECLARE_OBJECT_TYPE("dx.assets.optics",
+Core_declareObjectType("dx.assets.optics",
                        dx_assets_optics,
                        Core_Object);
 
@@ -17,11 +17,11 @@ struct dx_assets_optics {
   Core_Object _parent;
 };
 
-static inline dx_assets_optics_dispatch* DX_ASSETS_OPTICS_DISPATCH(void* p) {
-  return (dx_assets_optics_dispatch*)p;
+static inline dx_assets_optics_Dispatch* DX_ASSETS_OPTICS_DISPATCH(void* p) {
+  return (dx_assets_optics_Dispatch*)p;
 }
 
-struct dx_assets_optics_dispatch {
+struct dx_assets_optics_Dispatch {
   Core_Object _parent;
 };
 
@@ -30,7 +30,7 @@ Core_Result dx_assets_optics_construct(dx_assets_optics* SELF);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-DX_DECLARE_OBJECT_TYPE("dx.asset.optics_orthographic",
+Core_declareObjectType("dx.asset.optics_orthographic",
                        dx_asset_optics_orthographic,
                        dx_asset_optics);
 
@@ -69,12 +69,12 @@ struct dx_asset_optics_orthographic {
 #pragma pop_macro("far")
 #endif
 
-static inline dx_asset_optics_orthographic_dispatch* DX_ASSET_OPTICS_ORTHOGRAPHIC_DISPATCH(void* p) {
-  return (dx_asset_optics_orthographic_dispatch*)p;
+static inline dx_asset_optics_orthographic_Dispatch* DX_ASSET_OPTICS_ORTHOGRAPHIC_DISPATCH(void* p) {
+  return (dx_asset_optics_orthographic_Dispatch*)p;
 }
 
-struct dx_asset_optics_orthographic_dispatch {
-  dx_assets_optics_dispatch _parent;
+struct dx_asset_optics_orthographic_Dispatch {
+  dx_assets_optics_Dispatch _parent;
 };
 
 /// @constructor{dx_asset_optics_orthographic}
@@ -85,7 +85,7 @@ Core_Result dx_asset_optics_orthographic_create(dx_asset_optics_orthographic** R
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-DX_DECLARE_OBJECT_TYPE("dx.asset.optics_perspective",
+Core_declareObjectType("dx.asset.optics_perspective",
                        dx_asset_optics_perspective,
                        dx_asset_optics);
 
@@ -123,12 +123,12 @@ struct dx_asset_optics_perspective {
 #pragma pop_macro("far")
 #endif
 
-static inline dx_asset_optics_perspective_dispatch* DX_ASSET_OPTICS_PERSPECTIVE_DISPATCH(void* p) {
-  return (dx_asset_optics_perspective_dispatch*)p;
+static inline dx_asset_optics_perspective_Dispatch* DX_ASSET_OPTICS_PERSPECTIVE_DISPATCH(void* p) {
+  return (dx_asset_optics_perspective_Dispatch*)p;
 }
 
-struct dx_asset_optics_perspective_dispatch {
-  dx_assets_optics_dispatch _parent;
+struct dx_asset_optics_perspective_Dispatch {
+  dx_assets_optics_Dispatch _parent;
 };
 
 /// @constructor{dx_asset_optics_perspective}

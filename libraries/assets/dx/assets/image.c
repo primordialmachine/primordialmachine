@@ -5,7 +5,7 @@
 #include "dx/assets/image_operations/color_fill.h"
 #include "dx/assets/image_operations/checkerboard_pattern_fill.h"
 
-DX_DEFINE_OBJECT_TYPE("Core.Assets.Image",
+Core_defineObjectType("Core.Assets.Image",
                       dx_assets_image,
                       Core_Object);
 
@@ -373,13 +373,13 @@ static Core_Result _swap_rows(dx_assets_image* SELF, Core_Size i, Core_Size j) {
 
 static void dx_assets_image_destruct(dx_assets_image* SELF) {
   dx_inline_object_array_uninitialize(&SELF->operations);
-  DX_UNREFERENCE(SELF->name);
+  CORE_UNREFERENCE(SELF->name);
   SELF->name = NULL;
   Core_Memory_deallocate(SELF->pixels);
   SELF->pixels = NULL;
 }
 
-static void dx_assets_image_constructDispatch(dx_assets_image_dispatch* SELF)
+static void dx_assets_image_constructDispatch(dx_assets_image_Dispatch* SELF)
 {/*Intentionally empty.*/}
 
 Core_Result dx_assets_image_construct(dx_assets_image* SELF,
@@ -455,10 +455,10 @@ Core_Result dx_assets_image_construct(dx_assets_image* SELF,
   } break;
   };
   SELF->name = name;
-  DX_REFERENCE(name);
+  CORE_REFERENCE(name);
 
   if (dx_inline_object_array_initialize(&SELF->operations, 0)) {
-    DX_UNREFERENCE(SELF->name);
+    CORE_UNREFERENCE(SELF->name);
     SELF->name = NULL;
     Core_Memory_deallocate(SELF->pixels);
     SELF->pixels = NULL;
@@ -476,7 +476,7 @@ Core_Result dx_assets_image_create(dx_assets_image** RETURN,
                                    Core_Size height) {
   DX_CREATE_PREFIX(dx_assets_image);
   if (dx_assets_image_construct(SELF, name, pixel_format, width, height)) {
-    DX_UNREFERENCE(SELF);
+    CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
   }
@@ -507,7 +507,10 @@ static void read_image_deallocate(void* context, void* p) {
 Core_Result dx_assets_image_construct_path(dx_assets_image* SELF, Core_String* name, Core_String* path) {
   DX_CONSTRUCT_PREFIX(dx_assets_image);
   //
-  if (dx_string_contains_symbol(path, '\0')) {
+  Core_Boolean containsSymbol = Core_False;
+  containsSymbol = dx_string_contains_symbol(path, '\0');
+  if (containsSymbol) {
+    Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
   }
   Core_String* format = NULL;
@@ -516,23 +519,23 @@ Core_Result dx_assets_image_construct_path(dx_assets_image* SELF, Core_String* n
   }
   Core_String* path1 = NULL;
   if (Core_String_printf(&path1, format, path)) {
-    DX_UNREFERENCE(format);
+    CORE_UNREFERENCE(format);
     format = NULL;
     return Core_Failure;
   }
-  DX_UNREFERENCE(format);
+  CORE_UNREFERENCE(format);
   format = NULL;
   //
   HMODULE dll = LoadLibraryA("./" DX_WIC_PLUGIN_LIBRARY_NAME ".dll");
   if (NULL == dll) {
-    DX_UNREFERENCE(path1);
+    CORE_UNREFERENCE(path1);
     path1 = NULL;
     Core_setError(Core_Error_EnvironmentFailed);
     return Core_Failure;
   }
   DX_WIC_PLUGIN_READ_IMAGE_PROC* procedure = (DX_WIC_PLUGIN_READ_IMAGE_PROC*)GetProcAddress(dll, DX_WIC_PLUGIN_READ_IMAGE_PROC_NAME);
   if (!procedure) {
-    DX_UNREFERENCE(path1);
+    CORE_UNREFERENCE(path1);
     path1 = NULL;
     FreeLibrary(dll);
     dll = NULL;
@@ -545,14 +548,14 @@ Core_Result dx_assets_image_construct_path(dx_assets_image* SELF, Core_String* n
   uint32_t width;
   uint32_t height;
   if (procedure(path1->bytes, DX_WIC_PLUGIN_IMAGE_FORMAT_PNG, &pixels, &pixel_format, &stride, &width, &height, NULL, &read_image_allocate, &read_image_deallocate)) {
-    DX_UNREFERENCE(path1);
+    CORE_UNREFERENCE(path1);
     path1 = NULL;
     FreeLibrary(dll);
     dll = NULL;
     Core_setError(Core_Error_EnvironmentFailed);
     return 1;
   }
-  DX_UNREFERENCE(path1);
+  CORE_UNREFERENCE(path1);
   path1 = NULL;
   FreeLibrary(dll);
   dll = NULL;
@@ -575,10 +578,10 @@ Core_Result dx_assets_image_construct_path(dx_assets_image* SELF, Core_String* n
   SELF->pixels = pixels;
 
   SELF->name = name;
-  DX_REFERENCE(name);
+  CORE_REFERENCE(name);
 
   if (dx_inline_object_array_initialize(&SELF->operations, 0)) {
-    DX_UNREFERENCE(SELF->name);
+    CORE_UNREFERENCE(SELF->name);
     SELF->name = NULL;
     Core_Memory_deallocate(SELF->pixels);
     SELF->pixels = NULL;
@@ -592,7 +595,7 @@ Core_Result dx_assets_image_construct_path(dx_assets_image* SELF, Core_String* n
 Core_Result dx_assets_image_create_path(dx_assets_image** RETURN, Core_String* name, Core_String* path) {
   DX_CREATE_PREFIX(dx_assets_image);
   if (dx_assets_image_construct_path(SELF, name, path)) {
-    DX_UNREFERENCE(SELF);
+    CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
   }
@@ -625,12 +628,15 @@ Core_Result dx_assets_image_apply(dx_assets_image* SELF,
                                   Core_Size height,
                                   dx_assets_image_operation* image_operation) {
   Core_Type* type = NULL;
-
+  Core_Boolean result = Core_False;
   //
   if (dx_assets_image_operations_color_fill_getType(&type)) {
     return Core_Failure;
   }
-  if (dx_rti_type_is_leq(CORE_OBJECT(image_operation)->type, type)) {
+  if (Core_Type_isLowerThanOrEqualTo(&result, CORE_OBJECT(image_operation)->type, type)) {
+    return Core_Failure;
+  }
+  if (result) {
     OFFSET2 offset = { .left = left, .top = top };
     EXTEND2 extend = { .width = width, .height = height };
     return on_color_fill_image_operation(SELF, offset, extend, DX_ASSETS_IMAGE_OPERATIONS_COLOR_FILL(image_operation));
@@ -638,12 +644,14 @@ Core_Result dx_assets_image_apply(dx_assets_image* SELF,
   if (Core_getError()) {
     return Core_Failure;
   }
-  
   //
   if (dx_assets_image_operations_checkerboard_pattern_fill_getType(&type)) {
     return Core_Failure;
   }
-  if (dx_rti_type_is_leq(CORE_OBJECT(image_operation)->type, type)) {
+  if (Core_Type_isLowerThanOrEqualTo(&result, CORE_OBJECT(image_operation)->type, type)) {
+    return Core_Failure;
+  }
+  if (result) {
     OFFSET2 offset = { .left = left, .top = top };
     EXTEND2 extend = { .width = width, .height = height };
     return on_checkerboard_pattern_fill_image_operation(SELF, offset, extend, DX_ASSETS_IMAGE_OPERATIONS_CHECKERBOARD_PATTERN_FILL(image_operation));
@@ -651,7 +659,6 @@ Core_Result dx_assets_image_apply(dx_assets_image* SELF,
   if (Core_getError()) {
     return Core_Failure;
   }
-  
   //
   Core_setError(Core_Error_ArgumentInvalid);
   return Core_Failure;

@@ -5,7 +5,7 @@
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-DX_DECLARE_OBJECT_TYPE("dx.adl.symbol",
+Core_declareObjectType("dx.adl.symbol",
                        dx_adl_symbol,
                        Core_Object);
 
@@ -27,11 +27,11 @@ struct dx_adl_symbol {
   bool resolved;
 };
 
-static inline dx_adl_symbol_dispatch* DX_ADL_SYMBOL_DISPATCH(void* p) {
-  return (dx_adl_symbol_dispatch*)p;
+static inline dx_adl_symbol_Dispatch* DX_ADL_SYMBOL_DISPATCH(void* p) {
+  return (dx_adl_symbol_Dispatch*)p;
 }
 
-struct dx_adl_symbol_dispatch {
+struct dx_adl_symbol_Dispatch {
   Core_Object_Dispatch _parent;
 };
 
@@ -41,7 +41,7 @@ Core_Result dx_adl_symbol_create(dx_adl_symbol** RETURN, Core_String* type, Core
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-DX_DECLARE_OBJECT_TYPE("dx.adl.definitions",
+Core_declareObjectType("dx.adl.definitions",
                        dx_asset_definitions,
                        Core_Object);
 
@@ -52,10 +52,10 @@ static inline dx_asset_definitions* DX_ASSET_PALETTE(void* p) {
 struct dx_asset_definitions {
   Core_Object _parent;
   /// A map from names (Core_String*) to symbols (dx_adl_symbol*).
-  dx_inline_pointer_hashmap map;
+  Core_InlinePointerHashmap map;
 };
 
-struct dx_asset_definitions_dispatch {
+struct dx_asset_definitions_Dispatch {
   Core_Object_Dispatch _parent;
 };
 

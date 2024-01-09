@@ -1,15 +1,15 @@
 #include "dx/data_definition_language/word.h"
 
-DX_DEFINE_OBJECT_TYPE("dx.ddl.word",
+Core_defineObjectType("dx.ddl.word",
                       dx_ddl_word,
                       Core_Object);
 
 static void dx_ddl_word_destruct(dx_ddl_word* SELF) {
-  DX_UNREFERENCE(SELF->text);
+  CORE_UNREFERENCE(SELF->text);
   SELF->text = NULL;
 }
 
-static void dx_ddl_word_constructDispatch(dx_ddl_word_dispatch* SELF)
+static void dx_ddl_word_constructDispatch(dx_ddl_word_Dispatch* SELF)
 {/*Intentionally empty.*/}
 
 Core_Result dx_ddl_word_construct(dx_ddl_word* SELF, dx_data_definition_language_word_kind kind, Core_String* text) {
@@ -25,7 +25,7 @@ Core_Result dx_ddl_word_construct(dx_ddl_word* SELF, dx_data_definition_language
 Core_Result dx_ddl_word_create(dx_ddl_word** RETURN, dx_data_definition_language_word_kind kind, Core_String* text) {
   DX_CREATE_PREFIX(dx_ddl_word);
   if (dx_ddl_word_construct(SELF, kind, text)) {
-    DX_UNREFERENCE(SELF);
+    CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
   }

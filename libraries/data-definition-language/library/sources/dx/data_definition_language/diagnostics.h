@@ -7,7 +7,7 @@
 #include "dx/core.h"
 #include "dx/data_definition_language/configuration.h"
 
-DX_DECLARE_OBJECT_TYPE("dx.data_definition_language.diagnostics",
+Core_declareObjectType("dx.data_definition_language.diagnostics",
                        dx_data_definition_language_diagnostics,
                        Core_Object);
 
@@ -19,11 +19,11 @@ struct dx_data_definition_language_diagnostics {
   Core_Object _parent;
 };
 
-static inline dx_data_definition_language_diagnostics_dispatch* DX_DATA_DEFINITION_LANGUAGE_DIAGNOSTICS_DISPATCH(void* p) {
-  return (dx_data_definition_language_diagnostics_dispatch*)p;
+static inline dx_data_definition_language_diagnostics_Dispatch* DX_DATA_DEFINITION_LANGUAGE_DIAGNOSTICS_DISPATCH(void* p) {
+  return (dx_data_definition_language_diagnostics_Dispatch*)p;
 }
 
-struct dx_data_definition_language_diagnostics_dispatch {
+struct dx_data_definition_language_diagnostics_Dispatch {
   Core_Object_Dispatch _parent;
 };
 

@@ -6,7 +6,7 @@ typedef struct dx_assets_viewer dx_assets_viewer;
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-DX_DECLARE_OBJECT_TYPE("dx.assets.viewer_controller",
+Core_declareObjectType("dx.assets.viewer_controller",
                        dx_assets_viewer_controller,
                        Core_Object);
 
@@ -19,7 +19,7 @@ struct dx_assets_viewer_controller {
   Core_Result (*update)(dx_assets_viewer_controller* SELF, dx_assets_viewer* viewer, Core_Real32 delta_seconds);
 };
 
-struct dx_assets_viewer_controller_dispatch {
+struct dx_assets_viewer_controller_Dispatch {
   Core_Object_Dispatch _parent;
 };
 
@@ -31,7 +31,7 @@ Core_Result dx_assets_viewer_controller_update(dx_assets_viewer_controller* SELF
 
 /// @brief Controller that positions the viewer at a certain point and rotates the viewer around the y-axis.
 /// The viewer is looking at a specified point.
-DX_DECLARE_OBJECT_TYPE("dx.asset.viewer_controllers.rotate_y",
+Core_declareObjectType("dx.asset.viewer_controllers.rotate_y",
                        dx_asset_viewer_controllers_rotate_y,
                        dx_assets_viewer_controller);
 
@@ -53,12 +53,12 @@ struct dx_asset_viewer_controllers_rotate_y {
   Core_Real32 degrees;
 };
 
-static inline dx_asset_viewer_controllers_rotate_y_dispatch* DX_ASSET_VIEWER_CONTROLLERS_ROTATE_Y_DISPATCH(void* p) {
-  return (dx_asset_viewer_controllers_rotate_y_dispatch*)p;
+static inline dx_asset_viewer_controllers_rotate_y_Dispatch* DX_ASSET_VIEWER_CONTROLLERS_ROTATE_Y_DISPATCH(void* p) {
+  return (dx_asset_viewer_controllers_rotate_y_Dispatch*)p;
 }
 
-struct dx_asset_viewer_controllers_rotate_y_dispatch {
-  dx_assets_viewer_controller_dispatch _parent;
+struct dx_asset_viewer_controllers_rotate_y_Dispatch {
+  dx_assets_viewer_controller_Dispatch _parent;
 };
 
 /// @brief Construct this controller with default values.

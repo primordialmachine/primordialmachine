@@ -2,7 +2,7 @@
 
 #include "dx/val/command.h"
 
-DX_DEFINE_OBJECT_TYPE("dx.val.mesh_instance",
+Core_defineObjectType("dx.val.mesh_instance",
                       dx_val_mesh_instance,
                       Core_Object);
 
@@ -25,7 +25,7 @@ static Core_Result add_to_backend(dx_val_mesh_instance* self) {
   }
   dx_val_cbinding* cbinding = create_cbinding(self);
   if (!cbinding) {
-    DX_UNREFERENCE(self->commands);
+    CORE_UNREFERENCE(self->commands);
     self->commands = NULL;
     return Core_Failure;
   }
@@ -36,29 +36,29 @@ static Core_Result add_to_backend(dx_val_mesh_instance* self) {
                                            self->mesh->program,
                                            0,
                                            self->mesh->mesh_asset->number_of_vertices)) {
-    DX_UNREFERENCE(cbinding);
+    CORE_UNREFERENCE(cbinding);
     cbinding = NULL;
-    DX_UNREFERENCE(self->commands);
+    CORE_UNREFERENCE(self->commands);
     self->commands = NULL;
     return Core_Failure;
   }
-  DX_UNREFERENCE(cbinding);
+  CORE_UNREFERENCE(cbinding);
   cbinding = NULL;
   if (dx_val_command_list_append(self->commands, command)) {
-    DX_UNREFERENCE(command);
+    CORE_UNREFERENCE(command);
     command = NULL;
-    DX_UNREFERENCE(self->commands);
+    CORE_UNREFERENCE(self->commands);
     self->commands = NULL;
     return Core_Failure;
   }
-  DX_UNREFERENCE(command);
+  CORE_UNREFERENCE(command);
   command = NULL;
   return Core_Success;
 }
 
 static void remove_from_backend(dx_val_mesh_instance* self) {
   if (self->commands) {
-    DX_UNREFERENCE(self->commands);
+    CORE_UNREFERENCE(self->commands);
     self->commands = NULL;
   }
 }
@@ -66,12 +66,12 @@ static void remove_from_backend(dx_val_mesh_instance* self) {
 static void dx_val_mesh_instance_destruct(dx_val_mesh_instance* self) {
   remove_from_backend(self);
   if (self->mesh) {
-    DX_UNREFERENCE(self->mesh);
+    CORE_UNREFERENCE(self->mesh);
     self->mesh = NULL;
   }
 }
 
-static void dx_val_mesh_instance_constructDispatch(dx_val_mesh_instance_dispatch* self)
+static void dx_val_mesh_instance_constructDispatch(dx_val_mesh_instance_Dispatch* self)
 {/*Intentionally empty.*/}
 
 Core_Result dx_val_mesh_instance_construct(dx_val_mesh_instance* SELF, DX_MAT4 world_matrix, dx_val_mesh* mesh) {
@@ -83,9 +83,9 @@ Core_Result dx_val_mesh_instance_construct(dx_val_mesh_instance* SELF, DX_MAT4 w
   SELF->commands = NULL;
   SELF->world_matrix = world_matrix;
   SELF->mesh = mesh;
-  DX_REFERENCE(SELF->mesh);
+  CORE_REFERENCE(SELF->mesh);
   if (add_to_backend(SELF)) {
-    DX_UNREFERENCE(SELF->mesh);
+    CORE_UNREFERENCE(SELF->mesh);
     SELF->mesh = NULL;
     return Core_Failure;
   }
@@ -96,7 +96,7 @@ Core_Result dx_val_mesh_instance_construct(dx_val_mesh_instance* SELF, DX_MAT4 w
 Core_Result dx_val_mesh_instance_create(dx_val_mesh_instance** RETURN, DX_MAT4 world_matrix, dx_val_mesh* mesh) {
   DX_CREATE_PREFIX(dx_val_mesh_instance);
   if (dx_val_mesh_instance_construct(SELF, world_matrix, mesh)) {
-    DX_UNREFERENCE(SELF);
+    CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
   }

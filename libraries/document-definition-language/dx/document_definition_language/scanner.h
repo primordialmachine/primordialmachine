@@ -33,7 +33,7 @@
 /// The scanner reaches and "end of input" symbol and has consumed one or more symbols before encountering that symbol.
 /// It will create a "line" word.
 /// That "line" word's Byte range includes all symbols CONSUMED so far in this run plus the Byte range of the "end of input" symbol.
-DX_DECLARE_OBJECT_TYPE("dx.document_definition_language.scanner",
+Core_declareObjectType("dx.document_definition_language.scanner",
                        dx_document_definition_language_scanner,
                        dx_scanner);
 
@@ -60,17 +60,17 @@ struct dx_document_definition_language_scanner {
   } range;
 
   /// @brief The text of the current word.
-  dx_inline_byte_array text;
+  Core_InlineArrayN8 text;
   /// @brief The kind of the current word.
   dx_document_definition_language_word_kind kind;
 };
 
-static inline dx_document_definition_language_scanner_dispatch* DX_DOCUMENT_DEFINITION_LANGUAGE_SCANNER_DISPATCH(void* p) {
-  return (dx_document_definition_language_scanner_dispatch*)p;
+static inline dx_document_definition_language_scanner_Dispatch* DX_DOCUMENT_DEFINITION_LANGUAGE_SCANNER_DISPATCH(void* p) {
+  return (dx_document_definition_language_scanner_Dispatch*)p;
 }
 
-struct dx_document_definition_language_scanner_dispatch {
-  dx_scanner_dispatch _parent;
+struct dx_document_definition_language_scanner_Dispatch {
+  dx_scanner_Dispatch _parent;
 };
 
 /// @brief Construct this scanner with an empty input.

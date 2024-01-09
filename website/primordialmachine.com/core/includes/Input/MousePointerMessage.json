@@ -1,0 +1,10 @@
+{
+  "type" : "object",
+  "last-update" : "2024-01-13",
+  "indices" : "core",
+  "name" : "Core_MousePointerMessage",
+  "id" : "core-mousepointermessage",
+  "signature" : "typedef struct Core_MousePointerMessage Core_MousePointerMessage;",
+  "extends" : "@{code('Core_InputMessage')}",
+  "description": "A mouse pointer message."
+}

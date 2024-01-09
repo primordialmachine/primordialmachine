@@ -3,7 +3,7 @@
 
 #include "dx/core.h"
 
-DX_DECLARE_ENUMERATION_TYPE("dx.adl.name_index",
+Core_declareEnumerationType("dx.adl.name_index",
                             dx_adl_name_index)
 
 enum dx_semantical_name_index {
@@ -14,7 +14,7 @@ enum dx_semantical_name_index {
 
 #define DX_ADL_NAMES_NUMBER_OF_NAMES (((Core_Size)dx_adl_name_index_z_key) + 1)
 
-DX_DECLARE_OBJECT_TYPE("dx.adl.names",
+Core_declareObjectType("dx.adl.names",
                        dx_adl_names,
                        Core_Object);
 
@@ -28,7 +28,7 @@ struct dx_adl_names {
   Core_Size counter;
 };
 
-struct dx_adl_names_dispatch {
+struct dx_adl_names_Dispatch {
   Core_Object_Dispatch _parent;
 };
 

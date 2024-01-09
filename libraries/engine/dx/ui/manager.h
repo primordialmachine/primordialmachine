@@ -6,7 +6,7 @@
 typedef struct dx_ui_group dx_ui_group;
 typedef struct dx_ui_widget dx_ui_widget;
 
-DX_DECLARE_OBJECT_TYPE("dx.ui.manager",
+Core_declareObjectType("dx.ui.manager",
                        dx_ui_manager,
                        Core_Object);
 
@@ -18,7 +18,7 @@ struct dx_ui_manager {
   Core_Object _parent;
 
   /// @brief Map from type names (e.g., "Text" or "Group"/Core_String) to type handlers (dx_ui_type_handler). 
-  dx_inline_pointer_hashmap type_handlers;
+  Core_InlinePointerHashmap type_handlers;
 
   dx_ui_widget* root;
   
@@ -32,11 +32,11 @@ struct dx_ui_manager {
   dx_rectangle_presenter* rectangle_presenter;
 };
 
-static inline dx_ui_manager_dispatch* DX_UI_MANAGER_DISPATCH(void* p) {
-  return (dx_ui_manager_dispatch*)p;
+static inline dx_ui_manager_Dispatch* DX_UI_MANAGER_DISPATCH(void* p) {
+  return (dx_ui_manager_Dispatch*)p;
 }
 
-struct dx_ui_manager_dispatch {
+struct dx_ui_manager_Dispatch {
   Core_Object_Dispatch _parent;
 };
 

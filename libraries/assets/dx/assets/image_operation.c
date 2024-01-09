@@ -1,13 +1,13 @@
 #include "dx/assets/image_operation.h"
 
-DX_DEFINE_OBJECT_TYPE("dx.assets.image_operation",
+Core_defineObjectType("dx.assets.image_operation",
                       dx_assets_image_operation,
                       Core_Object);
 
 static void dx_assets_image_operation_destruct(dx_assets_image_operation* SELF)
 {/*Intentionally empty.*/}
 
-static void dx_assets_image_operation_constructDispatch(dx_assets_image_operation_dispatch* SELF)
+static void dx_assets_image_operation_constructDispatch(dx_assets_image_operation_Dispatch* SELF)
 {/*Intentionally empty.*/}
 
 Core_Result dx_assets_image_operation_construct(dx_assets_image_operation* SELF) {

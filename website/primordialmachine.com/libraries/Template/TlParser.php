@@ -37,21 +37,26 @@ class TlParser {
   //                        | e
   private function code_onArgumentList() {
     $argumentListAst = new TlAst(TlAstType::CodeArgumentList, null);
-    if (!$this->IS(TlTokenType::CodeRightParenthesis)) {
-      //while (!$this->IS(TlTokenType::CodeRightParenthesis)) {
-        $argumentAst = $this->code_onArgument();
-        $argumentListAst->append($argumentAst);
-      //}
-      while ($this->IS(TlTokenType::CodeArgumentSeparator)) {
-        $this->i++;
-        $argumentAst = $this->code_onArgument();
-        $argumentListAst->append($argumentAst);
-      }
-      if (!$this->IS(TlTokenType::CodeRightParenthesis)) {
-        throw new Exception("unclosed <code.argumentList>");
-      }
+    
+    // '('')'
+    if ($this->IS(TlTokenType::CodeRightParenthesis)) {
+      $this->i++;
+      return $argumentListAst;
+    }
+    
+    $argumentAst = $this->code_onArgument();
+    $argumentListAst->append($argumentAst);
+   
+    while ($this->IS(TlTokenType::CodeArgumentSeparator)) {
+      $this->i++;
+      $argumentAst = $this->code_onArgument();
+      $argumentListAst->append($argumentAst);
       $this->i++;
     }
+    if (!$this->IS(TlTokenType::CodeRightParenthesis)) {
+      throw new Exception("unclosed <code.argumentList>");
+    }
+    $this->i++;
     return $argumentListAst;
   }
   
@@ -105,15 +110,15 @@ class TlParser {
     return $expressionAst;
   }
 
-  public function execute(string $input) {
+  public function execute(string $input, string $inputName) {
     $inputAst = new TlAst(TlAstType::Input, null);
 
-    $this->scanner->execute($input);
+    $this->scanner->execute($input, $inputName);
     $this->tokens = $this->scanner->getTokens();
     $this->i = 0;
     $this->n = count($this->tokens);
     while ($this->i < $this->n) {
-      $token = $this->tokens[$this->i];     
+      $token = $this->tokens[$this->i];
       switch ($token->getTokenType()) {
         case TlTokenType::Verbatim:
           $ast = new TlAst(TlAstType::Verbatim, $token->getTokenText());

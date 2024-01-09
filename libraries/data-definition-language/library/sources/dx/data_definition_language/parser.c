@@ -2,7 +2,7 @@
 
 #include <string.h>
 
-DX_DEFINE_OBJECT_TYPE("dx.ddl.parser",
+Core_defineObjectType("dx.ddl.parser",
                       dx_ddl_parser,
                       Core_Object);
 
@@ -71,21 +71,21 @@ static dx_ddl_node* dx_ddl_parser_on_value(dx_ddl_parser* p) {
       }
       Core_String* number_literal = NULL;
       if (Core_String_create(&number_literal, p->scanner->text.elements, p->scanner->text.size)) {
-        DX_UNREFERENCE(node);
+        CORE_UNREFERENCE(node);
         node = NULL;
         return NULL;
       }
       if (dx_ddl_node_set_number(node, number_literal)) {
-        DX_UNREFERENCE(number_literal);
+        CORE_UNREFERENCE(number_literal);
         number_literal = NULL;
-        DX_UNREFERENCE(node);
+        CORE_UNREFERENCE(node);
         node = NULL;
         return NULL;
       }
-      DX_UNREFERENCE(number_literal);
+      CORE_UNREFERENCE(number_literal);
       number_literal = NULL;
       if (dx_ddl_parser_next(p)) {
-        DX_UNREFERENCE(node);
+        CORE_UNREFERENCE(node);
         node = NULL;
         return NULL;
       }
@@ -98,21 +98,21 @@ static dx_ddl_node* dx_ddl_parser_on_value(dx_ddl_parser* p) {
       }
       Core_String* string_literal = NULL;
       if (Core_String_create(&string_literal, p->scanner->text.elements, p->scanner->text.size)) {
-        DX_UNREFERENCE(node);
+        CORE_UNREFERENCE(node);
         node = NULL;
         return NULL;
       }
       if (dx_ddl_node_set_string(node, string_literal)) {
-        DX_UNREFERENCE(string_literal);
+        CORE_UNREFERENCE(string_literal);
         string_literal = NULL;
-        DX_UNREFERENCE(node);
+        CORE_UNREFERENCE(node);
         node = NULL;
         return NULL;
       }
-      DX_UNREFERENCE(string_literal);
+      CORE_UNREFERENCE(string_literal);
       string_literal = NULL;
       if (dx_ddl_parser_next(p)) {
-        DX_UNREFERENCE(node);
+        CORE_UNREFERENCE(node);
         node = NULL;
         return NULL;
       }
@@ -154,7 +154,7 @@ static int dx_ddl_parser_on_map_0(dx_ddl_parser* p, dx_ddl_node* map_node) {
       return Core_Failure;
     }
     if (dx_ddl_parser_next(p)) {
-      DX_UNREFERENCE(name);
+      CORE_UNREFERENCE(name);
       name = NULL;
       return Core_Failure;
     }
@@ -163,33 +163,33 @@ static int dx_ddl_parser_on_map_0(dx_ddl_parser* p, dx_ddl_node* map_node) {
       if (!Core_getError()) {
         Core_setError(Core_Error_SyntacticalAnalysisFailed);
       }
-      DX_UNREFERENCE(name);
+      CORE_UNREFERENCE(name);
       name = NULL;
       return Core_Failure;
     }
     if (dx_ddl_parser_next(p)) {
-      DX_UNREFERENCE(name);
+      CORE_UNREFERENCE(name);
       name = NULL;
       return 1;
     }
     // value
     dx_ddl_node* value_node = dx_ddl_parser_on_value(p);
     if (!value_node) {
-      DX_UNREFERENCE(name);
+      CORE_UNREFERENCE(name);
       name = NULL;
       return Core_Failure;
     }
     // put (name, value) into the map
     if (dx_ddl_node_map_set(map_node, name, value_node)) {
-      DX_UNREFERENCE(value_node);
+      CORE_UNREFERENCE(value_node);
       value_node = NULL;
-      DX_UNREFERENCE(name);
+      CORE_UNREFERENCE(name);
       name = NULL;
       return Core_Failure;
     }
-    DX_UNREFERENCE(value_node);
+    CORE_UNREFERENCE(value_node);
     value_node = NULL;
-    DX_UNREFERENCE(name);
+    CORE_UNREFERENCE(name);
     name = NULL;
     // if no comma follows, break the loop
     if (!dx_ddl_parser_is_word_kind(p, dx_data_definition_language_word_kind_comma)) {
@@ -214,18 +214,18 @@ static int dx_ddl_parser_on_map_0(dx_ddl_parser* p, dx_ddl_node* map_node) {
     }
     Core_Size number_of_bytes;
     if (Core_String_getNumberOfBytes(&number_of_bytes, s)) {
-      DX_UNREFERENCE(s);
+      CORE_UNREFERENCE(s);
       s = NULL;
       return Core_Failure;
     }
     char const* bytes = NULL;
     if (Core_String_getBytes(&bytes, s)) {
-      DX_UNREFERENCE(s);
+      CORE_UNREFERENCE(s);
       s = NULL;
       return Core_Failure;
     }
     dx_log(bytes, number_of_bytes);
-    DX_UNREFERENCE(s);
+    CORE_UNREFERENCE(s);
     s = NULL;
 
     dx_log(", expected ", sizeof(", expected ") - 1);
@@ -243,7 +243,7 @@ static int dx_ddl_parser_on_map_0(dx_ddl_parser* p, dx_ddl_node* map_node) {
       }
       dx_log(bytes, number_of_bytes);
     }
-    DX_UNREFERENCE(s);
+    CORE_UNREFERENCE(s);
     s = NULL;
 
     return Core_Failure;
@@ -260,7 +260,7 @@ static dx_ddl_node* dx_ddl_parser_on_map(dx_ddl_parser* p) {
     return NULL;
   }
   if (dx_ddl_parser_on_map_0(p, node)) {
-    DX_UNREFERENCE(node);
+    CORE_UNREFERENCE(node);
     node = NULL;
     return NULL;
   }
@@ -284,11 +284,11 @@ static int dx_ddl_parser_on_list_0(dx_ddl_parser* p, dx_ddl_node* list_node) {
       return Core_Failure;
     }
     if (dx_ddl_node_list_append(list_node, value_node)) {
-      DX_UNREFERENCE(value_node);
+      CORE_UNREFERENCE(value_node);
       value_node = NULL;
       return Core_Failure;
     }
-    DX_UNREFERENCE(value_node);
+    CORE_UNREFERENCE(value_node);
     value_node = NULL;
     // if no comma follows, break the loop
     if (!dx_ddl_parser_is_word_kind(p, dx_data_definition_language_word_kind_comma)) {
@@ -324,7 +324,7 @@ static int dx_ddl_parser_on_list_0(dx_ddl_parser* p, dx_ddl_node* list_node) {
       }
       dx_log(bytes, number_of_bytes);
     }
-    DX_UNREFERENCE(s);
+    CORE_UNREFERENCE(s);
     s = NULL;
 
     dx_log(", expected ", sizeof(", expected ") - 1);
@@ -342,7 +342,7 @@ static int dx_ddl_parser_on_list_0(dx_ddl_parser* p, dx_ddl_node* list_node) {
       }
       dx_log(bytes, number_of_bytes);
     }
-    DX_UNREFERENCE(s);
+    CORE_UNREFERENCE(s);
     s = NULL;
 
     return Core_Failure;
@@ -359,7 +359,7 @@ static dx_ddl_node* dx_ddl_parser_on_list(dx_ddl_parser* p) {
     return NULL;
   }
   if (dx_ddl_parser_on_list_0(p, node)) {
-    DX_UNREFERENCE(node);
+    CORE_UNREFERENCE(node);
     node = NULL;
     return NULL;
   }
@@ -375,13 +375,13 @@ static Core_Result dx_ddl_parser_next(dx_ddl_parser* SELF) {
 }
 
 static void dx_ddl_parser_destruct(dx_ddl_parser* SELF) {
-  DX_UNREFERENCE(SELF->diagnostics);
+  CORE_UNREFERENCE(SELF->diagnostics);
   SELF->diagnostics = NULL;
-  DX_UNREFERENCE(SELF->scanner);
+  CORE_UNREFERENCE(SELF->scanner);
   SELF->scanner = NULL;
 }
 
-static void dx_ddl_parser_constructDispatch(dx_ddl_parser_dispatch* SELF)
+static void dx_ddl_parser_constructDispatch(dx_ddl_parser_Dispatch* SELF)
 {/*Intentionally empty.*/}
 
 Core_Result dx_ddl_parser_construct(dx_ddl_parser* SELF, dx_data_definition_language_scanner* scanner, dx_data_definition_language_diagnostics* diagnostics) {
@@ -391,9 +391,9 @@ Core_Result dx_ddl_parser_construct(dx_ddl_parser* SELF, dx_data_definition_lang
     return Core_Failure;
   }
   SELF->scanner = scanner;
-  DX_REFERENCE(SELF->scanner);
+  CORE_REFERENCE(SELF->scanner);
   SELF->diagnostics = diagnostics;
-  DX_REFERENCE(SELF->diagnostics);
+  CORE_REFERENCE(SELF->diagnostics);
   CORE_OBJECT(SELF)->type = TYPE;
   return Core_Success;
 }
@@ -401,7 +401,7 @@ Core_Result dx_ddl_parser_construct(dx_ddl_parser* SELF, dx_data_definition_lang
 Core_Result dx_ddl_parser_create(dx_ddl_parser** RETURN, dx_data_definition_language_scanner* scanner, dx_data_definition_language_diagnostics* diagnostics) {
   DX_CREATE_PREFIX(dx_ddl_parser);
   if (dx_ddl_parser_construct(SELF, scanner, diagnostics)) {
-    DX_UNREFERENCE(SELF);
+    CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
   }
@@ -435,7 +435,7 @@ Core_Result dx_ddl_parser_run(dx_ddl_node** RETURN, dx_ddl_parser* SELF) {
   }
   // <end of input>
   if (!dx_ddl_parser_is_word_kind(SELF, dx_data_definition_language_word_kind_end_of_input)) {
-    DX_UNREFERENCE(root_node);
+    CORE_UNREFERENCE(root_node);
     root_node = NULL;
     return Core_Failure;
   }
@@ -454,21 +454,21 @@ static dx_ddl_parser* dx_ddl_parser_test_create_parser() {
   }
   dx_data_definition_language_scanner* scanner = NULL;
   if (dx_data_definition_language_scanner_create(&scanner, diagnostics)) {
-    DX_UNREFERENCE(diagnostics);
+    CORE_UNREFERENCE(diagnostics);
     diagnostics = NULL;
     return NULL;
   }
   dx_ddl_parser* parser = NULL;
   if (dx_ddl_parser_create(&parser, scanner, diagnostics)) {
-    DX_UNREFERENCE(scanner);
+    CORE_UNREFERENCE(scanner);
     scanner = NULL;
-    DX_UNREFERENCE(diagnostics);
+    CORE_UNREFERENCE(diagnostics);
     diagnostics = NULL;
     return NULL;
   }
-  DX_UNREFERENCE(scanner);
+  CORE_UNREFERENCE(scanner);
   scanner = NULL;
-  DX_UNREFERENCE(diagnostics);
+  CORE_UNREFERENCE(diagnostics);
   diagnostics = NULL;
   return parser;
 }
@@ -476,7 +476,7 @@ static dx_ddl_parser* dx_ddl_parser_test_create_parser() {
 static Core_Result dx_ddl_parser_test1() {
   dx_ddl_parser* parser = dx_ddl_parser_test_create_parser();
   if (parser) {
-    DX_UNREFERENCE(parser);
+    CORE_UNREFERENCE(parser);
     parser = NULL;
   }
   return Core_getError() ? Core_Failure : Core_Success;
@@ -506,11 +506,11 @@ static Core_Result dx_ddl_parser_test2() {
   }
 END:
   if (root_node) {
-    DX_UNREFERENCE(root_node);
+    CORE_UNREFERENCE(root_node);
     root_node = NULL;
   }
   if (parser) {
-    DX_UNREFERENCE(parser);
+    CORE_UNREFERENCE(parser);
     parser = NULL;
   }
   return Core_getError() ? Core_Failure : Core_Success;
@@ -549,11 +549,11 @@ static Core_Result dx_ddl_parser_test3() {
   }
 END:
   if (root_node) {
-    DX_UNREFERENCE(root_node);
+    CORE_UNREFERENCE(root_node);
     root_node = NULL;
   }
   if (parser) {
-    DX_UNREFERENCE(parser);
+    CORE_UNREFERENCE(parser);
     parser = NULL;
   }
   return Core_getError() ? Core_Failure : Core_Success;

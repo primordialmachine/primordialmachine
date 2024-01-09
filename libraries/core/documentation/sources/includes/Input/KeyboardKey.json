@@ -1,0 +1,538 @@
+{
+  "type" : "enumeration",
+  "last-update" : "2024-01-01",
+  "indices" : "core",
+  "name" : "Core_KeyboardKey",
+  "id" : "core-keyboardkey",
+  "signature" : "typedef enum Core_KeyboardKey &lt;implementation&gt; Core_KeyboardKey;",
+  "description": [
+    "An enumeration of keyboard keys.@(newline())",
+    "@(newline())",
+    "The numeric values of the digit keys form a consecutive range with Core_KeyboardKey_D0 being the lowest of value and Core_KeyboardKey_D9 being the highest of value.@(newline())",
+    "Furthermore, the digit key constant of a lower number has a lower value than the digit key constant of a higher number.@(newline())",
+    "@(newline())",
+    "The numeric values of the letter keys form a consecutive range with Core_KeyboardKey_A being the lowest value and Core_KeyboardKey_Z being the highest of value.@(newline())",
+    "Furthermore, the letter key constant of a letter lower in the alphabet has a lower value than the letter key constant of a letter higher in the alphabet.@(newline())",
+    "@(newline())",
+    "The numeric values of the numpad digit keys form a consecutive range with Core_KeyboardKey_NumPad0 being the lowest of value and Core_KeyboardKey_NumPad9 being the highest of value.@(newline())",
+    "Furthermore, the numpad digit key constant of a lower digit has a lower value than the numpad digit key constant of a higher number.@(newline())"
+  ],
+  "elements": [
+    {
+      "name" : "Core_KeyboardKey_A",
+      "description" : "The A key."
+    },
+    {
+      "name" : "Core_KeyboardKey_Accept",
+      "description" : "The IME Accept key."
+    },
+    {
+      "name" : "Core_KeyboardKey_Add",
+      "description" : "The Add key."
+    },
+    {
+      "name" : "Core_KeyboardKey_Applications",
+      "description" : "The Applications key (on Microsoft Natural Keyboard)."
+    },
+    {
+      "name" : "Core_KeyboardKey_B",
+      "description" : "The B key."
+    },
+    {
+      "name" : "Core_KeyboardKey_Backspace",
+      "description" : "The Backspace key."
+    },
+    {
+      "name" : "Core_KeyboardKey_BrowserBack",
+      "description" : "The Browser Back key."
+    },
+    {
+      "name" : "Core_KeyboardKey_BrowserFavorites",
+      "description" : "The Browser Favorites key."
+    },
+    {
+      "name" : "Core_KeyboardKey_BrowserForward",
+      "description" : "The Browser Forward key."
+    },
+    {
+      "name" : "Core_KeyboardKey_BrowserHome",
+      "description" : "The Browser Home key."
+    },
+    {
+      "name" : "Core_KeyboardKey_BrowserRefresh",
+      "description" : "The Browser Refresh key."
+    },
+    {
+      "name" : "Core_KeyboardKey_BrowserSearch",
+      "description" : "The Browser Search key."
+    },
+    {
+      "name" : "Core_KeyboardKey_BrowserStop",
+      "description" : "The Browser Stop key."
+    },
+    {
+      "name" : "Core_KeyboardKey_C",
+      "description" : "The C key."
+    },
+    {
+      "name" : "Core_KeyboardKey_Capital",
+      "description" : "The Capital key."
+    },
+    {
+      "name" : "Core_KeyboardKey_CapsLock",
+      "description" : "The Caps Lock key."
+    },
+    {
+      "name" : "Core_KeyboardKey_Clear",
+      "description" : "The Clear key."
+    },
+    {
+      "name" : "Core_KeyboardKey_Comma",
+      "description" : "The Comma key."
+    },
+    {
+      "name" : "Core_KeyboardKey_Convert",
+      "description" : "The IME Convert key."
+    },
+    {
+      "name" : "Core_KeyboardKey_D",
+      "description" : "The D key."
+    },
+    {
+      "name" : "Core_KeyboardKey_D0",
+      "description" : "The 0 key."
+    },
+    {
+      "name" : "Core_KeyboardKey_D1",
+      "description" : "The 1 key."
+    },
+    {
+      "name" : "Core_KeyboardKey_D2",
+      "description" : "The 2 key."
+    },
+    {
+      "name" : "Core_KeyboardKey_D3",
+      "description" : "The 3 key."
+    },
+    {
+      "name" : "Core_KeyboardKey_D4",
+      "description" : "The 4 key."
+    },
+    {
+      "name" : "Core_KeyboardKey_D5",
+      "description" : "The 5 key."
+    },
+    {
+      "name" : "Core_KeyboardKey_D6",
+      "description" : "The 6 key."
+    },
+    {
+      "name" : "Core_KeyboardKey_D7",
+      "description" : "The 7 key."
+    },
+    {
+      "name" : "Core_KeyboardKey_D8",
+      "description" : "The 8 key."
+    },
+    {
+      "name" : "Core_KeyboardKey_D9",
+      "description" : "The 9 key."
+    },
+    {
+      "name" : "Core_KeyboardKey_Decimal",
+      "description" : "The Decimal Separator key (on number pad)."
+    },
+    {
+      "name" : "Core_KeyboardKey_Delete",
+      "description" : "The Delete key."
+    },
+    {
+      "name" : "Core_KeyboardKey_Down",
+      "description" : "The Down Arrow key."
+    },
+    {
+      "name" : "Core_KeyboardKey_DownArrow",
+      "description" : "The Down Arrow key."
+    },
+    {
+      "name" : "Core_KeyboardKey_E",
+      "description" : "The E key."
+    },
+    {
+      "name" : "Core_KeyboardKey_End",
+      "description" : "The End key."
+    },
+    {
+      "name" : "Core_KeyboardKey_Escape",
+      "description" : "The Escape key."
+    },
+    {
+      "name" : "Core_KeyboardKey_F",
+      "description" : "The F key."
+    },
+    {
+      "name" : "Core_KeyboardKey_F1",
+      "description" : "The F1 key."
+    },
+    {
+      "name" : "Core_KeyboardKey_F10",
+      "description" : "The F10 key."
+    },
+    {
+      "name" : "Core_KeyboardKey_F11",
+      "description" : "The F11 key."
+    },
+    {
+      "name" : "Core_KeyboardKey_F12",
+      "description" : "The F12 key."
+    },
+    {
+      "name" : "Core_KeyboardKey_F13",
+      "description" : "The F13 key."
+    },
+    {
+      "name" : "Core_KeyboardKey_F14",
+      "description" : "The F14 key."
+    },
+    {
+      "name" : "Core_KeyboardKey_F15",
+      "description" : "The F15 key."
+    },
+    {
+      "name" : "Core_KeyboardKey_F16",
+      "description" : "The F16 key."
+    },
+    {
+      "name" : "Core_KeyboardKey_F17",
+      "description" : "The F17 key."
+    },
+    {
+      "name" : "Core_KeyboardKey_F18",
+      "description" : "The F18 key."
+    },
+    {
+      "name" : "Core_KeyboardKey_F19",
+      "description" : "The F19 key."
+    },
+    {
+      "name" : "Core_KeyboardKey_F2",
+      "description" : "The F2 key."
+    },
+    {
+      "name" : "Core_KeyboardKey_F20",
+      "description" : "The F20 key."
+    },
+    {
+      "name" : "Core_KeyboardKey_F21",
+      "description" : "The F21 key."
+    },
+    {
+      "name" : "Core_KeyboardKey_F22",
+      "description" : "The F22 key."
+    },
+    {
+      "name" : "Core_KeyboardKey_F23",
+      "description" : "The F23 key."
+    },
+    {
+      "name" : "Core_KeyboardKey_F24",
+      "description" : "The F24 key."
+    },
+    {
+      "name" : "Core_KeyboardKey_F3",
+      "description" : "The F3 key."
+    },
+    {
+      "name" : "Core_KeyboardKey_F4",
+      "description" : "The F4 key."
+    },
+    {
+      "name" : "Core_KeyboardKey_F5",
+      "description" : "The F5 key."
+    },
+    {
+      "name" : "Core_KeyboardKey_F6",
+      "description" : "The F6 key."
+    },
+    {
+      "name" : "Core_KeyboardKey_F7",
+      "description" : "The F7 key."
+    },
+    {
+      "name" : "Core_KeyboardKey_F8",
+      "description" : "The F8 key."
+    },
+    {
+      "name" : "Core_KeyboardKey_F9",
+      "description" : "The F9 key."
+    },
+    {
+      "name" : "Core_KeyboardKey_FinalMode",
+      "description" : "The IME Final Mode key."
+    },
+    {
+      "name" : "Core_KeyboardKey_G",
+      "description" : "The G key."
+    },
+    {
+      "name" : "Core_KeyboardKey_H",
+      "description" : "The H key."
+    },
+    {
+      "name" : "Core_KeyboardKey_HangulMode",
+      "description" : "The IME Hangul Mode key."
+    },
+    {
+      "name" : "Core_KeyboardKey_HanjaMode",
+      "description" : "The IME Hanja Mode key."
+    },
+    {
+      "name" : "Core_KeyboardKey_Home",
+      "description" : "The Home key."
+    },
+    {
+      "name" : "Core_KeyboardKey_I",
+      "description" : "The I key."
+    },
+    {
+      "name" : "Core_KeyboardKey_Insert",
+      "description" : "The Insert key."
+    },
+    {
+      "name" : "Core_KeyboardKey_J",
+      "description" : "The J key."
+    },
+    {
+      "name" : "Core_KeyboardKey_JunjaMode",
+      "description" : "The IME Junja mode key."
+    },
+    {
+      "name" : "Core_KeyboardKey_K",
+      "description" : "The K key."
+    },
+    {
+      "name" : "Core_KeyboardKey_KanaMode",
+      "description" : "The IME Kana Mode key."
+    },
+    {
+      "name" : "Core_KeyboardKey_KanjiMode",
+      "description" : "The IME Kanji Mode key."
+    },
+    {
+      "name" : "Core_KeyboardKey_L",
+      "description" : "The L key."
+    },
+    {
+      "name" : "Core_KeyboardKey_LeftControl",
+      "description" : "The Left Control key."
+    },
+    {
+      "name" : "Core_KeyboardKey_LeftMenu",
+      "description" : "The Left Menu key."
+    },
+    {
+      "name" : "Core_KeyboardKey_LeftShift",
+      "description" : "The Left Shift key."
+    },
+    {
+      "name" : "Core_KeyboardKey_LeftWindows",
+      "description" : "The Left Windows key (on Microsoft Natural Keyboard)."
+    },
+    {
+      "name" : "Core_KeyboardKey_M",
+      "description" : "The M key."
+    },
+    {
+      "name" : "Core_KeyboardKey_Minus",
+      "description" : "The Minus key."
+    },
+    {
+      "name" : "Core_KeyboardKey_ModeChange",
+      "description" : "The IME Mode Change key."
+    },
+    {
+      "name" : "Core_KeyboardKey_Multiply",
+      "description" : "The Multiply Change key."
+    },
+    {
+      "name" : "Core_KeyboardKey_N",
+      "description" : "The N key."
+    },
+    {
+      "name" : "Core_KeyboardKey_NonConvert",
+      "description" : "The IME Non Convert key."
+    },
+    {
+      "name" : "Core_KeyboardKey_NumberSign",
+      "description" : "The Number Sign key."
+    },
+    {
+      "name" : "Core_KeyboardKey_NumPad0",
+      "description" : "The 0 key on the numeric keypad."
+    },
+    {
+      "name" : "Core_KeyboardKey_NumPad1",
+      "description" : "The 1 key on the numeric keypad."
+    },
+    {
+      "name" : "Core_KeyboardKey_NumPad2",
+      "description" : "The 2 key on the numeric keypad."
+    },
+    {
+      "name" : "Core_KeyboardKey_NumPad3",
+      "description" : "The 3 key on the numeric keypad."
+    },
+    {
+      "name" : "Core_KeyboardKey_NumPad4",
+      "description" : "The 4 key on the numeric keypad."
+    },
+    {
+      "name" : "Core_KeyboardKey_NumPad5",
+      "description" : "The 5 key on the numeric keypad."
+    },
+    {
+      "name" : "Core_KeyboardKey_NumPad6",
+      "description" : "The 6 key on the numeric keypad."
+    },
+    {
+      "name" : "Core_KeyboardKey_NumPad7",
+      "description" : "The 7 key on the numeric keypad."
+    },
+    {
+      "name" : "Core_KeyboardKey_NumPad8",
+      "description" : "The 8 key on the numeric keypad."
+    },
+    {
+      "name" : "Core_KeyboardKey_NumPad9",
+      "description" : "The 9 key on the numeric keypad."
+    },
+    {
+      "name" : "Core_KeyboardKey_O",
+      "description" : "The O key."
+    },
+    {
+      "name" : "Core_KeyboardKey_P",
+      "description" : "The P key."
+    },
+    {
+      "name" : "Core_KeyboardKey_PageDown",
+      "description" : "The Page Down key."
+    },
+    {
+      "name" : "Core_KeyboardKey_PageUp",
+      "description" : "The Page Up key."
+    },
+    {
+      "name" : "Core_KeyboardKey_Pause",
+      "description" : "The Pause key."
+    },
+    {
+      "name" : "Core_KeyboardKey_Period",
+      "description" : "The Period key."
+    },
+    {
+      "name" : "Core_KeyboardKey_Print",
+      "description" : "The Print key."
+    },
+    {
+      "name" : "Core_KeyboardKey_Plus",
+      "description" : "The Plus key."
+    },
+    {
+      "name" : "Core_KeyboardKey_Q",
+      "description" : "The Q key."
+    },
+    {
+      "name" : "Core_KeyboardKey_R",
+      "description" : "The R key."
+    },
+    {
+      "name" : "Core_KeyboardKey_Return",
+      "description" : "The Return key."
+    },
+    {
+      "name" : "Core_KeyboardKey_Right",
+      "description" : "The Right Arrow key."
+    },
+    {
+      "name" : "Core_KeyboardKey_RightArrow",
+      "description" : "The Right Arrow key."
+    },
+    {
+      "name" : "Core_KeyboardKey_RightControl",
+      "description" : "The Right Control key."
+    },
+    {
+      "name" : "Core_KeyboardKey_RightMenu",
+      "description" : "The Right Menu key."
+    },
+    {
+      "name" : "Core_KeyboardKey_RightShift",
+      "description" : "The Right Shift key."
+    },
+    {
+      "name" : "Core_KeyboardKey_RightShift",
+      "description" : "The Right Windows key."
+    },
+    {
+      "name" : "Core_KeyboardKey_S",
+      "description" : "The S key."
+    },
+    {
+      "name" : "Core_KeyboardKey_ScrollLock",
+      "description" : "The Scroll Lock key."
+    },
+    {
+      "name" : "Core_KeyboardKey_Sleep",
+      "description" : "The Sleep key."
+    },
+    {
+      "name" : "Core_KeyboardKey_Space",
+      "description" : "The Space key."
+    },
+    {
+      "name" : "Core_KeyboardKey_Subtract",
+      "description" : "The Subtract key."
+    },
+    {
+      "name" : "Core_KeyboardKey_T",
+      "description" : "The T key."
+    },
+    {
+      "name" : "Core_KeyboardKey_Tabulator",
+      "description" : "The Tabulator key."
+    },
+    {
+      "name" : "Core_KeyboardKey_U",
+      "description" : "The U key."
+    },
+    {
+      "name" : "Core_KeyboardKey_Up",
+      "description" : "The Up Arrow key."
+    },
+    {
+      "name" : "Core_KeyboardKey_UpArrow",
+      "description" : "The Up Arrow key."
+    },
+    {
+      "name" : "Core_KeyboardKey_V",
+      "description" : "The V key."
+    },
+    {
+      "name" : "Core_KeyboardKey_W",
+      "description" : "The W key."
+    },
+    {
+      "name" : "Core_KeyboardKey_X",
+      "description" : "The X key."
+    },
+    {
+      "name" : "Core_KeyboardKey_Y",
+      "description" : "The Y key."
+    },
+    {
+      "name" : "Core_KeyboardKey_Z",
+      "description" : "The Z key."
+    }
+  ]
+}

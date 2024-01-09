@@ -3,7 +3,7 @@
 #include "dx/val/gl/buffer.h"
 #include "dx/val/gl/context.h"
 
-DX_DEFINE_OBJECT_TYPE("dx.val.gl.vbinding",
+Core_defineObjectType("dx.val.gl.vbinding",
                       dx_val_gl_vbinding,
                       dx_val_vbinding);
 
@@ -94,14 +94,14 @@ static void dx_val_gl_vbinding_destruct(dx_val_gl_vbinding* SELF) {
   }
 }
 
-static void dx_val_gl_vbinding_constructDispatch(dx_val_gl_vbinding_dispatch* SELF) {
+static void dx_val_gl_vbinding_constructDispatch(dx_val_gl_vbinding_Dispatch* SELF) {
   DX_VAL_VBINDING_DISPATCH(SELF)->activate = (Core_Result(*)(dx_val_vbinding*)) & dx_val_gl_vbinding_activate;
 }
 
 Core_Result dx_val_gl_vbinding_create(dx_val_gl_vbinding** RETURN, Core_VertexFormat vertex_format, dx_val_gl_buffer* buffer) {
   DX_CREATE_PREFIX(dx_val_gl_vbinding);
   if (dx_val_gl_vbinding_construct(SELF, vertex_format, buffer)) {
-    DX_UNREFERENCE(SELF);
+    CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
   }

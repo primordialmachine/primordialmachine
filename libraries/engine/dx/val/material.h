@@ -6,7 +6,7 @@
 
 /// @brief The backend-representation of a material.
 /// A dx.val.material usually represents a dx.asset.material.
-DX_DECLARE_OBJECT_TYPE("dx.val.material",
+Core_declareObjectType("dx.val.material",
                        dx_val_material,
                        Core_Object);
 
@@ -25,11 +25,11 @@ struct dx_val_material {
   dx_val_texture* ambient_texture;
 };
 
-static inline dx_val_material_dispatch* DX_VAL_MATERIAL_DISPATCH(void* p) {
-  return (dx_val_material_dispatch*)p;
+static inline dx_val_material_Dispatch* DX_VAL_MATERIAL_DISPATCH(void* p) {
+  return (dx_val_material_Dispatch*)p;
 }
 
-struct dx_val_material_dispatch {
+struct dx_val_material_Dispatch {
   Core_Object_Dispatch _parent;
 };
 
