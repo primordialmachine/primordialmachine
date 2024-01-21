@@ -25,33 +25,11 @@ static void dx_val_program_text_constructDispatch(dx_val_program_text_Dispatch* 
 
 Core_Result dx_val_program_text_construct_from_file(dx_val_program_text* SELF, dx_val_program_text_type type, Core_String* path) {
   DX_CONSTRUCT_PREFIX(dx_val_program_text);
-  //
-  Core_Boolean containsSymbol;
-  containsSymbol = dx_string_contains_symbol(path, '\0');
-  if (containsSymbol) {
-    Core_setError(Core_Error_ArgumentInvalid);
+  char* bytes = NULL;
+  Core_Size number_of_bytes = 0;
+  if (Core_getFileContents(path, &bytes, &number_of_bytes)) {
     return Core_Failure;
   }
-  Core_String* format = NULL;
-  if (Core_String_create(&format, "${s}\0", sizeof("${s}\0"))) {
-    return Core_Failure;
-  }
-  Core_String* path1 = NULL;
-  if (Core_String_printf(&path1, format, path)) {
-    CORE_UNREFERENCE(format);
-    format = NULL;
-    return Core_Failure;
-  }
-  CORE_UNREFERENCE(format);
-  format = NULL;
-  char* bytes; Core_Size number_of_bytes;
-  if (dx_get_file_contents(path1->bytes, &bytes, &number_of_bytes)) {
-    CORE_UNREFERENCE(path1);
-    path1 = NULL;
-    return Core_Failure;
-  }
-  CORE_UNREFERENCE(path1);
-  path1 = NULL;
   SELF->program_text = NULL;
   if (Core_String_create(&SELF->program_text, bytes, number_of_bytes)) {
     Core_Memory_deallocate(bytes);

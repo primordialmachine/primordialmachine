@@ -124,10 +124,10 @@ struct _dx_impl {
   Core_InlinePointerHashMap_ValueRemovedCallback* value_removed_callback;
   
   /// @brief A pointer to the @a dx_hash_key_callback function or a null pointer.
-  Core_InlinePointerHashmap_hash_key_callback* hash_key_callback;
+  Core_InlinePointerHashmap_HashKeyCallback* hash_key_callback;
   
   /// @brief A pointer to the @a dx_compare_keys_callback function or a null pointer.
-  Core_InlinePointerHashmap_compare_keys_callback* compare_keys_callback;
+  Core_InlinePointerHashmap_CompareKeysCallback* compare_keys_callback;
 
 };
 
@@ -614,10 +614,10 @@ Core_Result Core_InlinePointerHashmapIterator_remove(Core_InlinePointerHashmapIt
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-Core_Result Core_InlinePointerHashmap_getKeys(Core_InlinePointerHashmap* SELF, dx_inline_pointer_array* target) {
+Core_Result Core_InlinePointerHashmap_getKeys(Core_InlinePointerHashmap* SELF, Core_InlinePointerArray* target) {
   _dx_impl* pimpl = _DX_IMPL(SELF->pimpl);
   Core_InlinePointerHashmapIterator it;
-  if (dx_inline_pointer_array_ensure_free_capacity(target, pimpl->size)) {
+  if (Core_InlinePointerArray_ensureFreeCapacity(target, pimpl->size)) {
     return Core_Failure;
   }
   if (Core_InlinePointerHashmapIterator_initialize(&it, SELF)) {
@@ -634,7 +634,7 @@ Core_Result Core_InlinePointerHashmap_getKeys(Core_InlinePointerHashmap* SELF, d
       Core_InlinePointerHashmapIterator_uninitialize(&it);
       return Core_Failure;
     }
-    if (dx_inline_pointer_array_append(target, key)) {
+    if (Core_InlinePointerArray_append(target, key)) {
       Core_InlinePointerHashmapIterator_uninitialize(&it);
       return Core_Failure;
     }
@@ -651,10 +651,10 @@ Core_Result Core_InlinePointerHashmap_getKeys(Core_InlinePointerHashmap* SELF, d
   return Core_Success;
 }
 
-Core_Result Core_InlinePointerHashmap_getValues(Core_InlinePointerHashmap* SELF, dx_inline_pointer_array* target) {
+Core_Result Core_InlinePointerHashmap_getValues(Core_InlinePointerHashmap* SELF, Core_InlinePointerArray* target) {
   _dx_impl* pimpl = _DX_IMPL(SELF->pimpl);
   Core_InlinePointerHashmapIterator it;
-  if (dx_inline_pointer_array_ensure_free_capacity(target, pimpl->size)) {
+  if (Core_InlinePointerArray_ensureFreeCapacity(target, pimpl->size)) {
     return Core_Failure;
   }
   if (Core_InlinePointerHashmapIterator_initialize(&it, SELF)) {
@@ -671,7 +671,7 @@ Core_Result Core_InlinePointerHashmap_getValues(Core_InlinePointerHashmap* SELF,
       Core_InlinePointerHashmapIterator_uninitialize(&it);
       return Core_Failure;
     }
-    if (dx_inline_pointer_array_append(target, value)) {
+    if (Core_InlinePointerArray_append(target, value)) {
       Core_InlinePointerHashmapIterator_uninitialize(&it);
       return Core_Failure;
     }

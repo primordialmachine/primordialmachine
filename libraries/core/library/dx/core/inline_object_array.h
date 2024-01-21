@@ -13,7 +13,7 @@ static inline dx_inline_object_array* DX_INLINE_OBJECT_ARRAY(void* p) {
 }
 
 struct dx_inline_object_array {
-  dx_inline_pointer_array backend;
+  Core_InlinePointerArray backend;
 };
 
 /// @brief Initialize this dx_inline_object_array object.

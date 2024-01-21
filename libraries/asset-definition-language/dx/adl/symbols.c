@@ -90,8 +90,8 @@ static void dx_asset_definitions_constructDispatch(dx_asset_definitions_Dispatch
 Core_Result dx_asset_definitions_construct(dx_asset_definitions* SELF) {
   DX_CONSTRUCT_PREFIX(dx_asset_definitions);
   static Core_InlinePointerHashMap_Configuration const configuration = {
-    .compareKeysCallback = (Core_InlinePointerHashmap_compare_keys_callback*)&on_compare_keys,
-    .hashKeyCallback = (Core_InlinePointerHashmap_hash_key_callback*)&on_hash_key,
+    .compareKeysCallback = (Core_InlinePointerHashmap_CompareKeysCallback*)&on_compare_keys,
+    .hashKeyCallback = (Core_InlinePointerHashmap_HashKeyCallback*)&on_hash_key,
     .keyAddedCallback = (Core_InlinePointerHashMap_KeyAddedCallback*)&on_added,
     .keyRemovedCallback = (Core_InlinePointerHashMap_KeyRemovedCallback*)&on_removed,
     .valueAddedCallback = (Core_InlinePointerHashmap_ValueAddedCallback*)&on_added,

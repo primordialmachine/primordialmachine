@@ -63,8 +63,8 @@ static Core_Result _initialize_expected_keys(dx_adl_type_handlers_optics_orthogr
     .keyRemovedCallback = &_on_expected_key_key_removed,
     .valueAddedCallback = NULL,
     .valueRemovedCallback = NULL,
-    .hashKeyCallback = (Core_InlinePointerHashmap_hash_key_callback*)&_on_hash_expected_key_key,
-    .compareKeysCallback = (Core_InlinePointerHashmap_compare_keys_callback*)&_on_compare_expected_key_keys,
+    .hashKeyCallback = (Core_InlinePointerHashmap_HashKeyCallback*)&_on_hash_expected_key_key,
+    .compareKeysCallback = (Core_InlinePointerHashmap_CompareKeysCallback*)&_on_compare_expected_key_keys,
   };
   if (Core_InlinePointerHashmap_initialize(&SELF->expected_keys, &cfg)) {
     return Core_Failure;
@@ -106,32 +106,32 @@ static Core_Result _check_keys(dx_adl_type_handlers_optics_orthographic* SELF, d
     .added_callback = &on_received_key_added,
     .removed_callback = &on_received_key_removed,
   };
-  dx_inline_pointer_array received_keys;
-  if (dx_inline_pointer_array_initialize(&received_keys, 0, &configuration)) {
+  Core_InlinePointerArray received_keys;
+  if (Core_InlinePointerArray_initialize(&received_keys, 0, &configuration)) {
     return Core_Failure;
   }
   if (Core_InlinePointerHashmap_getKeys(&node->map, &received_keys)) {
-    dx_inline_pointer_array_uninitialize(&received_keys);
+    Core_InlinePointerArray_uninitialize(&received_keys);
     return Core_Failure;
   }
   Core_Size number_of_received_keys = 0;
-  if (dx_inline_pointer_array_get_size(&number_of_received_keys, &received_keys)) {
-    dx_inline_pointer_array_uninitialize(&received_keys);
+  if (Core_InlinePointerArray_getSize(&number_of_received_keys, &received_keys)) {
+    Core_InlinePointerArray_uninitialize(&received_keys);
     return Core_Failure;
   }
   for (Core_Size i = 0, n = number_of_received_keys; i < n; ++i) {
     Core_String* received_key = NULL;
-    if (dx_inline_pointer_array_get_at(&received_key, &received_keys, i)) {
-      dx_inline_pointer_array_uninitialize(&received_keys);
+    if (Core_InlinePointerArray_get_at(&received_key, &received_keys, i)) {
+      Core_InlinePointerArray_uninitialize(&received_keys);
       return Core_Failure;
     }
     Core_String* expected_key = NULL;
     if (Core_InlinePointerHashmap_get(&expected_key, &SELF->expected_keys, received_key)) {
-      dx_inline_pointer_array_uninitialize(&received_keys);
+      Core_InlinePointerArray_uninitialize(&received_keys);
       return Core_Failure;
     }
   }
-  dx_inline_pointer_array_uninitialize(&received_keys);
+  Core_InlinePointerArray_uninitialize(&received_keys);
   return Core_Success;
 }
 

@@ -20,7 +20,7 @@ struct dx_ddl_node {
   Core_Object _parent;
   dx_ddl_node_kind kind;
   union {
-    dx_inline_pointer_array list;
+    Core_InlinePointerArray list;
     Core_InlinePointerHashmap map;
     Core_String* string;
     Core_String* number;

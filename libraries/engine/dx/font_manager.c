@@ -436,8 +436,8 @@ Core_Result dx_font_manager_construct(dx_font_manager* SELF, dx_val_context* con
   DX_CONSTRUCT_PREFIX(dx_font_manager);
 
   Core_InlinePointerHashMap_Configuration configuration = {
-    .compareKeysCallback = (Core_InlinePointerHashmap_compare_keys_callback*) & compare_font_key,
-    .hashKeyCallback = (Core_InlinePointerHashmap_hash_key_callback*) & hash_font_key,
+    .compareKeysCallback = (Core_InlinePointerHashmap_CompareKeysCallback*) & compare_font_key,
+    .hashKeyCallback = (Core_InlinePointerHashmap_HashKeyCallback*) & hash_font_key,
     .keyAddedCallback = (Core_InlinePointerHashMap_KeyAddedCallback*) & font_key_added,
     .keyRemovedCallback = (Core_InlinePointerHashMap_KeyRemovedCallback*) & font_key_removed,
     .valueAddedCallback = NULL,

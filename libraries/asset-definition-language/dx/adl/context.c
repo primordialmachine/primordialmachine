@@ -83,8 +83,8 @@ static void value_removed_callback(Core_Object** value) {
 
 static Core_Result initialize_type_handlers(dx_adl_context* SELF) {
   static Core_InlinePointerHashMap_Configuration const configuration = {
-    .compareKeysCallback = (Core_InlinePointerHashmap_compare_keys_callback*)&compare_keys_callback,
-    .hashKeyCallback = (Core_InlinePointerHashmap_hash_key_callback*)&hash_key_callback,
+    .compareKeysCallback = (Core_InlinePointerHashmap_CompareKeysCallback*)&compare_keys_callback,
+    .hashKeyCallback = (Core_InlinePointerHashmap_HashKeyCallback*)&hash_key_callback,
     .keyAddedCallback = (Core_InlinePointerHashMap_KeyAddedCallback*)&key_added_callback,
     .keyRemovedCallback = (Core_InlinePointerHashMap_KeyRemovedCallback*)&key_removed_callback,
     .valueAddedCallback = (Core_InlinePointerHashmap_ValueAddedCallback*)&value_added_callback,

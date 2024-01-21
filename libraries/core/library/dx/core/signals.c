@@ -37,10 +37,10 @@ struct _Signal {
   dx_reference_counter referenceCount;
   _SignalKey key;
   /// null pointer or pointer to a (possibly empty) list of connections to this signal.
-  dx_inline_pointer_array* connections;
+  Core_InlinePointerArray* connections;
 };
 
-static Core_Result _Signal_getConnections(dx_inline_pointer_array** connections, _Signal* signal) {
+static Core_Result _Signal_getConnections(Core_InlinePointerArray** connections, _Signal* signal) {
   return Core_Success;
 }
 
@@ -60,7 +60,7 @@ static Core_Result _SignalKey_compareKeys(Core_Boolean* RETURN, _SignalKey** SEL
 
 static Core_Result _Signal_destroy(_Signal* signal) {
   if (signal->connections) {
-    dx_inline_pointer_array_uninitialize(signal->connections);
+    Core_InlinePointerArray_uninitialize(signal->connections);
     Core_Memory_deallocate(signal->connections);
     signal->connections = NULL;
   }
@@ -136,8 +136,8 @@ Core_Result Core_Signals_initialize() {
     return Core_Failure;
   }
   Core_InlinePointerHashMap_Configuration configuration = {
-    .compareKeysCallback = (Core_InlinePointerHashmap_compare_keys_callback*) & _SignalKey_compareKeys,
-    .hashKeyCallback = (Core_InlinePointerHashmap_hash_key_callback*)&_SignalKey_hashKey,
+    .compareKeysCallback = (Core_InlinePointerHashmap_CompareKeysCallback*) & _SignalKey_compareKeys,
+    .hashKeyCallback = (Core_InlinePointerHashmap_HashKeyCallback*)&_SignalKey_hashKey,
     .keyAddedCallback = NULL,
     .keyRemovedCallback = NULL,
     .valueAddedCallback = (Core_InlinePointerHashMap_KeyAddedCallback*)&_Signal_valueAdded,

@@ -234,8 +234,8 @@ static Core_Result help(dx_application_presenter* application_presenter) {
 Core_Result dx_cl_interpreter_construct(dx_cl_interpreter* SELF) {
   DX_CONSTRUCT_PREFIX(dx_cl_interpreter);
   Core_InlinePointerHashMap_Configuration configuration = {
-    .compareKeysCallback = (Core_InlinePointerHashmap_compare_keys_callback*)&on_compare_keys,
-    .hashKeyCallback = (Core_InlinePointerHashmap_hash_key_callback*)&on_hash_key,
+    .compareKeysCallback = (Core_InlinePointerHashmap_CompareKeysCallback*)&on_compare_keys,
+    .hashKeyCallback = (Core_InlinePointerHashmap_HashKeyCallback*)&on_hash_key,
     .keyAddedCallback = (Core_InlinePointerHashMap_KeyAddedCallback*)&on_key_added,
     .keyRemovedCallback = (Core_InlinePointerHashMap_KeyRemovedCallback*)&on_key_removed,
     .valueAddedCallback = (Core_InlinePointerHashmap_ValueAddedCallback*)&on_value_added,

@@ -10,16 +10,17 @@
     "<table style='width: initial !important'>",
     "<tr><td><code>&lt;Suffix&gt;</code></td> <td><code>&lt;Type&gt;  </code></td></tr>",
     "<tr><td><code>N8            </code></td> <td><code>Core_Natural8 </code></td></tr>",
+    "<tr><td><code>P             </code></td> <td><code>void*         </code></td></tr>",
     "</table>"
   ],
   "parameters" : [
     {
       "name" : "SELF",
-      "type" : "@{code('Core_Inline_Array&lt;Type&gt;*')}",
-      "description" : "A pointer to a @{code('Core_Inline_Array&lt;Type&gt;')} object."
+      "type" : "@{code('Core_InlineArray&lt;Type&gt;*')}",
+      "description" : "A pointer to a @{code('Core_InlineArray&lt;Type&gt;')} object."
     },
     {
-      "name" : "n",
+      "name" : "additional",
       "type" : "@{code('Core_Size')}",
       "description" : "The amount to increase the capacity by in elements."
     }
@@ -37,7 +38,5 @@
   ],
   "description" : "Increase the capacity by a specified value.",
   "return" : "@{code('Core_Success')} on success. @{code('Core_Failure')} on failure.",
-  "remarks" : [
-    "This function sets the by-thread error variable on failure."
-  ]
+  "remarks" : "This function sets the by-thread error variable on failure."
 }

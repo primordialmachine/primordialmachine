@@ -71,8 +71,8 @@ static void value_removed_callback(Core_Object** a) {
 
 static Core_Result initialize_type_handlers(dx_ui_manager* SELF) {
   static Core_InlinePointerHashMap_Configuration const configuration = {
-    .compareKeysCallback = (Core_InlinePointerHashmap_compare_keys_callback*)&compare_keys_callback,
-    .hashKeyCallback = (Core_InlinePointerHashmap_hash_key_callback*)&hash_key_callback,
+    .compareKeysCallback = (Core_InlinePointerHashmap_CompareKeysCallback*)&compare_keys_callback,
+    .hashKeyCallback = (Core_InlinePointerHashmap_HashKeyCallback*)&hash_key_callback,
     .keyAddedCallback = (Core_InlinePointerHashMap_KeyAddedCallback*)&key_added_callback,
     .keyRemovedCallback = (Core_InlinePointerHashMap_KeyRemovedCallback*)&key_removed_callback,
     .valueAddedCallback = (Core_InlinePointerHashmap_ValueAddedCallback*)&value_added_callback,
@@ -336,7 +336,7 @@ static Core_Result _parse(dx_ui_widget** RETURN, dx_ui_manager* SELF, dx_ddl_nod
 Core_Result dx_ui_manager_load(dx_ui_widget** RETURN, dx_ui_manager* SELF, Core_String* path) {
   char* bytes = NULL;
   Core_Size number_of_bytes = 0;
-  if (dx_get_file_contents_s(path, &bytes, &number_of_bytes)) {
+  if (Core_getFileContents(path, &bytes, &number_of_bytes)) {
     return Core_Failure;
   }
   dx_ddl_node* ddl_node = dx_ddl_compile(bytes, number_of_bytes);

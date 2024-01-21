@@ -18,7 +18,7 @@ Core_defineObjectType("dx.adl.resolve",
                       Core_Object);
 
 static void dx_adl_resolve_destruct(dx_adl_resolve* SELF) {
-  dx_inline_pointer_array_uninitialize(&SELF->queue);
+  Core_InlinePointerArray_uninitialize(&SELF->queue);
 }
 
 static void dx_adl_resolve_constructDispatch(dx_adl_resolve_Dispatch* SELF)
@@ -29,7 +29,7 @@ Core_Result dx_adl_resolve_construct(dx_adl_resolve* SELF, dx_adl_context* conte
   DX_INLINE_POINTER_ARRAY_CONFIGURATION configuration;
   configuration.added_callback = NULL;
   configuration.removed_callback = NULL;
-  if (dx_inline_pointer_array_initialize(&SELF->queue, 0, &configuration)) {
+  if (Core_InlinePointerArray_initialize(&SELF->queue, 0, &configuration)) {
     return Core_Failure;
   }
   SELF->context = context;
@@ -49,7 +49,7 @@ Core_Result dx_adl_resolve_create(dx_adl_resolve** RETURN, dx_adl_context* conte
 }
 
 static Core_Result setup_queue(dx_adl_resolve* SELF, bool include_unloaded, bool include_unresolved) {
-  dx_inline_pointer_array_clear(&SELF->queue);
+  Core_InlinePointerArray_clear(&SELF->queue);
   Core_InlinePointerHashmapIterator iterator;
   Core_InlinePointerHashmapIterator_initialize(&iterator, &SELF->context->definitions->map);
   Core_Boolean has_entry = false;
@@ -64,7 +64,7 @@ static Core_Result setup_queue(dx_adl_resolve* SELF, bool include_unloaded, bool
       return Core_Failure;
     }
     if ((!symbol->asset && include_unloaded) || (!symbol->resolved && include_unresolved)) {
-      if (dx_inline_pointer_array_append(&SELF->queue, symbol)) {
+      if (Core_InlinePointerArray_append(&SELF->queue, symbol)) {
         Core_InlinePointerHashmapIterator_uninitialize(&iterator);
         return Core_Failure;
       }
@@ -87,12 +87,12 @@ Core_Result dx_adl_resolve_run(dx_adl_resolve* SELF) {
     return Core_Failure;
   }
   Core_Size n;
-  if (dx_inline_pointer_array_get_size(&n, &SELF->queue)) {
+  if (Core_InlinePointerArray_getSize(&n, &SELF->queue)) {
     return Core_Failure;
   }
   for (Core_Size i = 0; i < n; ++i) {
     dx_adl_symbol* symbol = NULL;
-    if (dx_inline_pointer_array_get_at(&symbol, &SELF->queue, i)) {
+    if (Core_InlinePointerArray_get_at(&symbol, &SELF->queue, i)) {
       return Core_Failure;
     }
     if (!symbol->asset) {
@@ -111,12 +111,12 @@ Core_Result dx_adl_resolve_run(dx_adl_resolve* SELF) {
     if (setup_queue(SELF, true, true)) {
       return Core_Failure;
     } // if
-    if (dx_inline_pointer_array_get_size(&n, &SELF->queue)) {
+    if (Core_InlinePointerArray_getSize(&n, &SELF->queue)) {
       return Core_Failure;
     }
     for (Core_Size i = 0; i < n; ++i) {
       dx_adl_symbol* symbol = NULL;
-      if (dx_inline_pointer_array_get_at(&symbol, &SELF->queue, i)) {
+      if (Core_InlinePointerArray_get_at(&symbol, &SELF->queue, i)) {
         return Core_Failure;
       }
       dx_adl_type_handler* type_handler = NULL;
@@ -135,7 +135,7 @@ Core_Result dx_adl_resolve_run(dx_adl_resolve* SELF) {
         return Core_Failure;
       }
     } // for
-    if (dx_inline_pointer_array_get_size(&n, &SELF->queue)) {
+    if (Core_InlinePointerArray_getSize(&n, &SELF->queue)) {
       return Core_Failure;
     }
   } while (n);

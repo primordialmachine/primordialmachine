@@ -21,9 +21,9 @@ typedef struct _dx_impl {
   Core_Size size;
 
   /// @brief A pointer to the @a dx_added_callback function or a null pointer.
-  dx_inline_pointer_array_added_callback* added_callback;
+  Core_InlinePointerArray_added_callback* added_callback;
   /// @brief A pointer to the @a dx_removed_callback function or  a null pointer.
-  dx_inline_pointer_array_removed_callback* removed_callback;
+  Core_InlinePointerArray_removed_callback* removed_callback;
 
 } _dx_impl; // struct _dx_impl
 
@@ -102,7 +102,7 @@ static Core_Result _dx_impl_clear(_dx_impl* SELF);
 
 /// @internal
 /// @brief Get the pointer at the specified index.
-/// @param RETURN A pointer to a <code>dx_inline_pointer_array_element</code> variable.
+/// @param RETURN A pointer to a <code>Core_InlinePointerArray_element</code> variable.
 /// @param SELF A pointer to this _dx_impl object.
 /// @param index The index.
 /// @success <code>*RETURN</code> was assigned the pointer at the specified index.
@@ -110,7 +110,7 @@ static Core_Result _dx_impl_clear(_dx_impl* SELF);
 /// @error #Core_Error_ArgumentInvalid @a RETURN is a null pointer
 /// @error #Core_Error_ArgumentInvalid @a SELF is a null pointer
 /// @error #Core_Error_ArgumentInvalid @a index is greater than or equal to the size of the array.
-static Core_Result _dx_impl_get_at(dx_inline_pointer_array_element* RETURN, _dx_impl const* SELF, Core_Size index);
+static Core_Result _dx_impl_get_at(Core_InlinePointerArray_element* RETURN, _dx_impl const* SELF, Core_Size index);
 
 /// @internal
 /// @brief Insert an element.
@@ -121,7 +121,7 @@ static Core_Result _dx_impl_get_at(dx_inline_pointer_array_element* RETURN, _dx_
 /// @error #Core_Error_ArgumentInvalid @a SELF is a null pointer
 /// @error #Core_Error_ArgumentInvalid @a index is greater than the size of the array
 /// @error #Core_Error_AllocationFailed an allocation failed
-static Core_Result _dx_impl_insert(_dx_impl* SELF, dx_inline_pointer_array_element pointer, Core_Size index);
+static Core_Result _dx_impl_insert(_dx_impl* SELF, Core_InlinePointerArray_element pointer, Core_Size index);
 
 /// @internal
 /// @brief Append an element.
@@ -130,7 +130,7 @@ static Core_Result _dx_impl_insert(_dx_impl* SELF, dx_inline_pointer_array_eleme
 /// @method-call
 /// @error #Core_Error_ArgumentInvalid @a SELF is a null pointer
 /// @error #Core_Error_AllocationFailed an allocation failed
-static Core_Result _dx_impl_append(_dx_impl* SELF, dx_inline_pointer_array_element pointer);
+static Core_Result _dx_impl_append(_dx_impl* SELF, Core_InlinePointerArray_element pointer);
 
 /// @internal
 /// @brief Prepend an element.
@@ -139,7 +139,7 @@ static Core_Result _dx_impl_append(_dx_impl* SELF, dx_inline_pointer_array_eleme
 /// @method-call
 /// @error #Core_Error_ArgumentInvalid @a SELF is a null pointer
 /// @error #Core_Error_AllocationFailed an allocation failed
-static Core_Result _dx_impl_prepend(_dx_impl* SELF, dx_inline_pointer_array_element pointer);
+static Core_Result _dx_impl_prepend(_dx_impl* SELF, Core_InlinePointerArray_element pointer);
 
 /// @internal
 /// @brief Remove the specified number of elements.
@@ -157,7 +157,7 @@ static Core_Result _dx_impl_initialize(_dx_impl* SELF, Core_Size initial_capacit
   }
   Core_Size overflow = 0;
   Core_Size initial_capacity_bytes;
-  Core_safeMulSz(&initial_capacity_bytes, initial_capacity, sizeof(dx_inline_pointer_array_element), &overflow); // must succeed
+  Core_safeMulSz(&initial_capacity_bytes, initial_capacity, sizeof(Core_InlinePointerArray_element), &overflow); // must succeed
   if (overflow) {
     Core_setError(Core_Error_AllocationFailed);
     return Core_Failure;
@@ -223,7 +223,7 @@ static Core_Result _dx_impl_increase_capacity(_dx_impl* SELF, Core_Size addition
   }
   Core_Size overflow = 0;
   Core_Size new_capacity_bytes;
-  Core_safeMulSz(&new_capacity_bytes, new_capacity, sizeof(dx_inline_pointer_array_element), &overflow); // must succeed
+  Core_safeMulSz(&new_capacity_bytes, new_capacity, sizeof(Core_InlinePointerArray_element), &overflow); // must succeed
   if (overflow) {
     Core_setError(Core_Error_AllocationFailed);
     return Core_Failure;
@@ -254,7 +254,7 @@ static Core_Result _dx_impl_clear(_dx_impl* SELF) {
     return Core_Failure;
   }
   if (SELF->removed_callback) {
-    dx_inline_pointer_array_removed_callback* removed_callback = SELF->removed_callback;
+    Core_InlinePointerArray_removed_callback* removed_callback = SELF->removed_callback;
     while (SELF->size > 0) {
       void* element = SELF->elements[--SELF->size];
       removed_callback(&element);
@@ -265,7 +265,7 @@ static Core_Result _dx_impl_clear(_dx_impl* SELF) {
   return Core_Success;
 }
 
-static Core_Result _dx_impl_get_at(dx_inline_pointer_array_element* RETURN, _dx_impl const* SELF, Core_Size index) {
+static Core_Result _dx_impl_get_at(Core_InlinePointerArray_element* RETURN, _dx_impl const* SELF, Core_Size index) {
   if (!SELF || index >= SELF->size) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
@@ -274,7 +274,7 @@ static Core_Result _dx_impl_get_at(dx_inline_pointer_array_element* RETURN, _dx_
   return Core_Success;
 }
 
-static Core_Result _dx_impl_insert(_dx_impl* SELF, dx_inline_pointer_array_element pointer, Core_Size index) {
+static Core_Result _dx_impl_insert(_dx_impl* SELF, Core_InlinePointerArray_element pointer, Core_Size index) {
   if (!SELF) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
@@ -292,14 +292,14 @@ static Core_Result _dx_impl_insert(_dx_impl* SELF, dx_inline_pointer_array_eleme
   if (index != SELF->size) {
     Core_Memory_move(SELF->elements + index + 1,
                      SELF->elements + index + 0,
-                     (SELF->size - index) * sizeof(dx_inline_pointer_array_element));
+                     (SELF->size - index) * sizeof(Core_InlinePointerArray_element));
   }
   SELF->elements[index] = pointer;
   SELF->size++;
   return Core_Success;
 }
 
-static Core_Result _dx_impl_append(_dx_impl* SELF, dx_inline_pointer_array_element pointer) {
+static Core_Result _dx_impl_append(_dx_impl* SELF, Core_InlinePointerArray_element pointer) {
   if (!SELF) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
@@ -307,7 +307,7 @@ static Core_Result _dx_impl_append(_dx_impl* SELF, dx_inline_pointer_array_eleme
   return _dx_impl_insert(SELF, pointer, SELF->size);
 }
 
-static Core_Result _dx_impl_prepend(_dx_impl* SELF, dx_inline_pointer_array_element pointer) {
+static Core_Result _dx_impl_prepend(_dx_impl* SELF, Core_InlinePointerArray_element pointer) {
   if (!SELF) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
@@ -346,7 +346,7 @@ static inline _dx_impl const* _DX_IMPL_CONST(void* p) {
   return (_dx_impl const*)p;
 }
 
-Core_Result dx_inline_pointer_array_initialize(dx_inline_pointer_array *SELF, Core_Size initial_capacity, DX_INLINE_POINTER_ARRAY_CONFIGURATION const* configuration) {
+Core_Result Core_InlinePointerArray_initialize(Core_InlinePointerArray *SELF, Core_Size initial_capacity, DX_INLINE_POINTER_ARRAY_CONFIGURATION const* configuration) {
   if (!SELF) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
@@ -362,52 +362,52 @@ Core_Result dx_inline_pointer_array_initialize(dx_inline_pointer_array *SELF, Co
  return Core_Success;
 }
 
-void dx_inline_pointer_array_uninitialize(dx_inline_pointer_array* SELF) {
+void Core_InlinePointerArray_uninitialize(Core_InlinePointerArray* SELF) {
   _dx_impl_uninitialize(_DX_IMPL(SELF->pimpl));
   Core_Memory_deallocate(SELF->pimpl);
   SELF->pimpl = NULL;
 }
 
-Core_Result dx_inline_pointer_array_increase_capacity(dx_inline_pointer_array* SELF, Core_Size additional_capacity) {
-  return _dx_impl_increase_capacity(_DX_IMPL(SELF->pimpl), additional_capacity);
+Core_Result Core_InlinePointerArray_increaseCapacity(Core_InlinePointerArray* SELF, Core_Size additionalCapacity) {
+  return _dx_impl_increase_capacity(_DX_IMPL(SELF->pimpl), additionalCapacity);
 }
 
-Core_Result dx_inline_pointer_array_ensure_free_capacity(dx_inline_pointer_array* SELF, Core_Size required_free_capacity) {
-  return _dx_impl_ensure_free_capacity(_DX_IMPL(SELF->pimpl), required_free_capacity);
+Core_Result Core_InlinePointerArray_ensureFreeCapacity(Core_InlinePointerArray* SELF, Core_Size requiredFreeCapacity) {
+  return _dx_impl_ensure_free_capacity(_DX_IMPL(SELF->pimpl), requiredFreeCapacity);
 }
 
-Core_Result dx_inline_pointer_array_append(dx_inline_pointer_array* SELF, dx_inline_pointer_array_element pointer) {
+Core_Result Core_InlinePointerArray_append(Core_InlinePointerArray* SELF, Core_InlinePointerArray_element pointer) {
   return _dx_impl_append(_DX_IMPL(SELF->pimpl), pointer);
 }
 
-Core_Result dx_inline_pointer_array_prepend(dx_inline_pointer_array* SELF, dx_inline_pointer_array_element pointer) {
+Core_Result Core_InlinePointerArray_prepend(Core_InlinePointerArray* SELF, Core_InlinePointerArray_element pointer) {
   return _dx_impl_prepend(_DX_IMPL(SELF->pimpl), pointer);
 }
 
-Core_Result dx_inline_pointer_array_insert(dx_inline_pointer_array* SELF, dx_inline_pointer_array_element pointer, Core_Size index) {
+Core_Result Core_InlinePointerArray_insert(Core_InlinePointerArray* SELF, Core_InlinePointerArray_element pointer, Core_Size index) {
   return _dx_impl_insert(_DX_IMPL(SELF->pimpl), pointer, index);
 }
 
-Core_Result dx_inline_pointer_array_get_at(dx_inline_pointer_array_element* RETURN, dx_inline_pointer_array const* SELF, Core_Size index) {
+Core_Result Core_InlinePointerArray_get_at(Core_InlinePointerArray_element* RETURN, Core_InlinePointerArray const* SELF, Core_Size index) {
   return _dx_impl_get_at(RETURN, _DX_IMPL_CONST(SELF->pimpl), index);
 }
 
-Core_Result dx_inline_pointer_array_get_size(Core_Size* RETURN, dx_inline_pointer_array const* SELF) {
+Core_Result Core_InlinePointerArray_getSize(Core_Size* RETURN, Core_InlinePointerArray const* SELF) {
   return _dx_impl_get_size(RETURN, _DX_IMPL(SELF->pimpl));
 }
 
-Core_Result dx_inline_pointer_array_get_capacity(Core_Size* RETURN, dx_inline_pointer_array const* SELF) {
+Core_Result Core_InlinePointerArray_getCapacity(Core_Size* RETURN, Core_InlinePointerArray const* SELF) {
   return _dx_impl_get_capacity(RETURN, _DX_IMPL(SELF->pimpl));
 }
 
-Core_Result dx_inline_pointer_array_get_free_capacity(Core_Size* RETURN, dx_inline_pointer_array const* SELF) {
+Core_Result Core_InlinePointerArray_getFreeCapacity(Core_Size* RETURN, Core_InlinePointerArray const* SELF) {
   return _dx_impl_get_free_capacity(RETURN, _DX_IMPL(SELF->pimpl));
 }
 
-Core_Result dx_inline_pointer_array_clear(dx_inline_pointer_array* SELF) {
+Core_Result Core_InlinePointerArray_clear(Core_InlinePointerArray* SELF) {
   return _dx_impl_clear(_DX_IMPL(SELF->pimpl));
 }
 
-Core_Result dx_inline_pointer_array_pop_back_n(dx_inline_pointer_array* SELF, Core_Size n) {
+Core_Result Core_InlinePointerArray_pop_back_n(Core_InlinePointerArray* SELF, Core_Size n) {
   return _dx_impl_pop_back_n(_DX_IMPL(SELF->pimpl), n);
 }

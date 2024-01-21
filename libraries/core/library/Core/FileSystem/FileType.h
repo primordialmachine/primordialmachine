@@ -9,14 +9,10 @@
 Core_declareEnumerationType("Core.FileType",
                             Core_FileType);
 
-/// @ingroup Core_FileSystem
-/// @brief Enumeration of file types.
 enum Core_FileType {
 
-  /// @brief A file is a directory file.
-  Core_FileType_Directory,
+  Core_FileType_Directory = 1,
 
-  /// @brief A file is a regular file.
   Core_FileType_Regular,
 
 };

@@ -221,8 +221,8 @@ static Core_InlinePointerHashmap* g_types = NULL;
 
 Core_Result Core_TypeSystem_initialize() {
   static Core_InlinePointerHashMap_Configuration const configuration = {
-    .compareKeysCallback = (Core_InlinePointerHashmap_compare_keys_callback*) & _dx_rti_type_name_compare_keys_callback,
-    .hashKeyCallback = (Core_InlinePointerHashmap_hash_key_callback*) & _dx_rti_type_name_hash_key_callback,
+    .compareKeysCallback = (Core_InlinePointerHashmap_CompareKeysCallback*) & _dx_rti_type_name_compare_keys_callback,
+    .hashKeyCallback = (Core_InlinePointerHashmap_HashKeyCallback*) & _dx_rti_type_name_hash_key_callback,
     .keyAddedCallback = (Core_InlinePointerHashMap_KeyAddedCallback*) & _dx_rti_type_name_reference_callback,
     .keyRemovedCallback = (Core_InlinePointerHashMap_KeyRemovedCallback*) & _dx_rti_type_name_unreference_callback,
     .valueAddedCallback = (Core_InlinePointerHashmap_ValueAddedCallback*) & _dx_rti_type_reference_callback,

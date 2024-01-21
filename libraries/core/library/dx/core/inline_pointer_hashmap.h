@@ -7,7 +7,7 @@
 #define DX_CORE_INLINE_POINTER_HASHMAP_H_INCLUDED
 
 #include "dx/core/core.h"
-typedef struct dx_inline_pointer_array dx_inline_pointer_array;
+typedef struct Core_InlinePointerArray Core_InlinePointerArray;
 
 typedef void* Core_InlinePointerHashmap_Key;
 typedef void* Core_InlinePointerHashmap_Value;
@@ -35,8 +35,8 @@ typedef void (Core_InlinePointerHashMap_ValueRemovedCallback)(Core_InlinePointer
 /// @ingroup Core_Aggregates
 /// @brief Type of a callback function invoked if the hash value of a key must be computed.
 /// @param key A pointer to the key
-typedef Core_Result (Core_InlinePointerHashmap_hash_key_callback)(Core_Size*, Core_InlinePointerHashmap_Key*);
-typedef Core_Result (Core_InlinePointerHashmap_compare_keys_callback)(Core_Boolean*, Core_InlinePointerHashmap_Key*, Core_InlinePointerHashmap_Key*);
+typedef Core_Result (Core_InlinePointerHashmap_HashKeyCallback)(Core_Size*, Core_InlinePointerHashmap_Key*);
+typedef Core_Result (Core_InlinePointerHashmap_CompareKeysCallback)(Core_Boolean*, Core_InlinePointerHashmap_Key*, Core_InlinePointerHashmap_Key*);
 
 /// @ingroup Core_Aggregates
 /// @brief A dynamic hashmap of pointers (also null pointers).
@@ -60,10 +60,10 @@ typedef struct Core_InlinePointerHashMap_Configuration {
   Core_InlinePointerHashMap_ValueRemovedCallback* valueRemovedCallback;
   
   /// @brief A pointer to the @a dx_hash_key_callback function or a null pointer.
-  Core_InlinePointerHashmap_hash_key_callback* hashKeyCallback;
+  Core_InlinePointerHashmap_HashKeyCallback* hashKeyCallback;
   
   /// @brief A pointer to the @a dx_compare_keys_callback function or a null pointer.
-  Core_InlinePointerHashmap_compare_keys_callback* compareKeysCallback;
+  Core_InlinePointerHashmap_CompareKeysCallback* compareKeysCallback;
   
 } Core_InlinePointerHashMap_Configuration;
 
@@ -163,7 +163,7 @@ Core_Result Core_InlinePointerHashmap_getFreeCapacity(Core_Size* RETURN, Core_In
 /// if (Core_InlinePointerHashmapIterator_hasEntry(&entry, &target)) {
 ///   ...
 /// }
-/// while (has_entry) {
+/// while (hasEntry) {
 ///   void* k = NULL,
 ///       * v = NULL;
 ///   if (Core_InlinePointerHashmapIterator_getKey(&k, &target) || Core_InlinePointerHashmapIterator_getValue(&v, &target)) {
@@ -240,7 +240,7 @@ Core_Result Core_InlinePointerHashmapIterator_remove(Core_InlinePointerHashmapIt
 /// @method-call
 /// @error #Core_Error_ArgumentInvalid @a SELF is a null pointer.
 /// @error #Core_Error_ArgumentInvalid @a TARGET is a null pointer.
-Core_Result Core_InlinePointerHashmap_getKeys(Core_InlinePointerHashmap* SELF, dx_inline_pointer_array* target);
+Core_Result Core_InlinePointerHashmap_getKeys(Core_InlinePointerHashmap* SELF, Core_InlinePointerArray* target);
 
 /// @ingroup Core_Aggregates
 /// @brief Append the values of this pointer hashmap to the specified pointer array.
@@ -249,7 +249,7 @@ Core_Result Core_InlinePointerHashmap_getKeys(Core_InlinePointerHashmap* SELF, d
 /// @method-call
 /// @error #Core_Error_ArgumentInvalid @a SELF is a null pointer.
 /// @error #Core_Error_ArgumentInvalid @a TARGET is a null pointer.
-Core_Result Core_InlinePointerHashmap_getValues(Core_InlinePointerHashmap* SELF, dx_inline_pointer_array* target);
+Core_Result Core_InlinePointerHashmap_getValues(Core_InlinePointerHashmap* SELF, Core_InlinePointerArray* target);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 

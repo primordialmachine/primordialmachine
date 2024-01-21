@@ -48,19 +48,19 @@ static Core_Result _create_scene_from_text(dx_assets_scene** RETURN, char const*
 }
 
 Core_Result _create_scene_from_file(dx_assets_scene** RETURN, Core_String* path) {
-  char* p;
-  Core_Size n;
-  if (dx_get_file_contents_s(path, &p, &n)) {
+  char* bytes = NULL;
+  Core_Size number_of_bytes = 0;
+  if (Core_getFileContents(path, &bytes, &number_of_bytes)) {
     return Core_Failure;
   }
   dx_assets_scene* scene_asset = NULL;
-  if (_create_scene_from_text(&scene_asset, p, n)) {
-    Core_Memory_deallocate(p);
-    p = NULL;
+  if (_create_scene_from_text(&scene_asset, bytes, number_of_bytes)) {
+    Core_Memory_deallocate(bytes);
+    bytes = NULL;
     return Core_Failure;
   }
-  Core_Memory_deallocate(p);
-  p = NULL;
+  Core_Memory_deallocate(bytes);
+  bytes = NULL;
   *RETURN = scene_asset;
   return Core_Success;
 }

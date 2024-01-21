@@ -9,146 +9,144 @@
 #include "dx/core/core.h"
 
 /// @ingroup Core_Aggregates
-/// @brief The elements of a dx_inline_pointer_array are pointers.
-typedef void* dx_inline_pointer_array_element;
+/// @brief The elements of a Core_InlinePointerArray are pointers.
+typedef void* Core_InlinePointerArray_element;
 
 /// @ingroup Core_Aggregates
 /// @brief Type of a callback invoked if an element was added.
 /// @param element A pointer to the element.
-typedef void (dx_inline_pointer_array_added_callback)(dx_inline_pointer_array_element* element);
+typedef void (Core_InlinePointerArray_added_callback)(Core_InlinePointerArray_element* element);
 
 /// @ingroup Core_Aggregates
 /// @brief Type of a callback invoked if an element was removed.
 /// @param element A pointer to the element.
-typedef void (dx_inline_pointer_array_removed_callback)(dx_inline_pointer_array_element* element);
+typedef void (Core_InlinePointerArray_removed_callback)(Core_InlinePointerArray_element* element);
 
 /// @ingroup Core_Aggregates
 /// @brief A dynamic array of pointers (also null pointers).
 /// Supports callbacks for notifications on additions and removals of pointers.
-typedef struct dx_inline_pointer_array dx_inline_pointer_array;
+typedef struct Core_InlinePointerArray Core_InlinePointerArray;
 
-struct dx_inline_pointer_array {
+struct Core_InlinePointerArray {
   void* pimpl;
-}; // struct dx_inline_pointer_array
+}; // struct Core_InlinePointerArray
 
 /// @ingroup Core_Aggregates
 /// @brief Configuration of a pointer array.
 typedef struct DX_INLINE_POINTER_ARRAY_CONFIGURATION {
 
   /// @brief A pointer to the @a _dx_added_callback function or a null pointer.
-  dx_inline_pointer_array_added_callback* added_callback;
+  Core_InlinePointerArray_added_callback* added_callback;
 
   /// @brief A pointer to the @a _dx_removed_callback function or  a null pointer.
-  dx_inline_pointer_array_removed_callback* removed_callback;
+  Core_InlinePointerArray_removed_callback* removed_callback;
 
 } DX_INLINE_POINTER_ARRAY_CONFIGURATION;
 
-/// @brief Initialize this dx_inline_pointer_array object.
-/// @param SELF A pointer to this dx_inline_pointer_array object.
+/// @brief Initialize this Core_InlinePointerArray object.
+/// @param SELF A pointer to this Core_InlinePointerArray object.
 /// @param initial_capacity The initial capacity.
 /// @param configuration A pointer to the configuration.
-/// @method-call
+/// @method{Core_InlinePointerArray}
 /// @error #Core_Error_ArgumentInvalid @a SELF is a null pointer
 /// @error #Core_Error_AllocationFailed @a initial_capacity is too big
 /// @error #Core_Error_AllocationFailed an allocation failed
-Core_Result dx_inline_pointer_array_initialize(dx_inline_pointer_array* SELF, Core_Size initial_capacity, DX_INLINE_POINTER_ARRAY_CONFIGURATION const* configuration);
+Core_Result Core_InlinePointerArray_initialize(Core_InlinePointerArray* SELF, Core_Size initial_capacity, DX_INLINE_POINTER_ARRAY_CONFIGURATION const* configuration);
 
-/// @brief Uninitialize this dx_inline_pointer_array object.
-/// @param SELF A pointer to this dx_inline_pointer_array object.
-void dx_inline_pointer_array_uninitialize(dx_inline_pointer_array* SELF);
+/// @brief Uninitialize this Core_InlinePointerArray object.
+/// @param SELF A pointer to this Core_InlinePointerArray object.
+void Core_InlinePointerArray_uninitialize(Core_InlinePointerArray* SELF);
 
+/* http://localhost/core#core-inlinearray-increasecapacity */
 /// @brief Increase the capacity.
-/// @param SELF A pointer to this dx_inline_pointer_array object.
-/// @param additional_capacity The amount to increase the capacity by.
-/// @method-call
+/// @param additionalCapacity The amount to increase the capacity by.
 /// @error #Core_Error_ArgumentInvalid @a SELF is a null pointer
 /// @error #Core_Error_AllocationFailed @a additional_capacity is too big
 /// @error #Core_Error_AllocationFailed an allocation failed
 /// @success The capacity increased by at least the specified amount.
-Core_Result dx_inline_pointer_array_increase_capacity(dx_inline_pointer_array* SELF, Core_Size additional_capacity);
+/// @method{Core_InlinePointerArray}
+Core_Result Core_InlinePointerArray_increaseCapacity(Core_InlinePointerArray* SELF, Core_Size additional_capacity);
 
+/* http://localhost/core#core-inlinearray-ensurefreecapacity */
 /// @brief Ensure the free capacity is greater than or equal to a specified value.
-/// @param SELF A pointer to this dx_pointer_deque object.
-/// @param required_free_capacity The required free capacity.
-/// @method-call
-/// @error #DX_INVALID_ARGUMENT @a self is a null pointer
-/// @error #DX_ALLOCATION_FAILED @a required_free_capacity is too big
-/// @error #DX_ALLOCATION_FAILED an allocation failed
+/// @param requiredFreeCapacity The required free capacity.
+/// @error #Core_Error_ArgumentInvalid @a SELF is a null pointer
+/// @error #Core_Error_AllocationFailed @a requiredFreeCapacity is too big
+/// @error #Core_Error_AllocationFailed an allocation failed
 /// @success The free capacity is greater than or equal to the specified required free capacity.
-Core_Result dx_inline_pointer_array_ensure_free_capacity(dx_inline_pointer_array* SELF, Core_Size required_free_capacity);
+/// @method{Core_InlinePointerArray}
+Core_Result Core_InlinePointerArray_ensureFreeCapacity(Core_InlinePointerArray* SELF, Core_Size requiredFreeCapacity);
 
 /// @brief Append an element.
-/// @param SELF A pointer to this dx_inline_pointer_array object.
 /// @param pointer The element.
-/// @method-call
 /// @error #Core_Error_ArgumentInvalid @a SELF is a null pointer
 /// @error #Core_Error_AllocationFailed an allocation failed
-Core_Result dx_inline_pointer_array_append(dx_inline_pointer_array* SELF, dx_inline_pointer_array_element pointer);
+/// @method{Core_InlinePointerArray}
+Core_Result Core_InlinePointerArray_append(Core_InlinePointerArray* SELF, Core_InlinePointerArray_element pointer);
 
 /// @brief Prepend an element.
-/// @param SELF A pointer to this dx_inline_pointer_array object.
 /// @param pointer The element.
-/// @method-call
 /// @error #Core_Error_ArgumentInvalid @a SELF is a null pointer
 /// @error #Core_Error_AllocationFailed an allocation failed
-Core_Result dx_inline_pointer_array_prepend(dx_inline_pointer_array* SELF, dx_inline_pointer_array_element pointer);
+/// @method{Core_InlinePointerArray}
+Core_Result Core_InlinePointerArray_prepend(Core_InlinePointerArray* SELF, Core_InlinePointerArray_element pointer);
 
 /// @brief Insert an element.
-/// @param SELF A pointer to this dx_inline_pointer_array object.
+/// @param SELF A pointer to this Core_InlinePointerArray object.
 /// @param pointer The element.
 /// @param index The index.
 /// @method-call
 /// @error #Core_Error_ArgumentInvalid @a SELF is a null pointer
-/// @error #Core_Error_ArgumentInvalid @a index is greater than the size of this dx_inline_pointer_array object
+/// @error #Core_Error_ArgumentInvalid @a index is greater than the size of this Core_InlinePointerArray object
 /// @error #Core_Error_AllocationFailed an allocation failed
-Core_Result dx_inline_pointer_array_insert(dx_inline_pointer_array* SELF, dx_inline_pointer_array_element pointer, Core_Size index);
+Core_Result Core_InlinePointerArray_insert(Core_InlinePointerArray* SELF, Core_InlinePointerArray_element pointer, Core_Size index);
 
 /// @brief Get the pointer at the specified index.
 /// @param RETURN A pointer to a <code>void*</code> variable.
-/// @param SELF A pointer to this dx_inline_pointer_array object.
+/// @param SELF A pointer to this Core_InlinePointerArray object.
 /// @param index The index.
 /// @success <code>*RETURN</code> was assigned the pointer at the specified index.
 /// @method-call
 /// @error #Core_Error_ArgumentInvalid @a SELF is a null pointer
-/// @error #Core_Error_ArgumentInvalid @a index is greater than or equal to the size of this dx_inline_pointer_array object
-Core_Result dx_inline_pointer_array_get_at(dx_inline_pointer_array_element* RETURN, dx_inline_pointer_array const* SELF, Core_Size index);
+/// @error #Core_Error_ArgumentInvalid @a index is greater than or equal to the size of this Core_InlinePointerArray object
+Core_Result Core_InlinePointerArray_get_at(Core_InlinePointerArray_element* RETURN, Core_InlinePointerArray const* SELF, Core_Size index);
 
 /// @brief Get the size, in elements.
-/// @param SELF A pointer to this dx_inline_pointer_array object.
+/// @param SELF A pointer to this Core_InlinePointerArray object.
 /// @success <code>*RETURN</code> was assigned the size.
 /// @method-call
 /// @error #Core_Error_ArgumentInvalid @a RETURN is a null pointer
 /// @error #Core_Error_ArgumentInvalid @a self is a null pointer
-Core_Result dx_inline_pointer_array_get_size(Core_Size* RETURN, dx_inline_pointer_array const* SELF);
+Core_Result Core_InlinePointerArray_getSize(Core_Size* RETURN, Core_InlinePointerArray const* SELF);
 
 /// @brief Get the capacity, in elements.
-/// @param SELF A pointer to this dx_inline_pointer_array object.
+/// @param SELF A pointer to this Core_InlinePointerArray object.
 /// @success <code>*RETURN</code> was assigned the capacity.
 /// @method-call
 /// @error #Core_Error_ArgumentInvalid @a RETURN is a null pointer
 /// @error #Core_Error_ArgumentInvalid @a SELF is a null pointer
-Core_Result dx_inline_pointer_array_get_capacity(Core_Size* RETURN, dx_inline_pointer_array const* SELF);
+Core_Result Core_InlinePointerArray_getCapacity(Core_Size* RETURN, Core_InlinePointerArray const* SELF);
 
 /// @brief Get the free capacity, in elements.
-/// @param SELF A pointer to this dx_inline_pointer_array object.
+/// @param SELF A pointer to this Core_InlinePointerArray object.
 /// @success <code>*RETURN</code> was assigned the free capacity.
 /// @method-call
 /// @error #Core_Error_ArgumentInvalid @a RETURN is a null pointer
 /// @error #Core_Error_ArgumentInvalid @a SELF is a null pointer
-Core_Result dx_inline_pointer_array_get_free_capacity(Core_Size* RETURN, dx_inline_pointer_array const* SELF);
+Core_Result Core_InlinePointerArray_getFreeCapacity(Core_Size* RETURN, Core_InlinePointerArray const* SELF);
 
 /// @brief Remove all elements.
-/// @param SELF A pointer to this dx_inline_pointer_array object.
+/// @param SELF A pointer to this Core_InlinePointerArray object.
 /// @method-call
 /// @error #Core_Error_ArgumentInvalid @a SELF is a null pointer
-Core_Result dx_inline_pointer_array_clear(dx_inline_pointer_array* SELF);
+Core_Result Core_InlinePointerArray_clear(Core_InlinePointerArray* SELF);
 
 /// @brief Remove the specified number of elements.
-/// @param SELF A pointer to this dx_inline_pointer_array object.
+/// @param SELF A pointer to this Core_InlinePointerArray object.
 /// @param n The number of objects to remove.
 /// @method-call
 /// @remarks If this function fails, no elements were removed.
-/// @error #Core_Error_ArgumentInvalid @a n is greater than the size of the dx_inline_pointer_array object.
-Core_Result dx_inline_pointer_array_pop_back_n(dx_inline_pointer_array* SELF, Core_Size n);
+/// @error #Core_Error_ArgumentInvalid @a n is greater than the size of the Core_InlinePointerArray object.
+Core_Result Core_InlinePointerArray_pop_back_n(Core_InlinePointerArray* SELF, Core_Size n);
 
 #endif // DX_INLINE_CORE_POINTER_ARRAY_H_INCLUDED

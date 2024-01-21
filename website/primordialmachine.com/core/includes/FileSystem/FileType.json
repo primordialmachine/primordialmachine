@@ -1,0 +1,22 @@
+{
+  "type" : "enumeration",
+  "last-update" : "2024-01-18",
+  "indices" : "core",
+  "name" : "Core_FileType",
+  "id" : "core-filetype",
+  "signature" : "typedef enum Core_FileType &lt;implementation&gt; Core_FileType;",
+  "description": [
+    "An enumeration of file types.@(newline())",
+    "The enumeration elements cannot be combined."
+  ],
+  "elements": [
+    {
+      "name" : "Core_FileType_Directory",
+      "description" : "A file is a directory file."
+    },
+    {
+      "name" : "Core_FileType_Regular",
+      "description" : "A file is a regular file."
+    }
+  ]
+}

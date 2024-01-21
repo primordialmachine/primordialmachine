@@ -1,0 +1,37 @@
+{
+  "type" : "function",
+  "last-update" : "2024-01-21",
+  "indices" : "core",
+  "name" : "Core_createDirectoryFile",
+  "id" : "core-createdirectoryfile",
+  "signature" : "Core_Result Core_createDirectoryFile(Core_String* path);",
+  "signatureRemarks": null,
+  "parameters" : [
+    {
+      "name" : "path",
+      "type" : "Core_String*",
+      "description" : "The path of the directory file."
+    }
+  ],
+  "errors" : [
+    {
+      "errorCode" : "@{code('Core_Error_ArgumentInvalid')}",
+      "errorCondition" : "@{code('path')} is a null pointer."
+    },
+    {
+      "errorCode" : "@{code('Core_Error_NotFound')}",
+      "errorCondition" : "The directory file was not found."
+    },
+    {
+      "errorCode" : "@{code('Core_Error_EnvironmentFailed')}",
+      "errorCondition" : "Deleting the directory file failed."
+    }
+  ],
+  "description" : [
+    "Delete a directory file.",
+    "The path to the ancestor directory must exist for this function to succeed."
+  ],
+  "success" : "The directory file was created.",
+  "return" : "@{code('Core_Success')} on success. @{code('Core_Failure')} on failure.",
+  "remarks" : "This function sets the by-thread error variable on failure."
+}

@@ -218,8 +218,8 @@ static void kvs_value_removed(Core_Object** a) {
 Core_Result dx_val_cbinding_construct(dx_val_cbinding* SELF) {
   DX_CONSTRUCT_PREFIX(dx_val_cbinding);
   Core_InlinePointerHashMap_Configuration configuration = {
-    .compareKeysCallback = (Core_InlinePointerHashmap_compare_keys_callback*)&kvs_keys_equal,
-    .hashKeyCallback = (Core_InlinePointerHashmap_hash_key_callback*)&kvs_hash_key,
+    .compareKeysCallback = (Core_InlinePointerHashmap_CompareKeysCallback*)&kvs_keys_equal,
+    .hashKeyCallback = (Core_InlinePointerHashmap_HashKeyCallback*)&kvs_hash_key,
     .keyAddedCallback = (Core_InlinePointerHashMap_KeyAddedCallback*)&kvs_key_added,
     .keyRemovedCallback = (Core_InlinePointerHashMap_KeyRemovedCallback*)&kvs_key_removed,
     .valueAddedCallback = (Core_InlinePointerHashmap_ValueAddedCallback*)&kvs_value_added,
