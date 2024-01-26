@@ -1,6 +1,7 @@
 #if !defined(DX_CORE_STRING_H_INCLUDED)
 #define DX_CORE_STRING_H_INCLUDED
 
+#include "Core/Collections/InlineArrayListN8.h"
 #include "dx/core/object.h"
 #include "dx/core/string_iterator.h"
 
@@ -17,7 +18,7 @@ static inline Core_String* CORE_STRING(void* p) {
 struct Core_String {
   Core_Object _parent;
   Core_Size number_of_bytes;
-  char* bytes;
+  Core_Natural8* bytes;
 };
 
 static inline Core_String* CORE_STRING_DISPATCH(void* p) {
@@ -73,7 +74,29 @@ Core_Result Core_String_printf(Core_String** RETURN, Core_String* format, ...);
 /// @param bytes A pointer to an array of @a number_of_bytes Bytes.
 /// @param number_of_bytes The number of Bytes in the array pointed to by @a bytes.
 /// @create-operator{Core_String}
-Core_Result Core_String_create(Core_String** RETURN, char const* bytes, Core_Size number_of_bytes);
+Core_Result Core_String_create(Core_String** RETURN, char const* bytes, Core_Size numberOfBytes);
+
+/// @brief Create a string from an array containig an UTF8- Byte sequence.
+/// @param RETURN A pointer to a <code>Core_String*</code> variable.
+/// @param array A pointer to the array.
+/// @return #Core_Success on success. #Core_Failure on failure.
+/// @error #Core_Error_ArgumentInvalid @a RETURN is a null pointer.
+/// @error #Core_Error_ArgumentInvalid @a array is a null pointer.
+/// @error #Core_Error_ArgumentInvalid The array does not contain a sequence of Bytes that is a UTF-8 Byte sequence.
+Core_Result Core_String_createFromArray(Core_String** RETURN, Core_InlineArrayListN8* array);
+
+/// @brief Create a string from an array containig an UTF8- Byte sequence.
+/// @param RETURN A pointer to a <code>Core_String*</code> variable.
+/// @param array A pointer to the array.
+/// @param start The index of the UTF-8 symbol at which the sequence starts.
+/// @param length The length, in UTF-8 symbols, of the sequence.
+/// @return #Core_Success on success. #Core_Failure on failure.
+/// @error #Core_Error_ArgumentInvalid @a RETURN is a null pointer.
+/// @error #Core_Error_ArgumentInvalid @a array is a null pointer.
+/// @error #Core_Error_ArgumentInvalid The array does not contain a sequence of Bytes that is a UTF-8 Byte sequence.
+/// @error #Core_Error_ArgumentInvalid <code>start</code> is greater than or equal to the number of symbols in the array.
+/// @error #Core_Error_ArgumentInvalid <code>start + length</code> is greater than or equal to the number of symbols in the array.
+Core_Result Core_String_createFromSubArray(Core_String** RETURN, Core_InlineArrayListN8* array, Core_Size start, Core_Size length);
 
 /// @brief Get a pointer to the Bytes of this string.
 /// @param RETURN A pointer to a <code>void const*</code> variable.
@@ -88,12 +111,6 @@ Core_Result Core_String_getBytes(void const** RETURN, Core_String* SELF);
 /// @error #Core_Error_ArgumentInvalid @a RETURN is a null pointer.
 /// @method{Core_String}
 Core_Result Core_String_getNumberOfBytes(Core_Size* RETURN, Core_String* SELF);
-
-/// @brief Get if the string contains an UTF-8 symbol.
-/// @param symbol The UTF-8 symbol.
-/// @return @a true if the string contains the symbol. @a false if the string does not contain the symbol or an error occurred.
-/// @method{Core_String}
-Core_Boolean dx_string_contains_symbol(Core_String const* SELF, uint32_t symbol);
 
 /// @brief Get if this string contains a symbol.
 /// @param codePoint The code point.

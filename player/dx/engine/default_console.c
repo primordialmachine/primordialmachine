@@ -55,7 +55,7 @@ static Core_Result on_layout(dx_default_console* SELF, Core_Real32 console_x, Co
 
 static Core_Result on_execute_prompt(dx_default_console* SELF) {
   Core_String* string = NULL;
-  if (dx_string_buffer_to_string(&string, SELF->prompt)) {
+  if (dx_string_buffer_get_string(&string, SELF->prompt)) {
     return Core_Failure;
   }
   dx_application_presenter* application_presenter = NULL;
@@ -351,7 +351,7 @@ static Core_Result render(dx_default_console* SELF, Core_Real32 delta_seconds, C
           return Core_Failure;
         }
         Core_String* string = NULL;
-        if (dx_string_buffer_to_string(&string, string_buffer)) {
+        if (dx_string_buffer_get_string(&string, string_buffer)) {
           CORE_UNREFERENCE(string_buffer);
           string_buffer = NULL;
           return Core_Failure;

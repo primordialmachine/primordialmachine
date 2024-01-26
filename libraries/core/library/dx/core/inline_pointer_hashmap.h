@@ -7,7 +7,7 @@
 #define DX_CORE_INLINE_POINTER_HASHMAP_H_INCLUDED
 
 #include "dx/core/core.h"
-typedef struct Core_InlinePointerArray Core_InlinePointerArray;
+typedef struct Core_InlineArrayListP Core_InlineArrayListP;
 
 typedef void* Core_InlinePointerHashmap_Key;
 typedef void* Core_InlinePointerHashmap_Value;
@@ -240,7 +240,7 @@ Core_Result Core_InlinePointerHashmapIterator_remove(Core_InlinePointerHashmapIt
 /// @method-call
 /// @error #Core_Error_ArgumentInvalid @a SELF is a null pointer.
 /// @error #Core_Error_ArgumentInvalid @a TARGET is a null pointer.
-Core_Result Core_InlinePointerHashmap_getKeys(Core_InlinePointerHashmap* SELF, Core_InlinePointerArray* target);
+Core_Result Core_InlinePointerHashmap_getKeys(Core_InlinePointerHashmap* SELF, Core_InlineArrayListP* target);
 
 /// @ingroup Core_Aggregates
 /// @brief Append the values of this pointer hashmap to the specified pointer array.
@@ -249,7 +249,7 @@ Core_Result Core_InlinePointerHashmap_getKeys(Core_InlinePointerHashmap* SELF, C
 /// @method-call
 /// @error #Core_Error_ArgumentInvalid @a SELF is a null pointer.
 /// @error #Core_Error_ArgumentInvalid @a TARGET is a null pointer.
-Core_Result Core_InlinePointerHashmap_getValues(Core_InlinePointerHashmap* SELF, Core_InlinePointerArray* target);
+Core_Result Core_InlinePointerHashmap_getValues(Core_InlinePointerHashmap* SELF, Core_InlineArrayListP* target);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 

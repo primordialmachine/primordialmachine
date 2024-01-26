@@ -20,7 +20,7 @@ static inline dx_adl_resolve* DX_ADL_RESOLVE(void* p) {
 struct dx_adl_resolve {
   Core_Object _parent;
   dx_adl_context* context;
-  Core_InlinePointerArray queue;
+  Core_InlineArrayListP queue;
 };
 
 struct dx_adl_resolve_Dispatch {

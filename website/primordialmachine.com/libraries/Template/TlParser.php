@@ -15,6 +15,10 @@ class TlParser {
     $this->tokens = null;
   }
   
+  function error($input, $message) {
+    throw new Exception($input . ': ' . $message);
+  }
+  
   private function IS(TlTokenType $tokenType) {
     return $tokenType == $this->tokens[$this->i]->getTokenType();
   }
@@ -27,7 +31,7 @@ class TlParser {
       $argumentAst->append($stringAst);
       return $argumentAst;
     } else {
-      throw new Exception("expected <code.argument>");
+      $this->error($this->scanner->getInputName(), "expected <code.argument>");
     }
   }
   
@@ -54,7 +58,7 @@ class TlParser {
       $this->i++;
     }
     if (!$this->IS(TlTokenType::CodeRightParenthesis)) {
-      throw new Exception("unclosed <code.argumentList>");
+      $this->error($this->scanner->getInputName(), "unclosed <code.argumentList>");
     }
     $this->i++;
     return $argumentListAst;
@@ -63,12 +67,12 @@ class TlParser {
   // code.expression := code.name code.argumentList
   private function code_onExpression() {
     if (!$this->IS(TlTokenType::CodeName)) {
-      throw new Exception("expected <name>");
+      $this->error($this->scanner->getInputName(), "expected <name>");
     }
     $nameAst = new TlAst(TlAstType::CodeName, $this->tokens[$this->i]->getTokenText());
     $this->i++;
     if (!$this->IS(TlTokenType::CodeLeftParenthesis)) {
-      throw new Exception("expected <left parenthesis>");
+      $this->error($this->scanner->getInputName(), "expected <left parenthesis>");
     }
     $this->i++;
     $argumentListAst = $this->code_onArgumentList();
@@ -85,7 +89,11 @@ class TlParser {
       $expressionAst = $this->code_onExpression();
     }
     if (!$this->IS(TlTokenType::ClosingCodeBlockDelimiter)) {
-      throw new Exception("expected " . TlTokenType::ClosingCodeBlockDelimiter->toString() . ", received " . $this->tokens[$this->i]->getTokenType()->toString());
+      throw new Exception($this->scanner->getInputName()
+                          . "expected "
+                          . TlTokenType::ClosingCodeBlockDelimiter->toString()
+                          . ", received "
+                          - $this->tokens[$this->i]->getTokenType()->toString());
     }
     $this->i++;
     if (!$expressionAst) {
@@ -101,7 +109,7 @@ class TlParser {
       $expressionAst = $this->code_onExpression();
     }
     if ($this->i == $this->n || $this->tokens[$this->i]->getTokenType() != TlTokenType::ClosingCodeExpressionDelimiter) {
-      throw new Exception("expected " . TlTokenType::ClosingCodeExpressionDelimiter->toString() . ", received " . $this->tokens[$this->i]->getTokenType()->toString());
+      throw new Exception($this->scanner->getInputName() . ": expected " . TlTokenType::ClosingCodeExpressionDelimiter->toString() . ", received " . $this->tokens[$this->i]->getTokenType()->toString());
     }
     $this->i++;
     if (!$expressionAst) {

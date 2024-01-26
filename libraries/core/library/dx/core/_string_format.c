@@ -278,12 +278,12 @@ static int parse(format_spec_t* format_spec, char const** start, char const* end
 
 #undef IS
 
-Core_Result dx__format_v(Core_InlineArrayN8* buffer, char const* start, char const* end, va_list arguments) {
+Core_Result dx__format_v(Core_InlineArrayListN8* buffer, char const* start, char const* end, va_list arguments) {
   char const* current = start;
   while (current != end) {
     if (*current == '$') {
       // We encountered a format symbol. Store all the bytes up to and excluding the format symbol in the buffer.
-      if (Core_InlineArrayN8_append(buffer, start, current - start)) {
+      if (Core_InlineArrayListN8_appendMany(buffer, start, current - start)) {
         return Core_Failure;
       }
       format_spec_t format_spec;
@@ -299,7 +299,7 @@ Core_Result dx__format_v(Core_InlineArrayN8* buffer, char const* start, char con
           Core_setError(Core_Error_ArgumentInvalid);
           return Core_Failure;
         }
-        if (Core_InlineArrayN8_append(buffer, argument->bytes, argument->number_of_bytes)) {
+        if (Core_InlineArrayListN8_appendMany(buffer, argument->bytes, argument->number_of_bytes)) {
           return Core_Failure;
         }
       } break;
@@ -311,7 +311,7 @@ Core_Result dx__format_v(Core_InlineArrayN8* buffer, char const* start, char con
           Core_setError(Core_Error_ArgumentInvalid);
           return Core_Failure;
         }
-        if (Core_InlineArrayN8_append(buffer, temporary, strlen(temporary))) {
+        if (Core_InlineArrayListN8_appendMany(buffer, temporary, strlen(temporary))) {
           return Core_Failure;
         }
       } break;
@@ -323,7 +323,7 @@ Core_Result dx__format_v(Core_InlineArrayN8* buffer, char const* start, char con
           Core_setError(Core_Error_ArgumentInvalid);
           return Core_Failure;
         }
-        if (Core_InlineArrayN8_append(buffer, temporary, strlen(temporary))) {
+        if (Core_InlineArrayListN8_appendMany(buffer, temporary, strlen(temporary))) {
           return Core_Failure;
         }
       } break;
@@ -335,7 +335,7 @@ Core_Result dx__format_v(Core_InlineArrayN8* buffer, char const* start, char con
           Core_setError(Core_Error_ConversionFailed);
           return Core_Failure;
         }
-        if (Core_InlineArrayN8_append(buffer, temporary, strlen(temporary))) {
+        if (Core_InlineArrayListN8_appendMany(buffer, temporary, strlen(temporary))) {
           return Core_Failure;
         }
       } break;
@@ -347,7 +347,7 @@ Core_Result dx__format_v(Core_InlineArrayN8* buffer, char const* start, char con
           Core_setError(Core_Error_ArgumentInvalid);
           return Core_Failure;
         }
-        if (Core_InlineArrayN8_append(buffer, temporary, strlen(temporary))) {
+        if (Core_InlineArrayListN8_appendMany(buffer, temporary, strlen(temporary))) {
           return Core_Failure;
         }
       } break;
@@ -359,7 +359,7 @@ Core_Result dx__format_v(Core_InlineArrayN8* buffer, char const* start, char con
           Core_setError(Core_Error_ArgumentInvalid);
           return Core_Failure;
         }
-        if (Core_InlineArrayN8_append(buffer, temporary, strlen(temporary))) {
+        if (Core_InlineArrayListN8_appendMany(buffer, temporary, strlen(temporary))) {
           return Core_Failure;
         }
       } break;
@@ -371,7 +371,7 @@ Core_Result dx__format_v(Core_InlineArrayN8* buffer, char const* start, char con
           Core_setError(Core_Error_ArgumentInvalid);
           return Core_Failure;
         }
-        if (Core_InlineArrayN8_append(buffer, temporary, strlen(temporary))) {
+        if (Core_InlineArrayListN8_appendMany(buffer, temporary, strlen(temporary))) {
           return Core_Failure;
         }
       } break;
@@ -383,7 +383,7 @@ Core_Result dx__format_v(Core_InlineArrayN8* buffer, char const* start, char con
           Core_setError(Core_Error_ArgumentInvalid);
           return Core_Failure;
         }
-        if (Core_InlineArrayN8_append(buffer, temporary, strlen(temporary))) {
+        if (Core_InlineArrayListN8_appendMany(buffer, temporary, strlen(temporary))) {
           return Core_Failure;
         }
       } break;
@@ -395,7 +395,7 @@ Core_Result dx__format_v(Core_InlineArrayN8* buffer, char const* start, char con
           Core_setError(Core_Error_ArgumentInvalid);
           return Core_Failure;
         }
-        if (Core_InlineArrayN8_append(buffer, temporary, strlen(temporary))) {
+        if (Core_InlineArrayListN8_appendMany(buffer, temporary, strlen(temporary))) {
           return Core_Failure;
         }
       } break;
@@ -407,7 +407,7 @@ Core_Result dx__format_v(Core_InlineArrayN8* buffer, char const* start, char con
           Core_setError(Core_Error_ArgumentInvalid);
           return Core_Failure;
         }
-        if (Core_InlineArrayN8_append(buffer, temporary, strlen(temporary))) {
+        if (Core_InlineArrayListN8_appendMany(buffer, temporary, strlen(temporary))) {
           return Core_Failure;
         }
       } break;
@@ -419,13 +419,13 @@ Core_Result dx__format_v(Core_InlineArrayN8* buffer, char const* start, char con
           Core_setError(Core_Error_ArgumentInvalid);
           return Core_Failure;
         }
-        if (Core_InlineArrayN8_append(buffer, temporary, strlen(temporary))) {
+        if (Core_InlineArrayListN8_appendMany(buffer, temporary, strlen(temporary))) {
           return Core_Failure;
         }
       } break;
       case PRINT_DOLLAR: {
         static char const bytes[] = "$";
-        if (Core_InlineArrayN8_append(buffer, bytes, sizeof(bytes) - 1)) {
+        if (Core_InlineArrayListN8_appendMany(buffer, bytes, sizeof(bytes) - 1)) {
           return Core_Failure;
         }
       } break;
@@ -441,7 +441,7 @@ Core_Result dx__format_v(Core_InlineArrayN8* buffer, char const* start, char con
     }
   }
   if (start != current) {
-    if (Core_InlineArrayN8_append(buffer, start, current - start)) {
+    if (Core_InlineArrayListN8_appendMany(buffer, start, current - start)) {
       return Core_Failure;
     }
   }

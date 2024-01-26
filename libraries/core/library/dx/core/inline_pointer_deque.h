@@ -58,7 +58,7 @@ void dx_inline_pointer_deque_uninitialize(dx_inline_pointer_deque* SELF);
 /// @error #Core_Error_AllocationFailed an allocation failed
 /// @success The capacity increased by at least the specified amount.
 /// @method{dx_inline_pointer_deque}
-Core_Result dx_inline_pointer_deque_increase_capacity(dx_inline_pointer_deque* SELF, Core_Size required_additional_capacity);
+Core_Result dx_inline_pointer_deque_increaseCapacity(dx_inline_pointer_deque* SELF, Core_Size required_additional_capacity);
 
 /// @brief Ensure the free capacity is greater than or equal to a specified value.
 /// @param required_free_capacity The required free capacity.
@@ -66,28 +66,28 @@ Core_Result dx_inline_pointer_deque_increase_capacity(dx_inline_pointer_deque* S
 /// @error #Core_Error_AllocationFailed an allocation failed
 /// @success The free capacity is greater than or equal to the specified required free capacity.
 /// @method{dx_inline_pointer_deque}
-Core_Result dx_inline_pointer_deque_ensure_free_capacity(dx_inline_pointer_deque* SELF, Core_Size required_free_capacity);
+Core_Result dx_inline_pointer_deque_ensureFreeCapacity(dx_inline_pointer_deque* SELF, Core_Size required_free_capacity);
 
 /// @brief Get the size, in elements.
 /// @param RETURN A pointer to a <code>Core_Size</code> variable.
 /// @success <code>*RETURN</code> was assigned the size.
 /// @error #Core_Error_ArgumentInvalid @a RETURN is a null pointer
 /// @method{dx_inline_pointer_deque}
-Core_Result dx_inline_pointer_deque_get_size(Core_Size* RETURN, dx_inline_pointer_deque const* SELF);
+Core_Result dx_inline_pointer_deque_getSize(Core_Size* RETURN, dx_inline_pointer_deque const* SELF);
 
 /// @brief Get the capacity, in elements.
 /// @param RETURN A pointer to a <code>Core_Size</code> variable.
 /// @success <code>*RETURN</code> was assigned the capacity.
 /// @error #Core_Error_ArgumentInvalid @a RETURN is a null pointer
 /// @method{dx_inline_pointer_deque}
-Core_Result dx_inline_pointer_deque_get_capacity(Core_Size* RETURN, dx_inline_pointer_deque const* SELF);
+Core_Result dx_inline_pointer_deque_getCapacity(Core_Size* RETURN, dx_inline_pointer_deque const* SELF);
 
 /// @brief Get the free capacity, in elements.
 /// @param RETURN A pointer to a <code>Core_Size</code> variable.
 /// @success <code>*RETURN</code> was assigned the free capacity.
 /// @error #Core_Error_ArgumentInvalid @a RETURN is a null pointer
 /// @method{dx_inline_pointer_deque}
-Core_Result dx_inline_pointer_deque_get_free_capacity(Core_Size* RETURN, dx_inline_pointer_deque const* SELF);
+Core_Result dx_inline_pointer_deque_getFreeCapacity(Core_Size* RETURN, dx_inline_pointer_deque const* SELF);
 
 /// @brief Remove all elements.
 /// @param SELF A pointer to this dx_inline_pointer_deque object.

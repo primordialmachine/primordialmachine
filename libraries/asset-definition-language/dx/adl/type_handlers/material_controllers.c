@@ -99,36 +99,36 @@ static void on_received_key_removed(void** p) {
 }
 
 static Core_Result _check_keys(dx_adl_type_handlers_material_controllers* SELF, dx_ddl_node* node) {
-  DX_INLINE_POINTER_ARRAY_CONFIGURATION configuration = {
-    .added_callback = &on_received_key_added,
-    .removed_callback = &on_received_key_removed,
+  Core_InlineArrayListP_Configuration configuration = {
+    .addedCallback = &on_received_key_added,
+    .removedCallback = &on_received_key_removed,
   };
-  Core_InlinePointerArray received_keys;
-  if (Core_InlinePointerArray_initialize(&received_keys, 0, &configuration)) {
+  Core_InlineArrayListP received_keys;
+  if (Core_InlineArrayListP_initialize(&received_keys, 0, &configuration)) {
     return Core_Failure;
   }
   if (Core_InlinePointerHashmap_getKeys(&node->map, &received_keys)) {
-    Core_InlinePointerArray_uninitialize(&received_keys);
+    Core_InlineArrayListP_uninitialize(&received_keys);
     return Core_Failure;
   }
   Core_Size number_of_received_keys = 0;
-  if (Core_InlinePointerArray_getSize(&number_of_received_keys, &received_keys)) {
-    Core_InlinePointerArray_uninitialize(&received_keys);
+  if (Core_InlineArrayListP_getSize(&number_of_received_keys, &received_keys)) {
+    Core_InlineArrayListP_uninitialize(&received_keys);
     return Core_Failure;
   }
   for (Core_Size i = 0, n = number_of_received_keys; i < n; ++i) {
     Core_String* received_key = NULL;
-    if (Core_InlinePointerArray_get_at(&received_key, &received_keys, i)) {
-      Core_InlinePointerArray_uninitialize(&received_keys);
+    if (Core_InlineArrayListP_get(&received_key, &received_keys, i)) {
+      Core_InlineArrayListP_uninitialize(&received_keys);
       return Core_Failure;
     }
     Core_String* expected_key = NULL;
     if (Core_InlinePointerHashmap_get(&expected_key, &SELF->expected_keys, received_key)) {
-      Core_InlinePointerArray_uninitialize(&received_keys);
+      Core_InlineArrayListP_uninitialize(&received_keys);
       return Core_Failure;
     }
   }
-  Core_InlinePointerArray_uninitialize(&received_keys);
+  Core_InlineArrayListP_uninitialize(&received_keys);
   return Core_Success;
 }
 

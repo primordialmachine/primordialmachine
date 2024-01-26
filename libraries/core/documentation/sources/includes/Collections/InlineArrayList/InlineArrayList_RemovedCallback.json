@@ -1,0 +1,23 @@
+{
+  "type" : "typedef",
+  "last-update" : "2024-01-28",
+  "indices" : "core",
+  "name" : "Core_InlineArrayList_RemovedCallback",
+  "id" : "core-inlinearraylist-removedcallback",
+  "signature" : "typedef void (Core_InlineArrayList&lt;Suffix&gt;_RemovedCallback)(Core_InlineArrayList&lt;Suffix&gt;_Element* element);",
+  "signatureRemarks": [
+    "<p>where <code>&lt;Suffix&gt;</code> and <code>&lt;Type&gt;</code> can assume the values of</p>",
+    "<table style='width: initial !important'>",
+    "<tr><td><code>&lt;Suffix&gt;</code></td> <td><code>&lt;Type&gt;  </code></td></tr>",
+    "<tr><td><code>N8            </code></td> <td><code>Core_Natural8 </code></td></tr>",
+    "</table>"
+  ],
+  "parameters" : [
+    {
+      "name" : "element",
+      "type" : "@{code('Core_InlineArrayList&lt;Suffix&gt;_Element*')}",
+      "description" : "A pointer to a @{code('Core_InlineArrayList&lt;Suffix&gt;_Element')} value that was removed."
+    }
+  ],
+  "description" : "Callback invoked when an object was removed from a @{code('Core_InlineArrayList&lt;Suffix&gt;')} object."
+}

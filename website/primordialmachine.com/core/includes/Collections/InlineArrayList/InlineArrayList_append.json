@@ -1,0 +1,42 @@
+{
+  "type" : "function",
+  "last-update" : "2024-01-28",
+  "indices" : "core",
+  "name" : "Core_InlineArrayList_append",
+  "id" : "core-inlinearraylist-append",
+  "signature" : "Core_Result Core_InlineArrayList&lt;Suffix&gt;_append(Core_InlineArrayList&lt;Suffix&gt;* SELF, &lt;Type&gt; element);",
+  "signatureRemarks": [
+    "<p>where <code>&lt;Suffix&gt;</code> and <code>&lt;Type&gt;</code> can assume the values of</p>",
+    "<table style='width: initial !important'>",
+    "<tr><td><code>&lt;Suffix&gt;</code></td> <td><code>&lt;Type&gt;  </code></td></tr>",
+    "<tr><td><code>N8            </code></td> <td><code>Core_Natural8 </code></td></tr>",
+    "<tr><td><code>P             </code></td> <td><code>void*         </code></td></tr>",
+    "</table>"
+  ],
+  "parameters" : [
+    {
+      "name" : "SELF",
+      "type" : "@{code('Core_InlineArrayList&lt;Suffix&gt;*')}",
+      "description" : "A pointer to a @{code('Core_InlineArrayList&lt;Suffix&gt;')} object."
+    },
+    {
+      "name" : "element",
+      "type" : "@{code('&lt;Type&gt;')}",
+      "description" : "The element to append."
+    }
+  ],
+  "success": "The element was appended to this this @{code('Core_InlineArrayList&lt;Suffix&gt;')} object.",
+  "errors" : [
+    {
+      "errorCode" : "Core_Error_ArgumentInvalid",
+      "errorCondition" : "@{code('SELF')} is a null pointer."
+    },
+    {
+      "errorCode" : "Core_Error_AllocationFailed",
+      "errorCondition" : "An allocation failed."
+    }
+  ],
+  "description" : "Append an element.",
+  "return" : "@{code('Core_Success')} on success. @{code('Core_Failure')} on failure.",
+  "remarks" : "This function sets the by-thread error variable on failure."
+}

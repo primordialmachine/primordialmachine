@@ -11,8 +11,8 @@
 
   /* 100vw minus the widths of the left and right columns. Factor in a margin of 2vw. */
   --center-column-width: calc(100vw - var(--right-column-width) - var(--left-column-width) - 2vw);
-  /* Assume at most 17 characters. Factor in a padding of 2vw. */
-  --right-column-width: calc(var(--small-font-size) * 17 + 2vw);
+  /* The longest known entry is currently 45 characters. It seems to suffice to multiply the font size by 26. Furthermore, add in a padding of 2vw. */
+  --right-column-width: calc(var(--small-font-size) * 26 + 2vw);
   
   --column-margin-top: 2vw;
   --nav-menu-level-1-padding: 0.5vw;

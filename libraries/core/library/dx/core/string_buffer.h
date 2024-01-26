@@ -1,7 +1,7 @@
 #if !defined (DX_STRING_BUFFER_H_INCLUDED)
 #define DX_STRING_BUFFER_H_INCLUDED
 
-#include "dx/core/inline_byte_array.h"
+#include "Core/Collections/InlineArrayListN8.h"
 #include "dx/core/object.h"
 #include "dx/core/string_iterator.h"
 typedef struct Core_String Core_String;
@@ -18,7 +18,7 @@ static inline dx_string_buffer* DX_STRING_BUFFER(void* p) {
 
 struct dx_string_buffer {
   Core_Object _parent;
-  Core_InlineArrayN8 backend;
+  Core_InlineArrayListN8 backend;
 };
 
 static inline dx_string_buffer_Dispatch* DX_STRING_BUFFER_DISPATCH(void* p) {
@@ -35,11 +35,16 @@ Core_Result dx_string_buffer_create(dx_string_buffer** RETURN);
 
 Core_Result dx_string_buffer_clone(dx_string_buffer** RETURN, dx_string_buffer const* SELF);
 
-Core_Result dx_string_buffer_get_bytes(void** RETURN, dx_string_buffer* SELF);
+Core_Result dx_string_buffer_get_byte(Core_Natural8* RETURN, dx_string_buffer* SELF, Core_Size index);
 
 Core_Result dx_string_buffer_get_number_of_bytes(Core_Size* RETURN, dx_string_buffer* SELF);
 
-Core_Result dx_string_buffer_to_string(Core_String** RETURN, dx_string_buffer* SELF);
+/** @obsolete */
+Core_Result dx_string_buffer_get_bytes(void** RETURN, dx_string_buffer* SELF);
+
+Core_Result dx_string_buffer_get_string(Core_String** RETURN, dx_string_buffer* SELF);
+
+Core_Result dx_string_buffer_get_substring(Core_String** RETURN, dx_string_buffer* SELF, Core_Size start, Core_Size length);
 
 /// @brief Create an iterator for this string buffer.
 /// @param RETURN A pointer to a <code>dx_string_iterator*</code> variable.
@@ -53,7 +58,7 @@ Core_Result dx_string_buffer_create_iterator(dx_string_iterator** RETURN, dx_str
 /// @remark The function checks if the specified sequence of Bytes is a UTF-8 sequence.
 /// @method{dx_string_buffer}
 /// @error #Core_Error_ArgumentInvalid The sequence of Bytes is not a valid UTF-8 sequence.
-Core_Result dx_string_buffer_set_bytes(dx_string_buffer* SELF, char const* p, Core_Size n);
+Core_Result dx_string_buffer_set_bytes(dx_string_buffer* SELF, Core_Natural8 const* p, Core_Size n);
 
 /// @brief Set the contents of this string buffer to the specified string.
 /// @param string A pointer to the string.
@@ -66,7 +71,7 @@ Core_Result dx_string_buffer_set_string(dx_string_buffer* SELF, Core_String* str
 /// @remark The function checks if the specified sequence of Bytes is a UTF-8 sequence.
 /// @method{dx_string_buffer}
 /// @error #Core_Error_ArgumentInvalid The sequence of Bytes is not a valid UTF-8 sequence.
-Core_Result dx_string_buffer_prepend_bytes(dx_string_buffer* SELF, char const* p, Core_Size n);
+Core_Result dx_string_buffer_prepend_bytes(dx_string_buffer* SELF, Core_Natural8 const* p, Core_Size n);
 
 /// @brief Prepend a string to the contents of this string buffer.
 /// @param string A pointer to the string.

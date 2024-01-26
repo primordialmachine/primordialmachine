@@ -1,0 +1,17 @@
+{
+  "type" : "structure",
+  "last-update" : "2024-01-28",
+  "indices" : "core",
+  "name" : "Core_InlineArrayList",
+  "id" : "core-inlinearraylist",
+  "signature" : "typedef struct Core_InlineArrayList&lt;Suffix&gt; Core_InlineArrayList&lt;Suffix&gt;;",
+  "signatureRemarks": [
+    "<p>where <code>&lt;Suffix&gt;</code> and <code>&lt;Suffix&gt;</code> can assume the values of</p>",
+    "<table style='width: initial !important'>",
+    "<tr><td><code>&lt;Suffix&gt;</code></td> <td><code>&lt;Type&gt;  </code></td></tr>",
+    "<tr><td><code>N8            </code></td> <td><code>Core_Natural8 </code></td></tr>",
+    "</table>"
+  ],
+  "extends" : null,
+  "description": "A dynamic array with elements of type @{code('&lt;Type&gt;')}."
+}

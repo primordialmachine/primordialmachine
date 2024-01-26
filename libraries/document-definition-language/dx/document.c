@@ -295,7 +295,7 @@ Core_Result dx_text_document_set_text(dx_text_document* SELF, Core_String* text)
 }
 
 Core_Result dx_text_document_get_text(Core_String** RETURN, dx_text_document* SELF) {
-  return dx_string_buffer_to_string(RETURN, SELF->text);
+  return dx_string_buffer_get_string(RETURN, SELF->text);
 }
 
 Core_Result dx_text_document_append_text(dx_text_document* SELF, Core_String* text) {

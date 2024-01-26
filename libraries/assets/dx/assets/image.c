@@ -508,7 +508,9 @@ Core_Result dx_assets_image_construct_path(dx_assets_image* SELF, Core_String* n
   DX_CONSTRUCT_PREFIX(dx_assets_image);
   //
   Core_Boolean containsSymbol = Core_False;
-  containsSymbol = dx_string_contains_symbol(path, '\0');
+  if (Core_String_containsSymbol(&containsSymbol, path, '\0')) {
+    return Core_Failure;
+  }
   if (containsSymbol) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;

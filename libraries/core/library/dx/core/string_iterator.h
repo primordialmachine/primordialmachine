@@ -27,6 +27,7 @@ struct dx_string_iterator_Dispatch {
   Core_Result (*has_value)(Core_Boolean *RETURN, dx_string_iterator* SELF);
   Core_Result (*get_value)(uint32_t* RETURN, dx_string_iterator* SELF);
   Core_Result (*next)(dx_string_iterator* SELF);
+  Core_Result (*next_n)(dx_string_iterator* SELF, Core_Size n);
 
 };
 
@@ -42,6 +43,10 @@ static inline Core_Result dx_string_iterator_get_value(uint32_t* RETURN, dx_stri
 
 static inline Core_Result dx_string_iterator_next(dx_string_iterator* SELF) {
   DX_OBJECT_VIRTUALCALL(dx_string_iterator, next, SELF);
+}
+
+static inline Core_Result dx_string_iterator_next_many(dx_string_iterator* SELF, Core_Size n) {
+  DX_OBJECT_VIRTUALCALL(dx_string_iterator, next_n, SELF, n);
 }
 
 #endif // DX_CORE_STRING_ITERATOR_H_INCLUDED

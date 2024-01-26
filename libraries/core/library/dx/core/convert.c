@@ -8,24 +8,24 @@
 /// @brief Get if the current symbol is a digit.
 /// @param current, end The parser.
 /// @return @a true if the current symbol is a digit. @a false otherwise. 
-static inline bool is_digit(char const* current, char const* end);
+static inline bool is_digit(Core_Natural8 const* current, Core_Natural8 const* end);
 
 /// @brief Parse a floating point literal.
 /// @param p A pointer to the bytes. 
 /// @param n The number of Bytes.
-/// @return The zero value on success. A non-zero value on failure.
+/// @return #Core_Success on success. #Core_Failure on failure.
 /// @default-failure
-static int dx_parse_flit(char const* p, Core_Size n);
+static Core_Result parse_flit(Core_Natural8 const* p, Core_Size n);
 
-static inline bool is_digit(char const* current, char const* end) {
+static inline bool is_digit(Core_Natural8 const* current, Core_Natural8 const* end) {
   return (current != end)
       && ('0' <= *current && *current <= '9');
 }
 
-static int dx_parse_flit(char const* p, Core_Size n) {
-  char const* start = p;
-  char const* end = p + n;
-  char const* current = p;
+static Core_Result parse_flit(Core_Natural8 const* p, Core_Size n) {
+  Core_Natural8 const* start = p;
+  Core_Natural8 const* end = p + n;
+  Core_Natural8 const* current = p;
 
   if (current != end) {
     if (*current == '-') {
@@ -81,14 +81,14 @@ static int dx_parse_flit(char const* p, Core_Size n) {
   return Core_Success;
 }
 
-Core_Result dx_convert_utf8bytes_to_i8(char const* p, Core_Size n, Core_Integer8* target) {
-  if (!p || !target) {
+Core_Result Core_convertStringToI8(Core_Integer8* RETURN, Core_Natural8 const* p, Core_Size n) {
+  if (!RETURN || !p) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
   }
-  char const* start = p;
-  char const* end = p + n;
-  char const* current = start;
+  Core_Natural8 const* start = p;
+  Core_Natural8 const* end = p + n;
+  Core_Natural8 const* current = start;
   bool negative = false;
   if (current != end) {
     if (*current == '-') {
@@ -157,18 +157,18 @@ Core_Result dx_convert_utf8bytes_to_i8(char const* p, Core_Size n, Core_Integer8
       current++;
     } while (is_digit(current, end));
   }
-  *target = value;
+  *RETURN = value;
   return Core_Success;
 }
 
-Core_Result dx_convert_utf8bytes_to_n8(char const* p, Core_Size n, Core_Natural8* target) {
-  if (!p || !target) {
+Core_Result Core_convertStringToN8(Core_Natural8* RETURN, Core_Natural8 const* p, Core_Size n) {
+  if (!RETURN || !p) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
   }
-  char const* start = p;
-  char const* end = p + n;
-  char const* current = start;
+  Core_Natural8 const* start = p;
+  Core_Natural8 const* end = p + n;
+  Core_Natural8 const* current = start;
   if (current != end) {
     if (*current == '-') {
       Core_setError(Core_Error_ConversionFailed);
@@ -210,18 +210,18 @@ Core_Result dx_convert_utf8bytes_to_n8(char const* p, Core_Size n, Core_Natural8
     //
     current++;
   } while (is_digit(current, end));
-  *target = value;
+  *RETURN = value;
   return Core_Success;
 }
 
-Core_Result dx_convert_utf8bytes_to_i16(char const* p, Core_Size n, Core_Integer16* target) {
-  if (!p || !target) {
+Core_Result Core_convertStringToI16(Core_Integer16* RETURN, Core_Natural8 const* p, Core_Size n) {
+  if (!RETURN || !p) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
   }
-  char const* start = p;
-  char const* end = p + n;
-  char const* current = start;
+  Core_Natural8 const* start = p;
+  Core_Natural8 const* end = p + n;
+  Core_Natural8 const* current = start;
   bool negative = false;
   if (current != end) {
     if (*current == '-') {
@@ -290,18 +290,18 @@ Core_Result dx_convert_utf8bytes_to_i16(char const* p, Core_Size n, Core_Integer
       current++;
     } while (is_digit(current, end));
   }
-  *target = value;
+  *RETURN = value;
   return Core_Success;
 }
 
-Core_Result dx_convert_utf8bytes_to_n16(char const* p, Core_Size n, Core_Natural16* target) {
-  if (!p || !target) {
+Core_Result Core_convertStringToN16(Core_Natural16* RETURN, Core_Natural8 const* p, Core_Size n) {
+  if (!RETURN || !p) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
   }
-  char const* start = p;
-  char const* end = p + n;
-  char const* current = start;
+  Core_Natural8 const* start = p;
+  Core_Natural8 const* end = p + n;
+  Core_Natural8 const* current = start;
   if (current != end) {
     if (*current == '-') {
       Core_setError(Core_Error_ConversionFailed);
@@ -343,12 +343,12 @@ Core_Result dx_convert_utf8bytes_to_n16(char const* p, Core_Size n, Core_Natural
     //
     current++;
   } while (is_digit(current, end));
-  *target = value;
+  *RETURN = value;
   return Core_Success;
 }
 
-Core_Result dx_convert_utf8bytes_to_i32(char const* p, Core_Size n, Core_Integer32* target) {
-  if (!p || !target) {
+Core_Result Core_convertStringToI32(Core_Integer32* RETURN, Core_Natural8 const* p, Core_Size n) {
+  if (!RETURN || !p) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
   }
@@ -421,18 +421,18 @@ Core_Result dx_convert_utf8bytes_to_i32(char const* p, Core_Size n, Core_Integer
       current++;
     } while (is_digit(current, end));
   }
-  *target = value;
+  *RETURN = value;
   return Core_Success;
 }
 
-Core_Result dx_convert_utf8bytes_to_n32(char const* p, Core_Size n, Core_Natural32* target) {
-  if (!p || !target) {
+Core_Result Core_convertStringToN32(Core_Natural32* RETURN, Core_Natural8 const* p, Core_Size n) {
+  if (!RETURN || !p) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
   }
-  char const* start = p;
-  char const* end = p + n;
-  char const* current = start;
+  Core_Natural8 const* start = p;
+  Core_Natural8 const* end = p + n;
+  Core_Natural8 const* current = start;
   if (current != end) {
     if (*current == '-') {
       Core_setError(Core_Error_ConversionFailed);
@@ -462,7 +462,7 @@ Core_Result dx_convert_utf8bytes_to_n32(char const* p, Core_Size n, Core_Natural
     }
     value = value * BASE;
     //
-    static const uint32_t MAX2 = Core_Natural32_Greatest;
+    static const Core_Natural32 MAX2 = Core_Natural32_Greatest;
     Core_Natural32 x = *current - '0';
     if (MAX2 - x < value) {
       Core_setError(Core_Error_ConversionFailed);
@@ -472,18 +472,18 @@ Core_Result dx_convert_utf8bytes_to_n32(char const* p, Core_Size n, Core_Natural
     //
     current++;
   } while (is_digit(current, end));
-  *target = value;
+  *RETURN = value;
   return Core_Success;
 }
 
-Core_Result dx_convert_utf8bytes_to_i64(char const* p, Core_Size n, Core_Integer64* target) {
-  if (!p || !target) {
+Core_Result Core_convertStringToI64(Core_Integer64* RETURN, Core_Natural8 const* p, Core_Size n) {
+  if (!RETURN || !p) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
   }
-  char const* start = p;
-  char const* end = p + n;
-  char const* current = start;
+  Core_Natural8 const* start = p;
+  Core_Natural8 const* end = p + n;
+  Core_Natural8 const* current = start;
   bool negative = false;
   if (current != end) {
     if (*current == '-') {
@@ -550,18 +550,18 @@ Core_Result dx_convert_utf8bytes_to_i64(char const* p, Core_Size n, Core_Integer
       current++;
     } while (is_digit(current, end));
   }
-  *target = value;
+  *RETURN = value;
   return Core_Success;
 }
 
-Core_Result dx_convert_utf8bytes_to_n64(char const* p, Core_Size n, Core_Natural64* target) {
-  if (!p || !target) {
+Core_Result Core_convertStringToN64(Core_Natural64* RETURN, Core_Natural8 const* p, Core_Size n) {
+  if (!RETURN || !p) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
   }
-  char const* start = p;
-  char const* end = p + n;
-  char const* current = start;
+  Core_Natural8 const* start = p;
+  Core_Natural8 const* end = p + n;
+  Core_Natural8 const* current = start;
   if (current != end) {
     if (*current == '-') {
       Core_setError(Core_Error_ConversionFailed);
@@ -601,23 +601,27 @@ Core_Result dx_convert_utf8bytes_to_n64(char const* p, Core_Size n, Core_Natural
     //
     current++;
   } while (is_digit(current, end));
-  *target = value;
+  *RETURN = value;
   return Core_Success;
 }
 
-Core_Result dx_convert_utf8bytes_to_sz(char const* p, Core_Size n, Core_Size* target) {
+Core_Result Core_convertStringToSz(Core_Size* RETURN, Core_Natural8 const* p, Core_Size n) {
 #if defined(_M_X64)
-  return dx_convert_utf8bytes_to_n64(p, n, target);
+  return Core_convertStringToN64(RETURN, p, n);
 #elif defined(_M_IX86)
-  return dx_convert_utf8bytes_to_n32(p, n, target);
+  return Core_convertStringToN32(RETURN, p, n);
 #else
   #error("environment not supported")
 #endif
 }
 
 
-Core_Result dx_convert_utf8bytes_to_f32(char const* p, Core_Size n, Core_Real32* target) {
-  if (dx_parse_flit(p, n)) {
+Core_Result Core_convertStringToR32(Core_Real32* RETURN, Core_Natural8 const* p, Core_Size n) {
+  if (!RETURN) {
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
+  }
+  if (parse_flit(p, n)) {
     return Core_Failure;
   }
 #define N_MAX 200
@@ -640,12 +644,16 @@ Core_Result dx_convert_utf8bytes_to_f32(char const* p, Core_Size n, Core_Real32*
     return Core_Failure;
   }
 #undef N_MAX
-  *target = v;
+  *RETURN = v;
   return Core_Success;
 }
 
-Core_Result dx_convert_utf8bytes_to_f64(char const* p, Core_Size n, Core_Real64* target) {
-  if (dx_parse_flit(p, n)) {
+Core_Result Core_convertStringToR64(Core_Real64* RETURN, Core_Natural8 const* p, Core_Size n) {
+  if (!RETURN) {
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
+  }
+  if (parse_flit(p, n)) {
     return Core_Failure;
   }
 #define N_MAX 200
@@ -668,23 +676,23 @@ Core_Result dx_convert_utf8bytes_to_f64(char const* p, Core_Size n, Core_Real64*
     return Core_Failure;
   }
 #undef N_MAX
-  *target = v;
+  *RETURN = v;
   return Core_Success;
 }
 
-Core_Result dx_convert_utf8bytes_to_bool(char const* p, Core_Size n, Core_Boolean* target) {
-  if (!p || !target) {
+Core_Result Core_convertStringToB(Core_Boolean* RETURN, Core_Natural8 const* p, Core_Size n) {
+  if (!RETURN || !p) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
   }
   static_assert(sizeof("true") != sizeof("false"), "environment not supported");
   switch (n) {
     case sizeof("true") - sizeof(char) : {
-      *target = !memcmp(p, "true", n);
+      *RETURN = !memcmp(p, "true", n);
       return Core_Success;
     } break;
     case sizeof("false") - sizeof(char) : {
-      *target = !memcmp(p, "false", n);
+      *RETURN = !memcmp(p, "false", n);
       return Core_Success;
     } break;
     default: {

@@ -234,7 +234,7 @@ Core_Result dx_adl_semantical_read_n8(Core_Natural8* RETURN, dx_ddl_node* node, 
     child_node = NULL;
     return Core_Failure;
   }
-  if (dx_convert_utf8bytes_to_n8(child_node->number->bytes, child_node->number->number_of_bytes, RETURN)) {
+  if (Core_convertStringToN8(RETURN, child_node->number->bytes, child_node->number->number_of_bytes)) {
     CORE_UNREFERENCE(child_node);
     child_node = NULL;
     return Core_Failure;
@@ -254,7 +254,7 @@ Core_Result dx_adl_semantical_read_sz(Core_Size* RETURN, dx_ddl_node* node, Core
     child_node = NULL;
     return Core_Failure;
   }
-  if (dx_convert_utf8bytes_to_sz(child_node->number->bytes, child_node->number->number_of_bytes, RETURN)) {
+  if (Core_convertStringToSz(RETURN, child_node->number->bytes, child_node->number->number_of_bytes)) {
     CORE_UNREFERENCE(child_node);
     child_node = NULL;
     return Core_Failure;
@@ -274,7 +274,7 @@ Core_Result dx_adl_semantical_read_f32(Core_Real32* RETURN, dx_ddl_node* node, C
     child_node = NULL;
     return Core_Failure;
   }
-  if (dx_convert_utf8bytes_to_f32(child_node->number->bytes, child_node->number->number_of_bytes, RETURN)) {
+  if (Core_convertStringToR32(RETURN, child_node->number->bytes, child_node->number->number_of_bytes)) {
     CORE_UNREFERENCE(child_node);
     child_node = NULL;
     return Core_Failure;
@@ -294,7 +294,7 @@ Core_Result dx_adl_semantical_read_f64(Core_Real64* RETURN, dx_ddl_node* node, C
     child_node = NULL;
     return Core_Failure;
   }
-  if (dx_convert_utf8bytes_to_f64(child_node->number->bytes, child_node->number->number_of_bytes, RETURN)) {
+  if (Core_convertStringToR64(RETURN, child_node->number->bytes, child_node->number->number_of_bytes)) {
     CORE_UNREFERENCE(child_node);
     child_node = NULL;
     return Core_Failure;

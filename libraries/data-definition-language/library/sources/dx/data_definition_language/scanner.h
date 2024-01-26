@@ -42,7 +42,7 @@ struct dx_data_definition_language_scanner {
   } range;
 
   /// @brief The text of the current word.
-  Core_InlineArrayN8 text;
+  Core_InlineArrayListN8 text;
   /// @brief The kind of the current word.
   dx_data_definition_language_word_kind kind;
 };

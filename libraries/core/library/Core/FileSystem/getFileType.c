@@ -41,7 +41,9 @@ static Core_Result _getFileType(Core_FileType* RETURN, char const* path) {
 Core_Result Core_getFileType(Core_FileType* RETURN, Core_String* path) {
   //
   Core_Boolean containsSymbol;
-  containsSymbol = dx_string_contains_symbol(path, '\0');
+  if (Core_String_containsSymbol(&containsSymbol, path, '\0')) {
+    return Core_Failure;
+  }
   if (containsSymbol) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;

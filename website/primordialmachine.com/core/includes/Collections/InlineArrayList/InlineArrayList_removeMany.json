@@ -1,0 +1,55 @@
+{
+  "type" : "function",
+  "last-update" : "2024-01-28",
+  "indices" : "core",
+  "name" : "Core_InlineArrayList_removeMany",
+  "id" : "core-inlinearrayList-removemany",
+  "signature" : "Core_Result Core_InlineArrayList&lt;Suffix&gt;_removeMany(Core_InlineArrayList&lt;Suffix&gt;* SELF, Core_Size start, Core_Size length);",
+  "signatureRemarks": [
+    "<p>where <code>&lt;Suffix&gt;</code> and <code>&lt;Type&gt;</code> can assume the values of</p>",
+    "<table style='width: initial !important'>",
+    "<tr><td><code>&lt;Suffix&gt;</code></td> <td><code>&lt;Type&gt;  </code></td></tr>",
+    "<tr><td><code>N8            </code></td> <td><code>Core_Natural8 </code></td></tr>",
+    "<tr><td><code>P             </code></td> <td><code>void*         </code></td></tr>",
+    "</table>"
+  ],
+  "parameters" : [
+    {
+      "name" : "SELF",
+      "type" : "@{code('Core_InlineArrayList&lt;Suffix&gt;*')}",
+      "description" : "A pointer to a @{code('Core_InlineArrayList&lt;Suffix&gt;')} object."
+    },
+    {
+      "name" : "start",
+      "type" : "@{code('Core_Size')}",
+      "description" : "The starting index of the sequence of elements to remove."
+    },
+    {
+      "name" : "length",
+      "type" : "@{code('Core_Size')}",
+      "description" : "The length of the sequence of elements to remove."
+    }
+  ],
+  "success": [
+    "The sequence of elements @{code('[start, length)')} was from this @{code('Core_InlineArrayList&lt;Suffix&gt;')} object.",
+    "Consequently, the size of the @{code('Core_InlineArrayList&lt;Suffix&gt;')} object is reduced by @{code('length')}.",
+    "If a @{code('Core_InlineArrayList&lt;Suffix&gt;_ElementRemovedCallback')} function is associated with this @{code('Core_InlineArrayList&lt;Suffix&gt;')} object,",
+    "the function was invoked on each removed element exactly once."
+  ],
+  "errors" : [
+    {
+      "errorCode" : "Core_Error_ArgumentInvalid",
+      "errorCondition" : "@{code('SELF')} is a null pointer."
+    },
+    {
+      "errorCode" : "Core_Error_ArgumentInvalid",
+      "errorCondition" : "@{code('index + length')} is greater than the size of this @{code('Core_InlineArrayList&lt;Suffix&gt;')} object."
+    }
+  ],
+  "description" : "Remove a range of elements.",
+  "return" : "@{code('Core_Success')} on success. @{code('Core_Failure')} on failure.",
+  "remarks" : [
+    "This function sets the by-thread error variable on failure.",
+    "This function fails only with the specified errors/error conditions."
+  ]
+}

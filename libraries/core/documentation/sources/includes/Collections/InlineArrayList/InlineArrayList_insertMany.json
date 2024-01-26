@@ -1,0 +1,63 @@
+{
+  "type" : "function",
+  "last-update" : "2024-01-28",
+  "indices" : "core",
+  "name" : "Core_InlineArrayList_insertMany",
+  "id" : "core-inlinearraylist-insertmany",
+  "signature" : "Core_Result Core_InlineArrayList&lt;Suffix&gt;_insertMany(Core_InlineArrayList&lt;Suffix&gt;* SELF, Core_Size index, &lt;Type&gt; const* elements, Core_Size numberOfElements);",
+  "signatureRemarks": [
+    "<p>where <code>&lt;Suffix&gt;</code> and <code>&lt;Type&gt;</code> can assume the values of</p>",
+    "<table style='width: initial !important'>",
+    "<tr><td><code>&lt;Suffix&gt;</code></td> <td><code>&lt;Type&gt;  </code></td></tr>",
+    "<tr><td><code>N8            </code></td> <td><code>Core_Natural8 </code></td></tr>",
+    "<tr><td><code>P             </code></td> <td><code>void*         </code></td></tr>",
+    "</table>"
+  ],
+  "parameters" : [
+    {
+      "name" : "SELF",
+      "type" : "@{code('Core_InlineArrayList&lt;Suffix&gt;*')}",
+      "description" : "A pointer to a @{code('Core_InlineArrayList&lt;Suffix&gt;')} object."
+    },
+    {
+      "name" : "index",
+      "type" : "@{code('Core_Size')}",
+      "description" : "The index at which to insert the element."
+    },
+    {
+      "name" : "elements",
+      "type" : "@{code('&lt;Type&gt; const*')}",
+      "description" : "A pointer to an array of @{code('numberOfElements')} elements."
+    },
+    {
+      "name" : "numberOfElements",
+      "type" : "@{code('Core_InlineArrayList&lt;Suffix&gt;*')}",
+      "description" : "The number of elements to append."
+    }
+  ],
+  "success": [
+    "The @{code('numberOfElements')} elements in the array @{code('elements')} were appended to this @{code('Core_InlineArrayList&lt;Suffix;&gt;')} object.",
+    "The elements were inserted in the order of their appearance in the array @{code('elements')}."
+  ],
+  "errors" : [
+    {
+      "errorCode" : "Core_Error_ArgumentInvalid",
+      "errorCondition" : "@{code('SELF')} is a null pointer."
+    },
+    {
+      "errorCode" : "Core_Error_ArgumentInvalid",
+      "errorCondition" : "@{code('elements')} is a null pointer."
+    },
+    {
+      "errorCode" : "Core_Error_ArgumentInvalid",
+      "errorCondition" : "@{code('index')} is greater than the size of this @{code('Core_InlineArrayList&lt;Suffix&gt;')} object ."
+    },
+    {
+      "errorCode" : "Core_Error_AllocationFailed",
+      "errorCondition" : "An allocation failed."
+    }
+  ],
+  "description" : "Insert elements into this @{code('Core_InlineArrayList&lt;Suffix&gt;')} object.",
+  "return" : "@{code('Core_Success')} on success. @{code('Core_Failure')} on failure.",
+  "remarks" : "This function sets the by-thread error variable on failure."
+}

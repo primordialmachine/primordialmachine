@@ -1,0 +1,36 @@
+{
+  "type" : "function",
+  "last-update" : "2024-01-28",
+  "indices" : "core",
+  "name" : "Core_InlineArrayDeque_uninitialize",
+  "id" : "core-inlinearraydeque-uninitialize",
+  "signature" : "Core_Result Core_InlineArrayDeque&lt;Suffix&gt;_create(Core_InlineArrayDeque&lt;Suffix&gt;* SELF);",
+  "signatureRemarks": [
+    "<p>where <code>&lt;Suffix&gt;</code> and <code>&lt;Type&gt;</code> can assume the values of</p>",
+    "<table style='width: initial !important'>",
+    "<tr><td><code>&lt;Suffix&gt;</code></td> <td><code>&lt;Type&gt;  </code></td></tr>",
+    "<tr><td><code>N8            </code></td> <td><code>Core_Natural8 </code></td></tr>",
+    "</table>"
+  ],
+  "parameters" : [
+    {
+      "name" : "SELF",
+      "type" : "@{code('Core_InlineArrayDeque&lt;Suffix&gt;*')}",
+      "description" : "A pointer to a @{code('Core_InlineArrayDeque&lt;Suffix&gt;')} object."
+    }
+  ],
+  "success": "The @{code('Core_InlineArrayDeque&lt;Suffix&gt;')} object was uninitialized.",
+  "errors" : [
+    {
+      "errorCode" : "Core_Error_ArgumentInvalid",
+      "errorCondition" : "@{code('SELF')} is a null pointer."
+    }
+  ],
+  "description" : "Uninitialize a @{code('Core_InlineArrayDeque&lt;Suffix&gt;')} object.",
+  "return" : "@{code('Core_Success')} on success. @{code('Core_Failure')} on failure.",
+  "remarks" : [
+    "This function sets the by-thread error variable on failure.",
+    "This function fails only if @{code('SELF')} is a null pointer.",
+    "The behavior is undefined if @{code('SELF')} is not a null pointer but does not point to an initialized @{code('Core_InlineArrayDeque&lt;Suffix&gt;')} object."
+  ]
+}

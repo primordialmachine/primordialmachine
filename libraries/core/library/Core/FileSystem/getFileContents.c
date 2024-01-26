@@ -2,7 +2,7 @@
 
 #include "Core/FileSystem/getFileContents.h"
 
-#include "dx/core/inline_byte_array.h"
+#include "Core/Collections/InlineArrayListN8.h"
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
@@ -10,8 +10,12 @@
 static Core_Result _getFileContents(char const* path, char** bytes, Core_Size* numberOfBytes);
 
 static Core_Result _getFileContents(char const* path, char** bytes, Core_Size* numberOfBytes) {
-  Core_InlineArrayN8 byteArray;
-  if (Core_InlineArrayN8_initialize(&byteArray)) {
+  Core_InlineArrayListN8 byteArray;
+  Core_InlineArrayListN8_Configuration configuration = {
+    .addedCallback = NULL,
+    .removedCallback = NULL,
+  };
+  if (Core_InlineArrayListN8_initialize(&byteArray, 0, &configuration)) {
     return Core_Failure;
   }
   HANDLE file = CreateFile(path,
@@ -22,7 +26,7 @@ static Core_Result _getFileContents(char const* path, char** bytes, Core_Size* n
                            FILE_ATTRIBUTE_NORMAL,
                            0);
   if (INVALID_HANDLE_VALUE == file) {
-    Core_InlineArrayN8_uninitialize(&byteArray);
+    Core_InlineArrayListN8_uninitialize(&byteArray);
     return Core_Failure;
   }
   while (true) {
@@ -32,7 +36,7 @@ static Core_Result _getFileContents(char const* path, char** bytes, Core_Size* n
     if (!result) {
       CloseHandle(file);
       file = INVALID_HANDLE_VALUE;
-      Core_InlineArrayN8_uninitialize(&byteArray);
+      Core_InlineArrayListN8_uninitialize(&byteArray);
       return Core_Failure;
     }
     // eof
@@ -41,20 +45,20 @@ static Core_Result _getFileContents(char const* path, char** bytes, Core_Size* n
       file = INVALID_HANDLE_VALUE;
       break;
     }
-    if (Core_InlineArrayN8_append(&byteArray, temporary, received)) {
+    if (Core_InlineArrayListN8_appendMany(&byteArray, temporary, received)) {
       CloseHandle(file);
       file = INVALID_HANDLE_VALUE;
-      Core_InlineArrayN8_uninitialize(&byteArray);
+      Core_InlineArrayListN8_uninitialize(&byteArray);
       return Core_Failure;
     }
   }
 
   Core_Natural8* bytes1; Core_Size numberOfBytes1;
-  if (Core_InlineArrayN8_steal(&byteArray, &bytes1, &numberOfBytes1)) {
-    Core_InlineArrayN8_uninitialize(&byteArray);
+  if (Core_InlineArrayListN8_steal(&byteArray, &bytes1, &numberOfBytes1)) {
+    Core_InlineArrayListN8_uninitialize(&byteArray);
     return Core_Failure;
   }
-  Core_InlineArrayN8_uninitialize(&byteArray);
+  Core_InlineArrayListN8_uninitialize(&byteArray);
   *bytes = bytes1;
   *numberOfBytes = numberOfBytes1;
 
@@ -64,7 +68,9 @@ static Core_Result _getFileContents(char const* path, char** bytes, Core_Size* n
 Core_Result Core_getFileContents(Core_String* path, Core_Natural8** bytes, Core_Size* numberOfBytes) {
   //
   Core_Boolean containsSymbol;
-  containsSymbol = dx_string_contains_symbol(path, '\0');
+  if (Core_String_containsSymbol(&containsSymbol, path, '\0')) {
+    return Core_Failure;
+  }
   if (containsSymbol) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;

@@ -71,7 +71,7 @@ static void _dx_impl_uninitialize(_dx_impl* SELF);
 /// @method-call
 /// @error #Core_Error_ArgumentInvalid @a RETURN is a null pointer
 /// @error #Core_Error_ArgumentInvalid @a SELF is a null pointer
-static Core_Result _dx_impl_get_size(Core_Size* RETURN, _dx_impl const* SELF);
+static Core_Result _dx_impl_getSize(Core_Size* RETURN, _dx_impl const* SELF);
 
 /// @brief Get the capacity, in elements.
 /// @param RETURN A pointer to a <code>Core_Size</code> variable.
@@ -80,7 +80,7 @@ static Core_Result _dx_impl_get_size(Core_Size* RETURN, _dx_impl const* SELF);
 /// @method-call
 /// @error #Core_Error_ArgumentInvalid @a RETURN is a null pointer
 /// @error #Core_Error_ArgumentInvalid @a SELF is a null pointer
-static Core_Result _dx_impl_get_capacity(Core_Size* RETURN, _dx_impl const* self);
+static Core_Result _dx_impl_getCapacity(Core_Size* RETURN, _dx_impl const* self);
 
 /// @brief Get the free capacity, in elements.
 /// @param RETURN A pointer to a <code>Core_Size</code> variable.
@@ -89,7 +89,7 @@ static Core_Result _dx_impl_get_capacity(Core_Size* RETURN, _dx_impl const* self
 /// @method-call
 /// @error #Core_Error_ArgumentInvalid @a RETURN is a null pointer
 /// @error #Core_Error_ArgumentInvalid @a SELF is a null pointer
-static Core_Result _dx_impl_get_free_capacity(Core_Size* RETURN, _dx_impl const* SELF);
+static Core_Result _dx_impl_getFreeCapacity(Core_Size* RETURN, _dx_impl const* SELF);
 
 /// @brief Increase the capacity.
 /// @param SELF A pointer to this _dx_impl object.
@@ -99,7 +99,7 @@ static Core_Result _dx_impl_get_free_capacity(Core_Size* RETURN, _dx_impl const*
 /// @error #Core_Error_AllocationFailed @a additional_capacity is too big
 /// @error #Core_Error_AllocationFailed an allocation failed
 /// @success The capacity increased by at least the specified amount.
-static Core_Result _dx_impl_increase_capacity(_dx_impl* SELF, Core_Size required_additional_capacity);
+static Core_Result _dx_impl_increaseCapacity(_dx_impl* SELF, Core_Size required_additional_capacity);
 
 /// @brief Ensure the free capacity is greater than or equal to a specified value.
 /// @param SELF A pointer to this _dx_impl object.
@@ -109,7 +109,7 @@ static Core_Result _dx_impl_increase_capacity(_dx_impl* SELF, Core_Size required
 /// @error #Core_Error_AllocationFailed @a required_free_capacity is too big
 /// @error #Core_Error_AllocationFailed an allocation failed
 /// @success The free capacity is greater than or equal to the specified required free capacity.
-static Core_Result _dx_impl_ensure_free_capacity(_dx_impl* SELF, Core_Size required_free_capacity);
+static Core_Result _dx_impl_ensureFreeCapacity(_dx_impl* SELF, Core_Size required_free_capacity);
 
 /// @brief Remove all elements.
 /// @param SELF A pointer to this _dx_impl object.
@@ -219,7 +219,7 @@ static void _dx_impl_uninitialize(_dx_impl* self) {
   self->capacity = 0; 
 }
 
-static Core_Result _dx_impl_get_size(Core_Size* RETURN, _dx_impl const* SELF) {
+static Core_Result _dx_impl_getSize(Core_Size* RETURN, _dx_impl const* SELF) {
   if (!RETURN || !SELF) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
@@ -228,7 +228,7 @@ static Core_Result _dx_impl_get_size(Core_Size* RETURN, _dx_impl const* SELF) {
   return Core_Success;
 }
 
-static Core_Result _dx_impl_get_capacity(Core_Size* RETURN, _dx_impl const* SELF) {
+static Core_Result _dx_impl_getCapacity(Core_Size* RETURN, _dx_impl const* SELF) {
   if (!RETURN || !SELF) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
@@ -237,7 +237,7 @@ static Core_Result _dx_impl_get_capacity(Core_Size* RETURN, _dx_impl const* SELF
   return Core_Success;
 }
 
-static Core_Result _dx_impl_get_free_capacity(Core_Size* RETURN, _dx_impl const* SELF) {
+static Core_Result _dx_impl_getFreeCapacity(Core_Size* RETURN, _dx_impl const* SELF) {
   if (!RETURN || !SELF) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
@@ -246,7 +246,7 @@ static Core_Result _dx_impl_get_free_capacity(Core_Size* RETURN, _dx_impl const*
   return Core_Success;
 }
 
-static Core_Result _dx_impl_increase_capacity(_dx_impl* SELF, Core_Size required_additional_capacity) {
+static Core_Result _dx_impl_increaseCapacity(_dx_impl* SELF, Core_Size required_additional_capacity) {
   if (!SELF) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
@@ -272,7 +272,7 @@ static Core_Result _dx_impl_increase_capacity(_dx_impl* SELF, Core_Size required
   return Core_Success;
 }
 
-static Core_Result _dx_impl_ensure_free_capacity(_dx_impl* SELF, Core_Size required_free_capacity) {
+static Core_Result _dx_impl_ensureFreeCapacity(_dx_impl* SELF, Core_Size required_free_capacity) {
   if (!SELF) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
@@ -282,7 +282,7 @@ static Core_Result _dx_impl_ensure_free_capacity(_dx_impl* SELF, Core_Size requi
     return Core_Success;
   }
   Core_Size additional_capacity = required_free_capacity - available_free_capacity;
-  return _dx_impl_increase_capacity(SELF, additional_capacity);
+  return _dx_impl_increaseCapacity(SELF, additional_capacity);
 }
 
 static Core_Result _dx_impl_clear(_dx_impl* SELF) {
@@ -328,7 +328,7 @@ static Core_Result _dx_impl_insert(_dx_impl* SELF, dx_inline_pointer_deque_eleme
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
   }
-  if (_dx_impl_ensure_free_capacity(SELF, 1)) {
+  if (_dx_impl_ensureFreeCapacity(SELF, 1)) {
     return Core_Failure;
   }
   Core_Size const capacity = SELF->capacity; // The capacity does not change anymore for the rest of this
@@ -485,27 +485,27 @@ void dx_inline_pointer_deque_uninitialize(dx_inline_pointer_deque* SELF) {
 
 Core_Result dx_inline_pointer_deque_increase_capacity(dx_inline_pointer_deque* SELF, Core_Size required_additional_capacity) {
   _dx_impl* pimpl = _DX_IMPL(SELF->pimpl);
-  return _dx_impl_increase_capacity(pimpl, required_additional_capacity);
+  return _dx_impl_increaseCapacity(pimpl, required_additional_capacity);
 }
 
 Core_Result dx_inline_pointer_deque_ensure_free_capacity(dx_inline_pointer_deque* SELF, Core_Size required_free_capacity) {
   _dx_impl* pimpl = _DX_IMPL(SELF->pimpl);
-  return _dx_impl_ensure_free_capacity(pimpl, required_free_capacity);
+  return _dx_impl_ensureFreeCapacity(pimpl, required_free_capacity);
 }
 
 Core_Result dx_inline_pointer_deque_get_size(Core_Size* RETURN, dx_inline_pointer_deque const* SELF) {
   _dx_impl* pimpl = _DX_IMPL(SELF->pimpl);
-  return _dx_impl_get_size(RETURN, pimpl);
+  return _dx_impl_getSize(RETURN, pimpl);
 }
 
 Core_Result dx_inline_pointer_deque_get_capacity(Core_Size* RETURN, dx_inline_pointer_deque const* SELF) {
   _dx_impl* pimpl = _DX_IMPL(SELF->pimpl);
-  return _dx_impl_get_capacity(RETURN, pimpl);
+  return _dx_impl_getCapacity(RETURN, pimpl);
 }
 
 Core_Result dx_inline_pointer_deque_get_free_capacity(Core_Size* RETURN, dx_inline_pointer_deque const* SELF) {
   _dx_impl* pimpl = _DX_IMPL(SELF->pimpl);
-  return _dx_impl_get_free_capacity(RETURN, pimpl);
+  return _dx_impl_getFreeCapacity(RETURN, pimpl);
 }
 
 Core_Result dx_inline_pointer_deque_clear(dx_inline_pointer_deque* SELF) {

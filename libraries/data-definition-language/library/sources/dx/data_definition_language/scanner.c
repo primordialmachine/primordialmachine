@@ -49,7 +49,7 @@ static Core_Result set(dx_data_definition_language_scanner* SELF, char const* p,
   SELF->end = p + l;
   SELF->current = p;
   SELF->kind = dx_data_definition_language_word_kind_start_of_input;
-  Core_InlineArrayN8_clear(&SELF->text);
+  Core_InlineArrayListN8_clear(&SELF->text);
   return Core_Success;
 }
 
@@ -68,7 +68,7 @@ START:
   }
   // We have reached the end of the input.
   if (SELF->current == SELF->end) {
-    Core_InlineArrayN8_clear(&SELF->text);
+    Core_InlineArrayListN8_clear(&SELF->text);
     SELF->kind = dx_data_definition_language_word_kind_end_of_input;
     return Core_Success;
   }
@@ -111,8 +111,8 @@ START:
     case ',': {
       SELF->range.start = SELF->current;
       SELF->range.end = SELF->current;
-      Core_InlineArrayN8_clear(&SELF->text);
-      if (Core_InlineArrayN8_append(&SELF->text, ",", sizeof(",") - 1)) {
+      Core_InlineArrayListN8_clear(&SELF->text);
+      if (Core_InlineArrayListN8_appendMany(&SELF->text, ",", sizeof(",") - 1)) {
         return Core_Failure;
       }
       SELF->kind = dx_data_definition_language_word_kind_comma;
@@ -123,8 +123,8 @@ START:
     case '(': {
       SELF->range.start = SELF->current;
       SELF->range.end = SELF->current;
-      Core_InlineArrayN8_clear(&SELF->text);
-      if (Core_InlineArrayN8_append(&SELF->text, "(", sizeof("(") - 1)) {
+      Core_InlineArrayListN8_clear(&SELF->text);
+      if (Core_InlineArrayListN8_appendMany(&SELF->text, "(", sizeof("(") - 1)) {
         return Core_Failure;
       }
       SELF->kind = dx_data_definition_language_word_kind_left_parenthesis;
@@ -135,8 +135,8 @@ START:
     case ')': {
       SELF->range.start = SELF->current;
       SELF->range.end = SELF->current;
-      Core_InlineArrayN8_clear(&SELF->text);
-      if (Core_InlineArrayN8_append(&SELF->text, ")", sizeof(")") - 1)) {
+      Core_InlineArrayListN8_clear(&SELF->text);
+      if (Core_InlineArrayListN8_appendMany(&SELF->text, ")", sizeof(")") - 1)) {
         return Core_Failure;
       }
       SELF->kind = dx_data_definition_language_word_kind_right_parenthesis;
@@ -147,8 +147,8 @@ START:
     case '[': {
       SELF->range.start = SELF->current;
       SELF->range.end = SELF->current;
-      Core_InlineArrayN8_clear(&SELF->text);
-      if (Core_InlineArrayN8_append(&SELF->text, "[", sizeof("[") - 1)) {
+      Core_InlineArrayListN8_clear(&SELF->text);
+      if (Core_InlineArrayListN8_appendMany(&SELF->text, "[", sizeof("[") - 1)) {
         return Core_Failure;
       }
       SELF->kind = dx_data_definition_language_word_kind_left_square_bracket;
@@ -159,8 +159,8 @@ START:
     case ']': {
       SELF->range.start = SELF->current;
       SELF->range.end = SELF->current;
-      Core_InlineArrayN8_clear(&SELF->text);
-      if (Core_InlineArrayN8_append(&SELF->text, "]", sizeof("]") - 1)) {
+      Core_InlineArrayListN8_clear(&SELF->text);
+      if (Core_InlineArrayListN8_appendMany(&SELF->text, "]", sizeof("]") - 1)) {
         return Core_Failure;
       }
       SELF->kind = dx_data_definition_language_word_kind_right_square_bracket;
@@ -171,8 +171,8 @@ START:
     case '{': {
       SELF->range.start = SELF->current;
       SELF->range.end = SELF->current;
-      Core_InlineArrayN8_clear(&SELF->text);
-      if (Core_InlineArrayN8_append(&SELF->text, "{", sizeof("{") - 1)) {
+      Core_InlineArrayListN8_clear(&SELF->text);
+      if (Core_InlineArrayListN8_appendMany(&SELF->text, "{", sizeof("{") - 1)) {
         return Core_Failure;
       }
       SELF->kind = dx_data_definition_language_word_kind_left_curly_bracket;
@@ -183,8 +183,8 @@ START:
     case '}': {
       SELF->range.start = SELF->current;
       SELF->range.end = SELF->current;
-      Core_InlineArrayN8_clear(&SELF->text);
-      if (Core_InlineArrayN8_append(&SELF->text, "}", sizeof("}") - 1)) {
+      Core_InlineArrayListN8_clear(&SELF->text);
+      if (Core_InlineArrayListN8_appendMany(&SELF->text, "}", sizeof("}") - 1)) {
         return Core_Failure;
       }
       SELF->kind = dx_data_definition_language_word_kind_right_curly_bracket;
@@ -195,8 +195,8 @@ START:
     case ':': {
       SELF->range.start = SELF->current;
       SELF->range.end = SELF->current;
-      Core_InlineArrayN8_clear(&SELF->text);
-      if (Core_InlineArrayN8_append(&SELF->text, ":", sizeof(":") - 1)) {
+      Core_InlineArrayListN8_clear(&SELF->text);
+      if (Core_InlineArrayListN8_appendMany(&SELF->text, ":", sizeof(":") - 1)) {
         return Core_Failure;
       }
       SELF->kind = dx_data_definition_language_word_kind_colon;
@@ -207,13 +207,13 @@ START:
     case '\'': {
       SELF->range.start = SELF->current;
       SELF->range.end = SELF->current;
-      Core_InlineArrayN8_clear(&SELF->text);
+      Core_InlineArrayListN8_clear(&SELF->text);
       return dx_data_definition_language_scanner_on_single_quoted_string(SELF);
     } break;
     case '"': {
       SELF->range.start = SELF->current;
       SELF->range.end = SELF->current;
-      Core_InlineArrayN8_clear(&SELF->text);
+      Core_InlineArrayListN8_clear(&SELF->text);
       return dx_data_definition_language_scanner_on_double_quoted_string(SELF);
     } break;
     case '0': case '4': case '8':
@@ -225,13 +225,13 @@ START:
     case '.': {
       SELF->range.start = SELF->current;
       SELF->range.end = SELF->current;
-      Core_InlineArrayN8_clear(&SELF->text);
+      Core_InlineArrayListN8_clear(&SELF->text);
       return dx_data_definition_language_scanner_on_number(SELF);
     } break;
     default: {
       SELF->range.start = SELF->current;
       SELF->range.end = SELF->current;
-      Core_InlineArrayN8_clear(&SELF->text);
+      Core_InlineArrayListN8_clear(&SELF->text);
       return dx_data_definition_language_scanner_on_name(SELF);
     } break;
   };
@@ -263,7 +263,7 @@ static Core_Result dx_data_definition_language_scanner_save_and_next(dx_data_def
   if (SELF->current == SELF->end) {
     return Core_Failure;
   }
-  if (Core_InlineArrayN8_append(&SELF->text, SELF->current, 1)) {
+  if (Core_InlineArrayListN8_appendMany(&SELF->text, SELF->current, 1)) {
     return Core_Failure;
   }
   SELF->current++;
@@ -413,7 +413,7 @@ static Core_Result dx_data_definition_language_scanner_on_name(dx_data_definitio
 static Core_Result dx_data_definition_language_scanner_on_number(dx_data_definition_language_scanner* SELF) {
   // ('+'|'-')?
   if (SELF->current != SELF->end && (*SELF->current == '+' || *SELF->current == '-')) {
-    if (Core_InlineArrayN8_append(&SELF->text, SELF->current, 1)) {
+    if (Core_InlineArrayListN8_append(&SELF->text, *SELF->current)) {
       return Core_Failure;
     }
     SELF->current++;
@@ -421,7 +421,7 @@ static Core_Result dx_data_definition_language_scanner_on_number(dx_data_definit
   if (dx_data_definition_language_scanner_is_digit(SELF)) {
     // digit+ ('.' digit*)
     do {
-      if (Core_InlineArrayN8_append(&SELF->text, SELF->current, 1)) {
+      if (Core_InlineArrayListN8_append(&SELF->text, *SELF->current)) {
         return Core_Failure;
       }
       SELF->current++;
@@ -430,12 +430,12 @@ static Core_Result dx_data_definition_language_scanner_on_number(dx_data_definit
       return Core_Failure;
     }
     if (SELF->current != SELF->end && *SELF->current == '.') {
-      if (Core_InlineArrayN8_append(&SELF->text, SELF->current, 1)) {
+      if (Core_InlineArrayListN8_append(&SELF->text, *SELF->current)) {
         return Core_Failure;
       }
       SELF->current++;
       while (dx_data_definition_language_scanner_is_digit(SELF)) {
-        if (Core_InlineArrayN8_append(&SELF->text, SELF->current, 1)) {
+        if (Core_InlineArrayListN8_append(&SELF->text, *SELF->current)) {
           return Core_Failure;
         }
         SELF->current++;
@@ -443,7 +443,7 @@ static Core_Result dx_data_definition_language_scanner_on_number(dx_data_definit
     }
   } else if (SELF->current != SELF->end && *SELF->current == '.') {
     // '.' digit+
-    if (Core_InlineArrayN8_append(&SELF->text, SELF->current, 1)) {
+    if (Core_InlineArrayListN8_append(&SELF->text, *SELF->current)) {
       return Core_Failure;
     }
     if (!dx_data_definition_language_scanner_is_digit(SELF)) {
@@ -456,7 +456,7 @@ static Core_Result dx_data_definition_language_scanner_on_number(dx_data_definit
       return Core_Success;
     }
     do {
-      if (Core_InlineArrayN8_append(&SELF->text, SELF->current, 1)) {
+      if (Core_InlineArrayListN8_append(&SELF->text, *SELF->current)) {
         return Core_Failure;
       }
       SELF->current++;
@@ -471,7 +471,7 @@ static Core_Result dx_data_definition_language_scanner_on_number(dx_data_definit
   // exponent?
   // exponent = 'e'('+'|'-')? digit+
   if (SELF->current != SELF->end && *SELF->current == 'e') {
-    if (Core_InlineArrayN8_append(&SELF->text, SELF->current, 1)) {
+    if (Core_InlineArrayListN8_append(&SELF->text, *SELF->current)) {
       return Core_Failure;
     }
     if (!dx_data_definition_language_scanner_is_digit(SELF)) {
@@ -484,7 +484,7 @@ static Core_Result dx_data_definition_language_scanner_on_number(dx_data_definit
       return Core_Success;
     }
     do {
-      if (Core_InlineArrayN8_append(&SELF->text, SELF->current, 1)) {
+      if (Core_InlineArrayListN8_append(&SELF->text, *SELF->current)) {
         return Core_Failure;
       }
     } while (dx_data_definition_language_scanner_is_digit(SELF));
@@ -500,7 +500,7 @@ static Core_Result dx_data_definition_language_scanner_on_number(dx_data_definit
 static void dx_data_definition_language_scanner_destruct(dx_data_definition_language_scanner* SELF) {
   CORE_UNREFERENCE(SELF->diagnostics);
   SELF->diagnostics = NULL;
-  Core_InlineArrayN8_uninitialize(&SELF->text);
+  Core_InlineArrayListN8_uninitialize(&SELF->text);
 }
 
 static void dx_data_definition_language_scanner_constructDispatch(dx_data_definition_language_scanner_Dispatch* SELF) {
@@ -518,12 +518,15 @@ Core_Result dx_data_definition_language_scanner_construct(dx_data_definition_lan
   if (dx_scanner_construct(DX_SCANNER(SELF))) {
     return Core_Failure;
   }
-
-  if (Core_InlineArrayN8_initialize(&SELF->text)) {
+  Core_InlineArrayListN8_Configuration configuration = {
+    .addedCallback = NULL,
+    .removedCallback = NULL,
+  };
+  if (Core_InlineArrayListN8_initialize(&SELF->text, 0, &configuration)) {
     return Core_Failure;
   } 
   if (!diagnostics) {
-    Core_InlineArrayN8_uninitialize(&SELF->text);
+    Core_InlineArrayListN8_uninitialize(&SELF->text);
     return Core_Failure;
   }
   SELF->diagnostics = diagnostics;

@@ -1,0 +1,17 @@
+{
+  "type" : "typedef",
+  "last-update" : "2024-01-25",
+  "indices" : "core",
+  "name" : "Core_InlineArrayList_Element",
+  "id" : "core-inlinearrayList-element",
+  "signature" : "typedef &lt;implementation&gt; Core_InlineArrayList&lt;Suffix&gt;_Element;",
+  "signatureRemarks": [
+    "<p>where <code>&lt;Suffix&gt;</code> and <code>&lt;Suffix&gt;</code> can assume the values of</p>",
+    "<table style='width: initial !important'>",
+    "<tr><td><code>&lt;Suffix&gt;</code></td> <td><code>&lt;Type&gt;  </code></td></tr>",
+    "<tr><td><code>N8            </code></td> <td><code>Core_Natural8 </code></td></tr>",
+    "</table>"
+  ],
+  "extends" : null,
+  "description": "The type of an element of a dynamic array @{code('Core_InlineArrayList&lt;Suffix&gt;')}."
+}

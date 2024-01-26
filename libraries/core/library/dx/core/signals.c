@@ -1,7 +1,7 @@
 #include "dx/core/signals.h"
 
 #include "Core/Hash.h"
-#include "dx/core/inline_pointer_array.h"
+#include "Core/Collections/InlineArrayListP.h"
 #include "Core/Memory.h"
 #include "dx/core/inline_pointer_hashmap.h"
 #include <string.h>
@@ -37,10 +37,10 @@ struct _Signal {
   dx_reference_counter referenceCount;
   _SignalKey key;
   /// null pointer or pointer to a (possibly empty) list of connections to this signal.
-  Core_InlinePointerArray* connections;
+  Core_InlineArrayListP* connections;
 };
 
-static Core_Result _Signal_getConnections(Core_InlinePointerArray** connections, _Signal* signal) {
+static Core_Result _Signal_getConnections(Core_InlineArrayListP** connections, _Signal* signal) {
   return Core_Success;
 }
 
@@ -60,7 +60,7 @@ static Core_Result _SignalKey_compareKeys(Core_Boolean* RETURN, _SignalKey** SEL
 
 static Core_Result _Signal_destroy(_Signal* signal) {
   if (signal->connections) {
-    Core_InlinePointerArray_uninitialize(signal->connections);
+    Core_InlineArrayListP_uninitialize(signal->connections);
     Core_Memory_deallocate(signal->connections);
     signal->connections = NULL;
   }

@@ -1,0 +1,29 @@
+{
+  "type" : "structure",
+  "last-update" : "2024-01-28",
+  "indices" : "core",
+  "name" : "Core_InlineArrayList_Configuration",
+  "id" : "core-inlinearraylist-configuration",
+  "signature" : "typedef struct Core_InlineArrayList&lt;Suffix&gt;_Configuration Core_InlineArrayList&lt;Suffix&gt;_Configuration;",
+  "signatureRemarks": [
+    "<p>where <code>&lt;Suffix&gt;</code> and <code>&lt;Suffix&gt;</code> can assume the values of</p>",
+    "<table style='width: initial !important'>",
+    "<tr><td><code>&lt;Suffix&gt;</code></td> <td><code>&lt;Type&gt;  </code></td></tr>",
+    "<tr><td><code>N8            </code></td> <td><code>Core_Natural8 </code></td></tr>",
+    "<tr><td><code>P             </code></td> <td><code>void*         </code></td></tr>",
+    "</table>"
+  ],
+  "members" : [
+    {
+      "name"        : "addedCallback",
+      "type"        : "@{code('Core_InlineArrayList&lt;Suffix&gt;_AddedCallback*')}",
+      "description" : "A null pointer or a pointer to a @{code('Core_InlineArrayList&lt;Suffix&gt;_AddedCallback')} function."
+    },
+    {
+      "name"        : "removedCallback",
+      "type"        : "@{code('Core_InlineArrayList&lt;Suffix&gt;_RemovedCallback*')}",
+      "description" : "A null pointer or a pointer to a @{code('Core_InlineArrayList&lt;Suffix&gt;_RemovedCallback')} function."
+    }
+  ],
+  "description": "A configuration for a @{code('Core_InlineArrayList&lt;Suffix&gt;')} object."
+}

@@ -33,7 +33,7 @@ static Core_Result set(dx_document_definition_language_scanner* SELF, char const
   SELF->end = p + l;
   SELF->current = p;
   SELF->kind = dx_document_definition_language_word_kind_start_of_input;
-  Core_InlineArrayN8_clear(&SELF->text);
+  Core_InlineArrayListN8_clear(&SELF->text);
   return Core_Success;
 }
 
@@ -49,13 +49,13 @@ START:
   }
   SELF->range.start = SELF->current;
   SELF->range.end = SELF->current;
-  Core_InlineArrayN8_clear(&SELF->text);
+  Core_InlineArrayListN8_clear(&SELF->text);
   while (true) {
     // end of input
     if (SELF->current == SELF->end) {
       SELF->range.end = SELF->current;
       if (SELF->range.start < SELF->current) {
-        if (Core_InlineArrayN8_append(&SELF->text, SELF->range.start, SELF->range.end - SELF->range.start)) {
+        if (Core_InlineArrayListN8_appendMany(&SELF->text, SELF->range.start, SELF->range.end - SELF->range.start)) {
           return Core_Failure;
         }
         SELF->kind = dx_document_definition_language_word_kind_line;
@@ -72,7 +72,7 @@ START:
         SELF->current++;
       }
       SELF->range.end = SELF->current;
-      if (Core_InlineArrayN8_append(&SELF->text, SELF->range.start, SELF->range.end - SELF->range.start)) {
+      if (Core_InlineArrayListN8_appendMany(&SELF->text, SELF->range.start, SELF->range.end - SELF->range.start)) {
         return Core_Failure;
       }
       SELF->kind = dx_document_definition_language_word_kind_line;
@@ -111,7 +111,7 @@ static Core_Result dx_document_definition_language_scanner_save_and_next(dx_docu
     Core_setError(Core_Error_OperationInvalid);
     return Core_Failure;
   }
-  if (Core_InlineArrayN8_append(&SELF->text, SELF->current, 1)) {
+  if (Core_InlineArrayListN8_append(&SELF->text, *SELF->current)) {
     return Core_Failure;
   }
   SELF->current++;
@@ -119,7 +119,7 @@ static Core_Result dx_document_definition_language_scanner_save_and_next(dx_docu
 }
 
 static void dx_document_definition_language_scanner_destruct(dx_document_definition_language_scanner* SELF) {
-  Core_InlineArrayN8_uninitialize(&SELF->text);
+  Core_InlineArrayListN8_uninitialize(&SELF->text);
 }
 
 static void dx_document_definition_language_scanner_constructDispatch(dx_document_definition_language_scanner_Dispatch* SELF) {
@@ -138,7 +138,11 @@ Core_Result dx_document_definition_language_scanner_construct(dx_document_defini
     return Core_Failure;
   }
 
-  if (Core_InlineArrayN8_initialize(&SELF->text)) {
+  Core_InlineArrayListN8_Configuration configuration = {
+    .addedCallback = NULL,
+    .removedCallback = NULL,
+  };
+  if (Core_InlineArrayListN8_initialize(&SELF->text, 0, &configuration)) {
     return Core_Failure;
   } 
 

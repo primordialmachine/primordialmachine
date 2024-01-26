@@ -58,20 +58,24 @@ create_shader
   }
   GLuint id1 = ctx->glCreateShader(type);
   {
-    Core_InlineArrayN8 byte_array;
-    if (Core_InlineArrayN8_initialize(&byte_array)) {
+    Core_InlineArrayListN8 byte_array;
+    Core_InlineArrayListN8_Configuration configuration = {
+    .addedCallback = NULL,
+    .removedCallback = NULL,
+    };
+    if (Core_InlineArrayListN8_initialize(&byte_array, 0, &configuration)) {
       ctx->glDeleteShader(id1);
       id1 = 0;
       return Core_Failure;
     }
-    if (Core_InlineArrayN8_append(&byte_array, "#version 330 core\n", sizeof("#version 330 core\n") - 1)) {
-      Core_InlineArrayN8_uninitialize(&byte_array);
+    if (Core_InlineArrayListN8_appendMany(&byte_array, "#version 330 core\n", sizeof("#version 330 core\n") - 1)) {
+      Core_InlineArrayListN8_uninitialize(&byte_array);
       ctx->glDeleteShader(id1);
       id1 = 0;
       return Core_Failure;
     }
-    if (Core_InlineArrayN8_append(&byte_array, program_text->bytes, program_text->number_of_bytes)) {
-      Core_InlineArrayN8_uninitialize(&byte_array);
+    if (Core_InlineArrayListN8_appendMany(&byte_array, program_text->bytes, program_text->number_of_bytes)) {
+      Core_InlineArrayListN8_uninitialize(&byte_array);
       ctx->glDeleteShader(id1);
       id1 = 0;
       return Core_Failure;
@@ -79,7 +83,7 @@ create_shader
     GLint const m[] = { (GLint)byte_array.size };
     GLchar const *q[] = { byte_array.elements };
     ctx->glShaderSource(id1, 1, q, m);
-    Core_InlineArrayN8_uninitialize(&byte_array);
+    Core_InlineArrayListN8_uninitialize(&byte_array);
   }
   ctx->glCompileShader(id1);
   GLint success;

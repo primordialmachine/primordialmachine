@@ -303,7 +303,9 @@ static void deallocate_callback(void* context, void* bytes) {
 Core_Result dx_font_construct(dx_font* SELF, dx_font_key* key, dx_font_manager* font_manager) {
   DX_CONSTRUCT_PREFIX(dx_font);
   Core_Boolean containsSymbol;
-  containsSymbol = dx_string_contains_symbol(key->font_file, '\0');
+  if (Core_String_containsSymbol(&containsSymbol, key->font_file, '\0')) {
+    return Core_Failure;
+  }
   if (containsSymbol) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;

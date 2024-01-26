@@ -63,12 +63,9 @@ list(APPEND ${name}.headers "dx/core/scanner.h")
 
 list(APPEND ${name}.sources "dx/core/math.c")
 list(APPEND ${name}.headers "dx/core/math.h")
-list(APPEND ${name}.sources "dx/core/inline_byte_array.c")
-list(APPEND ${name}.headers "dx/core/inline_byte_array.h")
+
 list(APPEND ${name}.sources "dx/core/inline_object_array.c")
 list(APPEND ${name}.headers "dx/core/inline_object_array.h")
-list(APPEND ${name}.sources "dx/core/inline_pointer_array.c")
-list(APPEND ${name}.headers "dx/core/inline_pointer_array.h")
 list(APPEND ${name}.sources "dx/core/inline_pointer_deque.c")
 list(APPEND ${name}.headers "dx/core/inline_pointer_deque.h")
 list(APPEND ${name}.sources "dx/core/inline_pointer_hashmap.c")
@@ -150,14 +147,25 @@ list(APPEND ${name}.sources "Core/NextPowerOfTwo.c")
 list(APPEND ${name}.headers "Core/NextPowerOfTwo.h")
 list(APPEND ${name}.sources "Core/Result.c")
 list(APPEND ${name}.headers "Core/Result.h")
+
+list(APPEND ${name}.sources "Core/Convert.c")
+list(APPEND ${name}.headers "Core/Convert.h")
+
+# "time"
+list(APPEND ${name}.sources "Core/Time.c")
+list(APPEND ${name}.headers "Core/Time.h")
+
+# "collections"
+list(APPEND ${name}.sources "Core/Collections/InlineArrayListN8.c")
+list(APPEND ${name}.headers "Core/Collections/InlineArrayListN8.h")
+list(APPEND ${name}.sources "Core/Collections/InlineArrayListP.c")
+list(APPEND ${name}.headers "Core/Collections/InlineArrayListP.h")
 list(APPEND ${name}.sources "Core/safeAddNx.c")
 list(APPEND ${name}.headers "Core/safeAddNx.h")
 list(APPEND ${name}.sources "Core/safeMulIx.c")
 list(APPEND ${name}.headers "Core/safeMulIx.h")
 list(APPEND ${name}.sources "Core/safeMulNx.c")
 list(APPEND ${name}.headers "Core/safeMulNx.h")
-list(APPEND ${name}.sources "Core/Time.c")
-list(APPEND ${name}.headers "Core/Time.h")
 
 # Folder "Core/FileSystem".
 list(APPEND ${name}.sources "Core/FileSystem/createDirectoryFile.c")

@@ -2,7 +2,7 @@
 
 #include "dx/core/_is_utf8_sequence.h"
 #include "dx/core/_string_format.h"
-#include "dx/core/inline_byte_array.h"
+#include "Core/Collections/InlineArrayListN8.h"
 #include "Core/Hash.h"
 #include "Core/Memory.h"
 #include "Core/safeAddNx.h"
@@ -50,20 +50,24 @@ Core_defineObjectType("Core.String",
                       Core_Object);
 
 Core_Result Core_String_printfv(Core_String** RETURN, Core_String* format, va_list arguments) {
-  Core_InlineArrayN8 buffer;
-  if (Core_InlineArrayN8_initialize(&buffer)) {
+  Core_InlineArrayListN8 buffer;
+  Core_InlineArrayListN8_Configuration configuration = {
+    .addedCallback = NULL,
+    .removedCallback = NULL,
+  };
+  if (Core_InlineArrayListN8_initialize(&buffer, 0, &configuration)) {
     return Core_Failure;
   }
   if (dx__format_v(&buffer, format->bytes, format->bytes + format->number_of_bytes, arguments)) {
-    Core_InlineArrayN8_uninitialize(&buffer);
+    Core_InlineArrayListN8_uninitialize(&buffer);
     return Core_Failure;
   }
   Core_String* string = NULL;
   if (Core_String_create(&string, buffer.elements, buffer.size)) {
-    Core_InlineArrayN8_uninitialize(&buffer);
+    Core_InlineArrayListN8_uninitialize(&buffer);
     return Core_Failure;
   }
-  Core_InlineArrayN8_uninitialize(&buffer);
+  Core_InlineArrayListN8_uninitialize(&buffer);
   *RETURN = string;
   return Core_Success;
 }
@@ -99,7 +103,11 @@ Core_Result Core_String_construct(Core_String* SELF, char const* bytes, Core_Siz
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
   }
-  if (!dx__is_utf8_sequence(bytes, number_of_bytes)) {
+  Core_Boolean t;
+  if (_utf8_is_utf8_byte_sequence(&t, bytes, number_of_bytes)) {
+    return Core_Failure;
+  }
+  if (!t) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
   }
@@ -114,9 +122,117 @@ Core_Result Core_String_construct(Core_String* SELF, char const* bytes, Core_Siz
   return Core_Success;
 }
 
-Core_Result Core_String_create(Core_String** RETURN, char const* bytes, Core_Size number_of_bytes) {
+Core_Result Core_String_create(Core_String** RETURN, char const* bytes, Core_Size numberOfBytes) {
   DX_CREATE_PREFIX(Core_String);
-  if (Core_String_construct(SELF, bytes, number_of_bytes)) {
+  if (Core_String_construct(SELF, bytes, numberOfBytes)) {
+    CORE_UNREFERENCE(SELF);
+    SELF = NULL;
+    return Core_Failure;
+  }
+  *RETURN = SELF;
+  return Core_Success;
+}
+
+Core_Result Core_String_constructFromArray(Core_String* SELF, Core_InlineArrayListN8* array) {
+  DX_CONSTRUCT_PREFIX(Core_String);
+  if (!array) {
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
+  }
+  Core_Size numberOfBytes;
+  if (Core_InlineArrayListN8_getSize(&numberOfBytes, array)) {
+    return Core_Failure;
+  }
+  if (Core_Size_Greatest < numberOfBytes) {
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
+  }
+  // Allocate the buffer.
+  if (Core_Memory_allocate(&SELF->bytes, numberOfBytes)) {
+    return Core_Failure;
+  }
+  // Copy the Bytes to the buffer.
+  for (Core_Size i = 0, n = numberOfBytes; i < n; ++i) {
+    Core_Natural8 value;
+    if (Core_InlineArrayListN8_get(&value, array, i)) {
+      Core_Memory_deallocate(SELF->bytes);
+      SELF->bytes = NULL;
+      return Core_Failure;
+    }
+    SELF->bytes[i] = value;
+  }
+  Core_Boolean t;
+  if (_utf8_is_utf8_byte_sequence(&t, SELF->bytes, numberOfBytes)) {
+    Core_Memory_deallocate(SELF->bytes);
+    SELF->bytes = NULL;
+    return Core_Failure;
+  }
+  if (!t) {
+    Core_Memory_deallocate(SELF->bytes);
+    SELF->bytes = NULL;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
+  }
+  SELF->number_of_bytes = numberOfBytes;
+  CORE_OBJECT(SELF)->type = TYPE;
+  return Core_Success;
+}
+
+Core_Result Core_String_createFromArray(Core_String** RETURN, Core_InlineArrayListN8* array) {
+  DX_CREATE_PREFIX(Core_String);
+  if (Core_String_constructFromArray(SELF, array)) {
+    CORE_UNREFERENCE(SELF);
+    SELF = NULL;
+    return Core_Failure;
+  }
+  *RETURN = SELF;
+  return Core_Success;
+}
+
+Core_Result Core_String_constructFromSubArray(Core_String* SELF, Core_InlineArrayListN8* array, Core_Size start, Core_Size length) {
+  DX_CONSTRUCT_PREFIX(Core_String);
+  if (!array) {
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
+  }
+  if (Core_Size_Greatest < length) {
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
+  }
+  // Allocate the buffer.
+  if (Core_Memory_allocate(&SELF->bytes, length)) {
+    return Core_Failure;
+  }
+  // Copy the Bytes to the buffer.
+  for (Core_Size i = start, j = 0, l = start + length; i < l; ++i) {
+    Core_Natural8 v;
+    if (Core_InlineArrayListN8_get(&v, array, i)) {
+      Core_Memory_deallocate(SELF->bytes);
+      SELF->bytes = NULL;
+      return Core_Failure;
+    }
+    SELF->bytes[j] = v;
+  }
+  Core_Boolean t;
+  if (!_utf8_is_utf8_byte_sequence(&t, SELF->bytes, length)) {
+    Core_Memory_deallocate(SELF->bytes);
+    SELF->bytes = NULL;
+    return Core_Failure;
+  }
+  if (!t) {
+    Core_Memory_deallocate(SELF->bytes);
+    SELF->bytes = NULL;
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
+  }
+  SELF->number_of_bytes = length;
+  CORE_OBJECT(SELF)->type = TYPE;
+  return Core_Success;
+}
+
+Core_Result Core_String_createFromSubArray(Core_String** RETURN, Core_InlineArrayListN8* array, Core_Size start, Core_Size length) {
+  DX_CREATE_PREFIX(Core_String);
+  if (Core_String_constructFromSubArray(SELF, array, start, length)) {
     CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
@@ -137,46 +253,6 @@ Core_Result Core_String_getNumberOfBytes(Core_Size* RETURN, Core_String* SELF) {
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-/// @brief
-/// Classify the first Byte of an UTF8 sequence to determine the length of the sequence.
-/// @param x
-/// The Byte.
-/// @return
-/// The length of the sequence.
-/// The zero value on failure.
-/// The function fails if there is an encoding error.
-/// @failure This function has set the error variable to #DX_DECODING_FAILED.
-static Core_Size classify(uint8_t x) {
-  if ((x & 0x80) == 0x00) {
-    // To determine if the first Byte is in the range 0xxx xxxx,
-    // mask the Byte with 1000 0000 / 0x80. If the result is 0,
-    // then the first Byte is in the range 0xxx xxxx.
-    return 1;
-  }
-  else if ((x & 0xE0) == 0xC0) {
-    // To determine if the first Byte is in the range 110x xxxx,
-    // mask the Byte with 11100000 / 0xE0. If the result is 1100 0000 / 0xC0,
-    // then the first Byte is in the range 110x xxxx.
-    return 2;
-  }
-  else if ((x & 0xF0) == 0xE0) {
-    // To determine if the first Byte is in the range 1110 xxxx,
-    // mask the Byte with 1111 0000 / 0xF0. If the result is 1110 0000 / 0xE0,
-    // then the first Byte is in the range 1110 xxxx.
-    return 3;
-  }
-  else if ((x & 0xF8) == 0xF0) {
-    // To determine if the first Byte is in the range 1111 0xxx,
-    // mask the Byte with 1111 1000 / 0xF8. If the result is 1111 0000 / 0xF0,
-    // then the first Byte is in th range 1111 0xxx.
-    return 4;
-  }
-  else {
-    Core_setError(Core_Error_DecodingFailed);
-    return 0;
-  }
-}
-
 typedef struct y_utf8_it {
   uint8_t const* current;
   uint8_t const* end;
@@ -187,8 +263,8 @@ int y_utf8_decode(y_utf8_it* it, Core_Size* n, uint32_t* p) {
   if (it->error || it->current == it->end) {
     return 1;
   }
-  Core_Size l = classify(*it->current);
-  if (!l) {
+  Core_Size l;
+  if (_utf8_classify(&l, *it->current)) {
     it->error = true;
     return 1;
   }
@@ -219,20 +295,6 @@ int y_utf8_decode(y_utf8_it* it, Core_Size* n, uint32_t* p) {
   *n = l;
   it->current += l;
   return 0;
-}
-
-Core_Boolean dx_string_contains_symbol(Core_String const* SELF, uint32_t symbol) {
-  y_utf8_it it = { .current = (uint8_t*)SELF->bytes,
-                   .end = (uint8_t*)SELF->bytes + SELF->number_of_bytes,
-                   .error = false };
-  uint32_t p;
-  Core_Size n;
-  while (!y_utf8_decode(&it, &n, &p)) {
-    if (p == symbol) {
-      return true;
-    }
-  }
-  return false;
 }
 
 Core_Result Core_String_containsSymbol(Core_Boolean* RETURN, Core_String const* SELF, uint32_t symbol) {
@@ -290,15 +352,20 @@ static Core_Result dx_string_iterator_impl_get_value(uint32_t* RETURN, dx_string
 
 static Core_Result dx_string_iterator_impl_next(dx_string_iterator_impl* SELF);
 
+static Core_Result dx_string_iterator_impl_next_n(dx_string_iterator_impl* SELF, Core_Size n);
+
+static Core_Result _string_iterator_impl_increment_n(dx_string_iterator_impl* SELF, Core_Size n);
+
 static void dx_string_iterator_impl_destruct(dx_string_iterator_impl* SELF) {
   CORE_UNREFERENCE(SELF->string);
   SELF->string = NULL;
 }
 
 static void dx_string_iterator_impl_constructDispatch(dx_string_iterator_impl_Dispatch* SELF) {
-  DX_STRING_ITERATOR_DISPATCH(SELF)->has_value = (Core_Result(*)(Core_Boolean*,dx_string_iterator*))dx_string_iterator_impl_has_value;
-  DX_STRING_ITERATOR_DISPATCH(SELF)->get_value = (Core_Result(*)(uint32_t*,dx_string_iterator*))dx_string_iterator_impl_get_value;
-  DX_STRING_ITERATOR_DISPATCH(SELF)->next = (Core_Result(*)(dx_string_iterator*))dx_string_iterator_impl_next;
+  DX_STRING_ITERATOR_DISPATCH(SELF)->has_value = (Core_Result(*)(Core_Boolean*,dx_string_iterator*))&dx_string_iterator_impl_has_value;
+  DX_STRING_ITERATOR_DISPATCH(SELF)->get_value = (Core_Result(*)(uint32_t*,dx_string_iterator*))&dx_string_iterator_impl_get_value;
+  DX_STRING_ITERATOR_DISPATCH(SELF)->next = (Core_Result(*)(dx_string_iterator*))&dx_string_iterator_impl_next;
+  DX_STRING_ITERATOR_DISPATCH(SELF)->next_n = (Core_Result(*)(dx_string_iterator*,Core_Size))&dx_string_iterator_impl_next_n;
 }
 
 Core_Result dx_string_iterator_impl_construct(dx_string_iterator_impl* SELF, Core_String* string) {
@@ -418,7 +485,7 @@ static Core_Result dx_string_iterator_impl_get_value(uint32_t* RETURN, dx_string
   return Core_Failure;
 }
 
-static Core_Result dx_string_iterator_impl_next(dx_string_iterator_impl* SELF) {
+static Core_Result _string_iterator_impl_increment_n(dx_string_iterator_impl* SELF, Core_Size n) {
   if (!SELF) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
@@ -435,54 +502,31 @@ static Core_Result dx_string_iterator_impl_next(dx_string_iterator_impl* SELF) {
   if (Core_String_getBytes(&bytes, SELF->string)) {
     return Core_Failure;
   }
-  uint32_t code_point = 0;
-  char const* start = bytes;
-  char const* current = bytes + SELF->index;
-  char const* end = bytes + number_of_bytes;
-  char const x = *current;
-  {
-    // mask first byte with 1000.0000 (0x80)
-    // if the result is 0000.0000 (0x00) then we have a one byte sequence.
-    if (((*current) & 0x80) == 0x0) {
-      SELF->index += 1;
-      return Core_Success;
+  Core_Natural8 const* end = ((Core_Natural8 const*)bytes) + number_of_bytes;
+  Core_Size old_index = SELF->index;
+  while (n > 0) {
+    Core_Natural8 const* current = ((Core_Natural8 const*)bytes) + SELF->index;
+    Core_Size j;
+    if (_utf8_classify(&j, *current)) {
+      SELF->index = old_index;
+      return Core_Failure;
     }
-    // mask first byte with 1110.0000 (0xE0)
-    // if the result is 1100.0000 (0xC0) then we have a two byte sequence.
-    if (((*current) & 0xE0) == 0xC0) {
-      // mask second byte with 1100.0000 (0xC0)
-      // if the result is 1000.0000 (0x80) then we have a valid sequence.
-      for (Core_Size i = 0; i < 1; ++i) {
-        if (current == end) return Core_Failure;
-        if ((*current & 0xC0) != 0x80) return Core_Failure;
-      }
-      SELF->index += 2;
-      return Core_Success;
+    if (number_of_bytes - SELF->index < j) {
+      Core_setError(Core_Error_DecodingFailed);
+      SELF->index = old_index;
+      return Core_Failure;
     }
-    // mask first byte with 1111.0000 (0xF0)
-    // if the result is 1110.0000 (0xE0) then we have a three byte sequence.
-    if ((x & 0xF0) == 0xE0) {
-      // mask second to third byte with 1100.0000 (0xC0)
-      // if the result is 1000.0000 (0x80) then we have a valid sequence.
-      for (Core_Size i = 0; i < 2; ++i) {
-        if (current == end) return Core_Failure;
-        if ((*current & 0xC0) != 0x80) return Core_Failure;
-      }
-      SELF->index += 3;
-      return Core_Success;
-    }
-    // mask first byte with 1111.1000 (0xF8)
-    // if the result is 1111.0000 (0xF0) then we have a four byte sequence.
-    if ((x & 0xF8) == 0xF0) {
-      // mask second to fourth byte with 1100.0000 (0xC0)
-      // if the result is 1000.0000 (0x80) then we have a valid sequence.
-      for (Core_Size i = 0; i < 3; ++i) {
-        if (current == end) return Core_Failure;
-        if ((*current & 0xC0) != 0x80) return Core_Failure;
-      }
-      SELF->index += 4;
-      return Core_Success;
-    }
+    SELF->index += j;
+    // Decrement n.
+    n--;
   }
-  return Core_Failure;
+  return Core_Success;
+}
+
+static Core_Result dx_string_iterator_impl_next(dx_string_iterator_impl* SELF) {
+  return _string_iterator_impl_increment_n(SELF, 1);
+}
+
+static Core_Result dx_string_iterator_impl_next_n(dx_string_iterator_impl* SELF, Core_Size n) {
+  return _string_iterator_impl_increment_n(SELF, n);
 }

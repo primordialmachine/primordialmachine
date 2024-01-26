@@ -1,7 +1,7 @@
 #if !defined(DX_CORE_INLINE_OBJECT_ARRAY_H_INCLUDED)
 #define DX_CORE_INLINE_OBJECT_ARRAY_H_INCLUDED
 
-#include "dx/core/inline_pointer_array.h"
+#include "Core/Collections/InlineArrayListP.h"
 #include "dx/core/object.h"
 
 /// @brief A dynamic array of (pointers to) objects. Also supports null pointers.
@@ -13,7 +13,7 @@ static inline dx_inline_object_array* DX_INLINE_OBJECT_ARRAY(void* p) {
 }
 
 struct dx_inline_object_array {
-  Core_InlinePointerArray backend;
+  Core_InlineArrayListP backend;
 };
 
 /// @brief Initialize this dx_inline_object_array object.

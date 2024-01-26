@@ -38,7 +38,7 @@ static void dx_ddl_node_destruct(dx_ddl_node* self) {
     case dx_ddl_node_kind_error: {
     } break;
     case dx_ddl_node_kind_list: {
-      Core_InlinePointerArray_uninitialize(&self->list);
+      Core_InlineArrayListP_uninitialize(&self->list);
     } break;
     case dx_ddl_node_kind_map: {
       Core_InlinePointerHashmap_uninitialize(&self->map);
@@ -68,11 +68,11 @@ Core_Result dx_ddl_node_construct(dx_ddl_node* SELF, dx_ddl_node_kind kind) {
       /*Intentionally empty.*/
     } break;
     case dx_ddl_node_kind_list: {
-      DX_INLINE_POINTER_ARRAY_CONFIGURATION configuration = {
-        .added_callback = (void(*)(void*)) & on_added,
-        .removed_callback = (void(*)(void*)) & on_removed,
+      Core_InlineArrayListP_Configuration configuration = {
+        .addedCallback = (void(*)(void*)) & on_added,
+        .removedCallback = (void(*)(void*)) & on_removed,
       };
-      if (Core_InlinePointerArray_initialize(&SELF->list, 0, &configuration)) {
+      if (Core_InlineArrayListP_initialize(&SELF->list, 0, &configuration)) {
         return Core_Failure;
       }
     } break;
@@ -179,7 +179,7 @@ Core_Result dx_ddl_node_list_append(dx_ddl_node* SELF, dx_ddl_node* value) {
     Core_setError(Core_Error_OperationInvalid);
     return Core_Failure;
   }
-  return Core_InlinePointerArray_append(&SELF->list, (void*)value);
+  return Core_InlineArrayListP_append(&SELF->list, (void*)value);
 }
 
 Core_Result dx_ddl_node_list_prepend(dx_ddl_node* SELF, dx_ddl_node* value) {
@@ -191,7 +191,7 @@ Core_Result dx_ddl_node_list_prepend(dx_ddl_node* SELF, dx_ddl_node* value) {
     Core_setError(Core_Error_OperationInvalid);
     return Core_Failure;
   }
-  return Core_InlinePointerArray_prepend(&SELF->list, (void*)value);
+  return Core_InlineArrayListP_prepend(&SELF->list, (void*)value);
 }
 
 Core_Result dx_ddl_node_list_insert(dx_ddl_node* SELF, dx_ddl_node* value, Core_Size index) {
@@ -203,7 +203,7 @@ Core_Result dx_ddl_node_list_insert(dx_ddl_node* SELF, dx_ddl_node* value, Core_
     Core_setError(Core_Error_OperationInvalid);
     return Core_Failure;
   }
-  return Core_InlinePointerArray_insert(&SELF->list, (void*)value, index);
+  return Core_InlineArrayListP_insert(&SELF->list, index, (void*)value);
 }
 
 Core_Result dx_ddl_node_list_get(dx_ddl_node** RETURN, dx_ddl_node* SELF, Core_Size index) {
@@ -216,7 +216,7 @@ Core_Result dx_ddl_node_list_get(dx_ddl_node** RETURN, dx_ddl_node* SELF, Core_S
     return Core_Failure;
   }
   dx_ddl_node* temporary = NULL;
-  if (Core_InlinePointerArray_get_at(&temporary, &SELF->list, index)) {
+  if (Core_InlineArrayListP_get(&temporary, &SELF->list, index)) {
     return Core_Failure;
   }
   CORE_REFERENCE(temporary);
@@ -234,7 +234,7 @@ Core_Result dx_ddl_node_list_get_size(Core_Size* RETURN, dx_ddl_node* SELF) {
     return Core_Failure;
   }
   Core_Size temporary;
-  if (Core_InlinePointerArray_getSize(&temporary, &SELF->list)) {
+  if (Core_InlineArrayListP_getSize(&temporary, &SELF->list)) {
     return Core_Failure;
   }
   *RETURN = temporary;
