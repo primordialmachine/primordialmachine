@@ -17,9 +17,9 @@ static Core_Real32 const OPEN_CLOSE_SPEED = 2.f;
 static Core_Size const MAX_LINES = 20;
 
 // the console background color
-static DX_RGBA_F32 const CONSOLE_BACKGROUND_COLOR = { .r = 0.f, .g = 0.f, .b = 0.f, .a = 1.f };
+static Core_InlineRgbaR32 const CONSOLE_BACKGROUND_COLOR = { .r = 0.f, .g = 0.f, .b = 0.f, .a = 1.f };
 // the text color
-static DX_RGBA_F32 const TEXT_COLOR = { .r = 1.f, .g = 1.f, .b = 1.f, .a = 1.f };
+static Core_InlineRgbaR32 const TEXT_COLOR = { .r = 1.f, .g = 1.f, .b = 1.f, .a = 1.f };
 
 Core_defineObjectType("dx.default_console",
                       dx_default_console,
@@ -360,7 +360,7 @@ static Core_Result render(dx_default_console* SELF, Core_Real32 delta_seconds, C
         string_buffer = NULL;
         {
           dx_ui_text_field_set_text_color(SELF->ui_input_field, &TEXT_COLOR);
-          DX_RGBA_F32 bgc;
+          Core_InlineRgbaR32 bgc;
           dx_rgba_f32_set(&bgc, 0.f, 0.f, 0.f, 1.f);
           dx_rgba_f32_set(&bgc, 1.f, 0.f, 0.f, 1.f);
           dx_ui_text_field_set_background_color(SELF->ui_input_field, &bgc);

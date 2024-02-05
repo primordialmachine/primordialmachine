@@ -16,7 +16,7 @@ struct dx_adl_type_handlers_image_operations_color_fill {
   /// @brief
   /// Set of expected keys.
   /// If a key is not in that set, then this is a semantical error.
-  Core_InlinePointerHashmap expected_keys;
+  Core_InlineHashMapPP expected_keys;
 };
 
 static inline dx_adl_type_handlers_image_operations_color_fill_Dispatch* DX_ADL_TYPE_HANDLERS_IMAGE_OPERATIONS_COLOR_FILL_DISPATCH(void* p) {

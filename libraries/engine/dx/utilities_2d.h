@@ -131,7 +131,7 @@ static inline Core_Result dx_engine_utilities_2d_create_material(dx_val_material
   CORE_UNREFERENCE(name_string);
   name_string = NULL;
   dx_assets_color_rgb_n8* ambient_color = NULL;
-  DX_RGB_N8 WHITE = { .r = 255, .g = 255, .b = 255 };
+  Core_InlineRgbN8 WHITE = { .r = 255, .g = 255, .b = 255 };
   if (dx_assets_color_rgb_n8_create(&ambient_color, &WHITE)) {
     CORE_UNREFERENCE(material_asset);
     material_asset = NULL;

@@ -77,7 +77,7 @@ Core_Result dx_assets_image_operations_checkerboard_pattern_fill_set_first_check
   return Core_Success;
 }
 
-Core_Result dx_assets_image_operations_checkerboard_pattern_fill_get_first_checker_color(DX_RGB_N8* RETURN, dx_assets_image_operations_checkerboard_pattern_fill* SELF) {
+Core_Result dx_assets_image_operations_checkerboard_pattern_fill_get_first_checker_color(Core_InlineRgbN8* RETURN, dx_assets_image_operations_checkerboard_pattern_fill* SELF) {
   *RETURN = DX_ASSETS_COLOR_RGB_N8(SELF->first_checker_color->object)->value;
   return Core_Success;
 }
@@ -106,7 +106,7 @@ Core_Result dx_assets_image_operations_checkerboard_pattern_fill_set_second_chec
   return Core_Success;
 }
 
-Core_Result dx_assets_image_operations_checkerboard_pattern_fill_get_second_checker_color(DX_RGB_N8* RETURN, dx_assets_image_operations_checkerboard_pattern_fill* SELF) {
+Core_Result dx_assets_image_operations_checkerboard_pattern_fill_get_second_checker_color(Core_InlineRgbN8* RETURN, dx_assets_image_operations_checkerboard_pattern_fill* SELF) {
   *RETURN = DX_ASSETS_COLOR_RGB_N8(SELF->second_checker_color)->value;
   return Core_Success;
 }

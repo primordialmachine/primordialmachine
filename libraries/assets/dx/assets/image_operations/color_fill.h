@@ -47,6 +47,6 @@ Core_Result dx_assets_image_operations_color_fill_set_color(dx_assets_image_oper
 /// @param RETURN A pointer to the DX_RGB_U8 color.
 /// @success <code>*RETURN</code> was assigened the values.
 /// @method{dx_assets_image_operations_color_fill}
-Core_Result dx_assets_image_operations_color_fill_get_color(DX_RGB_N8* RETURN, dx_assets_image_operations_color_fill* SELF);
+Core_Result dx_assets_image_operations_color_fill_get_color(Core_InlineRgbN8* RETURN, dx_assets_image_operations_color_fill* SELF);
 
 #endif // DX_ASSETS_IMAGE_OPERATIONS_COLOR_FILL_H_INCLUDED

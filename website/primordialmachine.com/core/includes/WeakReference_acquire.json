@@ -1,0 +1,36 @@
+{
+  "type" : "method",
+  "last-update" : "2024-02-01",
+  "indices" : "core",
+  "name" : "Core_WeakReference_acquire",
+  "id" : "core-weakreference-acquire",
+  "signature" : "Core_Result Core_WeakReference_acquire(Core_Object** RETURN, Core_WeakReference* SELF);",
+  "parameters" : [
+    {
+      "name" : "RETURN",
+      "type" : "@{code('Core_Object**')}",
+      "description" : "A pointer to this @{code('Core_Object*')} variable."
+    },
+    {
+      "name" : "SELF",
+      "type" : "@{code('Core_WeakReference*')}",
+      "description" : "A pointer to this @{code('Core_WeakReference*')} object."
+    }
+  ],
+  "success": [
+    "@{code('*RETURN')} was a pointer.@{newline()}",
+    "If a strong reference can be created, this pointer points to an object and the caller acquired a reference to that object.@{newline()}",
+    "Otherwise the pointer is a null pointer."
+  ],
+  "errors" : [
+    {
+      "errorCode" : "Core_Error_ArgumentInvalid",
+      "errorCondition" : "@{code('SELF')} is a null pointer."
+    }
+  ],
+  "description" : "Acquire a strong reference from a weak reference.",
+  "return" : "@{code('Core_Success')} on success. @{code('Core_Failure')} on failure.",
+  "remarks" : [
+    "This function sets the by-thread error variable on failure."
+  ]
+}

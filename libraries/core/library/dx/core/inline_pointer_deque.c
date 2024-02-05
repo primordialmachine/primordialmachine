@@ -12,21 +12,10 @@ static Core_Size const GREATEST_CAPACITY = Core_Size_Greatest / sizeof(void*);
 /// @brief The least capacity, in elements, of a pointer array.
 static Core_Size const LEAST_CAPACITY = 0;
 
-static inline Core_Size MAX(Core_Size self, Core_Size other);
+// Macro-like function to compute index % capacity.
+static inline Core_Size MOD(Core_Size index, Core_Size capacity);
 
-static inline Core_Size MIN(Core_Size self, Core_Size other);
-
-static inline MOD(Core_Size index, Core_Size capacity);
-
-static inline Core_Size MAX(Core_Size self, Core_Size other) {
-  return self > other ? self : other;
-}
-
-static inline Core_Size MIN(Core_Size self, Core_Size other) {
-  return self < other ? self : other;
-}
-
-static inline MOD(Core_Size index, Core_Size capacity) {
+static inline Core_Size MOD(Core_Size index, Core_Size capacity) {
   return index % capacity;
 }
 
@@ -43,9 +32,9 @@ typedef struct _dx_impl {
   Core_Size read;
 
   /// @brief A pointer to the @a dx_added_callback function or a null pointer.
-  dx_inline_pointer_deque_added_callback* added_callback;
+  Core_InlineArrayDequeP_added_callback* added_callback;
   /// @brief A pointer to the @a dx_removed_callback function or  a null pointer.
-  dx_inline_pointer_deque_removed_callback* removed_callback;
+  Core_InlineArrayDequeP_removed_callback* removed_callback;
 
 } _dx_impl; // struct _dx_impl
 
@@ -58,7 +47,7 @@ typedef struct _dx_impl {
 /// @error #Core_Error_ArgumentInvalid @a self is a null pointer
 /// @error #Core_Error_AllocationFailed @a initial_capacity is too big
 /// @error #Core_Error_AllocationFailed an allocation failed
-static Core_Result _dx_impl_initialize(_dx_impl* SELF, Core_Size initial_capacity, DX_INLINE_POINTER_DEQUE_CONFIGURATION const* configuration);
+static Core_Result _dx_impl_initialize(_dx_impl* SELF, Core_Size initial_capacity, Core_InlineArrayDequeP_Configuration const* configuration);
 
 /// @brief Uninitialize this _dx_impl object.
 /// @param SELF A pointer to this _dx_impl object.
@@ -123,7 +112,7 @@ static Core_Result _dx_impl_clear(_dx_impl* SELF);
 /// @method-call
 /// @error #Core_Error_ArgumentInvalid @a self is a null pointer
 /// @error #Core_Error_AllocationFailed an allocation failed
-static Core_Result _dx_impl_push_back(_dx_impl* SELF, dx_inline_pointer_deque_element pointer);
+static Core_Result _dx_impl_push_back(_dx_impl* SELF, Core_InlineArrayDequeP_element pointer);
 
 /// @brief Prepend an element.
 /// @param SELF A pointer to this _dx_impl object.
@@ -131,7 +120,7 @@ static Core_Result _dx_impl_push_back(_dx_impl* SELF, dx_inline_pointer_deque_el
 /// @method-call
 /// @error #Core_Error_ArgumentInvalid @a SELF is a null pointer
 /// @error #Core_Error_AllocationFailed an allocation failed
-static Core_Result _dx_impl_push_front(_dx_impl* SELF, dx_inline_pointer_deque_element pointer);
+static Core_Result _dx_impl_push_front(_dx_impl* SELF, Core_InlineArrayDequeP_element pointer);
 
 /// @brief Insert an element.
 /// @param SELF A pointer to this _dx_impl object.
@@ -141,10 +130,10 @@ static Core_Result _dx_impl_push_front(_dx_impl* SELF, dx_inline_pointer_deque_e
 /// @error #Core_Error_ArgumentInvalid @a SELF is a null pointer
 /// @error #Core_Error_ArgumentInvalid @a index is greater than the size of this _dx_impl object
 /// @error #Core_Error_AllocationFailed an allocation failed
-static Core_Result _dx_impl_insert(_dx_impl* SELF, dx_inline_pointer_deque_element pointer, Core_Size index);
+static Core_Result _dx_impl_insert(_dx_impl* SELF, Core_InlineArrayDequeP_element pointer, Core_Size index);
 
 /// @brief Get the pointer at the specified index.
-/// @param RETURN A pointer to a dx_inline_pointer_deque_element variable.
+/// @param RETURN A pointer to a Core_InlineArrayDequeP_element variable.
 /// @param SELF A pointer to this _dx_impl object.
 /// @param index The index.
 /// @success <code>*RETURN</code> was assigned the pointer at the specified index.
@@ -152,10 +141,10 @@ static Core_Result _dx_impl_insert(_dx_impl* SELF, dx_inline_pointer_deque_eleme
 /// @error #Core_Error_ArgumentInvalid @a RETURN is a null pointer
 /// @error #Core_Error_ArgumentInvalid @a SELF is a null pointer
 /// @error #Core_Error_ArgumentInvalid @a index is greater than the size of this _dx_impl object
-static Core_Result _dx_impl_get_at(dx_inline_pointer_deque_element* RETURN, _dx_impl* SELF, Core_Size index);
+static Core_Result _dx_impl_get_at(Core_InlineArrayDequeP_element* RETURN, _dx_impl* SELF, Core_Size index);
 
 /// @brief Remove the pointer at the specified index.
-/// @param RETURN A pointer to a dx_inline_pointer_deque_element variable.
+/// @param RETURN A pointer to a Core_InlineArrayDequeP_element variable.
 /// @param SELF A pointer to the _dx_impl object.
 /// @param steal The "removed" callback is not invoked if this is @a true.
 /// @param index The index.
@@ -163,10 +152,10 @@ static Core_Result _dx_impl_get_at(dx_inline_pointer_deque_element* RETURN, _dx_
 /// @error #Core_Error_ArgumentInvalid @a RETURN is a null pointer
 /// @error #Core_Error_ArgumentInvalid @a SELF is a null pointer
 /// @error #Core_Error_ArgumentInvalid @a index is greater than or equal to the size of this _dx_impl object
-static Core_Result _dx_impl_remove(dx_inline_pointer_deque_element* RETURN, _dx_impl* SELF, Core_Boolean steal, Core_Size index);
+static Core_Result _dx_impl_remove(Core_InlineArrayDequeP_element* RETURN, _dx_impl* SELF, Core_Boolean steal, Core_Size index);
 
 /// @brief Pop the first pointer of the deque.
-/// @param RETURN A pointer to a <code>dx_inline_pointer_deque_element</code> variable.
+/// @param RETURN A pointer to a <code>Core_InlineArrayDequeP_element</code> variable.
 /// @param SELF A pointer to this _dx_impl object.
 /// @param steal The "removed" callback is not invoked if this is @a true.
 /// @success <code>*RETURN</code> was assigned the first pointer of the deque.
@@ -174,10 +163,10 @@ static Core_Result _dx_impl_remove(dx_inline_pointer_deque_element* RETURN, _dx_
 /// @error #Core_Error_ArgumentInvalid @a RETURN is a null pointer
 /// @error #Core_Error_ArgumentInvalid @a SELF is a null pointer
 /// @error #Core_Error_ArgumentInvalid the deque is empty.
-static Core_Result _dx_impl_pop_front(dx_inline_pointer_deque_element* RETURN, _dx_impl* SELF, Core_Boolean steal);
+static Core_Result _dx_impl_pop_front(Core_InlineArrayDequeP_element* RETURN, _dx_impl* SELF, Core_Boolean steal);
 
 /// @brief Pop the last pointer of the deque.
-/// @param RETURN A pointer to a <code>dx_inline_pointer_deque_element</code> variable.
+/// @param RETURN A pointer to a <code>Core_InlineArrayDequeP_element</code> variable.
 /// @param SELF A pointer to this _dx_impl object.
 /// @param steal The "removed" callback is not invoked if this is @a true.
 /// @success <code>*RETURN</code> was assigned the last pointer of the deque.
@@ -185,16 +174,16 @@ static Core_Result _dx_impl_pop_front(dx_inline_pointer_deque_element* RETURN, _
 /// @error #Core_Error_ArgumentInvalid @a RETURN is a null pointer
 /// @error #Core_Error_ArgumentInvalid @a SELF is a null pointer
 /// @error #Core_Error_ArgumentInvalid the deque is empty
-static Core_Result _dx_impl_pop_back(dx_inline_pointer_deque_element * RETURN, _dx_impl * SELF, Core_Boolean steal);
+static Core_Result _dx_impl_pop_back(Core_InlineArrayDequeP_element * RETURN, _dx_impl * SELF, Core_Boolean steal);
 
-static Core_Result _dx_impl_initialize(_dx_impl* SELF, Core_Size initial_capacity, DX_INLINE_POINTER_DEQUE_CONFIGURATION const* configuration) {
+static Core_Result _dx_impl_initialize(_dx_impl* SELF, Core_Size initial_capacity, Core_InlineArrayDequeP_Configuration const* configuration) {
   if (!SELF) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
   }
   Core_Size overflow;
   Core_Size initial_capacity_bytes;
-  Core_safeMulSz(&initial_capacity_bytes, initial_capacity, sizeof(dx_inline_pointer_deque_element), &overflow); // must succeed
+  Core_safeMulSz(&initial_capacity_bytes, initial_capacity, sizeof(Core_InlineArrayDequeP_element), &overflow); // must succeed
   if (overflow) {
     Core_setError(Core_Error_AllocationFailed);
     return Core_Failure;
@@ -303,7 +292,7 @@ static Core_Result _dx_impl_clear(_dx_impl* SELF) {
   return Core_Success;
 }
 
-static Core_Result _dx_impl_push_back(_dx_impl* SELF, dx_inline_pointer_deque_element pointer) {
+static Core_Result _dx_impl_push_back(_dx_impl* SELF, Core_InlineArrayDequeP_element pointer) {
   if (!SELF) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
@@ -311,7 +300,7 @@ static Core_Result _dx_impl_push_back(_dx_impl* SELF, dx_inline_pointer_deque_el
   return _dx_impl_insert(SELF, pointer, SELF->size);
 }
 
-static Core_Result _dx_impl_push_front(_dx_impl* SELF, dx_inline_pointer_deque_element pointer) {
+static Core_Result _dx_impl_push_front(_dx_impl* SELF, Core_InlineArrayDequeP_element pointer) {
   if (!SELF) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
@@ -319,7 +308,7 @@ static Core_Result _dx_impl_push_front(_dx_impl* SELF, dx_inline_pointer_deque_e
   return _dx_impl_insert(SELF, pointer, 0);
 }
 
-static Core_Result _dx_impl_insert(_dx_impl* SELF, dx_inline_pointer_deque_element pointer, Core_Size index) {
+static Core_Result _dx_impl_insert(_dx_impl* SELF, Core_InlineArrayDequeP_element pointer, Core_Size index) {
   if (!SELF) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
@@ -390,7 +379,7 @@ static Core_Result _dx_impl_insert(_dx_impl* SELF, dx_inline_pointer_deque_eleme
   return Core_Success;
 }
 
-static Core_Result _dx_impl_get_at(dx_inline_pointer_deque_element* RETURN, _dx_impl* SELF, Core_Size index) {
+static Core_Result _dx_impl_get_at(Core_InlineArrayDequeP_element* RETURN, _dx_impl* SELF, Core_Size index) {
   if (!RETURN || !SELF) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
@@ -403,7 +392,7 @@ static Core_Result _dx_impl_get_at(dx_inline_pointer_deque_element* RETURN, _dx_
   return Core_Success;
 }
 
-static Core_Result _dx_impl_remove(dx_inline_pointer_deque_element* RETURN, _dx_impl* SELF, Core_Boolean steal, Core_Size index) {
+static Core_Result _dx_impl_remove(Core_InlineArrayDequeP_element* RETURN, _dx_impl* SELF, Core_Boolean steal, Core_Size index) {
   if (!RETURN || !SELF) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
@@ -440,7 +429,7 @@ static Core_Result _dx_impl_remove(dx_inline_pointer_deque_element* RETURN, _dx_
   return Core_Success;
 }
 
-static Core_Result _dx_impl_pop_front(dx_inline_pointer_deque_element* RETURN, _dx_impl* SELF, Core_Boolean steal) {
+static Core_Result _dx_impl_pop_front(Core_InlineArrayDequeP_element* RETURN, _dx_impl* SELF, Core_Boolean steal) {
   if (SELF->size == 0) {
     Core_setError(Core_Error_Empty);
     return Core_Failure;
@@ -448,7 +437,7 @@ static Core_Result _dx_impl_pop_front(dx_inline_pointer_deque_element* RETURN, _
   return _dx_impl_remove(RETURN, SELF, steal, 0);
 }
 
-static Core_Result _dx_impl_pop_back(dx_inline_pointer_deque_element* RETURN, _dx_impl* SELF, Core_Boolean steal ) {
+static Core_Result _dx_impl_pop_back(Core_InlineArrayDequeP_element* RETURN, _dx_impl* SELF, Core_Boolean steal ) {
   if (SELF->size == 0) {
     Core_setError(Core_Error_Empty);
     return Core_Failure;
@@ -462,7 +451,7 @@ static inline _dx_impl* _DX_IMPL(void* p) {
   return (_dx_impl*)p;
 }
 
-Core_Result dx_inline_pointer_deque_initialize(dx_inline_pointer_deque* SELF, Core_Size initial_capacity, DX_INLINE_POINTER_DEQUE_CONFIGURATION const* configuration) {
+Core_Result Core_InlineArrayDequeP_initialize(Core_InlineArrayDequeP* SELF, Core_Size initial_capacity, Core_InlineArrayDequeP_Configuration const* configuration) {
   _dx_impl* pimpl = NULL;
   if (Core_Memory_allocate(&pimpl, sizeof(_dx_impl))) {
     return Core_Failure;
@@ -476,74 +465,74 @@ Core_Result dx_inline_pointer_deque_initialize(dx_inline_pointer_deque* SELF, Co
   return Core_Success;
 }
 
-void dx_inline_pointer_deque_uninitialize(dx_inline_pointer_deque* SELF) {
+void Core_InlineArrayDequeP_uninitialize(Core_InlineArrayDequeP* SELF) {
   _dx_impl* pimpl = _DX_IMPL(SELF->pimpl);
   SELF->pimpl = NULL;
   _dx_impl_uninitialize(pimpl);
   Core_Memory_deallocate(pimpl);
 }
 
-Core_Result dx_inline_pointer_deque_increase_capacity(dx_inline_pointer_deque* SELF, Core_Size required_additional_capacity) {
+Core_Result Core_InlineArrayDequeP_increaseCapacity(Core_InlineArrayDequeP* SELF, Core_Size required_additional_capacity) {
   _dx_impl* pimpl = _DX_IMPL(SELF->pimpl);
   return _dx_impl_increaseCapacity(pimpl, required_additional_capacity);
 }
 
-Core_Result dx_inline_pointer_deque_ensure_free_capacity(dx_inline_pointer_deque* SELF, Core_Size required_free_capacity) {
+Core_Result Core_InlineArrayDequeP_ensureFreeCapacity(Core_InlineArrayDequeP* SELF, Core_Size required_free_capacity) {
   _dx_impl* pimpl = _DX_IMPL(SELF->pimpl);
   return _dx_impl_ensureFreeCapacity(pimpl, required_free_capacity);
 }
 
-Core_Result dx_inline_pointer_deque_get_size(Core_Size* RETURN, dx_inline_pointer_deque const* SELF) {
+Core_Result Core_InlineArrayDequeP_getSize(Core_Size* RETURN, Core_InlineArrayDequeP const* SELF) {
   _dx_impl* pimpl = _DX_IMPL(SELF->pimpl);
   return _dx_impl_getSize(RETURN, pimpl);
 }
 
-Core_Result dx_inline_pointer_deque_get_capacity(Core_Size* RETURN, dx_inline_pointer_deque const* SELF) {
+Core_Result Core_InlineArrayDequeP_getCapacity(Core_Size* RETURN, Core_InlineArrayDequeP const* SELF) {
   _dx_impl* pimpl = _DX_IMPL(SELF->pimpl);
   return _dx_impl_getCapacity(RETURN, pimpl);
 }
 
-Core_Result dx_inline_pointer_deque_get_free_capacity(Core_Size* RETURN, dx_inline_pointer_deque const* SELF) {
+Core_Result Core_InlineArrayDequeP_getFreeCapacity(Core_Size* RETURN, Core_InlineArrayDequeP const* SELF) {
   _dx_impl* pimpl = _DX_IMPL(SELF->pimpl);
   return _dx_impl_getFreeCapacity(RETURN, pimpl);
 }
 
-Core_Result dx_inline_pointer_deque_clear(dx_inline_pointer_deque* SELF) {
+Core_Result Core_InlineArrayDequeP_clear(Core_InlineArrayDequeP* SELF) {
   _dx_impl* pimpl = _DX_IMPL(SELF->pimpl);
   return _dx_impl_clear(pimpl);
 }
 
-Core_Result dx_inline_pointer_deque_push_back(dx_inline_pointer_deque* SELF, dx_inline_pointer_deque_element pointer) {
+Core_Result Core_InlineArrayDequeP_push_back(Core_InlineArrayDequeP* SELF, Core_InlineArrayDequeP_element pointer) {
   _dx_impl* pimpl = _DX_IMPL(SELF->pimpl);
   return _dx_impl_push_back(pimpl, pointer);
 }
 
-Core_Result dx_inline_pointer_deque_push_front(dx_inline_pointer_deque* SELF, dx_inline_pointer_deque_element pointer) {
+Core_Result Core_InlineArrayDequeP_push_front(Core_InlineArrayDequeP* SELF, Core_InlineArrayDequeP_element pointer) {
   _dx_impl* pimpl = _DX_IMPL(SELF->pimpl);
   return _dx_impl_push_front(pimpl, pointer);
 }
 
-Core_Result dx_inline_pointer_deque_insert(dx_inline_pointer_deque* SELF, dx_inline_pointer_deque_element pointer, Core_Size index) {
+Core_Result Core_InlineArrayDequeP_insert(Core_InlineArrayDequeP* SELF, Core_InlineArrayDequeP_element pointer, Core_Size index) {
   _dx_impl* pimpl = _DX_IMPL(SELF->pimpl);
   return _dx_impl_insert(pimpl, pointer, index);
 }
 
-Core_Result dx_inline_pointer_deque_get_at(dx_inline_pointer_deque_element* RETURN, dx_inline_pointer_deque* SELF, Core_Size index) {
+Core_Result Core_InlineArrayDequeP_get_at(Core_InlineArrayDequeP_element* RETURN, Core_InlineArrayDequeP* SELF, Core_Size index) {
   _dx_impl* pimpl = _DX_IMPL(SELF->pimpl);
   return _dx_impl_get_at(RETURN, pimpl, index);
 }
 
-Core_Result dx_inline_pointer_deque_remove(dx_inline_pointer_deque_element* RETURN, dx_inline_pointer_deque* SELF, Core_Boolean steal, Core_Size index) {
+Core_Result Core_InlineArrayDequeP_remove(Core_InlineArrayDequeP_element* RETURN, Core_InlineArrayDequeP* SELF, Core_Boolean steal, Core_Size index) {
   _dx_impl* pimpl = _DX_IMPL(SELF->pimpl);
   return _dx_impl_remove(RETURN, pimpl, steal, index);
 }
 
-Core_Result dx_inline_pointer_deque_pop_front(dx_inline_pointer_deque_element* RETURN, dx_inline_pointer_deque* SELF, Core_Boolean steal) {
+Core_Result Core_InlineArrayDequeP_pop_front(Core_InlineArrayDequeP_element* RETURN, Core_InlineArrayDequeP* SELF, Core_Boolean steal) {
   _dx_impl* pimpl = _DX_IMPL(SELF->pimpl);
   return _dx_impl_pop_front(RETURN, pimpl, steal);
 }
 
-Core_Result dx_inline_pointer_deque_pop_back(dx_inline_pointer_deque_element* RETURN, dx_inline_pointer_deque* SELF, Core_Boolean steal) {
+Core_Result Core_InlineArrayDequeP_pop_back(Core_InlineArrayDequeP_element* RETURN, Core_InlineArrayDequeP* SELF, Core_Boolean steal) {
   _dx_impl* pimpl = _DX_IMPL(SELF->pimpl);
   return _dx_impl_pop_back(RETURN, pimpl, steal);
 }

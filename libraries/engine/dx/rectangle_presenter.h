@@ -41,8 +41,8 @@ Core_Result dx_rectangle_presenter_construct(dx_rectangle_presenter* SELf, dx_va
 
 Core_Result dx_rectangle_presenter_create(dx_rectangle_presenter** RETURN, dx_val_context* val_context, dx_aal_context* aal_context);
 
-Core_Result dx_rectangle_presenter_fill_rectangle(dx_rectangle_presenter* SELF, DX_RECT2_F32 const* target_rectangle, Core_Real32 target_depth, DX_RGBA_F32 const* color);
+Core_Result dx_rectangle_presenter_fill_rectangle(dx_rectangle_presenter* SELF, DX_RECT2_F32 const* target_rectangle, Core_Real32 target_depth, Core_InlineRgbaR32 const* color);
 
-Core_Result dx_rectangle_presenter_stroke_rectangle(dx_rectangle_presenter* SELF, DX_RECT2_F32 const* target_rectangle, Core_Real32 target_depth, DX_RGBA_F32 const* color);
+Core_Result dx_rectangle_presenter_stroke_rectangle(dx_rectangle_presenter* SELF, DX_RECT2_F32 const* target_rectangle, Core_Real32 target_depth, Core_InlineRgbaR32 const* color);
 
 #endif // DX_RECTANGLE_PRESENTER_H_INCLUDED

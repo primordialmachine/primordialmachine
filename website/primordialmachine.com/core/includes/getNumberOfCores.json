@@ -1,6 +1,6 @@
 {
   "type" : "function",
-  "last-update" : "2023-12-18",
+  "last-update" : "2023-02-04",
   "indices" : "core",
   "name" : "Core_getNumberOfCores",
   "id" : "core-getnumberofcores",
@@ -19,7 +19,7 @@
       "errorCondition" : "@{code('RETURN')} is a null pointer"
     },
     {
-      "errorCode" : "@{code('DX_ERROR_ENVIRONMENT_FAILED')}",
+      "errorCode" : "@{code('Core_Error_EnvironmentFailed')}",
       "errorCondition" : "the executing target environment failed"
     }
   ],

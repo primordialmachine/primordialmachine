@@ -56,14 +56,36 @@ static void Core_Object_onTypeDestroyed() {
   _Core_Object_type = NULL;
 }
 
+static void Core_Object_constructDispatch(Core_Object_Dispatch* SELF) {
+#if _DEBUG && 1 == Core_withObjectDispatchMagicBytes
+  SELF->magic_bytes[0] = 'D';
+  SELF->magic_bytes[1] = 'I';
+  SELF->magic_bytes[2] = 'S';
+  SELF->magic_bytes[3] = 'P';
+  SELF->magic_bytes[4] = 'A';
+  SELF->magic_bytes[5] = 'T';
+  SELF->magic_bytes[6] = 'C';
+  SELF->magic_bytes[7] = 'H';
+#endif
+}
+
 Core_Result Core_Object_getType(Core_Type** RETURN) {
   if (!_Core_Object_type) {
+  #if _DEBUG && 1 == Core_withObjectDispatchMagicBytes
+    if (Core_TypeSystem_defineObjectType(&_Core_Object_type,
+                                         "Core.Object", sizeof("Core.Object") - 1,
+                                         &Core_Object_onTypeDestroyed,
+                                         NULL,
+                                         sizeof(Core_Object), NULL,
+                                         sizeof(Core_Object_Dispatch), &Core_Object_constructDispatch)) {
+  #else
     if (Core_TypeSystem_defineObjectType(&_Core_Object_type,
                                          "Core.Object", sizeof("Core.Object") - 1,
                                          &Core_Object_onTypeDestroyed,
                                          NULL,
                                          sizeof(Core_Object), NULL,
                                          sizeof(Core_Object_Dispatch), NULL)) {
+  #endif
       return Core_Failure;
     }
   }
@@ -71,22 +93,22 @@ Core_Result Core_Object_getType(Core_Type** RETURN) {
   return Core_Success;
 }
 
-void DX_DEBUG_CHECK_OBJECT_MAGIC_BYTES(void* p) {
-#if _DEBUG && 1 == DX_OBJECT_WITH_MAGIC_BYTES
+#if _DEBUG && 1 == Core_withObjectMagicBytes
+void Core_Debug_checkObjectMagicBytes(void* p) {
   DX_DEBUG_ASSERT(NULL != p);
   Core_Object* q = CORE_OBJECT(p);
-  // 'O', 'B', 'J', 'E', 'T'' 
+  // 'O', 'B', 'J', 'E', 'C', 'T' 
   DX_DEBUG_ASSERT(q->magic_bytes[0] == 'O');
   DX_DEBUG_ASSERT(q->magic_bytes[1] == 'B');
   DX_DEBUG_ASSERT(q->magic_bytes[2] == 'J');
   DX_DEBUG_ASSERT(q->magic_bytes[3] == 'E');
   DX_DEBUG_ASSERT(q->magic_bytes[4] == 'C');
   DX_DEBUG_ASSERT(q->magic_bytes[5] == 'T');
-#endif
 }
+#endif
 
-void DX_DEBUG_CHECK_OBJECT_DISPATCH_MAGIC_BYTES(void* p) {
-#if _DEBUG && 1 == DX_OBJECT_DISPATCH_WITH_MAGIC_BYTES
+#if _DEBUG && 1 == Core_withObjectDispatchMagicBytes
+void Core_Debug_checkObjectDispatchMagicBytes(void* p) {
   DX_DEBUG_ASSERT(NULL != p);
   Core_Object_Dispatch* q = CORE_OBJECT_DISPATCH(p);
   // 'D', 'I', 'S', 'P', 'A', 'T', 'C', 'H'
@@ -98,8 +120,8 @@ void DX_DEBUG_CHECK_OBJECT_DISPATCH_MAGIC_BYTES(void* p) {
   DX_DEBUG_ASSERT(q->magic_bytes[5] == 'T');
   DX_DEBUG_ASSERT(q->magic_bytes[6] == 'C');
   DX_DEBUG_ASSERT(q->magic_bytes[7] == 'H');
-#endif
 }
+#endif
 
 Core_Result Core_Object_allocate(Core_Object** RETURN, Core_Size size) {
   if (!RETURN) {
@@ -121,7 +143,7 @@ Core_Result Core_Object_allocate(Core_Object** RETURN, Core_Size size) {
   object->reference_count = 1;
   object->type = type;
   object->weak_references = NULL;
-#if _DEBUG && 1 == DX_OBJECT_WITH_MAGIC_BYTES
+#if _DEBUG && 1 == Core_withObjectMagicBytes
   object->magic_bytes[0] = 'O';
   object->magic_bytes[1] = 'B';
   object->magic_bytes[2] = 'J';
@@ -133,13 +155,13 @@ Core_Result Core_Object_allocate(Core_Object** RETURN, Core_Size size) {
   return Core_Success;
 }
 
-void Core_Object_reference(Core_Object *object) {
-  DX_DEBUG_CHECK_OBJECT_MAGIC_BYTES(object);
+void Core_reference(Core_Object *object) {
+  Core_Debug_checkObjectMagicBytes(object);
   dx_reference_counter_increment(&object->reference_count);
 }
 
-void Core_Object_unreference(Core_Object* object) {
-  DX_DEBUG_CHECK_OBJECT_MAGIC_BYTES(object);
+void Core_unreference(Core_Object* object) {
+  Core_Debug_checkObjectMagicBytes(object);
   if (!dx_reference_counter_decrement(&object->reference_count)) {
     _acquire_weak_references_lock();
     while (object->weak_references) {

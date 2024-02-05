@@ -274,7 +274,7 @@ Core_defineObjectType("dx.font",
                       Core_Object);
 
 static void dx_font_destruct(dx_font* SELF) {
-  Core_InlinePointerHashmap_remove(&SELF->font_manager->fonts, SELF->key);
+  Core_InlineHashMapPP_remove(&SELF->font_manager->fonts, SELF->key);
   
   _backend_impl* pimpl = (_backend_impl*)SELF->font_manager->pimpl;
   pimpl->plugin_unreference_font((dx_font_loader_plugin_font*)SELF->font_pimpl);
@@ -437,28 +437,28 @@ static void font_key_removed(dx_font_key** a) {
 Core_Result dx_font_manager_construct(dx_font_manager* SELF, dx_val_context* context) {
   DX_CONSTRUCT_PREFIX(dx_font_manager);
 
-  Core_InlinePointerHashMap_Configuration configuration = {
-    .compareKeysCallback = (Core_InlinePointerHashmap_CompareKeysCallback*) & compare_font_key,
-    .hashKeyCallback = (Core_InlinePointerHashmap_HashKeyCallback*) & hash_font_key,
-    .keyAddedCallback = (Core_InlinePointerHashMap_KeyAddedCallback*) & font_key_added,
-    .keyRemovedCallback = (Core_InlinePointerHashMap_KeyRemovedCallback*) & font_key_removed,
+  Core_InlineHashMapPP_Configuration configuration = {
+    .compareKeysCallback = (Core_InlineHashMapPP_CompareKeysCallback*) & compare_font_key,
+    .hashKeyCallback = (Core_InlineHashMapPP_HashKeyCallback*) & hash_font_key,
+    .keyAddedCallback = (Core_InlineHashMapPP_KeyAddedCallback*) & font_key_added,
+    .keyRemovedCallback = (Core_InlineHashMapPP_KeyRemovedCallback*) & font_key_removed,
     .valueAddedCallback = NULL,
     .valueRemovedCallback = NULL,
   };
-  if (Core_InlinePointerHashmap_initialize(&SELF->fonts, &configuration)) {
+  if (Core_InlineHashMapPP_initialize(&SELF->fonts, &configuration)) {
     return Core_Failure;
   }
 
   SELF->pimpl = malloc(sizeof(_backend_impl));
   if (!SELF->pimpl) {
-    Core_InlinePointerHashmap_uninitialize(&SELF->fonts);
+    Core_InlineHashMapPP_uninitialize(&SELF->fonts);
     Core_setError(Core_Error_AllocationFailed);
     return Core_Failure;
   }
   if (_backend_impl_initialize((_backend_impl*)SELF->pimpl)) {
     free(SELF->pimpl);
     SELF->pimpl = NULL;
-    Core_InlinePointerHashmap_uninitialize(&SELF->fonts);
+    Core_InlineHashMapPP_uninitialize(&SELF->fonts);
     return Core_Failure;
   }
 
@@ -493,7 +493,7 @@ Core_Result dx_font_manager_get_or_create_font(dx_font** RETURN, dx_font_manager
     return Core_Failure;
   }
   dx_font* font = NULL;
-  if (Core_InlinePointerHashmap_get(&font, &SELF->fonts, font_key)) {
+  if (Core_InlineHashMapPP_get(&font, &SELF->fonts, font_key)) {
     if (Core_Error_NotFound != Core_getError()) {
       return Core_Failure;
     } else {
@@ -504,7 +504,7 @@ Core_Result dx_font_manager_get_or_create_font(dx_font** RETURN, dx_font_manager
     if (dx_font_create(&font, font_key, SELF)) {
       return Core_Failure;
     }
-    if (Core_InlinePointerHashmap_set(&SELF->fonts, font_key, font)) {
+    if (Core_InlineHashMapPP_set(&SELF->fonts, font_key, font)) {
       CORE_UNREFERENCE(font_key);
       font_key = NULL;
       CORE_UNREFERENCE(font);

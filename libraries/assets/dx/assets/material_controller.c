@@ -58,9 +58,9 @@ static Core_Result dx_assets_material_controllers_ambient_color_update(dx_assets
     return Core_Failure;
   }
   Core_Real32 t = amplitude * b + shift;
-  DX_RGB_N8 start = dx_colors_malachite;
-  DX_RGB_N8 end = dx_colors_amber;
-  DX_RGB_N8 current;
+  Core_InlineRgbN8 start = dx_colors_malachite;
+  Core_InlineRgbN8 end = dx_colors_amber;
+  Core_InlineRgbN8 current;
   dx_rgb_u8_lerp(&start, &end, t, &SELF->current);
   DX_ASSETS_COLOR_RGB_N8(material->ambient_color->object)->value = SELF->current;
   return Core_Success;

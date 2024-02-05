@@ -29,13 +29,18 @@
 /// Functionality related to the file system.
 
 #include "dx/core/context.h"
-#include "dx/core/convert.h"
 #include "dx/core/core.h"
-#include "dx/core/file_system.h"
 
 #include "Core/Bits.h"
 #include "Core/CountLeadingZeroes.h"
+#include "Core/Convert.h"
 #include "Core/Error.h"
+#include "Core/FileSystem/ExistingFilePolicy.h"
+#include "Core/FileSystem/FileAccessMode.h"
+#include "Core/FileSystem/FileType.h"
+#include "Core/FileSystem/getFileContents.h"
+#include "Core/FileSystem/getFileType.h"
+#include "Core/FileSystem/NonExistingFilePolicy.h"
 #include "Core/Hash.h"
 #include "Core/Input/KeyboardKey.h"
 #include "Core/Input/KeyboardKeyMessage.h"

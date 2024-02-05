@@ -27,30 +27,30 @@ static Core_Result _read_scene(dx_ddl_node* node, dx_adl_context* context);
 
 static Core_Result _read_scene(dx_ddl_node* node, dx_adl_context* context) {
   // get the mesh instances and viewer instances from the symbols
-  Core_InlinePointerHashmapIterator iterator;
-  Core_InlinePointerHashmapIterator_initialize(&iterator, &context->definitions->map);
+  Core_InlineHashMapPPIterator iterator;
+  Core_InlineHashMapPPIterator_initialize(&iterator, &context->definitions->map);
   Core_Boolean has_entry = false;
-  if (Core_InlinePointerHashmapIterator_hasEntry(&has_entry, &iterator)) {
-    Core_InlinePointerHashmapIterator_uninitialize(&iterator);
+  if (Core_InlineHashMapPPIterator_hasEntry(&has_entry, &iterator)) {
+    Core_InlineHashMapPPIterator_uninitialize(&iterator);
     return Core_Failure;
   }
   while (has_entry) {
     dx_adl_symbol* symbol = NULL;
-    if (Core_InlinePointerHashmapIterator_getValue(&symbol, &iterator)) {
-      Core_InlinePointerHashmapIterator_uninitialize(&iterator);
+    if (Core_InlineHashMapPPIterator_getValue(&symbol, &iterator)) {
+      Core_InlineHashMapPPIterator_uninitialize(&iterator);
       return Core_Failure;
     }
     Core_Object* asset = symbol->asset;
     if (dx_inline_object_array_append(&context->scene->assets, asset)) {
       return Core_Failure;
     }
-    Core_InlinePointerHashmapIterator_next(&iterator);
-    if (Core_InlinePointerHashmapIterator_hasEntry(&has_entry, &iterator)) {
-      Core_InlinePointerHashmapIterator_uninitialize(&iterator);
+    Core_InlineHashMapPPIterator_next(&iterator);
+    if (Core_InlineHashMapPPIterator_hasEntry(&has_entry, &iterator)) {
+      Core_InlineHashMapPPIterator_uninitialize(&iterator);
       return Core_Failure;
     }
   }
-  Core_InlinePointerHashmapIterator_uninitialize(&iterator);
+  Core_InlineHashMapPPIterator_uninitialize(&iterator);
   return Core_Success;
 }
 
@@ -146,21 +146,21 @@ Core_Result dx_adl_compile(dx_assets_scene** RETURN, dx_ddl_node* node) {
     /// @todo
     /// This is called the "compute" phase.
     /// The type handlers should provide an appropriate callback.
-    Core_InlinePointerHashmapIterator iterator;
-    Core_InlinePointerHashmapIterator_initialize(&iterator, &context->definitions->map);
+    Core_InlineHashMapPPIterator iterator;
+    Core_InlineHashMapPPIterator_initialize(&iterator, &context->definitions->map);
     Core_Boolean has_entry = false;
-    if (Core_InlinePointerHashmapIterator_hasEntry(&has_entry, &iterator)) {
+    if (Core_InlineHashMapPPIterator_hasEntry(&has_entry, &iterator)) {
       CORE_UNREFERENCE(context);
       context = NULL;
-      Core_InlinePointerHashmapIterator_uninitialize(&iterator);
+      Core_InlineHashMapPPIterator_uninitialize(&iterator);
       return Core_Failure;
     }
     while (has_entry) {
       dx_adl_symbol* symbol = NULL;
-      if (Core_InlinePointerHashmapIterator_getValue(&symbol, &iterator)) {
+      if (Core_InlineHashMapPPIterator_getValue(&symbol, &iterator)) {
         CORE_UNREFERENCE(context);
         context = NULL;
-        Core_InlinePointerHashmapIterator_uninitialize(&iterator);
+        Core_InlineHashMapPPIterator_uninitialize(&iterator);
         return Core_Failure;
       }
       Core_Boolean isEqualTo[2];
@@ -168,21 +168,21 @@ Core_Result dx_adl_compile(dx_assets_scene** RETURN, dx_ddl_node* node) {
           Core_String_isEqualTo(&isEqualTo[1], symbol->type, NAME(mesh_type))) {
         CORE_UNREFERENCE(context);
         context = NULL;
-        Core_InlinePointerHashmapIterator_uninitialize(&iterator);
+        Core_InlineHashMapPPIterator_uninitialize(&iterator);
         return Core_Failure;
       }
       if (isEqualTo[0] || isEqualTo[1]) {
         dx_adl_type_handler* type_handler = NULL;
-        if (Core_InlinePointerHashmap_get(&type_handler, &context->type_handlers, symbol->type)) {
+        if (Core_InlineHashMapPP_get(&type_handler, &context->type_handlers, symbol->type)) {
           CORE_UNREFERENCE(context);
           context = NULL;
-          Core_InlinePointerHashmapIterator_uninitialize(&iterator);
+          Core_InlineHashMapPPIterator_uninitialize(&iterator);
           return Core_Failure;
         }
         if (!symbol->asset) {
           CORE_UNREFERENCE(context);
           context = NULL;
-          Core_InlinePointerHashmapIterator_uninitialize(&iterator);
+          Core_InlineHashMapPPIterator_uninitialize(&iterator);
           return Core_Failure;
         }
         if (isEqualTo[0]) {
@@ -191,7 +191,7 @@ Core_Result dx_adl_compile(dx_assets_scene** RETURN, dx_ddl_node* node) {
           if (dx_inline_object_array_get_size(&n, &image->operations)) {
             CORE_UNREFERENCE(context);
             context = NULL;
-            Core_InlinePointerHashmapIterator_uninitialize(&iterator);
+            Core_InlineHashMapPPIterator_uninitialize(&iterator);
             return Core_Failure;
           }
           for (Core_Size i = 0; i < n; ++i) {
@@ -199,13 +199,13 @@ Core_Result dx_adl_compile(dx_assets_scene** RETURN, dx_ddl_node* node) {
             if (dx_inline_object_array_get_at((Core_Object**)&operation, &image->operations, i)) {
               CORE_UNREFERENCE(context);
               context = NULL;
-              Core_InlinePointerHashmapIterator_uninitialize(&iterator);
+              Core_InlineHashMapPPIterator_uninitialize(&iterator);
               return Core_Failure;
             }
             if (dx_assets_image_apply(image, 0, 0, image->width, image->height, operation)) {
               CORE_UNREFERENCE(context);
               context = NULL;
-              Core_InlinePointerHashmapIterator_uninitialize(&iterator);
+              Core_InlineHashMapPPIterator_uninitialize(&iterator);
               return Core_Failure;
             }
           }
@@ -216,7 +216,7 @@ Core_Result dx_adl_compile(dx_assets_scene** RETURN, dx_ddl_node* node) {
           if (dx_inline_object_array_get_size(&n, &mesh->operations)) {
             CORE_UNREFERENCE(context);
             context = NULL;
-            Core_InlinePointerHashmapIterator_uninitialize(&iterator);
+            Core_InlineHashMapPPIterator_uninitialize(&iterator);
             return Core_Failure;
           }
           for (Core_Size i = 0; i < n; ++i) {
@@ -224,32 +224,32 @@ Core_Result dx_adl_compile(dx_assets_scene** RETURN, dx_ddl_node* node) {
             if (dx_inline_object_array_get_at((Core_Object**)&operation, &mesh->operations, i)) {
               CORE_UNREFERENCE(context);
               context = NULL;
-              Core_InlinePointerHashmapIterator_uninitialize(&iterator);
+              Core_InlineHashMapPPIterator_uninitialize(&iterator);
               return Core_Failure;
             }
             if (dx_asset_mesh_operation_apply(operation, mesh)) {
               CORE_UNREFERENCE(context);
               context = NULL;
-              Core_InlinePointerHashmapIterator_uninitialize(&iterator);
+              Core_InlineHashMapPPIterator_uninitialize(&iterator);
               return Core_Failure;
             }
           }
         } else {
           CORE_UNREFERENCE(context);
           context = NULL;
-          Core_InlinePointerHashmapIterator_uninitialize(&iterator);
+          Core_InlineHashMapPPIterator_uninitialize(&iterator);
           return Core_Failure;
         }
       }
-      Core_InlinePointerHashmapIterator_next(&iterator);
-      if (Core_InlinePointerHashmapIterator_hasEntry(&has_entry, &iterator)) {
+      Core_InlineHashMapPPIterator_next(&iterator);
+      if (Core_InlineHashMapPPIterator_hasEntry(&has_entry, &iterator)) {
         CORE_UNREFERENCE(context);
         context = NULL;
-        Core_InlinePointerHashmapIterator_uninitialize(&iterator);
+        Core_InlineHashMapPPIterator_uninitialize(&iterator);
         return Core_Failure;
       }
     }
-    Core_InlinePointerHashmapIterator_uninitialize(&iterator);
+    Core_InlineHashMapPPIterator_uninitialize(&iterator);
   }
   CORE_REFERENCE(scene);
   CORE_UNREFERENCE(context);

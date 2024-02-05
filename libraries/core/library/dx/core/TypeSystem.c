@@ -217,21 +217,21 @@ static void _dx_rti_type_unreference_callback(_dx_rti_type** a) {
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-static Core_InlinePointerHashmap* g_types = NULL;
+static Core_InlineHashMapPP* g_types = NULL;
 
 Core_Result Core_TypeSystem_initialize() {
-  static Core_InlinePointerHashMap_Configuration const configuration = {
-    .compareKeysCallback = (Core_InlinePointerHashmap_CompareKeysCallback*) & _dx_rti_type_name_compare_keys_callback,
-    .hashKeyCallback = (Core_InlinePointerHashmap_HashKeyCallback*) & _dx_rti_type_name_hash_key_callback,
-    .keyAddedCallback = (Core_InlinePointerHashMap_KeyAddedCallback*) & _dx_rti_type_name_reference_callback,
-    .keyRemovedCallback = (Core_InlinePointerHashMap_KeyRemovedCallback*) & _dx_rti_type_name_unreference_callback,
-    .valueAddedCallback = (Core_InlinePointerHashmap_ValueAddedCallback*) & _dx_rti_type_reference_callback,
-    .valueRemovedCallback = (Core_InlinePointerHashMap_ValueRemovedCallback*) & _dx_rti_type_unreference_callback,
+  static Core_InlineHashMapPP_Configuration const configuration = {
+    .compareKeysCallback = (Core_InlineHashMapPP_CompareKeysCallback*) & _dx_rti_type_name_compare_keys_callback,
+    .hashKeyCallback = (Core_InlineHashMapPP_HashKeyCallback*) & _dx_rti_type_name_hash_key_callback,
+    .keyAddedCallback = (Core_InlineHashMapPP_KeyAddedCallback*) & _dx_rti_type_name_reference_callback,
+    .keyRemovedCallback = (Core_InlineHashMapPP_KeyRemovedCallback*) & _dx_rti_type_name_unreference_callback,
+    .valueAddedCallback = (Core_InlineHashMapPP_ValueAddedCallback*) & _dx_rti_type_reference_callback,
+    .valueRemovedCallback = (Core_InlineHashMapPP_ValueRemovedCallback*) & _dx_rti_type_unreference_callback,
   };
-  if (Core_Memory_allocate(&g_types, sizeof(Core_InlinePointerHashmap))) {
+  if (Core_Memory_allocate(&g_types, sizeof(Core_InlineHashMapPP))) {
     return Core_Failure;
   }
-  if (Core_InlinePointerHashmap_initialize(g_types, &configuration)) {
+  if (Core_InlineHashMapPP_initialize(g_types, &configuration)) {
     Core_Memory_deallocate(g_types);
     g_types = NULL;
     return Core_Failure;
@@ -240,7 +240,7 @@ Core_Result Core_TypeSystem_initialize() {
 }
 
 Core_Result Core_TypeSystem_uninitialize() {
-  Core_InlinePointerHashmap_uninitialize(g_types);
+  Core_InlineHashMapPP_uninitialize(g_types);
   Core_Memory_deallocate(g_types);
   g_types = NULL;
   return Core_Success;
@@ -279,7 +279,7 @@ Core_Result Core_TypeSystem_defineEnumerationType(Core_Type** RETURN, char const
     return Core_Failure;
   }
   _dx_rti_type* type = NULL;
-  if (Core_InlinePointerHashmap_get(&type, g_types, name)) {
+  if (Core_InlineHashMapPP_get(&type, g_types, name)) {
     if (Core_Error_NotFound != Core_getError()) {
       return Core_Failure;
     } else {
@@ -302,7 +302,7 @@ Core_Result Core_TypeSystem_defineEnumerationType(Core_Type** RETURN, char const
   type->name = name;
   type->reference_count = 1;
   // add the type
-  if (Core_InlinePointerHashmap_set(g_types, name, type)) {
+  if (Core_InlineHashMapPP_set(g_types, name, type)) {
     _dx_rti_type_unreference(type);
     type = NULL;
     return Core_Failure;
@@ -321,7 +321,7 @@ Core_Result Core_TypeSystem_defineFundamentalType(Core_Type** RETURN, char const
     return Core_Failure;
   }
   _dx_rti_type* type = NULL;
-  if (Core_InlinePointerHashmap_get(&type, g_types, name)) {
+  if (Core_InlineHashMapPP_get(&type, g_types, name)) {
     if (Core_Error_NotFound != Core_getError()) {
       return Core_Failure;
     } else {
@@ -346,7 +346,7 @@ Core_Result Core_TypeSystem_defineFundamentalType(Core_Type** RETURN, char const
   type->reference_count = 1;
   type->fundamental.value_size = value_size;
   // add the type
-  if (Core_InlinePointerHashmap_set(g_types, name, type)) {
+  if (Core_InlineHashMapPP_set(g_types, name, type)) {
     _dx_rti_type_unreference(type);
     type = NULL;
     return Core_Failure;
@@ -363,7 +363,7 @@ Core_Result Core_TypeSystem_defineObjectType(Core_Type** RETURN, char const* p, 
     return Core_Failure;
   }
   _dx_rti_type* type = NULL;
-  if (Core_InlinePointerHashmap_get(&type, g_types, name)) {
+  if (Core_InlineHashMapPP_get(&type, g_types, name)) {
     if (Core_Error_NotFound != Core_getError()) {
       return Core_Failure;
     } else {
@@ -444,7 +444,7 @@ Core_Result Core_TypeSystem_defineObjectType(Core_Type** RETURN, char const* p, 
     _dx_rti_type_reference(type->object.parent);
   }
   // add the type
-  if (Core_InlinePointerHashmap_set(g_types, name, type)) {
+  if (Core_InlineHashMapPP_set(g_types, name, type)) {
     _dx_rti_type_unreference(type);
     type = NULL;
     return Core_Failure;
@@ -455,7 +455,7 @@ Core_Result Core_TypeSystem_defineObjectType(Core_Type** RETURN, char const* p, 
 #endif
   // Simply revert everything if this goes wrong.
   if (_dx_rti_type_ensure_Dispatches_created(type)) {
-    Core_InlinePointerHashmap_remove(g_types, name);
+    Core_InlineHashMapPP_remove(g_types, name);
     return Core_Failure;
   }
   *RETURN = (Core_Type*)type;

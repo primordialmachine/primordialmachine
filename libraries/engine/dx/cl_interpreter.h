@@ -47,7 +47,7 @@ static inline dx_cl_interpreter* DX_CL_INTERPRETER(void* p) {
 
 struct dx_cl_interpreter {
   Core_Object _parent;
-  Core_InlinePointerHashmap procedures;
+  Core_InlineHashMapPP procedures;
 };
 
 static inline dx_cl_interpreter_Dispatch* DX_CL_INTERPRETER_DISPATCH(void* p) {

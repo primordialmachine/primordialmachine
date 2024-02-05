@@ -112,7 +112,7 @@ Core_Result dx_assets_image_operations_checkerboard_pattern_fill_set_first_check
 /// @brief Get the first checker color.
 /// @param RETURN A pointer to the DX_RGB_U8 color object receiving the color values.
 /// @method{dx_assets_image_operations_checkerboard_pattern_fill}
-Core_Result dx_assets_image_operations_checkerboard_pattern_fill_get_first_checker_color(DX_RGB_N8* RETURN, dx_assets_image_operations_checkerboard_pattern_fill* SELF);
+Core_Result dx_assets_image_operations_checkerboard_pattern_fill_get_first_checker_color(Core_InlineRgbN8* RETURN, dx_assets_image_operations_checkerboard_pattern_fill* SELF);
 
 
 
@@ -124,6 +124,6 @@ Core_Result dx_assets_image_operations_checkerboard_pattern_fill_set_second_chec
 /// @brief Get the first checker color.
 /// @param RETURN A pointer to the DX_RGB_U8 color object receiving the color values.
 /// @method{dx_assets_image_operations_checkerboard_pattern_fill}
-Core_Result dx_assets_image_operations_checkerboard_pattern_fill_get_second_checker_color(DX_RGB_N8* RETURN, dx_assets_image_operations_checkerboard_pattern_fill* SELF);
+Core_Result dx_assets_image_operations_checkerboard_pattern_fill_get_second_checker_color(Core_InlineRgbN8* RETURN, dx_assets_image_operations_checkerboard_pattern_fill* SELF);
 
 #endif // DX_ASSETS_IMAGE_OPERATIONS_CHECKERBOARD_PATTERN_FILL_H_INCLUDED

@@ -26,7 +26,7 @@ static void dx_val_command_destruct(dx_val_command* SELF) {
 static void dx_val_command_constructDispatch(dx_val_command_Dispatch* SELF)
 {/*Intentionally empty.*/}
 
-Core_Result dx_val_command_construct_clear_color(dx_val_command* SELF, Core_Real32 l, Core_Real32 b, Core_Real32 w, Core_Real32 h, DX_RGBA_F32 const* color) {
+Core_Result dx_val_command_construct_clear_color(dx_val_command* SELF, Core_Real32 l, Core_Real32 b, Core_Real32 w, Core_Real32 h, Core_InlineRgbaR32 const* color) {
   DX_CONSTRUCT_PREFIX(dx_val_command);
   SELF->kind = DX_VAL_COMMAND_KIND_CLEAR_COLOR;
   SELF->clear_color_command.rectangle.l = l;
@@ -38,7 +38,7 @@ Core_Result dx_val_command_construct_clear_color(dx_val_command* SELF, Core_Real
   return Core_Success;
 }
 
-Core_Result dx_val_command_create_clear_color(dx_val_command** RETURN, Core_Real32 l, Core_Real32 b, Core_Real32 w, Core_Real32 h, DX_RGBA_F32 const* color) {
+Core_Result dx_val_command_create_clear_color(dx_val_command** RETURN, Core_Real32 l, Core_Real32 b, Core_Real32 w, Core_Real32 h, Core_InlineRgbaR32 const* color) {
   DX_CREATE_PREFIX(dx_val_command);
   if (dx_val_command_construct_clear_color(SELF, l, b, w, h, color)) {
     CORE_UNREFERENCE(SELF);

@@ -19,7 +19,7 @@ typedef struct OFFSET2 {
   Core_Size top;
 } OFFSET2;
 
-static const DX_RGB_N8 black = { 0, 0, 0 };
+static const Core_InlineRgbN8 black = { 0, 0, 0 };
 
 // primitive operation
 static Core_Result _swap_pixels(dx_assets_image* SELF, Core_Size source_x, Core_Size source_y, Core_Size target_x, Core_Size target_y, Core_PixelFormat pixel_format);
@@ -29,7 +29,7 @@ static void _fill_bgr8(void* pixels, OFFSET2 fill_offset, EXTEND2 fill_extend, E
 static void _fill_bgra8(void* pixels, OFFSET2 fill_offset, EXTEND2 fill_extend, EXTEND2 image_extend, DX_BGRA_N8 const* color);
 static void _fill_l8(void* pixels, OFFSET2 fill_offset, EXTEND2 fill_extend, EXTEND2 image_extend, DX_L_N8 const* color);
 static void _fill_la8(void* pixels, OFFSET2 fill_offset, EXTEND2 fill_extend, EXTEND2 image_extend, DX_LA_N8 const* color);
-static void _fill_rgb8(void* pixels, OFFSET2 fill_offset, EXTEND2 fill_extend, EXTEND2 image_extend, DX_RGB_N8 const* color);
+static void _fill_rgb8(void* pixels, OFFSET2 fill_offset, EXTEND2 fill_extend, EXTEND2 image_extend, Core_InlineRgbN8 const* color);
 static void _fill_rgba8(void* pixels, OFFSET2 fill_offset, EXTEND2 fill_extend, EXTEND2 image_extend, DX_RGBA_N8 const* color);
 
 /// @brief Swap two columns.
@@ -236,7 +236,7 @@ static void _fill_la8(void* pixels, OFFSET2 fill_offset, EXTEND2 fill_extend, EX
   }
 }
 
-static void _fill_rgb8(void* pixels, OFFSET2 fill_offset, EXTEND2 fill_extend, EXTEND2 image_extend, DX_RGB_N8 const* color) {
+static void _fill_rgb8(void* pixels, OFFSET2 fill_offset, EXTEND2 fill_extend, EXTEND2 image_extend, Core_InlineRgbN8 const* color) {
   // fast clip
   if (fill_offset.left > image_extend.width) {
     return;
@@ -267,7 +267,7 @@ static void _fill_rgb8(void* pixels, OFFSET2 fill_offset, EXTEND2 fill_extend, E
     for (Core_Size x = fill_offset.left; x < fill_right; ++x) {
       Core_Size offset_pixels = y * image_extend.width + x;
       Core_Size offset_bytes = offset_pixels * bytes_per_pixel;
-      *(DX_RGB_N8*)(((uint8_t*)pixels) + offset_bytes) = *color;
+      *(Core_InlineRgbN8*)(((uint8_t*)pixels) + offset_bytes) = *color;
     }
   }
 }
@@ -437,7 +437,7 @@ Core_Result dx_assets_image_construct(dx_assets_image* SELF,
     _fill_bgr8(SELF->pixels, fill_offset, fill_size, image_size, &color);
   } break;
   case Core_PixelFormat_Rgb8: {
-    DX_RGB_N8 color = { .r = dx_colors_black.r,
+    Core_InlineRgbN8 color = { .r = dx_colors_black.r,
                         .g = dx_colors_black.g,
                         .b = dx_colors_black.b, };
   #if 0

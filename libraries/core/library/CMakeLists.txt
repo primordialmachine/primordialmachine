@@ -72,13 +72,8 @@ list(APPEND ${name}.sources "dx/core/inline_pointer_hashmap.c")
 list(APPEND ${name}.headers "dx/core/inline_pointer_hashmap.h")
 list(APPEND ${name}.sources "dx/core/object_array.c")
 list(APPEND ${name}.headers "dx/core/object_array.h")
-list(APPEND ${name}.sources "dx/core/file_system.c")
-list(APPEND ${name}.headers "dx/core/file_system.h")
 list(APPEND ${name}.sources "dx/core/visuals.c")
 list(APPEND ${name}.headers "dx/core/visuals.h")
-
-list(APPEND ${name}.sources "dx/core/convert.c")
-list(APPEND ${name}.headers "dx/core/convert.h")
 
 list(APPEND ${name}.sources "dx/core/keyboard_state.c")
 list(APPEND ${name}.headers "dx/core/keyboard_state.h")

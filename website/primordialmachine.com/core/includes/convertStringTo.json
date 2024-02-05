@@ -3,7 +3,7 @@
   "last-update" : "2024-01-30",
   "indices" : "core",
   "name" : "Core_convertStringTo",
-  "id" : "core-convertStringTo",
+  "id" : "core-convertstringto",
   "signature" : "Core_Result Core_convertStringTo&lt;Suffix&gt;(&lt;Type&gt;* RETURN, Core_Natural8 const* p, Core_Size n);",
   "signatureRemarks": [
     "<p>where <code>&lt;Suffix&gt;</code> and <code>&lt;Type&gt;</code> can assume the values of</p>",

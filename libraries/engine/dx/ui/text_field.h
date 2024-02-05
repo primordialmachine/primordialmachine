@@ -21,7 +21,7 @@ struct dx_ui_text_field {
   /// @brief The relative size of this UI text.
   DX_VEC2_F32 relative_size;
   /// @brief The background color of this UI text.
-  DX_RGBA_F32 background_color;
+  Core_InlineRgbaR32 background_color;
 
   /// @brief The bounds of the text.
   DX_RECT2_F32 text_bounds;
@@ -41,7 +41,7 @@ struct dx_ui_text_field {
   dx_text_anchor_vertical vertical_text_anchor;
 
   /// @brief The text color of this UI text.
-  DX_RGBA_F32 text_color;
+  Core_InlineRgbaR32 text_color;
   /// @brief The font of this UI text.
   dx_font* font;
   /// @brief The text document of this UI text.
@@ -68,12 +68,12 @@ Core_Result dx_ui_text_field_create(dx_ui_text_field** RETURN, dx_ui_manager* ma
 /// @param RETURN A pointer to a DX_VEC2 variable.
 /// @success <code>*RETURN</code> was assigned the background color.
 /// @method{dx_ui_text_field}
-Core_Result dx_ui_text_field_get_background_color(DX_RGBA_F32* RETURN, dx_ui_text_field* SELF);
+Core_Result dx_ui_text_field_get_background_color(Core_InlineRgbaR32* RETURN, dx_ui_text_field* SELF);
 
 /// @brief Set the background color.
-/// @param background_color A pointer to a <code>DX_RGBA_F32</code> variable.
+/// @param background_color A pointer to a <code>Core_InlineRgbaR32</code> variable.
 /// @method{dx_ui_text_field}
-Core_Result dx_ui_text_field_set_background_color(dx_ui_text_field* SELF, DX_RGBA_F32 const* background_color);
+Core_Result dx_ui_text_field_set_background_color(dx_ui_text_field* SELF, Core_InlineRgbaR32 const* background_color);
 
 /// @}
 
@@ -83,12 +83,12 @@ Core_Result dx_ui_text_field_set_background_color(dx_ui_text_field* SELF, DX_RGB
 /// @param RETURN A pointer to a DX_VEC2 variable.
 /// @success <code>*RETURN</code> was assigned the text color.
 /// @method{dx_ui_text_field}
-Core_Result dx_ui_text_field_get_text_color(DX_RGBA_F32* RETURN, dx_ui_text_field* SELF);
+Core_Result dx_ui_text_field_get_text_color(Core_InlineRgbaR32* RETURN, dx_ui_text_field* SELF);
 
 /// @brief Set the text color.
-/// @param text_color A pointer to a <code>DX_RGBA_F32</code> variable.
+/// @param text_color A pointer to a <code>Core_InlineRgbaR32</code> variable.
 /// @method{dx_ui_text_field}
-Core_Result dx_ui_text_field_set_text_color(dx_ui_text_field* SELF, DX_RGBA_F32 const* text_color);
+Core_Result dx_ui_text_field_set_text_color(dx_ui_text_field* SELF, Core_InlineRgbaR32 const* text_color);
 
 /// @}
 

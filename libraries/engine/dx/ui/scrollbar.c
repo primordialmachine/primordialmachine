@@ -136,7 +136,7 @@ static Core_Result get_child_by_name(dx_ui_widget** RETURN, dx_ui_scrollbar* SEL
   return Core_Failure;
 }
 
-Core_Result dx_ui_scrollbar_set_background_color(dx_ui_scrollbar* SELF, DX_RGBA_F32 const* background_color) {
+Core_Result dx_ui_scrollbar_set_background_color(dx_ui_scrollbar* SELF, Core_InlineRgbaR32 const* background_color) {
   if (!SELF || !background_color) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
@@ -145,7 +145,7 @@ Core_Result dx_ui_scrollbar_set_background_color(dx_ui_scrollbar* SELF, DX_RGBA_
   return Core_Success;
 }
 
-Core_Result dx_ui_scrollbar_get_background_color(DX_RGBA_F32* RETURN, dx_ui_scrollbar* SELF) {
+Core_Result dx_ui_scrollbar_get_background_color(Core_InlineRgbaR32* RETURN, dx_ui_scrollbar* SELF) {
   if (!RETURN || !SELF) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;

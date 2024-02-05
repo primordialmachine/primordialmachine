@@ -192,7 +192,7 @@ Core_Result dx_asset_definition_language_parser_parse_type(Core_String** RETURN,
   }
   CORE_UNREFERENCE(child_node);
   child_node = NULL;
-  DX_DEBUG_CHECK_OBJECT_MAGIC_BYTES(type);
+  Core_Debug_checkObjectMagicBytes(type);
   *RETURN = type;
   return Core_Success;
 }

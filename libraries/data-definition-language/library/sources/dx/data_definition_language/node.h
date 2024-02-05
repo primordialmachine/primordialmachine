@@ -21,7 +21,7 @@ struct dx_ddl_node {
   dx_ddl_node_kind kind;
   union {
     Core_InlineArrayListP list;
-    Core_InlinePointerHashmap map;
+    Core_InlineHashMapPP map;
     Core_String* string;
     Core_String* number;
   };

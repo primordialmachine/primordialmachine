@@ -18,7 +18,7 @@ struct dx_ui_manager {
   Core_Object _parent;
 
   /// @brief Map from type names (e.g., "Text" or "Group"/Core_String) to type handlers (dx_ui_type_handler). 
-  Core_InlinePointerHashmap type_handlers;
+  Core_InlineHashMapPP type_handlers;
 
   dx_ui_widget* root;
   

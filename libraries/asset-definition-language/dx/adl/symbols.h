@@ -52,7 +52,7 @@ static inline dx_asset_definitions* DX_ASSET_PALETTE(void* p) {
 struct dx_asset_definitions {
   Core_Object _parent;
   /// A map from names (Core_String*) to symbols (dx_adl_symbol*).
-  Core_InlinePointerHashmap map;
+  Core_InlineHashMapPP map;
 };
 
 struct dx_asset_definitions_Dispatch {

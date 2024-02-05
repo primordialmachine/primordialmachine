@@ -44,7 +44,7 @@ Core_defineObjectType("dx.cl.interpreter",
                       Core_Object);
 
 static void dx_cl_interpreter_destruct(dx_cl_interpreter* SELF) {
-  Core_InlinePointerHashmap_uninitialize(&SELF->procedures);
+  Core_InlineHashMapPP_uninitialize(&SELF->procedures);
 }
 
 static void dx_cl_interpreter_constructDispatch(dx_cl_interpreter_Dispatch* SELF)
@@ -233,33 +233,33 @@ static Core_Result help(dx_application_presenter* application_presenter) {
 
 Core_Result dx_cl_interpreter_construct(dx_cl_interpreter* SELF) {
   DX_CONSTRUCT_PREFIX(dx_cl_interpreter);
-  Core_InlinePointerHashMap_Configuration configuration = {
-    .compareKeysCallback = (Core_InlinePointerHashmap_CompareKeysCallback*)&on_compare_keys,
-    .hashKeyCallback = (Core_InlinePointerHashmap_HashKeyCallback*)&on_hash_key,
-    .keyAddedCallback = (Core_InlinePointerHashMap_KeyAddedCallback*)&on_key_added,
-    .keyRemovedCallback = (Core_InlinePointerHashMap_KeyRemovedCallback*)&on_key_removed,
-    .valueAddedCallback = (Core_InlinePointerHashmap_ValueAddedCallback*)&on_value_added,
-    .valueRemovedCallback = (Core_InlinePointerHashMap_ValueRemovedCallback*)&on_value_removed,
+  Core_InlineHashMapPP_Configuration configuration = {
+    .compareKeysCallback = (Core_InlineHashMapPP_CompareKeysCallback*)&on_compare_keys,
+    .hashKeyCallback = (Core_InlineHashMapPP_HashKeyCallback*)&on_hash_key,
+    .keyAddedCallback = (Core_InlineHashMapPP_KeyAddedCallback*)&on_key_added,
+    .keyRemovedCallback = (Core_InlineHashMapPP_KeyRemovedCallback*)&on_key_removed,
+    .valueAddedCallback = (Core_InlineHashMapPP_ValueAddedCallback*)&on_value_added,
+    .valueRemovedCallback = (Core_InlineHashMapPP_ValueRemovedCallback*)&on_value_removed,
   };
-  if (Core_InlinePointerHashmap_initialize(&SELF->procedures, &configuration)) {
+  if (Core_InlineHashMapPP_initialize(&SELF->procedures, &configuration)) {
     return Core_Failure;
   }
   Core_String* name = NULL;
   if (Core_String_create(&name, "help", strlen("help"))) {
-    Core_InlinePointerHashmap_uninitialize(&SELF->procedures);
+    Core_InlineHashMapPP_uninitialize(&SELF->procedures);
     return Core_Failure;
   }
   dx_cl_interpreter_procedure* p = NULL;
   if (dx_cl_interpreter_procedure_create(&p, name, &help)) {
     CORE_UNREFERENCE(name);
     name = NULL;
-    Core_InlinePointerHashmap_uninitialize(&SELF->procedures);
+    Core_InlineHashMapPP_uninitialize(&SELF->procedures);
     return Core_Failure;
   }
-  if (Core_InlinePointerHashmap_set(&SELF->procedures, name, p)) {
+  if (Core_InlineHashMapPP_set(&SELF->procedures, name, p)) {
     CORE_UNREFERENCE(name);
     name = NULL;
-    Core_InlinePointerHashmap_uninitialize(&SELF->procedures);
+    Core_InlineHashMapPP_uninitialize(&SELF->procedures);
     return Core_Failure;
   }
   CORE_UNREFERENCE(name);
@@ -281,7 +281,7 @@ Core_Result dx_cl_interpreter_create(dx_cl_interpreter** RETURN) {
 
 Core_Result dx_cl_interpreter_execute(dx_cl_interpreter* SELF, dx_application_presenter* application_presenter, Core_String* name) {
   dx_cl_interpreter_procedure* p = NULL;
-  if (Core_InlinePointerHashmap_get((Core_InlinePointerHashmap_Value*)&p, &SELF->procedures, name)) {
+  if (Core_InlineHashMapPP_get((Core_InlineHashMapPP_Value*)&p, &SELF->procedures, name)) {
     return Core_Failure;
   }
   if (p->pointer(application_presenter)) {
@@ -292,7 +292,7 @@ Core_Result dx_cl_interpreter_execute(dx_cl_interpreter* SELF, dx_application_pr
 
 Core_Result dx_cl_interpreter_register_function(dx_cl_interpreter* SELF, Core_String* name, dx_cl_function* function) {
   dx_cl_interpreter_procedure* p = NULL;
-  if (Core_InlinePointerHashmap_get((Core_InlinePointerHashmap_Value*)&p, &SELF->procedures, name)) {
+  if (Core_InlineHashMapPP_get((Core_InlineHashMapPP_Value*)&p, &SELF->procedures, name)) {
     if (Core_Error_NotFound != Core_getError()) {
       return Core_Failure;
     }
@@ -304,7 +304,7 @@ Core_Result dx_cl_interpreter_register_function(dx_cl_interpreter* SELF, Core_St
   if (dx_cl_interpreter_procedure_create(&p, name, function)) {
     return Core_Failure;
   }
-  if (Core_InlinePointerHashmap_set(&SELF->procedures, name, p)) {
+  if (Core_InlineHashMapPP_set(&SELF->procedures, name, p)) {
     CORE_UNREFERENCE(p);
     p = NULL;
     return Core_Failure;
@@ -317,13 +317,13 @@ Core_Result dx_cl_interpreter_register_function(dx_cl_interpreter* SELF, Core_St
 Core_Result dx_cl_interpreter_get_functions(dx_object_array** RETURN, dx_cl_interpreter* SELF) {
   dx_object_array* functions = NULL;
   Core_Size size;
-  if (Core_InlinePointerHashmap_getSize(&size, &SELF->procedures)) {
+  if (Core_InlineHashMapPP_getSize(&size, &SELF->procedures)) {
     return Core_Failure;
   }
   if (dx_object_array_create(&functions, size)) {
     return Core_Failure;
   }
-  if (Core_InlinePointerHashmap_getValues(&SELF->procedures, &functions->backend.backend)) {
+  if (Core_InlineHashMapPP_getValues(&SELF->procedures, &functions->backend.backend)) {
     return Core_Failure;
   }
   *RETURN = functions;

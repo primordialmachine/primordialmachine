@@ -63,12 +63,12 @@ static Core_Result on_hash_key(Core_Size* RETURN, Core_String** a);
 static Core_Result on_compare_keys(Core_Boolean* RETURN, Core_String** a, Core_String** b);
 
 static void on_added(Core_Object** a) {
-  DX_DEBUG_CHECK_OBJECT_MAGIC_BYTES(*a);
+  Core_Debug_checkObjectMagicBytes(*a);
   CORE_REFERENCE(*a);
 }
 
 static void on_removed(Core_Object** a) {
-  DX_DEBUG_CHECK_OBJECT_MAGIC_BYTES(*a);
+  Core_Debug_checkObjectMagicBytes(*a);
   CORE_UNREFERENCE(*a);
 }
 
@@ -81,7 +81,7 @@ static Core_Result on_compare_keys(Core_Boolean* RETURN, Core_String** a, Core_S
 }
 
 static void dx_asset_definitions_destruct(dx_asset_definitions* SELF) {
-  Core_InlinePointerHashmap_uninitialize(&SELF->map);
+  Core_InlineHashMapPP_uninitialize(&SELF->map);
 }
 
 static void dx_asset_definitions_constructDispatch(dx_asset_definitions_Dispatch* SELF)
@@ -89,15 +89,15 @@ static void dx_asset_definitions_constructDispatch(dx_asset_definitions_Dispatch
 
 Core_Result dx_asset_definitions_construct(dx_asset_definitions* SELF) {
   DX_CONSTRUCT_PREFIX(dx_asset_definitions);
-  static Core_InlinePointerHashMap_Configuration const configuration = {
-    .compareKeysCallback = (Core_InlinePointerHashmap_CompareKeysCallback*)&on_compare_keys,
-    .hashKeyCallback = (Core_InlinePointerHashmap_HashKeyCallback*)&on_hash_key,
-    .keyAddedCallback = (Core_InlinePointerHashMap_KeyAddedCallback*)&on_added,
-    .keyRemovedCallback = (Core_InlinePointerHashMap_KeyRemovedCallback*)&on_removed,
-    .valueAddedCallback = (Core_InlinePointerHashmap_ValueAddedCallback*)&on_added,
-    .valueRemovedCallback = (Core_InlinePointerHashMap_ValueRemovedCallback*)&on_removed,
+  static Core_InlineHashMapPP_Configuration const configuration = {
+    .compareKeysCallback = (Core_InlineHashMapPP_CompareKeysCallback*)&on_compare_keys,
+    .hashKeyCallback = (Core_InlineHashMapPP_HashKeyCallback*)&on_hash_key,
+    .keyAddedCallback = (Core_InlineHashMapPP_KeyAddedCallback*)&on_added,
+    .keyRemovedCallback = (Core_InlineHashMapPP_KeyRemovedCallback*)&on_removed,
+    .valueAddedCallback = (Core_InlineHashMapPP_ValueAddedCallback*)&on_added,
+    .valueRemovedCallback = (Core_InlineHashMapPP_ValueRemovedCallback*)&on_removed,
   };
-  if (Core_InlinePointerHashmap_initialize(&SELF->map, &configuration)) {
+  if (Core_InlineHashMapPP_initialize(&SELF->map, &configuration)) {
     return Core_Failure;
   }
   CORE_OBJECT(SELF)->type = TYPE;
@@ -121,7 +121,7 @@ Core_Result dx_asset_definitions_get(dx_adl_symbol** RETURN, dx_asset_definition
     return Core_Failure;
   }
   dx_adl_symbol* temporary = NULL;
-  if (Core_InlinePointerHashmap_get(&temporary, &SELF->map, name)) {
+  if (Core_InlineHashMapPP_get(&temporary, &SELF->map, name)) {
     return Core_Failure;
   }
   CORE_REFERENCE(temporary);
@@ -135,7 +135,7 @@ Core_Result dx_asset_definitions_set(dx_asset_definitions* SELF, Core_String* na
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
   }
-  if (Core_InlinePointerHashmap_set(&SELF->map, name, value)) {
+  if (Core_InlineHashMapPP_set(&SELF->map, name, value)) {
     return Core_Failure;
   }
   return Core_Success;
@@ -143,22 +143,22 @@ Core_Result dx_asset_definitions_set(dx_asset_definitions* SELF, Core_String* na
 
 Core_Result dx_asset_definitions_dump(dx_asset_definitions* SELF) {
   dx_log("{\n", sizeof("{\n") - 1);
-  Core_InlinePointerHashmapIterator iterator;
-  Core_InlinePointerHashmapIterator_initialize(&iterator, &SELF->map);
+  Core_InlineHashMapPPIterator iterator;
+  Core_InlineHashMapPPIterator_initialize(&iterator, &SELF->map);
   Core_Boolean has_entry = false;
-  if (Core_InlinePointerHashmapIterator_hasEntry(&has_entry, &iterator)) {
-    Core_InlinePointerHashmapIterator_uninitialize(&iterator);
+  if (Core_InlineHashMapPPIterator_hasEntry(&has_entry, &iterator)) {
+    Core_InlineHashMapPPIterator_uninitialize(&iterator);
     return Core_Failure;
   }
   while (has_entry) {
     Core_String* key = NULL;
-    if (Core_InlinePointerHashmapIterator_getKey(&key, &iterator)) {
-      Core_InlinePointerHashmapIterator_uninitialize(&iterator);
+    if (Core_InlineHashMapPPIterator_getKey(&key, &iterator)) {
+      Core_InlineHashMapPPIterator_uninitialize(&iterator);
       return Core_Failure;
     }
     dx_adl_symbol* value = NULL;
-    if (Core_InlinePointerHashmapIterator_getValue(&value, &iterator)) {
-      Core_InlinePointerHashmapIterator_uninitialize(&iterator);
+    if (Core_InlineHashMapPPIterator_getValue(&value, &iterator)) {
+      Core_InlineHashMapPPIterator_uninitialize(&iterator);
       return Core_Failure;
     }
     dx_log("  ", sizeof("  ") - 1);
@@ -168,13 +168,13 @@ Core_Result dx_asset_definitions_dump(dx_asset_definitions* SELF) {
     dx_log(" / ", sizeof(" / ") - 1);
     dx_log(value->type->bytes, value->type->number_of_bytes);
     dx_log("\n", sizeof("\n") - 1);
-    Core_InlinePointerHashmapIterator_next(&iterator);
-    if (Core_InlinePointerHashmapIterator_hasEntry(&has_entry, &iterator)) {
-      Core_InlinePointerHashmapIterator_uninitialize(&iterator);
+    Core_InlineHashMapPPIterator_next(&iterator);
+    if (Core_InlineHashMapPPIterator_hasEntry(&has_entry, &iterator)) {
+      Core_InlineHashMapPPIterator_uninitialize(&iterator);
       return Core_Failure;
     }
   }
-  Core_InlinePointerHashmapIterator_uninitialize(&iterator);
+  Core_InlineHashMapPPIterator_uninitialize(&iterator);
   dx_log("}\n", sizeof("}\n") - 1);
   return Core_Success;
 }

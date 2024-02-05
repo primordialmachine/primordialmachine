@@ -25,7 +25,7 @@ struct dx_adl_context {
   dx_assets_scene* scene;
 
   /// @brief Map from names (Core_String) to type handlers (dx_adl_type_handler).
-  Core_InlinePointerHashmap type_handlers;
+  Core_InlineHashMapPP type_handlers;
   /// @brief A pointer to the names.
   dx_adl_names* names;
   /// @brief A pointer to the parser object.

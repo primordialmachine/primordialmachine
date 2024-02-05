@@ -20,7 +20,7 @@ struct dx_val_material {
   /// @brief A pointer to the underlaying material asset.
   dx_assets_material* material_asset;
   /// @brief The ambient color as specified by dx_assets_material.ambient_color.
-  DX_RGBA_F32 ambient_color;
+  Core_InlineRgbaR32 ambient_color;
   /// @brief Pointer to the ambient texture or the null pointer as specified by dx_assets_material.ambient_texture.
   dx_val_texture* ambient_texture;
 };

@@ -16,7 +16,7 @@ struct dx_adl_type_handlers_mesh_operations {
   /// @brief
   /// Set of expected keys.
   /// If a key is not in that set, then this is a semantical error.
-  Core_InlinePointerHashmap expected_keys;
+  Core_InlineHashMapPP expected_keys;
 };
 
 static inline dx_adl_type_handlers_mesh_operations_Dispatch* DX_ADL_TYPE_HANDLERS_MESH_OPERATIONS_DISPATCH(void* p) {

@@ -41,7 +41,7 @@ static void dx_ddl_node_destruct(dx_ddl_node* self) {
       Core_InlineArrayListP_uninitialize(&self->list);
     } break;
     case dx_ddl_node_kind_map: {
-      Core_InlinePointerHashmap_uninitialize(&self->map);
+      Core_InlineHashMapPP_uninitialize(&self->map);
     } break;
     case dx_ddl_node_kind_number: {
       DX_DEBUG_ASSERT(NULL != self->number);
@@ -77,15 +77,15 @@ Core_Result dx_ddl_node_construct(dx_ddl_node* SELF, dx_ddl_node_kind kind) {
       }
     } break;
     case dx_ddl_node_kind_map: {
-      static Core_InlinePointerHashMap_Configuration const configuration = {
-        .compareKeysCallback = (Core_InlinePointerHashmap_CompareKeysCallback*)&on_compare_keys,
-        .hashKeyCallback = (Core_InlinePointerHashmap_HashKeyCallback*)&on_hash_key,
-        .keyAddedCallback = (Core_InlinePointerHashMap_KeyAddedCallback*)&on_added,
-        .keyRemovedCallback = (Core_InlinePointerHashMap_KeyRemovedCallback*)&on_removed,
-        .valueAddedCallback = (Core_InlinePointerHashmap_ValueAddedCallback*)&on_added,
-        .valueRemovedCallback = (Core_InlinePointerHashMap_ValueRemovedCallback*)&on_removed,
+      static Core_InlineHashMapPP_Configuration const configuration = {
+        .compareKeysCallback = (Core_InlineHashMapPP_CompareKeysCallback*)&on_compare_keys,
+        .hashKeyCallback = (Core_InlineHashMapPP_HashKeyCallback*)&on_hash_key,
+        .keyAddedCallback = (Core_InlineHashMapPP_KeyAddedCallback*)&on_added,
+        .keyRemovedCallback = (Core_InlineHashMapPP_KeyRemovedCallback*)&on_removed,
+        .valueAddedCallback = (Core_InlineHashMapPP_ValueAddedCallback*)&on_added,
+        .valueRemovedCallback = (Core_InlineHashMapPP_ValueRemovedCallback*)&on_removed,
       };
-      if (Core_InlinePointerHashmap_initialize(&SELF->map, &configuration)) {
+      if (Core_InlineHashMapPP_initialize(&SELF->map, &configuration)) {
         return Core_Failure;
       }
     } break;
@@ -137,7 +137,7 @@ Core_Result dx_ddl_node_map_set(dx_ddl_node* SELF, Core_String* name, dx_ddl_nod
     Core_setError(Core_Error_OperationInvalid);
     return Core_Failure;
   }
-  return Core_InlinePointerHashmap_set(&SELF->map, name, value);
+  return Core_InlineHashMapPP_set(&SELF->map, name, value);
 }
 
 Core_Result dx_ddl_node_map_get(dx_ddl_node** RETURN, dx_ddl_node const* SELF, Core_String* name) {
@@ -150,7 +150,7 @@ Core_Result dx_ddl_node_map_get(dx_ddl_node** RETURN, dx_ddl_node const* SELF, C
     return Core_Failure;
   }
   dx_ddl_node* temporary = NULL;
-  if (Core_InlinePointerHashmap_get(&temporary, &SELF->map, name)) {
+  if (Core_InlineHashMapPP_get(&temporary, &SELF->map, name)) {
     return Core_Failure;
   }
   CORE_REFERENCE(temporary);
@@ -167,7 +167,7 @@ Core_Result dx_ddl_node_map_get_size(Core_Size* RETURN, dx_ddl_node* SELF) {
     Core_setError(Core_Error_OperationInvalid);
     return Core_Failure;
   }
-  return Core_InlinePointerHashmap_getSize(RETURN, &SELF->map);
+  return Core_InlineHashMapPP_getSize(RETURN, &SELF->map);
 }
 
 Core_Result dx_ddl_node_list_append(dx_ddl_node* SELF, dx_ddl_node* value) {

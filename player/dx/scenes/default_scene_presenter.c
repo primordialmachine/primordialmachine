@@ -193,7 +193,7 @@ static Core_Result tick2(dx_default_scene_presenter* SELF, Core_Real32 delta_sec
     if (dx_inline_object_array_get_at((Core_Object**)&mesh_instance, &SELF->mesh_instances, i)) {
       return Core_Failure;
     }
-    DX_RGB_N8 a = DX_ASSETS_COLOR_RGB_N8(mesh_instance->mesh->material->material_asset->ambient_color->object)->value;
+    Core_InlineRgbN8 a = DX_ASSETS_COLOR_RGB_N8(mesh_instance->mesh->material->material_asset->ambient_color->object)->value;
     dx_rgb_n8_to_rgba_f32(&a, 1.f, &mesh_instance->mesh->material->ambient_color);
   }
   return Core_Success;
@@ -244,7 +244,7 @@ static Core_Result make_commands_1(dx_val_command_list* commands) {
   dx_val_command* command = NULL;
 
   // clear color command
-  DX_RGBA_F32 clear_color;
+  Core_InlineRgbaR32 clear_color;
   dx_rgb_n8_to_rgba_f32(&dx_colors_capri, 0.f, &clear_color);
   if (dx_val_command_create_clear_color(&command, 0, 0, 640, 480, &clear_color)) {
     return Core_Failure;

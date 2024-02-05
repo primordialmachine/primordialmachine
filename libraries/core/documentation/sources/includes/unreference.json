@@ -1,0 +1,19 @@
+{
+  "type" : "function",
+  "last-update" : "2024-02-01",
+  "indices" : "core",
+  "name" : "Core_unreference",
+  "id" : "core-unreference",
+  "signature" : "void Core_unreference(Core_Object* object);",
+  "parameters" : [
+    {
+      "name" : "object",
+      "type" : "@{code('Core_Object*')}",
+      "description" : "A pointer to a @{code('Core_Object')} object."
+    }
+  ],
+  "success": [
+    "This reference count of the object was decremented by @{code('1')}."
+  ],
+  "description" : "Decrement the reference count of an object."
+}

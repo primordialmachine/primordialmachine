@@ -15,7 +15,7 @@ static inline dx_val_cbinding* DX_VAL_CBINDING(void* p) {
 
 struct dx_val_cbinding {
   Core_Object _parent;
-  Core_InlinePointerHashmap kvs;
+  Core_InlineHashMapPP kvs;
 };
 
 struct dx_val_cbinding_Dispatch {
@@ -55,7 +55,7 @@ Core_Result dx_val_cbinding_set_mat4(dx_val_cbinding* SELF, char const* name, DX
 /// @param name The name of the variable.
 /// @param v The value of the variable.
 /// @method-call
-Core_Result dx_val_cbinding_set_rgba_f32(dx_val_cbinding* SELF, char const* name, DX_RGBA_F32 const* value);
+Core_Result dx_val_cbinding_set_rgba_f32(dx_val_cbinding* SELF, char const* name, Core_InlineRgbaR32 const* value);
 
 /// @brief Assign a variable of the specified name the specified value.
 /// @param self A pointer to this constant binding.
@@ -68,7 +68,7 @@ Core_Result dx_val_cbinding_construct(dx_val_cbinding* self);
 
 Core_Result dx_val_cbinding_create(dx_val_cbinding** RETURN);
 
-typedef Core_InlinePointerHashmapIterator dx_val_cbinding_iter;
+typedef Core_InlineHashMapPPIterator dx_val_cbinding_iter;
 
 int dx_val_cbinding_iter_initialize(dx_val_cbinding_iter* SELF, dx_val_cbinding* target);
 
@@ -104,7 +104,7 @@ Core_Result dx_val_cbinding_iter_get_mat4(dx_val_cbinding_iter* iter, DX_MAT4* a
 
 /// @default-return 
 /// @default-failure
-Core_Result dx_val_cbinding_iter_get_rgba_f32(dx_val_cbinding_iter* iter, DX_RGBA_F32* c);
+Core_Result dx_val_cbinding_iter_get_rgba_f32(dx_val_cbinding_iter* iter, Core_InlineRgbaR32* c);
 
 /// @default-return 
 /// @default-failure

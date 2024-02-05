@@ -18,7 +18,7 @@ struct dx_ui_scrollbar {
   /// @brief The relative size of this UI text.
   DX_VEC2_F32 relative_size;
   /// @brief The background color of this UI text.
-  DX_RGBA_F32 background_color;
+  Core_InlineRgbaR32 background_color;
 };
 
 static dx_ui_scrollbar_Dispatch* DX_UI_SCROLLBAR_DISPATCH(void* p) {

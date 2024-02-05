@@ -152,7 +152,7 @@ Core_Result Core_cosR64(Core_Real64* RETURN, Core_Real64 x) {
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-void dx_rgb_f32_lerp(DX_RGB_F32 const* a, DX_RGB_F32 const* b, Core_Real32 t, DX_RGB_F32* c) {
+void dx_rgb_f32_lerp(Core_InlineRgbR32 const* a, Core_InlineRgbR32 const* b, Core_Real32 t, Core_InlineRgbR32* c) {
   t = dx_clamp(t);
   if (t == 0.f) {
     *c = *a;
@@ -168,7 +168,7 @@ void dx_rgb_f32_lerp(DX_RGB_F32 const* a, DX_RGB_F32 const* b, Core_Real32 t, DX
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-void dx_rgba_f32_lerp(DX_RGBA_F32 const* a, DX_RGBA_F32 const* b, Core_Real32 t, DX_RGBA_F32* c) {
+void dx_rgba_f32_lerp(Core_InlineRgbaR32 const* a, Core_InlineRgbaR32 const* b, Core_Real32 t, Core_InlineRgbaR32* c) {
   t = dx_clamp(t);
   if (t == 0.f) {
     *c = *a;
@@ -185,7 +185,7 @@ void dx_rgba_f32_lerp(DX_RGBA_F32 const* a, DX_RGBA_F32 const* b, Core_Real32 t,
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-void dx_rgb_u8_lerp(DX_RGB_N8 const* a, DX_RGB_N8 const* b, Core_Real32 t, DX_RGB_N8* c) {
+void dx_rgb_u8_lerp(Core_InlineRgbN8 const* a, Core_InlineRgbN8 const* b, Core_Real32 t, Core_InlineRgbN8* c) {
   t = dx_clamp(t);
   if (t == 0.f) {
     *c = *a;
@@ -199,32 +199,44 @@ void dx_rgb_u8_lerp(DX_RGB_N8 const* a, DX_RGB_N8 const* b, Core_Real32 t, DX_RG
   }
 }
 
-DX_RGB_N8 const dx_colors_capri = { 0, 191, 255 };
+Core_InlineRgbN8 const dx_colors_capri = { 0, 191, 255 };
 
-DX_RGB_N8 const dx_colors_malachite = { 0, 255, 64 };
+Core_InlineRgbN8 const dx_colors_malachite = { 0, 255, 64 };
 
-DX_RGB_N8 const dx_colors_amber = { 255, 192, 0 };
+Core_InlineRgbN8 const dx_colors_amber = { 255, 192, 0 };
 
-DX_RGB_N8 const dx_colors_white = { 255, 255, 255 };
+Core_InlineRgbN8 const dx_colors_white = { 255, 255, 255 };
 
-DX_RGB_N8 const dx_colors_gray = { 128, 128, 128 };
+Core_InlineRgbN8 const dx_colors_gray = { 128, 128, 128 };
 
-DX_RGB_N8 const dx_colors_black = { 0, 0, 0 };
+Core_InlineRgbN8 const dx_colors_black = { 0, 0, 0 };
 
-DX_RGB_N8 const dx_colors_red = { 255, 0, 0 };
+Core_InlineRgbN8 const dx_colors_red = { 255, 0, 0 };
 
-DX_RGB_N8 const dx_colors_green = { 0, 255, 0 };
+Core_InlineRgbN8 const dx_colors_green = { 0, 255, 0 };
 
-DX_RGB_N8 const dx_colors_blue = { 0, 0, 255 };
+Core_InlineRgbN8 const dx_colors_blue = { 0, 0, 255 };
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-Core_Real32 dx_floor_f32(Core_Real32 x) {
-  return floorf(x);
+Core_Result Core_floorR32(Core_Real32* RETURN, Core_Real32 SELF) {
+  *RETURN = floorf(SELF);
+  return Core_Success;
 }
 
-Core_Real64 dx_floor_f64(Core_Real64 x) {
-  return floor(x);
+Core_Result Core_floorR64(Core_Real64* RETURN, Core_Real64 SELF) {
+  *RETURN = floor(SELF);
+  return Core_Success;
+}
+
+Core_Result Core_ceilR32(Core_Real32* RETURN, Core_Real32 SELF) {
+  *RETURN = ceilf(SELF);
+  return Core_Success;
+}
+
+Core_Result Core_ceilR64(Core_Real64* RETURN, Core_Real64 SELF) {
+  *RETURN = ceil(SELF);
+  return Core_Success;
 }
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/

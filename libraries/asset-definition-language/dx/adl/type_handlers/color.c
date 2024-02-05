@@ -30,7 +30,7 @@ static Core_Result _uninitialize_expected_keys(dx_adl_type_handlers_color* SELF)
 
 static Core_Result _check_keys(dx_adl_type_handlers_color* SELF, dx_ddl_node* node);
 
-static Core_Result _parse_color_rgb_u8(dx_ddl_node* node, dx_adl_context* context, DX_RGB_N8* target);
+static Core_Result _parse_color_rgb_u8(dx_ddl_node* node, dx_adl_context* context, Core_InlineRgbN8* target);
 
 static Core_Result _parse(Core_Object** RETURN, dx_adl_type_handlers_color* SELF, dx_ddl_node* node, dx_adl_context* context);
 
@@ -57,20 +57,20 @@ static Core_Result _on_compare_expected_key_keys(Core_Boolean* RETURN, Core_Stri
 }
 
 static Core_Result _uninitialize_expected_keys(dx_adl_type_handlers_color* SELF) {
-  Core_InlinePointerHashmap_uninitialize(&SELF->expected_keys);
+  Core_InlineHashMapPP_uninitialize(&SELF->expected_keys);
   return Core_Success;
 }
 
 static Core_Result _initialize_expected_keys(dx_adl_type_handlers_color* SELF) {
-  Core_InlinePointerHashMap_Configuration cfg = {
+  Core_InlineHashMapPP_Configuration cfg = {
     .keyAddedCallback = &_on_expected_key_key_added,
     .keyRemovedCallback = &_on_expected_key_key_removed,
     .valueAddedCallback = NULL,
     .valueRemovedCallback = NULL,
-    .hashKeyCallback = (Core_InlinePointerHashmap_HashKeyCallback*)&_on_hash_expected_key_key,
-    .compareKeysCallback = (Core_InlinePointerHashmap_CompareKeysCallback*)&_on_compare_expected_key_keys,
+    .hashKeyCallback = (Core_InlineHashMapPP_HashKeyCallback*)&_on_hash_expected_key_key,
+    .compareKeysCallback = (Core_InlineHashMapPP_CompareKeysCallback*)&_on_compare_expected_key_keys,
   };
-  if (Core_InlinePointerHashmap_initialize(&SELF->expected_keys, &cfg)) {
+  if (Core_InlineHashMapPP_initialize(&SELF->expected_keys, &cfg)) {
     return Core_Failure;
   }
 
@@ -78,13 +78,13 @@ static Core_Result _initialize_expected_keys(dx_adl_type_handlers_color* SELF) {
   { \
     Core_String* expected_key = NULL; \
     if (Core_String_create(&expected_key, EXPECTED_KEY, sizeof(EXPECTED_KEY)-1)) { \
-      Core_InlinePointerHashmap_uninitialize(&SELF->expected_keys); \
+      Core_InlineHashMapPP_uninitialize(&SELF->expected_keys); \
       return Core_Failure; \
     } \
-    if (Core_InlinePointerHashmap_set(&SELF->expected_keys, expected_key, expected_key)) {\
+    if (Core_InlineHashMapPP_set(&SELF->expected_keys, expected_key, expected_key)) {\
       CORE_UNREFERENCE(expected_key); \
       expected_key = NULL; \
-      Core_InlinePointerHashmap_uninitialize(&SELF->expected_keys); \
+      Core_InlineHashMapPP_uninitialize(&SELF->expected_keys); \
       return Core_Failure; \
     } \
     CORE_UNREFERENCE(expected_key); \
@@ -116,7 +116,7 @@ static Core_Result _check_keys(dx_adl_type_handlers_color* SELF, dx_ddl_node* no
   if (Core_InlineArrayListP_initialize(&received_keys, 0, &configuration)) {
     return Core_Failure;
   }
-  if (Core_InlinePointerHashmap_getKeys(&node->map, &received_keys)) {
+  if (Core_InlineHashMapPP_getKeys(&node->map, &received_keys)) {
     Core_InlineArrayListP_uninitialize(&received_keys);
     return Core_Failure;
   }
@@ -132,7 +132,7 @@ static Core_Result _check_keys(dx_adl_type_handlers_color* SELF, dx_ddl_node* no
       return Core_Failure;
     }
     Core_String* expected_key = NULL;
-    if (Core_InlinePointerHashmap_get(&expected_key, &SELF->expected_keys, received_key)) {
+    if (Core_InlineHashMapPP_get(&expected_key, &SELF->expected_keys, received_key)) {
       Core_InlineArrayListP_uninitialize(&received_keys);
       return Core_Failure;
     }
@@ -141,7 +141,7 @@ static Core_Result _check_keys(dx_adl_type_handlers_color* SELF, dx_ddl_node* no
   return Core_Success;
 }
 
-static Core_Result _parse_color_rgb_u8(dx_ddl_node* node, dx_adl_context* context, DX_RGB_N8* target) {
+static Core_Result _parse_color_rgb_u8(dx_ddl_node* node, dx_adl_context* context, Core_InlineRgbN8* target) {
   Core_Natural8 r, g, b;
   if (dx_adl_semantical_read_n8(&r, node, NAME(red_key))) {
     return Core_Failure;
@@ -167,7 +167,7 @@ static Core_Result _parse(Core_Object** RETURN, dx_adl_type_handlers_color* SELF
   if (_check_keys(SELF, node)) {
     return Core_Failure;
   }
-  DX_RGB_N8 temporary;
+  Core_InlineRgbN8 temporary;
   if (_parse_color_rgb_u8(node, context, &temporary)) {
     return Core_Failure;
   }

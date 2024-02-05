@@ -82,15 +82,15 @@ static void value_removed_callback(Core_Object** value) {
 }
 
 static Core_Result initialize_type_handlers(dx_adl_context* SELF) {
-  static Core_InlinePointerHashMap_Configuration const configuration = {
-    .compareKeysCallback = (Core_InlinePointerHashmap_CompareKeysCallback*)&compare_keys_callback,
-    .hashKeyCallback = (Core_InlinePointerHashmap_HashKeyCallback*)&hash_key_callback,
-    .keyAddedCallback = (Core_InlinePointerHashMap_KeyAddedCallback*)&key_added_callback,
-    .keyRemovedCallback = (Core_InlinePointerHashMap_KeyRemovedCallback*)&key_removed_callback,
-    .valueAddedCallback = (Core_InlinePointerHashmap_ValueAddedCallback*)&value_added_callback,
-    .valueRemovedCallback = (Core_InlinePointerHashMap_ValueRemovedCallback*)&value_removed_callback,
+  static Core_InlineHashMapPP_Configuration const configuration = {
+    .compareKeysCallback = (Core_InlineHashMapPP_CompareKeysCallback*)&compare_keys_callback,
+    .hashKeyCallback = (Core_InlineHashMapPP_HashKeyCallback*)&hash_key_callback,
+    .keyAddedCallback = (Core_InlineHashMapPP_KeyAddedCallback*)&key_added_callback,
+    .keyRemovedCallback = (Core_InlineHashMapPP_KeyRemovedCallback*)&key_removed_callback,
+    .valueAddedCallback = (Core_InlineHashMapPP_ValueAddedCallback*)&value_added_callback,
+    .valueRemovedCallback = (Core_InlineHashMapPP_ValueRemovedCallback*)&value_removed_callback,
   };
-  if (Core_InlinePointerHashmap_initialize(&SELF->type_handlers, &configuration)) {
+  if (Core_InlineHashMapPP_initialize(&SELF->type_handlers, &configuration)) {
     return Core_Failure;
   }
 
@@ -99,13 +99,13 @@ static Core_Result initialize_type_handlers(dx_adl_context* SELF) {
       Core_String* k = _get_name((SELF->names), dx_adl_name_index_##NAME##_type); \
       dx_adl_type_handler* v = NULL; \
       if (dx_adl_type_handlers_##NAME##_create((dx_adl_type_handlers_##NAME**)&v)) { \
-        Core_InlinePointerHashmap_uninitialize(&SELF->type_handlers); \
+        Core_InlineHashMapPP_uninitialize(&SELF->type_handlers); \
         return Core_Failure; \
       } \
-      if (Core_InlinePointerHashmap_set(&SELF->type_handlers, k, v)) { \
+      if (Core_InlineHashMapPP_set(&SELF->type_handlers, k, v)) { \
         CORE_UNREFERENCE(v); \
         v = NULL; \
-        Core_InlinePointerHashmap_uninitialize(&SELF->type_handlers); \
+        Core_InlineHashMapPP_uninitialize(&SELF->type_handlers); \
         return Core_Failure; \
       } \
       CORE_UNREFERENCE(v); \
@@ -118,14 +118,14 @@ static Core_Result initialize_type_handlers(dx_adl_context* SELF) {
       dx_adl_type_handler* v = NULL; \
       if (TYPE##_create((TYPE**)&v)) { \
         \
-          Core_InlinePointerHashmap_uninitialize(&SELF->type_handlers);  \
+          Core_InlineHashMapPP_uninitialize(&SELF->type_handlers);  \
           return Core_Failure; \
       } \
-        if (Core_InlinePointerHashmap_set(&SELF->type_handlers, k, v)) { \
+        if (Core_InlineHashMapPP_set(&SELF->type_handlers, k, v)) { \
           \
             CORE_UNREFERENCE(v); \
             v = NULL; \
-            Core_InlinePointerHashmap_uninitialize(&SELF->type_handlers); \
+            Core_InlineHashMapPP_uninitialize(&SELF->type_handlers); \
             return Core_Failure; \
         } \
         CORE_UNREFERENCE(v); \
@@ -155,7 +155,7 @@ static Core_Result initialize_type_handlers(dx_adl_context* SELF) {
 }
 
 static Core_Result uninitialize_type_handlers(dx_adl_context* SELF) {
-  Core_InlinePointerHashmap_uninitialize(&SELF->type_handlers);
+  Core_InlineHashMapPP_uninitialize(&SELF->type_handlers);
   return Core_Success;
 }
 
@@ -241,7 +241,7 @@ Core_Result dx_adl_context_add_type_handler(dx_adl_context* SELF, Core_String* n
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
   }
-  if (Core_InlinePointerHashmap_set(&SELF->type_handlers, (Core_InlinePointerHashmap_Key)name, (Core_InlinePointerHashmap_Value)type_handler)) {
+  if (Core_InlineHashMapPP_set(&SELF->type_handlers, (Core_InlineHashMapPP_Key)name, (Core_InlineHashMapPP_Value)type_handler)) {
     return Core_Failure;
   }
   return Core_Success;

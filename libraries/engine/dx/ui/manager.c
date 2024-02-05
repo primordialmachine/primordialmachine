@@ -70,15 +70,15 @@ static void value_removed_callback(Core_Object** a) {
 }
 
 static Core_Result initialize_type_handlers(dx_ui_manager* SELF) {
-  static Core_InlinePointerHashMap_Configuration const configuration = {
-    .compareKeysCallback = (Core_InlinePointerHashmap_CompareKeysCallback*)&compare_keys_callback,
-    .hashKeyCallback = (Core_InlinePointerHashmap_HashKeyCallback*)&hash_key_callback,
-    .keyAddedCallback = (Core_InlinePointerHashMap_KeyAddedCallback*)&key_added_callback,
-    .keyRemovedCallback = (Core_InlinePointerHashMap_KeyRemovedCallback*)&key_removed_callback,
-    .valueAddedCallback = (Core_InlinePointerHashmap_ValueAddedCallback*)&value_added_callback,
-    .valueRemovedCallback = (Core_InlinePointerHashMap_ValueRemovedCallback*)&value_removed_callback,
+  static Core_InlineHashMapPP_Configuration const configuration = {
+    .compareKeysCallback = (Core_InlineHashMapPP_CompareKeysCallback*)&compare_keys_callback,
+    .hashKeyCallback = (Core_InlineHashMapPP_HashKeyCallback*)&hash_key_callback,
+    .keyAddedCallback = (Core_InlineHashMapPP_KeyAddedCallback*)&key_added_callback,
+    .keyRemovedCallback = (Core_InlineHashMapPP_KeyRemovedCallback*)&key_removed_callback,
+    .valueAddedCallback = (Core_InlineHashMapPP_ValueAddedCallback*)&value_added_callback,
+    .valueRemovedCallback = (Core_InlineHashMapPP_ValueRemovedCallback*)&value_removed_callback,
   };
-  if (Core_InlinePointerHashmap_initialize(&SELF->type_handlers, &configuration)) {
+  if (Core_InlineHashMapPP_initialize(&SELF->type_handlers, &configuration)) {
     return Core_Failure;
   }
 
@@ -92,15 +92,15 @@ static Core_Result initialize_type_handlers(dx_ui_manager* SELF) {
       if (VALUE##_create((VALUE**)&v)) { \
         CORE_UNREFERENCE(k); \
         k = NULL; \
-        Core_InlinePointerHashmap_uninitialize(&SELF->type_handlers); \
+        Core_InlineHashMapPP_uninitialize(&SELF->type_handlers); \
         return Core_Failure; \
       } \
-      if (Core_InlinePointerHashmap_set(&SELF->type_handlers, k, v)) { \
+      if (Core_InlineHashMapPP_set(&SELF->type_handlers, k, v)) { \
         CORE_UNREFERENCE(v); \
         v = NULL; \
         CORE_UNREFERENCE(k); \
         k = NULL; \
-        Core_InlinePointerHashmap_uninitialize(&SELF->type_handlers); \
+        Core_InlineHashMapPP_uninitialize(&SELF->type_handlers); \
         return Core_Failure; \
       } \
       CORE_UNREFERENCE(v); \
@@ -118,7 +118,7 @@ static Core_Result initialize_type_handlers(dx_ui_manager* SELF) {
 }
 
 static Core_Result uninitialize_type_handlers(dx_ui_manager* SELF) {
-  Core_InlinePointerHashmap_uninitialize(&SELF->type_handlers);
+  Core_InlineHashMapPP_uninitialize(&SELF->type_handlers);
   return Core_Success;
 }
 
@@ -314,7 +314,7 @@ static Core_Result _parse_widget(dx_ui_widget** RETURN, dx_ui_manager* SELF, dx_
     return Core_Failure;
   }
   dx_ui_type_handler* type_handler = NULL;
-  if (Core_InlinePointerHashmap_get(&type_handler, &SELF->type_handlers, received_type)) {
+  if (Core_InlineHashMapPP_get(&type_handler, &SELF->type_handlers, received_type)) {
     CORE_UNREFERENCE(received_type);
     received_type = NULL;
     return Core_Failure;

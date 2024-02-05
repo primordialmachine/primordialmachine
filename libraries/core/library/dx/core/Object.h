@@ -1,7 +1,6 @@
-#if !defined(DX_CORE_OBJECT_H_INCLUDED)
-#define DX_CORE_OBJECT_H_INCLUDED
+#if !defined(CORE_OBJECT_H_INCLUDED)
+#define CORE_OBJECT_H_INCLUDED
 
-#include "dx/core/core.h"
 #include "dx/core/TypeSystem.h"
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
@@ -37,12 +36,18 @@ struct Core_Object {
   Core_Type* type;
   /// @brief Singly-linked list of weak references.
   Core_WeakReference* weak_references;
-#if _DEBUG && 1 == DX_OBJECT_WITH_MAGIC_BYTES
+#if _DEBUG && 1 == Core_withObjectMagicBytes
   char magic_bytes[6];
 #endif
 };
 
-void DX_DEBUG_CHECK_OBJECT_MAGIC_BYTES(void* p);
+// See Core_withObjectMagicBytes for more information.
+#if _DEBUG && 1 == Core_withObjectDispatchMagicBytes
+void Core_Debug_checkObjectMagicBytes(void* p);
+#else
+static inline void Core_Debug_checkObjectMagicBytes(void* p)
+{/*Intentionally empty.*/}
+#endif
 
 /// @brief
 /// Unconditionally cast a <code>void</code> pointer into a <code>Core_Object_Dispatch</code> pointer.
@@ -54,12 +59,18 @@ static inline Core_Object_Dispatch* CORE_OBJECT_DISPATCH(void* p) {
 
 struct Core_Object_Dispatch {
   int dummy;
-#if _DEBUG && 1 == DX_OBJECT_WITH_MAGIC_BYTES
+#if _DEBUG && 1 == Core_withObjectDispatchMagicBytes
   char magic_bytes[8];
 #endif
 };
 
-void DX_DEBUG_CHECK_OBJECT_DISPATCH_MAGIC_BYTES(void* p);
+// See Core_withObjectDispatchMagicBytes for more information.
+#if _DEBUG && 1 == Core_withObjectDispatchMagicBytes
+void Core_Debug_checkObjectDispatchMagicBytes(void* p);
+#else
+static inline void Core_Debug_checkObjectDispatchMagicBytes(void* p)
+{/*Intentionally empty.*/}
+#endif
 
 /// @brief
 /// Allocate a Core_Object.
@@ -104,24 +115,18 @@ Core_Result Core_Object_allocate(Core_Object** RETURN, Core_Size size);
     return Core_Failure; \
   }
 
-/// @brief
-/// Increment the reference count of a Core_Object object by @a 1.
-/// @param object
-/// A pointer to the Core_Object object.
-void Core_Object_reference(Core_Object *object);
+/* http://localhost/core#core-reference */
+void Core_reference(Core_Object *object);
 
-/// @brief
-/// Increment the reference count of a Core_Object object by @a 1.
-/// @param object
-/// A pointer to the Core_Object object.
-void Core_Object_unreference(Core_Object* object);
+/* http://localhost/core#core-unreference */
+void Core_unreference(Core_Object* object);
 
 static inline void CORE_REFERENCE(void *p) {
-  Core_Object_reference(CORE_OBJECT(p));
+  Core_reference(CORE_OBJECT(p));
 }
 
 static inline void CORE_UNREFERENCE(void *p) {
-  Core_Object_unreference(CORE_OBJECT(p));
+  Core_unreference(CORE_OBJECT(p));
 }
 
 /// @brief Utility macro to facilate the definition of functions.
@@ -143,6 +148,7 @@ static inline void CORE_UNREFERENCE(void *p) {
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
+/* http://localhost/core#core-weakreference */
 /// A weak reference.
 Core_declareObjectType("Core.WeakReference",
                        Core_WeakReference,
@@ -167,14 +173,16 @@ struct Core_WeakReference_Dispatch {
   Core_Object_Dispatch _parent;
 };
 
+/* http://localhost/core#core-weakreference-construct */
 Core_Result Core_WeakReference_construct(Core_WeakReference* SELF, Core_Object* object);
 
 Core_Result Core_WeakReference_create(Core_WeakReference** RETURN, Core_Object* object);
 
 Core_Result Core_WeakReference_set(Core_WeakReference* SELF, Core_Object* object);
 
+/* http://localhost/core#core-weakreference-acquire */
 Core_Result Core_WeakReference_acquire(Core_Object** RETURN, Core_WeakReference* SELF);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-#endif // DX_CORE_OBJECT_H_INCLUDED
+#endif // CORE_OBJECT_H_INCLUDED

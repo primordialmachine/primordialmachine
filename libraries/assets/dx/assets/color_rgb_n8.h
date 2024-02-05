@@ -13,7 +13,7 @@ static inline dx_assets_color_rgb_n8* DX_ASSETS_COLOR_RGB_N8(void* p) {
 
 struct dx_assets_color_rgb_n8 {
   Core_Object _parent;
-  DX_RGB_N8 value;
+  Core_InlineRgbN8 value;
 };
 
 static inline dx_assets_color_rgb_n8_Dispatch* DX_ASSETS_COLOR_RGB_N8_DISPATCH(void* p) {
@@ -25,16 +25,16 @@ struct dx_assets_color_rgb_n8_Dispatch {
 };
 
 /// @detail The color is initialized with the specified values.
-/// @param value A pointer to a <code>DX_RGB_N8</code> object from which the values are read.
+/// @param value A pointer to a <code>Core_InlineRgbN8</code> object from which the values are read.
 /// @constructor{dx_assets_color_rgb_n8} 
-Core_Result dx_assets_color_rgb_n8_construct(dx_assets_color_rgb_n8* SELF, DX_RGB_N8 const* value);
+Core_Result dx_assets_color_rgb_n8_construct(dx_assets_color_rgb_n8* SELF, Core_InlineRgbN8 const* value);
 
-Core_Result dx_assets_color_rgb_n8_create(dx_assets_color_rgb_n8** RESULT, DX_RGB_N8 const* value);
+Core_Result dx_assets_color_rgb_n8_create(dx_assets_color_rgb_n8** RESULT, Core_InlineRgbN8 const* value);
 
 /// @brief Get the values.
-/// @param RETURN A pointer to a <code>DX_RGB_N8</code> object.
+/// @param RETURN A pointer to a <code>Core_InlineRgbN8</code> object.
 /// @success <code>*RETURN</code> was assigned the component values.
 /// @constructor{dx_assets_color_rgb_n8}
-Core_Result dx_assets_color_rgb_n8_get_value(DX_RGB_N8* RETURN, dx_assets_color_rgb_n8* SELF);
+Core_Result dx_assets_color_rgb_n8_get_value(Core_InlineRgbN8* RETURN, dx_assets_color_rgb_n8* SELF);
 
 #endif // DX_ASSET_COLOR_RGB_N8_H_INCLUDED

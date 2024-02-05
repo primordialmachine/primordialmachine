@@ -16,7 +16,7 @@ struct dx_ui_type_handlers_text_field {
   /// @brief
   /// Set of expected keys.
   /// If a key is not in that set, then this is a semantical error.
-  Core_InlinePointerHashmap expected_keys;
+  Core_InlineHashMapPP expected_keys;
 };
 
 static inline dx_ui_type_handlers_text_field_Dispatch* DX_UI_TYPE_HANDLERS_TEXT_FIELD_DISPATCH(void* p) {

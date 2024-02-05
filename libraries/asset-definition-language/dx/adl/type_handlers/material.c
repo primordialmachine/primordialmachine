@@ -63,20 +63,20 @@ static Core_Result _on_compare_expected_key_keys(Core_Boolean* RETURN, Core_Stri
 }
 
 static Core_Result _uninitialize_expected_keys(dx_adl_type_handlers_material* SELF) {
-  Core_InlinePointerHashmap_uninitialize(&SELF->expected_keys);
+  Core_InlineHashMapPP_uninitialize(&SELF->expected_keys);
   return Core_Success;
 }
 
 static Core_Result _initialize_expected_keys(dx_adl_type_handlers_material* SELF) {
-  Core_InlinePointerHashMap_Configuration cfg = {
+  Core_InlineHashMapPP_Configuration cfg = {
     .keyAddedCallback = &_on_expected_key_key_added,
     .keyRemovedCallback = &_on_expected_key_key_removed,
     .valueAddedCallback = NULL,
     .valueRemovedCallback = NULL,
-    .hashKeyCallback = (Core_InlinePointerHashmap_HashKeyCallback*) &_on_hash_expected_key_key,
-    .compareKeysCallback = (Core_InlinePointerHashmap_CompareKeysCallback*)&_on_compare_expected_key_keys,
+    .hashKeyCallback = (Core_InlineHashMapPP_HashKeyCallback*) &_on_hash_expected_key_key,
+    .compareKeysCallback = (Core_InlineHashMapPP_CompareKeysCallback*)&_on_compare_expected_key_keys,
   };
-  if (Core_InlinePointerHashmap_initialize(&SELF->expected_keys, &cfg)) {
+  if (Core_InlineHashMapPP_initialize(&SELF->expected_keys, &cfg)) {
     return Core_Failure;
   }
 
@@ -84,13 +84,13 @@ static Core_Result _initialize_expected_keys(dx_adl_type_handlers_material* SELF
   { \
     Core_String* expected_key = NULL; \
     if (Core_String_create(&expected_key, EXPECTED_KEY, sizeof(EXPECTED_KEY)-1)) { \
-      Core_InlinePointerHashmap_uninitialize(&SELF->expected_keys); \
+      Core_InlineHashMapPP_uninitialize(&SELF->expected_keys); \
       return Core_Failure; \
     } \
-    if (Core_InlinePointerHashmap_set(&SELF->expected_keys, expected_key, expected_key)) {\
+    if (Core_InlineHashMapPP_set(&SELF->expected_keys, expected_key, expected_key)) {\
       CORE_UNREFERENCE(expected_key); \
       expected_key = NULL; \
-      Core_InlinePointerHashmap_uninitialize(&SELF->expected_keys); \
+      Core_InlineHashMapPP_uninitialize(&SELF->expected_keys); \
       return Core_Failure; \
     } \
     CORE_UNREFERENCE(expected_key); \
@@ -122,7 +122,7 @@ static Core_Result _check_keys(dx_adl_type_handlers_material* SELF, dx_ddl_node*
   if (Core_InlineArrayListP_initialize(&received_keys, 0, &configuration)) {
     return Core_Failure;
   }
-  if (Core_InlinePointerHashmap_getKeys(&node->map, &received_keys)) {
+  if (Core_InlineHashMapPP_getKeys(&node->map, &received_keys)) {
     Core_InlineArrayListP_uninitialize(&received_keys);
     return Core_Failure;
   }
@@ -138,7 +138,7 @@ static Core_Result _check_keys(dx_adl_type_handlers_material* SELF, dx_ddl_node*
       return Core_Failure;
     }
     Core_String* expected_key = NULL;
-    if (Core_InlinePointerHashmap_get(&expected_key, &SELF->expected_keys, received_key)) {
+    if (Core_InlineHashMapPP_get(&expected_key, &SELF->expected_keys, received_key)) {
       Core_InlineArrayListP_uninitialize(&received_keys);
       return Core_Failure;
     }
@@ -160,7 +160,7 @@ static Core_Result _parse_material_controller(dx_assets_material_controller** RE
   }
   if (isEqualTo) {
     dx_adl_type_handler* type_handler = NULL;
-    if (Core_InlinePointerHashmap_get(&type_handler, &context->type_handlers, received_type)) {
+    if (Core_InlineHashMapPP_get(&type_handler, &context->type_handlers, received_type)) {
       CORE_UNREFERENCE(received_type);
       received_type = NULL;
       return Core_Failure;
@@ -272,7 +272,7 @@ static Core_Result _resolve_ambient_color(dx_adl_type_handlers_material* SELF, d
   dx_assets_material* material = DX_ASSETS_MATERIAL(symbol->asset);
   // default to opaque white if no color is specified
   if (!material->ambient_color) {
-    DX_RGB_N8 WHITE = { .r = 255, .g = 255, .b = 255 };
+    Core_InlineRgbN8 WHITE = { .r = 255, .g = 255, .b = 255 };
     Core_String* name = NULL;
     if (Core_String_create(&name, "<anonymous>", sizeof("<anonymous>") - 1)) {
       return Core_Failure;

@@ -131,14 +131,14 @@ present_glyph
     Core_Real32 target_depth,
     DX_RECT2_F32 const* texture_coordinate_rectangle,
     dx_val_texture* texture,
-    DX_RGBA_F32 const* color
+    Core_InlineRgbaR32 const* color
   );
 
 static Core_Result create_text_presenter(dx_font_presenter* SELF);
 
 static void destroy_text_presenter(dx_font_presenter* SELF);
 
-static Core_Result on_render_code_point(dx_font_presenter* SELF, DX_VEC2_F32* position, uint32_t code_point, dx_font* font, DX_RGBA_F32 const* text_color, DX_TEXT_PRESENTATION_OPTIONS const* options);
+static Core_Result on_render_code_point(dx_font_presenter* SELF, DX_VEC2_F32* position, uint32_t code_point, dx_font* font, Core_InlineRgbaR32 const* text_color, DX_TEXT_PRESENTATION_OPTIONS const* options);
 
 static Core_Result on_measure_code_point(dx_font_presenter* SELF, DX_VEC2_F32* position, uint32_t code_point, dx_font* font,
                                        DX_TEXT_MEASUREMENT_OPTIONS const* options,
@@ -172,7 +172,7 @@ present_glyph
     Core_Real32 target_depth,
     DX_RECT2_F32 const* texture_coordinate_rectangle,
     dx_val_texture* texture,
-    DX_RGBA_F32 const* color
+    Core_InlineRgbaR32 const* color
   )
 {
   if (!texture || !texture_coordinate_rectangle) {
@@ -254,10 +254,10 @@ static void destroy_text_presenter(dx_font_presenter* SELF) {
 }
 
 /// @param [in,out] position A pointer to the position. After the code point was rendered, the position is advanced.
-static Core_Result on_render_code_point(dx_font_presenter* SELF, DX_VEC2_F32* position, uint32_t code_point, dx_font* font, DX_RGBA_F32 const* text_color, DX_TEXT_PRESENTATION_OPTIONS const* options) {
+static Core_Result on_render_code_point(dx_font_presenter* SELF, DX_VEC2_F32* position, uint32_t code_point, dx_font* font, Core_InlineRgbaR32 const* text_color, DX_TEXT_PRESENTATION_OPTIONS const* options) {
   // The colors "red" and "green".
   // @todo Cache those.
-  DX_RGBA_F32 red, green;
+  Core_InlineRgbaR32 red, green;
   dx_rgb_n8_to_rgba_f32(&dx_colors_red, 1.f, &red);
   dx_rgb_n8_to_rgba_f32(&dx_colors_green, 1.f, &green);
 
@@ -658,7 +658,7 @@ Core_Result dx_font_presenter_create(dx_font_presenter** RETURN, dx_font_manager
   return Core_Success;
 }
 
-Core_Result dx_font_presenter_render_line_string(dx_font_presenter* SELF, DX_VEC2_F32 const* position, Core_String* string, DX_RGBA_F32 const* text_color, dx_font* font,
+Core_Result dx_font_presenter_render_line_string(dx_font_presenter* SELF, DX_VEC2_F32 const* position, Core_String* string, Core_InlineRgbaR32 const* text_color, dx_font* font,
                                                DX_TEXT_PRESENTATION_OPTIONS const* options) {
   dx_string_iterator* string_iterator = NULL;
   if (Core_String_create_iterator(&string_iterator, string)) {
@@ -694,7 +694,7 @@ Core_Result dx_font_presenter_measure_line_string(dx_font_presenter* SELF, DX_VE
   return Core_Success;
 }
 
-Core_Result dx_font_presenter_render_line_string_iterator(dx_font_presenter* SELF, DX_VEC2_F32 const* position, dx_string_iterator* string_iterator, DX_RGBA_F32 const* text_color, dx_font* font,
+Core_Result dx_font_presenter_render_line_string_iterator(dx_font_presenter* SELF, DX_VEC2_F32 const* position, dx_string_iterator* string_iterator, Core_InlineRgbaR32 const* text_color, dx_font* font,
                                                         DX_TEXT_PRESENTATION_OPTIONS const* options) {
   // The distance from the baseline to the maximal extend of any symbol above the baseline.
   Core_Real32 ascender;
@@ -703,7 +703,7 @@ Core_Result dx_font_presenter_render_line_string_iterator(dx_font_presenter* SEL
   Core_Real32 descender;
   dx_font_get_descender(&descender, font);
 
-  DX_RGBA_F32 red, green;
+  Core_InlineRgbaR32 red, green;
   dx_rgb_n8_to_rgba_f32(&dx_colors_red, 1.f, &red);
   dx_rgb_n8_to_rgba_f32(&dx_colors_green, 1.f, &green);
   DX_VEC2_F32 pos = *position;

@@ -50,32 +50,32 @@ Core_Result dx_adl_resolve_create(dx_adl_resolve** RETURN, dx_adl_context* conte
 
 static Core_Result setup_queue(dx_adl_resolve* SELF, bool include_unloaded, bool include_unresolved) {
   Core_InlineArrayListP_clear(&SELF->queue);
-  Core_InlinePointerHashmapIterator iterator;
-  Core_InlinePointerHashmapIterator_initialize(&iterator, &SELF->context->definitions->map);
+  Core_InlineHashMapPPIterator iterator;
+  Core_InlineHashMapPPIterator_initialize(&iterator, &SELF->context->definitions->map);
   Core_Boolean has_entry = false;
-  if (Core_InlinePointerHashmapIterator_hasEntry(&has_entry, &iterator)) {
-    Core_InlinePointerHashmapIterator_uninitialize(&iterator);
+  if (Core_InlineHashMapPPIterator_hasEntry(&has_entry, &iterator)) {
+    Core_InlineHashMapPPIterator_uninitialize(&iterator);
     return Core_Failure;
   }
   while (has_entry) {
     dx_adl_symbol* symbol = NULL;
-    if (Core_InlinePointerHashmapIterator_getValue(&symbol, &iterator)) {
-      Core_InlinePointerHashmapIterator_uninitialize(&iterator);
+    if (Core_InlineHashMapPPIterator_getValue(&symbol, &iterator)) {
+      Core_InlineHashMapPPIterator_uninitialize(&iterator);
       return Core_Failure;
     }
     if ((!symbol->asset && include_unloaded) || (!symbol->resolved && include_unresolved)) {
       if (Core_InlineArrayListP_append(&SELF->queue, symbol)) {
-        Core_InlinePointerHashmapIterator_uninitialize(&iterator);
+        Core_InlineHashMapPPIterator_uninitialize(&iterator);
         return Core_Failure;
       }
     }
-    Core_InlinePointerHashmapIterator_next(&iterator);
-    if (Core_InlinePointerHashmapIterator_hasEntry(&has_entry, &iterator)) {
-      Core_InlinePointerHashmapIterator_uninitialize(&iterator);
+    Core_InlineHashMapPPIterator_next(&iterator);
+    if (Core_InlineHashMapPPIterator_hasEntry(&has_entry, &iterator)) {
+      Core_InlineHashMapPPIterator_uninitialize(&iterator);
       return Core_Failure;
     }
   }
-  Core_InlinePointerHashmapIterator_uninitialize(&iterator);
+  Core_InlineHashMapPPIterator_uninitialize(&iterator);
   return Core_Success;
 }
 
@@ -97,7 +97,7 @@ Core_Result dx_adl_resolve_run(dx_adl_resolve* SELF) {
     }
     if (!symbol->asset) {
       dx_adl_type_handler* type_handler = NULL;
-      if (Core_InlinePointerHashmap_get(&type_handler, &SELF->context->type_handlers, symbol->type)) {
+      if (Core_InlineHashMapPP_get(&type_handler, &SELF->context->type_handlers, symbol->type)) {
         return Core_Failure;
       }
       if (dx_adl_type_handler_read(&symbol->asset, type_handler, symbol->node, SELF->context)) {
@@ -120,7 +120,7 @@ Core_Result dx_adl_resolve_run(dx_adl_resolve* SELF) {
         return Core_Failure;
       }
       dx_adl_type_handler* type_handler = NULL;
-      if (Core_InlinePointerHashmap_get(&type_handler, &SELF->context->type_handlers, symbol->type)) {
+      if (Core_InlineHashMapPP_get(&type_handler, &SELF->context->type_handlers, symbol->type)) {
         return Core_Failure;
       }
       if (!symbol->asset) {

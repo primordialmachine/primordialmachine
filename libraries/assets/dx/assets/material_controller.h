@@ -51,7 +51,7 @@ struct dx_assets_material_controllers_ambient_color {
   Core_Real32 time;
   /// @brief  The current color.
   /// @todo Fixme.
-  DX_RGB_N8 current;
+  Core_InlineRgbN8 current;
 };
 
 static inline dx_assets_material_controllers_ambient_color_Dispatch* DX_ASSETS_MATERIAL_CONTROLLERS_AMBIENT_COLOR_DISPATCH(void* p) {

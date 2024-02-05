@@ -50,7 +50,7 @@ struct dx_val_command {
       struct {
         Core_Real32 l, b, w, h;
       } rectangle;
-      DX_RGBA_F32 color;
+      Core_InlineRgbaR32 color;
     } clear_color_command;
     
     struct {
@@ -142,7 +142,7 @@ struct dx_val_command_Dispatch {
 };
 
 
-Core_Result dx_val_command_construct_clear_color(dx_val_command* SELF, Core_Real32 l, Core_Real32 b, Core_Real32 w, Core_Real32 h, DX_RGBA_F32 const* color);
+Core_Result dx_val_command_construct_clear_color(dx_val_command* SELF, Core_Real32 l, Core_Real32 b, Core_Real32 w, Core_Real32 h, Core_InlineRgbaR32 const* color);
 
 /// Create a clear color (buffer) command.
 /// @param RETURN A pointer to a <code>dx_val_command</code> variable.
@@ -152,7 +152,7 @@ Core_Result dx_val_command_construct_clear_color(dx_val_command* SELF, Core_Real
 /// The caller has acquired a reference to the returned object.
 /// @default-return
 /// @default-failure
-Core_Result dx_val_command_create_clear_color(dx_val_command** RETURN, Core_Real32 l, Core_Real32 b, Core_Real32 w, Core_Real32 h, DX_RGBA_F32 const* color);
+Core_Result dx_val_command_create_clear_color(dx_val_command** RETURN, Core_Real32 l, Core_Real32 b, Core_Real32 w, Core_Real32 h, Core_InlineRgbaR32 const* color);
 
 
 Core_Result dx_val_command_construct_clear_depth(dx_val_command* SELF, Core_Real32 l, Core_Real32 b, Core_Real32 w, Core_Real32 h, Core_Real32 depth);

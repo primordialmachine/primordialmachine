@@ -57,7 +57,7 @@ Core_Result dx_assets_image_operations_color_fill_set_color(dx_assets_image_oper
   return Core_Success;
 }
 
-Core_Result dx_assets_image_operations_color_fill_get_color(DX_RGB_N8* RETURN, dx_assets_image_operations_color_fill* SELF) {
+Core_Result dx_assets_image_operations_color_fill_get_color(Core_InlineRgbN8* RETURN, dx_assets_image_operations_color_fill* SELF) {
   *RETURN = DX_ASSETS_COLOR_RGB_N8(SELF->color->object)->value;
   return Core_Success;
 }

@@ -18,7 +18,7 @@ struct dx_ui_group {
   /// @brief The relative size of this UI text.
   DX_VEC2_F32 relative_size;
   /// @brief The background color of this UI text.
-  DX_RGBA_F32 background_color;
+  Core_InlineRgbaR32 background_color;
 
   dx_object_array* children;
 };
@@ -37,15 +37,15 @@ Core_Result dx_ui_group_construct(dx_ui_group* SELF, dx_ui_manager* manager);
 Core_Result dx_ui_group_create(dx_ui_group** RETURN, dx_ui_manager* manager);
 
 /// @brief Set the background color.
-/// @param background_color A pointer to a <code>DX_RGBA_F32</code> variable.
+/// @param background_color A pointer to a <code>Core_InlineRgbaR32</code> variable.
 /// @method{dx_ui_group}
-Core_Result dx_ui_group_set_background_color(dx_ui_group* SELF, DX_RGBA_F32 const* background_color);
+Core_Result dx_ui_group_set_background_color(dx_ui_group* SELF, Core_InlineRgbaR32 const* background_color);
 
 /// @brief Get the background color.
 /// @param RETURN A pointer to a DX_VEC2 variable.
 /// @success <code>*RETURN</code> was assigned the background color.
 /// @method{dx_ui_group}
-Core_Result dx_ui_group_get_background_color(DX_RGBA_F32* RETURN, dx_ui_group* SELF);
+Core_Result dx_ui_group_get_background_color(Core_InlineRgbaR32* RETURN, dx_ui_group* SELF);
 
 /// @brief Append a child to the list of children of this group.
 /// @param child A pointer to the child.

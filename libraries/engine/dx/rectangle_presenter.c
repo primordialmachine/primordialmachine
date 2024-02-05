@@ -4,9 +4,9 @@
 #include "dx/val/cbinding.h"
 #include "dx/val/command.h"
 
-static Core_Result fill_rectangle(dx_rectangle_presenter* SELF, DX_RECT2_F32 const* target_rectangle, Core_Real32 target_depth, DX_RGBA_F32 const* color);
+static Core_Result fill_rectangle(dx_rectangle_presenter* SELF, DX_RECT2_F32 const* target_rectangle, Core_Real32 target_depth, Core_InlineRgbaR32 const* color);
 
-static Core_Result stroke_rectangle(dx_rectangle_presenter* SELF, DX_RECT2_F32 const* target_rectangle, Core_Real32 target_depth, DX_RGBA_F32 const* color);
+static Core_Result stroke_rectangle(dx_rectangle_presenter* SELF, DX_RECT2_F32 const* target_rectangle, Core_Real32 target_depth, Core_InlineRgbaR32 const* color);
 
 Core_defineObjectType("dx.rectangle_presenter",
                       dx_rectangle_presenter,
@@ -26,7 +26,7 @@ static Core_Result append_rect(DX_VEC3* array, Core_Size* index, DX_RECT2_F32 co
   return Core_Success;
 }
 
-static Core_Result fill_rectangle(dx_rectangle_presenter* SELF, DX_RECT2_F32 const* target_rectangle, Core_Real32 target_depth, DX_RGBA_F32 const* color) {
+static Core_Result fill_rectangle(dx_rectangle_presenter* SELF, DX_RECT2_F32 const* target_rectangle, Core_Real32 target_depth, Core_InlineRgbaR32 const* color) {
   dx_val_command* command;
 
   if (dx_val_cbinding_set_rgba_f32(SELF->val_cbinding, "vs_rgba", color)) {
@@ -73,7 +73,7 @@ static Core_Result fill_rectangle(dx_rectangle_presenter* SELF, DX_RECT2_F32 con
   return Core_Success;
 }
 
-static Core_Result stroke_rectangle(dx_rectangle_presenter* SELF, DX_RECT2_F32 const* target_rectangle, Core_Real32 target_depth, DX_RGBA_F32 const* color) {
+static Core_Result stroke_rectangle(dx_rectangle_presenter* SELF, DX_RECT2_F32 const* target_rectangle, Core_Real32 target_depth, Core_InlineRgbaR32 const* color) {
   dx_val_command* command;
 
   if (dx_val_cbinding_set_rgba_f32(SELF->val_cbinding, "vs_rgba", color)) {
@@ -299,10 +299,10 @@ Core_Result dx_rectangle_presenter_create(dx_rectangle_presenter** RETURN, dx_va
   return Core_Success;
 }
 
-Core_Result dx_rectangle_presenter_fill_rectangle(dx_rectangle_presenter* SELF, DX_RECT2_F32 const* target_rectangle, Core_Real32 target_depth, DX_RGBA_F32 const* color) {
+Core_Result dx_rectangle_presenter_fill_rectangle(dx_rectangle_presenter* SELF, DX_RECT2_F32 const* target_rectangle, Core_Real32 target_depth, Core_InlineRgbaR32 const* color) {
   return fill_rectangle(SELF, target_rectangle, target_depth, color);
 }
 
-Core_Result dx_rectangle_presenter_stroke_rectangle(dx_rectangle_presenter* SELF, DX_RECT2_F32 const* target_rectangle, Core_Real32 target_depth, DX_RGBA_F32 const* color) {
+Core_Result dx_rectangle_presenter_stroke_rectangle(dx_rectangle_presenter* SELF, DX_RECT2_F32 const* target_rectangle, Core_Real32 target_depth, Core_InlineRgbaR32 const* color) {
   return stroke_rectangle(SELF, target_rectangle, target_depth, color);
 }

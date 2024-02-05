@@ -172,7 +172,7 @@ static Core_Result dx_val_gl_program_bind(dx_val_gl_program* SELF, dx_val_cbindi
       ctx->glUniform4fv(location, 1, &(v.e[0]));
     } break;
     case DX_VAL_CBINDING_TYPE_RGBA_F32: {
-      DX_RGBA_F32 v;
+      Core_InlineRgbaR32 v;
       if (dx_val_cbinding_iter_get_rgba_f32(&it, &v)) {
         dx_val_cbinding_iter_uninitialize(&it);
         return Core_Failure;

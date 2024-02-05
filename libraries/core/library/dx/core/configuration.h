@@ -150,17 +150,17 @@
 
 /// If defined an evaluating to @a 1 and if compiled in debug mode,
 /// then "magic bytes" memory corruption detection pattern is available for Core_Object.
-/// A macro DX_DEBUG_CHECK_OBJECT_MAGIC_BYTES is provided.
+/// A function or macro Core_Debug_checkObjectMagicBytes is provided.
 /// If this function is invoked on a pointer that does not point to a valid Core_Object (or derived type) object,
 /// then there is a good chance (but only a chance) that this function will cause a debug break.
-#define DX_OBJECT_WITH_MAGIC_BYTES (1)
+#define Core_withObjectMagicBytes (1)
 
 /// If defined and evaluating to @a 1 and if compiled in debug mode,
 /// then "magic bytes" memory corruption detection pattern is available for Core_Object_Dispatch.
-/// A macro DX_DEBUG_CHECK_OBJECT_DISPATCH_MAGIC_BYTES is provided.
+/// A function or macro Core_Debug_checkObjectDispatchMagicBytes is provided.
 /// If this function is invoked on a pointer that does not point to a valid Core_Object_Dispatch (or derived type) object,
 /// then there is a good chance (but only a chance) that this function will cause a debug break.
-#define DX_OBJECT_DISPATCH_WITH_MAGIC_BYTES (1)
+#define Core_withObjectDispatchMagicBytes (1)
 
 /// If defined and evaluating to @a 1,
 /// then atomic reference counting is enabled.

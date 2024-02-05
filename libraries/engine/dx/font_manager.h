@@ -134,7 +134,7 @@ struct dx_font_manager {
   /// @brief The VAL context.
   dx_val_context* context;
   /// @brief Map from names to font objects.
-  Core_InlinePointerHashmap fonts;
+  Core_InlineHashMapPP fonts;
 };
 
 static inline dx_font_manager_Dispatch* DX_FONT_MANAGER_DISPATCH(void* p) {

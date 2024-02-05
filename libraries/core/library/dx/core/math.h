@@ -9,104 +9,104 @@
 
 typedef struct DX_VEC3 DX_VEC3;
 typedef struct DX_VEC4 DX_VEC4;
-typedef struct DX_RGB_F32 DX_RGB_F32;
-typedef struct DX_RGBA_F32 DX_RGBA_F32;
+typedef struct Core_InlineRgbR32 Core_InlineRgbR32;
+typedef struct Core_InlineRgbaR32 Core_InlineRgbaR32;
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-// https://primordialmachine.com/core/ring-1#core-min
+// https://primordialmachine.com/core#core-min
 Core_Result Core_minN8(Core_Natural8* RETURN, Core_Natural8 x, Core_Natural8 y);
 
-// https://primordialmachine.com/core/ring-1#core-min
+// https://primordialmachine.com/core#core-min
 Core_Result Core_minN16(Core_Natural16* RETURN, Core_Natural16 x, Core_Natural16 y);
 
-// https://primordialmachine.com/core/ring-1#core-min
+// https://primordialmachine.com/core#core-min
 Core_Result Core_minN32(Core_Natural32* RETURN, Core_Natural32 x, Core_Natural32 y);
 
-// https://primordialmachine.com/core/ring-1#core-min
+// https://primordialmachine.com/core#core-min
 Core_Result Core_minN64(Core_Natural64* RETURN, Core_Natural64 x, Core_Natural64 y);
 
-// https://primordialmachine.com/core/ring-1#core-min
+// https://primordialmachine.com/core#core-min
 Core_Result Core_minI8(Core_Integer8* RETURN, Core_Integer8 x, Core_Integer8 y);
 
-// https://primordialmachine.com/core/ring-1#core-min
+// https://primordialmachine.com/core#core-min
 Core_Result Core_minI16(Core_Integer16* RETURN, Core_Integer16 x, Core_Integer16 y);
 
-// https://primordialmachine.com/core/ring-1#core-min
+// https://primordialmachine.com/core#core-min
 Core_Result Core_minI32(Core_Integer32* RETURN, Core_Integer32 x, Core_Integer32 y);
 
-// https://primordialmachine.com/core/ring-1#core-min
+// https://primordialmachine.com/core#core-min
 Core_Result Core_minI64(Core_Integer64* RETURN, Core_Integer64 x, Core_Integer64 y);
 
-// https://primordialmachine.com/core/ring-1#core-min
+// https://primordialmachine.com/core#core-min
 Core_Result Core_minR32(Core_Real32* RETURN, Core_Real32 x, Core_Real32 y);
 
-// https://primordialmachine.com/core/ring-1#core-min
+// https://primordialmachine.com/core#core-min
 Core_Result Core_minR64(Core_Real64* RETURN, Core_Real64 x, Core_Real64 y);
 
-// https://primordialmachine.com/core/ring-1#core-min
+// https://primordialmachine.com/core#core-min
 Core_Result Core_minSz(Core_Size* RETURN, Core_Size x, Core_Size y);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-// https://primordialmachine.com/core/ring-1#core-sin
+// https://primordialmachine.com/core#core-sin
 Core_Result Core_sinR32(Core_Real32* RETURN, Core_Real32 x);
 
-// https://primordialmachine.com/core/ring-1#core-sin
+// https://primordialmachine.com/core#core-sin
 Core_Result Core_sinR64(Core_Real64* RETURN, Core_Real64 x);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-// https://primordialmachine.com/core/ring-1#core-cos
+// https://primordialmachine.com/core#core-cos
 Core_Result Core_cosR32(Core_Real32* RETURN, Core_Real32 x);
 
-// https://primordialmachine.com/core/ring-1#core-cos
+// https://primordialmachine.com/core#core-cos
 Core_Result Core_cosR64(Core_Real64* RETURN, Core_Real64 x);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-typedef struct DX_RGB_F32 {
+typedef struct Core_InlineRgbR32 {
   Core_Real32 r;
   Core_Real32 g;
   Core_Real32 b;
-} DX_RGB_F32;
+} Core_InlineRgbR32;
 
-static inline void dx_rgb_f32_set(DX_RGB_F32* c, Core_Real32 r, Core_Real32 g, Core_Real32 b) {
+static inline void dx_rgb_f32_set(Core_InlineRgbR32* c, Core_Real32 r, Core_Real32 g, Core_Real32 b) {
   c->r = r;
   c->g = g;
   c->b = b;
 }
 
-void dx_rgb_f32_lerp(DX_RGB_F32 const* a, DX_RGB_F32 const* b, Core_Real32 t, DX_RGB_F32* c);
+void dx_rgb_f32_lerp(Core_InlineRgbR32 const* a, Core_InlineRgbR32 const* b, Core_Real32 t, Core_InlineRgbR32* c);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-typedef struct DX_RGBA_F32 {
+typedef struct Core_InlineRgbaR32 {
   Core_Real32 r;
   Core_Real32 g;
   Core_Real32 b;
   Core_Real32 a;
-} DX_RGBA_F32;
+} Core_InlineRgbaR32;
 
-static inline void dx_rgba_f32_set(DX_RGBA_F32* c, Core_Real32 r, Core_Real32 g, Core_Real32 b, Core_Real32 a) {
+static inline void dx_rgba_f32_set(Core_InlineRgbaR32* c, Core_Real32 r, Core_Real32 g, Core_Real32 b, Core_Real32 a) {
   c->r = r;
   c->g = g;
   c->b = b;
   c->a = a;
 }
 
-void dx_rgba_f32_lerp(DX_RGBA_F32 const* a, DX_RGBA_F32 const* b, Core_Real32 t, DX_RGBA_F32* c);
+void dx_rgba_f32_lerp(Core_InlineRgbaR32 const* a, Core_InlineRgbaR32 const* b, Core_Real32 t, Core_InlineRgbaR32* c);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-typedef struct DX_ABGR_N8 {
+typedef struct Core_InlineAbgrN8 {
   Core_Natural8 a;
   Core_Natural8 b;
   Core_Natural8 g;
   Core_Natural8 r;
-} DX_ABGR_N8;
+} Core_InlineAbgrN8;
 
-static inline void dx_abgr_n8_set(DX_ABGR_N8* c, Core_Natural8 a, Core_Natural8 b, Core_Natural8 g, Core_Natural8 r) {
+static inline void dx_abgr_n8_set(Core_InlineAbgrN8* c, Core_Natural8 a, Core_Natural8 b, Core_Natural8 g, Core_Natural8 r) {
   c->a = a;
   c->b = b;
   c->g = g;
@@ -195,53 +195,53 @@ static inline void dx_la_n8_set(DX_LA_N8* c, Core_Natural8 l, Core_Natural8 a) {
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-typedef struct DX_RGB_N8 {
+typedef struct Core_InlineRgbN8 {
   Core_Natural8 r;
   Core_Natural8 g;
   Core_Natural8 b;
-} DX_RGB_N8;
+} Core_InlineRgbN8;
 
-static inline void dx_rgb_u8_set(DX_RGB_N8* c, Core_Natural8 r, Core_Natural8 g, Core_Natural8 b) {
+static inline void dx_rgb_u8_set(Core_InlineRgbN8* c, Core_Natural8 r, Core_Natural8 g, Core_Natural8 b) {
   c->r = r;
   c->g = g;
   c->b = b;
 }
 
-static inline void dx_rgb_n8_to_rgba_f32(DX_RGB_N8 const* source, Core_Real32 a, DX_RGBA_F32* target) {
+static inline void dx_rgb_n8_to_rgba_f32(Core_InlineRgbN8 const* source, Core_Real32 a, Core_InlineRgbaR32* target) {
   target->r = ((Core_Real32)source->r) / 255.f;
   target->g = ((Core_Real32)source->g) / 255.f;
   target->b = ((Core_Real32)source->b) / 255.f;
   target->a = a;
 }
 
-void dx_rgb_u8_lerp(DX_RGB_N8 const* a, DX_RGB_N8 const* b, Core_Real32 t, DX_RGB_N8* c);
+void dx_rgb_u8_lerp(Core_InlineRgbN8 const* a, Core_InlineRgbN8 const* b, Core_Real32 t, Core_InlineRgbN8* c);
 
 // The color "Capri"  (0, 191, 255).
-extern DX_RGB_N8 const dx_colors_capri;
+extern Core_InlineRgbN8 const dx_colors_capri;
 
 // The color "Malachite" (0, 255, 64) from "Capri"'s tetradic palette.
-extern DX_RGB_N8 const dx_colors_malachite;
+extern Core_InlineRgbN8 const dx_colors_malachite;
 
 // The color "Amber" (255, 192, 0) from "Capri"'s Split Complementary palette.
-extern DX_RGB_N8 const dx_colors_amber;
+extern Core_InlineRgbN8 const dx_colors_amber;
 
 // The color "White" (255, 255, 255).
-extern DX_RGB_N8 const dx_colors_white;
+extern Core_InlineRgbN8 const dx_colors_white;
 
 // The color "Gray" (128, 128, 128).
-extern DX_RGB_N8 const dx_colors_gray;
+extern Core_InlineRgbN8 const dx_colors_gray;
 
 // The color "Black" (0, 0, 0).
-extern DX_RGB_N8 const dx_colors_black;
+extern Core_InlineRgbN8 const dx_colors_black;
 
 // The color "Red" (255, 0, 0).
-extern DX_RGB_N8 const dx_colors_red;
+extern Core_InlineRgbN8 const dx_colors_red;
 
 // The color "Green" (0, 255, 0).
-extern DX_RGB_N8 const dx_colors_green;
+extern Core_InlineRgbN8 const dx_colors_green;
 
 // The color "Blue" (0, 0, 255).
-extern DX_RGB_N8 const dx_colors_blue;
+extern Core_InlineRgbN8 const dx_colors_blue;
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
@@ -259,7 +259,7 @@ static inline void dx_rgba_u8_set(DX_RGBA_N8* c, Core_Natural8 r, Core_Natural8 
   c->a = a;
 }
 
-static inline void dx_rgba_n8_to_rgba_f32(DX_RGBA_N8 const* source, Core_Real32 a, DX_RGBA_F32* target) {
+static inline void dx_rgba_n8_to_rgba_f32(DX_RGBA_N8 const* source, Core_Real32 a, Core_InlineRgbaR32* target) {
   target->r = ((Core_Real32)source->r) / 255.f;
   target->g = ((Core_Real32)source->g) / 255.f;
   target->b = ((Core_Real32)source->b) / 255.f;
@@ -268,17 +268,49 @@ static inline void dx_rgba_n8_to_rgba_f32(DX_RGBA_N8 const* source, Core_Real32 
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-/// @brief Compute the largest integer value not greater than @a x.
-/// @param x The value.
-/// @return The largest integer value not greater than @a x.
-/// If @a x is positive infinity, negative infinity, or not a number, then @a x is returned unmodified.
-Core_Real32 dx_floor_f32(Core_Real32 x);
+/// @brief
+/// Compute the largest integer value not greater than @a SELf.
+/// @param SELF
+/// The value.
+/// @return
+/// #Core_Success on success. #Core_Failure on failure.
+/// @success
+/// If @a SELF is positive infinity, negative infinity, or not a number, then <code>*RETURN</code> was assigned @a SELF.
+/// Otherwise <code>*RETURN</code> was assigned the largest integer value not greater than @a SELF.
+Core_Result Core_floorR32(Core_Real32* RETURN, Core_Real32 SELF);
 
-/// @brief Compute the largest integer value not greater than @a x.
-/// @param x The value.
-/// @return The largest integer value not greater than @a x.
-/// If @a x is positive infinity, negative infinity, or not a number, then @a x is returned unmodified.
-Core_Real64 dx_floor_f64(Core_Real64 x);
+/// @brief
+/// Compute the largest integer value not greater than @a x.
+/// @param SELF
+/// The value.
+/// @return
+/// #Core_Success on success. #Core_Failure on failure.
+/// @success
+/// If @a SELF is positive infinity, negative infinity, or not a number, then <code>*RETURN</code> was assigned @a SELF.
+/// Otherwise <code>*RETURN</code> was assigned the largest integer value not greater than @a SELF.
+Core_Result Core_floorR64(Core_Real64* RETURN, Core_Real64 SELF);
+
+/// @brief
+/// Compute the least integer value not greater than @a SELf.
+/// @param SELF
+/// The value.
+/// @return
+/// #Core_Success on success. #Core_Failure on failure.
+/// @success
+/// If @a SELF is positive infinity, negative infinity, or not a number, then <code>*RETURN</code> was assigned @a SELF.
+/// Otherwise <code>*RETURN</code> was assigned the largest integer value not greater than @a SELF.
+Core_Result Core_ceilR32(Core_Real32* RETURN, Core_Real32 SELF);
+
+/// @brief
+/// Compute the least integer value not greater than @a x.
+/// @param SELF
+/// The value.
+/// @return
+/// #Core_Success on success. #Core_Failure on failure.
+/// @success
+/// If @a SELF is positive infinity, negative infinity, or not a number, then <code>*RETURN</code> was assigned @a SELF.
+/// Otherwise <code>*RETURN</code> was assigned the largest integer value not greater than @a SELF.
+Core_Result Core_ceilR64(Core_Real64* RETURN, Core_Real64 SELF);
 
 // Symbolic constant for the Core_Real32 representation of PI.
 #define DX_PI_F32 3.1415926f

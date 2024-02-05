@@ -25,10 +25,10 @@ static DX_TEXT_PRESENTATION_OPTIONS const TEXT_PRESENTATION_OPTIONS = {
 };
 
 // The default text color.
-static DX_RGBA_F32 const TEXT_COLOR = { .r = 1.f, .g = 1.f, .b = 1.f, .a = 1.f };
+static Core_InlineRgbaR32 const TEXT_COLOR = { .r = 1.f, .g = 1.f, .b = 1.f, .a = 1.f };
 
 // The default background color.
-static DX_RGBA_F32 const BACKGROUND_COLOR = { .r = 1.f, .g = 1.f, .b = 1.f, .a = 1.f };
+static Core_InlineRgbaR32 const BACKGROUND_COLOR = { .r = 1.f, .g = 1.f, .b = 1.f, .a = 1.f };
 
 /// The font file.
 static char* const FONT_FILE = "./assets/fonts/SourceCodePro-Regular.ttf";
@@ -47,7 +47,8 @@ static Core_Size const FONT_SIZE = 12;
 static inline Core_Size get_font_size() {
   Core_Real32 dpi = DPI_HORIZONTAL < DPI_VERTICAL ? DPI_HORIZONTAL : DPI_VERTICAL;
   Core_Real32 dpi_scale = dpi / 96.f;
-  return (Core_Size)dx_floor_f32(((Core_Real32)FONT_SIZE) * dpi_scale);
+  Core_floorR32(&dpi_scale, (Core_Real32)FONT_SIZE * dpi_scale);
+  return (Core_Size)dpi_scale;
 }
 
 /// @Ensure that SELF->font is pointing to a suitable font.
@@ -228,7 +229,7 @@ static Core_Result get_child_by_name(dx_ui_widget** RETURN, dx_ui_text_field* SE
 
 /// @{ 
 
-Core_Result dx_ui_text_field_get_background_color(DX_RGBA_F32* RETURN, dx_ui_text_field* SELF) {
+Core_Result dx_ui_text_field_get_background_color(Core_InlineRgbaR32* RETURN, dx_ui_text_field* SELF) {
   if (!RETURN || !SELF) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
@@ -237,7 +238,7 @@ Core_Result dx_ui_text_field_get_background_color(DX_RGBA_F32* RETURN, dx_ui_tex
   return Core_Success;
 }
 
-Core_Result dx_ui_text_field_set_background_color(dx_ui_text_field* SELF, DX_RGBA_F32 const* background_color) {
+Core_Result dx_ui_text_field_set_background_color(dx_ui_text_field* SELF, Core_InlineRgbaR32 const* background_color) {
   if (!SELF || !background_color) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
@@ -250,7 +251,7 @@ Core_Result dx_ui_text_field_set_background_color(dx_ui_text_field* SELF, DX_RGB
 
 /// @{ 
 
-Core_Result dx_ui_text_field_get_text_color(DX_RGBA_F32* RETURN, dx_ui_text_field* SELF) {
+Core_Result dx_ui_text_field_get_text_color(Core_InlineRgbaR32* RETURN, dx_ui_text_field* SELF) {
   if (!RETURN || !SELF) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
@@ -260,7 +261,7 @@ Core_Result dx_ui_text_field_get_text_color(DX_RGBA_F32* RETURN, dx_ui_text_fiel
 }
 
 
-Core_Result dx_ui_text_field_set_text_color(dx_ui_text_field* SELF, DX_RGBA_F32 const* text_color) {
+Core_Result dx_ui_text_field_set_text_color(dx_ui_text_field* SELF, Core_InlineRgbaR32 const* text_color) {
   if (!SELF || !text_color) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;

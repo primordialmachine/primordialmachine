@@ -16,7 +16,7 @@ struct dx_adl_type_handlers_viewer_controllers_rotate_y {
   /// @brief
   /// Set of expected keys.
   /// If a key is not in that set, then this is a semantical error.
-  Core_InlinePointerHashmap expected_keys;
+  Core_InlineHashMapPP expected_keys;
 };
 
 static inline dx_adl_type_handlers_viewer_controllers_rotate_y_Dispatch* DX_ADL_TYPE_HANDLERS_VIEWER_CONTROLLERS_ROTATE_Y_DISPATCH(void* p) {

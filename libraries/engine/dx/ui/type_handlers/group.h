@@ -16,7 +16,7 @@ struct dx_ui_type_handlers_group {
   /// @brief
   /// Set of expected keys.
   /// If a key is not in that set, then this is a semantical error.
-  Core_InlinePointerHashmap expected_keys;
+  Core_InlineHashMapPP expected_keys;
 };
 
 static inline dx_ui_type_handlers_group_Dispatch* DX_UI_TYPE_HANDLERS_GROUP_DISPATCH(void* p) {

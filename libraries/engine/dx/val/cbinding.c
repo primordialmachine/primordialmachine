@@ -19,7 +19,7 @@ struct dx_val_cbinding_node {
     DX_VEC3 vec3;
     DX_VEC4 vec4;
     DX_MAT4 mat4;
-    DX_RGBA_F32 rgba_f32;
+    Core_InlineRgbaR32 rgba_f32;
     Core_Size texture_index;
   };
 };
@@ -73,7 +73,7 @@ Core_Result dx_val_cbinding_node_create(dx_val_cbinding_node** RETURN, Core_Stri
 
 static inline dx_val_cbinding_node* get_or_create(dx_val_cbinding* SELF, Core_String* name) {
   dx_val_cbinding_node* node = NULL;
-  if (Core_InlinePointerHashmap_get(&node, &SELF->kvs, name)) {
+  if (Core_InlineHashMapPP_get(&node, &SELF->kvs, name)) {
     if (Core_Error_NotFound != Core_getError()) {
       return NULL;
     } else {
@@ -84,7 +84,7 @@ static inline dx_val_cbinding_node* get_or_create(dx_val_cbinding* SELF, Core_St
     if (dx_val_cbinding_node_create(&node, name)) {
       return NULL;
     }
-    if (Core_InlinePointerHashmap_set(&SELF->kvs, node->name, node)) {
+    if (Core_InlineHashMapPP_set(&SELF->kvs, node->name, node)) {
       CORE_UNREFERENCE(node);
       node = NULL;
       return NULL;
@@ -146,7 +146,7 @@ Core_Result dx_val_cbinding_set_mat4(dx_val_cbinding* SELF, char const *name, DX
   return Core_Success;
 }
 
-Core_Result dx_val_cbinding_set_rgba_f32(dx_val_cbinding* SELF, char const* name, DX_RGBA_F32 const* value) {
+Core_Result dx_val_cbinding_set_rgba_f32(dx_val_cbinding* SELF, char const* name, Core_InlineRgbaR32 const* value) {
   Core_String* name1 = NULL;
   if (Core_String_create(&name1, name, strlen(name) + 1)) {
     return Core_Failure;
@@ -185,7 +185,7 @@ Core_defineObjectType("dx.val.cbinding",
                       Core_Object);
 
 static void dx_val_cbinding_destruct(dx_val_cbinding* self) {
-  Core_InlinePointerHashmap_uninitialize(&self->kvs);
+  Core_InlineHashMapPP_uninitialize(&self->kvs);
 }
 
 static void dx_val_cbinding_constructDispatch(dx_val_cbinding_Dispatch* self)
@@ -217,15 +217,15 @@ static void kvs_value_removed(Core_Object** a) {
 
 Core_Result dx_val_cbinding_construct(dx_val_cbinding* SELF) {
   DX_CONSTRUCT_PREFIX(dx_val_cbinding);
-  Core_InlinePointerHashMap_Configuration configuration = {
-    .compareKeysCallback = (Core_InlinePointerHashmap_CompareKeysCallback*)&kvs_keys_equal,
-    .hashKeyCallback = (Core_InlinePointerHashmap_HashKeyCallback*)&kvs_hash_key,
-    .keyAddedCallback = (Core_InlinePointerHashMap_KeyAddedCallback*)&kvs_key_added,
-    .keyRemovedCallback = (Core_InlinePointerHashMap_KeyRemovedCallback*)&kvs_key_removed,
-    .valueAddedCallback = (Core_InlinePointerHashmap_ValueAddedCallback*)&kvs_value_added,
-    .valueRemovedCallback = (Core_InlinePointerHashMap_ValueRemovedCallback*)&kvs_value_removed,
+  Core_InlineHashMapPP_Configuration configuration = {
+    .compareKeysCallback = (Core_InlineHashMapPP_CompareKeysCallback*)&kvs_keys_equal,
+    .hashKeyCallback = (Core_InlineHashMapPP_HashKeyCallback*)&kvs_hash_key,
+    .keyAddedCallback = (Core_InlineHashMapPP_KeyAddedCallback*)&kvs_key_added,
+    .keyRemovedCallback = (Core_InlineHashMapPP_KeyRemovedCallback*)&kvs_key_removed,
+    .valueAddedCallback = (Core_InlineHashMapPP_ValueAddedCallback*)&kvs_value_added,
+    .valueRemovedCallback = (Core_InlineHashMapPP_ValueRemovedCallback*)&kvs_value_removed,
   };
-  if (Core_InlinePointerHashmap_initialize(&SELF->kvs, &configuration)) {
+  if (Core_InlineHashMapPP_initialize(&SELF->kvs, &configuration)) {
     return Core_Failure;
   }
   CORE_OBJECT(SELF)->type = TYPE;
@@ -244,20 +244,20 @@ Core_Result dx_val_cbinding_create(dx_val_cbinding** RETURN) {
 }
 
 int dx_val_cbinding_iter_initialize(dx_val_cbinding_iter* SELF, dx_val_cbinding* target) {
-  return Core_InlinePointerHashmapIterator_initialize(SELF,&target->kvs);
+  return Core_InlineHashMapPPIterator_initialize(SELF,&target->kvs);
 }
 
 void dx_val_cbinding_iter_uninitialize(dx_val_cbinding_iter* SELF) {
-  Core_InlinePointerHashmapIterator_uninitialize(SELF);
+  Core_InlineHashMapPPIterator_uninitialize(SELF);
 }
 
 int dx_val_cbinding_iter_next(dx_val_cbinding_iter* SELF) {
-  return Core_InlinePointerHashmapIterator_next(SELF);
+  return Core_InlineHashMapPPIterator_next(SELF);
 }
 
 bool dx_val_cbinding_iter_has_entry(dx_val_cbinding_iter* SELF) {
   Core_Boolean temporary = false;
-  if (Core_InlinePointerHashmapIterator_hasEntry(&temporary, SELF)) {
+  if (Core_InlineHashMapPPIterator_hasEntry(&temporary, SELF)) {
     return false;
   }
   return temporary;
@@ -265,7 +265,7 @@ bool dx_val_cbinding_iter_has_entry(dx_val_cbinding_iter* SELF) {
 
 uint8_t dx_val_cbinding_iter_get_tag(dx_val_cbinding_iter* SELF) {
   dx_val_cbinding_node* node = NULL;
-  if (Core_InlinePointerHashmapIterator_getValue(&node, SELF)) {
+  if (Core_InlineHashMapPPIterator_getValue(&node, SELF)) {
     return 0;
   }
   if (!node) {
@@ -276,7 +276,7 @@ uint8_t dx_val_cbinding_iter_get_tag(dx_val_cbinding_iter* SELF) {
 
 Core_String* dx_val_cbinding_iter_get_name(dx_val_cbinding_iter* SELF) {
   dx_val_cbinding_node* node = NULL;
-  if (Core_InlinePointerHashmapIterator_getValue(&node, SELF)) {
+  if (Core_InlineHashMapPPIterator_getValue(&node, SELF)) {
     return NULL;
   }
   if (!node) {
@@ -288,7 +288,7 @@ Core_String* dx_val_cbinding_iter_get_name(dx_val_cbinding_iter* SELF) {
 
 Core_Result dx_val_cbinding_iter_get_vec3(dx_val_cbinding_iter* SELF, DX_VEC3* v) {
   dx_val_cbinding_node* node = NULL;
-  if (Core_InlinePointerHashmapIterator_getValue(&node, SELF)) {
+  if (Core_InlineHashMapPPIterator_getValue(&node, SELF)) {
     return Core_Failure;
   }
   if (!node || node->tag != DX_VAL_CBINDING_TYPE_VEC3) {
@@ -303,7 +303,7 @@ Core_Result dx_val_cbinding_iter_get_vec3(dx_val_cbinding_iter* SELF, DX_VEC3* v
 
 Core_Result dx_val_cbinding_iter_get_vec4(dx_val_cbinding_iter* SELF, DX_VEC4* v) {
   dx_val_cbinding_node* node = NULL;
-  if (Core_InlinePointerHashmapIterator_getValue(&node, SELF)) {
+  if (Core_InlineHashMapPPIterator_getValue(&node, SELF)) {
     return Core_Failure;
   }
   if (!node || node->tag != DX_VAL_CBINDING_TYPE_VEC4) {
@@ -318,7 +318,7 @@ Core_Result dx_val_cbinding_iter_get_vec4(dx_val_cbinding_iter* SELF, DX_VEC4* v
 
 Core_Result dx_val_cbinding_iter_get_mat4(dx_val_cbinding_iter* SELF, DX_MAT4* a) {
   dx_val_cbinding_node* node = NULL;
-  if (Core_InlinePointerHashmapIterator_getValue(&node, SELF)) {
+  if (Core_InlineHashMapPPIterator_getValue(&node, SELF)) {
     return Core_Failure;
   }
   if (!node || node->tag != DX_VAL_CBINDING_TYPE_MAT4) {
@@ -331,9 +331,9 @@ Core_Result dx_val_cbinding_iter_get_mat4(dx_val_cbinding_iter* SELF, DX_MAT4* a
   return Core_Success;
 }
 
-Core_Result dx_val_cbinding_iter_get_rgba_f32(dx_val_cbinding_iter* SELF, DX_RGBA_F32* c) {
+Core_Result dx_val_cbinding_iter_get_rgba_f32(dx_val_cbinding_iter* SELF, Core_InlineRgbaR32* c) {
   dx_val_cbinding_node* node = NULL;
-  if (Core_InlinePointerHashmapIterator_getValue(&node, SELF)) {
+  if (Core_InlineHashMapPPIterator_getValue(&node, SELF)) {
     return Core_Failure;
   }
   if (!node || node->tag != DX_VAL_CBINDING_TYPE_RGBA_F32) {
@@ -348,7 +348,7 @@ Core_Result dx_val_cbinding_iter_get_rgba_f32(dx_val_cbinding_iter* SELF, DX_RGB
 
 Core_Result dx_val_cbinding_iter_get_texture_index(dx_val_cbinding_iter* SELF, Core_Size* i) {
   dx_val_cbinding_node* node = NULL;
-  if (Core_InlinePointerHashmapIterator_getValue(&node, SELF)) {
+  if (Core_InlineHashMapPPIterator_getValue(&node, SELF)) {
     return Core_Failure;
   }
   if (!node || node->tag != DX_VAL_CBINDING_TYPE_TEXTURE_INDEX) {

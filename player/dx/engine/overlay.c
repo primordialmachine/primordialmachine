@@ -7,11 +7,11 @@
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 /// The overlay background color.
-static DX_RGBA_F32 const OVERLAY_BACKGROUND_COLOR = { .r = 0.f, .g = 0.f, .b = 0.f, .a = 0.f };
+static Core_InlineRgbaR32 const OVERLAY_BACKGROUND_COLOR = { .r = 0.f, .g = 0.f, .b = 0.f, .a = 0.f };
 /// The text ui background color.
-static DX_RGBA_F32 const TEXT_UI_BACKGROUND_COLOR = { .r = 0.f, .g = 0.f, .b = 0.f, .a = 0.f };
+static Core_InlineRgbaR32 const TEXT_UI_BACKGROUND_COLOR = { .r = 0.f, .g = 0.f, .b = 0.f, .a = 0.f };
 /// The text ui text color.
-static DX_RGBA_F32 const TEXT_UI_TEXT_COLOR = { .r = 0.f, .g = 0.f, .b = 0.f, .a = 1.f };
+static Core_InlineRgbaR32 const TEXT_UI_TEXT_COLOR = { .r = 0.f, .g = 0.f, .b = 0.f, .a = 1.f };
 
 Core_defineObjectType("dx.overlay",
                       dx_overlay,

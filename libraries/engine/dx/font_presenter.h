@@ -176,7 +176,7 @@ typedef struct DX_TEXT_PRESENTATION_OPTIONS {
 Core_Result dx_font_presenter_render_line_string(dx_font_presenter* SELF,
                                                DX_VEC2_F32 const* position,
                                                Core_String* string,
-                                               DX_RGBA_F32 const* text_color,
+                                               Core_InlineRgbaR32 const* text_color,
                                                dx_font* font,
                                                DX_TEXT_PRESENTATION_OPTIONS const* options);
 
@@ -212,7 +212,7 @@ Core_Result dx_font_presenter_measure_line_string(dx_font_presenter* SELF,
 Core_Result dx_font_presenter_render_line_string_iterator(dx_font_presenter* SELF,
                                                         DX_VEC2_F32 const* position,
                                                         dx_string_iterator* string_iterator,
-                                                        DX_RGBA_F32 const* text_color,
+                                                        Core_InlineRgbaR32 const* text_color,
                                                         dx_font* font,
                                                         DX_TEXT_PRESENTATION_OPTIONS const* options);
 

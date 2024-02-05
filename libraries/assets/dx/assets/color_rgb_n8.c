@@ -10,7 +10,7 @@ static void dx_assets_color_rgb_n8_destruct(dx_assets_color_rgb_n8* SELF)
 static void dx_assets_color_rgb_n8_constructDispatch(dx_assets_color_rgb_n8_Dispatch* SELF)
 {/*Intentionally empty.*/}
 
-Core_Result dx_assets_color_rgb_n8_construct(dx_assets_color_rgb_n8* SELF, DX_RGB_N8 const* value) {
+Core_Result dx_assets_color_rgb_n8_construct(dx_assets_color_rgb_n8* SELF, Core_InlineRgbN8 const* value) {
   DX_CONSTRUCT_PREFIX(dx_assets_color_rgb_n8);
   if (!value) {
     Core_setError(Core_Error_ArgumentInvalid);
@@ -21,7 +21,7 @@ Core_Result dx_assets_color_rgb_n8_construct(dx_assets_color_rgb_n8* SELF, DX_RG
   return Core_Success;
 }
 
-Core_Result dx_assets_color_rgb_n8_create(dx_assets_color_rgb_n8** RETURN, DX_RGB_N8 const* value) {
+Core_Result dx_assets_color_rgb_n8_create(dx_assets_color_rgb_n8** RETURN, Core_InlineRgbN8 const* value) {
   DX_CREATE_PREFIX(dx_assets_color_rgb_n8);
   if (dx_assets_color_rgb_n8_construct(SELF, value)) {
     CORE_UNREFERENCE(SELF);
@@ -32,7 +32,7 @@ Core_Result dx_assets_color_rgb_n8_create(dx_assets_color_rgb_n8** RETURN, DX_RG
   return Core_Success;
 }
 
-Core_Result dx_assets_color_rgb_n8_get_value(DX_RGB_N8* RETURN, dx_assets_color_rgb_n8* SELF) {
+Core_Result dx_assets_color_rgb_n8_get_value(Core_InlineRgbN8* RETURN, dx_assets_color_rgb_n8* SELF) {
   if (!RETURN || !SELF) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;

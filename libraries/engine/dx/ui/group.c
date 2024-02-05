@@ -161,7 +161,7 @@ static Core_Result get_child_by_name(dx_ui_widget** RETURN, dx_ui_group* SELF, C
   return Core_Failure;
 }
 
-Core_Result dx_ui_group_set_background_color(dx_ui_group* SELF, DX_RGBA_F32 const* background_color) {
+Core_Result dx_ui_group_set_background_color(dx_ui_group* SELF, Core_InlineRgbaR32 const* background_color) {
   if (!SELF || !background_color) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
@@ -170,7 +170,7 @@ Core_Result dx_ui_group_set_background_color(dx_ui_group* SELF, DX_RGBA_F32 cons
   return Core_Success;
 }
 
-Core_Result dx_ui_group_get_background_color(DX_RGBA_F32* RETURN, dx_ui_group* SELF) {
+Core_Result dx_ui_group_get_background_color(Core_InlineRgbaR32* RETURN, dx_ui_group* SELF) {
   if (!RETURN || !SELF) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;

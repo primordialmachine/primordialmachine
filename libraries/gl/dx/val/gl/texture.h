@@ -27,7 +27,7 @@ struct dx_val_gl_texture {
   Core_TextureMinificationFilter texture_minification_filter;
   Core_TextureAddressMode texture_address_mode_u;
   Core_TextureAddressMode texture_address_mode_v;
-  /// @todo This should be DX_RGBA_F32.
+  /// @todo This should be Core_InlineRgbaR32.
   DX_VEC4 texture_border_color;
 };
 

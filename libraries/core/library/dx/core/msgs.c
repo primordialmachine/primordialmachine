@@ -25,7 +25,7 @@ static void removed(void** p) {
 }
 
 typedef struct dx_msg_queue {
-  dx_inline_pointer_deque deque;
+  Core_InlineArrayDequeP deque;
 } dx_msg_queue;
 
 Core_Result dx_msg_queue_push(dx_msg_queue* SELF, Core_Message* msg) {
@@ -35,7 +35,7 @@ Core_Result dx_msg_queue_push(dx_msg_queue* SELF, Core_Message* msg) {
     TRACE("leave: dx_msg_queue_push\n");
     return Core_Failure;
   }
-  if (dx_inline_pointer_deque_push_back(&SELF->deque, msg)) {
+  if (Core_InlineArrayDequeP_push_back(&SELF->deque, msg)) {
     TRACE("leave: dx_msg_queue_push\n");
     return Core_Failure;
   }
@@ -46,7 +46,7 @@ Core_Result dx_msg_queue_push(dx_msg_queue* SELF, Core_Message* msg) {
 Core_Result dx_msg_queue_pop(Core_Message** RETURN, dx_msg_queue* SELF) {
   TRACE("enter: dx_msg_queue_pop\n");
   Core_Message* msg = NULL;
-  if (dx_inline_pointer_deque_pop_front(&msg, &SELF->deque, true)) {
+  if (Core_InlineArrayDequeP_pop_front(&msg, &SELF->deque, true)) {
     if (Core_Error_Empty != Core_getError()) {
       TRACE("leave: dx_msg_queue_pop (failure)\n");
       return Core_Failure;
@@ -70,11 +70,11 @@ Core_Result dx_msg_queue_create(dx_msg_queue** RETURN) {
     TRACE("leave: dx_msg_queue_create\n");
     return Core_Failure;
   }
-  DX_INLINE_POINTER_DEQUE_CONFIGURATION configuration = {
+  Core_InlineArrayDequeP_Configuration configuration = {
     .added_callback = &added,
     .removed_callback = &removed,
   };
-  if (dx_inline_pointer_deque_initialize(&msg_queue->deque, 0, &configuration)) {
+  if (Core_InlineArrayDequeP_initialize(&msg_queue->deque, 0, &configuration)) {
     TRACE("leave: dx_msg_queue_create (failure)\n");
     return Core_Failure;
   }
@@ -85,7 +85,7 @@ Core_Result dx_msg_queue_create(dx_msg_queue** RETURN) {
 
 void dx_msg_queue_destroy(dx_msg_queue* msg_queue) {
   TRACE("enter: dx_msg_queue_destroy\n");
-  dx_inline_pointer_deque_uninitialize(&msg_queue->deque);
+  Core_InlineArrayDequeP_uninitialize(&msg_queue->deque);
   Core_Memory_deallocate(msg_queue);
   msg_queue = NULL;
   TRACE("leave: dx_msg_queue_destroy\n");
