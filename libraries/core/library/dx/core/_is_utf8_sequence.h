@@ -2,6 +2,7 @@
 #define DX_CORE__IS_UTF8_SEQUENCE
 
 #include "dx/core/core.h"
+#include "Core/InlineUtf8Iterator.h"
 
 /// @brief Classify the first Byte of an UTF8 sequence to determine the length of the sequence.
 /// @param RETURN A pointer to a <code>Core_Size</code> variable.
@@ -51,70 +52,39 @@ typedef struct _utf8_symbol_range {
 } _utf8_symbol_range;
 
 /// @brief Convert a range of symbols (specified by its starting index and its length) into a range of Bytes (specified by its starting index and its length).
-/// @param context An opaque context pointer.
-/// @param get A pointer to a function to read a Byte from the contet given its index.
-/// @param symbols The range of symbols.
+/// @param p A pointer to a UTF-8 Byte sequence.
+/// @param n The length of the UTF-8 Byte sequence.
+/// @param source A pointer to a <code>_utf8_symbol_range</code> object.
 /// @param target A pointer to a <code>_utf8_byte_range</code> object.
 /// @success <code>*target</code> was assigned the range of Bytes.
 /// @return #Core_Success on success. #Core_Failure.
 /// @success
 /// <code>*RETURN</code> was assigned @a true if the sequence of Bytes is an UTF-8 Byte sequence.
 /// Otherwise it was assigned @a false.
-/// @error Core_Error_ArgumentInvalid @a get is a null pointer.
+/// @error Core_Error_ArgumentInvalid @a p is a null pointer.
 /// @error Core_Error_ArgumentInvalid @a source is a null pointer.
 /// @error Core_Error_ArgumentInvalid @a target is a null pointer.
-static Core_Result _utf8_symbol_range_to_byte_range(void *context, Core_Result (*get)(Core_Natural8*, void *context, Core_Size), _utf8_symbol_range* source, _utf8_byte_range* target) {
-  _utf8_symbol_range currentSymbolRange = {
-    .start = 0,
-    .length = 0
-  };
-  _utf8_byte_range currentByteRange = {
-    .start = 0,
-    .length = 0
-  };
-  while (currentSymbolRange.start < source->start) {
-    Core_Natural8 value;
-    if (get(&value, context, currentByteRange.start + currentByteRange.length)) {
-      return Core_Failure;
-    }
-    Core_Size j;
-    if (_utf8_classify(&j, value)) {
-      return Core_Failure;
-    }
-    currentByteRange.start += j;
-    currentSymbolRange.start++;
-  }
-  while (currentSymbolRange.start + currentSymbolRange.length < source->start + source->length) {
-    Core_Natural8 value;
-    if (get(&value, context, currentByteRange.start + currentByteRange.length)) {
-      return Core_Failure;
-    }
-    Core_Size j;
-    if (_utf8_classify(&j, value)) {
-      return Core_Failure;
-    }
-    currentByteRange.length += j;
-    currentSymbolRange.length++;
-  }
-  *target = currentByteRange;
-  return Core_Success;
-}
+Core_Result _utf8_symbol_range_to_byte_range(Core_Natural8 const* p, Core_Size n, _utf8_symbol_range* source, _utf8_byte_range* target);
 
-/// @brief Get if the specified sequence of Bytes is a UTF-8 Byte sequence.
+/// @brief Get if the specified sequence of Bytes is a UTF-8 symbol sequence.
 /// @param RETURN A pointer to a <code>Core_Boolean</code> variable.
 /// @param p A pointer to an array of @a n Bytes.
 /// @param n The number of Bytes in the array pointed to by @a p.
+/// @param numberOfSymbols A pointer to a <code>core_Size</code> variable or a null pointer.
 /// @return #Core_Success on success. #Core_Failure.
 /// @success
-/// <code>*RETURN</code> was assigned @a true if the sequence of Bytes is an UTF-8 Byte sequence.
+/// <code>*RETURN</code> was assigned @a true if the sequence of Bytes is an UTF-8 symbol sequence.
 /// Otherwise it was assigned @a false.
+/// If the Byte sequence is a UTF-8 symbol sequence and if <code>numberOfSymbols</code> is not null,
+/// then <code>*numberOfSymbols</code> was assigned the number of UTF-8 symbol sequence.
 /// @error Core_Error_ArgumentInvalid @a RETURN is a null pointer.
 /// @error Core_Error_ArgumentInvalid @a p is a null pointer.
-static inline Core_Result _utf8_is_utf8_byte_sequence(Core_Boolean* RETURN, Core_Natural8 const* p, Core_Size n) {
+static inline Core_Result _utf8_is_utf8_byte_sequence(Core_Boolean* RETURN, Core_Natural8 const* p, Core_Size n, Core_Size* numberOfSymbols) {
   if (!RETURN || !p) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
   }
+  Core_Size numberOfSymbols_ = 0;
   Core_Natural8 const* current = p;
   Core_Natural8 const* end = p + n;
   while (current != end) {
@@ -125,6 +95,7 @@ static inline Core_Result _utf8_is_utf8_byte_sequence(Core_Boolean* RETURN, Core
       *RETURN = false;
       return Core_Success;
     }
+    numberOfSymbols_++;
     current++;
     // mask second,third,fourth byte with 1100.0000 (0xC0)
     // if the result is 1000.0000 (0x80) then we have a valid sequence.
@@ -140,6 +111,9 @@ static inline Core_Result _utf8_is_utf8_byte_sequence(Core_Boolean* RETURN, Core
       current++;
       continue;
     }
+  }
+  if (numberOfSymbols) {
+    *numberOfSymbols = numberOfSymbols_;
   }
   *RETURN = true;
   return Core_Success;

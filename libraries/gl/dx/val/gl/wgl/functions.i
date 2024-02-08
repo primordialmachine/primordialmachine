@@ -1,2 +1,2 @@
-DEFINE(PFNWGLSWAPINTERVALEXTPROC, wglSwapIntervalEXT, "WGL_EXT_swap_control")
-DEFINE(PFNWGLGETSWAPINTERVALEXTPROC, wglGetSwapIntervalEXT, "WGL_EXT_swap_control")
+Define(PFNWGLSWAPINTERVALEXTPROC, wglSwapIntervalEXT, "WGL_EXT_swap_control")
+Define(PFNWGLGETSWAPINTERVALEXTPROC, wglGetSwapIntervalEXT, "WGL_EXT_swap_control")

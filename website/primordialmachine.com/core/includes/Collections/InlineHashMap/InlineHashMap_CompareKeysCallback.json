@@ -1,0 +1,44 @@
+{
+  "type" : "function-prototype",
+  "last-update" : "2024-02-07",
+  "indices" : "core",
+  "name" : "Core_InlineHashMap_CompareKeysCallback",
+  "id" : "core-inlinehashmap-comparekeyscallback",
+  "signature" : "typedef Core_Result (Core_InlineHashMap&lt;Suffix&gt;_CompareKeysCallback)(Core_Boolean*, Core_InlineHashMap&lt;Suffix&gt;_Key*, Core_InlineHashMap&lt;Suffix&gt;_Key*);",
+  "signatureRemarks": "<p>where <code>&lt;KeySuffix&gt;</code> <code>&lt;ValueSuffix&gt;</code> can assume the value of <code>P</code>.</p>",
+  "description" : "The type of a callback invoked to compare two keys.",
+  "success": "@{code('*RETURN')} was assigned @{code('Core_True')} if the keys are equal and @{code('Core_False')} otherwise.",
+  "parameters" : [
+    {
+      "name" : "RETURN",
+      "type" : "@{code('Core_Boolean*')}",
+      "description" : "A pointer to a @{code('Core_Boolean')} variable."
+    },
+    {
+      "name" : "x",
+      "type" : "@{code('Core_InlineHashMap&lt;Suffix&gt;_Key*')}",
+      "description" : "A pointer to a @{code('Core_InlineHashMap&lt;Suffix&gt;_Key')} value."
+    },
+    {
+      "name" : "y",
+      "type" : "@{code('Core_InlineHashMap&lt;Suffix&gt;_Key*')}",
+      "description" : "A pointer to a @{code('Core_InlineHashMap&lt;Suffix&gt;_Key')} value."
+    }
+  ],
+  "errors" : [
+    {
+      "errorCode" : "Core_Error_ArgumentInvalid",
+      "errorCondition" : "@{code('RETURN')} is a null pointer."
+    },
+    {
+      "errorCode" : "Core_Error_ArgumentInvalid",
+      "errorCondition" : "@{code('x')} is a null pointer."
+    },
+    {
+      "errorCode" : "Core_Error_ArgumentInvalid",
+      "errorCondition" : "@{code('y')} is a null pointer."
+    }
+  ],
+  "return" : "@{code('Core_Success')} on success. @{code('Core_Failure')} on failure.",
+  "remarks" : "This function sets the by-thread error variable on failure."
+}

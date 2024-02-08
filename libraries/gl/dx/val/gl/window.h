@@ -21,7 +21,7 @@ static inline dx_val_gl_window_Dispatch* DX_VAL_GL_WINDOW_DISPATCH(void* p) {
 
 struct dx_val_gl_window_Dispatch {
   Core_Object_Dispatch _parent;
-  Core_Result(*get_canvas_size)(dx_val_gl_window*, Core_Integer32*, Core_Integer32*);
+  Core_Result(*getCanvasSize)(dx_val_gl_window*, Core_Integer32*, Core_Integer32*);
 };
 
 /// @brief Construct this VAL GL window.
@@ -38,8 +38,8 @@ Core_Result dx_val_gl_window_construct(dx_val_gl_window* SELF);
 /// @success
 /// <code>*width</code> was assigned the width of the canvas.
 /// <code>*height</code> was assigned the height of the canvas.
-static inline Core_Result dx_val_gl_window_get_canvas_size(dx_val_gl_window* SELF, Core_Integer32* width, Core_Integer32* height) {
-  DX_OBJECT_VIRTUALCALL(dx_val_gl_window, get_canvas_size, SELF, width, height);
+static inline Core_Result dx_val_gl_window_getCanvasSize(dx_val_gl_window* SELF, Core_Integer32* width, Core_Integer32* height) {
+  DX_OBJECT_VIRTUALCALL(dx_val_gl_window, getCanvasSize, SELF, width, height);
 }
 
 #endif // DX_VAL_GL_SYSTEM_H_INCLUDED

@@ -163,13 +163,18 @@ void Core_reference(Core_Object *object) {
 void Core_unreference(Core_Object* object) {
   Core_Debug_checkObjectMagicBytes(object);
   if (!dx_reference_counter_decrement(&object->reference_count)) {
+    // weak references
     _acquire_weak_references_lock();
     while (object->weak_references) {
       Core_WeakReference* weak_reference = object->weak_references;
-      object->weak_references = weak_reference->next;
-      _detach_weak_reference(object, weak_reference);
+      object->weak_references = object->weak_references->next;
+      // invalidate the weak reference.
+      weak_reference->object = NULL;
     }
     _relinquish_weak_references_lock();
+    // signals
+    Core_Signals_disconnectAll(object);
+    // destruct
     while (object->type) {
       _dx_rti_type* type = (_dx_rti_type*)object->type;
       if (type->object.destruct_object) {
@@ -177,6 +182,7 @@ void Core_unreference(Core_Object* object) {
       }
       object->type = (Core_Type*)type->object.parent;
     }
+    // deallocate
     Core_Memory_deallocate(object);
     object = NULL;
   }
@@ -194,33 +200,22 @@ static void _acquire_weak_references_lock()
 static void _relinquish_weak_references_lock()
 {/*Intentionally empty.*/}
 
-static void _detach_weak_reference(Core_Object* object, Core_WeakReference* weak_reference) {
-  Core_WeakReference** previous = &(object->weak_references);
-  Core_WeakReference* current = (object->weak_references);
-  while (NULL != current) {
-    if (current == weak_reference) {
-      *previous = current->next;
-      current->object = NULL;
-      return;
-    }
-  }
-  dx_log("warning: weak reference not found", sizeof("warning: weak reference not found"));
-}
-
-static void _attach_weak_reference(Core_Object* object, Core_WeakReference* weak_reference) {
-#if defined(_DEBUG)
-  if (weak_reference->object) {
-    dx_log("warning: weak reference already attached", sizeof("warning: weak reference already attached"));
-  }
-#endif
-  weak_reference->next = object->weak_references;
-  object->weak_references = weak_reference;
-}
-
 static void Core_WeakReference_destruct(Core_WeakReference* SELF) {
   _acquire_weak_references_lock();
   if (SELF->object) {
-    _detach_weak_reference(SELF->object, SELF);
+    // Detach the weak reference from the old object.
+    Core_WeakReference** previous = &(SELF->object->weak_references);
+    Core_WeakReference* current = (SELF->object->weak_references);
+    while (NULL != current) {
+      if (current == SELF) {
+        *previous = current->next;
+        current->object = NULL;
+        break;
+      } else {
+        previous = &current->next;
+        current = current->next;
+      }
+    }
   }
   _relinquish_weak_references_lock();
 }
@@ -229,18 +224,22 @@ static void Core_WeakReference_constructDispatch(Core_WeakReference_Dispatch* SE
 {/*Intentionally empty.*/}
 
 Core_Result Core_WeakReference_construct(Core_WeakReference* SELF, Core_Object* object) {
-  DX_CONSTRUCT_PREFIX(Core_WeakReference);
-
+  if (!SELF) {
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
+  }
+  Core_Type* TYPE = NULL;
+  if (Core_WeakReference_getType(&TYPE)) {
+    return Core_Failure;
+  }
   _acquire_weak_references_lock();
-
   SELF->object = object;
   if (SELF->object) {
-    _attach_weak_reference(SELF->object, SELF);
+    SELF->next = object->weak_references;
+    object->weak_references = SELF;
   }
-
   CORE_OBJECT(SELF)->type = TYPE;
   _relinquish_weak_references_lock();
-
   return Core_Success;
 }
 
@@ -258,10 +257,24 @@ Core_Result Core_WeakReference_create(Core_WeakReference** RETURN, Core_Object* 
 Core_Result Core_WeakReference_set(Core_WeakReference* SELF, Core_Object* object) {
   _acquire_weak_references_lock();
   if (SELF->object) {
-    _detach_weak_reference(SELF->object, SELF);
+    // Detach the weak reference from the old object.
+    Core_WeakReference** previous = &(object->weak_references);
+    Core_WeakReference* current = (object->weak_references);
+    while (NULL != current) {
+      if (current == SELF) {
+        *previous = current->next;
+        current->object = NULL;
+        break;
+      } else {
+        previous = &current->next;
+        current = current->next;
+      }
+    }
   }
   if (object) {
-    _attach_weak_reference(object, SELF);
+    // Attach weak reference to the new object.
+    SELF->next = object->weak_references;
+    object->weak_references = SELF;
   }
   _relinquish_weak_references_lock();
   return Core_Success;

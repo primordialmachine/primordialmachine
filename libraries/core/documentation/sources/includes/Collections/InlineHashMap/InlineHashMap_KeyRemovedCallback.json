@@ -1,0 +1,17 @@
+{
+  "type" : "function-prototype",
+  "last-update" : "2024-02-07",
+  "indices" : "core",
+  "name" : "Core_InlineHashMap_KeyRemovedCallback",
+  "id" : "core-inlinehashmap-keyremovedcallback",
+  "signature" : "typedef void (Core_InlineHashMap&lt;Suffix&gt;_KeyRemovedCallback)(Core_InlineHashMap&lt;Suffix&gt;_Key* key);",
+  "signatureRemarks": "<p>where <code>&lt;KeySuffix&gt;</code> <code>&lt;ValueSuffix&gt;</code> can assume the value of <code>P</code>.</p>",
+  "description" : "The type of a callback invoked if a key is removed from an inline pointer hash map.",
+  "parameters" : [
+    {
+      "name" : "key",
+      "type" : "@{code('Core_InlineHashMap&lt;Suffix&gt;_Key*')}",
+      "description" : "A pointer to a @{code('Core_InlineHashMap&lt;Suffix&gt;_Key')} value."
+    }
+  ]
+}

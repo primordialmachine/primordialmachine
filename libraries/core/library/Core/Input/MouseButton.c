@@ -2,7 +2,7 @@
 
 #include "Core/Input/MouseButton.h"
 
-#include "dx/core/string.h"
+#include "Core/String.h"
 
 Core_defineEnumerationType("Core.MouseButton",
                            Core_MouseButton);

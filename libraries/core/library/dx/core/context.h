@@ -1,7 +1,7 @@
 #if !defined(DX_CORE_CONTEXT_H_INCLUDED)
 #define DX_CORE_CONTEXT_H_INCLUDED
 
-#include "dx/core/string.h"
+#include "Core/String.h"
 
 /// @brief Base of all contexts. A context is a provides access to functionality.
 Core_declareObjectType("dx.context",

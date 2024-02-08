@@ -14,9 +14,9 @@ static dx_ui_group* DX_UI_GROUP(void* p) {
 struct dx_ui_group {
   dx_ui_widget _parent;
   /// @brief The relative position of this UI text.
-  DX_VEC2_F32 relative_position;
+  Core_InlineVector2R32 relative_position;
   /// @brief The relative size of this UI text.
-  DX_VEC2_F32 relative_size;
+  Core_InlineVector2R32 relative_size;
   /// @brief The background color of this UI text.
   Core_InlineRgbaR32 background_color;
 

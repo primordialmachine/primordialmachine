@@ -1,0 +1,43 @@
+{
+  "type" : "function",
+  "last-update" : "2024-02-08",
+  "indices" : "core",
+  "name" : "Core_InlineHashMap_set",
+  "id" : "core-inlinehashmap-set",
+  "signature" : "Core_Result Core_InlineHashMap&lt;Suffix&gt;_set(Core_InlineHashMap&lt;Suffix&gt;* SELF, Core_InlineHashMap&lt;Suffix&gt;_Key key, Core_InlineHashMap&lt;Suffix&gt;_Value value);",
+  "signatureRemarks": "<p>where <code>&lt;KeySuffix&gt;</code> <code>&lt;ValueSuffix&gt;</code> can assume the value of <code>P</code>.</p>",
+  "parameters" : [
+    {
+      "name" : "SELF",
+      "type" : "@{code('Core_InlineHashMap&lt;Suffix&gt;*')}",
+      "description" : "A pointer to a @{code('Core_InlineHashMap&lt;Suffix&gt;')} object."
+    },
+    {
+      "name" : "key",
+      "type" : "@{code('Core_InlineHashMap_Key&lt;Suffix&gt;')}",
+      "description" : "The key."
+    },
+    {
+      "name" : "value",
+      "type" : "@{code('Core_InlineHashMap_Value&lt;Suffix&gt;')}",
+      "description" : "The value."
+    }
+  ],
+  "success": "@{code('*RETURN')} was assigned the size, in elements, of this @{code('Core_InlineHashMap&lt;Suffix&gt;')} object.",
+  "errors" : [
+    {
+      "errorCode" : "Core_Error_ArgumentInvalid",
+      "errorCondition" : "@{code('SELF')} is a null pointer."
+    },
+    {
+      "errorCode" : "Core_Error_AllocationFailed",
+      "errorCondition" : "An allcation failed."
+    }
+  ],
+  "description" : "Add or update an entry in this hash map.",
+  "return" : "@{code('Core_Success')} on success. @{code('Core_Failure')} on failure.",
+  "remarks" : [
+    "This function sets the by-thread error variable on failure.",
+    "This function fails only with the specified errors/error conditions."
+  ]
+}

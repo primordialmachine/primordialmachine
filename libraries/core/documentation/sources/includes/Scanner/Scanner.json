@@ -1,0 +1,18 @@
+{
+  "type" : "object",
+  "last-update" : "2024-02-07",
+  "indices" : "core",
+  "name" : "Core_Scanner",
+  "id" : "core-scanner",
+  "signature" : "typedef struct Core_Scanner Core_Scanner;",
+  "extends" : "Core_Object",
+  "description": [
+    "The base of a lexical analysis (aka scanner, aka lexer, aka lexical analyzer, ...).@{newline()}",
+    "A lexical analysis ensures a Byte sequence is an UTF-8 Byte sequence and splits the symbols into words (aka tokens, ...).@{newline()}",
+    "A lexical analysis provides",
+    "<ul>",
+    "  <li>the Bytes of the word,</li>",
+    "  <li>the start offset and the end offset, in Bytes, of the word.</li>",
+    "<ul>"
+  ]
+}

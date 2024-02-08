@@ -15,7 +15,7 @@ static inline dx_val_system* DX_VAL_SYSTEM(void* p) {
 struct dx_val_system {
   dx_system _parent;
   /// @brief A weak reference to the message queue.
-  dx_msg_queue* msg_queue;
+  Core_MessageQueue* msg_queue;
   /// @brief The state of the keyboard.
   /// @todo This should be window-specific.
   dx_keyboard_state* keyboard_state;
@@ -35,7 +35,7 @@ struct dx_val_system_Dispatch {
 
 /// @param msg_queue A pointer to the message queue.
 /// @constructor{dx_val_system}
-Core_Result dx_val_system_construct(dx_val_system* SELF, dx_msg_queue* msg_queue);
+Core_Result dx_val_system_construct(dx_val_system* SELF, Core_MessageQueue* msg_queue);
 
 /// @brief Get the VAL context.
 /// @param RETURN A pointer to a <code>dx_val_context*</code> variable.

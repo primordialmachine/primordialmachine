@@ -492,8 +492,9 @@ Core_Result Core_Type_isLowerThanOrEqualTo(Core_Boolean* RETURN, Core_Type* x, C
   return Core_Success;
 }
 
-void* Core_Type_getDispatch(Core_Type* x) {
-  return _DX_RTI_TYPE(x)->object.dispatch;
+Core_Result Core_Type_getDispatch(void** RETURN, Core_Type* x) {
+  *RETURN = _DX_RTI_TYPE(x)->object.dispatch;
+  return Core_Success;
 }
 
 Core_Result Core_Type_getParent(Core_Type** RETURN, Core_Type* SELF) {

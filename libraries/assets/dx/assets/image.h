@@ -58,11 +58,11 @@ struct dx_assets_image_Dispatch {
 /// - #Core_PixelFormat_Abgr8      default is the color "Opaque Black" (255, 0, 0, 0)
 /// - #Core_PixelFormat_Al8        default is the color "OpaqueBlack" (255, 0)
 /// - #Core_PixelFormat_Argb8      default is the color "Opaque Black" (255, 0, 0, 0)
-/// - #Core_PixelFormat_Bgr8       default value is the color "Black" (0, 0, 0).
+/// - #Core_PixelFormat_Bgr8       default is the color "Black" (0, 0, 0).
 /// - #Core_PixelFormat_Bgra8      default is the color "Opaque Black" (0, 0, 0, 255)
 /// - #Core_PixelFormat_L8         default is the color "Black" (0)
 /// - #Core_PixelFormat_La8        default is the color "Opaque Black" (0, 255)
-/// - #Core_PixelFormat_Rgb8       default value is the color "Black" (0, 0, 0).
+/// - #Core_PixelFormat_Rgb8       default is the color "Black" (0, 0, 0).
 /// - #Core_PixelFormat_Rgba8      default is the color "Opaque Black" (0, 0, 0, 255)
 /// @constructor{dx_asset_image}
 Core_Result dx_assets_image_construct(dx_assets_image * SELF,

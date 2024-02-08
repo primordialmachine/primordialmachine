@@ -65,7 +65,7 @@ static Core_Result get_context(dx_aal_al_context** RETURN, dx_aal_al_system* SEL
   return Core_Success;
 }
 
-Core_Result dx_aal_al_system_construct(dx_aal_al_system* SELF, dx_msg_queue* msg_queue) {
+Core_Result dx_aal_al_system_construct(dx_aal_al_system* SELF, Core_MessageQueue* msg_queue) {
   DX_CONSTRUCT_PREFIX(dx_aal_al_system);
   if (dx_aal_system_construct(DX_AAL_SYSTEM(SELF), msg_queue)) {
     return Core_Failure;
@@ -74,7 +74,7 @@ Core_Result dx_aal_al_system_construct(dx_aal_al_system* SELF, dx_msg_queue* msg
   return Core_Success;
 }
 
-Core_Result dx_aal_al_system_create(dx_aal_al_system** RETURN, dx_msg_queue* msg_queue) {
+Core_Result dx_aal_al_system_create(dx_aal_al_system** RETURN, Core_MessageQueue* msg_queue) {
   DX_CREATE_PREFIX(dx_aal_al_system);
   if (dx_aal_al_system_construct(SELF, msg_queue)) {
     CORE_UNREFERENCE(SELF);

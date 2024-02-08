@@ -194,12 +194,12 @@ Core_Result dx_ui_manager_create(dx_ui_manager** RETURN, dx_font_presenter* font
   return Core_Success;
 }
 
-Core_Result dx_ui_manager_set_canvas_dpi(dx_ui_manager* SELF, DX_VEC2_F32 const* dpi) {
+Core_Result dx_ui_manager_set_canvas_dpi(dx_ui_manager* SELF, Core_InlineVector2R32 const* dpi) {
   SELF->dpi = *dpi;
   return Core_Success;
 }
 
-Core_Result dx_ui_manager_set_canvas_resolution(dx_ui_manager* SELF, DX_VEC2_F32 const* resolution) {
+Core_Result dx_ui_manager_set_canvas_resolution(dx_ui_manager* SELF, Core_InlineVector2R32 const* resolution) {
   SELF->resolution = *resolution;
   return Core_Success;
 }
@@ -227,7 +227,7 @@ static Core_Result on_render_group_children(dx_ui_manager* SELF, dx_ui_group* gr
 }
 
 static Core_Result on_render_widget(dx_ui_manager* SELF, dx_ui_widget* widget) {
-  if (dx_ui_widget_render(widget, SELF->resolution.e[0], SELF->resolution.e[1], SELF->dpi.e[0], SELF->dpi.e[1])) {
+  if (dx_ui_widget_render(widget)) {
     return Core_Failure;
   }
   Core_Type* type = NULL;

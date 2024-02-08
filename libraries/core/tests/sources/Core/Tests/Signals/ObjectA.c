@@ -11,9 +11,8 @@ static void Core_Tests_Signals_ObjectA_constructDispatch(Core_Tests_Signals_Obje
 {/*Intentionally empty.*/}
 
 Core_Result Core_Tests_Signals_ObjectA_construct(Core_Tests_Signals_ObjectA* SELF) {
-  DX_CONSTRUCT_PREFIX(Core_Tests_Signals_ObjectA);
-  CORE_OBJECT(SELF)->type = TYPE;
-  return Core_Success;
+  Core_BeginConstructor(Core_Tests_Signals_ObjectA);
+  Core_EndConstructor(Core_Tests_Signals_ObjectA);
 }
 
 Core_Result Core_Tests_Signals_ObjectA_create(Core_Tests_Signals_ObjectA** RETURN) {

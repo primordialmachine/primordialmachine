@@ -1,10 +1,10 @@
 {
   "type" : "object",
-  "last-update" : "2024-02-1",
+  "last-update" : "2024-02-08",
   "indices" : "core",
   "name" : "Core_WeakReference",
   "id" : "core-weakreference",
   "signature" : "typedef struct Core_WeakReference Core_WeakReference;",
-  "extends" : null,
+  "extends" : "Core_Object",
   "description": "A weak reference."
 }

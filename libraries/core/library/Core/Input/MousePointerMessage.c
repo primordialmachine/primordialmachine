@@ -15,15 +15,14 @@ static void Core_MousePointerMessage_constructDispatch(Core_MousePointerMessage_
 {/*Intentionally empty.*/}
 
 Core_Result Core_MousePointerMessage_construct(Core_MousePointerMessage* SELF, Core_MousePointerAction action, Core_Real32 x, Core_Real32 y, Core_ModifierKeys modifierKeys) {
-  DX_CONSTRUCT_PREFIX(Core_MousePointerMessage);
+  Core_BeginConstructor(Core_MousePointerMessage);
   if (Core_InputMessage_construct(CORE_INPUTMESSAGE(SELF), Core_InputMessageKind_MousePointer, modifierKeys)) {
     return Core_Failure;
   }
   SELF->action = action;
   SELF->x = x;
   SELF->y = y;
-  CORE_OBJECT(SELF)->type = TYPE;
-  return Core_Success;
+  Core_EndConstructor(Core_MousePointerMessage);
 }
 
 Core_Result Core_MousePointerMessage_getAction(Core_MousePointerAction* RETURN, Core_MousePointerMessage* SELF) {

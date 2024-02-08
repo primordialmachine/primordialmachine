@@ -15,14 +15,14 @@
   ],
   "members" : [
     {
-      "name"        : "addedCallback",
-      "type"        : "@{code('Core_InlineArrayList&lt;Suffix&gt;_AddedCallback*')}",
-      "description" : "A null pointer or a pointer to a @{code('Core_InlineArrayList&lt;Suffix&gt;_AddedCallback')} function."
+      "name"        : "keyAddedCallback",
+      "type"        : "@{code('Core_InlineArrayList&lt;Suffix&gt;_KeyAddedCallback*')}",
+      "description" : "A null pointer or a pointer to a @{code('Core_InlineArrayList&lt;Suffix&gt;_KeyAddedCallback')} function."
     },
     {
-      "name"        : "removedCallback",
-      "type"        : "@{code('Core_InlineArrayList&lt;Suffix&gt;_RemovedCallback*')}",
-      "description" : "A null pointer or a pointer to a @{code('Core_InlineArrayList&lt;Suffix&gt;_RemovedCallback')} function."
+      "name"        : "valueRemovedCallback",
+      "type"        : "@{code('Core_InlineArrayList&lt;Suffix&gt;_ValueRemovedCallback*')}",
+      "description" : "A null pointer or a pointer to a @{code('Core_InlineHa&lt;Suffix&gt;_KeyRemovedCallback')} function."
     }
   ],
   "description": "A configuration for a @{code('Core_InlineArrayList&lt;Suffix&gt;')} object."

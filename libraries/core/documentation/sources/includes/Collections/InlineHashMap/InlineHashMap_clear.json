@@ -1,0 +1,34 @@
+{
+  "type" : "function",
+  "last-update" : "2024-02-07",
+  "indices" : "core",
+  "name" : "Core_InlineHashMap_clear",
+  "id" : "core-inlinehashmap-clear",
+  "signature" : "Core_Result Core_InlineHashMap&lt;Suffix&gt;_clear(Core_InlineHashMap&lt;Suffix&gt;* SELF);",
+  "signatureRemarks": "<p>where <code>&lt;KeySuffix&gt;</code> <code>&lt;ValueSuffix&gt;</code> can assume the value of <code>P</code>.</p>",
+  "parameters" : [
+    {
+      "name" : "SELF",
+      "type" : "@{code('Core_InlineHashMap&lt;Suffix&gt;*')}",
+      "description" : "A pointer to a @{code('Core_InlineHashMap&lt;Suffix&gt;')} object."
+    }
+  ],
+  "success": [
+    "All elements were removed from this @{code('Core_InlineHashMap&lt;Suffix&gt;')} object.",
+    "Consequently, the size of the @{code('Core_InlineHashMap&lt;Suffix&gt;')} object is zero.",
+    "If a @{code('Core_InlineHashMap&lt;Suffix&gt;_ElementRemovedCallback')} function is associated with this @{code('Core_InlineHashMap&lt;Suffix&gt;')} object,",
+    "the function was invoked on each removed element exactly once."
+  ],
+  "errors" : [
+    {
+      "errorCode" : "Core_Error_ArgumentInvalid",
+      "errorCondition" : "@{code('SELF')} is a null pointer."
+    }
+  ],
+  "description" : "Remove all elements.",
+  "return" : "@{code('Core_Success')} on success. @{code('Core_Failure')} on failure.",
+  "remarks" : [
+    "This function sets the by-thread error variable on failure.",
+    "This function fails only with the specified errors/error conditions."
+  ]
+}

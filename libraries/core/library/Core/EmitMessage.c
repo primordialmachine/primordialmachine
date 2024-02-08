@@ -16,7 +16,7 @@ static void Core_EmitMessage_constructDispatch(Core_EmitMessage_Dispatch* SELF)
 {/*Intentionally empty.*/}
 
 Core_Result Core_EmitMessage_construct(Core_EmitMessage* SELF, Core_String* message) {
-  DX_CONSTRUCT_PREFIX(Core_EmitMessage);
+  Core_BeginConstructor(Core_EmitMessage);
   Core_Natural64 timeStamp;
   if (Core_getNow(&timeStamp)) {
     return Core_Failure;
@@ -26,8 +26,7 @@ Core_Result Core_EmitMessage_construct(Core_EmitMessage* SELF, Core_String* mess
   }
   SELF->message = message;
   CORE_REFERENCE(SELF->message);
-  CORE_OBJECT(SELF)->type = TYPE;
-  return Core_Success;
+  Core_EndConstructor(Core_EmitMessage);
 }
 
 Core_Result Core_EmitMessage_create(Core_EmitMessage** RETURN, Core_String* message) {

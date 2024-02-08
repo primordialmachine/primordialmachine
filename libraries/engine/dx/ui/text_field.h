@@ -4,6 +4,7 @@
 #include "dx/ui/widget.h"
 #include "dx/ui/scrollbar_policy.h"
 #include "dx/document.h"
+typedef struct dx_ui_scrollbar dx_ui_scrollbar;
 typedef struct dx_font dx_font;
 
 Core_declareObjectType("dx.ui.text_field",
@@ -17,11 +18,18 @@ static dx_ui_text_field* DX_UI_TEXT_FIELD(void* p) {
 struct dx_ui_text_field {
   dx_ui_widget _parent;
   /// @brief The relative position of this UI text.
-  DX_VEC2_F32 relative_position;
+  Core_InlineVector2R32 relative_position;
   /// @brief The relative size of this UI text.
-  DX_VEC2_F32 relative_size;
+  Core_InlineVector2R32 relative_size;
   /// @brief The background color of this UI text.
   Core_InlineRgbaR32 background_color;
+
+  struct {
+    Core_Real32 left;
+    Core_Real32 right;
+    Core_Real32 bottom;
+    Core_Real32 top;
+  } margin;
 
   /// @brief The bounds of the text.
   DX_RECT2_F32 text_bounds;
@@ -34,6 +42,11 @@ struct dx_ui_text_field {
   /// @brief The policy for showing the vertical scrollbar.
   /// @default dx_ui_scrollbar_policy_auto
   dx_ui_scrollbar_policy vertical_scrollbar_policy;
+
+  /// @brief The vertical scrollbar.
+  dx_ui_scrollbar* vertical_scrollbar;
+  /// @brief The horizontal scrollbar.
+  dx_ui_scrollbar* horizontal_scrollbar;
 
   /// The text is in general anchored to the (horiontal) left border (for single line text controls).
   dx_text_anchor_horizontal horizontal_text_anchor;

@@ -1,0 +1,11 @@
+{
+  "type" : "symbolic-constant",
+  "last-update" : "2024-02-09",
+  "indices" : "core",
+  "name" : "Core_NoReturn",
+  "id" : "core-noreturn",
+  "signature" : "#define Core_NoReturn() &lt;implementation&gt;",
+  "description" : [
+    "Function annotation indicating that a function never returns."
+  ]
+}

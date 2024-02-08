@@ -3,55 +3,42 @@
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-/// @ingroup Core
-/// @brief The major version of this library.
+/* http://localhost/core#core-version-major */
 #define Core_Version_Major (2)
 
-/// @ingroup Core
-/// @brief The minor version of this library.
+/* http://localhost/core#core-version-minor */
 #define Core_Version_Minor (0)
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-/// @ingroup Core
-/// @brief Symbolic constant for the Microsoft Windows operating system.
+/* http://localhost/core#core-operatingsystem-windows */
 #define Core_OperatingSystem_Windows (1)
 
-/// @ingroup Core
-/// @brief Symbolic constant for an Unix operating system.
+/* http://localhost/core#core-operatingsystem-unix */
 #define Core_OperatingSystem_Unix (2)
 
-/// @ingroup Core
-/// @brief Symbolic constant for Linux operating system.
+/* http://localhost/core#core-operatingsystem-linux */
 #define Core_OperatingSystem_Linux (3)
 
-/// @ingroup Core
-/// @brief Symbolic constant for a MacOS operating system.
+/* http://localhost/core#core-operatingsystem-macos */
 #define Core_OperatingSystem_Macos (4)
 
-/// @ingroup Core
-/// @brief Symbolic constant for a iOS operating system.
+/* http://localhost/core#core-operatingsystem-ios */
 #define Core_OperatingSystem_Ios (5)
 
-/// @ingroup Core
-/// @brief Symbolic constant for a iOS simulator operating system.
+/* http://localhost/core#core-operatingsystem-iossimulator */
 #define Core_OperatingSystem_IosSimulator (6)
 
-/// @ingroup Core
-/// @brief Symbolic constant for the Cygwin/Microsoft Windows operating system.
+/* http://localhost/core#core-operatingsystem-cygwin */
 #define Core_Operatingsystem_Cygwin (7)
 
-/// @ingroup Core
-/// @brief Symbolic constant for the MSYS/Microsoft Windows operating system.
+/* http://localhost/core#core-operatingsystem-msys */
 #define Core_OperatingSystem_Msys (8)
 
-/// @ingroup Core
-/// @brief Symbolic constant for the MinGW/Microsoft Windows operating system.
+/* http://localhost/core#core-operatingsystem-mingw */
 #define Core_OperatingSystem_Mingw (9)
 
-/// @ingroup Core
-/// @brief Symbolic constant indicating the operating system.
-/// It is defined to a value of one of the Core_OperatingSystem_* symbolic constants.
+/* http://localhost/core#core-operatingsystem */
 #if !defined(Core_OperatingSystem)
   #if defined(_WIN32)
     #define Core_OperatingSystem Core_OperatingSystem_Windows
@@ -62,33 +49,16 @@
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-/// @ingroup Core
-/// @brief Symbolic constant for the "MSVC" C compiler.
+/* http://localhost/core#core-compiler-c-msvc */
 #define Core_Compiler_C_Msvc (1)
 
-/// @ingroup Core
-/// @brief Symbolic constant for the "GCC" C compiler.
+/* http://localhost/core#core-compiler-c-gcc */
 #define Core_Compiler_C_Gcc (2)
 
-/// @ingroup Core
-/// @brief Symbolic constant for the "CLANG" C compiler.
+/* http://localhost/core#core-compiler-c-clang */
 #define Core_Compiler_C_Clang (3)
 
-/// @ingroup Core
-/// @brief Symbolic constant for the "MSVC" CPP compiler.
-#define Core_Compiler_Cpp_Msvc (4)
-
-/// @ingroup Core
-/// @brief Symbolic constant for the "GCC" CPP compiler.
-#define Core_Compiler_Cpp_Gcc (5)
-
-/// @ingroup Core
-/// @brief Symbolic constant for the "CLANG" CPP compiler.
-#define Core_Compiler_Cpp_Clang (6)
-
-/// @ingroup Core
-/// @brief Symbolic constant indicating the C compiler.
-/// It is defined to a value of one of the Core_Compiler_C_* symbolic constants.
+/* http://localhost/core#core-compiler-c */
 #if !defined(Core_Compiler_C)
   #if defined(_MSC_VER)
     #define Core_Compiler_C Core_Compiler_C_Msvc
@@ -101,9 +71,16 @@
   #endif
 #endif
 
-/// @ingroup Core
-/// @brief Symbolic constant indicating the CPP compiler.
-/// It is defined to a value of one of the Core_Compiler_CPP_* symbolic constants.
+/* http://localhost/core#core-compiler-cpp-msvc */
+#define Core_Compiler_Cpp_Msvc (1)
+
+/* http://localhost/core#core-compiler-cpp-gcc */
+#define Core_Compiler_Cpp_Gcc (2)
+
+/* http://localhost/core#core-compiler-cpp-clang */
+#define Core_Compiler_Cpp_Clang (3)
+
+/* http://localhost/core#core-compiler-cpp */
 #if !defined(Core_Compiler_Cpp)
   #if defined(_MSC_VER)
     #define Core_Compiler_Cpp Core_Compiler_Cpp_Msvc
@@ -118,32 +95,24 @@
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-/// @ingroup Core
-/// @brief Symbolic constant for the "Direct3D 12" visuals backend.
+/* http://localhost/core#core-visualsbackend-direct3d12 */
 #define Core_VisualsBackend_Direct3d12 (1)
 
-/// @ingroup Core
-/// @brief Symbolic constant for the "OpenGL 4" visuals backend.
+/* http://localhost/core#core-visualsbackend-opengl4 */
 #define Core_VisualsBackend_OpenGl4 (2)
 
-/// @ingroup Core
-/// @brief Symbolic constant for the "Vulkan" visuals backend.
+/* http://localhost/core#core-visualsbackend-vulkan */
 #define Core_VisualsBackend_Vulkan (3)
 
-/// @ingroup Core
-/// @brief Symbolic constant indicating the visuals backend.
-/// It is defined to a value of one of the Core_VisualsBackend_* symbolic constants.
+/* http://localhost/core#core-visualsbackend */
 #define Core_VisualsBackend Core_VisualsBackend_OpenGl4
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-/// @ingroup Core
-/// @brief Symbolic constant for the "OpenAL" audials backend.
+/* http://localhost/core#core-audialsbackend-openal */
 #define Core_AudialsBackend_OpenAl (1)
 
-/// @ingroup Core
-/// @brief Symbolic constant indicating the audials backend.
-/// It is defined to a value of one of the Core_AudialsBackend_* symbolic constants.
+/* http://localhost/core#core-audialsbackend */
 #define Core_AudialsBackend Core_AudialsBackend_OpenAl
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
@@ -220,10 +189,6 @@
 /// which performs tests on functionality provided by dx/core/safe_mul_ix.h".
 /// This function succeeds if all such tests succeed, otherwise it fails.
 #define DX_SAFE_MUL_IX_WITH_TESTS (1)
-
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-
-
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 

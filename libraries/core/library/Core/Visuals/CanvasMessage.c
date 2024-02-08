@@ -15,7 +15,7 @@ static void Core_CanvasMessage_constructDispatch(Core_CanvasMessage_Dispatch* SE
 {/*Intentionally empty.*/}
 
 Core_Result Core_CanvasMessage_construct(Core_CanvasMessage* SELF, Core_CanvasMessageKind kind) {
-  DX_CONSTRUCT_PREFIX(Core_CanvasMessage);
+  Core_BeginConstructor(Core_CanvasMessage);
   Core_Natural64 timeStamp;
   if (Core_getNow(&timeStamp)) {
     return Core_Failure;
@@ -24,8 +24,7 @@ Core_Result Core_CanvasMessage_construct(Core_CanvasMessage* SELF, Core_CanvasMe
     return Core_Failure;
   }
   SELF->kind = kind;
-  CORE_OBJECT(SELF)->type = TYPE;
-  return Core_Success;
+  Core_EndConstructor(Core_CanvasMessage);
 }
 
 Core_Result Core_CanvasMessage_getKind(Core_CanvasMessageKind* RETURN, Core_CanvasMessage* SELF) {

@@ -91,30 +91,6 @@ static inline void Core_Debug_checkObjectDispatchMagicBytes(void* p)
 /// - Core_Object::type is a pointer to the Core.Object type
 Core_Result Core_Object_allocate(Core_Object** RETURN, Core_Size size);
 
-#define DX_CONSTRUCT_PREFIX(_TYPE) \
-  if (!SELF) { \
-    Core_setError(Core_Error_ArgumentInvalid); \
-    return Core_Failure; \
-  } \
-  Core_Type* TYPE = NULL; \
-  if (_TYPE##_getType(&TYPE)) { \
-    return Core_Failure; \
-  } \
-
-#define DX_CREATE_PREFIX(_TYPE) \
-  if (!RETURN) { \
-    Core_setError(Core_Error_ArgumentInvalid); \
-    return Core_Failure; \
-  } \
-  Core_Type* TYPE = NULL; \
-  if (_TYPE##_getType(&TYPE)) { \
-    return Core_Failure; \
-  } \
-  _TYPE* SELF = NULL; \
-  if (Core_Object_allocate((Core_Object**)&SELF, sizeof(_TYPE))) { \
-    return Core_Failure; \
-  }
-
 /* http://localhost/core#core-reference */
 void Core_reference(Core_Object *object);
 
@@ -129,27 +105,9 @@ static inline void CORE_UNREFERENCE(void *p) {
   Core_unreference(CORE_OBJECT(p));
 }
 
-/// @brief Utility macro to facilate the definition of functions.
-/// @code
-/// struct dx_foo_Dispatch {
-///   dx_bar* (*create_bar)(dx_foo*, dx_quu*);
-/// };
-/// 
-/// static inline dx_bar* dx_foo_create_bar(dx_foo* SELF, dx_quu* quu) {
-///   DX_OBJECT_VIRTUALCALL(dx_foo, create_bar, SELF, quu);
-/// }
-/// 
-/// @endcode
-#define DX_OBJECT_VIRTUALCALL(_TYPE, _FUNCTION, ...) \
-  Core_Type* TYPE = CORE_OBJECT(SELF)->type; \
-  _TYPE##_Dispatch* dispatch = NULL; \
-  dispatch = (_TYPE##_Dispatch*)Core_Type_getDispatch(TYPE); \
-  return dispatch->_FUNCTION(__VA_ARGS__);
-
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 /* http://localhost/core#core-weakreference */
-/// A weak reference.
 Core_declareObjectType("Core.WeakReference",
                        Core_WeakReference,
                        Core_Object);
@@ -176,13 +134,67 @@ struct Core_WeakReference_Dispatch {
 /* http://localhost/core#core-weakreference-construct */
 Core_Result Core_WeakReference_construct(Core_WeakReference* SELF, Core_Object* object);
 
+/* http://localhost/core#core-weakreference-create */
 Core_Result Core_WeakReference_create(Core_WeakReference** RETURN, Core_Object* object);
 
+/* http://localhost/core#core-weakreference-set */
 Core_Result Core_WeakReference_set(Core_WeakReference* SELF, Core_Object* object);
 
 /* http://localhost/core#core-weakreference-acquire */
 Core_Result Core_WeakReference_acquire(Core_Object** RETURN, Core_WeakReference* SELF);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+/// @brief Utility macro to facilate the definition of functions.
+/// @code
+/// struct dx_foo_Dispatch {
+///   dx_bar* (*create_bar)(dx_foo*, dx_quu*);
+/// };
+/// 
+/// static inline dx_bar* dx_foo_create_bar(dx_foo* SELF, dx_quu* quu) {
+///   DX_OBJECT_VIRTUALCALL(dx_foo, create_bar, SELF, quu);
+/// }
+/// 
+/// @endcode
+#define DX_OBJECT_VIRTUALCALL(_TYPE, _FUNCTION, ...) \
+  Core_Type* TYPE = CORE_OBJECT(SELF)->type; \
+  _TYPE##_Dispatch* dispatch = NULL; \
+  if (Core_Type_getDispatch(&dispatch, TYPE)) { \
+    return Core_Failure; \
+  } \
+  return dispatch->_FUNCTION(__VA_ARGS__);
+
+#define DX_CONSTRUCT_PREFIX(_TYPE) \
+  Core_BeginConstructor(_TYPE);
+
+/* Utility macro to shorten the definition of a constructor. */
+#define Core_BeginConstructor(T) \
+  if (!SELF) { \
+    Core_setError(Core_Error_ArgumentInvalid); \
+    return Core_Failure; \
+  } \
+  Core_Type* TYPE = NULL; \
+  if (T##_getType(&TYPE)) { \
+    return Core_Failure; \
+  }
+
+/* Utility macro to shorten the definition of a constructor. */
+#define Core_EndConstructor(T) \
+  CORE_OBJECT(SELF)->type = TYPE; \
+  return Core_Success;
+
+#define DX_CREATE_PREFIX(_TYPE) \
+  if (!RETURN) { \
+    Core_setError(Core_Error_ArgumentInvalid); \
+    return Core_Failure; \
+  } \
+  Core_Type* TYPE = NULL; \
+  if (_TYPE##_getType(&TYPE)) { \
+    return Core_Failure; \
+  } \
+  _TYPE* SELF = NULL; \
+  if (Core_Object_allocate((Core_Object**)&SELF, sizeof(_TYPE))) { \
+    return Core_Failure; \
+  }
 
 #endif // CORE_OBJECT_H_INCLUDED

@@ -1,18 +1,27 @@
 {
   "type" : "constructor",
-  "last-update" : "2024-02-01",
+  "last-update" : "2024-02-11",
   "indices" : "core",
   "name" : "Core_WeakReference_construct",
   "id" : "core-weakreference-construct",
-  "signature" : "Core_Result Core_Object_construct(Core_Object* SELF);",
+  "signature" : "Core_Result Core_WeakReference_construct(Core_WeakReference* SELF, Core_Object* object);",
   "parameters" : [
     {
       "name" : "SELF",
+      "type" : "@{code('Core_WeakReference*')}",
+      "description" : "A pointer to this @{code('Core_WeakReference')} object."
+    },
+    {
+      "name" : "object",
       "type" : "@{code('Core_Object*')}",
-      "description" : "A pointer to this @{code('Core_Object')} object."
+      "description" : "A pointer to a @{code('Core_Object')} object or a null pointer."
     }
   ],
-  "success": "This @{code('Core_Object')} object was constructed.",
+  "success": [
+    "This @{code('Core_WeakReference')} object was constructed.",
+    "The weak reference holds a null pointer if @{code('object')} is a null pointer.",
+    "Otherwise it holds a pointer to the @{code('Core_Object')} pointed to by @{code('object')}."
+  ],
   "errors" : [
     {
       "errorCode" : "Core_Error_ArgumentInvalid",
@@ -23,9 +32,7 @@
       "errorCondition" : "An allocation failed."
     }
   ],
-  "description" : "Construct a @{code('Core_Object')} object.",
+  "description" : "Construct a @{code('Core_WeakReference')} object.",
   "return" : "@{code('Core_Success')} on success. @{code('Core_Failure')} on failure.",
-  "remarks" : [
-    "This function sets the by-thread error variable on failure."
-  ]
+  "remarks" : "This function sets the by-thread error variable on failure."
 }

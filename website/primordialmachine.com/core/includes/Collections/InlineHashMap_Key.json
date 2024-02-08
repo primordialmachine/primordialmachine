@@ -1,9 +1,0 @@
-{
-  "type" : "typedef",
-  "last-update" : "2024-01-15",
-  "indices" : "core",
-  "name" : "Core_InlinePointerHashMap_Key",
-  "id" : "core-inlinepointerhashmap-key",
-  "signature" : "typedef void* Core_InlinePointerHashMap_Key;",
-  "description" : "The type of a key stored in a @{code('Core_InlinePointerHashMap')}."
-}

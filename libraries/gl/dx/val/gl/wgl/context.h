@@ -3,7 +3,7 @@
 
 #include "dx/val/gl/context.h"
 #include <GL/wglext.h>
-typedef struct dx_val_gl_wgl_window dx_val_gl_wgl_window;
+typedef struct Core_Val_Gl_Wgl_Window Core_Val_Gl_Wgl_Window;
 
 Core_declareObjectType("dx.gl.wgl.context",
                        dx_gl_wgl_context,
@@ -15,10 +15,17 @@ static inline dx_gl_wgl_context* DX_GL_WGL_CONTEXT(void* p) {
 
 struct dx_gl_wgl_context {
   dx_val_gl_context _parent;
-  dx_val_gl_wgl_window* window;
-#define DEFINE(TYPE, NAME, EXTENSION_NAME) TYPE NAME;
+  Core_Val_Gl_Wgl_Window* window;
+  struct {
+#define Define(NAME, STRING) Core_Boolean with_NAME;
+#include "dx/val/gl/wgl/extensions.i"
+#undef Define
+  } extensions;
+  struct {
+#define Define(TYPE, NAME, EXTENSION_NAME) TYPE NAME;
 #include "dx/val/gl/wgl/functions.i"
-#undef DEFINE
+#undef Define
+  } functions;
 };
 
 static inline dx_gl_wgl_context_Dispatch* DX_GL_WGL_CONTEXT_DISPATCH(void* p) {
@@ -31,10 +38,10 @@ struct dx_gl_wgl_context_Dispatch {
 
 /// @constructor{dx_gl_wgl_context}
 /// @todo Make private to package.
-Core_Result dx_gl_wgl_context_construct(dx_gl_wgl_context* SELF, dx_val_gl_wgl_window* window);
+Core_Result dx_gl_wgl_context_construct(dx_gl_wgl_context* SELF, Core_Val_Gl_Wgl_Window* window);
 
 /// @create-operator{dx_gl_wgl_context}
 /// @todo Scope to package. That is, move to "context.package.h".
-Core_Result dx_gl_wgl_context_create(dx_gl_wgl_context** RETURN, dx_val_gl_wgl_window * window);
+Core_Result dx_gl_wgl_context_create(dx_gl_wgl_context** RETURN, Core_Val_Gl_Wgl_Window* window);
 
 #endif // DX_GL_WGL_CONTEXT_H_INCLUDED

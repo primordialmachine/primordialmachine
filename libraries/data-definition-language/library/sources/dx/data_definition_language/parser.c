@@ -371,7 +371,7 @@ static Core_Result dx_ddl_parser_next(dx_ddl_parser* SELF) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
   }
-  return dx_scanner_step(DX_SCANNER(SELF->scanner));
+  return Core_Scanner_step(CORE_SCANNER(SELF->scanner));
 }
 
 static void dx_ddl_parser_destruct(dx_ddl_parser* SELF) {
@@ -410,7 +410,7 @@ Core_Result dx_ddl_parser_create(dx_ddl_parser** RETURN, dx_data_definition_lang
 }
 
 Core_Result dx_ddl_parser_set(dx_ddl_parser* SELF, char const* p, Core_Size l) {
-  return dx_scanner_set(DX_SCANNER(SELF->scanner), p, l);
+  return Core_Scanner_setInput(CORE_SCANNER(SELF->scanner), p, l);
 }
 
 Core_Result dx_ddl_parser_get_word_kind(dx_data_definition_language_word_kind* RETURN, dx_ddl_parser const* SELF) {

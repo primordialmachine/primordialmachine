@@ -26,7 +26,7 @@ static void dx_aal_al_context_constructDispatch(dx_aal_al_context_Dispatch* SELF
 }
 
 Core_Result dx_aal_al_context_construct(dx_aal_al_context * SELF, dx_aal_al_system* system) {
-  DX_CONSTRUCT_PREFIX(dx_aal_al_context);
+  Core_BeginConstructor(dx_aal_al_context);
   if (dx_aal_context_construct(DX_AAL_CONTEXT(SELF))) {
     return Core_Failure;
   }
@@ -89,9 +89,7 @@ Core_Result dx_aal_al_context_construct(dx_aal_al_context * SELF, dx_aal_al_syst
   }
   alBufferData(SELF->buffer, AL_FORMAT_MONO8, data, sizeof(uint8_t) * sample_rate * duration, sample_rate);
   Core_Memory_deallocate(data);
-  //
-  CORE_OBJECT(SELF)->type = TYPE;
-  return Core_Success;
+  Core_EndConstructor(dx_aal_al_context);
 }
 
 Core_Result dx_aal_al_context_create(dx_aal_al_context** RETURN, dx_aal_al_system* system) {

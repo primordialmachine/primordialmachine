@@ -52,7 +52,7 @@ create_shader
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
   }
-  if (program_text->number_of_bytes > INT_MAX) {
+  if (program_text->numberOfBytes > INT_MAX) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
   }
@@ -74,7 +74,7 @@ create_shader
       id1 = 0;
       return Core_Failure;
     }
-    if (Core_InlineArrayListN8_appendMany(&byte_array, program_text->bytes, program_text->number_of_bytes)) {
+    if (Core_InlineArrayListN8_appendMany(&byte_array, program_text->bytes, program_text->numberOfBytes)) {
       Core_InlineArrayListN8_uninitialize(&byte_array);
       ctx->glDeleteShader(id1);
       id1 = 0;

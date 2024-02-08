@@ -1,0 +1,10 @@
+{
+  "type" : "structure",
+  "last-update" : "2024-02-08",
+  "indices" : "core",
+  "name" : "Core_InlineHashMap",
+  "id" : "core-inlinehashmap",
+  "signature" : "typedef struct Core_InlineHashMap&lt;Suffix&gt; Core_InlineHashMap&lt;Suffix&gt;;",
+  "signatureRemarks": "<p>where <code>&lt;KeySuffix&gt;</code> <code>&lt;ValueSuffix&gt;</code> can assume the value of <code>P</code>.</p>",
+  "description" : "The type of an inline hashmap."
+}

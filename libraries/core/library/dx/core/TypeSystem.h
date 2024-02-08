@@ -2,20 +2,15 @@
 #define DX_CORE_TYPESYSTEM_H_INCLUDED
 
 #include "dx/core/core.h"
-
 /*Forward declaration.*/
 typedef struct Core_Object Core_Object;
-
 /*Forward declaration.*/
 typedef struct Core_Object_Dispatch Core_Object_Dispatch;
 
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 /// @brief
 /// The opaque C representation of runtime information on a type.
 typedef struct Core_Type Core_Type;
-
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 /// @brief Get if a type is a lower than or equal to another type.
 /// @param x The first type.
@@ -34,7 +29,7 @@ Core_Result Core_Type_isLowerThanOrEqualTo(Core_Boolean* RETURN, Core_Type* x, C
 /// 
 /// @undefined @a x does not pointed to a dx_type object.
 /// @undefined The runtime type system is not initialized.
-void* Core_Type_getDispatch(Core_Type* x);
+Core_Result Core_Type_getDispatch(void** RETURN, Core_Type* x);
 
 /// @brief Get the parent type of a type.
 /// @param RETURN A pointer to a <code>Core_Type*</code> variable.

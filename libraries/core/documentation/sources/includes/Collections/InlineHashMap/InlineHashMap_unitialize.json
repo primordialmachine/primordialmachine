@@ -1,0 +1,30 @@
+{
+  "type" : "function",
+  "last-update" : "2024-02-07",
+  "indices" : "core",
+  "name" : "Core_InlineHashMap_uninitialize",
+  "id" : "core-inlinehashmap-uninitialize",
+  "signature" : "Core_Result Core_InlineHashMap&lt;Suffix&gt;_create(Core_InlineHashMap&lt;Suffix&gt;* SELF);",
+  "signatureRemarks": "<p>where <code>&lt;KeySuffix&gt;</code> <code>&lt;ValueSuffix&gt;</code> can assume the value of <code>P</code>.</p>",
+  "parameters" : [
+    {
+      "name" : "SELF",
+      "type" : "@{code('Core_InlineHashMap&lt;Suffix&gt;*')}",
+      "description" : "A pointer to a @{code('Core_InlineHashMap&lt;Suffix&gt;')} object."
+    }
+  ],
+  "success": "The @{code('Core_InlineHashMap&lt;Suffix&gt;')} object was uninitialized.",
+  "errors" : [
+    {
+      "errorCode" : "Core_Error_ArgumentInvalid",
+      "errorCondition" : "@{code('SELF')} is a null pointer."
+    }
+  ],
+  "description" : "Uninitialize a @{code('Core_InlineHashMap&lt;Suffix&gt;')} object.",
+  "return" : "@{code('Core_Success')} on success. @{code('Core_Failure')} on failure.",
+  "remarks" : [
+    "This function sets the by-thread error variable on failure.",
+    "This function fails only if @{code('SELF')} is a null pointer.",
+    "The behavior is undefined if @{code('SELF')} is not a null pointer but does not point to an initialized @{code('Core_InlineHashMap&lt;Suffix&gt;')} object."
+  ]
+}

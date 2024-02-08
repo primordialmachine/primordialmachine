@@ -42,7 +42,7 @@ static inline dx_document_definition_language_scanner* DX_DOCUMENT_DEFINITION_LA
 }
 
 struct dx_document_definition_language_scanner {
-  dx_scanner _parent;
+  Core_Scanner _parent;
 
   /// @brief Pointer to the beginning of the first Byte of the input.
   char const* start;
@@ -70,7 +70,7 @@ static inline dx_document_definition_language_scanner_Dispatch* DX_DOCUMENT_DEFI
 }
 
 struct dx_document_definition_language_scanner_Dispatch {
-  dx_scanner_Dispatch _parent;
+  Core_Scanner_Dispatch _parent;
 };
 
 /// @brief Construct this scanner with an empty input.

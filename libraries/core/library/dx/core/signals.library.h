@@ -17,10 +17,11 @@ Core_Result Core_Signals_initialize();
 /// @return #Core_Success on success. #Core_Failure on failure.
 Core_Result Core_Signals_uninitialize();
 
-/// @internal
-/// @brief Invoked when an instance is about to be destroyed.
-/// @param instance The instance that is about to be destroyed.
+/// @brief Remove all connections of a specific context.
+/// @param instance The instance to remove all connections from.
 /// @return #Core_Success on success. #Core_Failure on failure.
+/// @remarks This function sets the by-thread error variable on failure.
+/// @remarks This functions fails only if @a instance is a null pointer.
 Core_Result Core_Signals_disconnectAll(Core_Object* instance);
 
 #endif // DX_CORE_SIGNALS_LIBRARY_H_INCLUDED

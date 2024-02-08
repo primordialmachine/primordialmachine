@@ -1,0 +1,37 @@
+{
+  "type" : "create-operator",
+  "last-update" : "2024-02-11",
+  "indices" : "core",
+  "name" : "Core_WeakReference_set",
+  "id" : "core-weakreference-set",
+  "signature" : "Core_Result Core_WeakReference_set(Core_WeakReference* SELF, Core_Object* object);",
+  "parameters" : [
+    {
+      "name" : "SELF",
+      "type" : "@{code('Core_WeakReference*')}",
+      "description" : "A pointer to this @{code('Core_WeakReference')} object."
+    },
+    {
+      "name" : "object",
+      "type" : "@{code('Core_Object*')}",
+      "description" : "A pointer to a @{code('Core_Object')} object or a null pointer."
+    }
+  ],
+  "success": [
+    "The weak reference holds a null pointer if @{code('object')} is a null pointer.",
+    "Otherwise it holds a pointer to the @{code('Core_Object')} pointed to by @{code('object')}."
+  ],
+  "errors" : [
+    {
+      "errorCode" : "Core_Error_ArgumentInvalid",
+      "errorCondition" : "@{code('SELF')} is a null pointer."
+    },
+    {
+      "errorCode" : "Core_Error_AllocationFailed",
+      "errorCondition" : "An allocation failed."
+    }
+  ],
+  "description" : "Create a @{code('Core_WeakReference')} object.",
+  "return" : "@{code('Core_Success')} on success. @{code('Core_Failure')} on failure.",
+  "remarks" : "This function sets the by-thread error variable on failure."
+}

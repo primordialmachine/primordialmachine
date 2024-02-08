@@ -1,0 +1,10 @@
+{
+  "type" : "object",
+  "last-update" : "2024-02-10",
+  "indices" : "core",
+  "name" : "Core_StringBuffer",
+  "id" : "core-stringbuffer",
+  "signature" : "typedef struct Core_StringBuffer Core_StringBuffer;",
+  "extends" : "Core_Object",
+  "description": "A mutable UTF-8 Byte sequence."
+}

@@ -1,0 +1,12 @@
+{
+  "type" : "symbolic-constant",
+  "last-update" : "2024-02-06",
+  "indices" : "core",
+  "name" : "Core_OperatingSystem_Windows",
+  "id" : "core-operatingsystem-windows",
+  "signature" : "#define Core_OperatingSystem_Windows &lt;implementation&gt;",
+  "description" : [
+    "Symbolic constant defined to a numeric value that is different from the values of the other @{code('Core_OperatingSystem_*')} symbolic constants.@{newline()}",
+    "The symbolic constant denotes a WINDOWS operating system."
+  ]
+}

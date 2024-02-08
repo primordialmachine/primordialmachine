@@ -1,10 +1,10 @@
 {
   "type" : "object",
-  "last-update" : "2024-01-09",
+  "last-update" : "2024-02-08",
   "indices" : "core",
   "name" : "Core_ApplicationMessage",
   "id" : "core-applicationmessage",
   "signature" : "typedef struct Core_ApplicationMessage Core_ApplicationMessage;",
-  "extends" : "@{code('Core_Message')}",
+  "extends" : "Core_Message",
   "description": "A message pertaining to an <em>Application</em>."
 }

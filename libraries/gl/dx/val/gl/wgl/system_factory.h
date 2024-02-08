@@ -1,32 +1,32 @@
-#if !defined(DX_VAL_GL_WGL_SYSTEM_FACTORY_H_INCLUDED)
-#define DX_VAL_GL_WGL_SYSTEM_FACTORY_H_INCLUDED
+#if !defined(CORE_VAL_GL_WGL_SYSTEMFACTORY_H_INCLUDED)
+#define CORE_VAL_GL_WGL_SYSTEMFACTORY_H_INCLUDED
 
 #include "dx/val/gl/system_factory.h"
 
-Core_declareObjectType("dx.val.gl.wgl.system_factory",
-                       dx_val_gl_wgl_system_factory,
+Core_declareObjectType("Core.Val.Gl.Wgl.SystemFactory",
+                       Core_Val_Gl_Wgl_SystemFactory,
                        dx_val_gl_system_factory);
 
-static inline dx_val_gl_wgl_system_factory* DX_VAL_GL_WGL_SYSTEM_FACTORY(void* p) {
-  return (dx_val_gl_wgl_system_factory*)p;
+static inline Core_Val_Gl_Wgl_SystemFactory* CORE_VAL_GL_WGL_SYSTEMFACTORY(void* p) {
+  return (Core_Val_Gl_Wgl_SystemFactory*)p;
 }
 
-struct dx_val_gl_wgl_system_factory {
+struct Core_Val_Gl_Wgl_SystemFactory {
   dx_val_gl_system_factory _parent;
 };
 
-static inline dx_val_gl_wgl_system_factory_Dispatch* DX_VAL_GL_WGL_SYSTEM_FACTORY_DISPATCH(void* p) {
-  return (dx_val_gl_wgl_system_factory_Dispatch*)p;
+static inline Core_Val_Gl_Wgl_SystemFactory_Dispatch* CORE_VAL_WGL_SYSTEMFACTORY_DISPATCH(void* p) {
+  return (Core_Val_Gl_Wgl_SystemFactory_Dispatch*)p;
 }
 
-struct dx_val_gl_wgl_system_factory_Dispatch {
+struct Core_Val_Gl_Wgl_SystemFactory_Dispatch {
   dx_val_gl_system_factory_Dispatch _parent;
 };
 
-/// @constructor{dx_val_gl_wgl_system_factory}
-Core_Result dx_val_gl_wgl_system_factory_construct(dx_val_gl_wgl_system_factory* SELF);
+/// @constructor{Core_Val_Gl_Wgl_SystemFactory}
+Core_Result Core_Val_Gl_Wgl_SystemFactory_construct(Core_Val_Gl_Wgl_SystemFactory* SELF);
 
-/// @create-operator{dx_val_gl_wgl_system_factory}
-Core_Result dx_val_gl_wgl_system_factory_create(dx_val_gl_wgl_system_factory** RETURN);
+/// @create-operator{Core_Val_Gl_Wgl_SystemFactory}
+Core_Result Core_Val_Gl_Wgl_SystemFactory_create(Core_Val_Gl_Wgl_SystemFactory** RETURN);
 
-#endif // DX_VAL_GL_WGL_SYSTEM_FACTORY_H_INCLUDED
+#endif // CORE_VAL_GL_WGL_SYSTEMFACTORY_H_INCLUDED

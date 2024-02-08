@@ -22,7 +22,7 @@ static inline dx_system_factory_Dispatch* DX_SYSTEM_FACTORY_DISPATCH(void* p) {
 
 struct dx_system_factory_Dispatch {
   Core_Object_Dispatch _parent;
-  Core_Result(*create_system)(dx_system**,dx_system_factory*, dx_msg_queue*);
+  Core_Result(*create_system)(dx_system**,dx_system_factory*, Core_MessageQueue*);
 };
 
 /// @brief Construct this system factory.
@@ -35,7 +35,7 @@ Core_Result dx_system_factory_construct(dx_system_factory* SELF);
 /// @param SELF A pointer to this system factory.
 /// @param msg_queue A pointer to the message queue.
 /// @method-call.
-static inline Core_Result dx_system_factory_create_system(dx_system** RETURN, dx_system_factory* SELF, dx_msg_queue* msg_queue) {
+static inline Core_Result dx_system_factory_create_system(dx_system** RETURN, dx_system_factory* SELF, Core_MessageQueue* msg_queue) {
   DX_OBJECT_VIRTUALCALL(dx_system_factory, create_system, RETURN, SELF, msg_queue);
 }
 

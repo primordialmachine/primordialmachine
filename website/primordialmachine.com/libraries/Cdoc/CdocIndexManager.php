@@ -45,6 +45,7 @@ class CdocIndex {
         array
           (
             'index' => $this,
+            'id' => $id,
             'file' => $file,
           );
       $this->entryList[] = $entry;
@@ -84,8 +85,36 @@ class CdocIndexManager {
 
     return self::$instance;
   }
+  
+  private array $entries = array();
 
   private array $indices = array();
+  
+  /// add a file (e.g., "includes/WeakReference_construct.json") to an index (e.g., "core").
+  public function addFile(string $indexName, CdocFile $file) {
+    $jsonData = $file->getJsonData();
+    $name = $jsonData['name'];
+    if (isset($this->entries[$name])) {
+      throw new Exception('entry of name `' . $name . '` is already registered');
+    } else {
+      $entry =
+        array
+          (
+            'name' => $name,
+            'file' => $file,
+          );
+      $this->entries[$name] = $entry;
+    }
+    $index = CdocIndexManager::getInstance()->getByName($indexName);
+    $index->addEntry($file);
+  }
+  
+  public function getFileByName(string $name) {
+    if (!isset($this->entries[$name])) {
+      throw new Exception('entry of name `' . $name . '` not found');
+    }
+    return $this->entries[$name]['file'];
+  }
 
   private function __construct()
   {/*Intentionally empty.*/}

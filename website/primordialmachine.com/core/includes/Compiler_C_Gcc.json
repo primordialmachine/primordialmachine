@@ -1,0 +1,12 @@
+{
+  "type" : "symbolic-constant",
+  "last-update" : "2024-02-06",
+  "indices" : "core",
+  "name" : "Core_Compiler_C_Gcc",
+  "id" : "core-compiler-c-gcc",
+  "signature" : "#define Core_Compiler_C_Gcc &lt;implementation&gt;",
+  "description" : [
+    "Symbolic constant defined to a numeric value that is different from the values of the other @{code('Core_Compiler_C_*')} symbolic constants.@{newline()}",
+    "The symbolic constant denotes the GCC C compiler."
+  ]
+}

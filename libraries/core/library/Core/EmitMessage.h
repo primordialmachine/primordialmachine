@@ -2,7 +2,7 @@
 #define CORE_EMITMESSAGE_H_INCLUDED
 
 #include "Core/Message.h"
-#include "dx/core/string.h"
+#include "Core/String.h"
 
 // The opaque type of an "emit" message.
 // An "emit" message makes the engine print out the specifid string on the output device for emit messages.

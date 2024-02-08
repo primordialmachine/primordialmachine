@@ -42,7 +42,7 @@ Core_Result dx_data_definition_language_diagnostics_on_unclosed_string_literal(d
   if (Core_String_create(&format, "lexical error: unclosed string literal\n", sizeof("lexical error: unclosed string literal\n") - 1)) {
     return Core_Failure;
   }
-  dx_log(format->bytes, format->number_of_bytes);
+  dx_log(format->bytes, format->numberOfBytes);
   CORE_UNREFERENCE(format);
   format = NULL;
   return Core_Success;
@@ -53,7 +53,7 @@ Core_Result dx_data_definition_language_diagnostics_on_invalid_number_literal(dx
   if (Core_String_create(&format, "lexical error: invalid number literal\n", sizeof("lexical error: invalid number literal\n") - 1)) {
     return Core_Failure;
   }
-  dx_log(format->bytes, format->number_of_bytes);
+  dx_log(format->bytes, format->numberOfBytes);
   CORE_UNREFERENCE(format);
   format = NULL;
   return Core_Success;
@@ -64,7 +64,7 @@ Core_Result dx_data_definition_language_diagnostics_on_unclosed_multi_line_comme
   if (Core_String_create(&format, "lexical error: unclosed multi-line comment\n", sizeof("lexical error: unclosed multi-line comment\n") - 1)) {
     return Core_Failure;
   }
-  dx_log(format->bytes, format->number_of_bytes);
+  dx_log(format->bytes, format->numberOfBytes);
   CORE_UNREFERENCE(format);
   format = NULL;
   return Core_Success;
@@ -75,7 +75,7 @@ Core_Result dx_data_definition_language_diagnostics_on_invalid_name(dx_data_defi
   if (Core_String_create(&format, "lexical error: invalid name\n", sizeof("lexical error: invalid name\n") - 1)) {
     return Core_Failure;
   }
-  dx_log(format->bytes, format->number_of_bytes);
+  dx_log(format->bytes, format->numberOfBytes);
   CORE_UNREFERENCE(format);
   format = NULL;
   return Core_Success;
@@ -87,7 +87,7 @@ Core_Result dx_data_definition_language_diagnostics_on_unexpected_symbol(dx_data
   if (Core_String_create(&format, "lexical error: unexpected symbol\n", sizeof("lexical error: unexpected symbol\n") - 1)) {
     return Core_Failure;
   }
-  dx_log(format->bytes, format->number_of_bytes);
+  dx_log(format->bytes, format->numberOfBytes);
   CORE_UNREFERENCE(format);
   format = NULL;
   return Core_Success;

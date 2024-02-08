@@ -1,0 +1,10 @@
+{
+  "type" : "object",
+  "last-update" : "2024-02-10",
+  "indices" : "core",
+  "name" : "Core_String",
+  "id" : "core-string",
+  "signature" : "typedef struct Core_String Core_String;",
+  "extends" : "Core_Object",
+  "description": "An immutable UTF-8 Byte sequence."
+}

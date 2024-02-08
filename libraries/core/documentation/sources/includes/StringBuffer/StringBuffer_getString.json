@@ -1,0 +1,45 @@
+{
+  "type" : "method",
+  "last-update" : "2024-02-10",
+  "indices" : "core",
+  "name" : "Core_StringBuffer_getString",
+  "id" : "core-stringbuffer-getstring",
+  "signature" : "Core_Result Core_StringBuffer_getString(Core_String** RETURN, Core_StringBuffer* SELF);",
+  "parameters" : [
+    {
+      "name" : "RETURN",
+      "type" : "@{code('Core_String**')}",
+      "description" : "A pointer to a @{code('Core_String*')} variable."
+    },
+    {
+      "name" : "SELF",
+      "type" : "@{code('Core_StringBuffer*')}",
+      "description" : "A pointer to this @{code('Core_StringBuffer')} object."
+    }
+  ],
+  "success": [
+    "@{code('*RETURN')} was assigned a pointer to a @{code('Core_String')} object.",
+    "The UTF-8 symbol sequencs of that @{code('Core_String')} object is a copy of the UTF-8 symbol sequence of this @{code('Core_StringBuffer')} object.",
+    "The caller acquired a reference to that  @{code('Core_String')} object."
+  ],
+  "errors" : [
+    {
+      "errorCode" : "Core_Error_ArgumentInvalid",
+      "errorCondition" : "@{code('RETURN')} is a null pointer."
+    },
+    {
+      "errorCode" : "Core_Error_ArgumentInvalid",
+      "errorCondition" : "@{code('SELF')} is a null pointer."
+    },
+    {
+      "errorCode" : "Core_Error_AllocationFailed",
+      "errorCondition" : "An allocation failed."
+    }
+  ],
+  "description" : "Get a copy of the UTF-8 symbol sequence of this @{code('Core_StringBuffer')} object as a @{code('Core_String')} object.",
+  "return" : "@{code('Core_Success')} on success. @{code('Core_Failure')} on failure.",
+  "remarks" : [
+    "This function sets the by-thread error variable on failure.",
+    "This function fails only with the specified errors/error conditions."
+  ]
+}

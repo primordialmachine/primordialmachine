@@ -3,7 +3,7 @@
 #if !defined(CORE_FILESYSTEM_GETFILETYPE_H_INCLUDED)
 #define CORE_FILESYSTEM_GETFILETYPE_H_INCLUDED
 
-#include "dx/core/string.h"
+#include "Core/String.h"
 #include "Core/FileSystem/FileType.h"
 
 /* http://localhost/core#core-getfiletype */

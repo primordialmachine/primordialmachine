@@ -1,19 +1,19 @@
-#if !defined(DX_VAL_GL_WGL_SYSTEM_H_INCLUDED)
-#define DX_VAL_GL_WGL_SYSTEM_H_INCLUDED
+#if !defined(CORE_VAL_GL_WGL_SYSTEM_H_INCLUDED)
+#define CORE_VAL_GL_WGL_SYSTEM_H_INCLUDED
 
 #include "dx/val/gl/system.h"
 #include "dx/val/gl/wgl/context.h"
 
-Core_declareObjectType("dx.val.gl.wgl.system",
-                       dx_val_gl_wgl_system,
-                       dx_val_gl_system);
+Core_declareObjectType("Core.Val.Gl.Wgl.System",
+                       Core_Val_Gl_Wgl_System,
+                       Core_Val_Gl_System);
 
-static inline dx_val_gl_wgl_system* DX_VAL_GL_WGL_SYSTEM(void* p) {
-  return (dx_val_gl_wgl_system*)p;
+static inline Core_Val_Gl_Wgl_System* CORE_VAL_GL_WGL_SYSTEM(void* p) {
+  return (Core_Val_Gl_Wgl_System*)p;
 }
 
-struct dx_val_gl_wgl_system {
-  dx_val_gl_system _parent;
+struct Core_Val_Gl_Wgl_System {
+  Core_Val_Gl_System _parent;
   /// @brief The instance handle.
   HINSTANCE instance_handle;
   /// @brief The class name.
@@ -22,58 +22,58 @@ struct dx_val_gl_wgl_system {
   ATOM class_handle;
 };
 
-static inline dx_val_gl_wgl_system_Dispatch* DX_VAL_GL_WGL_SYSTEM_DISPATCH(void* p) {
-  return (dx_val_gl_wgl_system_Dispatch*)p;
+static inline Core_Val_Gl_Wgl_System_Dispatch* CORE_VAL_GL_WGL_SYSTEM_DISPATCH(void* p) {
+  return (Core_Val_Gl_Wgl_System_Dispatch*)p;
 }
 
-struct dx_val_gl_wgl_system_Dispatch {
-  dx_val_gl_system_Dispatch _parent;
+struct Core_Val_Gl_Wgl_System_Dispatch {
+  Core_Val_Gl_System_Dispatch _parent;
 };
 
 /// @param msq_queue A pointer to the message queue.
-/// @constructor{dx_val_gl_wgl_system}
+/// @constructor{Core_Val_Gl_Wgl_System}
 /// @todo Scope to package. That is, move to "system.package.h".
-Core_Result dx_val_gl_wgl_system_construct(dx_val_gl_wgl_system* SELF, dx_msg_queue* msg_queue);
+Core_Result Core_Val_Gl_Wgl_System_construct(Core_Val_Gl_Wgl_System* SELF, Core_MessageQueue* msg_queue);
 
 /// @param msq_queue A pointer to the message queue.
-/// @create-operator{dx_val_gl_wgl_system}
+/// @create-operator{Core_Val_Gl_Wgl_System}
 /// @todo Scope to package. That is, move to "system.package.h".
-Core_Result dx_val_gl_wgl_system_create(dx_val_gl_wgl_system** RETURN, dx_msg_queue* msg_queue);
+Core_Result Core_Val_Gl_Wgl_System_create(Core_Val_Gl_Wgl_System** RETURN, Core_MessageQueue* msg_queue);
 
 /// @brief Handle WM_(L|M|R|X)BUTTON(DOWN|UP) messages.
 /// @param wnd The window handle.
 /// @param msg The message.
 /// @param wparam The WPARAM parameter.
 /// @param lparam The LPARAM parameter.
-/// @method{dx_val_gl_wgl_system}
+/// @method{Core_Val_Gl_Wgl_System}
 /// @todo Scope to package. That is, move to "system.package.h".
-Core_Result dx_val_gl_wgl_system_on_mouse_button_message(dx_val_gl_wgl_system* SELF, HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam);
+Core_Result Core_Val_Gl_Wgl_System_onMouseButtonMessage(Core_Val_Gl_Wgl_System* SELF, HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam);
 
 /// @brief Handle WM_MOUSEMOVE messages.
 /// @param wnd The window handle.
 /// @param msg The message.
 /// @param wparam The WPARAM parameter.
 /// @param lparam The LPARAM parameter.
-/// @method{dx_val_gl_wgl_system}
+/// @method{Core_Val_Gl_Wgl_System}
 /// @todo Scope to package. That is, move to "system.package.h".
-Core_Result dx_val_gl_wgl_system_on_mouse_pointer_message(dx_val_gl_wgl_system* SELF, HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam);
+Core_Result Core_Val_Gl_Wgl_System_onMousePointerMessage(Core_Val_Gl_Wgl_System* SELF, HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam);
 
 /// @brief Handle WM_(KEY|SYSKEY)(DOWN|UP) messages.
 /// @param wnd The window handle.
 /// @param msg The message.
 /// @param wparam The WPARAM parameter.
 /// @param lparam The LPARAM parameter.
-/// @method{dx_val_gl_wgl_system}
+/// @method{Core_Val_Gl_Wgl_System}
 /// @todo Scope to package. That is, move to "system.package.h".
-Core_Result dx_val_gl_wgl_system_on_keyboard_key_message(dx_val_gl_wgl_system* SELF, HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam);
+Core_Result Core_Val_Gl_Wgl_System_onKeyboardKeyMessage(Core_Val_Gl_Wgl_System* SELF, HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam);
 
 /// @brief Handle WM_SIZE|WM_ACTIVATE messages.
 /// @param wnd The window handle.
 /// @param msg The message.
 /// @param wparam The WPARAM parameter.
 /// @param lparam The LPARAM parameter.
-/// @method{dx_val_gl_wgl_system}
+/// @method{Core_Val_Gl_Wgl_System}
 /// @todo Scope to package. That is, move to "system.package.h".
-Core_Result dx_val_gl_wgl_system_on_window_message(dx_val_gl_wgl_system* SELF, HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam);
+Core_Result Core_Val_Gl_Wgl_System_onWindowMessage(Core_Val_Gl_Wgl_System* SELF, HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam);
 
-#endif // DX_VAL_GL_WGL_SYSTEM_H_INCLUDED
+#endif // CORE_VAL_GL_WGL_SYSTEM_H_INCLUDED

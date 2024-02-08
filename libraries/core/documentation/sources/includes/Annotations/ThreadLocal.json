@@ -1,0 +1,9 @@
+{
+  "type" : "symbolic-constant",
+  "last-update" : "2024-02-09",
+  "indices" : "core",
+  "name" : "Core_ThreadLocal",
+  "id" : "core-threadlocal",
+  "signature" : "#define Core_ThreadLocal() &lt;implementation&gt;",
+  "description" : "Variable annotation indicating thread local storage."
+}

@@ -3,6 +3,10 @@
 
 #include "dx/core.h"
 
+typedef struct dx_font_manager dx_font_manager;
+typedef struct dx_rectangle_presenter dx_rectangle_presenter;
+typedef struct dx_font_presenter dx_font_presenter;
+
 typedef struct dx_aal_context dx_aal_context;
 typedef struct dx_aal_system dx_aal_system;
 typedef struct dx_aal_system_factory dx_aal_system_factory;
@@ -31,14 +35,28 @@ static dx_application* DX_APPLICATION(void* p) {
 
 struct dx_application {
   Core_Object _parent;
-  /// @brief A non-referencing pointer to the message queue.
-  dx_msg_queue* msg_queue;
+  
+  /// @brief The configuration.
+  Core_Configuration* configuration;
+  
+  /// @brief A pointer to the message queue.
+  /// The application does not retain a reference to the message queue.
+  Core_MessageQueue* msg_queue;
+  
   /// @brief The VAL system.
   dx_val_system* val_system;
+  
   /// @brief The AAL system.
   dx_aal_system* aal_system;
+  
   /// @brief The assets system.
   dx_assets_system* assets_system;
+  
+  /// @brief The font manager.
+  dx_font_manager* font_manager;
+
+  dx_rectangle_presenter* rectangle_presenter;
+  dx_font_presenter* font_presenter;
 };
 
 static dx_application_Dispatch* DX_APPLICATION_DISPATCH(void* p) {
@@ -67,7 +85,7 @@ Core_Result dx_application_construct
     dx_val_system_factory* val_system_factory,
     dx_aal_system_factory* aal_system_factory,
     dx_assets_system_factory* assets_system_factory,
-    dx_msg_queue* msg_queue
+    Core_MessageQueue* msg_queue
   );
 
 Core_Result dx_application_create
@@ -76,7 +94,7 @@ Core_Result dx_application_create
     dx_val_system_factory* val_system_factory,
     dx_aal_system_factory* aal_system_factory,
     dx_assets_system_factory* assets_system_factory,
-    dx_msg_queue* msg_queue
+    Core_MessageQueue* msg_queue
   );
 
 /// @method{dx_application}

@@ -5,7 +5,7 @@
 // snprintf
 #include <stdio.h>
 
-#include "dx/core/string.h"
+#include "Core/String.h"
 
 #define PRINT_PRECISION_8 (8)
 #define PRINT_PRECISION_16 (16)
@@ -299,7 +299,7 @@ Core_Result dx__format_v(Core_InlineArrayListN8* buffer, char const* start, char
           Core_setError(Core_Error_ArgumentInvalid);
           return Core_Failure;
         }
-        if (Core_InlineArrayListN8_appendMany(buffer, argument->bytes, argument->number_of_bytes)) {
+        if (Core_InlineArrayListN8_appendMany(buffer, argument->bytes, argument->numberOfBytes)) {
           return Core_Failure;
         }
       } break;

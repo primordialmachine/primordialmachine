@@ -8,21 +8,21 @@ Core_defineObjectType("dx.ui.group",
                        dx_ui_group,
                        dx_ui_widget);
 
-static Core_Result set_relative_position(dx_ui_group* SELF, DX_VEC2_F32 const* relative_position);
+static Core_Result set_relative_position(dx_ui_group* SELF, Core_InlineVector2R32 const* relative_position);
 
-static Core_Result get_relative_position(DX_VEC2_F32* RETURN, dx_ui_group* SELF);
+static Core_Result get_relative_position(Core_InlineVector2R32* RETURN, dx_ui_group* SELF);
 
-static Core_Result set_relative_size(dx_ui_group* SELF, DX_VEC2_F32 const* relative_size);
+static Core_Result set_relative_size(dx_ui_group* SELF, Core_InlineVector2R32 const* relative_size);
 
-static Core_Result get_relative_size(DX_VEC2_F32* RETURN, dx_ui_group* SELF);
+static Core_Result get_relative_size(Core_InlineVector2R32* RETURN, dx_ui_group* SELF);
 
-static Core_Result get_absolute_position(DX_VEC2_F32* RETURN, dx_ui_group* SELF);
+static Core_Result get_absolute_position(Core_InlineVector2R32* RETURN, dx_ui_group* SELF);
 
-static Core_Result get_absolute_size(DX_VEC2_F32* RETURN, dx_ui_group* SELF);
+static Core_Result get_absolute_size(Core_InlineVector2R32* RETURN, dx_ui_group* SELF);
 
 static Core_Result get_child_by_name(dx_ui_widget** RETURN, dx_ui_group* SELF, Core_String* name);
 
-static Core_Result render(dx_ui_group* SELF, Core_Real32 canvas_horizontal_size, Core_Real32 canvas_vertical_size, Core_Real32 dpi_horizontal, Core_Real32 dpi_vertical);
+static Core_Result render(dx_ui_group* SELF);
 
 static void dx_ui_group_destruct(dx_ui_group* SELF) {
   CORE_UNREFERENCE(SELF->children);
@@ -30,13 +30,13 @@ static void dx_ui_group_destruct(dx_ui_group* SELF) {
 }
 
 static void dx_ui_group_constructDispatch(dx_ui_group_Dispatch* SELF) {
-  DX_UI_WIDGET_DISPATCH(SELF)->get_relative_position = (Core_Result(*)(DX_VEC2_F32*,dx_ui_widget*)) & get_relative_position;
-  DX_UI_WIDGET_DISPATCH(SELF)->get_relative_size = (Core_Result(*)(DX_VEC2_F32*, dx_ui_widget*)) & get_relative_size;
-  DX_UI_WIDGET_DISPATCH(SELF)->render = (Core_Result(*)(dx_ui_widget*,Core_Real32,Core_Real32,Core_Real32,Core_Real32)) & render;
-  DX_UI_WIDGET_DISPATCH(SELF)->set_relative_position = (Core_Result(*)(dx_ui_widget*,DX_VEC2_F32 const*)) & set_relative_position;
-  DX_UI_WIDGET_DISPATCH(SELF)->set_relative_size = (Core_Result(*)(dx_ui_widget*,DX_VEC2_F32 const*)) & set_relative_size;
-  DX_UI_WIDGET_DISPATCH(SELF)->get_absolute_position = (Core_Result(*)(DX_VEC2_F32*, dx_ui_widget*)) & get_absolute_position;
-  DX_UI_WIDGET_DISPATCH(SELF)->get_absolute_size = (Core_Result(*)(DX_VEC2_F32*, dx_ui_widget*)) & get_absolute_size;
+  DX_UI_WIDGET_DISPATCH(SELF)->get_relative_position = (Core_Result(*)(Core_InlineVector2R32*,dx_ui_widget*)) & get_relative_position;
+  DX_UI_WIDGET_DISPATCH(SELF)->get_relative_size = (Core_Result(*)(Core_InlineVector2R32*, dx_ui_widget*)) & get_relative_size;
+  DX_UI_WIDGET_DISPATCH(SELF)->render = (Core_Result(*)(dx_ui_widget*)) & render;
+  DX_UI_WIDGET_DISPATCH(SELF)->set_relative_position = (Core_Result(*)(dx_ui_widget*, Core_InlineVector2R32 const*)) & set_relative_position;
+  DX_UI_WIDGET_DISPATCH(SELF)->set_relative_size = (Core_Result(*)(dx_ui_widget*, Core_InlineVector2R32 const*)) & set_relative_size;
+  DX_UI_WIDGET_DISPATCH(SELF)->get_absolute_position = (Core_Result(*)(Core_InlineVector2R32*, dx_ui_widget*)) & get_absolute_position;
+  DX_UI_WIDGET_DISPATCH(SELF)->get_absolute_size = (Core_Result(*)(Core_InlineVector2R32*, dx_ui_widget*)) & get_absolute_size;
   DX_UI_WIDGET_DISPATCH(SELF)->get_child_by_name = (Core_Result(*)(dx_ui_widget**, dx_ui_widget*, Core_String*)) & get_child_by_name;
 }
 
@@ -50,7 +50,7 @@ Core_Result dx_ui_group_construct(dx_ui_group* SELF, dx_ui_manager* manager) {
   }
   dx_vec2_f32_set(&SELF->relative_position, 0.f, 0.f);
   dx_vec2_f32_set(&SELF->relative_size, 0.f, 0.f);
-  dx_rgba_f32_set(&SELF->background_color, 1.f, 1.f, 1.f, 1.f);
+  Core_InlineRgbaR32_set(&SELF->background_color, 1.f, 1.f, 1.f, 1.f);
   CORE_OBJECT(SELF)->type = TYPE;
   return Core_Success;
 }
@@ -66,7 +66,7 @@ Core_Result dx_ui_group_create(dx_ui_group** RETURN, dx_ui_manager* manager) {
   return Core_Success;
 }
 
-static Core_Result set_relative_position(dx_ui_group* SELF, DX_VEC2_F32 const* relative_position) {
+static Core_Result set_relative_position(dx_ui_group* SELF, Core_InlineVector2R32 const* relative_position) {
   if (!SELF || !relative_position) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
@@ -75,7 +75,7 @@ static Core_Result set_relative_position(dx_ui_group* SELF, DX_VEC2_F32 const* r
   return Core_Success;
 }
 
-static Core_Result get_relative_position(DX_VEC2_F32* RETURN, dx_ui_group* SELF) {
+static Core_Result get_relative_position(Core_InlineVector2R32* RETURN, dx_ui_group* SELF) {
   if (!RETURN || !SELF) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
@@ -84,7 +84,7 @@ static Core_Result get_relative_position(DX_VEC2_F32* RETURN, dx_ui_group* SELF)
   return Core_Success;
 }
 
-static Core_Result set_relative_size(dx_ui_group* SELF, DX_VEC2_F32 const* relative_size) {
+static Core_Result set_relative_size(dx_ui_group* SELF, Core_InlineVector2R32 const* relative_size) {
   if (!SELF || !relative_size) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
@@ -93,7 +93,7 @@ static Core_Result set_relative_size(dx_ui_group* SELF, DX_VEC2_F32 const* relat
   return Core_Success;
 }
 
-static Core_Result get_relative_size(DX_VEC2_F32* RETURN, dx_ui_group* SELF) {
+static Core_Result get_relative_size(Core_InlineVector2R32* RETURN, dx_ui_group* SELF) {
   if (!RETURN || !SELF) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
@@ -102,32 +102,32 @@ static Core_Result get_relative_size(DX_VEC2_F32* RETURN, dx_ui_group* SELF) {
   return Core_Success;
 }
 
-static Core_Result get_absolute_position(DX_VEC2_F32* RETURN, dx_ui_group* SELF) {
+static Core_Result get_absolute_position(Core_InlineVector2R32* RETURN, dx_ui_group* SELF) {
   if (!RETURN || !SELF) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
   }
-  DX_VEC2_F32 a;
+  Core_InlineVector2R32 a;
   if (dx_ui_widget_get_relative_position(&a, DX_UI_WIDGET(SELF))) {
     return Core_Failure;
   }
   if (DX_UI_WIDGET(SELF)->parent) {
-    DX_VEC2_F32 b;
+    Core_InlineVector2R32 b;
     if (dx_ui_widget_get_absolute_position(&b, DX_UI_WIDGET(SELF)->parent)) {
       return Core_Failure;
     }
-    dx_vec2_f32_add3(&a, &a, &b);
+    Core_InlineVector2R32_add_vv(&a, &a, &b);
   }
   *RETURN = a;
   return Core_Success;
 }
 
-static Core_Result get_absolute_size(DX_VEC2_F32* RETURN, dx_ui_group* SELF) {
+static Core_Result get_absolute_size(Core_InlineVector2R32* RETURN, dx_ui_group* SELF) {
   if (!RETURN || !SELF) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
   }
-  DX_VEC2_F32 a;
+  Core_InlineVector2R32 a;
   if (dx_ui_widget_get_relative_size(&a, DX_UI_WIDGET(SELF))) {
     return Core_Failure;
   }
@@ -179,7 +179,7 @@ Core_Result dx_ui_group_get_background_color(Core_InlineRgbaR32* RETURN, dx_ui_g
   return Core_Success;
 }
 
-static Core_Result render(dx_ui_group* SELF, Core_Real32 canvas_horizontal_size, Core_Real32 canvas_vertical_size, Core_Real32 dpi_horizontal, Core_Real32 dpi_vertical) {
+static Core_Result render(dx_ui_group* SELF) {
   DX_RECT2_F32 target_rectangle;
   if (dx_ui_widget_get_absolute_rectangle(&target_rectangle, DX_UI_WIDGET(SELF))) {
     return Core_Failure;

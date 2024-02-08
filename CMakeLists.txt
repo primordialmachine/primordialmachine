@@ -1,4 +1,4 @@
-# Copyright (c) 2023 Michael Heilmann. All rights reserved.
+# Copyright (c) 2023-2024 Michael Heilmann. All rights reserved.
 # Author: Michael Heilmann (michaelheilmann@primordialmachine.com
 # Copyright Copyright (c) 2023 Michael Heilmann. All rights reserved.
 

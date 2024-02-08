@@ -11,12 +11,11 @@ static void Core_Tests_Signals_ObjectC_constructDispatch(Core_Tests_Signals_Obje
 {/*Intentionally empty.*/}
 
 Core_Result Core_Tests_Signals_ObjectC_construct(Core_Tests_Signals_ObjectC* SELF) {
-  DX_CONSTRUCT_PREFIX(Core_Tests_Signals_ObjectC);
+  Core_BeginConstructor(Core_Tests_Signals_ObjectC);
   if (Core_Tests_Signals_ObjectB_construct(CORE_TESTS_SIGNALS_OBJECTB(SELF))) {
     return Core_Failure;
   }
-  CORE_OBJECT(SELF)->type = TYPE;
-  return Core_Success;
+  Core_EndConstructor(Core_Tests_Signals_ObjectC);
 }
 
 Core_Result Core_Tests_Signals_ObjectC_create(Core_Tests_Signals_ObjectC** RETURN) {

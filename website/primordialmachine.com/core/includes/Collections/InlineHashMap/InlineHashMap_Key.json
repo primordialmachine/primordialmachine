@@ -1,0 +1,10 @@
+{
+  "type" : "typedef",
+  "last-update" : "2024-02-07",
+  "indices" : "core",
+  "name" : "Core_InlineHashMap_Key",
+  "id" : "core-inlinehashmap-key",
+  "signature" : "typedef /*Implementation*/ Core_InlineMap&lt;Suffix&gt;_Key;",
+  "signatureRemarks": "<p>where <code>&lt;KeySuffix&gt;</code> <code>&lt;ValueSuffix&gt;</code> can assume the value of <code>P</code>.</p>",
+  "description" : "The type of a key stored in a @{code('Core_InlineHashMap')}."
+}

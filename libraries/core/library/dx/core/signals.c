@@ -9,11 +9,72 @@
 // key of a signal
 typedef struct _SignalKey _SignalKey;
 
-/// a connection to a signal.
-typedef struct _SignalConnection _SignalConnection;
-
 // a signal
 typedef struct _Signal _Signal;
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+// A connection consists of a context, a callback and the signal.
+typedef struct _SignalConnection {
+  struct _SignalConnection* next;
+  _Signal* signal;
+  Core_WeakReference* contextWeakReference;
+  Core_Callback* callback;
+} _SignalConnection;
+
+typedef struct _SignalConnectionList {
+  _SignalConnection* head;
+} _SignalConnectionList;
+
+static void _SignalConnectionList_destroy(_SignalConnectionList* x) {
+  while (x->head) {
+    _SignalConnection* y = x->head;
+    x->head = x->head->next;
+    CORE_UNREFERENCE(y->contextWeakReference);
+    y->callback = NULL;
+    Core_Memory_deallocate(y);
+  }
+  Core_Memory_deallocate(x);
+}
+
+typedef struct _SignalConnectionManager {
+  // hash map from instances to _SignalConnectionList.
+  Core_InlineHashMapPP connections;
+} _SignalConnectionManager;
+
+static Core_Result _SignalConnectionManager_compareKeys(Core_Boolean* RETURN, Core_Object** x, Core_Object** y) {
+  return *x == *y;
+}
+
+static Core_Result _SignalConnectionManager_hashKey(Core_Size* RETURN, Core_Object** x) {
+  return Core_hashPointer(RETURN, *x);
+}
+
+static void _SignalConnectionManager_removedValue(_SignalConnectionList** x) {
+  _SignalConnectionList_destroy(*x);
+}
+
+static Core_Result _SignalConnectionManager_initialize(_SignalConnectionManager* connectionManager) {
+  Core_InlineHashMapPP_Configuration configuration = {
+    .compareKeysCallback = (Core_InlineHashMapPP_CompareKeysCallback*) & _SignalConnectionManager_compareKeys,
+    .hashKeyCallback = (Core_InlineHashMapPP_HashKeyCallback*) & _SignalConnectionManager_hashKey,
+    .keyAddedCallback = NULL,
+    .keyRemovedCallback = NULL,
+    .valueAddedCallback = NULL,
+    .valueRemovedCallback = (Core_InlineHashMapPP_ValueRemovedCallback*) & _SignalConnectionManager_removedValue,
+  };
+  /* @todo Fix naming. */
+  if (Core_InlineHashMapPP_initialize(&connectionManager->connections, &configuration)) {
+    return Core_Failure;
+  }
+  return Core_Success;
+}
+
+static void _SignalConnectionManager_uninitialize(_SignalConnectionManager* connectionManager) {
+  Core_InlineHashMapPP_uninitialize(&connectionManager->connections);
+}
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 struct _SignalKey {
   /// @brief The name of the signal.
@@ -29,24 +90,10 @@ struct _SignalKey {
   Core_Size hashValue;
 };
 
-struct _SignalConnection {
-  int x;
-};
-
 struct _Signal {
   dx_reference_counter referenceCount;
   _SignalKey key;
-  /// null pointer or pointer to a (possibly empty) list of connections to this signal.
-  Core_InlineArrayListP* connections;
 };
-
-static Core_Result _Signal_getConnections(Core_InlineArrayListP** connections, _Signal* signal) {
-  return Core_Success;
-}
-
-#if 0
-static Core_Result _Signal_create(_Signal** RETURN, Core_Type* type, char const* p, Core_Size n);
-#endif
 
 static Core_Result _Signal_destroy(_Signal* signal);
 
@@ -59,41 +106,12 @@ static Core_Result _SignalKey_hashKey(Core_Size* RETURN, _SignalKey** SELF);
 static Core_Result _SignalKey_compareKeys(Core_Boolean* RETURN, _SignalKey** SELF, _SignalKey** other);
 
 static Core_Result _Signal_destroy(_Signal* signal) {
-  if (signal->connections) {
-    Core_InlineArrayListP_uninitialize(signal->connections);
-    Core_Memory_deallocate(signal->connections);
-    signal->connections = NULL;
-  }
+  //_SignalConnectionManager_uninitialize(&signal->manager);
   Core_Memory_deallocate(signal->key.name.p);
   signal->key.name.p = NULL;
   Core_Memory_deallocate(signal);
   return Core_Success;
 }
-
-#if 0
-static Core_Result _Signal_create(_Signal** RETURN, Core_Type* type, _SignalKey const* key) {
-  char* q = NULL;
-  if (dx_memory_allocate(&q, n)) {
-    return Core_Failure;
-  }
-  dx_memory_copy(q, p, n); // all arguments valid => bound to succeed.
-  Core_Size hashValue = dx_hash_bytes(q, n);
-  _Signal* SELF = NULL;
-  if (dx_memory_allocate(&SELF, sizeof(_Signal))) {
-    Core_Memory_deallocate(q);
-    q = NULL;
-    return Core_Failure;
-  }
-  SELF->key.name.p = q;
-  SELF->key.name.n = n;
-  SELF->key.hashValue = hashValue;
-  SELF->key.type = type;
-  SELF->connections = NULL;
-  SELF->referenceCount = 1;
-  *RETURN = SELF;
-  return Core_Success;
-}
-#endif
 
 static void _Signal_valueAdded(_Signal** SELF) {
   dx_reference_counter_increment(&(*SELF)->referenceCount);
@@ -131,12 +149,14 @@ static Core_Boolean g_initialized = false;
 
 static Core_InlineHashMapPP* g_signals = NULL;
 
+static _SignalConnectionManager g_signal_connection_manager = { 0 };
+
 Core_Result Core_Signals_initialize() {
   if (Core_Memory_allocate(&g_signals, sizeof(Core_InlineHashMapPP))) {
     return Core_Failure;
   }
   Core_InlineHashMapPP_Configuration configuration = {
-    .compareKeysCallback = (Core_InlineHashMapPP_CompareKeysCallback*) & _SignalKey_compareKeys,
+    .compareKeysCallback = (Core_InlineHashMapPP_CompareKeysCallback*)&_SignalKey_compareKeys,
     .hashKeyCallback = (Core_InlineHashMapPP_HashKeyCallback*)&_SignalKey_hashKey,
     .keyAddedCallback = NULL,
     .keyRemovedCallback = NULL,
@@ -146,10 +166,14 @@ Core_Result Core_Signals_initialize() {
   if (Core_InlineHashMapPP_initialize(g_signals, &configuration)) {
     return Core_Failure;
   }
+  if (_SignalConnectionManager_initialize(&g_signal_connection_manager)) {
+    return Core_Failure;
+  }
   return Core_Success;
 }
 
 Core_Result Core_Signals_uninitialize() {
+  _SignalConnectionManager_uninitialize(&g_signal_connection_manager);
   Core_InlineHashMapPP_uninitialize(g_signals);
   Core_Memory_deallocate(g_signals);
   g_signals = NULL;
@@ -242,7 +266,6 @@ static Core_Result create(Core_Type* type, char const* p, Core_Size n) {
   Core_hashBytes(&typeHashValue, typeNameBytes, typeNameLength); // must succeed
   signal->key.hashValue = nameHashValue + typeHashValue;
   signal->key.type = type;
-  signal->connections = NULL;
   signal->referenceCount = 0;
   if (Core_InlineHashMapPP_set(g_signals, &signal->key, signal)) {
     Core_Memory_deallocate(signal->key.name.p);
@@ -321,12 +344,50 @@ Core_Result Core_Signals_add(Core_Type* type, char const* p, Core_Size n) {
   return create(type, p, n);
 }
 
-Core_Result Core_Signals_connect(Core_Object* instance, char const* p, Core_Size n, Core_Object* context, Core_Callback* callback) {
+Core_Result Core_Signals_connect(void** RETURN, Core_Object* instance, char const* p, Core_Size n, Core_Object* context, Core_Callback* callback) {
+  if (!RETURN) {
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
+  }
   _Signal* signal = NULL;
   Core_Type* type = instance->type;
   if (get(&signal, type, p, n)) {
     return Core_Failure;
   }
+  _SignalConnection* connection = NULL;
+  if (Core_Memory_allocate(&connection, sizeof(_SignalConnection))) {
+    return Core_Failure;
+  }
+  if (Core_WeakReference_create(&connection->contextWeakReference, context)) {
+    Core_Memory_deallocate(signal);
+    signal = NULL;
+    return Core_Failure;
+  }
+  connection->callback = callback;
+  connection->signal = signal;
+
+  // Remove all connections from the specified instance.
+  _SignalConnectionList* lst = NULL;
+  if (Core_InlineHashMapPP_get(&lst, &g_signal_connection_manager.connections, instance)) {
+    if (Core_Error_NotFound != Core_getError()) {
+      return Core_Failure;
+    }
+    //
+    if (Core_Memory_allocate(&lst, sizeof(_SignalConnectionList))) {
+      return Core_Failure;
+    }
+    lst->head = NULL;
+    if (Core_InlineHashMapPP_set(&g_signal_connection_manager.connections, instance, lst)) {
+      Core_Memory_deallocate(lst);
+      lst = NULL;
+      return Core_Failure;
+    }
+  }
+
+  connection->next = lst->head;
+  lst->head = connection;
+
+  *RETURN = connection;
   return Core_Success;
 }
 
@@ -336,9 +397,48 @@ Core_Result Core_Signals_invoke(Core_Object* instance, char const* p, Core_Size 
   if (get(&signal, type, p, n)) {
     return Core_Failure;
   }
+  // Remove all connections from the specified instance.
+  _SignalConnectionList* lst = NULL;
+  if (Core_InlineHashMapPP_get(&lst, &g_signal_connection_manager.connections, instance)) {
+    if (Core_Error_NotFound != Core_getError()) {
+      return Core_Failure;
+    } else {
+      return Core_Success;
+    }
+  }
+  _SignalConnection* connection = lst->head;
+  while (connection) {
+    // ToDo: Use a sorted list for early abort.
+    if (connection->signal == signal) {
+      Core_Object* object = NULL;
+      if (Core_WeakReference_acquire(&object, connection->contextWeakReference)) {
+        return Core_Failure;
+      }
+      if (object) {
+        if (connection->callback(object, argument)) {
+          CORE_UNREFERENCE(object);
+          object = NULL;
+          return Core_Failure;
+        } else {
+          CORE_UNREFERENCE(object);
+          object = NULL;
+        }
+      }
+    }
+    connection = connection->next;
+  }
   return Core_Success;
 }
 
 Core_Result Core_Signals_disconnectAll(Core_Object* instance) {
+  // Remove all connections from the specified instance.
+  if (Core_InlineHashMapPP_remove(&g_signal_connection_manager.connections, instance)) {
+    if (Core_Error_NotFound == Core_getError()) {
+      Core_setError(Core_Error_NoError);
+      return Core_Success;
+    } else {
+      return Core_Failure;
+    }
+  }
   return Core_Success;
 }

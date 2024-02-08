@@ -2,7 +2,7 @@
 
 #include "Core/Input/KeyboardKey.h"
 
-#include "dx/core/string.h"
+#include "Core/String.h"
 
 Core_defineEnumerationType("Core.KeyboardKey",
                            Core_KeyboardKey);

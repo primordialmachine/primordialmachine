@@ -11,12 +11,11 @@ static void dx_keyboard_state_constructDispatch(dx_keyboard_state_Dispatch* SELF
 {/*Intentionally empty.*/}
 
 Core_Result dx_keyboard_state_construct(dx_keyboard_state* SELF) {
-  DX_CONSTRUCT_PREFIX(dx_keyboard_state);
+  Core_BeginConstructor(dx_keyboard_state);
   for (Core_Size i = 0; i < dx_keyboard_state_configuration_number_of_keyboard_keys; ++i) {
     SELF->state[i] = false;
   }
-  CORE_OBJECT(SELF)->type = TYPE;
-  return Core_Success;
+  Core_EndConstructor(dx_keyboard_state);
 }
 
 Core_Result dx_keyboard_state_create(dx_keyboard_state** RETURN) {

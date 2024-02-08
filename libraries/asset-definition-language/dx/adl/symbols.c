@@ -162,11 +162,11 @@ Core_Result dx_asset_definitions_dump(dx_asset_definitions* SELF) {
       return Core_Failure;
     }
     dx_log("  ", sizeof("  ") - 1);
-    dx_log(key->bytes, key->number_of_bytes);
+    dx_log(key->bytes, key->numberOfBytes);
     dx_log(" -> ", sizeof(" -> ") - 1);
-    dx_log(value->name->bytes, value->name->number_of_bytes);
+    dx_log(value->name->bytes, value->name->numberOfBytes);
     dx_log(" / ", sizeof(" / ") - 1);
-    dx_log(value->type->bytes, value->type->number_of_bytes);
+    dx_log(value->type->bytes, value->type->numberOfBytes);
     dx_log("\n", sizeof("\n") - 1);
     Core_InlineHashMapPPIterator_next(&iterator);
     if (Core_InlineHashMapPPIterator_hasEntry(&has_entry, &iterator)) {

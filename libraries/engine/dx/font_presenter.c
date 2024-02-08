@@ -138,11 +138,11 @@ static Core_Result create_text_presenter(dx_font_presenter* SELF);
 
 static void destroy_text_presenter(dx_font_presenter* SELF);
 
-static Core_Result on_render_code_point(dx_font_presenter* SELF, DX_VEC2_F32* position, uint32_t code_point, dx_font* font, Core_InlineRgbaR32 const* text_color, DX_TEXT_PRESENTATION_OPTIONS const* options);
+static Core_Result on_render_code_point(dx_font_presenter* SELF, Core_InlineVector2R32* position, uint32_t code_point, dx_font* font, Core_InlineRgbaR32 const* text_color, DX_TEXT_PRESENTATION_OPTIONS const* options);
 
-static Core_Result on_measure_code_point(dx_font_presenter* SELF, DX_VEC2_F32* position, uint32_t code_point, dx_font* font,
-                                       DX_TEXT_MEASUREMENT_OPTIONS const* options,
-                                       DX_RECT2_F32* bounds);
+static Core_Result on_measure_code_point(dx_font_presenter* SELF, Core_InlineVector2R32* position, uint32_t code_point, dx_font* font,
+                                         DX_TEXT_MEASUREMENT_OPTIONS const* options,
+                                         DX_RECT2_F32* bounds);
 
 Core_defineObjectType("dx.font_presenter",
                       dx_font_presenter,
@@ -189,7 +189,7 @@ present_glyph
 
   struct {
     DX_VEC3 xyz;
-    DX_VEC2_F32 uv;
+    Core_InlineVector2R32 uv;
   } vertices[] = {
       { dx_rect2_f32_get_left(target_rectangle),  dx_rect2_f32_get_bottom(target_rectangle), target_depth, dx_rect2_f32_get_left(texture_coordinate_rectangle),  dx_rect2_f32_get_left(texture_coordinate_rectangle), },
       { dx_rect2_f32_get_right(target_rectangle), dx_rect2_f32_get_bottom(target_rectangle), target_depth, dx_rect2_f32_get_right(texture_coordinate_rectangle), dx_rect2_f32_get_left(texture_coordinate_rectangle), },
@@ -254,7 +254,7 @@ static void destroy_text_presenter(dx_font_presenter* SELF) {
 }
 
 /// @param [in,out] position A pointer to the position. After the code point was rendered, the position is advanced.
-static Core_Result on_render_code_point(dx_font_presenter* SELF, DX_VEC2_F32* position, uint32_t code_point, dx_font* font, Core_InlineRgbaR32 const* text_color, DX_TEXT_PRESENTATION_OPTIONS const* options) {
+static Core_Result on_render_code_point(dx_font_presenter* SELF, Core_InlineVector2R32* position, uint32_t code_point, dx_font* font, Core_InlineRgbaR32 const* text_color, DX_TEXT_PRESENTATION_OPTIONS const* options) {
   // The colors "red" and "green".
   // @todo Cache those.
   Core_InlineRgbaR32 red, green;
@@ -375,7 +375,7 @@ static Core_Result on_render_code_point(dx_font_presenter* SELF, DX_VEC2_F32* po
                      position->e[1] - char_height,
                      position->e[0] + char_width,
                      position->e[1]);
-    DX_VEC2_F32 bearing;
+    Core_InlineVector2R32 bearing;
     dx_vec2_f32_set(&bearing, _bearing_x, _bearing_y);
     dx_rect2_f32_translate(&target_rectangle, &bearing);
     present_glyph(SELF,
@@ -398,11 +398,11 @@ static Core_Result on_render_code_point(dx_font_presenter* SELF, DX_VEC2_F32* po
 /// This is (position,(0,0)) if the code point is not representable and code_point_not_representable_policy is DX_CODE_POINT_NOT_PRESENTABLE_POLICY_SKIP.
 /// @method{dx_font_presenter}
 static Core_Result on_measure_code_point(dx_font_presenter* SELF,
-                                       DX_VEC2_F32* position,
-                                       uint32_t code_point,
-                                       dx_font* font,
-                                       DX_TEXT_MEASUREMENT_OPTIONS const* options,
-                                       DX_RECT2_F32* bounds) {
+                                         Core_InlineVector2R32* position,
+                                         uint32_t code_point,
+                                         dx_font* font,
+                                         DX_TEXT_MEASUREMENT_OPTIONS const* options,
+                                         DX_RECT2_F32* bounds) {
   if (code_point == '\n' || code_point == '\r') {
     // the code point is not presentable.
     switch (options->code_point_not_presentable_policy) {
@@ -658,13 +658,13 @@ Core_Result dx_font_presenter_create(dx_font_presenter** RETURN, dx_font_manager
   return Core_Success;
 }
 
-Core_Result dx_font_presenter_render_line_string(dx_font_presenter* SELF, DX_VEC2_F32 const* position, Core_String* string, Core_InlineRgbaR32 const* text_color, dx_font* font,
-                                               DX_TEXT_PRESENTATION_OPTIONS const* options) {
-  dx_string_iterator* string_iterator = NULL;
-  if (Core_String_create_iterator(&string_iterator, string)) {
+Core_Result dx_font_presenter_render_line_string(dx_font_presenter* SELF, Core_InlineVector2R32 const* position, Core_String* string, Core_InlineRgbaR32 const* text_color, dx_font* font,
+                                                 DX_TEXT_PRESENTATION_OPTIONS const* options) {
+  Core_StringIterator* string_iterator = NULL;
+  if (Core_String_createIterator(&string_iterator, string)) {
     return Core_Failure;
   }
-  DX_VEC2_F32 position1;
+  Core_InlineVector2R32 position1;
   dx_vec2_f32_set(&position1, position->e[0], position->e[1]);
   if (dx_font_presenter_render_line_string_iterator(SELF, &position1, string_iterator, text_color, font, options)) {
     CORE_UNREFERENCE(string_iterator);
@@ -676,13 +676,13 @@ Core_Result dx_font_presenter_render_line_string(dx_font_presenter* SELF, DX_VEC
   return Core_Success;
 }
 
-Core_Result dx_font_presenter_measure_line_string(dx_font_presenter* SELF, DX_VEC2_F32 const* position, Core_String* string, dx_font* font,
+Core_Result dx_font_presenter_measure_line_string(dx_font_presenter* SELF, Core_InlineVector2R32 const* position, Core_String* string, dx_font* font,
                                                 DX_TEXT_MEASUREMENT_OPTIONS const* options, DX_RECT2_F32* bounds) {
-  dx_string_iterator* string_iterator = NULL;
-  if (Core_String_create_iterator(&string_iterator, string)) {
+  Core_StringIterator* string_iterator = NULL;
+  if (Core_String_createIterator(&string_iterator, string)) {
     return Core_Failure;
   }
-  DX_VEC2_F32 position1;
+  Core_InlineVector2R32 position1;
   dx_vec2_f32_set(&position1, position->e[0], position->e[1]);
   if (dx_font_presenter_measure_line_string_iterator(SELF, &position1, string_iterator, font, options, bounds)) {
     CORE_UNREFERENCE(string_iterator);
@@ -694,8 +694,8 @@ Core_Result dx_font_presenter_measure_line_string(dx_font_presenter* SELF, DX_VE
   return Core_Success;
 }
 
-Core_Result dx_font_presenter_render_line_string_iterator(dx_font_presenter* SELF, DX_VEC2_F32 const* position, dx_string_iterator* string_iterator, Core_InlineRgbaR32 const* text_color, dx_font* font,
-                                                        DX_TEXT_PRESENTATION_OPTIONS const* options) {
+Core_Result dx_font_presenter_render_line_string_iterator(dx_font_presenter* SELF, Core_InlineVector2R32 const* position, Core_StringIterator* string_iterator, Core_InlineRgbaR32 const* text_color, dx_font* font,
+                                                          DX_TEXT_PRESENTATION_OPTIONS const* options) {
   // The distance from the baseline to the maximal extend of any symbol above the baseline.
   Core_Real32 ascender;
   dx_font_get_ascender(&ascender, font);
@@ -706,24 +706,24 @@ Core_Result dx_font_presenter_render_line_string_iterator(dx_font_presenter* SEL
   Core_InlineRgbaR32 red, green;
   dx_rgb_n8_to_rgba_f32(&dx_colors_red, 1.f, &red);
   dx_rgb_n8_to_rgba_f32(&dx_colors_green, 1.f, &green);
-  DX_VEC2_F32 pos = *position;
+  Core_InlineVector2R32 pos = *position;
 
   Core_Boolean has_value;
-  if (dx_string_iterator_has_value(&has_value, string_iterator)) {
+  if (Core_StringIterator_hasValue(&has_value, string_iterator)) {
     return Core_Failure;
   }
   while (has_value) {
     uint32_t code_point;
-    if (dx_string_iterator_get_value(&code_point, string_iterator)) {
+    if (Core_StringIterator_getValue(&code_point, string_iterator)) {
       return Core_Failure;
     }
     if (on_render_code_point(SELF, &pos, code_point, font, text_color, options)) {
       return Core_Failure;
     }
-    if (dx_string_iterator_next(string_iterator)) {
+    if (Core_StringIterator_next(string_iterator)) {
       return Core_Failure;
     }
-    if (dx_string_iterator_has_value(&has_value, string_iterator)) {
+    if (Core_StringIterator_hasValue(&has_value, string_iterator)) {
       return Core_Failure;
     }
   }
@@ -731,11 +731,11 @@ Core_Result dx_font_presenter_render_line_string_iterator(dx_font_presenter* SEL
 }
 
 Core_Result dx_font_presenter_measure_line_string_iterator(dx_font_presenter* SELF,
-                                                         DX_VEC2_F32 const* position,
-                                                         dx_string_iterator* string_iterator,
-                                                         dx_font* font,
-                                                         DX_TEXT_MEASUREMENT_OPTIONS const* options,
-                                                         DX_RECT2_F32* bounds) {
+                                                           Core_InlineVector2R32 const* position,
+                                                           Core_StringIterator* string_iterator,
+                                                           dx_font* font,
+                                                           DX_TEXT_MEASUREMENT_OPTIONS const* options,
+                                                           DX_RECT2_F32* bounds) {
   // The distance from the baseline to the maximal extend of any symbol above the baseline.
   Core_Real32 ascender;
   dx_font_get_ascender(&ascender, font);
@@ -746,15 +746,15 @@ Core_Result dx_font_presenter_measure_line_string_iterator(dx_font_presenter* SE
   DX_RECT2_F32 bounds1;
   dx_rect2_f32_set2(&bounds1, position->e[0], position->e[1], 0.f, 0.f);
 
-  DX_VEC2_F32 pos = *position;
+  Core_InlineVector2R32 pos = *position;
 
   Core_Boolean has_value;
-  if (dx_string_iterator_has_value(&has_value, string_iterator)) {
+  if (Core_StringIterator_hasValue(&has_value, string_iterator)) {
     return Core_Failure;
   }
   while (has_value) {
     uint32_t code_point;
-    if (dx_string_iterator_get_value(&code_point, string_iterator)) {
+    if (Core_StringIterator_getValue(&code_point, string_iterator)) {
       return Core_Failure;
     }
     DX_RECT2_F32 glyph_bounds;
@@ -762,10 +762,10 @@ Core_Result dx_font_presenter_measure_line_string_iterator(dx_font_presenter* SE
       return Core_Failure;
     }
     dx_rect2_f32_union(&bounds1, &bounds1, &glyph_bounds);
-    if (dx_string_iterator_next(string_iterator)) {
+    if (Core_StringIterator_next(string_iterator)) {
       return Core_Failure;
     }
-    if (dx_string_iterator_has_value(&has_value, string_iterator)) {
+    if (Core_StringIterator_hasValue(&has_value, string_iterator)) {
       return Core_Failure;
     }
   }

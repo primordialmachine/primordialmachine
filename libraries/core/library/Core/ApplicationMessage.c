@@ -15,7 +15,7 @@ static void Core_ApplicationMessage_constructDispatch(Core_ApplicationMessage_Di
 {/*Intentionally empty.*/}
 
 Core_Result Core_ApplicationMessage_construct(Core_ApplicationMessage* SELF, Core_ApplicationMessageKind kind) {
-  DX_CONSTRUCT_PREFIX(Core_ApplicationMessage);
+  Core_BeginConstructor(Core_ApplicationMessage);
   Core_Natural64 timeStamp;
   if (Core_getNow(&timeStamp)) {
     return Core_Failure;
@@ -24,8 +24,7 @@ Core_Result Core_ApplicationMessage_construct(Core_ApplicationMessage* SELF, Cor
     return Core_Failure;
   }
   SELF->kind = kind;
-  CORE_OBJECT(SELF)->type = TYPE;
-  return Core_Success;
+  Core_EndConstructor(Core_ApplicationMessage);
 }
 
 Core_Result Core_ApplicationMessage_create(Core_ApplicationMessage** RETURN, Core_ApplicationMessageKind kind) {

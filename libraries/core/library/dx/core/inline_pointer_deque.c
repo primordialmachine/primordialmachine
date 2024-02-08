@@ -472,14 +472,14 @@ void Core_InlineArrayDequeP_uninitialize(Core_InlineArrayDequeP* SELF) {
   Core_Memory_deallocate(pimpl);
 }
 
-Core_Result Core_InlineArrayDequeP_increaseCapacity(Core_InlineArrayDequeP* SELF, Core_Size required_additional_capacity) {
+Core_Result Core_InlineArrayDequeP_increaseCapacity(Core_InlineArrayDequeP* SELF, Core_Size requiredAdditionalCapacity) {
   _dx_impl* pimpl = _DX_IMPL(SELF->pimpl);
-  return _dx_impl_increaseCapacity(pimpl, required_additional_capacity);
+  return _dx_impl_increaseCapacity(pimpl, requiredAdditionalCapacity);
 }
 
-Core_Result Core_InlineArrayDequeP_ensureFreeCapacity(Core_InlineArrayDequeP* SELF, Core_Size required_free_capacity) {
+Core_Result Core_InlineArrayDequeP_ensureFreeCapacity(Core_InlineArrayDequeP* SELF, Core_Size requiredFreeCapacity) {
   _dx_impl* pimpl = _DX_IMPL(SELF->pimpl);
-  return _dx_impl_ensureFreeCapacity(pimpl, required_free_capacity);
+  return _dx_impl_ensureFreeCapacity(pimpl, requiredFreeCapacity);
 }
 
 Core_Result Core_InlineArrayDequeP_getSize(Core_Size* RETURN, Core_InlineArrayDequeP const* SELF) {

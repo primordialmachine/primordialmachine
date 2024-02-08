@@ -186,15 +186,15 @@ static Core_Result resize_vertex_arrays(dx_assets_mesh* SELF, Core_Boolean shrin
   Core_Memory_copy(ambient_rgba, SELF->vertices.ambient_rgba, n * sizeof(DX_VEC4));
 
   // (3)
-  DX_VEC2_F32* ambient_uv = NULL;
-  if (Core_Memory_allocate(&ambient_uv, number_of_vertices * sizeof(DX_VEC2_F32))) {
+  Core_InlineVector2R32* ambient_uv = NULL;
+  if (Core_Memory_allocate(&ambient_uv, number_of_vertices * sizeof(Core_InlineVector2R32))) {
     Core_Memory_deallocate(xyz);
     xyz = NULL;
     Core_Memory_deallocate(ambient_rgba);
     ambient_rgba = NULL;
     return Core_Failure;
   }
-  Core_Memory_copy(ambient_uv, SELF->vertices.ambient_uv, n * sizeof(DX_VEC2_F32));
+  Core_Memory_copy(ambient_uv, SELF->vertices.ambient_uv, n * sizeof(Core_InlineVector2R32));
 
   SELF->vertices.xyz = xyz;
   SELF->vertices.ambient_rgba = ambient_rgba;
@@ -413,18 +413,18 @@ Core_Result dx_assets_mesh_format(dx_assets_mesh* SELF, Core_VertexFormat vertex
   } break;
   case Core_VertexFormat_position_xyz_ambient_uv: {
     void* p = NULL;
-    if (Core_Memory_allocate(&p, SELF->number_of_vertices * (sizeof(DX_VEC3) + sizeof(DX_VEC2_F32)))) {
+    if (Core_Memory_allocate(&p, SELF->number_of_vertices * (sizeof(DX_VEC3) + sizeof(Core_InlineVector2R32)))) {
       return Core_Failure;
     }
     char* q = (char*)p;
     for (Core_Size i = 0, n = SELF->number_of_vertices; i < n; ++i) {
       *((DX_VEC3*)q) = SELF->vertices.xyz[i];
       q += sizeof(DX_VEC3);
-      *((DX_VEC2_F32*)q) = SELF->vertices.ambient_uv[i];
-      q += sizeof(DX_VEC2_F32);
+      *((Core_InlineVector2R32*)q) = SELF->vertices.ambient_uv[i];
+      q += sizeof(Core_InlineVector2R32);
     }
     *bytes = p;
-    *number_of_bytes = SELF->number_of_vertices * (sizeof(DX_VEC3) + sizeof(DX_VEC2_F32));
+    *number_of_bytes = SELF->number_of_vertices * (sizeof(DX_VEC3) + sizeof(Core_InlineVector2R32));
     return Core_Success;
   } break;
   default: {
@@ -451,9 +451,9 @@ Core_Result dx_assets_mesh_transform_range(dx_assets_mesh* SELF, DX_MAT4 const* 
 }
 
 Core_Result dx_assets_mesh_append_vertex(dx_assets_mesh* SELF,
-                                       DX_VEC3 const* xyz,
-                                       DX_VEC4 const* ambient_rgba,
-                                       DX_VEC2_F32 const* ambient_uv)
+                                         DX_VEC3 const* xyz,
+                                         DX_VEC4 const* ambient_rgba,
+                                         Core_InlineVector2R32 const* ambient_uv)
 {
   Core_Size i = SELF->number_of_vertices;
   if (resize_vertex_arrays(SELF, false, i + 1)) {

@@ -32,16 +32,16 @@ static Core_Result get_minor_version(int32_t* RETURN, dx_val_gl_context* SELF) {
   return Core_Success;
 }
 
-static Core_String* get_information(dx_val_gl_context* self) {
+static Core_Result get_information(Core_String** RETURN, dx_val_gl_context* self) {
   Core_String* renderer = NULL;
   if (get_renderer(&renderer, self)) {
-    return NULL;
+    return Core_Failure;
   }
   Core_String* vendor = NULL;
   if (get_vendor(&vendor, self)) {
     CORE_UNREFERENCE(renderer);
     renderer = NULL;
-    return NULL;
+    return Core_Failure;
   }
   Core_Boolean vsync_enabled;
   if (dx_val_context_get_vsync_enabled(&vsync_enabled, DX_VAL_CONTEXT(self))) {
@@ -49,7 +49,7 @@ static Core_String* get_information(dx_val_gl_context* self) {
     vendor = NULL;
     CORE_UNREFERENCE(renderer);
     renderer = NULL;
-    return NULL;
+    return Core_Failure;
   }
   Core_Integer32 major_version, minor_version;
   if (get_major_version(&major_version, self) || get_minor_version(&minor_version, self)) {
@@ -57,7 +57,7 @@ static Core_String* get_information(dx_val_gl_context* self) {
     vendor = NULL;
     CORE_UNREFERENCE(renderer);
     renderer = NULL;
-    return NULL;
+    return Core_Failure;
   }
   static const char* FORMAT = "renderer: ${s}\nvendor: ${s}\nOpenGL version: ${i32}.${i32}\nvsync enabled: ${i32}\n";
   Core_String* format = NULL;
@@ -66,7 +66,7 @@ static Core_String* get_information(dx_val_gl_context* self) {
     vendor = NULL;
     CORE_UNREFERENCE(renderer);
     renderer = NULL;
-    return NULL;
+    return Core_Failure;
   }
   Core_String* information = NULL;
   if (Core_String_printf(&information, format,
@@ -81,7 +81,7 @@ static Core_String* get_information(dx_val_gl_context* self) {
     vendor = NULL;
     CORE_UNREFERENCE(renderer);
     renderer = NULL;
-    return NULL;
+    return Core_Failure;
   }
   CORE_UNREFERENCE(format);
   format = NULL;
@@ -89,7 +89,8 @@ static Core_String* get_information(dx_val_gl_context* self) {
   vendor = NULL;
   CORE_UNREFERENCE(renderer);
   renderer = NULL;
-  return information;
+  *RETURN = information;
+  return Core_Success;
 }
 
 Core_defineObjectType("dx.val.gl.context",
@@ -280,7 +281,7 @@ static void dx_val_gl_context_destruct(dx_val_gl_context* SELF) {
 }
 
 static void dx_val_gl_context_constructDispatch(dx_val_gl_context_Dispatch* SELF) {
-  DX_VAL_CONTEXT_DISPATCH(SELF)->get_information = (Core_String * (*)(dx_val_context*)) & get_information;
+  DX_VAL_CONTEXT_DISPATCH(SELF)->get_information = (Core_Result (*)(Core_String**, dx_val_context*)) & get_information;
   DX_VAL_CONTEXT_DISPATCH(SELF)->bind_texture = (Core_Result(*)(dx_val_context*, Core_Size, dx_val_texture*)) & bind_texture;
   DX_VAL_CONTEXT_DISPATCH(SELF)->create_buffer = (Core_Result (*)(dx_val_buffer**, dx_val_context*)) & create_buffer;
   DX_VAL_CONTEXT_DISPATCH(SELF)->create_cbinding = (Core_Result(*)(dx_val_cbinding**, dx_val_context*)) & create_cbinding;

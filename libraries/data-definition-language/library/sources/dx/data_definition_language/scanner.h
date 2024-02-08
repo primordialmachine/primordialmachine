@@ -21,7 +21,7 @@ static inline dx_data_definition_language_scanner* DX_DATA_DEFINITION_LANGUAGE_S
 }
 
 struct dx_data_definition_language_scanner {
-  dx_scanner _parent;
+  Core_Scanner _parent;
 
   /// @brief A pointer to the diagnostics used by this scanner.
   dx_data_definition_language_diagnostics* diagnostics;
@@ -52,7 +52,7 @@ static inline dx_data_definition_language_scanner_Dispatch* DX_DATA_DEFINITION_L
 }
 
 struct dx_data_definition_language_scanner_Dispatch {
-  dx_scanner_Dispatch _parent;
+  Core_Scanner_Dispatch _parent;
 };
 
 /// @brief Construct this scanner with an empty input.

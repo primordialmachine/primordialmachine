@@ -1,0 +1,33 @@
+{
+  "type" : "method",
+  "last-update" : "2024-02-07",
+  "indices" : "core",
+  "name" : "Core_Scanner_getWordTextBytes",
+  "id" : "core-scanner-getwordtextbytes",
+  "signature" : "Core_Result Core_Scanner_getWordTextBytes(void** RETURN, Core_Scanner* SELF);",
+  "parameters" : [
+    {
+      "name" : "RETURN",
+      "type" : "@{code('void**')}",
+      "description" : "A pointer to a @{code('void*')} variable."
+    },
+    {
+      "name" : "SELF",
+      "type" : "@{code('Core_Scanner*')}",
+      "description" : "A pointer to this @{code('Core_Scanner*')} object."
+    }
+  ],
+  "success": "@{code('*RETURN')} was assigned a pointer to the Bytes of the current word.",
+  "errors" : [
+    {
+      "errorCode" : "Core_Error_ArgumentInvalid",
+      "errorCondition" : "@{code('SELF')} is a null pointer."
+    }
+  ],
+  "description" : [
+    "Get a pointer to the Bytes of the current word.@{newline()}",
+    "The pointer remains valid as long as the @{code('Core_Scanner')} or derived type object is valid and the word does not change."
+  ],
+  "return" : "@{code('Core_Success')} on success. @{code('Core_Failure')} on failure.",
+  "remarks" : "This function sets the by-thread error variable on failure."
+}

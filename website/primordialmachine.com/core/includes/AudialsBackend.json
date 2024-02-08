@@ -1,0 +1,12 @@
+{
+  "type" : "symbolic-constant",
+  "last-update" : "2024-02-06",
+  "indices" : "core",
+  "name" : "Core_AudialsBackend",
+  "id" : "core-audialsbackend",
+  "signature" : "#define Core_AudialsBackend &lt;implementation&gt;",
+  "description" : [
+    "Symbolic constant denoting the audials backend this library was compiled for.@{newline()}",
+    "It is always defined as one of the @{code('Core_AudialsBackend_*')} constants."
+  ]
+}

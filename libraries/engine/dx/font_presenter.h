@@ -174,11 +174,11 @@ typedef struct DX_TEXT_PRESENTATION_OPTIONS {
 /// @param options A pointer to the options.
 /// @method{dx_font_presenter}
 Core_Result dx_font_presenter_render_line_string(dx_font_presenter* SELF,
-                                               DX_VEC2_F32 const* position,
-                                               Core_String* string,
-                                               Core_InlineRgbaR32 const* text_color,
-                                               dx_font* font,
-                                               DX_TEXT_PRESENTATION_OPTIONS const* options);
+                                                 Core_InlineVector2R32 const* position,
+                                                 Core_String* string,
+                                                 Core_InlineRgbaR32 const* text_color,
+                                                 dx_font* font,
+                                                 DX_TEXT_PRESENTATION_OPTIONS const* options);
 
 /// @brief 
 /// @param position
@@ -192,11 +192,11 @@ Core_Result dx_font_presenter_render_line_string(dx_font_presenter* SELF,
 /// @param options A pointer to the options.
 /// @method{dx_font_presenter}
 Core_Result dx_font_presenter_measure_line_string(dx_font_presenter* SELF,
-                                                DX_VEC2_F32 const* position,
-                                                Core_String* string,
-                                                dx_font* font,
-                                                DX_TEXT_MEASUREMENT_OPTIONS const* options,
-                                                DX_RECT2_F32* bounds);
+                                                  Core_InlineVector2R32 const* position,
+                                                  Core_String* string,
+                                                  dx_font* font,
+                                                  DX_TEXT_MEASUREMENT_OPTIONS const* options,
+                                                  DX_RECT2_F32* bounds);
 
 /// @brief 
 /// @param position
@@ -210,11 +210,11 @@ Core_Result dx_font_presenter_measure_line_string(dx_font_presenter* SELF,
 /// @param options A pointer to the options.
 /// @method{dx_font_presenter}
 Core_Result dx_font_presenter_render_line_string_iterator(dx_font_presenter* SELF,
-                                                        DX_VEC2_F32 const* position,
-                                                        dx_string_iterator* string_iterator,
-                                                        Core_InlineRgbaR32 const* text_color,
-                                                        dx_font* font,
-                                                        DX_TEXT_PRESENTATION_OPTIONS const* options);
+                                                          Core_InlineVector2R32 const* position,
+                                                          Core_StringIterator* string_iterator,
+                                                          Core_InlineRgbaR32 const* text_color,
+                                                          dx_font* font,
+                                                          DX_TEXT_PRESENTATION_OPTIONS const* options);
 
 /// @brief 
 /// @param position
@@ -228,10 +228,10 @@ Core_Result dx_font_presenter_render_line_string_iterator(dx_font_presenter* SEL
 /// @param options A pointer to the options.
 /// @method{dx_font_presenter}
 Core_Result dx_font_presenter_measure_line_string_iterator(dx_font_presenter* SELF,
-                                                         DX_VEC2_F32 const* position,
-                                                         dx_string_iterator* string_iterator,
-                                                         dx_font* font,
-                                                         DX_TEXT_MEASUREMENT_OPTIONS const* options,
-                                                         DX_RECT2_F32* bounds);
+                                                           Core_InlineVector2R32 const* position,
+                                                           Core_StringIterator* string_iterator,
+                                                           dx_font* font,
+                                                           DX_TEXT_MEASUREMENT_OPTIONS const* options,
+                                                           DX_RECT2_F32* bounds);
 
 #endif // DX_FONT_PRESENTER_H_INCLUDED

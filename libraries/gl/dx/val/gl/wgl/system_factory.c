@@ -3,35 +3,34 @@
 #include "dx/application.h"
 #include "dx/val/gl/wgl/system.h"
 
-Core_defineObjectType("dx.val.gl.wgl.system_factory",
-                      dx_val_gl_wgl_system_factory,
+Core_defineObjectType("Val.Gl.Wgl.SystemFactory",
+                      Core_Val_Gl_Wgl_SystemFactory,
                       dx_val_gl_system_factory);
 
-static Core_Result create_system(dx_val_gl_wgl_system** RETURN, dx_val_gl_wgl_system_factory* SELF, dx_msg_queue* msg_queue);
+static Core_Result createSystem(Core_Val_Gl_Wgl_System** RETURN, Core_Val_Gl_Wgl_SystemFactory* SELF, Core_MessageQueue* msg_queue);
 
-static Core_Result create_system(dx_val_gl_wgl_system** RETURN, dx_val_gl_wgl_system_factory* SELF, dx_msg_queue* msg_queue) {
-  return dx_val_gl_wgl_system_create(RETURN, msg_queue);
+static Core_Result createSystem(Core_Val_Gl_Wgl_System** RETURN, Core_Val_Gl_Wgl_SystemFactory* SELF, Core_MessageQueue* msg_queue) {
+  return Core_Val_Gl_Wgl_System_create(RETURN, msg_queue);
 }
 
-static void dx_val_gl_wgl_system_factory_destruct(dx_val_gl_wgl_system_factory* SELF)
+static void Core_Val_Gl_Wgl_SystemFactory_destruct(Core_Val_Gl_Wgl_SystemFactory* SELF)
 {/*Intentionally empty.*/}
 
-static void dx_val_gl_wgl_system_factory_constructDispatch(dx_val_gl_wgl_system_factory_Dispatch* SELF) {
-  DX_SYSTEM_FACTORY_DISPATCH(SELF)->create_system = (Core_Result(*)(dx_system**, dx_system_factory*, dx_msg_queue*)) & create_system;
+static void Core_Val_Gl_Wgl_SystemFactory_constructDispatch(Core_Val_Gl_Wgl_SystemFactory_Dispatch* SELF) {
+  DX_SYSTEM_FACTORY_DISPATCH(SELF)->create_system = (Core_Result(*)(dx_system**, dx_system_factory*, Core_MessageQueue*)) & createSystem;
 }
 
-Core_Result dx_val_gl_wgl_system_factory_construct(dx_val_gl_wgl_system_factory* SELF) {
-  DX_CONSTRUCT_PREFIX(dx_val_gl_wgl_system_factory);
+Core_Result Core_Val_Gl_Wgl_SystemFactory_construct(Core_Val_Gl_Wgl_SystemFactory* SELF) {
+  Core_BeginConstructor(Core_Val_Gl_Wgl_SystemFactory);
   if (dx_val_gl_system_factory_construct(DX_VAL_GL_SYSTEM_FACTORY(SELF))) {
     return Core_Failure;
   }
-  CORE_OBJECT(SELF)->type = TYPE;
-  return Core_Success;
+  Core_EndConstructor(Core_Val_Gl_Wgl_SystemFactory);
 }
 
-Core_Result dx_val_gl_wgl_system_factory_create(dx_val_gl_wgl_system_factory** RETURN) {
-  DX_CREATE_PREFIX(dx_val_gl_wgl_system_factory);
-  if (dx_val_gl_wgl_system_factory_construct(SELF)) {
+Core_Result Core_Val_Gl_Wgl_SystemFactory_create(Core_Val_Gl_Wgl_SystemFactory** RETURN) {
+  DX_CREATE_PREFIX(Core_Val_Gl_Wgl_SystemFactory);
+  if (Core_Val_Gl_Wgl_SystemFactory_construct(SELF)) {
     CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;

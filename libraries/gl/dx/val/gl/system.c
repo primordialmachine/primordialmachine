@@ -1,20 +1,19 @@
 #include "dx/val/gl/system.h"
 
-Core_defineObjectType("dx.val.gl.system",
-                      dx_val_gl_system,
+Core_defineObjectType("Core.Val.Gl.System",
+                      Core_Val_Gl_System,
                       dx_val_system);
 
-static void dx_val_gl_system_destruct(dx_val_gl_system* SELF)
+static void Core_Val_Gl_System_destruct(Core_Val_Gl_System* SELF)
 {/*Intentionally empty.*/}
 
-static void dx_val_gl_system_constructDispatch(dx_val_gl_system_Dispatch* SELF)
+static void Core_Val_Gl_System_constructDispatch(Core_Val_Gl_System_Dispatch* SELF)
 {/*Intentionally empty.*/}
 
-Core_Result dx_val_gl_system_construct(dx_val_gl_system* SELF, dx_msg_queue* msg_queue) {
-  DX_CONSTRUCT_PREFIX(dx_val_gl_system);
+Core_Result Core_Val_Gl_System_construct(Core_Val_Gl_System* SELF, Core_MessageQueue* msg_queue) {
+  Core_BeginConstructor(Core_Val_Gl_System);
   if (dx_val_system_construct(DX_VAL_SYSTEM(SELF), msg_queue)) {
     return Core_Failure;
   }
-  CORE_OBJECT(SELF)->type = TYPE;
-  return Core_Success;
+  Core_EndConstructor(Core_Val_Gl_System);
 }

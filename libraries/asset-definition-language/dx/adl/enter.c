@@ -178,7 +178,7 @@ Core_Result dx_asset_definition_language_enter_on_color(dx_asset_definition_lang
       /// TODO: Emit positions.
       /// TODO: Use dx_adl_diagnostics.
       dx_log("a definition of name `", sizeof("a definition of name `") - 1);
-      dx_log(name->bytes, name->number_of_bytes);
+      dx_log(name->bytes, name->numberOfBytes);
       dx_log("` already exists", sizeof("` already exists") - 1);
     } else {
       CORE_UNREFERENCE(name);
@@ -293,7 +293,7 @@ Core_Result dx_asset_definition_language_enter_on_image(dx_asset_definition_lang
       /// TODO: Emit positions.
       /// TODO: Use dx_adl_diagnostics.
       dx_log("a definition of name `", sizeof("a definition of name `") - 1);
-      dx_log(name->bytes, name->number_of_bytes);
+      dx_log(name->bytes, name->numberOfBytes);
       dx_log("` already exists", sizeof("` already exists") - 1);
     } else {
       CORE_UNREFERENCE(name);
@@ -343,7 +343,7 @@ Core_Result dx_asset_definition_language_enter_on_mesh(dx_asset_definition_langu
       /// TODO: Emit positions.
       /// TODO: Use dx_adl_diagnostics.
       dx_log("a definition of name `", sizeof("a definition of name `") - 1);
-      dx_log(name->bytes, name->number_of_bytes);
+      dx_log(name->bytes, name->numberOfBytes);
       dx_log("` already exists", sizeof("` already exists") - 1);
     } else {
       CORE_UNREFERENCE(name);
@@ -388,7 +388,7 @@ Core_Result dx_asset_definition_language_enter_on_mesh_instance(dx_asset_definit
       /// TODO: Emit positions.
       /// TODO: Use dx_adl_diagnostics.
       dx_log("a definition of name `", sizeof("a definition of name `") - 1);
-      dx_log(name->bytes, name->number_of_bytes);
+      dx_log(name->bytes, name->numberOfBytes);
       dx_log("` already exists", sizeof("` already exists") - 1);
     } else {
       CORE_UNREFERENCE(name);
@@ -438,7 +438,7 @@ Core_Result dx_asset_definition_language_enter_on_material(dx_asset_definition_l
       /// TODO: Emit positions.
       /// TODO: Use dx_adl_diagnostics.
       dx_log("a definition of name `", sizeof("a definition of name `") - 1);
-      dx_log(name->bytes, name->number_of_bytes);
+      dx_log(name->bytes, name->numberOfBytes);
       dx_log("` already exists", sizeof("` already exists") - 1);
     } else {
       CORE_UNREFERENCE(name);
@@ -483,7 +483,7 @@ Core_Result dx_asset_definition_language_enter_on_viewer_instance(dx_asset_defin
       /// TODO: Emit positions.
       /// TODO: Use dx_adl_diagnostics.
       dx_log("a definition of name `", sizeof("a definition of name `") - 1);
-      dx_log(name->bytes, name->number_of_bytes);
+      dx_log(name->bytes, name->numberOfBytes);
       dx_log("` already exists", sizeof("` already exists") - 1);
     } else {
       CORE_UNREFERENCE(name);
@@ -533,7 +533,7 @@ Core_Result dx_asset_definition_language_enter_on_viewer(dx_asset_definition_lan
       /// TODO: Emit positions.
       /// TODO: Use dx_adl_diagnostics.
       dx_log("a definition of name `", sizeof("a definition of name `") - 1);
-      dx_log(name->bytes, name->number_of_bytes);
+      dx_log(name->bytes, name->numberOfBytes);
       dx_log("` already exists", sizeof("` already exists") - 1);
     } else {
       CORE_UNREFERENCE(name);
@@ -583,7 +583,7 @@ Core_Result dx_asset_definition_language_enter_on_texture(dx_asset_definition_la
       /// TODO: Emit positions.
       /// TODO: Use dx_adl_diagnostics.
       dx_log("a definition of name `", sizeof("a definition of name `") - 1);
-      dx_log(name->bytes, name->number_of_bytes);
+      dx_log(name->bytes, name->numberOfBytes);
       dx_log("` already exists", sizeof("` already exists") - 1);
     } else {
       CORE_UNREFERENCE(name);

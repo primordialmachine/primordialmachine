@@ -1,0 +1,60 @@
+{
+  "type" : "method",
+  "last-update" : "2024-02-10",
+  "indices" : "core",
+  "name" : "Core_StringBuffer_getSubString",
+  "id" : "core-stringbuffer-getsubstring",
+  "signature" : "Core_Result Core_StringBuffer_getSubString(Core_String** RETURN, Core_StringBuffer* SELF, Core_Size start, Core_Size length);",
+  "parameters" : [
+    {
+      "name" : "RETURN",
+      "type" : "@{code('Core_String**')}",
+      "description" : "A pointer to a @{code('Core_String*')} variable."
+    },
+    {
+      "name" : "SELF",
+      "type" : "@{code('Core_StringBuffer*')}",
+      "description" : "A pointer to this @{code('Core_StringBuffer')} object."
+    },
+    {
+      "name" : "start",
+      "type" : "@{code('Core_Size*')}",
+      "description" : "The index of the UTF-8 symbol at which the substring starts."
+    },
+    {
+      "name" : "length",
+      "type" : "@{code('Core_Size*')}",
+      "description" : "The length in UTF-8 symbols of the substring."
+    }
+  ],
+  "success": [
+    "@{code('*RETURN')} was assigned a pointer to a @{code('Core_String')} object.",
+    "The UTF-8 symbol sequence of that @{code('Core_String')} object is the subsequence of the UTF-8 symbol sequence of this @{code('Core_StringBuffer')} object.",
+    "The subsequence starts at the symbol @{code('start')} and ends before the symbol @{code('start+length')}.",
+    "The caller acquired a reference to that  @{code('Core_String')} object."
+  ],
+  "errors" : [
+    {
+      "errorCode" : "Core_Error_ArgumentInvalid",
+      "errorCondition" : "@{code('RETURN')} is a null pointer."
+    },
+    {
+      "errorCode" : "Core_Error_ArgumentInvalid",
+      "errorCondition" : "@{code('SELF')} is a null pointer."
+    },
+    {
+      "errorCode" : "Core_Error_ArgumentInvalid",
+      "errorCondition" : "@{code('start+length')} is greater than the number of UTF-8 symbols in this @{code('Core_StringBuffer')} object."
+    },
+    {
+      "errorCode" : "Core_Error_AllocationFailed",
+      "errorCondition" : "An allocation failed."
+    }
+  ],
+  "description" : "Get a copy of a subsequence of the UTF-8 symbol sequence of this @{code('Core_StringBuffer')} object as a @{code('Core_String')} object.",
+  "return" : "@{code('Core_Success')} on success. @{code('Core_Failure')} on failure.",
+  "remarks" : [
+    "This function sets the by-thread error variable on failure.",
+    "This function fails only with the specified errors/error conditions."
+  ]
+}

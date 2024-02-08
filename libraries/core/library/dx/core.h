@@ -31,44 +31,18 @@
 #include "dx/core/context.h"
 #include "dx/core/core.h"
 
-#include "Core/Bits.h"
-#include "Core/CountLeadingZeroes.h"
-#include "Core/Convert.h"
-#include "Core/Error.h"
-#include "Core/FileSystem/ExistingFilePolicy.h"
-#include "Core/FileSystem/FileAccessMode.h"
-#include "Core/FileSystem/FileType.h"
-#include "Core/FileSystem/getFileContents.h"
-#include "Core/FileSystem/getFileType.h"
-#include "Core/FileSystem/NonExistingFilePolicy.h"
-#include "Core/Hash.h"
-#include "Core/Input/KeyboardKey.h"
-#include "Core/Input/KeyboardKeyMessage.h"
-#include "Core/Input/MouseButton.h"
-#include "Core/Input/MouseButtonMessage.h"
-#include "Core/Input/MousePointerMessage.h"
-#include "Core/Input/ModifierKeys.h"
-#include "Core/Memory.h"
-#include "Core/NextPowerOfTwo.h"
-#include "Core/Result.h"
-#include "Core/safeAddNx.h"
-#include "Core/safeMulIx.h"
-#include "Core/safeMulNx.h"
-#include "Core/Time.h"
-#include "Core/Visuals/CanvasMessage.h"
+// @todo Fixme.
+#include "./../Core/Configuration.h"
+#include "Core/Include.h"
 
 #include "dx/core/math.h"
-#include "dx/core/msgs.h"
+#include "dx/core/MessageQueue.h"
 #include "dx/core/object.h"
 #include "dx/core/object_array.h"
 #include "dx/core/os.h"
-#include "Core/Collections/InlineArrayListN8.h"
-#include "Core/Collections/InlineArrayListP.h"
 #include "dx/core/inline_object_array.h"
 #include "dx/core/inline_pointer_hashmap.h"
-#include "dx/core/scanner.h"
 #include "dx/core/signals.h"
-#include "dx/core/string.h"
 #include "dx/core/string_buffer.h"
 #include "dx/core/visuals.h"
 #include "dx/core/system.h"
@@ -84,15 +58,14 @@
 #include "dx/core/text/bounds_type.h"
 // end: dx/core/text
 
-
 /// @brief The name of this library.
-#define DX_CORE_LIBRARY_NAME "Core"
+#define CORE_LIBRARY_NAME "Core"
 
 /// @brief The major version of this library.
-#define DX_CORE_LIBRARY_MAJOR_VERSION (0)
+#define CORE_LIBRARY_MAJOR_VERSION (0)
 
 /// @brief The minor version of this library.
-#define DX_CORE_LIBRARY_MINOR_VERSION (1)
+#define CORE_LIBRARY_MINOR_VERSION (1)
 
 
 /// @brief Macro evaluating to <code>__FILE__</code>.

@@ -1,0 +1,19 @@
+{
+  "type" : "symbolic-constant",
+  "last-update" : "2024-02-09",
+  "indices" : "core",
+  "name" : "Core_Unlikely",
+  "id" : "core-unlikely",
+  "signature" : "#define Core_Unlikely() &lt;implementation&gt;",
+  "description" : [
+    "Expression annotation aiding branch prediction by indicating an expression is unlikely to evaluate to logically true.",
+    "@{newline()}",
+    "@{newline()}",
+    "In the following example, we use this function annotation to indicate that a call to @{code('malloc')} is unlikely to fail.@{newline()}",
+    "<code>",
+    "void* p = malloc(sizeof(char));@{newline()}",
+    "if (Core_Unlikely(NULL == p)) @{newline()}",
+    "}",
+    "</code>"
+  ]
+}

@@ -12,12 +12,11 @@ static void dx_object_array_constructDispatch(dx_object_array_Dispatch* SELF)
 {/*Intentionally emtpy.*/}
 
 Core_Result dx_object_array_construct(dx_object_array* SELF, Core_Size initial_capacity) {
-  DX_CONSTRUCT_PREFIX(dx_object_array);
+  Core_BeginConstructor(dx_object_array);
   if (dx_inline_object_array_initialize(&SELF->backend, initial_capacity)) {
     return Core_Failure;
   }
-  CORE_OBJECT(SELF)->type = TYPE;
-  return Core_Success;
+  Core_EndConstructor(dx_object_array);
 }
 
 Core_Result dx_object_array_create(dx_object_array** RETURN, Core_Size initial_capacity) {

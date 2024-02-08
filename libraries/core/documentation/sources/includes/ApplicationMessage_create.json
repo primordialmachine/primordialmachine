@@ -30,7 +30,5 @@
   ],
   "description" : "Create a @{code('Core_ApplicationMessage')} object.",
   "return" : "@{code('Core_Success')} on success. @{code('Core_Failure')} on failure.",
-  "remarks" : [
-    "This function sets the by-thread error variable on failure."
-  ]
+  "remarks" : "This function sets the by-thread error variable on failure."
 }

@@ -15,7 +15,7 @@ static void Core_InputMessage_constructDispatch(Core_InputMessage_Dispatch* SELF
 {/*Intentionally empty.*/}
 
 Core_Result Core_InputMessage_construct(Core_InputMessage* SELF, Core_InputMessageKind kind, Core_ModifierKeys modifierKeys) {
-  DX_CONSTRUCT_PREFIX(Core_InputMessage);
+  Core_BeginConstructor(Core_InputMessage);
   Core_Natural64 timeStamp;
   if (Core_getNow(&timeStamp)) {
     return Core_Failure;
@@ -25,8 +25,7 @@ Core_Result Core_InputMessage_construct(Core_InputMessage* SELF, Core_InputMessa
   }
   SELF->kind = kind;
   SELF->modifierKeys = modifierKeys;
-  CORE_OBJECT(SELF)->type = TYPE;
-  return Core_Success;
+  Core_EndConstructor(Core_InputMessage);
 }
 
 Core_Result Core_InputMessage_getKind(Core_InputMessageKind* RETURN, Core_InputMessage* SELF) {

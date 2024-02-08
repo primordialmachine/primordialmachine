@@ -6,62 +6,12 @@
 
 #include "dx/core/configuration.h"
 #include "dx/core/core.h"
+#include "Core/Numerics.h"
 
 typedef struct DX_VEC3 DX_VEC3;
 typedef struct DX_VEC4 DX_VEC4;
 typedef struct Core_InlineRgbR32 Core_InlineRgbR32;
 typedef struct Core_InlineRgbaR32 Core_InlineRgbaR32;
-
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-
-// https://primordialmachine.com/core#core-min
-Core_Result Core_minN8(Core_Natural8* RETURN, Core_Natural8 x, Core_Natural8 y);
-
-// https://primordialmachine.com/core#core-min
-Core_Result Core_minN16(Core_Natural16* RETURN, Core_Natural16 x, Core_Natural16 y);
-
-// https://primordialmachine.com/core#core-min
-Core_Result Core_minN32(Core_Natural32* RETURN, Core_Natural32 x, Core_Natural32 y);
-
-// https://primordialmachine.com/core#core-min
-Core_Result Core_minN64(Core_Natural64* RETURN, Core_Natural64 x, Core_Natural64 y);
-
-// https://primordialmachine.com/core#core-min
-Core_Result Core_minI8(Core_Integer8* RETURN, Core_Integer8 x, Core_Integer8 y);
-
-// https://primordialmachine.com/core#core-min
-Core_Result Core_minI16(Core_Integer16* RETURN, Core_Integer16 x, Core_Integer16 y);
-
-// https://primordialmachine.com/core#core-min
-Core_Result Core_minI32(Core_Integer32* RETURN, Core_Integer32 x, Core_Integer32 y);
-
-// https://primordialmachine.com/core#core-min
-Core_Result Core_minI64(Core_Integer64* RETURN, Core_Integer64 x, Core_Integer64 y);
-
-// https://primordialmachine.com/core#core-min
-Core_Result Core_minR32(Core_Real32* RETURN, Core_Real32 x, Core_Real32 y);
-
-// https://primordialmachine.com/core#core-min
-Core_Result Core_minR64(Core_Real64* RETURN, Core_Real64 x, Core_Real64 y);
-
-// https://primordialmachine.com/core#core-min
-Core_Result Core_minSz(Core_Size* RETURN, Core_Size x, Core_Size y);
-
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-
-// https://primordialmachine.com/core#core-sin
-Core_Result Core_sinR32(Core_Real32* RETURN, Core_Real32 x);
-
-// https://primordialmachine.com/core#core-sin
-Core_Result Core_sinR64(Core_Real64* RETURN, Core_Real64 x);
-
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-
-// https://primordialmachine.com/core#core-cos
-Core_Result Core_cosR32(Core_Real32* RETURN, Core_Real32 x);
-
-// https://primordialmachine.com/core#core-cos
-Core_Result Core_cosR64(Core_Real64* RETURN, Core_Real64 x);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
@@ -71,7 +21,7 @@ typedef struct Core_InlineRgbR32 {
   Core_Real32 b;
 } Core_InlineRgbR32;
 
-static inline void dx_rgb_f32_set(Core_InlineRgbR32* c, Core_Real32 r, Core_Real32 g, Core_Real32 b) {
+static inline void Core_InlineRgbR32_set(Core_InlineRgbR32* c, Core_Real32 r, Core_Real32 g, Core_Real32 b) {
   c->r = r;
   c->g = g;
   c->b = b;
@@ -88,7 +38,7 @@ typedef struct Core_InlineRgbaR32 {
   Core_Real32 a;
 } Core_InlineRgbaR32;
 
-static inline void dx_rgba_f32_set(Core_InlineRgbaR32* c, Core_Real32 r, Core_Real32 g, Core_Real32 b, Core_Real32 a) {
+static inline void Core_InlineRgbaR32_set(Core_InlineRgbaR32* c, Core_Real32 r, Core_Real32 g, Core_Real32 b, Core_Real32 a) {
   c->r = r;
   c->g = g;
   c->b = b;
@@ -106,7 +56,7 @@ typedef struct Core_InlineAbgrN8 {
   Core_Natural8 r;
 } Core_InlineAbgrN8;
 
-static inline void dx_abgr_n8_set(Core_InlineAbgrN8* c, Core_Natural8 a, Core_Natural8 b, Core_Natural8 g, Core_Natural8 r) {
+static inline void Core_InlineAbgrN8_set(Core_InlineAbgrN8* c, Core_Natural8 a, Core_Natural8 b, Core_Natural8 g, Core_Natural8 r) {
   c->a = a;
   c->b = b;
   c->g = g;
@@ -115,26 +65,26 @@ static inline void dx_abgr_n8_set(Core_InlineAbgrN8* c, Core_Natural8 a, Core_Na
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-typedef struct DX_AL_N8 {
+typedef struct Core_Inline_AlN8 {
   Core_Natural8 a;
   Core_Natural8 l;
-} DX_AL_N8;
+} Core_Inline_AlN8;
 
-static inline void dx_al_n8_set(DX_AL_N8* c, Core_Natural8 a, Core_Natural8 l) {
+static inline void Core_Inline_AlN8_set(Core_Inline_AlN8* c, Core_Natural8 a, Core_Natural8 l) {
   c->a = a;
   c->l = l;
 }
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-typedef struct DX_ARGB_N8 {
+typedef struct Core_Inline_ArgbN8 {
   Core_Natural8 a;
   Core_Natural8 r;
   Core_Natural8 g;
   Core_Natural8 b;
-} DX_ARGB_N8;
+} Core_Inline_ArgbN8;
 
-static inline void dx_argb_n8_set(DX_ARGB_N8* c, Core_Natural8 a, Core_Natural8 r, Core_Natural8 g, Core_Natural8 b) {
+static inline void Core_Inline_ArgbN8_set(Core_Inline_ArgbN8* c, Core_Natural8 a, Core_Natural8 r, Core_Natural8 g, Core_Natural8 b) {
   c->a = a;
   c->r = r;
   c->g = g;
@@ -143,13 +93,13 @@ static inline void dx_argb_n8_set(DX_ARGB_N8* c, Core_Natural8 a, Core_Natural8 
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-typedef struct DX_BGR_N8 {
+typedef struct Core_Inline_BgrN8 {
   Core_Natural8 b;
   Core_Natural8 g;
   Core_Natural8 r;
-} DX_BGR_N8;
+} Core_Inline_BgrN8;
 
-static inline void dx_bgr_n8_set(DX_BGR_N8* c, Core_Natural8 b, Core_Natural8 g, Core_Natural8 r) {
+static inline void Core_Inline_BgrN8_set(Core_Inline_BgrN8* c, Core_Natural8 b, Core_Natural8 g, Core_Natural8 r) {
   c->b = b;
   c->g = g;
   c->r = r;
@@ -157,14 +107,14 @@ static inline void dx_bgr_n8_set(DX_BGR_N8* c, Core_Natural8 b, Core_Natural8 g,
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-typedef struct DX_BGRA_N8 {
+typedef struct Core_Inline_BgraN8 {
   Core_Natural8 b;
   Core_Natural8 g;
   Core_Natural8 r;
   Core_Natural8 a;
-} DX_BGRA_N8;
+} Core_Inline_BgraN8;
 
-static inline void dx_bgra_n8_set(DX_BGRA_N8* c, Core_Natural8 b, Core_Natural8 g, Core_Natural8 r, Core_Natural8 a) {
+static inline void Core_Inline_BgraN8_set(Core_Inline_BgraN8* c, Core_Natural8 b, Core_Natural8 g, Core_Natural8 r, Core_Natural8 a) {
   c->b = b;
   c->g = g;
   c->r = r;
@@ -173,24 +123,29 @@ static inline void dx_bgra_n8_set(DX_BGRA_N8* c, Core_Natural8 b, Core_Natural8 
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-typedef struct DX_L_N8 {
+typedef struct Core_InlineLN8 {
   Core_Natural8 l;
-} DX_L_N8;
+} Core_InlineLN8;
 
-static inline void dx_l_n8_set(DX_L_N8* c, Core_Natural8 l) {
+static inline void Core_InlineLN8_set(Core_InlineLN8* c, Core_Natural8 l) {
   c->l = l;
 }
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-typedef struct DX_LA_N8 {
+typedef struct Core_InlineLaN8 {
   Core_Natural8 l;
   Core_Natural8 a;
-} DX_LA_N8;
+} Core_InlineLaN8;
 
-static inline void dx_la_n8_set(DX_LA_N8* c, Core_Natural8 l, Core_Natural8 a) {
+static inline void Core_InlineLaN8_set(Core_InlineLaN8* c, Core_Natural8 l, Core_Natural8 a) {
   c->l = l;
   c->a = a;
+}
+
+static inline Core_Boolean Core_InlineLaN8_areEqual(Core_InlineLaN8 const* a, Core_InlineLaN8 const* b) {
+  return a->l == b->l
+      && a->a == b->a;
 }
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
@@ -201,10 +156,16 @@ typedef struct Core_InlineRgbN8 {
   Core_Natural8 b;
 } Core_InlineRgbN8;
 
-static inline void dx_rgb_u8_set(Core_InlineRgbN8* c, Core_Natural8 r, Core_Natural8 g, Core_Natural8 b) {
+static inline void Core_InlineRgbN8_set(Core_InlineRgbN8* c, Core_Natural8 r, Core_Natural8 g, Core_Natural8 b) {
   c->r = r;
   c->g = g;
   c->b = b;
+}
+
+static inline Core_Boolean Core_InlineRgbN8_areEqual(Core_InlineRgbN8 const* a, Core_InlineRgbN8 const* b) {
+  return a->r == b->r
+      && a->g == b->g
+      && a->b == b->b;
 }
 
 static inline void dx_rgb_n8_to_rgba_f32(Core_InlineRgbN8 const* source, Core_Real32 a, Core_InlineRgbaR32* target) {
@@ -245,21 +206,28 @@ extern Core_InlineRgbN8 const dx_colors_blue;
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-typedef struct DX_RGBA_N8 {
+typedef struct Core_RgbaN8 {
   Core_Natural8 r;
   Core_Natural8 g;
   Core_Natural8 b;
   Core_Natural8 a;
-} DX_RGBA_N8;
+} Core_RgbaN8;
 
-static inline void dx_rgba_u8_set(DX_RGBA_N8* c, Core_Natural8 r, Core_Natural8 g, Core_Natural8 b, Core_Natural8 a) {
+static inline void Core_RgbaN8_set(Core_RgbaN8* c, Core_Natural8 r, Core_Natural8 g, Core_Natural8 b, Core_Natural8 a) {
   c->r = r;
   c->g = g;
   c->b = b;
   c->a = a;
 }
 
-static inline void dx_rgba_n8_to_rgba_f32(DX_RGBA_N8 const* source, Core_Real32 a, Core_InlineRgbaR32* target) {
+static inline Core_Boolean Core_RgbaN8_areEqual(Core_RgbaN8 const* a, Core_RgbaN8 const* b) {
+  return a->r == b->r
+      && a->g == b->g
+      && a->b == b->b
+      && a->a == b->a; 
+}
+
+static inline void Core_RgbaN8_to_rgba_f32(Core_RgbaN8 const* source, Core_Real32 a, Core_InlineRgbaR32* target) {
   target->r = ((Core_Real32)source->r) / 255.f;
   target->g = ((Core_Real32)source->g) / 255.f;
   target->b = ((Core_Real32)source->b) / 255.f;
@@ -267,50 +235,6 @@ static inline void dx_rgba_n8_to_rgba_f32(DX_RGBA_N8 const* source, Core_Real32 
 }
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-
-/// @brief
-/// Compute the largest integer value not greater than @a SELf.
-/// @param SELF
-/// The value.
-/// @return
-/// #Core_Success on success. #Core_Failure on failure.
-/// @success
-/// If @a SELF is positive infinity, negative infinity, or not a number, then <code>*RETURN</code> was assigned @a SELF.
-/// Otherwise <code>*RETURN</code> was assigned the largest integer value not greater than @a SELF.
-Core_Result Core_floorR32(Core_Real32* RETURN, Core_Real32 SELF);
-
-/// @brief
-/// Compute the largest integer value not greater than @a x.
-/// @param SELF
-/// The value.
-/// @return
-/// #Core_Success on success. #Core_Failure on failure.
-/// @success
-/// If @a SELF is positive infinity, negative infinity, or not a number, then <code>*RETURN</code> was assigned @a SELF.
-/// Otherwise <code>*RETURN</code> was assigned the largest integer value not greater than @a SELF.
-Core_Result Core_floorR64(Core_Real64* RETURN, Core_Real64 SELF);
-
-/// @brief
-/// Compute the least integer value not greater than @a SELf.
-/// @param SELF
-/// The value.
-/// @return
-/// #Core_Success on success. #Core_Failure on failure.
-/// @success
-/// If @a SELF is positive infinity, negative infinity, or not a number, then <code>*RETURN</code> was assigned @a SELF.
-/// Otherwise <code>*RETURN</code> was assigned the largest integer value not greater than @a SELF.
-Core_Result Core_ceilR32(Core_Real32* RETURN, Core_Real32 SELF);
-
-/// @brief
-/// Compute the least integer value not greater than @a x.
-/// @param SELF
-/// The value.
-/// @return
-/// #Core_Success on success. #Core_Failure on failure.
-/// @success
-/// If @a SELF is positive infinity, negative infinity, or not a number, then <code>*RETURN</code> was assigned @a SELF.
-/// Otherwise <code>*RETURN</code> was assigned the largest integer value not greater than @a SELF.
-Core_Result Core_ceilR64(Core_Real64* RETURN, Core_Real64 SELF);
 
 // Symbolic constant for the Core_Real32 representation of PI.
 #define DX_PI_F32 3.1415926f
@@ -344,11 +268,11 @@ static inline void dx_lerp(Core_Real32 *result, Core_Real32 start, Core_Real32 e
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-typedef struct DX_VEC2_F32 {
+typedef struct Core_InlineVector2R32 {
   Core_Real32 e[2];
-} DX_VEC2_F32;
+} Core_InlineVector2R32;
 
-static inline void dx_vec2_f32_set(DX_VEC2_F32* v, Core_Real32 x, Core_Real32 y) {
+static inline void dx_vec2_f32_set(Core_InlineVector2R32* v, Core_Real32 x, Core_Real32 y) {
   v->e[0] = x;
   v->e[1] = y;
 }
@@ -360,20 +284,42 @@ static inline void dx_vec2_f32_set(DX_VEC2_F32* v, Core_Real32 x, Core_Real32 y)
 /// The object's values represent the augend (aka the 1st operand).
 /// @param v Pointer toa DX_VEC2 object.
 /// The object's values represent the addend (aka the 2nd operand).
-/// @remarks @a w, @a u, and @a v all may refer to the same object.
-/// @post <code>*w/<code> was assigned the values of the sum vector.
-void dx_vec2_f32_add3(DX_VEC2_F32* w, DX_VEC2_F32 const* u, DX_VEC2_F32 const* v);
+/// @remarks @a RETURN, @a operand1, and @a operand2 all may refer to the same object.
+/// @post <code>*RETURN/<code> was assigned the product.
+void Core_InlineVector2R32_add_vv(Core_InlineVector2R32* RETURN, Core_InlineVector2R32 const* operand1, Core_InlineVector2R32 const* operand2);
+
+/// @ingroup math
+/// @brief Compute the product of a vector and a scalar.
+/// @param RETURN A pointer to a <code>Core_InlineVector2R32</code> variable.
+/// @param operand1 A pointer to a <code>Core_InlineVector2R32</code> variable.
+/// The first operand aka the multiplier.
+/// @param operand2 A <code>Core_Real32</code> value.
+/// The second operand aka the multiplicand.
+/// @remarks @a RETURN and @a operand1 all may refer to the same object.
+/// @post <code>*RETURN/<code> was assigned the product.
+void Core_InlineVector2R32_mul_vs(Core_InlineVector2R32* RETURN, Core_InlineVector2R32 const* operand1, Core_Real32 operand2);
+
+/// @ingroup math
+/// @brief Compute the component-wise product of two vector.
+/// @param RETURN A pointer to a <code>Core_InlineVector2R32</code> variable.
+/// @param operand1 A pointer to a <code>Core_InlineVector2R32</code> variable.
+/// The first operand aka the multiplier.
+/// @param operand1 A pointer to a <code>Core_InlineVector2R32</code> variable.
+/// The second operand aka the multiplicand.
+/// @remarks @a RETURN, @a operand1, and @a operand2 all may refer to the same object.
+/// @post <code>*RETURN/<code> was assigned the product.
+void Core_InlineVector2R32_mulc_vv(Core_InlineVector2R32* RETURN, Core_InlineVector2R32 const* operand1, Core_InlineVector2R32 const* operand2);
 
 /// @ingroup math
 /// @brief Compute the difference of two vectors.
-/// @param w Pointer to a DX_VEC2 object.
-/// @param u Pointer to a DX_VEC2 object.
-/// The object's values represent the vector that is the minuend (aka the 1st operand).
-/// @param v Pointer to a DX_VEC2 object.
-/// The object's values represent hte vector that is the the subtrahend (aka the 2nd operand).
-/// @remarks @a w, @a u, and @a v all may refer to the same object.
-/// @post <code>*w/<code> was assigned the values of the difference vector.
-void dx_vec2_f32_sub3(DX_VEC2_F32* w, DX_VEC2_F32 const* u, DX_VEC2_F32 const* v);
+/// @param RETURN A pointer to a <code>Core_InlineVector2R32</code> variable.
+/// @param operand1 A pointer to a <code>Core_InlineVector2R32</code> variable.
+/// The first operand aka the minuend.
+/// @param operand2 Pointer to a <code>Core_InlineVector2R32</code> variable.
+/// The second operand aka the subtrahend.
+/// @remarks @a RETURN, @a operand1, and @a operand2 all may refer to the same object.
+/// @post <code>*RETURN/<code> was assigned the difference.
+void Core_InlineVector2R32_sub_vv(Core_InlineVector2R32* RETURN, Core_InlineVector2R32 const* operand1, Core_InlineVector2R32 const* operand2);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
@@ -708,7 +654,7 @@ static inline void dx_rect2_f32_union(DX_RECT2_F32* a, DX_RECT2_F32 const* x, DX
 #pragma pop_macro("MIN")
 }
 
-static inline void dx_rect2_f32_translate(DX_RECT2_F32* r, DX_VEC2_F32 const* t) {
+static inline void dx_rect2_f32_translate(DX_RECT2_F32* r, Core_InlineVector2R32 const* t) {
   r->offset.x += t->e[0];
   r->offset.y += t->e[1];
 }

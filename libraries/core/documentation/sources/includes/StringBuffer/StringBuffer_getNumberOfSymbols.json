@@ -1,0 +1,37 @@
+{
+  "type" : "method",
+  "last-update" : "2024-02-10",
+  "indices" : "core",
+  "name" : "Core_StringBuffer_getNumberOfSymbols",
+  "id" : "core-stringbuffer-getnumberofsymbols",
+  "signature" : "Core_Result Core_StringBuffer_getNumberOfSymbols(Core_Size* RETURN, Core_StringBuffer* SELF);",
+  "parameters" : [
+    {
+      "name" : "RETURN",
+      "type" : "@{code('Core_Size*')}",
+      "description" : "A pointer to a @{code('Core_Size')} variable."
+    },
+    {
+      "name" : "SELF",
+      "type" : "@{code('Core_StringBuffer*')}",
+      "description" : "A pointer to this @{code('Core_StringBuffer')} object."
+    }
+  ],
+  "success": "@{code('*RETURN')} was assigned the length of this UTF-8 symbol sequence of this @{code('Core_StringBuffer')} object.",
+  "errors" : [
+    {
+      "errorCode" : "Core_Error_ArgumentInvalid",
+      "errorCondition" : "@{code('RETURN')} is a null pointer."
+    },
+    {
+      "errorCode" : "Core_Error_ArgumentInvalid",
+      "errorCondition" : "@{code('SELF')} is a null pointer."
+    }
+  ],
+  "description" : "Get the length of the UTF-8 symbol sequence of this @{code('Core_StringBuffer')} object.",
+  "return" : "@{code('Core_Success')} on success. @{code('Core_Failure')} on failure.",
+  "remarks" : [
+    "This function sets the by-thread error variable on failure.",
+    "This function fails only with the specified errors/error conditions."
+  ]
+}

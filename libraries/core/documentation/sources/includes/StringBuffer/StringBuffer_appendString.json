@@ -1,0 +1,41 @@
+{
+  "type" : "method",
+  "last-update" : "2024-02-10",
+  "indices" : "core",
+  "name" : "Core_StringBuffer_appendString",
+  "id" : "core-stringbuffer-appendstring",
+  "signature" : "Core_Result Core_StringBuffer_appendString(Core_StringBuffer* SELF, Core_String* string);",
+  "parameters" : [
+    {
+      "name" : "SELF",
+      "type" : "@{code('Core_StringBuffer*')}",
+      "description" : "A pointer to this @{code('Core_StringBuffer')} object."
+    },
+    {
+      "name" : "string",
+      "type" : "@{code('Core_String*')}",
+      "description" : "A pointer to a @{code('Core_String')} object."
+    }
+  ],
+  "success": "The UTF-8 Byte sequence of the @{code('Core_String')} object was appended to the UTF-8 Byte sequence of this @{code('Core_StringBuffer')} object.",
+  "errors" : [
+    {
+      "errorCode" : "Core_Error_ArgumentInvalid",
+      "errorCondition" : "@{code('SELF')} is a null pointer."
+    },
+    {
+      "errorCode" : "Core_Error_ArgumentInvalid",
+      "errorCondition" : "@{code('string')} is a null pointer."
+    },
+    {
+      "errorCode" : "Core_Error_AllocationFailed",
+      "errorCondition" : "An allocation failed."
+    }
+  ],
+  "description" : "Append the UTF-8 Byte sequence of a @{code('Core_String')} object to the UTF-8 Byte sequence of this @{code('Core_StringBuffer')} object.",
+  "return" : "@{code('Core_Success')} on success. @{code('Core_Failure')} on failure.",
+  "remarks" : [
+    "This function sets the by-thread error variable on failure.",
+    "This function fails only with the specified errors/error conditions."
+  ]
+}

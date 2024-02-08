@@ -1,7 +1,7 @@
 #if !defined(CORE_FILESYSTEM_DELETEDIRECTORYFILE_H_INCLUDED)
 #define CORE_FILESYSTEM_DELETEDIRECTORYFILE_H_INCLUDED
 
-#include "dx/core/string.h"
+#include "Core/String.h"
 
 Core_Result Core_deleteDirectoryFile(Core_String* path);
 

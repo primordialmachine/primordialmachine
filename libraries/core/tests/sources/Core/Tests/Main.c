@@ -7,6 +7,7 @@
 #include "Core/Tests/safeAddNx.h"
 #include "Core/Tests/safeMulIx.h"
 #include "Core/Tests/safeMulNx.h"
+#include "Core/Tests/Utf8/InlineUtf8IteratorTests.h"
 
 #include "Core/Tests/Signals/Test1.h"
 
@@ -138,27 +139,32 @@ static Core_Result run_tests() {
     fprintf(stdout, "Core.Tests.safeAddNxTests failed\n");
     return Core_Failure;
   }
-  fprintf(stdout, "Core.Tests.safeAddNxTests succeded\n");
+  fprintf(stdout, "Core.Tests.safeAddNxTests succeeded\n");
 
   if (Core_Tests_safeMulNxTests()) {
     fprintf(stdout, "Core.Tests.safeMulNxTests failed\n");
     return Core_Failure;
   }
-  fprintf(stdout, "Core.Tests.safeMulNxTests succeded\n");
+  fprintf(stdout, "Core.Tests.safeMulNxTests succeeded\n");
 
 #if defined(DX_SAFE_MUL_IX_WITH_TESTS) && 1 == DX_SAFE_MUL_IX_WITH_TESTS
   if (Core_Tests_safeMulIxTests()) {
     fprintf(stdout, "Core.Tests.safeMulIxTests failed\n");
     return Core_Failure;
   }
-  fprintf(stdout, "Core.Tests.safeMulIxTests succeded\n");
+  fprintf(stdout, "Core.Tests.safeMulIxTests succeeded\n");
 #endif
+  if (Core_Tests_Utf8_inlineUtf8IteratorTests()) {
+    fprintf(stdout, "Core.Tests.Utf8.inlineUtf8IteratorTests failed\n");
+    return Core_Failure;
+  }
+  fprintf(stdout, "Core.Tests.Utf8.inlineUtf8IteratorTests succeeded\n");
 #if defined(DX_MATH_WITH_TESTS) && 1 == DX_MATH_WITH_TESTS
   if (dx_math_tests()) {
     fprintf(stdout, "Core.Tests.mathTests failed\n");
     return Core_Failure;
   }
-  fprintf(stdout, "Core.Tests.mathTests succeded\n");
+  fprintf(stdout, "Core.Tests.mathTests succeeded\n");
 #endif
   return Core_Success;
 }

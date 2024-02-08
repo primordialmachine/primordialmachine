@@ -1,5 +1,9 @@
 #include "dx/val/gl/wgl/system.h"
 
+#include "dx/val/gl/wgl/Helper.h"
+
+#include <stdio.h>
+
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
@@ -17,6 +21,10 @@
 
 #pragma comment (lib, "opengl32.lib")
 
+#include "dx/application.h"
+#include "dx/val/gl/wgl/window.h"
+#include "dx/val/gl/wgl/context.h"
+
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 // Executables (but not DLLs) exporting this symbol with this value will be
@@ -29,38 +37,32 @@ __declspec(dllexport) DWORD NvOptimusEnablement = 1;
 // with up-to-date drivers
 __declspec(dllexport) int AmdPowerXpressRequestHighPerformance = 1;
 
-#include "dx/application.h"
-#include "dx/val/gl/wgl/window.h"
-#include "dx/val/gl/wgl/context.h"
+static Core_Result gl_wgl_open_window_internal(Core_Val_Gl_Wgl_Window** window, Core_Result(*init_wgl)(Core_Val_Gl_Wgl_Window*));
 
-static Core_Result gl_wgl_open_window_internal(dx_val_gl_wgl_window** window, dx_val_gl_wgl_window* existing, Core_Result(*init_wgl)(dx_val_gl_wgl_window*, dx_val_gl_wgl_window*));
+static void gl_wgl_close_window_internal(Core_Val_Gl_Wgl_Window* window);
 
-static void gl_wgl_close_window_internal(dx_val_gl_wgl_window* window);
-
-static Core_Result gl_wgl_init_wgl_v1(dx_val_gl_wgl_window* window, dx_val_gl_wgl_window*);
-
-static Core_Result gl_wgl_init_wgl_v2(dx_val_gl_wgl_window* window, dx_val_gl_wgl_window*);
+static Core_Result gl_wgl_init_wgl(Core_Val_Gl_Wgl_Window* window);
 
 static Core_Result gl_wgl_open_window();
 
 static Core_Result gl_wgl_close_window();
 
-static dx_val_gl_wgl_window* g_window = NULL;
+static Core_Val_Gl_Wgl_Window* g_window = NULL;
 
 static dx_gl_wgl_context* g_context = NULL;
 
-static void gl_wgl_close_window_internal(dx_val_gl_wgl_window* window) {
+static void gl_wgl_close_window_internal(Core_Val_Gl_Wgl_Window* window) {
   CORE_UNREFERENCE(window);
   window = NULL;
 }
 
-static Core_Result gl_wgl_open_window_internal(dx_val_gl_wgl_window** window, dx_val_gl_wgl_window* existing, Core_Result(*init_wgl)(dx_val_gl_wgl_window*, dx_val_gl_wgl_window*)) {
+static Core_Result gl_wgl_open_window_internal(Core_Val_Gl_Wgl_Window** window, Core_Result(*init_wgl)(Core_Val_Gl_Wgl_Window*)) {
   dx_gl_wgl_application* application = NULL;
   if (dx_application_get((dx_application**) & application)) {
     return Core_Failure;
   }
-  dx_val_gl_wgl_window* window1 = NULL;
-  if (dx_gl_wgl_window_create(&window1, application)) {
+  Core_Val_Gl_Wgl_Window* window1 = NULL;
+  if (Core_Val_Gl_Wgl_Window_create(&window1, application)) {
     CORE_UNREFERENCE(application);
     application = NULL;
     return Core_Failure;
@@ -68,7 +70,7 @@ static Core_Result gl_wgl_open_window_internal(dx_val_gl_wgl_window** window, dx
   CORE_UNREFERENCE(application);
   application = NULL;
   if (init_wgl) {
-    if (init_wgl(window1, existing)) {
+    if (init_wgl(window1)) {
       CORE_UNREFERENCE(window1);
       window1 = NULL;
       return Core_Failure;
@@ -84,146 +86,507 @@ static Core_Result gl_wgl_open_window_internal(dx_val_gl_wgl_window** window, dx
 }
 
 static Core_Result gl_wgl_open_window() {
-  dx_val_gl_wgl_window* window_v1;
-  if (gl_wgl_open_window_internal(&window_v1, NULL, &gl_wgl_init_wgl_v1)) {
+  if (OpenHelperWindow()) {
     return Core_Failure;
   }
-  dx_val_gl_wgl_window* window_v2;
-  if (gl_wgl_open_window_internal(&window_v2, window_v1, &gl_wgl_init_wgl_v2)) {
+  Core_Val_Gl_Wgl_Window* window;
+  if (gl_wgl_open_window_internal(&window, &gl_wgl_init_wgl)) {
     return Core_Failure;
   }
-
-  gl_wgl_close_window_internal(window_v1);
-
-  if (!wglMakeCurrent(window_v2->dc, window_v2->glrc)) {
+  CloseHelperWindow();
+  if (!wglMakeCurrent(window->dc, window->glrc)) {
     dx_log("unable to make wgl context current\n", sizeof("unable to make wgl context current\n") - 1);
-    gl_wgl_close_window_internal(window_v2);
-    window_v2 = NULL;
+    gl_wgl_close_window_internal(window);
+    window = NULL;
     return Core_Failure;
   }
-
-  g_window = window_v2;
-
+  g_window = window;
   return Core_Success;
 }
 
 static Core_Result gl_wgl_close_window() {
   gl_wgl_close_window_internal(g_window);
   g_window = NULL;
+  CloseHelperWindow();
   return Core_Success;
 }
 
-static Core_Result gl_wgl_init_wgl_v2(dx_val_gl_wgl_window* window, dx_val_gl_wgl_window* existing) {
-  if (!wglMakeCurrent(existing->dc, existing->glrc)) {
-    dx_log("unable to make wgl context current\n", sizeof("unable to make wgl context current\n") - 1);
-    return Core_Failure;
-  }
-  // (1) Acquire pointers to essential OpenGL functions.
-  PFNWGLCHOOSEPIXELFORMATARBPROC wglChoosePixelFormat = (PFNWGLCHOOSEPIXELFORMATARBPROC)wglGetProcAddress("wglChoosePixelFormatARB");
-  if (!wglChoosePixelFormat) {
-    dx_log("unable to acquire a pointer to the wglChoosePixelFormat function\n", sizeof("unable to acquire a pointer to the wglChoosePixelFormat function\n") - 1);
-    return Core_Failure;
-  }
-  PFNWGLCREATECONTEXTATTRIBSARBPROC wglCreateContextAttribs = (PFNWGLCREATECONTEXTATTRIBSARBPROC)wglGetProcAddress("wglCreateContextAttribsARB");
-  if (!wglCreateContextAttribs) {
-    dx_log("unable to acquire a pointer to the wglCreateContextAttribs function\n", sizeof("unable to acquire a pointer to the wglCreateContextAttribs function\n") - 1);
-    return Core_Failure;
-  }
+static Core_Result getPixelFormatAttribI(int* RETURN, Core_Val_Gl_Wgl_Window* window, int attribute, Core_Size pixelFormatIndex);
+
+static Core_Result getPixelFormatAttribF(float* RETURN, Core_Val_Gl_Wgl_Window* window, int attribute, Core_Size pixelFormatIndex);
+
+static Core_Result getPixelFormat(Core_Val_Gl_Wgl_Window* window, Core_Size index, Core_Configuration* cfg);
+
+static Core_Result getPixelFormatAttribI(int* RETURN, Core_Val_Gl_Wgl_Window* window, int attribute, Core_Size pixelFormatIndex) {
   PFNWGLGETPIXELFORMATATTRIBIVARBPROC wglGetPixelFormatAttribiv = (PFNWGLGETPIXELFORMATATTRIBIVARBPROC)wglGetProcAddress("wglGetPixelFormatAttribivARB");
   if (!wglGetPixelFormatAttribiv) {
     dx_log("unable to acquire a pointer to the wglGetPixelFormatAttribiv function\n", sizeof("unable to acquire a pointer to the wglGetPixelFormatAttribiv function\n") - 1);
+    Core_setError(Core_Error_EnvironmentFailed);
     return Core_Failure;
   }
-  PFNWGLGETPIXELFORMATATTRIBFVARBPROC wglGetPixelFormatAttribfv = (PFNWGLGETPIXELFORMATATTRIBFVARBPROC)wglGetProcAddress("wglGetPixelFormatAttribfvARB");
-  if (!wglGetPixelFormatAttribfv) {
-    dx_log("unable to acquire a pointer to the wglGetPixelFormatAttribfv function\n", sizeof("unable to acquire a pointer to the wglGetPixelFormatAttribfv function\n") - 1);
+  int value;
+  if (!wglGetPixelFormatAttribiv(window->dc, pixelFormatIndex, 0, 1, &attribute, &value)) {
+    Core_setError(Core_Error_EnvironmentFailed);
     return Core_Failure;
   }
-  // (2) Choose a pixel format.
-  const int samples = 0;
-  const int pixel_format_attribs[] = {
-    WGL_DRAW_TO_WINDOW_ARB, GL_TRUE,
-    WGL_ACCELERATION_ARB, WGL_FULL_ACCELERATION_ARB,
-    WGL_COLOR_BITS_ARB, 24,
-    WGL_ALPHA_BITS_ARB, 8,
-    WGL_DEPTH_BITS_ARB, 24,
-    WGL_STENCIL_BITS_ARB, 8,
-    WGL_DOUBLE_BUFFER_ARB, GL_TRUE,
-    WGL_SAMPLE_BUFFERS_ARB, samples > 0 ? 1 : 0,
-    WGL_SAMPLES_ARB, samples,
-    WGL_FRAMEBUFFER_SRGB_CAPABLE_ARB, GL_TRUE,
-    0, 0
-  };
-  {
-    int i, n;
-    if (!wglChoosePixelFormat(window->dc, pixel_format_attribs, 0, 1, &i, &n)) {
-      dx_log("unable to choose pixel format\n", sizeof("unable to choose pixel format\n") - 1);
-      return Core_Failure;
-    }
-    PIXELFORMATDESCRIPTOR desc;
-    if (!DescribePixelFormat(window->dc, i, sizeof(desc), &desc)) {
-      dx_log("unable to describe pixel format\n", sizeof("unable to describe pixel format\n") - 1);
-      return Core_Failure;
-    }
-    if (!SetPixelFormat(window->dc, i, &desc)) {
-      dx_log("unable to set pixel format\n", sizeof("unable to set pixel format\n") - 1);
-      return Core_Failure;
-    }
-  }
-  const int context_attribs[] = {
-    WGL_CONTEXT_MAJOR_VERSION_ARB, 4,
-    WGL_CONTEXT_MINOR_VERSION_ARB, 1,
-    WGL_CONTEXT_FLAGS_ARB, WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB,
-    WGL_CONTEXT_PROFILE_MASK_ARB, WGL_CONTEXT_CORE_PROFILE_BIT_ARB,
-    0
-  };
-  window->glrc = wglCreateContextAttribs(window->dc, NULL, context_attribs);
-  if (!window->glrc) {
-    dx_log("unable to create wgl context\n", sizeof("unable to create wgl context\n") - 1);
-    return Core_Failure;
-  }
-
+  *RETURN = value;
   return Core_Success;
 }
 
-static Core_Result gl_wgl_init_wgl_v1(dx_val_gl_wgl_window* window, dx_val_gl_wgl_window* existing) {
-  PIXELFORMATDESCRIPTOR desc = {
-    .nSize = sizeof(desc),
-    .nVersion = 1,
-    .dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER,
-    .iPixelType = PFD_TYPE_RGBA,
-    .cColorBits = 24,
-  };
-  int format = ChoosePixelFormat(window->dc, &desc);
-  if (!format) {
-    dx_log("unable to choose pixel format\n", sizeof("unable to choose pixel format\n") - 1);
+static Core_Result getPixelFormatAttribF(float* RETURN, Core_Val_Gl_Wgl_Window* window, int attribute, Core_Size pixelFormatIndex) {
+  PFNWGLGETPIXELFORMATATTRIBFVARBPROC wglGetPixelFormatAttribfv = (PFNWGLGETPIXELFORMATATTRIBFVARBPROC)wglGetProcAddress("wglGetPixelFormatAttribfvARB");
+  if (!wglGetPixelFormatAttribfv) {
+    dx_log("unable to acquire a pointer to the wglGetPixelFormatAttribfv function\n", sizeof("unable to acquire a pointer to the wglGetPixelFormatAttribfv function\n") - 1);
     Core_setError(Core_Error_EnvironmentFailed);
     return Core_Failure;
   }
-  if (!DescribePixelFormat(window->dc, format, sizeof(desc), &desc)) {
-    dx_log("unable to describe pixel format\n", sizeof("unable to describe pixel format\n") - 1);
+  float value;
+  if (!wglGetPixelFormatAttribfv(window->dc, pixelFormatIndex, 0, 1, &attribute, &value)) {
     Core_setError(Core_Error_EnvironmentFailed);
     return Core_Failure;
   }
-  if (!SetPixelFormat(window->dc, format, &desc)) {
-    dx_log("unable to set pixel format\n", sizeof("unable to set pixel format\n") - 1);
+  *RETURN = value;
+  return Core_Success;
+}
+
+static Core_Result getPixelFormat(Core_Val_Gl_Wgl_Window* window, Core_Size index, Core_Configuration* cfg) {
+  int i;
+  // reject if pixel format does not support draw to window
+  if (getPixelFormatAttribI(&i, window, WGL_DRAW_TO_WINDOW_ARB, index)) {
+    return Core_Failure;
+  }
+  if (i != 1) {
+    Core_setError(Core_Error_NotSupported);
+    return Core_Failure;
+  }
+  // reject if pixel format does not support full accelaration
+  if (getPixelFormatAttribI(&i, window, WGL_ACCELERATION_ARB, index)) {
+    return Core_Failure;
+  }
+  if (i != WGL_FULL_ACCELERATION_ARB) {
+    Core_setError(Core_Error_NotSupported);
+    return Core_Failure;
+  }
+  // reject if pixel format does not support opengl
+  if (getPixelFormatAttribI(&i, window, WGL_SUPPORT_OPENGL_ARB, index)) {
+    return Core_Failure;
+  }
+  if (i != 1) {
+    Core_setError(Core_Error_NotSupported);
+    return Core_Failure;
+  }
+  // reject if pixel format does not support non-palettized
+  if (getPixelFormatAttribI(&i, window, WGL_PIXEL_TYPE_ARB, index)) {
+    return Core_Failure;
+  }
+  if (i != WGL_TYPE_RGBA_ARB) {
+    Core_setError(Core_Error_NotSupported);
+    return Core_Failure;
+  }
+  //
+  {
+    if (getPixelFormatAttribI(&i, window, WGL_ACCUM_RED_BITS_ARB, index)) {
+      return Core_Failure;
+    }
+    if (i < Core_Natural8_Least || i > Core_Natural8_Greatest) {
+      Core_setError(Core_Error_EnvironmentFailed);
+      return Core_Failure;
+    }
+    Core_String* key;
+    if (Core_String_create(&key, "visuals.accumulationBuffer.redBits", sizeof("visuals.accumulationBuffer.redBits") - 1)) {
+      return Core_Failure;
+    }
+    if (Core_Configuration_setN8(cfg, key, i)) {
+      CORE_UNREFERENCE(key);
+      key = NULL;
+      return Core_Failure;
+    }
+    CORE_UNREFERENCE(key);
+    key = NULL;
+  }
+  //
+  {
+    if (getPixelFormatAttribI(&i, window, WGL_ACCUM_GREEN_BITS_ARB, index)) {
+      return Core_Failure;
+    }
+    if (i < Core_Natural8_Least || i > Core_Natural8_Greatest) {
+      Core_setError(Core_Error_EnvironmentFailed);
+      return Core_Failure;
+    }
+    Core_String* key;
+    if (Core_String_create(&key, "visuals.accumulationBuffer.greenBits", sizeof("visuals.accumulationBuffer.greenBits") - 1)) {
+      return Core_Failure;
+    }
+    if (Core_Configuration_setN8(cfg, key, i)) {
+      CORE_UNREFERENCE(key);
+      key = NULL;
+      return Core_Failure;
+    }
+    CORE_UNREFERENCE(key);
+    key = NULL;
+  }
+  //
+  {
+    if (getPixelFormatAttribI(&i, window, WGL_ACCUM_BLUE_BITS_ARB, index)) {
+      return Core_Failure;
+    }
+    if (i < Core_Natural8_Least || i > Core_Natural8_Greatest) {
+      Core_setError(Core_Error_EnvironmentFailed);
+      return Core_Failure;
+    }
+    Core_String* key;
+    if (Core_String_create(&key, "visuals.accumulationBuffer.blueBits", sizeof("visuals.accumulationBuffer.blueBits") - 1)) {
+      return Core_Failure;
+    }
+    if (Core_Configuration_setN8(cfg, key, i)) {
+      CORE_UNREFERENCE(key);
+      key = NULL;
+      return Core_Failure;
+    }
+    CORE_UNREFERENCE(key);
+    key = NULL;
+  }
+  //
+  {
+    if (getPixelFormatAttribI(&i, window, WGL_ACCUM_ALPHA_BITS_ARB, index)) {
+      return Core_Failure;
+    }
+    if (i < Core_Natural8_Least || i > Core_Natural8_Greatest) {
+      Core_setError(Core_Error_EnvironmentFailed);
+      return Core_Failure;
+    }
+    Core_String* key;
+    if (Core_String_create(&key, "visuals.accumulationBuffer.alphaBits", sizeof("visuals.accumulationBuffer.alphaBits") - 1)) {
+      return Core_Failure;
+    }
+    if (Core_Configuration_setN8(cfg, key, i)) {
+      CORE_UNREFERENCE(key);
+      key = NULL;
+      return Core_Failure;
+    }
+    CORE_UNREFERENCE(key);
+    key = NULL;
+  }
+  //
+  {
+    if (getPixelFormatAttribI(&i, window, WGL_RED_BITS_ARB, index)) {
+      return Core_Failure;
+    }
+    if (i < Core_Natural8_Least || i > Core_Natural8_Greatest) {
+      Core_setError(Core_Error_EnvironmentFailed);
+      return Core_Failure;
+    }
+    Core_String* key;
+    if (Core_String_create(&key, "visuals.colorBuffer.redBits", sizeof("visuals.colorBuffer.redBits") - 1)) {
+      return Core_Failure;
+    }
+    if (Core_Configuration_setN8(cfg, key, i)) {
+      CORE_UNREFERENCE(key);
+      key = NULL;
+      return Core_Failure;
+    }
+    CORE_UNREFERENCE(key);
+    key = NULL;
+  }
+  //
+  {
+    if (getPixelFormatAttribI(&i, window, WGL_GREEN_BITS_ARB, index)) {
+      return Core_Failure;
+    }
+    if (i < Core_Natural8_Least || i > Core_Natural8_Greatest) {
+      Core_setError(Core_Error_EnvironmentFailed);
+      return Core_Failure;
+    }
+    Core_String* key;
+    if (Core_String_create(&key, "visuals.colorBuffer.greenBits", sizeof("visuals.colorBuffer.greenBits") - 1)) {
+      return Core_Failure;
+    }
+    if (Core_Configuration_setN8(cfg, key, i)) {
+      CORE_UNREFERENCE(key);
+      key = NULL;
+      return Core_Failure;
+    }
+    CORE_UNREFERENCE(key);
+    key = NULL;
+  }
+  //
+  {
+    if (getPixelFormatAttribI(&i, window, WGL_BLUE_BITS_ARB, index)) {
+      return Core_Failure;
+    }
+    if (i < Core_Natural8_Least || i > Core_Natural8_Greatest) {
+      Core_setError(Core_Error_EnvironmentFailed);
+      return Core_Failure;
+    }
+    Core_String* key;
+    if (Core_String_create(&key, "visuals.colorBuffer.blueBits", sizeof("visuals.colorBuffer.blueBits") - 1)) {
+      return Core_Failure;
+    }
+    if (Core_Configuration_setN8(cfg, key, i)) {
+      CORE_UNREFERENCE(key);
+      key = NULL;
+      return Core_Failure;
+    }
+    CORE_UNREFERENCE(key);
+    key = NULL;
+  }
+  //
+  {
+    if (getPixelFormatAttribI(&i, window, WGL_ALPHA_BITS_ARB, index)) {
+      return Core_Failure;
+    }
+    if (i < Core_Natural8_Least || i > Core_Natural8_Greatest) {
+      Core_setError(Core_Error_EnvironmentFailed);
+      return Core_Failure;
+    }
+    Core_String* key;
+    if (Core_String_create(&key, "visuals.colorBuffer.alphaBits", sizeof("visuals.colorBuffer.alphaBits") - 1)) {
+      return Core_Failure;
+    }
+    if (Core_Configuration_setN8(cfg, key, i)) {
+      CORE_UNREFERENCE(key);
+      key = NULL;
+      return Core_Failure;
+    }
+    CORE_UNREFERENCE(key);
+    key = NULL;
+  }
+  //
+  {
+    if (getPixelFormatAttribI(&i, window, WGL_STENCIL_BITS_ARB, index)) {
+      return Core_Failure;
+    }
+    if (i < Core_Natural8_Least || i > Core_Natural8_Greatest) {
+      Core_setError(Core_Error_EnvironmentFailed);
+      return Core_Failure;
+    }
+    Core_String* key;
+    if (Core_String_create(&key, "visuals.stencilBuffer.stencilBits", sizeof("visuals.stencilBuffer.stencilBits") - 1)) {
+      return Core_Failure;
+    }
+    if (Core_Configuration_setN8(cfg, key, i)) {
+      CORE_UNREFERENCE(key);
+      key = NULL;
+      return Core_Failure;
+    }
+    CORE_UNREFERENCE(key);
+    key = NULL;
+  }
+  //
+  {
+    if (getPixelFormatAttribI(&i, window, WGL_DEPTH_BITS_ARB, index)) {
+      return Core_Failure;
+    }
+    if (i < Core_Natural8_Least || i > Core_Natural8_Greatest) {
+      Core_setError(Core_Error_EnvironmentFailed);
+      return Core_Failure;
+    }
+    Core_String* key;
+    if (Core_String_create(&key, "visuals.depthBuffer.depthBits", sizeof("visuals.depthBuffer.depthBits") - 1)) {
+      return Core_Failure;
+    }
+    if (Core_Configuration_setN8(cfg, key, i)) {
+      CORE_UNREFERENCE(key);
+      key = NULL;
+      return Core_Failure;
+    }
+    CORE_UNREFERENCE(key);
+    key = NULL;
+  }
+  //
+  return Core_Success;
+}
+
+static Core_Result getNumberOfPixelFormats(Core_Size* RETURN, Core_Val_Gl_Wgl_Window* window) {
+  PFNWGLGETPIXELFORMATATTRIBIVARBPROC wglGetPixelFormatAttribiv = (PFNWGLGETPIXELFORMATATTRIBIVARBPROC)wglGetProcAddress("wglGetPixelFormatAttribivARB");
+  if (!wglGetPixelFormatAttribiv) {
+    dx_log("unable to acquire a pointer to the wglGetPixelFormatAttribiv function\n", sizeof("unable to acquire a pointer to the wglGetPixelFormatAttribiv function\n") - 1);
     Core_setError(Core_Error_EnvironmentFailed);
     return Core_Failure;
   }
-  window->glrc = wglCreateContext(window->dc);
-  if (!window->glrc) {
-    dx_log("unable to create wgl context\n", sizeof("unable to create wgl context\n") - 1);
+  static const int attribute = WGL_NUMBER_PIXEL_FORMATS_ARB;
+  int value = { 0.f };
+  if (!wglGetPixelFormatAttribiv(window->dc, 0, 0, 1, &attribute, &value)) {
     Core_setError(Core_Error_EnvironmentFailed);
     return Core_Failure;
   }
+  if (value < Core_Size_Least || value > Core_Size_Greatest) {
+    Core_setError(Core_Error_EnvironmentFailed);
+    return Core_Failure;
+  }
+  *RETURN = value;
+  return Core_Success;
+}
+
+static Core_Result dumpVisualsConfiguration(Core_Configuration* configuration) {
+  {
+    Core_Natural8 r, g, b, a;
+    Core_String* key;
+    //
+    if (Core_String_create(&key, "visuals.colorBuffer.redBits", sizeof("visuals.colorBuffer.redBits") - 1)) {
+      return Core_Failure;
+    }
+    if (Core_Configuration_getN8(&r, configuration, key)) {
+      CORE_UNREFERENCE(key);
+      key = NULL;
+      return Core_Failure;
+    }
+    CORE_UNREFERENCE(key);
+    key = NULL;
+    //
+    if (Core_String_create(&key, "visuals.colorBuffer.greenBits", sizeof("visuals.colorBuffer.greenBits") - 1)) {
+      return Core_Failure;
+    }
+    if (Core_Configuration_getN8(&g, configuration, key)) {
+      CORE_UNREFERENCE(key);
+      key = NULL;
+      return Core_Failure;
+    }
+    CORE_UNREFERENCE(key);
+    key = NULL;
+    //
+    if (Core_String_create(&key, "visuals.colorBuffer.blueBits", sizeof("visuals.colorBuffer.blueBits") - 1)) {
+      return Core_Failure;
+    }
+    if (Core_Configuration_getN8(&b, configuration, key)) {
+      CORE_UNREFERENCE(key);
+      key = NULL;
+      return Core_Failure;
+    }
+    CORE_UNREFERENCE(key);
+    key = NULL;
+    //
+    if (Core_String_create(&key, "visuals.colorBuffer.alphaBits", sizeof("visuals.colorBuffer.alphaBits") - 1)) {
+      return Core_Failure;
+    }
+    if (Core_Configuration_getN8(&a, configuration, key)) {
+      CORE_UNREFERENCE(key);
+      key = NULL;
+      return Core_Failure;
+    }
+    CORE_UNREFERENCE(key);
+    key = NULL;
+    fprintf(stdout, "  color buffer bit depths (r/g/b/a): %d/%d/%d/%d\n", r, g, b, a);
+  }
+  {
+    Core_Natural8 r, g, b, a;
+    Core_String* key;
+    //
+    if (Core_String_create(&key, "visuals.accumulationBuffer.redBits", sizeof("visuals.accumulationBuffer.redBits") - 1)) {
+      return Core_Failure;
+    }
+    if (Core_Configuration_getN8(&r, configuration, key)) {
+      CORE_UNREFERENCE(key);
+      key = NULL;
+      return Core_Failure;
+    }
+    CORE_UNREFERENCE(key);
+    key = NULL;
+    //
+    if (Core_String_create(&key, "visuals.accumulationBuffer.greenBits", sizeof("visuals.accumulationBuffer.greenBits") - 1)) {
+      return Core_Failure;
+    }
+    if (Core_Configuration_getN8(&g, configuration, key)) {
+      CORE_UNREFERENCE(key);
+      key = NULL;
+      return Core_Failure;
+    }
+    CORE_UNREFERENCE(key);
+    key = NULL;
+    //
+    if (Core_String_create(&key, "visuals.accumulationBuffer.blueBits", sizeof("visuals.accumulationBuffer.blueBits") - 1)) {
+      return Core_Failure;
+    }
+    if (Core_Configuration_getN8(&b, configuration, key)) {
+      CORE_UNREFERENCE(key);
+      key = NULL;
+      return Core_Failure;
+    }
+    CORE_UNREFERENCE(key);
+    key = NULL;
+    //
+    if (Core_String_create(&key, "visuals.accumulationBuffer.alphaBits", sizeof("visuals.accumulationBuffer.alphaBits") - 1)) {
+      return Core_Failure;
+    }
+    if (Core_Configuration_getN8(&a, configuration, key)) {
+      CORE_UNREFERENCE(key);
+      key = NULL;
+      return Core_Failure;
+    }
+    CORE_UNREFERENCE(key);
+    key = NULL;
+    fprintf(stdout, "  accumulation buffer bit depths (r/g/b/a): %d/%d/%d/%d\n", r, g, b, a);
+  }
+  {
+    Core_Natural8 s, d;
+    Core_String* key;
+    //
+    if (Core_String_create(&key, "visuals.stencilBuffer.stencilBits", sizeof("visuals.stencilBuffer.stencilBits") - 1)) {
+      return Core_Failure;
+    }
+    if (Core_Configuration_getN8(&s, configuration, key)) {
+      CORE_UNREFERENCE(key);
+      key = NULL;
+      return Core_Failure;
+    }
+    CORE_UNREFERENCE(key);
+    key = NULL;
+    //
+    if (Core_String_create(&key, "visuals.depthBuffer.depthBits", sizeof("visuals.depthBuffer.depthBits") - 1)) {
+      return Core_Failure;
+    }
+    if (Core_Configuration_getN8(&d, configuration, key)) {
+      CORE_UNREFERENCE(key);
+      key = NULL;
+      return Core_Failure;
+    }
+    CORE_UNREFERENCE(key);
+    key = NULL;
+    //
+    fprintf(stdout, "  stencil buffer bit depths (s): %d\n", s);
+    fprintf(stdout, "  depth buffer bit depths (d): %d\n", d);
+  }
+  return Core_Success;
+}
+
+static Core_Result enumeratePixelFormats(Core_Val_Gl_Wgl_Window* window) {
+  Core_Size numberOfPixelFormats;
+  if (getNumberOfPixelFormats(&numberOfPixelFormats, window)) {
+    return Core_Failure;
+  }
+  Core_Configuration* configuration;
+  if (Core_Configuration_create(&configuration)) {
+    return Core_Failure;
+  }
+  for (int i = 1, j = 1, n = numberOfPixelFormats; i < n; ++i) {
+    if (getPixelFormat(window, i, configuration)) {
+      if (Core_Error_NotSupported != Core_getError()) {
+        CORE_UNREFERENCE(configuration);
+        configuration = NULL;
+        return Core_Failure;
+      } else {
+        Core_setError(Core_Error_NoError);
+        continue;
+      }
+    }
+    fprintf(stdout, "format %d, %d\n", i, j);
+    j++;
+    {
+      dumpVisualsConfiguration(configuration);
+    }
+  }
+  return Core_Success;
+}
+
+static Core_Result gl_wgl_init_wgl(Core_Val_Gl_Wgl_Window* window) {
   return Core_Success;
 }
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-Core_defineObjectType("dx.val.gl.wgl.system",
-                      dx_val_gl_wgl_system,
-                      dx_val_gl_system);
+Core_defineObjectType("Core.Val.Gl.Wgl.System",
+                      Core_Val_Gl_Wgl_System,
+                      Core_Val_Gl_System);
 
 /// @internal
 /// @brief Determine the mouse button that was pressed/released given the msg, wparam, and lparam arguments of a WM_(L|M|R|X)BUTTON(DOWN|UP) message.
@@ -233,7 +596,7 @@ Core_defineObjectType("dx.val.gl.wgl.system",
 /// @param lparam The lparam value of the message.
 /// @procedure
 /// @error #Core_Error_NotFound if the button is not is not supported.
-static Core_Result map_mouse_button(Core_MouseButton* RETURN, dx_val_gl_wgl_system* SELF, UINT msg, WPARAM wparam, LPARAM lparam);
+static Core_Result map_mouse_button(Core_MouseButton* RETURN, Core_Val_Gl_Wgl_System* SELF, UINT msg, WPARAM wparam, LPARAM lparam);
 
 /// @internal
 /// @brief Determine the keyboard key that was pressed/released given the msg, wparam, and lparam arguments of a WM_(KEY|SYSKEY)(DOWN|UP) message.
@@ -243,21 +606,21 @@ static Core_Result map_mouse_button(Core_MouseButton* RETURN, dx_val_gl_wgl_syst
 /// @param lparam The lparam value of the message.
 /// @procedure
 /// @error #Core_Error_NotFound if the key is not supported.
-static Core_Result map_keyboard_key(Core_KeyboardKey* RETURN, dx_val_gl_wgl_system* SELF, UINT msg, WPARAM wparam, LPARAM lparam);
+static Core_Result map_keyboard_key(Core_KeyboardKey* RETURN, Core_Val_Gl_Wgl_System* SELF, UINT msg, WPARAM wparam, LPARAM lparam);
 
-static Core_Result get_modifiers(uint8_t* RETURN, dx_val_gl_wgl_system* SELF);
+static Core_Result get_modifiers(uint8_t* RETURN, Core_Val_Gl_Wgl_System* SELF);
 
 static LRESULT CALLBACK window_procedure(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam);
 
-static Core_Result startup(dx_val_gl_wgl_system* SELF);
+static Core_Result startup(Core_Val_Gl_Wgl_System* SELF);
 
-static Core_Result shutdown(dx_val_gl_wgl_system* SELF);
+static Core_Result shutdown(Core_Val_Gl_Wgl_System* SELF);
 
-static Core_Result get_context(dx_gl_wgl_context** RETURN, dx_val_gl_wgl_system* SELF);
+static Core_Result get_context(dx_gl_wgl_context** RETURN, Core_Val_Gl_Wgl_System* SELF);
 
-static Core_Result get_window(dx_val_gl_wgl_window** RETURN, dx_val_gl_wgl_system* SELF);
+static Core_Result get_window(Core_Val_Gl_Wgl_Window** RETURN, Core_Val_Gl_Wgl_System* SELF);
 
-static Core_Result map_mouse_button(Core_MouseButton* RETURN, dx_val_gl_wgl_system* SELF, UINT msg, WPARAM wparam, LPARAM lparam) {
+static Core_Result map_mouse_button(Core_MouseButton* RETURN, Core_Val_Gl_Wgl_System* SELF, UINT msg, WPARAM wparam, LPARAM lparam) {
   switch (msg) {
     case WM_LBUTTONDOWN:
       *RETURN = Core_MouseButton_Button0;
@@ -291,7 +654,7 @@ static Core_Result map_mouse_button(Core_MouseButton* RETURN, dx_val_gl_wgl_syst
   return Core_Success;
 }
 
-static Core_Result map_keyboard_key(Core_KeyboardKey* RETURN, dx_val_gl_wgl_system* SELF, UINT msg, WPARAM wparam, LPARAM lparam) {
+static Core_Result map_keyboard_key(Core_KeyboardKey* RETURN, Core_Val_Gl_Wgl_System* SELF, UINT msg, WPARAM wparam, LPARAM lparam) {
   // Windows simply sends shift, control, and menu messages.
   // We want to distinguish between the left and the right variants of those keys.
   // The method is awkward.
@@ -433,7 +796,7 @@ static Core_Result map_keyboard_key(Core_KeyboardKey* RETURN, dx_val_gl_wgl_syst
   return Core_Success;
 }
 
-static Core_Result get_modifiers(uint8_t* RETURN, dx_val_gl_wgl_system* SELF) {
+static Core_Result get_modifiers(uint8_t* RETURN, Core_Val_Gl_Wgl_System* SELF) {
   uint8_t modifiers = 0;
   Core_Boolean state;
   dx_keyboard_state* keyboard_state = DX_VAL_SYSTEM(SELF)->keyboard_state;
@@ -481,7 +844,7 @@ static LRESULT CALLBACK window_procedure(HWND wnd, UINT msg, WPARAM wparam, LPAR
       if (dx_application_get(&app)) {
         return 0;
       }
-      if (dx_val_gl_wgl_system_on_keyboard_key_message(DX_VAL_GL_WGL_SYSTEM(app->val_system), wnd, msg, wparam, lparam)) {
+      if (Core_Val_Gl_Wgl_System_onKeyboardKeyMessage(CORE_VAL_GL_WGL_SYSTEM(app->val_system), wnd, msg, wparam, lparam)) {
         Core_setError(Core_Error_NoError); // Ignore the error.
         CORE_UNREFERENCE(app);
         app = NULL;
@@ -504,7 +867,7 @@ static LRESULT CALLBACK window_procedure(HWND wnd, UINT msg, WPARAM wparam, LPAR
       if (dx_application_get(&app)) {
         return 0;
       }
-      if (dx_val_gl_wgl_system_on_mouse_button_message(DX_VAL_GL_WGL_SYSTEM(app->val_system), wnd, msg, wparam, lparam)) {
+      if (Core_Val_Gl_Wgl_System_onMouseButtonMessage(CORE_VAL_GL_WGL_SYSTEM(app->val_system), wnd, msg, wparam, lparam)) {
         Core_setError(Core_Error_NoError); // Ignore the error.
         CORE_UNREFERENCE(app);
         app = NULL;
@@ -520,7 +883,7 @@ static LRESULT CALLBACK window_procedure(HWND wnd, UINT msg, WPARAM wparam, LPAR
       if (dx_application_get(&app)) {
         return 0;
       }
-      if (dx_val_gl_wgl_system_on_mouse_pointer_message(DX_VAL_GL_WGL_SYSTEM(app->val_system), wnd, msg, wparam, lparam)) {
+      if (Core_Val_Gl_Wgl_System_onMousePointerMessage(CORE_VAL_GL_WGL_SYSTEM(app->val_system), wnd, msg, wparam, lparam)) {
         Core_setError(Core_Error_NoError); // Ignore the error.
         CORE_UNREFERENCE(app);
         app = NULL;
@@ -537,7 +900,7 @@ static LRESULT CALLBACK window_procedure(HWND wnd, UINT msg, WPARAM wparam, LPAR
       if (dx_application_get(&app)) {
         return 0;
       }
-      if (dx_val_gl_wgl_system_on_window_message(DX_VAL_GL_WGL_SYSTEM(app->val_system), wnd, msg, wparam, lparam)) {
+      if (Core_Val_Gl_Wgl_System_onWindowMessage(CORE_VAL_GL_WGL_SYSTEM(app->val_system), wnd, msg, wparam, lparam)) {
         CORE_UNREFERENCE(app);
         app = NULL;
         return 0;
@@ -566,7 +929,7 @@ static LRESULT CALLBACK window_procedure(HWND wnd, UINT msg, WPARAM wparam, LPAR
   };
 }
 
-static Core_Result startup(dx_val_gl_wgl_system* SELF) {
+static Core_Result startup(Core_Val_Gl_Wgl_System* SELF) {
   if (gl_wgl_open_window()) {
     return Core_Failure;
   }
@@ -577,14 +940,14 @@ static Core_Result startup(dx_val_gl_wgl_system* SELF) {
   return Core_Success;
 }
 
-static Core_Result shutdown(dx_val_gl_wgl_system* SELF) {
+static Core_Result shutdown(Core_Val_Gl_Wgl_System* SELF) {
   CORE_UNREFERENCE(g_context);
   g_context = NULL;
   gl_wgl_close_window();
   return Core_Success;
 }
 
-static Core_Result get_context(dx_gl_wgl_context** RETURN, dx_val_gl_wgl_system* SELF) {
+static Core_Result get_context(dx_gl_wgl_context** RETURN, Core_Val_Gl_Wgl_System* SELF) {
   if (!g_context) {
     Core_setError(Core_Error_NotInitialized);
     return Core_Failure;
@@ -594,7 +957,7 @@ static Core_Result get_context(dx_gl_wgl_context** RETURN, dx_val_gl_wgl_system*
   return Core_Success;
 }
 
-static Core_Result get_window(dx_val_gl_wgl_window** RETURN, dx_val_gl_wgl_system* SELF) {
+static Core_Result getWindow(Core_Val_Gl_Wgl_Window** RETURN, Core_Val_Gl_Wgl_System* SELF) {
   if (!g_window) {
     Core_setError(Core_Error_NotInitialized);
     return Core_Failure;
@@ -604,7 +967,7 @@ static Core_Result get_window(dx_val_gl_wgl_window** RETURN, dx_val_gl_wgl_syste
   return Core_Success;
 }
 
-static void dx_val_gl_wgl_system_destruct(dx_val_gl_wgl_system* SELF) {
+static void Core_Val_Gl_Wgl_System_destruct(Core_Val_Gl_Wgl_System* SELF) {
   if (SELF->class_handle) {
     if (!UnregisterClass(SELF->class_name, SELF->instance_handle)) {
       dx_log("unable to unregister window class\n", sizeof("unable to unregister window class\n") - 1);
@@ -618,16 +981,16 @@ static void dx_val_gl_wgl_system_destruct(dx_val_gl_wgl_system* SELF) {
   SELF->instance_handle = NULL;
 }
 
-static void dx_val_gl_wgl_system_constructDispatch(dx_val_gl_wgl_system_Dispatch* SELF) {
+static void Core_Val_Gl_Wgl_System_constructDispatch(Core_Val_Gl_Wgl_System_Dispatch* SELF) {
   DX_SYSTEM_DISPATCH(SELF)->startup = (Core_Result(*)(dx_system*)) & startup;
   DX_SYSTEM_DISPATCH(SELF)->shutdown = (Core_Result(*)(dx_system*)) & shutdown;
   DX_VAL_SYSTEM_DISPATCH(SELF)->get_context = (Core_Result(*)(dx_val_context**,dx_val_system*)) & get_context;
-  DX_VAL_GL_SYSTEM_DISPATCH(SELF)->get_window = (Core_Result(*)(dx_val_gl_window**,dx_val_gl_system*)) & get_window;
+  CORE_VAL_GL_SYSTEM_DISPATCH(SELF)->getWindow = (Core_Result(*)(dx_val_gl_window**,Core_Val_Gl_System*)) & getWindow;
 }
 
-Core_Result dx_val_gl_wgl_system_construct(dx_val_gl_wgl_system* SELF, dx_msg_queue* msg_queue) {
-  DX_CONSTRUCT_PREFIX(dx_val_gl_wgl_system);
-  if (dx_val_gl_system_construct(DX_VAL_GL_SYSTEM(SELF), msg_queue)) {
+Core_Result Core_Val_Gl_Wgl_System_construct(Core_Val_Gl_Wgl_System* SELF, Core_MessageQueue* msg_queue) {
+  Core_BeginConstructor(Core_Val_Gl_Wgl_System);
+  if (Core_Val_Gl_System_construct(CORE_VAL_GL_SYSTEM(SELF), msg_queue)) {
     return Core_Failure;
   }
   //
@@ -670,14 +1033,12 @@ Core_Result dx_val_gl_wgl_system_construct(dx_val_gl_wgl_system* SELF, dx_msg_qu
     SELF->instance_handle = NULL;
     return Core_Failure;
   }
-  //
-  CORE_OBJECT(SELF)->type = TYPE;
-  return Core_Success;
+  Core_EndConstructor(Core_Val_Gl_Wgl_System);
 }
 
-Core_Result dx_val_gl_wgl_system_create(dx_val_gl_wgl_system** RETURN, dx_msg_queue* msg_queue) {
-  DX_CREATE_PREFIX(dx_val_gl_wgl_system);
-  if (dx_val_gl_wgl_system_construct(SELF, msg_queue)) {
+Core_Result Core_Val_Gl_Wgl_System_create(Core_Val_Gl_Wgl_System** RETURN, Core_MessageQueue* msg_queue) {
+  DX_CREATE_PREFIX(Core_Val_Gl_Wgl_System);
+  if (Core_Val_Gl_Wgl_System_construct(SELF, msg_queue)) {
     CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
@@ -686,7 +1047,7 @@ Core_Result dx_val_gl_wgl_system_create(dx_val_gl_wgl_system** RETURN, dx_msg_qu
   return Core_Success;
 }
 
-Core_Result dx_val_gl_wgl_system_on_mouse_button_message(dx_val_gl_wgl_system* SELF, HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam) {
+Core_Result Core_Val_Gl_Wgl_System_onMouseButtonMessage(Core_Val_Gl_Wgl_System* SELF, HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam) {
   Core_Real32 x = (Core_Real32)(int)GET_X_LPARAM(lparam);
   Core_Real32 y = (Core_Real32)(int)GET_Y_LPARAM(lparam);
   Core_MouseButton mouse_button;
@@ -720,7 +1081,7 @@ Core_Result dx_val_gl_wgl_system_on_mouse_button_message(dx_val_gl_wgl_system* S
   return Core_Success;
 }
 
-Core_Result dx_val_gl_wgl_system_on_mouse_pointer_message(dx_val_gl_wgl_system* SELF, HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam) {
+Core_Result Core_Val_Gl_Wgl_System_onMousePointerMessage(Core_Val_Gl_Wgl_System* SELF, HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam) {
   Core_Real32 x = (Core_Real32)(int)GET_X_LPARAM(lparam);
   Core_Real32 y = (Core_Real32)(int)GET_Y_LPARAM(lparam);
   uint8_t modifiers = 0;
@@ -734,7 +1095,7 @@ Core_Result dx_val_gl_wgl_system_on_mouse_pointer_message(dx_val_gl_wgl_system* 
   return Core_Success;
 }
 
-Core_Result dx_val_gl_wgl_system_on_keyboard_key_message(dx_val_gl_wgl_system* SELF, HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam) {
+Core_Result Core_Val_Gl_Wgl_System_onKeyboardKeyMessage(Core_Val_Gl_Wgl_System* SELF, HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam) {
   Core_KeyboardKey keyboard_key;
   if (map_keyboard_key(&keyboard_key, SELF, msg, wparam, lparam)) {
     return Core_Failure;
@@ -763,7 +1124,7 @@ Core_Result dx_val_gl_wgl_system_on_keyboard_key_message(dx_val_gl_wgl_system* S
   return Core_Success;
 }
 
-Core_Result dx_val_gl_wgl_system_on_window_message(dx_val_gl_wgl_system* SELF, HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam) {
+Core_Result Core_Val_Gl_Wgl_System_onWindowMessage(Core_Val_Gl_Wgl_System* SELF, HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam) {
   switch (msg) {
     case WM_ACTIVATE: {
       if (wparam) {

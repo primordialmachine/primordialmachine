@@ -1,0 +1,12 @@
+{
+  "type" : "symbolic-constant",
+  "last-update" : "2024-02-06",
+  "indices" : "core",
+  "name" : "Core_VisualsBackend_Vulkan",
+  "id" : "core-visualsbackend-vulkan",
+  "signature" : "#define Core_VisualsBackend_Vulkan &lt;implementation&gt;",
+  "description" : [
+    "Symbolic constant defined to a numeric value that is different from the values of the other @{code('Core_VisualsBackend_*')} symbolic constants.",
+    "The symbolic constant denotes the VULKAN visuals."
+  ]
+}

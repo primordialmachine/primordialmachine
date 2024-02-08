@@ -1,10 +1,10 @@
 {
   "type" : "object",
-  "last-update" : "2024-01-09",
+  "last-update" : "2024-02-08",
   "indices" : "val",
   "name" : "Core_CanvasMessage",
   "id" : "core-canvasmessage",
   "signature" : "typedef struct Core_CanvasMessage Core_CanvasMessage;",
-  "extends" : "@{code('Core_Message')}",
+  "extends" : "Core_Message",
   "description": "A message pertaining to a <em>Canvas</em>."
 }

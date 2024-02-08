@@ -125,6 +125,13 @@ class TlInterpreter {
     }
   }
 
+  public function registerFunction(string $name, $function) {
+    if (isset($this->functions[$name])) {
+      throw new Exception('a function of name `' . $name . '` is already registered');
+    }
+    $this->functions[$name] = $function;
+  }
+
   public function execute(string $input, string $inputName) {
     $ast = $this->parser->execute($input, $inputName);
     $this->onInput($ast);

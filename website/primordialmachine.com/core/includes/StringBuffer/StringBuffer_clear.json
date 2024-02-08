@@ -1,0 +1,31 @@
+{
+  "type" : "method",
+  "last-update" : "2024-02-19",
+  "indices" : "core",
+  "name" : "Core_StringBuffer_clear",
+  "id" : "core-stringbuffer-clear",
+  "signature" : "Core_Result Core_StringBuffer_clear(Core_StringBuffer* SELF);",
+  "parameters" : [
+    {
+      "name" : "SELF",
+      "type" : "@{code('Core_StringBuffer*')}",
+      "description" : "A pointer to a @{code('Core_StringBuffer')} object."
+    }
+  ],
+  "success": [
+    "All Bytes were removed from this @{code('Core_StringBuffer')} object.",
+    "Consequently, the number of Bytes in this @{code('Core_StringBuffer')} object is zero."
+  ],
+  "errors" : [
+    {
+      "errorCode" : "Core_Error_ArgumentInvalid",
+      "errorCondition" : "@{code('SELF')} is a null pointer."
+    }
+  ],
+  "description" : "Remove all Bytes.",
+  "return" : "@{code('Core_Success')} on success. @{code('Core_Failure')} on failure.",
+  "remarks" : [
+    "This function sets the by-thread error variable on failure.",
+    "This function fails only with the specified errors/error conditions."
+  ]
+}

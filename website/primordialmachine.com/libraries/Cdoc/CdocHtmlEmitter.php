@@ -41,12 +41,17 @@ class CdocHtmlEmitter extends CdocEmitter {
     $this->interpreter = new TlInterpreter(new TlParser(new TlScanner()));
   }
   
+  public function getLinkInfo(CdocFile $file) {
+    $url = App::getInstance()->site_url_prefix . $file->getJsonData()['indices'][0] . '#' . $file->getJsonData()['id'];
+    $text = $file->getJsonData()['name'];
+    return array( 'url' => $url, 'text' => $text );
+  }
+  
   public function emitTableOfContentsEntry($entry) {
-    $linkHref = App::getInstance()->site_url_prefix . $entry['index']->getName() . '#' . $entry['file']->getJsonData()['id'];
-    $linkText = $entry['file']->getJsonData()['name'];
+    $linkInfo = $this->getLinkInfo($entry['file']);
     echo
       '<li>' .
-      '<a href="' . $linkHref . '">' . $linkText . '</a>' .
+      '<a href="' . $linkInfo['url'] . '">' . $linkInfo['text'] . '</a>' .
       '</li>'
       ;
   }
@@ -75,7 +80,7 @@ class CdocHtmlEmitter extends CdocEmitter {
 
     // signature
     echo '<h4>Signature</h4>'
-       . '<p><code>'
+       . '<p><code style="overflow-wrap: anywhere">'
        ;
     echo $jsonData['signature'];
     echo '</code></p>';
@@ -83,8 +88,14 @@ class CdocHtmlEmitter extends CdocEmitter {
     // signature remarks (optional)
     if (isset($jsonData['signatureRemarks'])) {
       $signatureRemarks = $jsonData['signatureRemarks'];
-      foreach ($signatureRemarks as $signatureRemark) {
-        echo $signatureRemark;
+      if (is_array($signatureRemarks)) {
+        foreach ($signatureRemarks as $signatureRemark) {
+          echo $signatureRemark;
+        }
+      } else if (is_string($signatureRemarks)) {
+        echo $signatureRemarks;
+      } else {
+        throw new Exception("signatureRemarks must be a) an array of zero or more strings, b) a string, or c) undefined");
       }
     }
 
@@ -92,7 +103,9 @@ class CdocHtmlEmitter extends CdocEmitter {
       if (isset($jsonData['extends'])) {
         echo '<h4>Extends</h4>';
         echo '<p>';
-        echo $interpreter->execute($jsonData['extends'], $file->getPathname());
+        $file = CdocIndexManager::getInstance()->getFileByName($jsonData['extends']);
+        $linkInfo = $this->getLinkInfo($file);
+        echo '<a href="' . $linkInfo['url'] . '">' . $linkInfo['text'] . '</a>';
         echo '</p>';
       }
     }
@@ -142,7 +155,7 @@ class CdocHtmlEmitter extends CdocEmitter {
         if (!is_array($membersJson)) {
           throw new Exception($file->getPathname() . ": error: `members` must be an array");
         }
-        echo '<table style="width: initial !important">';
+        echo '<table class="structure-members-table" style="width: initial !important">';
         foreach ($membersJson as $memberJson) {
           echo '<tr>';
             echo '<td><code>';
@@ -151,7 +164,7 @@ class CdocHtmlEmitter extends CdocEmitter {
             echo '<td>';
             $interpreter->execute($memberJson['type'], $file->getPathname());
             echo '</td>';
-            echo '<td style="width: 100%">';
+            echo '<td>';
             if (is_array($memberJson['description'])) {
               foreach ($memberJson['description'] as $x) {
                 $interpreter->execute($x, $file->getPathname());
@@ -174,13 +187,13 @@ class CdocHtmlEmitter extends CdocEmitter {
         if (!is_array($elementsJson)) {
           throw new Exception($file->getPathname() . ": error: `elements` must be an array");
         }
-        echo '<table style="width: initial !important">';
+        echo '<table class="enumeration-elements-table">';
         foreach ($elementsJson as $elementJson) {
           echo '<tr>';
           echo '<td><code>';
           $interpreter->execute($elementJson['name'], $file->getPathname());
           echo '</code></td>';
-          echo '<td style="width: 100%">';
+          echo '<td>';
           if (is_array($elementJson['description'])) {
             foreach ($elementJson['description'] as $x) {
               $interpreter->execute($x, $file->getPathname());
@@ -195,7 +208,7 @@ class CdocHtmlEmitter extends CdocEmitter {
       }
     }
 
-    // handle functions
+    // handle callables
     if ($jsonData['type'] == 'create-operator' || $jsonData['type'] == 'constructor' || $jsonData['type'] == 'function' || $jsonData['type'] == 'function-prototype'|| $jsonData['type'] == 'method') {
       if (isset($jsonData['parameters'])) {
         $parametersJson = $jsonData['parameters'];
@@ -203,7 +216,7 @@ class CdocHtmlEmitter extends CdocEmitter {
         if (!is_array($parametersJson)) {
           throw new Exception($file->getPathname() . ": error: `parameters` must be an array");
         }
-        echo '<table style="width: initial !important">';
+        echo '<table class="parameters-table">';
         foreach ($parametersJson as $parameterJson) {
           echo '<tr>';
           echo '<td><code>';
@@ -212,7 +225,7 @@ class CdocHtmlEmitter extends CdocEmitter {
           echo '<td>';
           $interpreter->execute($parameterJson['type'], $file->getPathname());
           echo '</td>';
-          echo '<td style="width: 100%">';
+          echo '<td>';
           $interpreter->execute($parameterJson['description'], $file->getPathname());
           echo '</td>';
           echo '</tr>';

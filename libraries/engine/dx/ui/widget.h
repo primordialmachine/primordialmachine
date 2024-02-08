@@ -33,20 +33,20 @@ struct dx_ui_widget_Dispatch {
   Core_Result(*set_name)(dx_ui_widget*, Core_String*);
   Core_Result(*get_name)(Core_String**, dx_ui_widget*);
   
-  Core_Result(*set_relative_position)(dx_ui_widget*,DX_VEC2_F32 const*);
-  Core_Result(*get_relative_position)(DX_VEC2_F32*,dx_ui_widget*);
+  Core_Result(*set_relative_position)(dx_ui_widget*, Core_InlineVector2R32 const*);
+  Core_Result(*get_relative_position)(Core_InlineVector2R32*,dx_ui_widget*);
   
-  Core_Result(*set_relative_size)(dx_ui_widget*,DX_VEC2_F32 const*);
-  Core_Result(*get_relative_size)(DX_VEC2_F32*,dx_ui_widget*);
+  Core_Result(*set_relative_size)(dx_ui_widget*, Core_InlineVector2R32 const*);
+  Core_Result(*get_relative_size)(Core_InlineVector2R32*,dx_ui_widget*);
   
   Core_Result(*set_relative_rectangle)(dx_ui_widget*, DX_RECT2_F32 const*);
   Core_Result(*get_relative_rectangle)(DX_RECT2_F32*, dx_ui_widget*);
   
-  Core_Result(*get_absolute_position)(DX_VEC2_F32*,dx_ui_widget*);
-  Core_Result(*get_absolute_size)(DX_VEC2_F32*,dx_ui_widget*);
+  Core_Result(*get_absolute_position)(Core_InlineVector2R32*,dx_ui_widget*);
+  Core_Result(*get_absolute_size)(Core_InlineVector2R32*,dx_ui_widget*);
   Core_Result(*get_absolute_rectangle)(DX_RECT2_F32*, dx_ui_widget*);
 
-  Core_Result(*render)(dx_ui_widget*,Core_Real32,Core_Real32,Core_Real32,Core_Real32);
+  Core_Result(*render)(dx_ui_widget*);
   Core_Result(*get_child_by_name)(dx_ui_widget**, dx_ui_widget*, Core_String*);
 };
 
@@ -81,7 +81,7 @@ static inline Core_Result dx_ui_widget_get_name(Core_String** RETURN, dx_ui_widg
 /// @param position
 /// A pointer to a <code>DX_VEC2_F32</code> variable.
 /// @method{dx_ui_widget}
-static inline Core_Result dx_ui_widget_set_relative_position(dx_ui_widget* SELF, DX_VEC2_F32 const* relative_position) {
+static inline Core_Result dx_ui_widget_set_relative_position(dx_ui_widget* SELF, Core_InlineVector2R32 const* relative_position) {
   DX_OBJECT_VIRTUALCALL(dx_ui_widget, set_relative_position, SELF, relative_position);
 }
 
@@ -92,7 +92,7 @@ static inline Core_Result dx_ui_widget_set_relative_position(dx_ui_widget* SELF,
 /// @success
 /// <code>*RETURN</code> was assigned the relative position.
 /// @method{dx_ui_widget}
-static inline Core_Result dx_ui_widget_get_relative_position(DX_VEC2_F32* RETURN, dx_ui_widget* SELF) {
+static inline Core_Result dx_ui_widget_get_relative_position(Core_InlineVector2R32* RETURN, dx_ui_widget* SELF) {
   DX_OBJECT_VIRTUALCALL(dx_ui_widget, get_relative_position, RETURN, SELF);
 }
 
@@ -101,7 +101,7 @@ static inline Core_Result dx_ui_widget_get_relative_position(DX_VEC2_F32* RETURN
 /// @param size
 /// A pointer to a <code>DX_VEC2_F32</code> variable.
 /// @method{dx_ui_widget}
-static inline Core_Result dx_ui_widget_set_relative_size(dx_ui_widget* SELF, DX_VEC2_F32 const* relative_size) {
+static inline Core_Result dx_ui_widget_set_relative_size(dx_ui_widget* SELF, Core_InlineVector2R32 const* relative_size) {
   DX_OBJECT_VIRTUALCALL(dx_ui_widget, set_relative_size, SELF, relative_size);
 }
 
@@ -112,7 +112,7 @@ static inline Core_Result dx_ui_widget_set_relative_size(dx_ui_widget* SELF, DX_
 /// @success
 /// <code>*RETURN</code> was assigned the relative size.
 /// @method{dx_ui_widget}
-static inline Core_Result dx_ui_widget_get_relative_size(DX_VEC2_F32* RETURN, dx_ui_widget* SELF) {
+static inline Core_Result dx_ui_widget_get_relative_size(Core_InlineVector2R32* RETURN, dx_ui_widget* SELF) {
   DX_OBJECT_VIRTUALCALL(dx_ui_widget, get_relative_size, RETURN, SELF);
 }
 
@@ -141,7 +141,7 @@ static inline Core_Result dx_ui_widget_get_relative_rectangle(DX_RECT2_F32* RETU
 /// @success
 /// <code>*RETURN</code> was assigned the absolute position.
 /// @method{dx_ui_widget}
-static inline Core_Result dx_ui_widget_get_absolute_position(DX_VEC2_F32* RETURN, dx_ui_widget* SELF) {
+static inline Core_Result dx_ui_widget_get_absolute_position(Core_InlineVector2R32* RETURN, dx_ui_widget* SELF) {
   DX_OBJECT_VIRTUALCALL(dx_ui_widget, get_absolute_position, RETURN, SELF);
 }
 
@@ -152,7 +152,7 @@ static inline Core_Result dx_ui_widget_get_absolute_position(DX_VEC2_F32* RETURN
 /// @success
 /// <code>*RETURN</code> was assigned the absolute size.
 /// @method{dx_ui_widget}
-static inline Core_Result dx_ui_widget_get_absolute_size(DX_VEC2_F32* RETURN, dx_ui_widget* SELF) {
+static inline Core_Result dx_ui_widget_get_absolute_size(Core_InlineVector2R32* RETURN, dx_ui_widget* SELF) {
   DX_OBJECT_VIRTUALCALL(dx_ui_widget, get_absolute_size, RETURN, SELF);
 }
 
@@ -174,8 +174,8 @@ static inline Core_Result dx_ui_widget_get_absolute_rectangle(DX_RECT2_F32* RETU
 /// @param rectangle_presenter
 /// A pointer to the rectangle presenter.
 /// @method{dx_ui_widget}
-static inline Core_Result dx_ui_widget_render(dx_ui_widget* SELF, Core_Real32 canvas_horizontal_size, Core_Real32 canvas_vertical_size, Core_Real32 dpi_horizontal, Core_Real32 dpi_vertical) {
-  DX_OBJECT_VIRTUALCALL(dx_ui_widget, render, SELF, canvas_horizontal_size, canvas_vertical_size, dpi_horizontal, dpi_vertical)
+static inline Core_Result dx_ui_widget_render(dx_ui_widget* SELF) {
+  DX_OBJECT_VIRTUALCALL(dx_ui_widget, render, SELF);
 }
 
 /// @brief

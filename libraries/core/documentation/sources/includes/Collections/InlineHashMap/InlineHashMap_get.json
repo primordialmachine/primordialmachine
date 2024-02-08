@@ -1,0 +1,47 @@
+{
+  "type" : "function",
+  "last-update" : "2024-02-08",
+  "indices" : "core",
+  "name" : "Core_InlineHashMap_get",
+  "id" : "core-inlinehashmap-get",
+  "signature" : "Core_Result Core_InlineHashMap&lt;Suffix&gt;_get(Core_Size* RETURN, Core_InlineHashMap&lt;Suffix&gt;* SELF);",
+  "signatureRemarks": "<p>where <code>&lt;KeySuffix&gt;</code> <code>&lt;ValueSuffix&gt;</code> can assume the value of <code>P</code>.</p>",
+  "parameters" : [
+    {
+      "name" : "RETURN",
+      "type" : "@{code('Core_InlineHashMap&lt;Suffix&gt;_Value*')}",
+      "description" : "A pointer to a @{code('Core_InlineHashMap&lt;Suffix&gt;_Value')} variable."
+    },
+    {
+      "name" : "SELF",
+      "type" : "@{code('Core_InlineHashMap&lt;Suffix&gt;*')}",
+      "description" : "A pointer to a @{code('Core_InlineHashMap&lt;Suffix&gt;')} object."
+    },
+    {
+      "name" : "key",
+      "type" : "@{code('Core_InlineHashMap&lt;Suffix&gt;_Key*')}",
+      "description" : "The key."
+    }
+  ],
+  "success": "@{code('*RETURN')} was assigned value.",
+  "errors" : [
+    {
+      "errorCode" : "Core_Error_ArgumentInvalid",
+      "errorCondition" : "@{code('RETURN')} is a null pointer."
+    },
+    {
+      "errorCode" : "Core_Error_ArgumentInvalid",
+      "errorCondition" : "@{code('SELF')} is a null pointer."
+    },
+    {
+      "errorCode" : "Core_Error_NotFound",
+      "errorCondition" : "The entry does not exist."
+    }
+  ],
+  "description" : "Get the value of an entry.",
+  "return" : "@{code('Core_Success')} on success. @{code('Core_Failure')} on failure.",
+  "remarks" : [
+    "This function sets the by-thread error variable on failure.",
+    "This function fails only with the specified errors/error conditions."
+  ]
+}

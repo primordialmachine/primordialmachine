@@ -3,6 +3,10 @@
 
 #include "dx/core.h"
 
+#if !defined(Core_VisualsBackend)
+  #error("Core_VisualsBackend is not defined")
+#endif
+
 #if Core_OperatingSystem_Windows == Core_OperatingSystem
   #include "dx/val/gl/wgl/system_factory.h"
 #else

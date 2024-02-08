@@ -1,0 +1,10 @@
+{
+  "type" : "object",
+  "last-update" : "2024-02-08",
+  "indices" : "core",
+  "name" : "Core_Message",
+  "id" : "core-message",
+  "signature" : "typedef struct Core_Message Core_Message;",
+  "extends" : "Core_Object",
+  "description": "A message."
+}

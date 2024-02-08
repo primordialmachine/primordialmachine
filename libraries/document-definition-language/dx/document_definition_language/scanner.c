@@ -24,7 +24,7 @@ static Core_Result dx_document_definition_language_scanner_skip_nls(dx_document_
 
 Core_defineObjectType("dx.document_definition_language.scanner",
                       dx_document_definition_language_scanner,
-                      dx_scanner);
+                      Core_Scanner);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
@@ -123,18 +123,18 @@ static void dx_document_definition_language_scanner_destruct(dx_document_definit
 }
 
 static void dx_document_definition_language_scanner_constructDispatch(dx_document_definition_language_scanner_Dispatch* SELF) {
-  DX_SCANNER_DISPATCH(SELF)->get_word_end_offset = (Core_Result(*)(Core_Size*,dx_scanner*)) & get_word_end_offset;
-  DX_SCANNER_DISPATCH(SELF)->get_word_start_offset = (Core_Result(*)(Core_Size*, dx_scanner*)) & get_word_start_offset;
-  DX_SCANNER_DISPATCH(SELF)->get_word_text_bytes = (Core_Result(*)(char const**, dx_scanner*)) & get_word_text_bytes;
-  DX_SCANNER_DISPATCH(SELF)->get_word_text_number_of_bytes = (Core_Result(*)(Core_Size*, dx_scanner*)) & get_word_text_number_of_bytes;
-  DX_SCANNER_DISPATCH(SELF)->set = (Core_Result(*)(dx_scanner*, char const*, Core_Size)) & set;
-  DX_SCANNER_DISPATCH(SELF)->step = (Core_Result(*)(dx_scanner*)) & step;
+  CORE_SCANNER_DISPATCH(SELF)->getWordEndOffset = (Core_Result(*)(Core_Size*, Core_Scanner*)) & get_word_end_offset;
+  CORE_SCANNER_DISPATCH(SELF)->getWordStartOffset = (Core_Result(*)(Core_Size*, Core_Scanner*)) & get_word_start_offset;
+  CORE_SCANNER_DISPATCH(SELF)->getWordTextBytes = (Core_Result(*)(char const**, Core_Scanner*)) & get_word_text_bytes;
+  CORE_SCANNER_DISPATCH(SELF)->getWordTextNumberOfBytes = (Core_Result(*)(Core_Size*, Core_Scanner*)) & get_word_text_number_of_bytes;
+  CORE_SCANNER_DISPATCH(SELF)->setInput = (Core_Result(*)(Core_Scanner*, char const*, Core_Size)) & set;
+  CORE_SCANNER_DISPATCH(SELF)->step = (Core_Result(*)(Core_Scanner*)) & step;
 }
 
 Core_Result dx_document_definition_language_scanner_construct(dx_document_definition_language_scanner* SELF) {
   DX_CONSTRUCT_PREFIX(dx_document_definition_language_scanner);
 
-  if (dx_scanner_construct(DX_SCANNER(SELF))) {
+  if (Core_Scanner_construct(CORE_SCANNER(SELF))) {
     return Core_Failure;
   }
 

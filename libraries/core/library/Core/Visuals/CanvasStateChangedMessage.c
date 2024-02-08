@@ -13,13 +13,12 @@ static void Core_CanvasStateChangedMessage_constructDispatch(Core_CanvasStateCha
 {/*Intentionally empty.*/}
 
 Core_Result Core_CanvasStateChangedMessage_construct(Core_CanvasStateChangedMessage* SELF, Core_Boolean active) {
-  DX_CONSTRUCT_PREFIX(Core_CanvasStateChangedMessage);
+  Core_BeginConstructor(Core_CanvasStateChangedMessage);
   if (Core_CanvasMessage_construct(CORE_CANVASMESSAGE(SELF), Core_CanvasMessageKind_StateChanged)) {
     return Core_Failure;
   }
   SELF->active = active;
-  CORE_OBJECT(SELF)->type = TYPE;
-  return Core_Success;
+  Core_EndConstructor(Core_CanvasStateChangedMessage);
 }
 
 Core_Result Core_CanvasStateChangedMessage_create(Core_CanvasStateChangedMessage** RETURN, Core_Boolean active) {

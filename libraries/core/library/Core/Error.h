@@ -76,6 +76,9 @@ enum _Core_Error {
   // http://localhost/core#core-error-testfailed
   Core_Error_TestFailed,
 
+  /** @todo Add documentation. */
+  Core_Error_NotSupported,
+
 };
 
 /// @ingroup Core

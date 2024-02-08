@@ -18,11 +18,15 @@
     }
   ],
   "success": [
-    "@{code('*RETURN')} was a pointer.@{newline()}",
-    "If a strong reference can be created, this pointer points to an object and the caller acquired a reference to that object.@{newline()}",
-    "Otherwise the pointer is a null pointer."
+    "@{code('*RETURN')} was assigned pointer.@{newline()}",
+    "If this @{code('Core_WeakReference*')} object references a @{code('Core_Object')}, @{code('*RETURN')} was assigned a pointer to the object and the caller acquired a reference to that object.",
+    "Otherwise @{code('*RETURN')} was assigned a null pointer."
   ],
   "errors" : [
+    {
+      "errorCode" : "Core_Error_ArgumentInvalid",
+      "errorCondition" : "@{code('RETURN')} is a null pointer."
+    },
     {
       "errorCode" : "Core_Error_ArgumentInvalid",
       "errorCondition" : "@{code('SELF')} is a null pointer."
@@ -30,7 +34,5 @@
   ],
   "description" : "Acquire a strong reference from a weak reference.",
   "return" : "@{code('Core_Success')} on success. @{code('Core_Failure')} on failure.",
-  "remarks" : [
-    "This function sets the by-thread error variable on failure."
-  ]
+  "remarks" : "This function sets the by-thread error variable on failure."
 }

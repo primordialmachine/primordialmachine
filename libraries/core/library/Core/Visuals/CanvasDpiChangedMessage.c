@@ -13,14 +13,13 @@ static void Core_CanvasDpiChangedMessage_constructDispatch(Core_CanvasDpiChanged
 {/*Intentionally empty.*/}
 
 Core_Result Core_CanvasDpiChangedMessage_construct(Core_CanvasDpiChangedMessage* SELF, Core_Real32 horizontalDpi, Core_Real32 verticalDpi) {
-  DX_CONSTRUCT_PREFIX(Core_CanvasDpiChangedMessage);
+  Core_BeginConstructor(Core_CanvasDpiChangedMessage);
   if (Core_CanvasMessage_construct(CORE_CANVASMESSAGE(SELF), Core_CanvasMessageKind_DpiChanged)) {
     return Core_Failure;
   }
   SELF->horizontalDpi = horizontalDpi;
   SELF->verticalDpi = verticalDpi;
-  CORE_OBJECT(SELF)->type = TYPE;
-  return Core_Success;
+  Core_EndConstructor(Core_CanvasDpiChangedMessage);
 }
 
 Core_Result Core_CanvasDpiChangedMessage_create(Core_CanvasDpiChangedMessage** RETURN, Core_Real32 horizontalDpi, Core_Real32 verticalDpi) {

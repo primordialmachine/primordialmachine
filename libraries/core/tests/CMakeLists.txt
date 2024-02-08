@@ -19,6 +19,8 @@ list(APPEND ${name}.sources "sources/Core/Tests/Signals/ObjectB.c")
 list(APPEND ${name}.headers "sources/Core/Tests/Signals/ObjectB.h")
 list(APPEND ${name}.sources "sources/Core/Tests/Signals/ObjectC.c")
 list(APPEND ${name}.headers "sources/Core/Tests/Signals/ObjectC.h")
+list(APPEND ${name}.sources "sources/Core/Tests/Signals/Receiver.c")
+list(APPEND ${name}.headers "sources/Core/Tests/Signals/Receiver.h")
 list(APPEND ${name}.sources "sources/Core/Tests/Signals/Test1.c")
 list(APPEND ${name}.headers "sources/Core/Tests/Signals/Test1.h")
 
@@ -37,6 +39,9 @@ list(APPEND ${name}.sources "sources/Core/Tests/safeMulNx.c")
 list(APPEND ${name}.headers "sources/Core/Tests/safeMulNx.h")
 list(APPEND ${name}.sources "sources/Core/Tests/clearBits.c")
 list(APPEND ${name}.headers "sources/Core/Tests/clearBits.h")
+
+list(APPEND ${name}.sources "sources/Core/Tests/Utf8/InlineUtf8IteratorTests.c")
+list(APPEND ${name}.headers "sources/Core/Tests/Utf8/InlineUtf8IteratorTests.h")
 
 dx_end_project(${name})
 

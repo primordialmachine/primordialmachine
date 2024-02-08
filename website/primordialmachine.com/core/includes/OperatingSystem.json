@@ -1,0 +1,12 @@
+{
+  "type" : "symbolic-constant",
+  "last-update" : "2024-02-06",
+  "indices" : "core",
+  "name" : "Core_OperatingSystem",
+  "id" : "core-operatingsystem",
+  "signature" : "#define Core_OperatingSystem &lt;implementation&gt;",
+  "description" : [
+    "Symbolic constant denoting the operating system this library was compiled for.@{newline()}",
+    "It is always defined as one of the @{code('Core_OperatingSystem_*')} constants."
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "type" : "function",
+  "last-update" : "2024-02-11",
+  "indices" : "core",
+  "name" : "Core_ceil",
+  "id" : "core-ceil",
+  "signature" : "Core_Result Core_ceil&lt;Suffix&gt;(&lt;Type&gt;* RETURN, &lt;Type&gt; x);",
+  "signatureRemarks": [
+    "<p>where <code>&lt;Suffix&gt;</code> and <code>&lt;Type&gt;</code> can assume the values of</p>",
+    "<table style='width: initial !important'>",
+    "<tr><td><code>&lt;Suffix&gt;</code></td> <td><code>&lt;Type&gt;  </code></td></tr>",
+    "<tr><td><code>R32           </code></td> <td><code>Core_Real32   </code></td></tr>",
+    "<tr><td><code>R64           </code></td> <td><code>Core_Real64   </code></td></tr>",
+    "</table>"
+  ],
+  "parameters" : [
+    {
+      "name" : "RETURN",
+      "type" : "&lt;Type&gt;*",
+      "description" : "A pointer to a @{code('&lt;Type&gt;')} variable."
+    },
+    {
+      "name" : "x",
+      "type" : "&lt;Type&gt;",
+      "description" : "A value."
+    }
+  ],
+  "errors" : [
+    {
+      "errorCode" : "@{code('Core_Error_ArgumentInvalid')}",
+      "errorCondition" : "@{code('RETURN')} is a null pointer"
+    }
+  ],
+  "description" : "Computes the smallest integer value not less than @{code('x')}.",
+  "success" : [
+    "@{code('*RETURN')} was assigned the smallest integer value not less than @{code('x')}.",
+    "@{code('±∞')} and @{code('±0')} are returned unmodified.",
+    "@{code('NaN')} is returned if a value is @{code('NaN')}."
+  ],
+  "return" : "@{code('Core_Success')} on success. @{code('Core_Failure')} on failure.",
+  "remarks" : "This function sets the by-thread error variable on failure."
+}

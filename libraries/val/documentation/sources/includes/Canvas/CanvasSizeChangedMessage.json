@@ -1,10 +1,10 @@
 {
   "type" : "object",
-  "last-update" : "2024-01-09",
+  "last-update" : "2024-02-08",
   "indices" : "val",
   "name" : "Core_CanvasSizeChangedMessage",
   "id" : "core-canvassizechangedmessage",
   "signature" : "typedef struct Core_CanvasSizeChangedMessage Core_CanvasSizeChangedMessage;",
-  "extends" : "@{code('Core_CanvasMessage')}",
+  "extends" : "Core_CanvasMessage",
   "description": "A message pertaining to a <em>canvas size changed</em> event."
 }

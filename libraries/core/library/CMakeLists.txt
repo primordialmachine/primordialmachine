@@ -13,9 +13,6 @@ set(${name}.private_include_directories "${CMAKE_CURRENT_SOURCE_DIR}")
 set(${name}.source_directory "${CMAKE_CURRENT_SOURCE_DIR}")
 dx_begin_project(${name})
 
-# "README.md".
-list(APPEND ${name}.readmes "README.md")
-
 # configuration files.
 list(APPEND ${name}.sources "dx/core/configuration.c")
 list(APPEND ${name}.headers "dx/core/configuration.h")
@@ -41,28 +38,25 @@ list(APPEND ${name}.sources "dx/core/signals.c")
 list(APPEND ${name}.headers "dx/core/signals.h")
 list(APPEND ${name}.sources "dx/core/signals.library.c")
 list(APPEND ${name}.headers "dx/core/signals.library.h")
+list(APPEND ${name}.sources "dx/core/math.c")
+list(APPEND ${name}.headers "dx/core/math.h")
 
 list(APPEND ${name}.sources "dx/core/core.c")
 list(APPEND ${name}.headers "dx/core/core.h")
 list(APPEND ${name}.sources "dx/core/os.c")
 list(APPEND ${name}.headers "dx/core/os.h")
 
-list(APPEND ${name}.sources "dx/core/string.c")
-list(APPEND ${name}.headers "dx/core/string.h")
-list(APPEND ${name}.sources "dx/core/string_iterator.c")
-list(APPEND ${name}.headers "dx/core/string_iterator.h")
+list(APPEND ${name}.sources "dx/core/text/anchor.c")
+list(APPEND ${name}.headers "dx/core/text/anchor.h")
+list(APPEND ${name}.sources "dx/core/text/bounds_type.c")
+list(APPEND ${name}.headers "dx/core/text/bounds_type.h")
+
 list(APPEND ${name}.sources "dx/core/_string_format.c")
 list(APPEND ${name}.headers "dx/core/_string_format.h")
 list(APPEND ${name}.sources "dx/core/string_buffer.c")
 list(APPEND ${name}.headers "dx/core/string_buffer.h")
 list(APPEND ${name}.sources "dx/core/_is_utf8_sequence.c")
 list(APPEND ${name}.headers "dx/core/_is_utf8_sequence.h")
-
-list(APPEND ${name}.sources "dx/core/scanner.c")
-list(APPEND ${name}.headers "dx/core/scanner.h")
-
-list(APPEND ${name}.sources "dx/core/math.c")
-list(APPEND ${name}.headers "dx/core/math.h")
 
 list(APPEND ${name}.sources "dx/core/inline_object_array.c")
 list(APPEND ${name}.headers "dx/core/inline_object_array.h")
@@ -90,25 +84,111 @@ list(APPEND ${name}.headers "dx/core/TypeSystem.h")
 list(APPEND ${name}.sources "dx/core/TypeSystem.library.c")
 list(APPEND ${name}.headers "dx/core/TypeSystem.library.h")
 
-list(APPEND ${name}.sources "dx/core/msgs.c")
-list(APPEND ${name}.headers "dx/core/msgs.h")
+list(APPEND ${name}.sources "dx/core/MessageQueue.c")
+list(APPEND ${name}.headers "dx/core/MessageQueue.h")
 
+# "README.md".
+list(APPEND ${name}.readmes "README.md")
+
+# Main include file.
+list(APPEND ${name}.sources "Core/Include.c")
+list(APPEND ${name}.headers "Core/Include.h")
+
+# "Configurations".
+list(APPEND ${name}.sources "Core/Configuration.c")
+list(APPEND ${name}.headers "Core/Configuration.h")
+
+# "Numerics".
+list(APPEND ${name}.sources "Core/Numerics.c")
+list(APPEND ${name}.headers "Core/Numerics.h")
+
+# "Lexical Analyses".
+list(APPEND ${name}.sources "Core/Scanner.c")
+list(APPEND ${name}.headers "Core/Scanner.h")
+
+# "Strings".
+list(APPEND ${name}.sources "Core/String.c")
+list(APPEND ${name}.headers "Core/String.h")
+list(APPEND ${name}.sources "Core/StringIterator.c")
+list(APPEND ${name}.headers "Core/StringIterator.h")
+list(APPEND ${name}.sources "Core/InlineByteIterator.c")
+list(APPEND ${name}.headers "Core/InlineByteIterator.h")
+list(APPEND ${name}.sources "Core/InlineUtf8Iterator.c")
+list(APPEND ${name}.headers "Core/InlineUtf8Iterator.h")
+
+# "low level operations"
+list(APPEND ${name}.sources "Core/CountLeadingZeroes.c")
+list(APPEND ${name}.headers "Core/CountLeadingZeroes.h")
+list(APPEND ${name}.sources "Core/Hash.c")
+list(APPEND ${name}.headers "Core/Hash.h")
+list(APPEND ${name}.sources "Core/Memory.c")
+list(APPEND ${name}.headers "Core/Memory.h")
+list(APPEND ${name}.sources "Core/NextPowerOfTwo.c")
+list(APPEND ${name}.headers "Core/NextPowerOfTwo.h")
+list(APPEND ${name}.sources "Core/Bits.c")
+list(APPEND ${name}.headers "Core/Bits.h")
+
+# "Messages".
+list(APPEND ${name}.sources "Core/Message.c")
+list(APPEND ${name}.headers "Core/Message.h")
+list(APPEND ${name}.sources "Core/EmitMessage.c")
+list(APPEND ${name}.headers "Core/EmitMessage.h")
 list(APPEND ${name}.sources "Core/ApplicationMessage.c")
 list(APPEND ${name}.headers "Core/ApplicationMessage.h")
 list(APPEND ${name}.sources "Core/ApplicationMessageKind.c")
 list(APPEND ${name}.headers "Core/ApplicationMessageKind.h")
-list(APPEND ${name}.sources "Core/Bits.c")
-list(APPEND ${name}.headers "Core/Bits.h")
-list(APPEND ${name}.sources "Core/CountLeadingZeroes.c")
-list(APPEND ${name}.headers "Core/CountLeadingZeroes.h")
-list(APPEND ${name}.sources "Core/EmitMessage.c")
-list(APPEND ${name}.headers "Core/EmitMessage.h")
+
+# "Runtime".
 list(APPEND ${name}.sources "Core/Error.c")
 list(APPEND ${name}.headers "Core/Error.h")
 list(APPEND ${name}.sources "Core/FundamentalTypes.c")
 list(APPEND ${name}.headers "Core/FundamentalTypes.h")
-list(APPEND ${name}.sources "Core/Hash.c")
-list(APPEND ${name}.headers "Core/Hash.h")
+list(APPEND ${name}.sources "Core/Result.c")
+list(APPEND ${name}.headers "Core/Result.h")
+
+# "Text to number conversion".
+list(APPEND ${name}.sources "Core/Convert.c")
+list(APPEND ${name}.headers "Core/Convert.h")
+
+# "Time".
+list(APPEND ${name}.sources "Core/Time.c")
+list(APPEND ${name}.headers "Core/Time.h")
+
+# "Inline Collections".
+list(APPEND ${name}.sources "Core/Collections/InlineArrayListN8.c")
+list(APPEND ${name}.headers "Core/Collections/InlineArrayListN8.h")
+list(APPEND ${name}.sources "Core/Collections/InlineArrayListP.c")
+list(APPEND ${name}.headers "Core/Collections/InlineArrayListP.h")
+
+# "Safe arithmetic".
+list(APPEND ${name}.sources "Core/safeAddNx.c")
+list(APPEND ${name}.headers "Core/safeAddNx.h")
+list(APPEND ${name}.sources "Core/safeMulIx.c")
+list(APPEND ${name}.headers "Core/safeMulIx.h")
+list(APPEND ${name}.sources "Core/safeMulNx.c")
+list(APPEND ${name}.headers "Core/safeMulNx.h")
+
+# "File system".
+list(APPEND ${name}.sources "Core/FileSystem/createDirectoryFile.c")
+list(APPEND ${name}.headers "Core/FileSystem/createDirectoryFile.h")
+list(APPEND ${name}.sources "Core/FileSystem/deleteRegularFile.c")
+list(APPEND ${name}.headers "Core/FileSystem/deleteRegularFile.h")
+list(APPEND ${name}.sources "Core/FileSystem/deleteDirectoryFile.c")
+list(APPEND ${name}.headers "Core/FileSystem/deleteDirectoryFile.h")
+list(APPEND ${name}.sources "Core/FileSystem/ExistingFilePolicy.c")
+list(APPEND ${name}.headers "Core/FileSystem/ExistingFilePolicy.h")
+list(APPEND ${name}.sources "Core/FileSystem/FileAccessMode.c")
+list(APPEND ${name}.headers "Core/FileSystem/FileAccessMode.h")
+list(APPEND ${name}.sources "Core/FileSystem/FileType.c")
+list(APPEND ${name}.headers "Core/FileSystem/FileType.h")
+list(APPEND ${name}.sources "Core/FileSystem/getFileContents.c")
+list(APPEND ${name}.headers "Core/FileSystem/getFileContents.h")
+list(APPEND ${name}.sources "Core/FileSystem/getFileType.c")
+list(APPEND ${name}.headers "Core/FileSystem/getFileType.h")
+list(APPEND ${name}.sources "Core/FileSystem/NonExistingFilePolicy.c")
+list(APPEND ${name}.headers "Core/FileSystem/NonExistingFilePolicy.h")
+
+# "Input".
 list(APPEND ${name}.sources "Core/Input/InputMessageKind.c")
 list(APPEND ${name}.headers "Core/Input/InputMessageKind.h")
 list(APPEND ${name}.sources "Core/Input/InputMessage.c")
@@ -134,55 +214,8 @@ list(APPEND ${name}.sources "Core/Input/MousePointerMessage.h")
 list(APPEND ${name}.sources "Core/Input/ModifierKeys.c")
 list(APPEND ${name}.headers "Core/Input/ModifierKeys.h")
 list(APPEND ${name}.inlays  "Core/Input/ModifierKeys.i")
-list(APPEND ${name}.sources "Core/Memory.c")
-list(APPEND ${name}.headers "Core/Memory.h")
-list(APPEND ${name}.sources "Core/Message.c")
-list(APPEND ${name}.headers "Core/Message.h")
-list(APPEND ${name}.sources "Core/NextPowerOfTwo.c")
-list(APPEND ${name}.headers "Core/NextPowerOfTwo.h")
-list(APPEND ${name}.sources "Core/Result.c")
-list(APPEND ${name}.headers "Core/Result.h")
 
-list(APPEND ${name}.sources "Core/Convert.c")
-list(APPEND ${name}.headers "Core/Convert.h")
-
-# "time"
-list(APPEND ${name}.sources "Core/Time.c")
-list(APPEND ${name}.headers "Core/Time.h")
-
-# "collections"
-list(APPEND ${name}.sources "Core/Collections/InlineArrayListN8.c")
-list(APPEND ${name}.headers "Core/Collections/InlineArrayListN8.h")
-list(APPEND ${name}.sources "Core/Collections/InlineArrayListP.c")
-list(APPEND ${name}.headers "Core/Collections/InlineArrayListP.h")
-list(APPEND ${name}.sources "Core/safeAddNx.c")
-list(APPEND ${name}.headers "Core/safeAddNx.h")
-list(APPEND ${name}.sources "Core/safeMulIx.c")
-list(APPEND ${name}.headers "Core/safeMulIx.h")
-list(APPEND ${name}.sources "Core/safeMulNx.c")
-list(APPEND ${name}.headers "Core/safeMulNx.h")
-
-# Folder "Core/FileSystem".
-list(APPEND ${name}.sources "Core/FileSystem/createDirectoryFile.c")
-list(APPEND ${name}.headers "Core/FileSystem/createDirectoryFile.h")
-list(APPEND ${name}.sources "Core/FileSystem/deleteRegularFile.c")
-list(APPEND ${name}.headers "Core/FileSystem/deleteRegularFile.h")
-list(APPEND ${name}.sources "Core/FileSystem/deleteDirectoryFile.c")
-list(APPEND ${name}.headers "Core/FileSystem/deleteDirectoryFile.h")
-list(APPEND ${name}.sources "Core/FileSystem/ExistingFilePolicy.c")
-list(APPEND ${name}.headers "Core/FileSystem/ExistingFilePolicy.h")
-list(APPEND ${name}.sources "Core/FileSystem/FileAccessMode.c")
-list(APPEND ${name}.headers "Core/FileSystem/FileAccessMode.h")
-list(APPEND ${name}.sources "Core/FileSystem/FileType.c")
-list(APPEND ${name}.headers "Core/FileSystem/FileType.h")
-list(APPEND ${name}.sources "Core/FileSystem/getFileContents.c")
-list(APPEND ${name}.headers "Core/FileSystem/getFileContents.h")
-list(APPEND ${name}.sources "Core/FileSystem/getFileType.c")
-list(APPEND ${name}.headers "Core/FileSystem/getFileType.h")
-list(APPEND ${name}.sources "Core/FileSystem/NonExistingFilePolicy.c")
-list(APPEND ${name}.headers "Core/FileSystem/NonExistingFilePolicy.h")
-
-# Folder "Core/Visuals".
+# "Visuals".
 list(APPEND ${name}.sources "Core/Visuals/CullMode.c")
 list(APPEND ${name}.headers "Core/Visuals/CullMode.h")
 list(APPEND ${name}.sources "Core/Visuals/DepthCompareFunction.c")
@@ -205,12 +238,6 @@ list(APPEND ${name}.sources "Core/Visuals/CanvasDpiChangedMessage.c")
 list(APPEND ${name}.headers "Core/Visuals/CanvasDpiChangedMessage.h")
 list(APPEND ${name}.sources "Core/Visuals/CanvasStateChangedMessage.c")
 list(APPEND ${name}.headers "Core/Visuals/CanvasStateChangedMessage.h")
-
-# Folder "dx/core/text".
-list(APPEND ${name}.sources "dx/core/text/anchor.c")
-list(APPEND ${name}.headers "dx/core/text/anchor.h")
-list(APPEND ${name}.sources "dx/core/text/bounds_type.c")
-list(APPEND ${name}.headers "dx/core/text/bounds_type.h")
 
 # Small utility function to find files by expression and append them to the specified list.
 function(add_files file_list expression)

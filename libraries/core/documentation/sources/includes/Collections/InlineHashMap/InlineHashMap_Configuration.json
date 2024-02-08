@@ -1,0 +1,42 @@
+{
+  "type" : "structure",
+  "last-update" : "2024-02-08",
+  "indices" : "core",
+  "name" : "Core_InlineHashMap_Configuration",
+  "id" : "core-inlinehashmap-configuration",
+  "signature" : "typedef struct Core_InlineHashMapSuffix&gt;&#x200b_Configuration Core_InlineHashMapSuffix&gt;&#x200b_Configuration;",
+  "signatureRemarks": "<p>where <code>&lt;KeySuffix&gt;</code> <code>&lt;ValueSuffix&gt;</code> can assume the value of <code>P</code>.</p>",
+  "members" : [
+    {
+      "name"        : "keyAddedCallback",
+      "type"        : "@{code('Core_InlineHashMapSuffix&gt;&#x200b_KeyAddedCallback*')}",
+      "description" : "A null pointer or a pointer to a @{code('Core_InlineHashMapSuffix&gt;&#x200b_KeyAddedCallback')} function."
+    },
+    {
+      "name"        : "keyRemovedCallback",
+      "type"        : "@{code('Core_InlineHashMap&lt;Suffix&gt;_KeyRemovedCallback*')}",
+      "description" : "A null pointer or a pointer to a @{code('Core_InlineHashMap&lt;Suffix&gt;_KeyRemovedCallback')} function."
+    },
+    {
+      "name"        : "valueAddedCallback",
+      "type"        : "@{code('Core_InlineHashMapSuffix&gt;&#x200b_ValueAddedCallback*')}",
+      "description" : "A null pointer or a pointer to a @{code('Core_InlineHashMapSuffix&gt;&#x200b_ValueAddedCallback')} function."
+    },
+    {
+      "name"        : "valueRemovedCallback",
+      "type"        : "@{code('Core_InlineHashMapSuffix&gt;&#x200b_ValueRemovedCallback*')}",
+      "description" : "A null pointer or a pointer to a @{code('Core_InlineHashMapSuffix&gt;&#x200b_ValueRemovedCallback')} function."
+    },
+    {
+      "name"        : "hashKeyCallback",
+      "type"        : "@{code('Core_InlineHashMap&lt;Suffix&gt;_HashKeyCallback*')}",
+      "description" : "A pointer to a @{code('Core_InlineHashMap&lt;Suffix&gt;_HashKeyCallback')} function."
+    },
+    {
+      "name"        : "compareKeysCallback",
+      "type"        : "@{code('Core_InlineHashMap&lt;Suffix&gt;_CompareKeysCallback*')}",
+      "description" : "A pointer to a @{code('Core_InlineHashMap&lt;Suffix&gt;_CompareKeysCallback')} function."
+    }
+  ],
+  "description": "A configuration for a @{code('Core_InlineHashMap&lt;Suffix&gt;')} object."
+}

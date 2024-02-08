@@ -2,153 +2,8 @@
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-// sinf, sin
-// cosf, cos
+// sinf, cosf, sqrtf
 #include <math.h>
-
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-
-Core_Result Core_minN8(Core_Natural8* RETURN, Core_Natural8 x, Core_Natural8 y) {
-  if (!RETURN) {
-    return Core_Failure;
-  }
-  *RETURN = x < y ? x : y;
-  return Core_Success;
-}
-
-Core_Result Core_minN16(Core_Natural16* RETURN, Core_Natural16 x, Core_Natural16 y) {
-  if (!RETURN) {
-    return Core_Failure;
-  }
-  *RETURN = x < y ? x : y;
-  return Core_Success;
-}
-
-Core_Result Core_minN32(Core_Natural32* RETURN, Core_Natural32 x, Core_Natural32 y) {
-  if (!RETURN) {
-    return Core_Failure;
-  }
-  *RETURN = x < y ? x : y;
-  return Core_Success;
-}
-
-Core_Result Core_minN64(Core_Natural64* RETURN, Core_Natural64 x, Core_Natural64 y) {
-  if (!RETURN) {
-    return Core_Failure;
-  }
-  *RETURN = x < y ? x : y;
-  return Core_Success;
-}
-
-Core_Result Core_minI8(Core_Integer8* RETURN, Core_Integer8 x, Core_Integer8 y) {
-  if (!RETURN) {
-    return Core_Failure;
-  }
-  *RETURN = x < y ? x : y;
-  return Core_Success;
-}
-
-Core_Result Core_minI16(Core_Integer16* RETURN, Core_Integer16 x, Core_Integer16 y) {
-  if (!RETURN) {
-    return Core_Failure;
-  }
-  *RETURN = x < y ? x : y;
-  return Core_Success;
-}
-
-Core_Result Core_minI32(Core_Integer32* RETURN, Core_Integer32 x, Core_Integer32 y) {
-  if (!RETURN) {
-    return Core_Failure;
-  }
-  *RETURN = x < y ? x : y;
-  return Core_Success;
-}
-
-Core_Result Core_minI64(Core_Integer64* RETURN, Core_Integer64 x, Core_Integer64 y) {
-  if (!RETURN) {
-    return Core_Failure;
-  }
-  *RETURN = x < y ? x : y;
-  return Core_Success;
-}
-
-Core_Result Core_minR32(Core_Real32* RETURN, Core_Real32 x, Core_Real32 y) {
-  if (!RETURN) {
-    return Core_Failure;
-  }
-  *RETURN = x < y ? x : y;
-  return Core_Success;
-}
-
-Core_Result Core_minR64(Core_Real64* RETURN, Core_Real64 x, Core_Real64 y) {
-  if (!RETURN) {
-    return Core_Failure;
-  }
-  *RETURN = x < y ? x : y;
-  return Core_Success;
-}
-
-Core_Result Core_minSz(Core_Size* RETURN, Core_Size x, Core_Size y) {
-  if (!RETURN) {
-    return Core_Failure;
-  }
-  *RETURN = x < y ? x : y;
-  return Core_Success;
-}
-
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-
-Core_Result Core_sinR32(Core_Real32* RETURN, Core_Real32 x) {
-  if (!RETURN) {
-    Core_setError(Core_Error_ArgumentInvalid);
-    return Core_Failure;
-  }
-  if (isinf(x) || isnan(x)) {
-    Core_setError(Core_Error_ArgumentInvalid);
-    return Core_Failure;
-  }
-  *RETURN = sinf(x);
-  return Core_Success;
-}
-
-Core_Result Core_sinR64(Core_Real64* RETURN, Core_Real64 x) {
-  if (!RETURN) {
-    Core_setError(Core_Error_ArgumentInvalid);
-    return Core_Failure;
-  }
-  if (isinf(x) || isnan(x)) {
-    Core_setError(Core_Error_ArgumentInvalid);
-    return Core_Failure;
-  }
-  *RETURN = sin(x);
-  return Core_Success;
-}
-
-Core_Result Core_cosR32(Core_Real32* RETURN, Core_Real32 x) {
-  if (!RETURN) {
-    Core_setError(Core_Error_ArgumentInvalid);
-    return Core_Failure;
-  }
-  if (isinf(x) || isnan(x)) {
-    Core_setError(Core_Error_ArgumentInvalid);
-    return Core_Failure;
-  }
-  *RETURN = cosf(x);
-  return Core_Success;
-}
-
-Core_Result Core_cosR64(Core_Real64* RETURN, Core_Real64 x) {
-  if (!RETURN) {
-    Core_setError(Core_Error_ArgumentInvalid);
-    return Core_Failure;
-  }
-  if (isinf(x) || isnan(x)) {
-    Core_setError(Core_Error_ArgumentInvalid);
-    return Core_Failure;
-  }
-  *RETURN = cos(x);
-  return Core_Success;
-}
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
@@ -219,36 +74,24 @@ Core_InlineRgbN8 const dx_colors_blue = { 0, 0, 255 };
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-Core_Result Core_floorR32(Core_Real32* RETURN, Core_Real32 SELF) {
-  *RETURN = floorf(SELF);
-  return Core_Success;
+void Core_InlineVector2R32_add_vv(Core_InlineVector2R32* RETURN, Core_InlineVector2R32 const* operand1, Core_InlineVector2R32 const* operand2) {
+  RETURN->e[0] = operand1->e[0] + operand2->e[0];
+  RETURN->e[1] = operand1->e[1] + operand2->e[1];
 }
 
-Core_Result Core_floorR64(Core_Real64* RETURN, Core_Real64 SELF) {
-  *RETURN = floor(SELF);
-  return Core_Success;
+void Core_InlineVector2R32_mul_vs(Core_InlineVector2R32* RETURN, Core_InlineVector2R32 const* operand1, Core_Real32 operand2) {
+  RETURN->e[0] = operand1->e[0] * operand2;
+  RETURN->e[1] = operand1->e[1] * operand2;
 }
 
-Core_Result Core_ceilR32(Core_Real32* RETURN, Core_Real32 SELF) {
-  *RETURN = ceilf(SELF);
-  return Core_Success;
+void Core_InlineVector2R32_mulc_vv(Core_InlineVector2R32* RETURN, Core_InlineVector2R32 const* operand1, Core_InlineVector2R32 const* operand2) {
+  RETURN->e[0] = operand1->e[0] * operand2->e[0];
+  RETURN->e[1] = operand1->e[1] * operand2->e[1];
 }
 
-Core_Result Core_ceilR64(Core_Real64* RETURN, Core_Real64 SELF) {
-  *RETURN = ceil(SELF);
-  return Core_Success;
-}
-
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-
-void dx_vec2_f32_add3(DX_VEC2_F32* w, DX_VEC2_F32 const* u, DX_VEC2_F32 const* v) {
-  w->e[0] = u->e[0] + v->e[0];
-  w->e[1] = u->e[1] + v->e[1];
-}
-
-void dx_vec2_f32_sub3(DX_VEC2_F32* w, DX_VEC2_F32 const* u, DX_VEC2_F32 const* v) {
-  w->e[0] = u->e[0] - v->e[0];
-  w->e[1] = u->e[1] - v->e[1];
+void Core_InlineVector2R32_sub_vv(Core_InlineVector2R32* RETURN, Core_InlineVector2R32 const* operand1, Core_InlineVector2R32 const* operand2) {
+  RETURN->e[0] = operand1->e[0] - operand2->e[0];
+  RETURN->e[1] = operand1->e[1] - operand2->e[1];
 }
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/

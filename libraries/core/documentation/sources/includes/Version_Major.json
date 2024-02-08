@@ -1,0 +1,9 @@
+{
+  "type" : "symbolic-constant",
+  "last-update" : "2024-02-06",
+  "indices" : "core",
+  "name" : "Core_Version_Major",
+  "id" : "core-version-major",
+  "signature" : "#define Core_Version_Major &lt;implementation&gt;",
+  "description" : "Symbolic constant defined to a non-negative integer value denoting the major version of this library."
+}

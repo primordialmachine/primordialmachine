@@ -5,11 +5,11 @@ Core_defineObjectType("dx.ui.widget",
                       Core_Object);
 
 static Core_Result get_relative_rectangle(DX_RECT2_F32* RETURN, dx_ui_widget* SELF) {
-  DX_VEC2_F32 position;
+  Core_InlineVector2R32 position;
   if (dx_ui_widget_get_relative_position(&position, SELF)) {
     return Core_Failure;
   }
-  DX_VEC2_F32 size;
+  Core_InlineVector2R32 size;
   if (dx_ui_widget_get_relative_size(&size, SELF)) {
     return Core_Failure;
   }
@@ -28,7 +28,7 @@ static Core_Result get_absolute_rectangle(DX_RECT2_F32* RETURN, dx_ui_widget* SE
     return Core_Failure;
   }
   if (DX_UI_WIDGET(SELF)->parent) {
-    DX_VEC2_F32 t;
+    Core_InlineVector2R32 t;
     if (dx_ui_widget_get_absolute_position(&t, DX_UI_WIDGET(SELF)->parent)) {
       return Core_Failure;
     }

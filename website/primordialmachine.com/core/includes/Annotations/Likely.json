@@ -1,0 +1,19 @@
+{
+  "type" : "symbolic-constant",
+  "last-update" : "2024-02-09",
+  "indices" : "core",
+  "name" : "Core_Likely",
+  "id" : "core-likely",
+  "signature" : "#define Core_Likely() &lt;implementation&gt;",
+  "description" : [
+    "Expression annotation aiding branch prediction by indicating an expression is likely to evaluate to logically true.",
+    "@{newline()}",
+    "@{newline()}",
+    "In the following example, we use this function annotation to indicate that a call to @{code('malloc')} is likely to succeed.@{newline()}",
+    "<code>",
+    "void* p = malloc(sizeof(char));@{newline()}",
+    "if (Core_Likely(NULL != p)) @{newline()}",
+    "}",
+    "</code>"
+  ]
+}

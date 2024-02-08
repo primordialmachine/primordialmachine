@@ -1,0 +1,12 @@
+{
+  "type" : "symbolic-constant",
+  "last-update" : "2024-02-06",
+  "indices" : "core",
+  "name" : "Core_Compiler_Cpp",
+  "id" : "core-compiler-cpp",
+  "signature" : "#define Core_Compiler_Cpp &lt;implementation&gt;",
+  "description" : [
+    "Symbolic constant denoting the C++ compiler used for compiling this library.@{newline()}",
+    "Is defined to one of the @{code('Core_Compiler_Cpp_*')} constants."
+  ]
+}

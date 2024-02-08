@@ -16,7 +16,7 @@ static Core_Result dx_val_gl_vbinding_activate(dx_val_gl_vbinding* SELF) {
 }
 
 static Core_Result dx_val_gl_vbinding_construct(dx_val_gl_vbinding* SELF, Core_VertexFormat vertex_format, dx_val_gl_buffer* buffer) {
-  DX_CONSTRUCT_PREFIX(dx_val_gl_vbinding);
+  Core_BeginConstructor(dx_val_gl_vbinding);
   if (dx_val_vbinding_construct(DX_VAL_VBINDING(SELF), DX_VAL_BUFFER(buffer))) {
     return Core_Failure;
   }
@@ -82,8 +82,7 @@ static Core_Result dx_val_gl_vbinding_construct(dx_val_gl_vbinding* SELF, Core_V
     SELF->id = 0;
     return Core_Failure;
   }
-  CORE_OBJECT(SELF)->type = TYPE;
-  return Core_Success;
+  Core_EndConstructor(dx_val_gl_vbinding);
 }
 
 static void dx_val_gl_vbinding_destruct(dx_val_gl_vbinding* SELF) {

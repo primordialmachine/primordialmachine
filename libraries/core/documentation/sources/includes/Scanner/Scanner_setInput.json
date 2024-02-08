@@ -1,0 +1,47 @@
+{
+  "type" : "method",
+  "last-update" : "2024-02-07",
+  "indices" : "core",
+  "name" : "Core_Scanner_setInput",
+  "id" : "core-scanner-setinput",
+  "signature" : "Core_Result Core_Scanner_setInput(Core_Scanner* SELF, void* bytes, Core_Size numberOfBytes);",
+  "parameters" : [
+    {
+      "name" : "SELF",
+      "type" : "@{code('Core_Scanner*')}",
+      "description" : "A pointer to this @{code('Core_Scanner*')} object."
+    },
+    {
+      "name" : "bytes",
+      "type" : "@{code('void*')}",
+      "description" : "A pointer to an array of Bytes."
+    },
+    {
+      "name" : "numberOfBytes",
+      "type" : "@{code('Core_Size')}",
+      "description" : "The number of Bytes in the array pointed to by @{code('bytes')}."
+    }
+  ],
+  "errors" : [
+    {
+      "errorCode" : "Core_Error_ArgumentInvalid",
+      "errorCondition" : "@{code('SELF')} is a null pointer."
+    },
+    {
+      "errorCode" : "Core_Error_ArgumentInvalid",
+      "errorCondition" : "@{code('void*')} is a null pointer."
+    },
+    {
+      "errorCode" : "Core_Error_AllocationFailed",
+      "errorCondition" : "An allocation failed."
+    }
+  ],
+  "success" : [
+    "The scanner was assigned the empty input and is in its initial state wrt that input."
+  ],
+  "description" : [
+    "Set the input of the scanner.@{newline()}"
+  ],
+  "return" : "@{code('Core_Success')} on success. @{code('Core_Failure')} on failure.",
+  "remarks" : "This function sets the by-thread error variable on failure."
+}

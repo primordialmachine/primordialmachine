@@ -38,7 +38,7 @@ struct dx_val_context_Dispatch {
   Core_Result (*create_program)(dx_val_program**,dx_val_context*, dx_val_program_text*);
   Core_Result (*create_texture)(dx_val_texture**,dx_val_context*);
   Core_Result (*execute_commands)(dx_val_context*, dx_val_command_list*);
-  Core_String* (*get_information)(dx_val_context*);
+  Core_Result (*get_information)(Core_String** RETURN, dx_val_context*);
   Core_Result (*enter_frame)(dx_val_context*);
   Core_Result (*leave_frame)(dx_val_context*);
   Core_Result (*get_canvas_size)(dx_val_context*, Core_Integer32*, Core_Integer32*);
@@ -53,8 +53,8 @@ Core_Result dx_val_context_construct(dx_val_context* context);
 /// @return A pointer to a string with information on the backend in human-readable form on success. The null pointer on failure.
 /// @success The caller has acquired a reference to the returned string object.
 /// @method{dx_val_context}
-static inline Core_String* dx_val_context_get_information(dx_val_context* SELF) {
-  DX_OBJECT_VIRTUALCALL(dx_val_context, get_information, SELF);
+static inline Core_Result dx_val_context_get_information(Core_String** RETURN, dx_val_context* SELF) {
+  DX_OBJECT_VIRTUALCALL(dx_val_context, get_information, RETURN, SELF);
 }
 
 /// @brief Bind the specified texture to the specified texture unit.

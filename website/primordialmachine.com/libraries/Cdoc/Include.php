@@ -52,9 +52,11 @@ class CdocContext {
     // get the JSON data and add the contents of the file to its corresponding indices.
     $jsonData = $file->getJsonData();
     $indexNames = $jsonData['indices'];
+    if (count($indexNames) != 1) {
+      throw new Exception("multiple indices not supported");
+    }
     foreach ($indexNames as $indexName) {
-      $index = CdocIndexManager::getInstance()->getByName($indexName);
-      $index->addEntry($file);
+      CdocIndexManager::getInstance()->addFile($indexName, $file);
     }
   }
 

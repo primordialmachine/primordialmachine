@@ -14,7 +14,7 @@ static void dx_val_system_destruct(dx_val_system* SELF) {
 static void dx_val_system_constructDispatch(dx_val_system_Dispatch* SELF)
 {/*Intentionally empty.*/}
 
-Core_Result dx_val_system_construct(dx_val_system* SELF, dx_msg_queue* msg_queue) {
+Core_Result dx_val_system_construct(dx_val_system* SELF, Core_MessageQueue* msg_queue) {
   DX_CONSTRUCT_PREFIX(dx_val_system);
   SELF->msg_queue = msg_queue;
   if (dx_system_construct(DX_SYSTEM(SELF))) {
@@ -37,7 +37,7 @@ Core_Result dx_val_system_emit_keyboard_key_pressed_msg(dx_val_system* SELF, Cor
   if (Core_KeyboardKeyMessage_create((Core_KeyboardKeyMessage**)&message, Core_KeyboardKeyAction_Pressed, key, modifierKeys)) {
     return Core_Failure;
   }
-  if (dx_msg_queue_push(SELF->msg_queue, message)) {
+  if (Core_MessageQueue_push(SELF->msg_queue, message)) {
     CORE_UNREFERENCE(message);
     message = NULL;
     return Core_Failure;
@@ -52,7 +52,7 @@ Core_Result dx_val_system_emit_keyboard_key_released_msg(dx_val_system* SELF, Co
   if (Core_KeyboardKeyMessage_create((Core_KeyboardKeyMessage**)&message, Core_KeyboardKeyAction_Released, key, modifierKeys)) {
     return Core_Failure;
   }
-  if (dx_msg_queue_push(SELF->msg_queue, message)) {
+  if (Core_MessageQueue_push(SELF->msg_queue, message)) {
     CORE_UNREFERENCE(message);
     message = NULL;
     return Core_Failure;
@@ -67,7 +67,7 @@ Core_Result dx_val_system_emit_mouse_button_pressed_msg(dx_val_system* SELF, Cor
   if (Core_MouseButtonMessage_create((Core_MouseButtonMessage**)&message, Core_MouseButtonAction_Pressed, button, modifierKeys, x, y)) {
     return Core_Failure;
   }
-  if (dx_msg_queue_push(SELF->msg_queue, message)) {
+  if (Core_MessageQueue_push(SELF->msg_queue, message)) {
     CORE_UNREFERENCE(message);
     message = NULL;
     return Core_Failure;
@@ -82,7 +82,7 @@ Core_Result dx_val_system_emit_mouse_button_released_msg(dx_val_system* SELF, Co
   if (Core_MouseButtonMessage_create((Core_MouseButtonMessage**)&message, Core_MouseButtonAction_Released, button, modifierKeys, x, y)) {
     return Core_Failure;
   }
-  if (dx_msg_queue_push(SELF->msg_queue, message)) {
+  if (Core_MessageQueue_push(SELF->msg_queue, message)) {
     CORE_UNREFERENCE(message);
     message = NULL;
     return Core_Failure;
@@ -97,7 +97,7 @@ Core_Result dx_val_system_emit_mouse_pointer_moved_msg(dx_val_system* SELF, Core
   if (Core_MousePointerMessage_create((Core_MousePointerMessage**)&message, Core_MousePointerAction_Moved, x, y, modifierKeys)) {
     return Core_Failure;
   }
-  if (dx_msg_queue_push(SELF->msg_queue, message)) {
+  if (Core_MessageQueue_push(SELF->msg_queue, message)) {
     CORE_UNREFERENCE(message);
     message = NULL;
     return Core_Failure;
@@ -112,7 +112,7 @@ Core_Result dx_val_system_emit_canvas_size_changed_msg(dx_val_system* SELF, Core
   if (Core_CanvasSizeChangedMessage_create((Core_CanvasSizeChangedMessage**)&message, horizontalSize, verticalSize)) {
     return Core_Failure;
   }
-  if (dx_msg_queue_push(SELF->msg_queue, message)) {
+  if (Core_MessageQueue_push(SELF->msg_queue, message)) {
     CORE_UNREFERENCE(message);
     message = NULL;
     return Core_Failure;
@@ -127,7 +127,7 @@ Core_Result dx_val_system_emit_canvas_activated_msg(dx_val_system* SELF) {
   if (Core_CanvasStateChangedMessage_create((Core_CanvasStateChangedMessage**)&message, Core_True)) {
     return Core_Failure;
   }
-  if (dx_msg_queue_push(SELF->msg_queue, message)) {
+  if (Core_MessageQueue_push(SELF->msg_queue, message)) {
     CORE_UNREFERENCE(message);
     message = NULL;
     return Core_Failure;
@@ -142,7 +142,7 @@ Core_Result dx_val_system_emit_canvas_deactivated_msg(dx_val_system* SELF) {
   if (Core_CanvasStateChangedMessage_create((Core_CanvasStateChangedMessage**)&message, Core_False)) {
     return Core_Failure;
   }
-  if (dx_msg_queue_push(SELF->msg_queue, message)) {
+  if (Core_MessageQueue_push(SELF->msg_queue, message)) {
     CORE_UNREFERENCE(message);
     message = NULL;
     return Core_Failure;

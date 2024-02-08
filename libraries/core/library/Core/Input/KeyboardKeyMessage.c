@@ -15,14 +15,13 @@ static void Core_KeyboardKeyMessage_constructDispatch(Core_KeyboardKeyMessage_Di
 {/*Intentionally empty.*/}
 
 Core_Result Core_KeyboardKeyMessage_construct(Core_KeyboardKeyMessage* SELF, Core_KeyboardKeyAction action, Core_KeyboardKey key, Core_ModifierKeys modifierKeys) {
-  DX_CONSTRUCT_PREFIX(Core_KeyboardKeyMessage);
+  Core_BeginConstructor(Core_KeyboardKeyMessage);
   if (Core_InputMessage_construct(CORE_INPUTMESSAGE(SELF), Core_InputMessageKind_KeyboardKey, modifierKeys)) {
     return Core_Failure;
   }
   SELF->action = action;
   SELF->key = key;
-  CORE_OBJECT(SELF)->type = TYPE;
-  return Core_Success;
+  Core_EndConstructor(Core_KeyboardKeyMessage);
 }
 
 Core_Result Core_KeyboardKeyMessage_getAction(Core_KeyboardKeyAction* RETURN, Core_KeyboardKeyMessage* SELF) {

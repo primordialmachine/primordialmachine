@@ -44,7 +44,7 @@ static inline dx_text_document* DX_TEXT_DOCUMENT(void* p) {
 
 struct dx_text_document {
   Core_Object _parent;
-  dx_string_buffer* text;
+  Core_StringBuffer* text;
   dx_object_array *lines;
 };
 

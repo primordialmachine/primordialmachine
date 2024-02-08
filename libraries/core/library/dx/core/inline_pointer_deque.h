@@ -48,52 +48,26 @@ struct Core_InlineArrayDequeP {
 /// @error #Core_Error_AllocationFailed an allocation failed
 Core_Result Core_InlineArrayDequeP_initialize(Core_InlineArrayDequeP* SELF, Core_Size initial_capacity, Core_InlineArrayDequeP_Configuration const* configuration);
 
-/// @brief Uninitialize this Core_InlineArrayDequeP object.
-/// @method{Core_InlineArrayDequeP}
+/* http://localhost/core#core-inlinearraydeque-uninitialize */
 void Core_InlineArrayDequeP_uninitialize(Core_InlineArrayDequeP* SELF);
 
-/// @brief Increase the capacity.
-/// @param required_additional_capacity The amount to increase the capacity by.
-/// @error #Core_Error_AllocationFailed @a additional_capacity is too big
-/// @error #Core_Error_AllocationFailed an allocation failed
-/// @success The capacity increased by at least the specified amount.
-/// @method{Core_InlineArrayDequeP}
-Core_Result Core_InlineArrayDequeP_increaseCapacity(Core_InlineArrayDequeP* SELF, Core_Size required_additional_capacity);
+/* http://localhost/core#core-inlinearraydeque-clear */
+Core_Result Core_InlineArrayDequeP_clear(Core_InlineArrayDequeP* SELF);
 
-/// @brief Ensure the free capacity is greater than or equal to a specified value.
-/// @param required_free_capacity The required free capacity.
-/// @error #Core_Error_AllocationFailed @a required_free_capacity is too big
-/// @error #Core_Error_AllocationFailed an allocation failed
-/// @success The free capacity is greater than or equal to the specified required free capacity.
-/// @method{Core_InlineArrayDequeP}
-Core_Result Core_InlineArrayDequeP_ensureFreeCapacity(Core_InlineArrayDequeP* SELF, Core_Size required_free_capacity);
+/* http://localhost/core#core-inlinearraydeque-ensurefreecapacity */
+Core_Result Core_InlineArrayDequeP_ensureFreeCapacity(Core_InlineArrayDequeP* SELF, Core_Size requiredFreeCapacity);
 
-/// @brief Get the size, in elements.
-/// @param RETURN A pointer to a <code>Core_Size</code> variable.
-/// @success <code>*RETURN</code> was assigned the size.
-/// @error #Core_Error_ArgumentInvalid @a RETURN is a null pointer
-/// @method{Core_InlineArrayDequeP}
-Core_Result Core_InlineArrayDequeP_getSize(Core_Size* RETURN, Core_InlineArrayDequeP const* SELF);
-
-/// @brief Get the capacity, in elements.
-/// @param RETURN A pointer to a <code>Core_Size</code> variable.
-/// @success <code>*RETURN</code> was assigned the capacity.
-/// @error #Core_Error_ArgumentInvalid @a RETURN is a null pointer
-/// @method{Core_InlineArrayDequeP}
+/* http://localhost/core#core-inlinearraydeque-getcapacity */
 Core_Result Core_InlineArrayDequeP_getCapacity(Core_Size* RETURN, Core_InlineArrayDequeP const* SELF);
 
-/// @brief Get the free capacity, in elements.
-/// @param RETURN A pointer to a <code>Core_Size</code> variable.
-/// @success <code>*RETURN</code> was assigned the free capacity.
-/// @error #Core_Error_ArgumentInvalid @a RETURN is a null pointer
-/// @method{Core_InlineArrayDequeP}
+/* http://localhost/core#core-inlinearraydeque-getfreecapacity */
 Core_Result Core_InlineArrayDequeP_getFreeCapacity(Core_Size* RETURN, Core_InlineArrayDequeP const* SELF);
 
-/// @brief Remove all elements.
-/// @param SELF A pointer to this Core_InlineArrayDequeP object.
-/// @method-call
-/// @error #Core_Error_ArgumentInvalid @a SELF is a null pointer
-Core_Result Core_InlineArrayDequeP_clear(Core_InlineArrayDequeP* SELF);
+/* http://localhost/core#core-inlinearraydeque-getsize */
+Core_Result Core_InlineArrayDequeP_getSize(Core_Size* RETURN, Core_InlineArrayDequeP const* SELF);
+
+/* http://localhost/core#core-inlinearraydeque-increaseincreasecapacity */
+Core_Result Core_InlineArrayDequeP_increaseCapacity(Core_InlineArrayDequeP* SELF, Core_Size requiredAdditionalCapacity);
 
 /// @brief Append an element.
 /// @param pointer The element.

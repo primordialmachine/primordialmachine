@@ -222,3 +222,51 @@ main > div.container > div.right-column > nav > ul > li {
 main > div.container > div.right-column > nav > ul > li > a {
   /*margin-right: 32px;*/
 }
+
+
+
+.parameters-table > tbody > tr > td:nth-child(1) {
+  overflow-wrap: anywhere;
+  width: 33%;
+}
+
+
+.parameters-table > tbody > tr > td:nth-child(2) {
+  overflow-wrap: anywhere;
+  width: 33%;
+}
+
+.parameters-table > tbody > tr > td:nth-child(3) {
+  overflow-wrap: anywhere;
+  width: 33%;
+}
+
+
+.enumeration-elements-table > tbody > tr > td:nth-child(1) {
+  overflow-wrap: anywhere;
+  width: 50%;
+}
+
+.enumeration-elements-table > tbody > tr > td:nth-child(2) {
+  overflow-wrap: anywhere;
+  width: 50%;
+}
+
+
+.structure-members-table > tbody > tr > td:nth-child(1) {
+  /*background-color: red;*/
+  overflow-wrap: anywhere;
+  width: 33%;
+}
+
+.structure-members-table > tbody > tr > td:nth-child(2) {
+  /*background-color: green;*/
+  overflow-wrap: anywhere;
+  width: 33%;
+}
+
+.structure-members-table > tbody > tr > td:nth-child(3) {
+  /*background-color: blue;*/
+  overflow-wrap: anywhere;
+  width: 33%;
+}

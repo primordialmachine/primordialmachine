@@ -11,7 +11,6 @@ static void dx_val_gl_window_constructDispatch(dx_val_gl_window_Dispatch* SELF)
 {/*Intentionally empty.*/}
 
 Core_Result dx_val_gl_window_construct(dx_val_gl_window* SELF) {
-  DX_CONSTRUCT_PREFIX(dx_val_gl_window);
-  CORE_OBJECT(SELF)->type = TYPE;
-  return Core_Success;
+  Core_BeginConstructor(dx_val_gl_window);
+  Core_EndConstructor(dx_val_gl_window);
 }

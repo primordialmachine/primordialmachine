@@ -15,7 +15,7 @@ static void Core_MouseButtonMessage_constructDispatch(Core_MouseButtonMessage_Di
 {/*Intentionally empty.*/}
 
 Core_Result Core_MouseButtonMessage_construct(Core_MouseButtonMessage* SELF, Core_MouseButtonAction action, Core_MouseButton button, Core_ModifierKeys modifierKeys, Core_Real32 x, Core_Real32 y) {
-  DX_CONSTRUCT_PREFIX(Core_MouseButtonMessage);
+  Core_BeginConstructor(Core_MouseButtonMessage);
   if (Core_InputMessage_construct(CORE_INPUTMESSAGE(SELF), Core_InputMessageKind_MouseButton, modifierKeys)) {
     return Core_Failure;
   }
@@ -23,8 +23,7 @@ Core_Result Core_MouseButtonMessage_construct(Core_MouseButtonMessage* SELF, Cor
   SELF->button = button;
   SELF->x = x;
   SELF->y = y;
-  CORE_OBJECT(SELF)->type = TYPE;
-  return Core_Success;
+  Core_EndConstructor(Core_MouseButtonMessage);
 }
 
 Core_Result Core_MouseButtonMessage_getAction(Core_MouseButtonAction* RETURN, Core_MouseButtonMessage* SELF) {
