@@ -194,7 +194,7 @@ static Core_Result _parse_image_operation(dx_ddl_node* node, dx_adl_symbol* symb
   CORE_UNREFERENCE(received_type);
   received_type = NULL;
 
-  dx_assets_image_operation* operation = NULL;
+  Core_Assets_ImageOperation* operation = NULL;
   if (dx_adl_type_handler_read((Core_Object**)&operation, type_handler, node, context)) {
     CORE_UNREFERENCE(reader_symbol);
     reader_symbol = NULL;

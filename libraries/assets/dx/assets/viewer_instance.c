@@ -12,7 +12,7 @@ static void dx_assets_viewer_instance_destruct(dx_assets_viewer_instance* SELF) 
 static void dx_assets_viewer_instance_constructDispatch(dx_assets_viewer_instance_Dispatch* SELF)
 {/*Intentionally empty.*/}
 
-Core_Result dx_assets_viewer_instance_construct(dx_assets_viewer_instance* SELF, dx_asset_reference* viewer_reference) {
+Core_Result dx_assets_viewer_instance_construct(dx_assets_viewer_instance* SELF, Core_Assets_Ref* viewer_reference) {
   DX_CONSTRUCT_PREFIX(dx_assets_viewer_instance);
 
   if (!viewer_reference) {
@@ -28,7 +28,7 @@ Core_Result dx_assets_viewer_instance_construct(dx_assets_viewer_instance* SELF,
   return Core_Success;
 }
 
-Core_Result dx_assets_viewer_instance_create(dx_assets_viewer_instance** RETURN, dx_asset_reference* viewer_reference) {
+Core_Result dx_assets_viewer_instance_create(dx_assets_viewer_instance** RETURN, Core_Assets_Ref* viewer_reference) {
   DX_CREATE_PREFIX(dx_assets_viewer_instance);
   if (dx_assets_viewer_instance_construct(SELF, viewer_reference)) {
     CORE_UNREFERENCE(SELF);

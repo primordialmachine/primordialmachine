@@ -1,34 +1,41 @@
 # Copy the contents of
 # "./../../libraries/data-definition-language/documentation/sources"
 # to
-# "./data-definition-language"
-Remove-Item "./data-definition-language" -Force -Recurse -ErrorAction SilentlyContinue
-Copy-Item "./../../libraries/data-definition-language/documentation/sources" -Destination "./data-definition-language" -Recurse
+# "./contents/data-definition-language"
+Remove-Item "./contents/data-definition-language" -Force -Recurse -ErrorAction SilentlyContinue
+Copy-Item "./../../libraries/data-definition-language/documentation/sources" -Destination "./contents/data-definition-language" -Recurse
 
 # Copy the contents of
 # "./../../libraries/asset-definition-language/documentation/sources"
 # to
-# "./asset-definition-language"
-Remove-Item "./asset-definition-language" -Force -Recurse -ErrorAction SilentlyContinue
-Copy-Item "./../../libraries/asset-definition-language/documentation/sources" -Destination "./asset-definition-language" -Recurse
+# "./contents/asset-definition-language"
+Remove-Item "./contents/asset-definition-language" -Force -Recurse -ErrorAction SilentlyContinue
+Copy-Item "./../../libraries/asset-definition-language/documentation/sources" -Destination "./contents/asset-definition-language" -Recurse
 
 # Copy the contents of
 # "./../../libraries/core/documentation/sources"
 # to
-# "./core/ring-1"
-Remove-Item "./core" -Force -Recurse -ErrorAction SilentlyContinue
-Copy-Item "./../../libraries/core/documentation/sources" -Destination "./core" -Recurse
+# "./contents/core"
+Remove-Item "./contents/core" -Force -Recurse -ErrorAction SilentlyContinue
+Copy-Item "./../../libraries/core/documentation/sources" -Destination "./contents/core" -Recurse
+
+# Copy the contents of
+# "./../../libraries/assets/documentation/sources"
+# to
+# "./contents/assets"
+Remove-Item "./contents/assets" -Force -Recurse -ErrorAction SilentlyContinue
+Copy-Item "./../../libraries/assets/documentation/sources" -Destination "./contents/assets" -Recurse
 
 # Copy the contents of
 # "./../../libraries/aal/documentation/sources"
 # to
-# "./aal"
-Remove-Item "./aal" -Force -Recurse -ErrorAction SilentlyContinue
-Copy-Item "./../../libraries/aal/documentation/sources" -Destination "./aal" -Recurse
+# "./contents/aal"
+Remove-Item "./contents/aal" -Force -Recurse -ErrorAction SilentlyContinue
+Copy-Item "./../../libraries/aal/documentation/sources" -Destination "./contents/aal" -Recurse
 
 # Copy the contents of
 # "./../../libraries/aal/documentation/sources"
 # to
-# "./val"
-Remove-Item "./val" -Force -Recurse -ErrorAction SilentlyContinue
-Copy-Item "./../../libraries/val/documentation/sources" -Destination "./val" -Recurse
+# "./contents/val"
+Remove-Item "./contents/val" -Force -Recurse -ErrorAction SilentlyContinue
+Copy-Item "./../../libraries/val/documentation/sources" -Destination "./contents/val" -Recurse

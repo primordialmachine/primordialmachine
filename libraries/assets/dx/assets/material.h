@@ -1,8 +1,8 @@
 #if !defined(DX_ASSETS_MATERIAL_H_INCLUDED)
 #define DX_ASSETS_MATERIAL_H_INCLUDED
 
-#include "dx/assets/reference.h"
-typedef struct dx_assets_color_rgb_n8 dx_assets_color_rgb_n8;
+#include "Core/Assets/Ref.h"
+typedef struct Core_Assets_ColorRgbN8 Core_Assets_ColorRgbN8;
 typedef struct dx_assets_material_controller dx_assets_material_controller;
 
 /// @brief A material asset.
@@ -19,10 +19,10 @@ struct dx_assets_material {
   /// @brief A pointer to the ADL name of this material.
   Core_String* name;
   /// @brief The ambient color of this material.
-  dx_asset_reference* ambient_color;
+  Core_Assets_Ref* ambient_color;
   /// @brief Pointer to the ambient texture of this material or the null pointer.
   /// @default The null pointer.
-  dx_asset_reference* ambient_texture_reference;
+  Core_Assets_Ref* ambient_texture_reference;
   /// @brief A pointer to the viewer controller or a null pointer.
   dx_assets_material_controller* controller;
 };
@@ -51,11 +51,11 @@ Core_Result dx_assets_material_create(dx_assets_material** RETURN, Core_String* 
 /// @param ambient_color A pointer to color.
 /// @error #Core_Error_ArgumentInvalid @a ambient_color is a null pointer,
 /// @method{dx_assets_material}
-Core_Result dx_assets_material_set_ambient_color(dx_assets_material* SELF, dx_assets_color_rgb_n8* ambient_color);
+Core_Result dx_assets_material_set_ambient_color(dx_assets_material* SELF, Core_Assets_ColorRgbN8* ambient_color);
 
 /// @brief Set the ambient texture.
 /// @param ambient_texture_reference A pointer to the ambient_texture_reference or the null pointer.
 /// @method{dx_assets_material}
-Core_Result dx_assets_material_set_ambient_texture(dx_assets_material* SELF, dx_asset_reference* ambient_texture_reference);
+Core_Result dx_assets_material_set_ambient_texture(dx_assets_material* SELF, Core_Assets_Ref* ambient_texture_reference);
 
 #endif // DX_ASSETS_MATERIAL_H_INCLUDED

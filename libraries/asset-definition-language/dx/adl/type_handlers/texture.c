@@ -148,7 +148,7 @@ static Core_Result _parse_texture(dx_assets_texture** RETURN, dx_ddl_node* node,
     return Core_Failure;
   }
   // image
-  dx_asset_reference* image_reference_value = NULL;
+  Core_Assets_Ref* image_reference_value = NULL;
   if (dx_asset_definition_language_parser_parse_image_instance_field(&image_reference_value, node, false, NAME(image_key), context)) {
     CORE_UNREFERENCE(name_value);
     name_value = NULL;

@@ -144,8 +144,8 @@ static Core_Result _parse(Core_Object** RETURN, dx_adl_type_handlers_image_opera
   if (_check_keys(SELF, node)) {
     return Core_Failure;
   }
-  dx_assets_image_operations_color_fill* asset = NULL;
-  if (dx_assets_image_operations_color_fill_create(&asset)) {
+  Core_Assets_ImageOperations_ColorFill* asset = NULL;
+  if (Core_Assets_ImageOperations_ColorFill_create(&asset)) {
     return Core_Failure;
   }
   // color
@@ -160,7 +160,7 @@ static Core_Result _resolve(dx_adl_type_handlers_image_operations_color_fill* SE
   if (symbol->resolved) {
     return Core_Success;
   }
-  dx_assets_image_operations_color_fill* asset = DX_ASSETS_IMAGE_OPERATIONS_COLOR_FILL(symbol->asset);
+  Core_Assets_ImageOperations_ColorFill* asset = CORE_ASSETS_IMAGEOPERATIONS_COLORFILL(symbol->asset);
   dx_ddl_node* node = symbol->node;
   // color
   {
@@ -168,8 +168,8 @@ static Core_Result _resolve(dx_adl_type_handlers_image_operations_color_fill* SE
     if (dx_asset_definitions_get(&color_symbol, context->definitions, asset->color->name)) {
       return Core_Failure;
     }
-    dx_assets_color_rgb_n8* color_asset = DX_ASSETS_COLOR_RGB_N8(color_symbol->asset);
-    if (dx_assets_image_operations_color_fill_set_color(asset, color_asset)) {
+    Core_Assets_ColorRgbN8* color_asset = CORE_ASSETS_COLORRGBN8(color_symbol->asset);
+    if (Core_Assets_ImageOperations_ColorFill_set_color(asset, color_asset)) {
       CORE_UNREFERENCE(color_symbol);
       color_symbol = NULL;
       return Core_Failure;

@@ -56,7 +56,7 @@ Core_Result dx_assets_material_create(dx_assets_material** RETURN, Core_String* 
   return Core_Success;
 }
 
-Core_Result dx_assets_material_set_ambient_color(dx_assets_material* SELF, dx_assets_color_rgb_n8* ambient_color) {
+Core_Result dx_assets_material_set_ambient_color(dx_assets_material* SELF, Core_Assets_ColorRgbN8* ambient_color) {
   if (!SELF || !ambient_color) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
@@ -66,7 +66,7 @@ Core_Result dx_assets_material_set_ambient_color(dx_assets_material* SELF, dx_as
     if (Core_String_create(&name, "<anonymous>", sizeof("<anonymous") - 1)) {
       return Core_Failure;
     }
-    if (dx_asset_reference_create(&SELF->ambient_color, name)) {
+    if (Core_Assets_Ref_create(&SELF->ambient_color, name)) {
       CORE_UNREFERENCE(name);
       name = NULL;
       return Core_Failure;
@@ -82,7 +82,7 @@ Core_Result dx_assets_material_set_ambient_color(dx_assets_material* SELF, dx_as
   return Core_Success;
 }
 
-Core_Result dx_assets_material_set_ambient_texture(dx_assets_material* SELF, dx_asset_reference* ambient_texture_reference) {
+Core_Result dx_assets_material_set_ambient_texture(dx_assets_material* SELF, Core_Assets_Ref* ambient_texture_reference) {
   if (!SELF) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;

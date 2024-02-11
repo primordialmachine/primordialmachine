@@ -84,7 +84,7 @@ Core_Result dx_asset_definition_language_parser_parse_translation(dx_assets_matr
 /// <code>*RETURN</code> was assigned a pointer to the asset reference object.
 /// The caller acquired a reference to the asset reference object returned.
 /// @method{dx_asset_definition_language_parser}
-Core_Result dx_asset_definition_language_parser_parse_color_instance(dx_asset_reference** RETURN, dx_ddl_node* node, dx_adl_context* context);
+Core_Result dx_asset_definition_language_parser_parse_color_instance(Core_Assets_Ref** RETURN, dx_ddl_node* node, dx_adl_context* context);
 
 /// @brief Parse
 /// @code
@@ -170,7 +170,7 @@ Core_String* dx_adl_semantical_read_string_field(dx_ddl_node* node, Core_String*
 /// { ... <key> : <ADL.ColorInstance> ... }
 /// @param node A pointer to the node.
 /// @method{dx_asset_definition_language_parser}
-Core_Result dx_adl_semantical_read_color_instance_field(dx_asset_reference** RETURN, dx_ddl_node* node, bool optional, Core_String* key, dx_adl_context* context);
+Core_Result dx_adl_semantical_read_color_instance_field(Core_Assets_Ref** RETURN, dx_ddl_node* node, bool optional, Core_String* key, dx_adl_context* context);
 
 /// @brief Parse
 /// @code
@@ -178,7 +178,7 @@ Core_Result dx_adl_semantical_read_color_instance_field(dx_asset_reference** RET
 /// @endcode
 /// @param node A pointer to the node.
 /// @method{dx_asset_definition_language_parser}
-Core_Result dx_asset_definition_language_parser_parse_image_instance(dx_asset_reference** RETURN, dx_ddl_node* node, dx_adl_context* context);
+Core_Result dx_asset_definition_language_parser_parse_image_instance(Core_Assets_Ref** RETURN, dx_ddl_node* node, dx_adl_context* context);
 
 /// @brief Parse
 /// @code
@@ -186,7 +186,7 @@ Core_Result dx_asset_definition_language_parser_parse_image_instance(dx_asset_re
 /// @endcode
 /// @param node A pointer to the node.
 /// @method{dx_asset_definition_language_parser}
-Core_Result dx_asset_definition_language_parser_parse_image_instance_field(dx_asset_reference** RETURN, dx_ddl_node* node, bool optional, Core_String* key, dx_adl_context* context);
+Core_Result dx_asset_definition_language_parser_parse_image_instance_field(Core_Assets_Ref** RETURN, dx_ddl_node* node, bool optional, Core_String* key, dx_adl_context* context);
 
 /// @brief Parse
 /// @code
@@ -194,7 +194,7 @@ Core_Result dx_asset_definition_language_parser_parse_image_instance_field(dx_as
 /// @endcode
 /// @param node A pointer to the node.
 /// @method{dx_asset_definition_language_parser}
-Core_Result dx_asset_definition_language_parser_parse_texture_instance(dx_asset_reference** RETURN, dx_ddl_node* node, dx_adl_context* context);
+Core_Result dx_asset_definition_language_parser_parse_texture_instance(Core_Assets_Ref** RETURN, dx_ddl_node* node, dx_adl_context* context);
 
 /// @brief Parse
 /// @code
@@ -202,7 +202,7 @@ Core_Result dx_asset_definition_language_parser_parse_texture_instance(dx_asset_
 /// @endcode
 /// @param node A pointer to the node.
 /// @method{dx_asset_definition_language_parser}
-Core_Result dx_asset_definition_language_parser_parse_texture_instance_field(dx_asset_reference** RETURN, dx_ddl_node* node, bool optional, Core_String* key, dx_adl_context* context);
+Core_Result dx_asset_definition_language_parser_parse_texture_instance_field(Core_Assets_Ref** RETURN, dx_ddl_node* node, bool optional, Core_String* key, dx_adl_context* context);
 
 /// @brief Parse
 /// @code
@@ -210,7 +210,7 @@ Core_Result dx_asset_definition_language_parser_parse_texture_instance_field(dx_
 /// @endcode
 /// @param node A pointer to the node.
 /// @method{dx_asset_definition_language_parser}
-Core_Result dx_asset_definition_language_parser_parse_material_instance(dx_asset_reference** RETURN, dx_ddl_node* node, dx_adl_context* context);
+Core_Result dx_asset_definition_language_parser_parse_material_instance(Core_Assets_Ref** RETURN, dx_ddl_node* node, dx_adl_context* context);
 
 /// @brief Parse
 /// @code
@@ -218,6 +218,6 @@ Core_Result dx_asset_definition_language_parser_parse_material_instance(dx_asset
 /// @endcode
 /// @param node A pointer to the node.
 /// @method{dx_asset_definition_language_parser}
-Core_Result dx_adl_semantical_read_material_instance_field(dx_asset_reference** RETURN, dx_ddl_node* node, bool optional, Core_String* key, dx_adl_context* context);
+Core_Result dx_adl_semantical_read_material_instance_field(Core_Assets_Ref** RETURN, dx_ddl_node* node, bool optional, Core_String* key, dx_adl_context* context);
 
 #endif // DX_ASSET_DEFINITION_LANGUAGE_PARSER_H_INCLUDED

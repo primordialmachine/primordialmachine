@@ -2,7 +2,7 @@
 
 #include "dx/assets/context.h"
 
-static dx_assets_context* g_context = NULL;
+static Core_Assets_Context* g_context = NULL;
 
 Core_defineObjectType("dx.assets.system",
                       dx_assets_system,
@@ -12,10 +12,10 @@ static Core_Result startup(dx_assets_system* SELF);
 
 static Core_Result shutdown(dx_assets_system* SELF);
 
-static Core_Result get_context(dx_assets_context** RETURN, dx_assets_system* SELF);
+static Core_Result get_context(Core_Assets_Context** RETURN, dx_assets_system* SELF);
 
 static Core_Result startup(dx_assets_system* SELF) {
-  if (dx_assets_context_create(&g_context)) {
+  if (Core_Assets_Context_create(&g_context)) {
     return Core_Failure;
   }
   return Core_Success;
@@ -27,7 +27,7 @@ static Core_Result shutdown(dx_assets_system* SELF) {
   return Core_Success;
 }
 
-static Core_Result get_context(dx_assets_context** RETURN, dx_assets_system* SELF) {
+static Core_Result get_context(Core_Assets_Context** RETURN, dx_assets_system* SELF) {
   if (!g_context) {
     Core_setError(Core_Error_NotInitialized);
     return Core_Failure;

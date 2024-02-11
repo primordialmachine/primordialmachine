@@ -19,7 +19,7 @@ static inline dx_asset_mesh_instance* DX_ASSET_MESH_INSTANCE(void* p) {
 struct dx_asset_mesh_instance {
   Core_Object _parent;
   /// @brief Reference to the mesh of this mesh instance.
-  dx_asset_reference* mesh_reference;
+  Core_Assets_Ref* mesh_reference;
   /// @brief The world matrix of this mesh instance.
   dx_assets_matrix_4x4_f32* world_matrix;
 };
@@ -37,11 +37,11 @@ struct dx_asset_mesh_instance_Dispatch {
 /// @param mesh_reference A pointer to the mesh reference of this mesh instance.
 /// @error #Core_Error_ArgumentInvalid @a mesh_reference is a null pointer
 /// @error #Core_Error_AllocationFailed an allocation failed
-Core_Result dx_asset_mesh_instance_construct(dx_asset_mesh_instance* SELF, dx_asset_reference* mesh_reference);
+Core_Result dx_asset_mesh_instance_construct(dx_asset_mesh_instance* SELF, Core_Assets_Ref* mesh_reference);
 
 /// @create-operator{dx_asset_mesh_instance}
 /// @param mesh_reference A pointer to the mesh reference of this mesh instance.
 /// @error #Core_Error_ArgumentInvalid @a mesh_reference is a null pointer
-Core_Result dx_asset_mesh_instance_create(dx_asset_mesh_instance** RETURN, dx_asset_reference* mesh_reference);
+Core_Result dx_asset_mesh_instance_create(dx_asset_mesh_instance** RETURN, Core_Assets_Ref* mesh_reference);
 
 #endif // DX_ASSET_MESH_INSTANCE_H_INCLUDED

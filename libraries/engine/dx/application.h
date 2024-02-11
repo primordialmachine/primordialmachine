@@ -15,7 +15,7 @@ typedef struct dx_val_context dx_val_context;
 typedef struct dx_val_system dx_val_system;
 typedef struct dx_val_system_factory dx_val_system_factory;
 
-typedef struct dx_assets_context dx_assets_context;
+typedef struct Core_Assets_Context Core_Assets_Context;
 typedef struct dx_assets_system dx_assets_system;
 typedef struct dx_assets_system_factory dx_assets_system_factory;
 
@@ -70,7 +70,7 @@ struct dx_application_Dispatch {
   Core_Result(*shutdown_systems)(dx_application*);
   Core_Result(*get_val_context)(dx_val_context**, dx_application*);
   Core_Result(*get_aal_context)(dx_aal_context**, dx_application*);
-  Core_Result(*get_assets_context)(dx_assets_context**, dx_application*);
+  Core_Result(*get_assets_context)(Core_Assets_Context**, dx_application*);
 };
 
 /// @internal
@@ -135,11 +135,11 @@ static inline Core_Result dx_application_get_aal_context(dx_aal_context** RETURN
 }
 
 /// @brief Get the Assets context.
-/// @param RETURN A pointer to a <code>dx_assets_context*</code> variable.
+/// @param RETURN A pointer to a <code>Core_Assets_Context*</code> variable.
 /// @method{dx_application}
 /// @success <code>*RETURN</code> was assigned a pointer to the Assets context object. The caller acquired a reference to that object.
 /// @pre The Assets backend is running.
-static inline Core_Result dx_application_get_assets_context(dx_assets_context** RETURN, dx_application* SELF) {
+static inline Core_Result dx_application_get_assets_context(Core_Assets_Context** RETURN, dx_application* SELF) {
   DX_OBJECT_VIRTUALCALL(dx_application, get_assets_context, RETURN, SELF);
 }
 

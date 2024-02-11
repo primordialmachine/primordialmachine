@@ -209,7 +209,7 @@ static Core_Result _parse_material(dx_assets_material** RETURN, dx_ddl_node* nod
   }
   // ambientTexture?
   {
-    dx_asset_reference* texture_reference = NULL;
+    Core_Assets_Ref* texture_reference = NULL;
     if (dx_asset_definition_language_parser_parse_texture_instance_field(&texture_reference, node, true, NAME(ambient_texture_key), context)) {
       CORE_UNREFERENCE(material_value);
       material_value = NULL;
@@ -277,14 +277,14 @@ static Core_Result _resolve_ambient_color(dx_adl_type_handlers_material* SELF, d
     if (Core_String_create(&name, "<anonymous>", sizeof("<anonymous>") - 1)) {
       return Core_Failure;
     }
-    if (dx_asset_reference_create(&material->ambient_color, name)) {
+    if (Core_Assets_Ref_create(&material->ambient_color, name)) {
       CORE_UNREFERENCE(name);
       name = NULL;
       return Core_Failure;
     }
     CORE_UNREFERENCE(name);
     name = NULL;
-    if (dx_assets_color_rgb_n8_create((dx_assets_color_rgb_n8**)&material->ambient_color->object, &WHITE)) {
+    if (Core_Assets_ColorRgbN8_create((Core_Assets_ColorRgbN8**)&material->ambient_color->object, &WHITE)) {
       CORE_UNREFERENCE(material->ambient_color);
       material->ambient_color = NULL;
       return Core_Failure;
@@ -294,7 +294,7 @@ static Core_Result _resolve_ambient_color(dx_adl_type_handlers_material* SELF, d
     if (dx_asset_definitions_get(&color_symbol, context->definitions, material->ambient_color->name)) {
       return Core_Failure;
     }
-    dx_assets_color_rgb_n8* color_asset = DX_ASSETS_COLOR_RGB_N8(color_symbol->asset);
+    Core_Assets_ColorRgbN8* color_asset = CORE_ASSETS_COLORRGBN8(color_symbol->asset);
     if (dx_assets_material_set_ambient_color(material, color_asset)) {
       CORE_UNREFERENCE(color_symbol);
       color_symbol = NULL;

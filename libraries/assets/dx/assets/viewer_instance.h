@@ -2,7 +2,7 @@
 #define DX_ASSETS_VIEWER_INSTANCE_H_INCLUDED
 
 #include "dx/assets/viewer.h"
-#include "dx/assets/reference.h"
+#include "Core/Assets/Ref.h"
 
 /// @brief A viewer instance asset.
 Core_declareObjectType("dx.assets.viewer_instance",
@@ -16,7 +16,7 @@ static inline dx_assets_viewer_instance* DX_ASSETS_VIEWER_INSTANCE(void* p) {
 struct dx_assets_viewer_instance {
   Core_Object _parent;
   /// @brief Reference to the viewer of this viewer instance.
-  dx_asset_reference* viewer_reference;
+  Core_Assets_Ref* viewer_reference;
   /// @brief The world matrix of this viewer instance.
   DX_MAT4 world_matrix;
 };
@@ -33,11 +33,11 @@ struct dx_assets_viewer_instance_Dispatch {
 /// @param viewer_reference A pointer to the viewer reference of this viewer instance.
 /// @error #Core_Error_ArgumentInvalid @a viewer_reference is a null pointer.
 /// @constructor{dx_asset_viewer_instance}
-Core_Result dx_assets_viewer_instance_construct(dx_assets_viewer_instance* SELF, dx_asset_reference* viewer_reference);
+Core_Result dx_assets_viewer_instance_construct(dx_assets_viewer_instance* SELF, Core_Assets_Ref* viewer_reference);
 
 /// @param viewer_reference A pointer to the viewer reference of this viewer instance.
 /// @error #Core_Error_ArgumentInvalid @a viewer_reference is a null pointer
 /// @create-operator{dx_asset_viewer_instance}
-Core_Result dx_assets_viewer_instance_create(dx_assets_viewer_instance** RETURN, dx_asset_reference* viewer_reference);
+Core_Result dx_assets_viewer_instance_create(dx_assets_viewer_instance** RETURN, Core_Assets_Ref* viewer_reference);
 
 #endif // DX_ASSETS_VIEWER_INSTANCE_H_INCLUDED

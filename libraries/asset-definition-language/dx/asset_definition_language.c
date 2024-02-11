@@ -195,7 +195,7 @@ Core_Result dx_adl_compile(dx_assets_scene** RETURN, dx_ddl_node* node) {
             return Core_Failure;
           }
           for (Core_Size i = 0; i < n; ++i) {
-            dx_assets_image_operation* operation = NULL;
+            Core_Assets_ImageOperation* operation = NULL;
             if (dx_inline_object_array_get_at((Core_Object**)&operation, &image->operations, i)) {
               CORE_UNREFERENCE(context);
               context = NULL;

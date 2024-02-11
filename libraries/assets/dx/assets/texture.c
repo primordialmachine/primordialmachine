@@ -18,7 +18,7 @@ static void dx_assets_texture_destruct(dx_assets_texture* SELF) {
 static void dx_assets_texture_constructDispatch(dx_assets_texture_Dispatch* SELF)
 {/*Intentionally empty.*/}
 
-Core_Result dx_assets_texture_construct(dx_assets_texture* SELF, Core_String* name, dx_asset_reference* image_reference) {
+Core_Result dx_assets_texture_construct(dx_assets_texture* SELF, Core_String* name, Core_Assets_Ref* image_reference) {
   DX_CONSTRUCT_PREFIX(dx_assets_texture);
   if (!name) {
     Core_setError(Core_Error_ArgumentInvalid);
@@ -40,7 +40,7 @@ Core_Result dx_assets_texture_construct(dx_assets_texture* SELF, Core_String* na
   return Core_Success;
 }
 
-Core_Result dx_assets_texture_create(dx_assets_texture** RETURN, Core_String* name, dx_asset_reference* image_reference) {
+Core_Result dx_assets_texture_create(dx_assets_texture** RETURN, Core_String* name, Core_Assets_Ref* image_reference) {
   DX_CREATE_PREFIX(dx_assets_texture);
   if (dx_assets_texture_construct(SELF, name, image_reference)) {
     CORE_UNREFERENCE(SELF);

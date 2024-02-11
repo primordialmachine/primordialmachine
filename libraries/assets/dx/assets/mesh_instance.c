@@ -14,7 +14,7 @@ static void dx_asset_mesh_instance_destruct(dx_asset_mesh_instance* SELF) {
 static void dx_asset_mesh_instance_constructDispatch(dx_asset_mesh_instance_Dispatch* SELF)
 {/*Intentionally empty.*/}
 
-Core_Result dx_asset_mesh_instance_construct(dx_asset_mesh_instance* SELF, dx_asset_reference* mesh_reference) {
+Core_Result dx_asset_mesh_instance_construct(dx_asset_mesh_instance* SELF, Core_Assets_Ref* mesh_reference) {
   DX_CONSTRUCT_PREFIX(dx_asset_mesh_instance);
 
   if (!mesh_reference) {
@@ -36,7 +36,7 @@ Core_Result dx_asset_mesh_instance_construct(dx_asset_mesh_instance* SELF, dx_as
   return Core_Success;
 }
 
-Core_Result dx_asset_mesh_instance_create(dx_asset_mesh_instance** RETURN, dx_asset_reference* mesh_reference) {
+Core_Result dx_asset_mesh_instance_create(dx_asset_mesh_instance** RETURN, Core_Assets_Ref* mesh_reference) {
   DX_CREATE_PREFIX(dx_asset_mesh_instance);
   if (dx_asset_mesh_instance_construct(SELF, mesh_reference)) {
     CORE_UNREFERENCE(SELF);

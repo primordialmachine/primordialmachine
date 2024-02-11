@@ -130,9 +130,9 @@ static inline Core_Result dx_engine_utilities_2d_create_material(dx_val_material
   }
   CORE_UNREFERENCE(name_string);
   name_string = NULL;
-  dx_assets_color_rgb_n8* ambient_color = NULL;
+  Core_Assets_ColorRgbN8* ambient_color = NULL;
   Core_InlineRgbN8 WHITE = { .r = 255, .g = 255, .b = 255 };
-  if (dx_assets_color_rgb_n8_create(&ambient_color, &WHITE)) {
+  if (Core_Assets_ColorRgbN8_create(&ambient_color, &WHITE)) {
     CORE_UNREFERENCE(material_asset);
     material_asset = NULL;
     return Core_Failure;
@@ -216,8 +216,8 @@ static inline Core_Result dx_assets_extensions_create_texture_from_pixels(dx_ass
     return Core_Failure;
   }
   Core_Memory_copy(image->pixels, pixels, number_of_bytes);
-  dx_asset_reference* image_reference = NULL;
-  if (dx_asset_reference_create(&image_reference, image_name)) {
+  Core_Assets_Ref* image_reference = NULL;
+  if (Core_Assets_Ref_create(&image_reference, image_name)) {
     CORE_UNREFERENCE(image);
     image = NULL;
     CORE_UNREFERENCE(image_name);

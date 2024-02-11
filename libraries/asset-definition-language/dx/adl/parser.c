@@ -325,7 +325,7 @@ Core_String* dx_adl_semantical_read_string_field(dx_ddl_node* node, Core_String*
   return value;
 }
 
-static Core_Result dx_adl_semantical_read_instance(dx_asset_reference** RETURN, dx_ddl_node* node, Core_String* expected_type, dx_adl_context* context) {
+static Core_Result dx_adl_semantical_read_instance(Core_Assets_Ref** RETURN, dx_ddl_node* node, Core_String* expected_type, dx_adl_context* context) {
   Core_String* received_type = NULL;
   if (dx_asset_definition_language_parser_parse_type(&received_type, node, context)) {
     Core_setError(Core_Error_SemanticalAnalysisFailed);
@@ -347,8 +347,8 @@ static Core_Result dx_adl_semantical_read_instance(dx_asset_reference** RETURN, 
   if (!value) {
     return Core_Failure;
   }
-  dx_asset_reference* reference = NULL;
-  if (dx_asset_reference_create(&reference, value)) {
+  Core_Assets_Ref* reference = NULL;
+  if (Core_Assets_Ref_create(&reference, value)) {
     CORE_UNREFERENCE(value);
     value = NULL;
     return Core_Failure;
@@ -359,7 +359,7 @@ static Core_Result dx_adl_semantical_read_instance(dx_asset_reference** RETURN, 
   return Core_Success;
 }
 
-Core_Result dx_asset_definition_language_parser_parse_color_instance(dx_asset_reference** RETURN, dx_ddl_node* node, dx_adl_context* context) {
+Core_Result dx_asset_definition_language_parser_parse_color_instance(Core_Assets_Ref** RETURN, dx_ddl_node* node, dx_adl_context* context) {
   Core_String* received_type = NULL;
   if (dx_asset_definition_language_parser_parse_type(&received_type, node, context)) {
     return Core_Failure;
@@ -381,8 +381,8 @@ Core_Result dx_asset_definition_language_parser_parse_color_instance(dx_asset_re
   if (!value) {
     return Core_Failure;
   }
-  dx_asset_reference* reference = NULL;
-  if (dx_asset_reference_create(&reference, value)) {
+  Core_Assets_Ref* reference = NULL;
+  if (Core_Assets_Ref_create(&reference, value)) {
     CORE_UNREFERENCE(value);
     value = NULL;
     return Core_Failure;
@@ -393,7 +393,7 @@ Core_Result dx_asset_definition_language_parser_parse_color_instance(dx_asset_re
   return Core_Success;
 }
 
-Core_Result dx_adl_semantical_read_color_instance_field(dx_asset_reference** RETURN, dx_ddl_node* node, bool optional, Core_String* key, dx_adl_context* context) {
+Core_Result dx_adl_semantical_read_color_instance_field(Core_Assets_Ref** RETURN, dx_ddl_node* node, bool optional, Core_String* key, dx_adl_context* context) {
   dx_ddl_node* child_node = NULL;
   if (dx_ddl_node_map_get(&child_node, node, key)) {
     if (Core_Error_NotFound != Core_getError()) {
@@ -403,7 +403,7 @@ Core_Result dx_adl_semantical_read_color_instance_field(dx_asset_reference** RET
       return optional ? Core_Success : Core_Failure;
     }
   }
-  dx_asset_reference* temporary = NULL;
+  Core_Assets_Ref* temporary = NULL;
   if (dx_asset_definition_language_parser_parse_color_instance(&temporary, child_node, context)) {
     CORE_UNREFERENCE(child_node);
     child_node = NULL;
@@ -415,11 +415,11 @@ Core_Result dx_adl_semantical_read_color_instance_field(dx_asset_reference** RET
   return Core_Success;
 }
 
-Core_Result dx_asset_definition_language_parser_parse_image_instance(dx_asset_reference** RETURN, dx_ddl_node* node, dx_adl_context* context) {
+Core_Result dx_asset_definition_language_parser_parse_image_instance(Core_Assets_Ref** RETURN, dx_ddl_node* node, dx_adl_context* context) {
   return dx_adl_semantical_read_instance(RETURN, node, NAME(image_instance_type), context);
 }
 
-Core_Result dx_asset_definition_language_parser_parse_image_instance_field(dx_asset_reference** RETURN, dx_ddl_node* node, bool optional, Core_String* key, dx_adl_context* context) {
+Core_Result dx_asset_definition_language_parser_parse_image_instance_field(Core_Assets_Ref** RETURN, dx_ddl_node* node, bool optional, Core_String* key, dx_adl_context* context) {
   dx_ddl_node* child_node = NULL;
   if (dx_ddl_node_map_get(&child_node, node, key)) {
     if (Core_Error_NotFound != Core_getError()) {
@@ -429,7 +429,7 @@ Core_Result dx_asset_definition_language_parser_parse_image_instance_field(dx_as
       return optional ? Core_Success : Core_Failure;
     }
   }
-  dx_asset_reference* temporary = NULL;
+  Core_Assets_Ref* temporary = NULL;
   if (dx_asset_definition_language_parser_parse_image_instance(&temporary, child_node, context)) {
     CORE_UNREFERENCE(child_node);
     child_node = NULL;
@@ -441,11 +441,11 @@ Core_Result dx_asset_definition_language_parser_parse_image_instance_field(dx_as
   return Core_Success;
 }
 
-Core_Result dx_asset_definition_language_parser_parse_texture_instance(dx_asset_reference** RETURN, dx_ddl_node* node, dx_adl_context* context) {
+Core_Result dx_asset_definition_language_parser_parse_texture_instance(Core_Assets_Ref** RETURN, dx_ddl_node* node, dx_adl_context* context) {
   return dx_adl_semantical_read_instance(RETURN, node, NAME(texture_instance_type), context);
 }
 
-Core_Result dx_asset_definition_language_parser_parse_texture_instance_field(dx_asset_reference** RETURN, dx_ddl_node* node, bool optional, Core_String* key, dx_adl_context* context) {
+Core_Result dx_asset_definition_language_parser_parse_texture_instance_field(Core_Assets_Ref** RETURN, dx_ddl_node* node, bool optional, Core_String* key, dx_adl_context* context) {
   dx_ddl_node* child_node = NULL;
   if (dx_ddl_node_map_get(&child_node, node, key)) {
     if (Core_Error_NotFound != Core_getError()) {
@@ -455,7 +455,7 @@ Core_Result dx_asset_definition_language_parser_parse_texture_instance_field(dx_
       return optional ? Core_Success : Core_Failure;
     }
   }
-  dx_asset_reference* temporary = NULL;
+  Core_Assets_Ref* temporary = NULL;
   if (dx_asset_definition_language_parser_parse_texture_instance(&temporary, child_node, context)) {
     CORE_UNREFERENCE(child_node);
     child_node = NULL;
@@ -467,11 +467,11 @@ Core_Result dx_asset_definition_language_parser_parse_texture_instance_field(dx_
   return Core_Success;
 }
 
-Core_Result dx_asset_definition_language_parser_parse_material_instance(dx_asset_reference** RETURN, dx_ddl_node* node, dx_adl_context* context) {
+Core_Result dx_asset_definition_language_parser_parse_material_instance(Core_Assets_Ref** RETURN, dx_ddl_node* node, dx_adl_context* context) {
   return dx_adl_semantical_read_instance(RETURN, node, NAME(material_instance_type), context);
 }
 
-Core_Result dx_adl_semantical_read_material_instance_field(dx_asset_reference** RETURN, dx_ddl_node* node, bool optional, Core_String* key, dx_adl_context* context) {
+Core_Result dx_adl_semantical_read_material_instance_field(Core_Assets_Ref** RETURN, dx_ddl_node* node, bool optional, Core_String* key, dx_adl_context* context) {
   dx_ddl_node* child_node = NULL;
   if (dx_ddl_node_map_get(&child_node, node, key)) {
     if (Core_Error_NotFound != Core_getError()) {

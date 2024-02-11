@@ -33,6 +33,33 @@ on_enter_document($options);
       <div class="center-column">
         <div class="news-item">
           <div class="news-item-header">
+            <h1>2024-02-11</h1>
+          </div>
+          <div class="news-item-body">
+            <p>
+            As the backing system for the website matures, we add more documentation items
+            for the various libraries Primordial Machine we are building for our games  to
+            be. As of today, over 250 procedures, objects, and enumeration were documented.
+            </p>
+            
+            <p>
+            When visiting Primordial Machine's website (or running the website locally on
+            your machine for quickly referencing the documentation), then you want   that
+            website to respect your privacy. In particular, you do not want that  website
+            to give your PI to companies by requesting assets and libraries from    their
+            CDNs: Consequently, Primordial Machine removed all external references    for
+            to assets and libraries it uses. The following references were       removed:
+            </p>
+            <ul style="list-style: square inside;">
+              <li>Removed references go Google's "static.google.com" for fonts.
+                  Fonts are hosted locally.</li>
+              <li>Removed references to "polyfill.io" and "cdn.jsdelivr.net" for library loading.
+                  The "Polyfill" library was removed and the "MathJax" library is hosted locally.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="news-item">
+          <div class="news-item-header">
             <h1>2023-12-23</h1>
           </div>
           <div class="news-item-body">

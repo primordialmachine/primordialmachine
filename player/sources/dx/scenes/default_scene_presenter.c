@@ -193,7 +193,7 @@ static Core_Result tick2(dx_default_scene_presenter* SELF, Core_Real32 delta_sec
     if (dx_inline_object_array_get_at((Core_Object**)&mesh_instance, &SELF->mesh_instances, i)) {
       return Core_Failure;
     }
-    Core_InlineRgbN8 a = DX_ASSETS_COLOR_RGB_N8(mesh_instance->mesh->material->material_asset->ambient_color->object)->value;
+    Core_InlineRgbN8 a = CORE_ASSETS_COLORRGBN8(mesh_instance->mesh->material->material_asset->ambient_color->object)->value;
     dx_rgb_n8_to_rgba_f32(&a, 1.f, &mesh_instance->mesh->material->ambient_color);
   }
   return Core_Success;

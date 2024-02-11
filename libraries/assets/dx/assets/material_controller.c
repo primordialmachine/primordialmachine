@@ -1,7 +1,6 @@
 #include "dx/assets/material_controller.h"
 
-//#include <math.h>
-#include "dx/assets/color_rgb_n8.h"
+#include "Core/Assets/ColorRgbN8.h"
 #include "dx/assets/material.h"
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
@@ -62,7 +61,7 @@ static Core_Result dx_assets_material_controllers_ambient_color_update(dx_assets
   Core_InlineRgbN8 end = dx_colors_amber;
   Core_InlineRgbN8 current;
   dx_rgb_u8_lerp(&start, &end, t, &SELF->current);
-  DX_ASSETS_COLOR_RGB_N8(material->ambient_color->object)->value = SELF->current;
+  CORE_ASSETS_COLORRGBN8(material->ambient_color->object)->value = SELF->current;
   return Core_Success;
 }
 

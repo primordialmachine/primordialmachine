@@ -3,7 +3,14 @@
 
 #include "Core/String.h"
 
-/// @brief Base of all contexts. A context is a provides access to functionality.
+/// @brief
+/// Base of all contexts.
+/// @details
+/// Contexts are acquired for systems (Core.System).
+/// A context represents an isolation of state.
+/// Frequently, systems only have one single context.
+/// Some system, however, allow to create multiple contexts.
+/// Althought these contexts are create for the same system, they behave "as if" they were isolated from each other.
 Core_declareObjectType("dx.context",
                        dx_context,
                        Core_Object);

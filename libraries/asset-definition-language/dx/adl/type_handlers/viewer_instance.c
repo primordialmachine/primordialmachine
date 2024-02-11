@@ -137,14 +137,14 @@ static Core_Result _check_keys(dx_adl_type_handlers_viewer_instance* SELF, dx_dd
 }
 
 static Core_Result _parse_viewer_instance(dx_assets_viewer_instance** RETURN, dx_adl_type_handlers_viewer_instance* SELF, dx_ddl_node* node, dx_adl_context* context) {
-  dx_asset_reference* viewer_reference = NULL;
+  Core_Assets_Ref* viewer_reference = NULL;
   // reference
   {
     Core_String* name = dx_adl_semantical_read_string_field(node, NAME(reference_key), context->names);
     if (!name) {
       return Core_Failure;
     }
-    if (dx_asset_reference_create(&viewer_reference, name)) {
+    if (Core_Assets_Ref_create(&viewer_reference, name)) {
       CORE_UNREFERENCE(name);
       name = NULL;
       return Core_Failure;

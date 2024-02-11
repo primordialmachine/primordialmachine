@@ -1,27 +1,26 @@
 #include "dx/assets/context.h"
 
-Core_defineObjectType("dx.assets.context",
-                      dx_assets_context,
+Core_defineObjectType("Core.Assets.Context",
+                      Core_Assets_Context,
                       dx_context);
 
-static void dx_assets_context_destruct(dx_assets_context* SELF)
+static void Core_Assets_Context_destruct(Core_Assets_Context* SELF)
 {/*Intentionally empty.*/}
 
-static void dx_assets_context_constructDispatch(dx_assets_context_Dispatch* SELF)
+static void Core_Assets_Context_constructDispatch(Core_Assets_Context_Dispatch* SELF)
 {/*Intentionally empty.*/}
 
-Core_Result dx_assets_context_construct(dx_assets_context* SELF) {
-  DX_CONSTRUCT_PREFIX(dx_assets_context);
+Core_Result Core_Assets_Context_construct(Core_Assets_Context* SELF) {
+  Core_BeginConstructor(Core_Assets_Context);
   if (dx_context_construct(DX_CONTEXT(SELF))) {
     return Core_Failure;
   }
-  CORE_OBJECT(SELF)->type = TYPE;
-  return Core_Success;
+  Core_EndConstructor(Core_Assets_Context);
 }
 
-Core_Result dx_assets_context_create(dx_assets_context** RETURN) {
-  DX_CREATE_PREFIX(dx_assets_context);
-  if (dx_assets_context_construct(SELF)) {
+Core_Result Core_Assets_Context_create(Core_Assets_Context** RETURN) {
+  DX_CREATE_PREFIX(Core_Assets_Context);
+  if (Core_Assets_Context_construct(SELF)) {
     CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;

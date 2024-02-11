@@ -148,7 +148,7 @@ static Core_Result _parse(Core_Object** RETURN, dx_adl_type_handlers_mesh_instan
     return Core_Failure;
   }
   dx_asset_mesh_instance* mesh_instance = NULL;
-  dx_asset_reference* mesh_reference = NULL;
+  Core_Assets_Ref* mesh_reference = NULL;
   dx_assets_matrix_4x4_f32* transformation = NULL;
   // transformation?
   {
@@ -188,7 +188,7 @@ static Core_Result _parse(Core_Object** RETURN, dx_adl_type_handlers_mesh_instan
       }
       return Core_Failure;
     }
-    if (dx_asset_reference_create(&mesh_reference, name)) {
+    if (Core_Assets_Ref_create(&mesh_reference, name)) {
       if (transformation) {
         CORE_UNREFERENCE(transformation);
         transformation = NULL;

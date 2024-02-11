@@ -16,7 +16,7 @@ static Core_Result _create_scene_from_text(dx_assets_scene** RETURN, char const*
   if (dx_application_get(&application)) {
     return Core_Failure;
   }
-  dx_assets_context* context = NULL;
+  Core_Assets_Context* context = NULL;
   if (dx_application_get_assets_context(&context, application)) {
     CORE_UNREFERENCE(application);
     application = NULL;

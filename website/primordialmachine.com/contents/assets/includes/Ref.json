@@ -1,0 +1,10 @@
+{
+  "type" : "object",
+  "last-update" : "2024-02-11",
+  "indices" : "core",
+  "name" : "Core_Assets_Ref",
+  "id" : "core-assets-ref",
+  "signature" : "typedef struct Core_Assets_Ref Core_Assets_Ref;",
+  "extends" : "Core_Object",
+  "description": "A reference to an asset definition."
+}

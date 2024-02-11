@@ -2,12 +2,12 @@
 #define DX_ASSETS_H_INCLUDED
 
 
-#include "dx/assets/color_rgb_n8.h"
+#include "Core/Assets/ColorRgbN8.h"
 #include "dx/assets/context.h"
-#include "dx/assets/image.h"
-#include "dx/assets/image_operation.h"
-#include "dx/assets/image_operations/color_fill.h"
-#include "dx/assets/image_operations/checkerboard_pattern_fill.h"
+#include "Core/Assets/Image.h"
+#include "Core/Assets/ImageOperation.h"
+#include "Core/Assets/ImageOperations/ColorFill.h"
+#include "Core/Assets/ImageOperations/CheckerboardPatternFill.h"
 #include "dx/assets/material.h"
 #include "dx/assets/material_controller.h"
 #include "dx/assets/matrix_4x4_f32.h"
@@ -16,7 +16,8 @@
 #include "dx/assets/mesh_operation.h"
 #include "dx/assets/mesh_operations/set_vertex_colors.h"
 #include "dx/assets/optics.h"
-#include "dx/assets/reference.h"
+#include "Core/Assets/Ref.h"
+#include "Core/Assets/Def.h"
 #include "dx/assets/scene.h"
 #include "dx/assets/system.h"
 #include "dx/assets/system_factory.h"

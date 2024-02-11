@@ -3,31 +3,34 @@
 
 #include "dx/core.h"
 
-/// @extends dx_context
-Core_declareObjectType("dx.assets.context",
-                       dx_assets_context,
+/// A context for the Core_Assets_System.
+/// Fully qualified names must be unique in a context.
+/// However, different contexts can contain defs of the same fully qualified name.
+/// @extends Core_Context
+Core_declareObjectType("Core.Assets.Context",
+                       Core_Assets_Context,
                        dx_context);
 
-static inline dx_assets_context* DX_ASSETS_CONTEXT(void* p) {
-  return (dx_assets_context*)p;
+static inline Core_Assets_Context* CORE_ASSETS_CONTEXT(void* p) {
+  return (Core_Assets_Context*)p;
 }
 
-struct dx_assets_context {
+struct Core_Assets_Context {
   dx_context _parent;
 };
 
-static inline dx_assets_context_Dispatch* DX_ASSETS_CONTEXT_DISPATCH(void* p) {
-  return (dx_assets_context_Dispatch*)p;
+static inline Core_Assets_Context_Dispatch* CORE_ASSETS_CONTEXT_DISPATCH(void* p) {
+  return (Core_Assets_Context_Dispatch*)p;
 }
 
-struct dx_assets_context_Dispatch {
+struct Core_Assets_Context_Dispatch {
   dx_context_Dispatch _parent;
 };
 
-/// @constructor{dx_assets_context}
-Core_Result dx_assets_context_construct(dx_assets_context* SELF);
+/// @constructor{Core_Assets_Context}
+Core_Result Core_Assets_Context_construct(Core_Assets_Context* SELF);
 
-/// @constructor-operator{dx_assets_context}
-Core_Result dx_assets_context_create(dx_assets_context** RETURN);
+/// @constructor-operator{Core_Assets_Context}
+Core_Result Core_Assets_Context_create(Core_Assets_Context** RETURN);
 
-#endif  // DX_ASSETS_CONTEXT_H_INCLUDED
+#endif  // CORE_ASSETS_CONTEXT_H_INCLUDED

@@ -94,8 +94,8 @@ artifacts:
       name: $(ZIP_FILENAME)
 
 deploy:
-    release: primordialmachine-v$(APPVEYOR_BUILD_VERSION)
-    tag: primordialmachine-v$(APPVEYOR_BUILD_VERSION)
+    release: primordialmachine-master-v$(APPVEYOR_BUILD_VERSION)
+    tag: primordialmachine-master-v$(APPVEYOR_BUILD_VERSION)
     description: 'Primordial Machine Master v$(APPVEYOR_BUILD_VERSION)'
     provider: GitHub
     auth_token:

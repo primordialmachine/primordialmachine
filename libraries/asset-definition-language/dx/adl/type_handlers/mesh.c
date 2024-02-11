@@ -348,7 +348,7 @@ static Core_Result _parse_mesh(dx_assets_mesh** RETURN, dx_ddl_node* node, dx_ad
     child_node = NULL;
   }
   // material
-  dx_asset_reference* material_reference_value = NULL;
+  Core_Assets_Ref* material_reference_value = NULL;
   {
     if (dx_adl_semantical_read_material_instance_field(&material_reference_value, node, false, NAME(material_key), context)) {
       CORE_UNREFERENCE(generator_value);

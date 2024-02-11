@@ -88,7 +88,7 @@ struct dx_assets_mesh {
   Core_String* name;
 
   /// @brief Reference to the material of this mesh.
-  dx_asset_reference* material_reference;
+  Core_Assets_Ref* material_reference;
 
   /// @brief The number of vertices of this mesh.
   uint32_t number_of_vertices;
@@ -139,7 +139,7 @@ struct dx_assets_mesh_Dispatch {
 /// - "cube" a cube mesh
 /// - "empty" an empty mesh
 /// @create-operator{dx_assets_mesh}
-Core_Result dx_assets_mesh_create(dx_assets_mesh** RETURN, Core_String* name, Core_String* specifier, Core_VertexFormat vertex_format, dx_asset_reference* material_reference);
+Core_Result dx_assets_mesh_create(dx_assets_mesh** RETURN, Core_String* name, Core_String* specifier, Core_VertexFormat vertex_format, Core_Assets_Ref* material_reference);
 
 /// @brief Pack the mesh data into a single stream of the specified format.
 /// @param vertex_format The vertex format to pack the mesh data in.

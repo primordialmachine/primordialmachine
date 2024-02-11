@@ -292,17 +292,17 @@ static void dx_val_gl_texture_constructDispatch(dx_val_gl_texture_Dispatch* self
 }
 
 static Core_Result fill_amber(dx_assets_image* image_value) {
-  dx_assets_color_rgb_n8* color_value = NULL;
-  if (dx_assets_color_rgb_n8_create(&color_value, &dx_colors_amber)) {
+  Core_Assets_ColorRgbN8* color_value = NULL;
+  if (Core_Assets_ColorRgbN8_create(&color_value, &dx_colors_amber)) {
     return Core_Failure;
   }
-  dx_assets_image_operations_color_fill* image_operation_value = NULL;
-  if (dx_assets_image_operations_color_fill_create(&image_operation_value)) {
+  Core_Assets_ImageOperations_ColorFill* image_operation_value = NULL;
+  if (Core_Assets_ImageOperations_ColorFill_create(&image_operation_value)) {
     CORE_UNREFERENCE(color_value);
     color_value = NULL;
     return Core_Failure;
   }
-  if (dx_assets_image_operations_color_fill_set_color(image_operation_value, color_value)) {
+  if (Core_Assets_ImageOperations_ColorFill_set_color(image_operation_value, color_value)) {
     CORE_UNREFERENCE(image_operation_value);
     image_operation_value = NULL;
     CORE_UNREFERENCE(color_value);
@@ -311,7 +311,7 @@ static Core_Result fill_amber(dx_assets_image* image_value) {
   }
   CORE_UNREFERENCE(color_value);
   color_value = NULL;
-  if (dx_assets_image_apply(image_value, 0, 0, image_value->width, image_value->height, DX_ASSETS_IMAGE_OPERATION(image_operation_value))) {
+  if (dx_assets_image_apply(image_value, 0, 0, image_value->width, image_value->height, CORE_ASSETS_IMAGEOPERATION(image_operation_value))) {
     CORE_UNREFERENCE(image_operation_value);
     image_operation_value = NULL;
     return Core_Failure;

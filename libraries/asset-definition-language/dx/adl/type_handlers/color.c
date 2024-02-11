@@ -171,8 +171,8 @@ static Core_Result _parse(Core_Object** RETURN, dx_adl_type_handlers_color* SELF
   if (_parse_color_rgb_u8(node, context, &temporary)) {
     return Core_Failure;
   }
-  dx_assets_color_rgb_n8* color_asset = NULL;
-  if (dx_assets_color_rgb_n8_create(&color_asset, &temporary)) {
+  Core_Assets_ColorRgbN8* color_asset = NULL;
+  if (Core_Assets_ColorRgbN8_create(&color_asset, &temporary)) {
     return Core_Failure;
   }
   *RETURN = CORE_OBJECT(color_asset);

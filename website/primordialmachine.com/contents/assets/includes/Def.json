@@ -1,0 +1,10 @@
+{
+  "type" : "object",
+  "last-update" : "2024-02-11",
+  "indices" : "assets",
+  "name" : "Core_Assets_Def",
+  "id" : "core-assets-def",
+  "signature" : "typedef struct Core_Assets_Def Core_Assets_Def;",
+  "extends" : "Core_Object",
+  "description": "The base of all asset definitions."
+}

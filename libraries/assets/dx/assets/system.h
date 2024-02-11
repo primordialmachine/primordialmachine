@@ -2,7 +2,7 @@
 #define DX_ASSETS_SYSTEM_H_INCLUDED
 
 #include "dx/core.h"
-typedef struct dx_assets_context dx_assets_context;
+typedef struct Core_Assets_Context Core_Assets_Context;
 
 /// @brief A system for assets.
 /// @extends dx_system
@@ -24,7 +24,7 @@ static inline dx_assets_system_Dispatch* DX_ASSETS_SYSTEM_DISPATCH(void* p) {
 
 struct dx_assets_system_Dispatch {
   dx_system_Dispatch _parent;
-  Core_Result(*get_context)(dx_assets_context**, dx_assets_system*);
+  Core_Result(*get_context)(Core_Assets_Context**, dx_assets_system*);
 };
 
 /// @brief Construct this system.
@@ -35,14 +35,14 @@ Core_Result dx_assets_system_construct(dx_assets_system* SELF);
 Core_Result dx_assets_system_create(dx_assets_system** RETURN);
 
 /// @brief Get the Assets context.
-/// @param RETURN A pointer to a <code>dx_assets_context*</code> variable.
+/// @param RETURN A pointer to a <code>Core_Assets_Context*</code> variable.
 /// @success
 /// <code>*RETURN</code> was assigned a pointer to the Assets context object.
 /// The caller acquired a reference to that object.
 /// @warning
 /// This function fails if this Assets system is not started.
 /// @method{dx_assets_system}
-static inline Core_Result dx_assets_system_get_context(dx_assets_context** RETURN, dx_assets_system* SELF) {
+static inline Core_Result dx_assets_system_get_context(Core_Assets_Context** RETURN, dx_assets_system* SELF) {
   DX_OBJECT_VIRTUALCALL(dx_assets_system, get_context, RETURN, SELF);
 }
 

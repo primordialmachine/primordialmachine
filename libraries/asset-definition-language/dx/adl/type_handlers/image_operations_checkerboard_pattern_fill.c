@@ -30,7 +30,7 @@ static Core_Result _uninitialize_expected_keys(dx_adl_type_handlers_image_operat
 
 static Core_Result _check_keys(dx_adl_type_handlers_image_operations_checkerboard_pattern_fill* SELF, dx_ddl_node* node);
 
-static Core_Result _parse_checker_colors(dx_adl_type_handlers_image_operations_checkerboard_pattern_fill* SELF, dx_assets_image_operations_checkerboard_pattern_fill* asset, dx_ddl_node* node, dx_adl_context* context);
+static Core_Result _parse_checker_colors(dx_adl_type_handlers_image_operations_checkerboard_pattern_fill* SELF, Core_Assets_ImageOperations_CheckerboardPatternFill* asset, dx_ddl_node* node, dx_adl_context* context);
 
 static Core_Result _parse(Core_Object** RETURN, dx_adl_type_handlers_image_operations_checkerboard_pattern_fill* SELF, dx_ddl_node* node, dx_adl_context* context);
 
@@ -140,7 +140,7 @@ static Core_Result _check_keys(dx_adl_type_handlers_image_operations_checkerboar
   return Core_Success;
 }
 
-static Core_Result _parse_checker_colors(dx_adl_type_handlers_image_operations_checkerboard_pattern_fill* SELF, dx_assets_image_operations_checkerboard_pattern_fill *asset, dx_ddl_node* node, dx_adl_context* context) {
+static Core_Result _parse_checker_colors(dx_adl_type_handlers_image_operations_checkerboard_pattern_fill* SELF, Core_Assets_ImageOperations_CheckerboardPatternFill* asset, dx_ddl_node* node, dx_adl_context* context) {
   // checkerColors
   dx_ddl_node* child_node = NULL;
   if (dx_ddl_node_map_get(&child_node, node, NAME(checker_colors_key))) {
@@ -171,8 +171,8 @@ static Core_Result _parse(Core_Object** RETURN, dx_adl_type_handlers_image_opera
   if (_check_keys(SELF, node)) {
     return Core_Failure;
   }
-  dx_assets_image_operations_checkerboard_pattern_fill* image_operation = NULL;
-  if (dx_assets_image_operations_checkerboard_pattern_fill_create(&image_operation)) {
+  Core_Assets_ImageOperations_CheckerboardPatternFill* image_operation = NULL;
+  if (Core_Assets_ImageOperations_CheckerboardPatternFill_create(&image_operation)) {
     return Core_Failure;
   }
   // numberOfCheckers
@@ -193,7 +193,7 @@ static Core_Result _parse(Core_Object** RETURN, dx_adl_type_handlers_image_opera
         image_operation = NULL;
         return Core_Failure;
       }
-      if (dx_assets_image_operations_checkerboard_pattern_fill_set_number_of_checkers_horizontal(image_operation, value)) {
+      if (Core_Assets_ImageOperations_CheckerboardPatternFill_set_number_of_checkers_horizontal(image_operation, value)) {
         CORE_UNREFERENCE(image_operation);
         image_operation = NULL;
         return Core_Failure;
@@ -209,7 +209,7 @@ static Core_Result _parse(Core_Object** RETURN, dx_adl_type_handlers_image_opera
         image_operation = NULL;
         return Core_Failure;
       }
-      if (dx_assets_image_operations_checkerboard_pattern_fill_set_number_of_checkers_vertical(image_operation, value)) {
+      if (Core_Assets_ImageOperations_CheckerboardPatternFill_set_number_of_checkers_vertical(image_operation, value)) {
         CORE_UNREFERENCE(child_node);
         child_node = NULL;
         CORE_UNREFERENCE(image_operation);
@@ -238,7 +238,7 @@ static Core_Result _parse(Core_Object** RETURN, dx_adl_type_handlers_image_opera
         image_operation = NULL;
         return Core_Failure;
       }
-      if (dx_assets_image_operations_checkerboard_pattern_fill_set_checker_size_horizontal(image_operation, value)) {
+      if (Core_Assets_ImageOperations_CheckerboardPatternFill_set_checker_size_horizontal(image_operation, value)) {
         CORE_UNREFERENCE(child_node);
         child_node = NULL;
         CORE_UNREFERENCE(image_operation);
@@ -256,7 +256,7 @@ static Core_Result _parse(Core_Object** RETURN, dx_adl_type_handlers_image_opera
         image_operation = NULL;
         return Core_Failure;
       }
-      if (dx_assets_image_operations_checkerboard_pattern_fill_set_checker_size_vertical(image_operation, value)) {
+      if (Core_Assets_ImageOperations_CheckerboardPatternFill_set_checker_size_vertical(image_operation, value)) {
         CORE_UNREFERENCE(child_node);
         child_node = NULL;
         CORE_UNREFERENCE(image_operation);
@@ -281,7 +281,7 @@ static Core_Result _resolve(dx_adl_type_handlers_image_operations_checkerboard_p
   if (symbol->resolved) {
     return Core_Success;
   }
-  dx_assets_image_operations_checkerboard_pattern_fill* asset = DX_ASSETS_IMAGE_OPERATIONS_CHECKERBOARD_PATTERN_FILL(symbol->asset);
+  Core_Assets_ImageOperations_CheckerboardPatternFill* asset = CORE_ASSETS_IMAGEOPERATIONS_CHECKERBOARDPATTERNFILL(symbol->asset);
   // checkerColors
   {
     // checkerColors.first
@@ -290,8 +290,8 @@ static Core_Result _resolve(dx_adl_type_handlers_image_operations_checkerboard_p
       if (dx_asset_definitions_get(&color_symbol, context->definitions, asset->first_checker_color->name)) {
         return Core_Failure;
       }
-      dx_assets_color_rgb_n8* color_asset = DX_ASSETS_COLOR_RGB_N8(color_symbol->asset);
-      if (dx_assets_image_operations_checkerboard_pattern_fill_set_first_checker_color(asset, color_asset)) {
+      Core_Assets_ColorRgbN8* color_asset = CORE_ASSETS_COLORRGBN8(color_symbol->asset);
+      if (Core_Assets_ImageOperations_CheckerboardPatternFill_set_first_checker_color(asset, color_asset)) {
         CORE_UNREFERENCE(color_symbol);
         color_symbol = NULL;
         return Core_Failure;
@@ -305,8 +305,8 @@ static Core_Result _resolve(dx_adl_type_handlers_image_operations_checkerboard_p
       if (dx_asset_definitions_get(&color_symbol, context->definitions, asset->second_checker_color->name)) {
         return Core_Failure;
       }
-      dx_assets_color_rgb_n8* color_asset = DX_ASSETS_COLOR_RGB_N8(color_symbol->asset);
-      if (dx_assets_image_operations_checkerboard_pattern_fill_set_second_checker_color(asset, color_asset)) {
+      Core_Assets_ColorRgbN8* color_asset = CORE_ASSETS_COLORRGBN8(color_symbol->asset);
+      if (Core_Assets_ImageOperations_CheckerboardPatternFill_set_second_checker_color(asset, color_asset)) {
         CORE_UNREFERENCE(color_symbol);
         color_symbol = NULL;
         return Core_Failure;

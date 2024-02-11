@@ -1,6 +1,6 @@
-# Copyright (c) 2023 Michael Heilmann. All rights reserved.
+# Copyright (c) 2023-2024 Michael Heilmann. All rights reserved.
 # Author: Michael Heilmann (michaelheilmann@primordialmachine.com
-# Copyright: Copyright (c) 2023 Michael Heilmann. All rights reserved.
+# Copyright: Copyright (c) 2023-2024 Michael Heilmann. All rights reserved.
 
 cmake_minimum_required(VERSION 3.20)
 
@@ -37,22 +37,27 @@ list(APPEND ${name}.headers "dx/assets/mesh_operation.h")
 list(APPEND ${name}.sources "dx/assets/mesh_operations/set_vertex_colors.c")
 list(APPEND ${name}.headers "dx/assets/mesh_operations/set_vertex_colors.h")
 
-list(APPEND ${name}.sources "dx/assets/image_operation.c")
-list(APPEND ${name}.headers "dx/assets/image_operation.h")
-list(APPEND ${name}.sources "dx/assets/image_operations/color_fill.c")
-list(APPEND ${name}.headers "dx/assets/image_operations/color_fill.h")
-
-list(APPEND ${name}.sources "dx/assets/image_operations/checkerboard_pattern_fill.c")
-list(APPEND ${name}.headers "dx/assets/image_operations/checkerboard_pattern_fill.h")
-list(APPEND ${name}.inlays  "dx/assets/image_operations/checkerboard_pattern_fill_impl.i")
-
-list(APPEND ${name}.sources "dx/assets/image_operations/mirror_vertical.c")
-list(APPEND ${name}.headers "dx/assets/image_operations/mirror_vertical.h")
-list(APPEND ${name}.inlays  "dx/assets/image_operations/mirror_vertical_impl.i")
-
-list(APPEND ${name}.sources "dx/assets/image_operations/mirror_horizontal.c")
-list(APPEND ${name}.headers "dx/assets/image_operations/mirror_horizontal.h")
-list(APPEND ${name}.inlays  "dx/assets/image_operations/mirror_horizontal_impl.i")
+list(APPEND ${name}.sources "Core/Assets/ColorRgbN8.c")
+list(APPEND ${name}.headers "Core/Assets/ColorRgbN8.h")
+list(APPEND ${name}.sources "Core/Assets/Def.c")
+list(APPEND ${name}.headers "Core/Assets/Def.h")
+list(APPEND ${name}.sources "Core/Assets/Image.c")
+list(APPEND ${name}.headers "Core/Assets/Image.h")
+list(APPEND ${name}.sources "Core/Assets/ImageOperation.c")
+list(APPEND ${name}.headers "Core/Assets/ImageOperation.h")
+list(APPEND ${name}.sources "Core/Assets/ImageOperations/CheckerboardPatternFill.c")
+list(APPEND ${name}.headers "Core/Assets/ImageOperations/CheckerboardPatternFill.h")
+list(APPEND ${name}.inlays  "Core/Assets/ImageOperations/CheckerboardPatternFillImpl.i")
+list(APPEND ${name}.sources "Core/Assets/ImageOperations/ColorFill.c")
+list(APPEND ${name}.headers "Core/Assets/ImageOperations/ColorFill.h")
+list(APPEND ${name}.sources "Core/Assets/ImageOperations/MirrorHorizontal.c")
+list(APPEND ${name}.headers "Core/Assets/ImageOperations/MirrorHorizontal.h")
+list(APPEND ${name}.inlays  "Core/Assets/ImageOperations/MirrorHorizontalImpl.i")
+list(APPEND ${name}.sources "Core/Assets/ImageOperations/MirrorVertical.c")
+list(APPEND ${name}.headers "Core/Assets/ImageOperations/MirrorVertical.h")
+list(APPEND ${name}.inlays  "Core/Assets/ImageOperations/MirrorVerticalImpl.i")
+list(APPEND ${name}.sources "Core/Assets/Ref.c")
+list(APPEND ${name}.headers "Core/Assets/Ref.h")
 
 list(APPEND ${name}.sources "dx/assets/scene.c")
 list(APPEND ${name}.headers "dx/assets/scene.h")
@@ -68,9 +73,6 @@ list(APPEND ${name}.headers "dx/assets/texture.h")
 list(APPEND ${name}.sources "dx/assets/optics.c")
 list(APPEND ${name}.headers "dx/assets/optics.h")
 
-list(APPEND ${name}.sources "dx/assets/reference.c")
-list(APPEND ${name}.headers "dx/assets/reference.h")
-
 # assets - mesh & mesh instance
 list(APPEND ${name}.sources "dx/assets/mesh.c")
 list(APPEND ${name}.headers "dx/assets/mesh.h")
@@ -84,15 +86,10 @@ list(APPEND ${name}.headers "dx/assets/viewer_instance.h")
 list(APPEND ${name}.sources "dx/assets/viewer_controller.c")
 list(APPEND ${name}.headers "dx/assets/viewer_controller.h")
 
-list(APPEND ${name}.sources "dx/assets/image.c")
-list(APPEND ${name}.headers "dx/assets/image.h")
-
 list(APPEND ${name}.sources "dx/assets/matrix_4x4_f32.c")
 list(APPEND ${name}.headers "dx/assets/matrix_4x4_f32.h")
 list(APPEND ${name}.sources "dx/assets/vector_3_f32.c")
 list(APPEND ${name}.headers "dx/assets/vector_3_f32.h")
-list(APPEND ${name}.sources "dx/assets/color_rgb_n8.c")
-list(APPEND ${name}.headers "dx/assets/color_rgb_n8.h")
 
 # Small utility function to find files by expression and append them to the specified list.
 function(add_files file_list expression)

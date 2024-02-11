@@ -39,7 +39,7 @@ static Core_Result get_val_context(dx_val_context** RETURN, dx_application* SELF
 
 static Core_Result get_aal_context(dx_aal_context** RETURN, dx_application* SELF);
 
-static Core_Result get_assets_context(dx_assets_context** RETURN, dx_application* SELF);
+static Core_Result get_assets_context(Core_Assets_Context** RETURN, dx_application* SELF);
 
 static void dx_application_destruct(dx_application* SELF) {
   CORE_UNREFERENCE(SELF->assets_system);
@@ -63,7 +63,7 @@ static void dx_application_constructDispatch(dx_application_Dispatch* SELF) {
   DX_APPLICATION_DISPATCH(SELF)->update = (Core_Result(*)(dx_application*))&update;
   DX_APPLICATION_DISPATCH(SELF)->get_val_context = (Core_Result(*)(dx_val_context**, dx_application*)) & get_val_context;
   DX_APPLICATION_DISPATCH(SELF)->get_aal_context = (Core_Result(*)(dx_aal_context**, dx_application*)) & get_aal_context;
-  DX_APPLICATION_DISPATCH(SELF)->get_assets_context = (Core_Result(*)(dx_assets_context**, dx_application*)) & get_assets_context;
+  DX_APPLICATION_DISPATCH(SELF)->get_assets_context = (Core_Result(*)(Core_Assets_Context**, dx_application*)) & get_assets_context;
 }
 
 static Core_Result update(dx_application* SELF) {
@@ -195,8 +195,8 @@ static Core_Result get_aal_context(dx_aal_context** RETURN, dx_application* SELF
   return Core_Success;
 }
 
-static Core_Result get_assets_context(dx_assets_context** RETURN, dx_application* SELF) {
-  dx_assets_context* context = NULL;
+static Core_Result get_assets_context(Core_Assets_Context** RETURN, dx_application* SELF) {
+  Core_Assets_Context* context = NULL;
   if (dx_assets_system_get_context(&context, SELF->assets_system)) {
     return Core_Failure;
   }

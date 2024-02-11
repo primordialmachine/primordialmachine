@@ -231,7 +231,7 @@ static void dx_assets_mesh_destruct(dx_assets_mesh* SELF) {
 static void dx_assets_mesh_constructDispatch(dx_assets_mesh_Dispatch* SELF)
 {/*Intentionally empty.*/}
 
-static Core_Result dx_assets_mesh_construct(dx_assets_mesh* SELF, Core_String* name, Core_String* specifier, Core_VertexFormat vertex_format, dx_asset_reference* material_reference) {
+static Core_Result dx_assets_mesh_construct(dx_assets_mesh* SELF, Core_String* name, Core_String* specifier, Core_VertexFormat vertex_format, Core_Assets_Ref* material_reference) {
   DX_CONSTRUCT_PREFIX(dx_assets_mesh);
   if (!name || !specifier || !material_reference) {
     Core_setError(Core_Error_ArgumentInvalid);
@@ -354,7 +354,7 @@ SELECT_GENERATOR(octahedron)
   return Core_Success;
 }
 
-Core_Result dx_assets_mesh_create(dx_assets_mesh** RETURN, Core_String * name, Core_String* specifier, Core_VertexFormat vertex_format, dx_asset_reference* material_reference) {
+Core_Result dx_assets_mesh_create(dx_assets_mesh** RETURN, Core_String * name, Core_String* specifier, Core_VertexFormat vertex_format, Core_Assets_Ref* material_reference) {
   DX_CREATE_PREFIX(dx_assets_mesh);
   if (dx_assets_mesh_construct(SELF, name, specifier, vertex_format, material_reference)) {
     CORE_UNREFERENCE(SELF);

@@ -4,6 +4,7 @@
 #include "dx/core.h"
 typedef struct dx_system dx_system;
 
+/// The base of factories for Core_System derived type object.
 Core_declareObjectType("dx.system_factory",
                        dx_system_factory,
                        Core_Object);
