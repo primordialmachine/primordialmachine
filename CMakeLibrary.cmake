@@ -48,7 +48,7 @@ endmacro()
 #
 # Furthermore, it defines the public and private include directories of the project.
 macro(dx_begin_project target)
-  message(${target})
+  message( STATUS ${target})
   
   core_detect_void_pointer_size(${target})
 
@@ -123,22 +123,22 @@ macro(dx_end_project target)
   dx_configure_warnings(${target})
 
   #message( STATUS "${target}:" )
-  message(" - kind: ${${target}.kind}" )
-  message(" - target_architecture: ${${target}.target_architecture}" )
-  message(" - void pointer size: ${${target}.sizeof_void_pointer}" )
+  message( STATUS " - kind: ${${target}.kind}" )
+  message( STATUS " - target_architecture: ${${target}.target_architecture}" )
+  message( STATUS " - void pointer size: ${${target}.sizeof_void_pointer}" )
   
   if (DEFINED ${target}.private_include_directories)
-    message(" - private include directories specified: yes" )
+    message( STATUS " - private include directories specified: yes" )
     target_include_directories(${target} PRIVATE ${${target}.private_include_directories})
   else()
-    message(" - private include directories specified: no" ) 
+    message( STATUS " - private include directories specified: no" ) 
   endif()
 
   if (DEFINED ${target}.public_include_directories)
-    message(" - public include directories specified: yes" )
+    message( STATUS " - public include directories specified: yes" )
     target_include_directories(${target} PUBLIC ${${target}.public_include_directories})  
   else()
-    message(" - public include directories specified: no" )
+    message( STATUS " - public include directories specified: no" )
   endif()
 
 endmacro()

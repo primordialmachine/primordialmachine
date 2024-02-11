@@ -3,76 +3,66 @@ The folder, in which this `README.md` is located in, contains the source code an
 
 The program opens a window.
 
-It presents eight scenes:
+It presents seventeen scenes:
 
-- `day8-empty.adl` An empty scene with a "Capri"-colored background.
+- `day1.empty.adl` An empty scene with a "Capri"-colored background.
 
-- `day11-quadriliteral.adl` A quadriliteral.
+- `day2.quadriliteral.adl` A quadriliteral.
   The background is "Capri"-colored.
   The geometric is "Malachite"-colored.
 
-- `day11-triangle.adl` A triangle.
+- `day2.triangle.adl` A triangle.
   The background is "Capri"-colored.
   The geometric is "Malachite"-colored.
 
-- `day12-quadriliteral.adl` A quadriliteral.
+- `day3.quadriliteral.adl` A quadriliteral.
   The background is "Capri"-colored.
   The geometric is vertex-colored.
   The vertex color is oscillating between colors.
  
-- `day12-triangle.adl` A triangle.
+- `day3.triangle.adl` A triangle.
   The background is "Capri"-colored.
   The geometric is vertex-colored.
   The vertex color is oscillating between colors.
 
-- `day13-quadriliteral.adl` A quadriliteral.
+- `day4.quadriliteral.adl` A quadriliteral.
   The background is "Capri"-colored.
   The geometric is vertex-colored.
 
-- `day13-triangle.adl` A triangle.
+- `day4.triangle.adl` A triangle.
   The background is "Capri"-colored.
   The geometric is vertex-colored.
  
-- `day15-quadriliteral` A quadriliteral.
+- `day5.quadriliteral.adl` A quadriliteral.
   The background is "Capri"-colored.
   The geometric is textured with a checkerboard texture.
 
-- `day15-triangle` A triangle.
+- `day5.triangle.adl` A triangle.
   The background is "Capri"-colored.
   The geometric is textured with a checkerboard texture.
 
-- `day16-quadriliteral.adl` A quadriliteral with a checkerboard texture.
+- `day6.quadriliteral.adl` A quadriliteral with a checkerboard texture.
   The background is "Capri"-colored.
   The camera rotates around the geometrics.
 
-- `day16-triangle.adl` A triangle with a checkerboard texture.
+- `day7.triangle.adl` A triangle with a checkerboard texture.
   The background is "Capri"-colored.
   The camera rotates around the geometrics.
 
-- `day17-cube.adl` A cube with a checkerboard texture.
+- `day8.cube.adl` A cube with a checkerboard texture.
   The background is "Capri"-colored.
   The camera rotates around the geometrics.
 
-- `day17-octahedron.adl` An octahderon with a checkerboard texture.
+- `day8.octahedron.adl` An octahderon with a checkerboard texture.
   The background is "Capri"-colored.
   The camera rotates around the geometrics.
 
-- `day18-cube.adl` Two cubes both with a checkerboard texture.
+- `day9.cube.loaded-texture.adl` Two cubes both with a white texture with black lines at the seams of the sides.
   The background is "Capri"-colored.
   The cubes are distributed around the origin.
   The camera rotates around the geometrics.
 
-- `day18-octahedron.adl` Two octahedra both with a checkerboard texture.
-  The background is "Capri"-colored.
-  The octahedra are distributed around the origin.
-  The camera rotates around the geometrics.
-
-- `day19-cube-loaded-texture.adl` Two cubes both with a white texture with black lines at the seams of the sides.
-  The background is "Capri"-colored.
-  The cubes are distributed around the origin.
-  The camera rotates around the geometrics.
-
-- `day19-octahedron-loaded-texture.adl` Two octahedra both with a white texture with black lines at the seams of the sides.
+- `day9.octahedron.loaded-texture.adl` Two octahedra both with a white texture with black lines at the seams of the sides.
   The background is "Capri"-colored.
   The octahedra are distributed around the origin.
   The camera rotates around the geometrics.
