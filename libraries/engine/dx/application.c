@@ -130,22 +130,22 @@ static Core_Result startup_secondary_systems(dx_application* SELF) {
 }
 
 static Core_Result startup_systems(dx_application* SELF) {
-  if (dx_system_startup(DX_SYSTEM(SELF->val_system))) {
+  if (Core_System_startup(CORE_SYSTEM(SELF->val_system))) {
     return Core_Failure;
   }
-  if (dx_system_startup(DX_SYSTEM(SELF->aal_system))) {
-    dx_system_shutdown(DX_SYSTEM(SELF->val_system));
+  if (Core_System_startup(CORE_SYSTEM(SELF->aal_system))) {
+    Core_System_shutdown(CORE_SYSTEM(SELF->val_system));
     return Core_Failure;
   }
-  if (dx_system_startup(DX_SYSTEM(SELF->assets_system))) {
-    dx_system_shutdown(DX_SYSTEM(SELF->aal_system));
-    dx_system_shutdown(DX_SYSTEM(SELF->val_system));
+  if (Core_System_startup(CORE_SYSTEM(SELF->assets_system))) {
+    Core_System_shutdown(CORE_SYSTEM(SELF->aal_system));
+    Core_System_shutdown(CORE_SYSTEM(SELF->val_system));
     return Core_Failure;
   }
   if (startup_secondary_systems(SELF)) {
-    dx_system_shutdown(DX_SYSTEM(SELF->assets_system));
-    dx_system_shutdown(DX_SYSTEM(SELF->aal_system));
-    dx_system_shutdown(DX_SYSTEM(SELF->val_system));
+    Core_System_shutdown(CORE_SYSTEM(SELF->assets_system));
+    Core_System_shutdown(CORE_SYSTEM(SELF->aal_system));
+    Core_System_shutdown(CORE_SYSTEM(SELF->val_system));
     return Core_Failure;
   }
   return Core_Success;
@@ -165,13 +165,13 @@ static Core_Result shutdown_systems(dx_application* SELF) {
   if (shutdown_secondary_systems(SELF)) {
     return Core_Failure;
   }
-  if (dx_system_shutdown(DX_SYSTEM(SELF->assets_system))) {
+  if (Core_System_shutdown(CORE_SYSTEM(SELF->assets_system))) {
     return Core_Failure;
   }
-  if (dx_system_shutdown(DX_SYSTEM(SELF->aal_system))) {
+  if (Core_System_shutdown(CORE_SYSTEM(SELF->aal_system))) {
     return Core_Failure;
   }
-  if (dx_system_shutdown(DX_SYSTEM(SELF->val_system))) {
+  if (Core_System_shutdown(CORE_SYSTEM(SELF->val_system))) {
     return Core_Failure;
   }
   return Core_Success;
@@ -221,13 +221,13 @@ Core_Result dx_application_construct
     return Core_Failure;
   }
   //
-  if (dx_system_factory_create_system((dx_system**)&SELF->val_system, DX_SYSTEM_FACTORY(val_system_factory), msg_queue)) {
+  if (Core_SystemFactory_create_system((Core_System**)&SELF->val_system, CORE_SYSTEMFACTORY(val_system_factory), msg_queue)) {
     CORE_UNREFERENCE(SELF->configuration);
     SELF->configuration = NULL;
     return Core_Failure;
   }
   //
-  if (dx_system_factory_create_system((dx_system**)&SELF->aal_system, DX_SYSTEM_FACTORY(aal_system_factory), msg_queue)) {
+  if (Core_SystemFactory_create_system((Core_System**)&SELF->aal_system, CORE_SYSTEMFACTORY(aal_system_factory), msg_queue)) {
     CORE_UNREFERENCE(SELF->val_system);
     SELF->val_system = NULL;
     CORE_UNREFERENCE(SELF->configuration);
@@ -235,7 +235,7 @@ Core_Result dx_application_construct
     return Core_Failure;
   }
   //
-  if (dx_system_factory_create_system((dx_system**)&SELF->assets_system, DX_SYSTEM_FACTORY(assets_system_factory), msg_queue)) {
+  if (Core_SystemFactory_create_system((Core_System**)&SELF->assets_system, CORE_SYSTEMFACTORY(assets_system_factory), msg_queue)) {
     CORE_UNREFERENCE(SELF->aal_system);
     SELF->aal_system = NULL;
     CORE_UNREFERENCE(SELF->val_system);

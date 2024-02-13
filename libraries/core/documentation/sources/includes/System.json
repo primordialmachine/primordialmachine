@@ -1,0 +1,28 @@
+{
+  "type" : "object",
+  "last-update" : "2024-02-13",
+  "indices" : "core",
+  "name" : "Core_System",
+  "id" : "core-system",
+  "signature" : "typedef struct Core_System Core_System;",
+  "extends" : "Core_Object",
+  "description": [
+    "The representation of a system.",
+    " ",
+    "A @{code('Core_System')} derived type objects have to states: 'started' and 'stopped'. The initial state is 'stopped'.",
+    "@{newline()}",
+    "A successfull call to @{code('Core_System_startup')} puts the object in the 'started' state.",
+    " ",
+    "The system remains in the 'stopped' state if the call fails.",
+    " ",
+    "A call to  @{code('Core_System_startup')} for a system in the 'started' state is undefined behavior.",
+    "@{newline()}",
+    "A successful call to @{code('Core_System_shutdown')} puts the object in the 'stopped' state.",
+    " ",
+    "The system remains in the 'started' state if the call fails.",
+    " ",
+    "A call to  @{code('Core_System_shutdown')} for a system in the 'stopped' state is undefined behavior.",
+    "@{newline()}",
+    "@{code('Core_System')} derived type objects are created by @{code('Core_SystemFactory')} derived type objects."
+  ]
+}

@@ -88,7 +88,7 @@ static Core_Result _read_vector_3(DX_VEC3* target, dx_ddl_node* node, dx_adl_con
   return Core_Success;
 }
 
-Core_Result dx_asset_definition_language_parser_parse_translation(dx_assets_matrix_4x4_f32** RETURN, dx_ddl_node* node, dx_adl_context* context) {
+Core_Result dx_asset_definition_language_parser_parse_translation(Core_Assets_Matrix4x4R32** RETURN, dx_ddl_node* node, dx_adl_context* context) {
   Core_String* received_type = NULL;
   if (dx_asset_definition_language_parser_parse_type(&received_type, node, context)) {
     return Core_Failure;
@@ -112,15 +112,15 @@ Core_Result dx_asset_definition_language_parser_parse_translation(dx_assets_matr
   if (_read_translation(&value, node, context, context->names)) {
     return Core_Failure;
   }
-  dx_assets_matrix_4x4_f32* temporary = NULL;
-  if (dx_assets_matrix_4x4_f32_create(&temporary, &value)) {
+  Core_Assets_Matrix4x4R32* temporary = NULL;
+  if (Core_Assets_Matrix4x4R32_create(&temporary, &value)) {
     return Core_Failure;
   }
   *RETURN = temporary;
   return Core_Success;
 }
 
-Core_Result dx_asset_definition_language_parser_parse_vector_3_f32(dx_assets_vector_3_f32** RETURN, dx_ddl_node* node, dx_adl_context* context) {
+Core_Result dx_asset_definition_language_parser_parse_vector_3_f32(Core_Assets_Vector3R32** RETURN, dx_ddl_node* node, dx_adl_context* context) {
   Core_String* received_type = NULL;
   if (dx_asset_definition_language_parser_parse_type(&received_type, node, context)) {
     Core_setError(Core_Error_SemanticalAnalysisFailed);
@@ -143,15 +143,15 @@ Core_Result dx_asset_definition_language_parser_parse_vector_3_f32(dx_assets_vec
   if (_read_vector_3(&value, node, context, context->names)) {
     return Core_Failure;
   }
-  dx_assets_vector_3_f32* temporary = NULL;
-  if (dx_assets_vector_3_f32_create(&temporary, &value)) {
+  Core_Assets_Vector3R32* temporary = NULL;
+  if (Core_Assets_Vector3R32_create(&temporary, &value)) {
     return Core_Failure;
   }
   *RETURN = temporary;
   return Core_Success;
 }
 
-Core_Result dx_asset_definition_language_parser_parse_vector_3_f32_field(dx_assets_vector_3_f32** RETURN, dx_ddl_node* node, Core_String* key, dx_adl_context* context) {
+Core_Result dx_asset_definition_language_parser_parse_vector_3_f32_field(Core_Assets_Vector3R32** RETURN, dx_ddl_node* node, Core_String* key, dx_adl_context* context) {
   dx_ddl_node* child_node = NULL;
   if (dx_ddl_node_map_get(&child_node, node, key)) {
     return Core_Failure;

@@ -71,7 +71,7 @@ Core_Result dx_asset_definition_language_parser_parse_name(Core_String** RETURN,
 /// <code>*RETURN</code> was assigned a pointer to the translation object.
 /// The caller acquired a reference to the string object returned.
 /// @method{dx_asset_definition_language_parser}
-Core_Result dx_asset_definition_language_parser_parse_translation(dx_assets_matrix_4x4_f32** RETURN, dx_ddl_node* node, dx_adl_context* context);
+Core_Result dx_asset_definition_language_parser_parse_translation(Core_Assets_Matrix4x4R32** RETURN, dx_ddl_node* node, dx_adl_context* context);
 
 /// @brief Parse
 /// @code
@@ -96,13 +96,13 @@ Core_Result dx_asset_definition_language_parser_parse_color_instance(Core_Assets
 /// <code>*RETURN</code> was assigned a pointer to the vector object.
 /// The caller acquired a reference to the string object returned.
 /// @method{dx_asset_definition_language_parser}
-Core_Result dx_asset_definition_language_parser_parse_vector_3_f32(dx_assets_vector_3_f32** RETURN, dx_ddl_node* node, dx_adl_context* context);
+Core_Result dx_asset_definition_language_parser_parse_vector_3_f32(Core_Assets_Vector3R32** RETURN, dx_ddl_node* node, dx_adl_context* context);
 
 /// @brief Parse
 /// @code
 /// <key> : <ADL.Vector3>
 /// @endcode
-/// @param RETURN A pointer to a <code>dx_assets_vector_3_f32*</code> variable.
+/// @param RETURN A pointer to a <code>Core_Assets_Vector3R32*</code> variable.
 /// @param node A pointer to the node.
 /// @param context A pointer to the context.
 /// @param key A pointer to the key (string).
@@ -110,7 +110,7 @@ Core_Result dx_asset_definition_language_parser_parse_vector_3_f32(dx_assets_vec
 /// <code>*RETURN</code> was assigned a pointer to the vector object.
 /// The caller acquired a reference to the string object returned.
 /// @method{dx_asset_definition_language_parser}
-Core_Result dx_asset_definition_language_parser_parse_vector_3_f32_field(dx_assets_vector_3_f32** RETURN, dx_ddl_node* node, Core_String* key, dx_adl_context* context);
+Core_Result dx_asset_definition_language_parser_parse_vector_3_f32_field(Core_Assets_Vector3R32** RETURN, dx_ddl_node* node, Core_String* key, dx_adl_context* context);
 
 /// @brief Parse
 /// @code

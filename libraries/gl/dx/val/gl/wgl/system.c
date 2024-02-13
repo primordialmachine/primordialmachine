@@ -982,8 +982,8 @@ static void Core_Val_Gl_Wgl_System_destruct(Core_Val_Gl_Wgl_System* SELF) {
 }
 
 static void Core_Val_Gl_Wgl_System_constructDispatch(Core_Val_Gl_Wgl_System_Dispatch* SELF) {
-  DX_SYSTEM_DISPATCH(SELF)->startup = (Core_Result(*)(dx_system*)) & startup;
-  DX_SYSTEM_DISPATCH(SELF)->shutdown = (Core_Result(*)(dx_system*)) & shutdown;
+  CORE_SYSTEM_DISPATCH(SELF)->startup = (Core_Result(*)(Core_System*)) & startup;
+  CORE_SYSTEM_DISPATCH(SELF)->shutdown = (Core_Result(*)(Core_System*)) & shutdown;
   DX_VAL_SYSTEM_DISPATCH(SELF)->get_context = (Core_Result(*)(dx_val_context**,dx_val_system*)) & get_context;
   CORE_VAL_GL_SYSTEM_DISPATCH(SELF)->getWindow = (Core_Result(*)(dx_val_gl_window**,Core_Val_Gl_System*)) & getWindow;
 }

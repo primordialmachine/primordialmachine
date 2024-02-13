@@ -149,7 +149,7 @@ static Core_Result _parse(Core_Object** RETURN, dx_adl_type_handlers_mesh_instan
   }
   dx_asset_mesh_instance* mesh_instance = NULL;
   Core_Assets_Ref* mesh_reference = NULL;
-  dx_assets_matrix_4x4_f32* transformation = NULL;
+  Core_Assets_Matrix4x4R32* transformation = NULL;
   // transformation?
   {
     Core_String* name = NULL;

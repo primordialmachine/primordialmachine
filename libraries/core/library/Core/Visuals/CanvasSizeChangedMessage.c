@@ -13,14 +13,13 @@ static void Core_CanvasSizeChangedMessage_constructDispatch(Core_CanvasSizeChang
 {/*Intentionally empty.*/}
 
 Core_Result Core_CanvasSizeChangedMessage_construct(Core_CanvasSizeChangedMessage* SELF, Core_Real32 horizontalSize, Core_Real32 verticalSize) {
-  DX_CONSTRUCT_PREFIX(Core_CanvasSizeChangedMessage);
+  Core_BeginConstructor(Core_CanvasSizeChangedMessage);
   if (Core_CanvasMessage_construct(CORE_CANVASMESSAGE(SELF), Core_CanvasMessageKind_SizeChanged)) {
     return Core_Failure;
   }
   SELF->horizontalSize = horizontalSize;
   SELF->verticalSize = verticalSize;
-  CORE_OBJECT(SELF)->type = TYPE;
-  return Core_Success;
+  Core_EndConstructor(Core_CanvasSizeChangedMessage);
 }
 
 Core_Result Core_CanvasSizeChangedMessage_create(Core_CanvasSizeChangedMessage** RETURN, Core_Real32 horizontalSize, Core_Real32 verticalSize) {

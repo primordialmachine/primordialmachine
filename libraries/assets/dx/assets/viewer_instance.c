@@ -1,6 +1,6 @@
 #include "dx/assets/viewer_instance.h"
 
-Core_defineObjectType("dx.assets.viewer_instance",
+Core_defineObjectType("Core.Assets.ViewerInstance",
                       dx_assets_viewer_instance,
                       Core_Object);
 

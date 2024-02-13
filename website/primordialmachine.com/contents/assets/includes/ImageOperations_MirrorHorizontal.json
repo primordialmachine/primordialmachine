@@ -7,7 +7,7 @@
   "signature" : "typedef struct Core_Assets_ImageOperations_MirrorHorizontal Core_Assets_ImageOperations_MirrorHorizontal;",
   "extends" : "Core_Assets_ImageOperation",
   "description": [
-    "An image operation. Mirrors the image horizontally.",
+    "An image operation asset definition. Mirrors the image horizontally. ",
     "Let \\(w \\geq 0\\) and \\(h \\geq 0\\) be the width of the height of the image, respectively, ",
     "then the pixel at \\((x,y)\\) with \\(x \\in [1,w]\\) and \\(y \\in [1,h]\\) is swapped with the pixel at \\((w-x,y)\\)." 
   ]

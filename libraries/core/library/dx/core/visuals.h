@@ -12,7 +12,7 @@
 #include "Core/Visuals/CanvasSizeChangedMessage.h"
 #include "Core/Visuals/CanvasStateChangedMessage.h"
 #include "Core/Visuals/CullMode.h"
-#include "Core/Visuals/DepthCompareFunction.h"
+#include "Core/Visuals/DepthCompareMode.h"
 #include "core/Visuals/PixelFormat.h"
 #include "Core/Visuals/TextureAddressMode.h"
 #include "Core/Visuals/VertexFormat.h"

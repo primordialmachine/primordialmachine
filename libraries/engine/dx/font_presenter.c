@@ -79,7 +79,7 @@ Core_Result dx_glyph_atlas_get_texture(dx_glyph_atlas* SELF, dx_font_glyph *glyp
   if (dx_font_glyph_get_texture_coordinates(glyph, &texture_coordinates_1)) {
     return Core_Failure;
   }
-  dx_assets_texture* assets_texture;
+  Core_Assets_Texture* assets_texture;
   if (dx_assets_extensions_create_texture_from_glyph(&assets_texture, glyph)) {
     return Core_Failure;
   }
@@ -202,7 +202,7 @@ present_glyph
   dx_val_buffer_set_data(SELF->val_buffer, &vertices, sizeof(vertices));
 
   // pipeline state command
-  if (dx_val_command_create_pipeline_state(&command, Core_CullMode_Back, Core_DepthCompareFunction_Always, Core_False)) {
+  if (dx_val_command_create_pipeline_state(&command, Core_CullMode_Back, Core_DepthCompareMode_Always, Core_False)) {
     return Core_Failure;
   }
   if (dx_val_command_list_append(SELF->val_command_list, command)) {

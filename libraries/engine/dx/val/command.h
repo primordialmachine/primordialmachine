@@ -118,12 +118,12 @@ struct dx_val_command {
     struct {
       
       /// @brief The cull mode.
-      /// @default Core_CullMode_Back in the default state of any VAL rendering system..
+      /// @default Core_CullMode_Back in the default state of any VAL rendering system.
       Core_CullMode cullMode;
       
-      /// @brief The depth compare function.
+      /// @brief The depth compare mode.
       /// @default Core_DepthCompareFunction_LessThan in the default state of any VAL rendering system.
-      Core_DepthCompareFunction depthCompareFunction;
+      Core_DepthCompareMode depthCompareMode;
       
       /// @brief Is depth write enable.
       /// @default Core_True in the default state of any VAL rendering system.
@@ -207,19 +207,19 @@ Core_Result dx_val_command_construct_viewport(dx_val_command* SELF, Core_Real32 
 Core_Result dx_val_command_create_viewport(dx_val_command** RETURN, Core_Real32 l, Core_Real32 b, Core_Real32 w, Core_Real32 h);
 
 
-Core_Result dx_val_command_construct_pipeline_state(dx_val_command* SELF, Core_CullMode cullMode, Core_DepthCompareFunction depthCompareFunction, Core_Boolean depthWriteEnabled);
+Core_Result dx_val_command_construct_pipeline_state(dx_val_command* SELF, Core_CullMode cullMode, Core_DepthCompareMode depthCompareMode, Core_Boolean depthWriteEnabled);
 
 /// Create a pipeline state command.
 /// @param RETURN A pointer to a <code>dx_val_command</code> variable.
 /// @param cull_mode The cull mode.
-/// @param depthCompareFunction The depth compare function.
+/// @param depthCompareMode The depth compare mode.
 /// @param depthWriteEnabled If depth write is enabled.
 /// @success
 /// <code>*RETURN</code> was assigned a pointer to the created dx_val_command object.
 /// The caller has acquired a reference to the returned object.
 /// @default-return
 /// @default-failure
-Core_Result dx_val_command_create_pipeline_state(dx_val_command** RETURN, Core_CullMode cullMode, Core_DepthCompareFunction depthCompareFunction, Core_Boolean depthWriteEnabled);
+Core_Result dx_val_command_create_pipeline_state(dx_val_command** RETURN, Core_CullMode cullMode, Core_DepthCompareMode depthCompareMode, Core_Boolean depthWriteEnabled);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 

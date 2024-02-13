@@ -27,7 +27,7 @@ static Core_Result _uninitialize_expected_keys(dx_adl_type_handlers_viewer* SELF
 
 static Core_Result _check_keys(dx_adl_type_handlers_viewer* SELF, dx_ddl_node* node);
 
-static Core_Result _parse_optics(dx_assets_optics** RETURN, dx_ddl_node* node, dx_adl_context* context);
+static Core_Result _parse_optics(Core_Assets_Optics** RETURN, dx_ddl_node* node, dx_adl_context* context);
 
 static Core_Result _parse_viewer_controller(dx_assets_viewer_controller** RETURN, dx_ddl_node* node, dx_adl_context* context);
 
@@ -142,7 +142,7 @@ static Core_Result _check_keys(dx_adl_type_handlers_viewer* SELF, dx_ddl_node* n
   return Core_Success;
 }
 
-static Core_Result _parse_optics(dx_assets_optics** RETURN, dx_ddl_node* node, dx_adl_context* context) {
+static Core_Result _parse_optics(Core_Assets_Optics** RETURN, dx_ddl_node* node, dx_adl_context* context) {
   Core_String* received_type = NULL;
   if (dx_asset_definition_language_parser_parse_type(&received_type, node, context)) {
     return Core_Failure;
@@ -168,7 +168,7 @@ static Core_Result _parse_optics(dx_assets_optics** RETURN, dx_ddl_node* node, d
   }
   CORE_UNREFERENCE(received_type);
   received_type = NULL;
-  dx_assets_optics* asset_optics = NULL;
+  Core_Assets_Optics* asset_optics = NULL;
   if (dx_adl_type_handler_read((Core_Object**)&asset_optics, type_handler, node, context)) {
     return Core_Failure;
   }
@@ -246,7 +246,7 @@ static Core_Result _parse(Core_Object** RETURN, dx_adl_type_handlers_viewer* SEL
         Core_setError(Core_Error_NoError);
       }
     } else {
-      dx_assets_vector_3_f32* value;
+      Core_Assets_Vector3R32* value;
       if (dx_asset_definition_language_parser_parse_vector_3_f32(&value, child_node, context)) {
         CORE_UNREFERENCE(child_node);
         child_node = NULL;
@@ -273,7 +273,7 @@ static Core_Result _parse(Core_Object** RETURN, dx_adl_type_handlers_viewer* SEL
         Core_setError(Core_Error_NoError);
       }
     } else {
-      dx_assets_vector_3_f32* value;
+      Core_Assets_Vector3R32* value;
       if (dx_asset_definition_language_parser_parse_vector_3_f32(&value, child_node, context)) {
         CORE_UNREFERENCE(child_node);
         child_node = NULL;
@@ -300,7 +300,7 @@ static Core_Result _parse(Core_Object** RETURN, dx_adl_type_handlers_viewer* SEL
         Core_setError(Core_Error_NoError);
       }
     } else {
-      dx_assets_vector_3_f32* value;
+      Core_Assets_Vector3R32* value;
       if (dx_asset_definition_language_parser_parse_vector_3_f32(&value, child_node, context)) {
         CORE_UNREFERENCE(child_node);
         child_node = NULL;
@@ -327,7 +327,7 @@ static Core_Result _parse(Core_Object** RETURN, dx_adl_type_handlers_viewer* SEL
         Core_setError(Core_Error_NoError);
       }
     } else {
-      dx_assets_optics* optics = NULL;
+      Core_Assets_Optics* optics = NULL;
       if (_parse_optics(&optics, child_node, context)) {
         CORE_UNREFERENCE(child_node);
         child_node = NULL;

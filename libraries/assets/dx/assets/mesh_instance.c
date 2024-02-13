@@ -26,7 +26,7 @@ Core_Result dx_asset_mesh_instance_construct(dx_asset_mesh_instance* SELF, Core_
 
   DX_MAT4 temporary;
   dx_mat4_set_identity(&temporary);
-  if (dx_assets_matrix_4x4_f32_create(&SELF->world_matrix, &temporary)) {
+  if (Core_Assets_Matrix4x4R32_create(&SELF->world_matrix, &temporary)) {
     CORE_UNREFERENCE(SELF->mesh_reference);
     SELF->mesh_reference = NULL;
     return Core_Failure;

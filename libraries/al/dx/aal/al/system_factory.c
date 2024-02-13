@@ -16,7 +16,7 @@ static void dx_aal_al_system_factory_destruct(dx_aal_al_system_factory* SELF)
 {/*Intentionally empty.*/}
 
 static void dx_aal_al_system_factory_constructDispatch(dx_aal_al_system_factory_Dispatch* SELF) {
-  DX_SYSTEM_FACTORY_DISPATCH(SELF)->create_system = (Core_Result(*)(dx_system**, dx_system_factory*, Core_MessageQueue*)) & create_system;
+  CORE_SYSTEMFACTORY_DISPATCH(SELF)->create_system = (Core_Result(*)(Core_System**, Core_SystemFactory*, Core_MessageQueue*)) & create_system;
 }
 
 Core_Result dx_aal_al_system_factory_construct(dx_aal_al_system_factory* SELF) {

@@ -5,14 +5,14 @@
 
 Core_declareObjectType("dx.assets.system_factory",
                        dx_assets_system_factory,
-                       dx_system_factory);
+                       Core_SystemFactory);
 
 static inline dx_assets_system_factory* DX_ASSETS_SYSTEM_FACTORY(void* p) {
   return (dx_assets_system_factory*)p;
 }
 
 struct dx_assets_system_factory {
-  dx_system_factory _parent;
+  Core_SystemFactory _parent;
 };
 
 static inline dx_assets_system_factory_Dispatch* DX_ASSETS_SYSTEM_FACTORY_DISPATCH(void* p) {
@@ -20,7 +20,7 @@ static inline dx_assets_system_factory_Dispatch* DX_ASSETS_SYSTEM_FACTORY_DISPAT
 }
 
 struct dx_assets_system_factory_Dispatch {
-  dx_system_factory_Dispatch _parent;
+  Core_SystemFactory_Dispatch _parent;
 };
 
 /// @brief Construct this assets system factory.

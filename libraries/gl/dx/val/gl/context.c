@@ -209,29 +209,29 @@ static Core_Result execute_commands(dx_val_gl_context* SELF, dx_val_command_list
       SELF->glEnable(GL_BLEND);
       SELF->glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
       SELF->glEnable(GL_DEPTH_TEST);
-      switch (command->pipeline_state.depthCompareFunction) {
-        case Core_DepthCompareFunction_Always: {
+      switch (command->pipeline_state.depthCompareMode) {
+        case Core_DepthCompareMode_Always: {
           SELF->glDepthFunc(GL_ALWAYS);
         } break;
-        case Core_DepthCompareFunction_Never: {
+        case Core_DepthCompareMode_Never: {
           SELF->glDepthFunc(GL_NEVER);
         } break;
-        case Core_DepthCompareFunction_LessThan: {
+        case Core_DepthCompareMode_LessThan: {
           SELF->glDepthFunc(GL_LESS);
         } break;
-        case Core_DepthCompareFunction_LessThanOrEqualTo: {
+        case Core_DepthCompareMode_LessThanOrEqualTo: {
           SELF->glDepthFunc(GL_LEQUAL);
         } break;
-        case Core_DepthCompareFunction_GreaterThan: {
+        case Core_DepthCompareMode_GreaterThan: {
           SELF->glDepthFunc(GL_GREATER);
         } break;
-        case Core_DepthCompareFunction_GreaterThanOrEqualTo: {
+        case Core_DepthCompareMode_GreaterThanOrEqualTo: {
           SELF->glDepthFunc(GL_GEQUAL);
         } break;
-        case Core_DepthCompareFunction_Equal: {
+        case Core_DepthCompareMode_Equal: {
           SELF->glDepthFunc(GL_EQUAL);
         } break;
-        case Core_DepthCompareFunction_NotEqual: {
+        case Core_DepthCompareMode_NotEqual: {
           SELF->glDepthFunc(GL_NOTEQUAL);
         } break;
         default: {

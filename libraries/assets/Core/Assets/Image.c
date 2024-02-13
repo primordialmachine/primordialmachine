@@ -1,3 +1,4 @@
+// Copyright (c) 2018-2024 Michael Heilmann. All rights reserved.
 #include "Core/Assets/Image.h"
 
 // string
@@ -6,8 +7,8 @@
 #include "Core/Assets/ImageOperations/CheckerboardPatternFill.h"
 
 Core_defineObjectType("Core.Assets.Image",
-                      dx_assets_image,
-                      Core_Object);
+                      Core_Assets_Image,
+                      Core_Assets_Def);
 
 typedef struct EXTEND2 {
   Core_Size width;
@@ -22,7 +23,7 @@ typedef struct OFFSET2 {
 static const Core_InlineRgbN8 black = { 0, 0, 0 };
 
 // primitive operation
-static Core_Result _swap_pixels(dx_assets_image* SELF, Core_Size source_x, Core_Size source_y, Core_Size target_x, Core_Size target_y, Core_PixelFormat pixel_format);
+static Core_Result _swap_pixels(Core_Assets_Image* SELF, Core_Size source_x, Core_Size source_y, Core_Size target_x, Core_Size target_y, Core_PixelFormat pixel_format);
 
 // primitive operation
 static void _fill_bgr8(void* pixels, OFFSET2 fill_offset, EXTEND2 fill_extend, EXTEND2 image_extend, Core_Inline_BgrN8 const* color);
@@ -37,16 +38,16 @@ static void _fill_rgba8(void* pixels, OFFSET2 fill_offset, EXTEND2 fill_extend, 
 /// @param i, j The indices of the columns.
 /// @method-call
 /// @remark This is a non-primitive operation.
-static Core_Result _swap_columns(dx_assets_image* SELF, Core_Size i, Core_Size j);
+static Core_Result _swap_columns(Core_Assets_Image* SELF, Core_Size i, Core_Size j);
 
 /// @brief Swap two rows.
 /// @param SELF A pointer to this image.
 /// @param i, j The indices of the rows.
 /// @method-call
 /// @remark This is a non-primitive operation.
-static Core_Result _swap_rows(dx_assets_image* SELF, Core_Size i, Core_Size j);
+static Core_Result _swap_rows(Core_Assets_Image* SELF, Core_Size i, Core_Size j);
 
-static Core_Result on_color_fill_image_operation(dx_assets_image* SELF, OFFSET2 offset, EXTEND2 extend, Core_Assets_ImageOperations_ColorFill* image_operation);
+static Core_Result on_color_fill_image_operation(Core_Assets_Image* SELF, OFFSET2 offset, EXTEND2 extend, Core_Assets_ImageOperations_ColorFill* image_operation);
 
 static inline void _swap_bytes(uint8_t* a, uint8_t* b) {
   uint8_t t = *a;
@@ -54,7 +55,7 @@ static inline void _swap_bytes(uint8_t* a, uint8_t* b) {
   *b = t;
 }
 
-static Core_Result _swap_pixels(dx_assets_image* SELF, Core_Size source_x, Core_Size source_y, Core_Size target_x, Core_Size target_y, Core_PixelFormat pixel_format) {
+static Core_Result _swap_pixels(Core_Assets_Image* SELF, Core_Size source_x, Core_Size source_y, Core_Size target_x, Core_Size target_y, Core_PixelFormat pixel_format) {
   if (!SELF) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
@@ -308,7 +309,7 @@ static void _fill_rgba8(void* pixels, OFFSET2 fill_offset, EXTEND2 fill_extend, 
   }
 }
 
-static Core_Result _swap_columns(dx_assets_image* SELF, Core_Size i, Core_Size j) {
+static Core_Result _swap_columns(Core_Assets_Image* SELF, Core_Size i, Core_Size j) {
   if (!SELF) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
@@ -317,7 +318,7 @@ static Core_Result _swap_columns(dx_assets_image* SELF, Core_Size i, Core_Size j
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
   }
-  switch (SELF->pixel_format) {
+  switch (SELF->pixelFormat) {
     case Core_PixelFormat_Abgr8:
     case Core_PixelFormat_Argb8:
     case Core_PixelFormat_Bgr8:
@@ -329,7 +330,7 @@ static Core_Result _swap_columns(dx_assets_image* SELF, Core_Size i, Core_Size j
     {
       // iterate over the y-axis
       for (Core_Size y = 0; y < SELF->height; ++y) {
-        _swap_pixels(SELF, i, y, j, y, SELF->pixel_format);
+        _swap_pixels(SELF, i, y, j, y, SELF->pixelFormat);
       }
     } break;
     default: {
@@ -340,7 +341,7 @@ static Core_Result _swap_columns(dx_assets_image* SELF, Core_Size i, Core_Size j
   return Core_Success;
 }
 
-static Core_Result _swap_rows(dx_assets_image* SELF, Core_Size i, Core_Size j) {
+static Core_Result _swap_rows(Core_Assets_Image* SELF, Core_Size i, Core_Size j) {
   if (!SELF) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
@@ -349,7 +350,7 @@ static Core_Result _swap_rows(dx_assets_image* SELF, Core_Size i, Core_Size j) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
   }
-  switch (SELF->pixel_format) {
+  switch (SELF->pixelFormat) {
     case Core_PixelFormat_Abgr8:
     case Core_PixelFormat_Argb8:
     case Core_PixelFormat_Bgr8:
@@ -360,7 +361,7 @@ static Core_Result _swap_rows(dx_assets_image* SELF, Core_Size i, Core_Size j) {
     case Core_PixelFormat_Rgba8: {
       // iterate over the x-axis
       for (Core_Size x = 0; x < SELF->width; ++x) {
-        _swap_pixels(SELF, x, i, x, j, SELF->pixel_format);
+        _swap_pixels(SELF, x, i, x, j, SELF->pixelFormat);
       }
     } break;
     default: {
@@ -371,7 +372,7 @@ static Core_Result _swap_rows(dx_assets_image* SELF, Core_Size i, Core_Size j) {
   return Core_Success;
 }
 
-static void dx_assets_image_destruct(dx_assets_image* SELF) {
+static void Core_Assets_Image_destruct(Core_Assets_Image* SELF) {
   dx_inline_object_array_uninitialize(&SELF->operations);
   CORE_UNREFERENCE(SELF->name);
   SELF->name = NULL;
@@ -379,18 +380,21 @@ static void dx_assets_image_destruct(dx_assets_image* SELF) {
   SELF->pixels = NULL;
 }
 
-static void dx_assets_image_constructDispatch(dx_assets_image_Dispatch* SELF)
+static void Core_Assets_Image_constructDispatch(Core_Assets_Image_Dispatch* SELF)
 {/*Intentionally empty.*/}
 
-Core_Result dx_assets_image_construct(dx_assets_image* SELF,
-                                      Core_String* name,
-                                      Core_PixelFormat pixel_format,
-                                      Core_Size width,
-                                      Core_Size height) {
-  Core_BeginConstructor(dx_assets_image);
+Core_Result Core_Assets_Image_construct(Core_Assets_Image* SELF,
+                                        Core_String* name,
+                                        Core_PixelFormat pixelFormat,
+                                        Core_Size width,
+                                        Core_Size height) {
+  Core_BeginConstructor(Core_Assets_Image);
+  if (Core_Assets_Def_construct(CORE_ASSETS_DEF(SELF))) {
+    return Core_Failure;
+  }
   SELF->width = width;
   SELF->height = height;
-  SELF->pixel_format = pixel_format;
+  SELF->pixelFormat = pixelFormat;
   Core_Size overflow;
   Core_Size number_of_pixels;
   Core_safeMulSz(&number_of_pixels, SELF->width, SELF->height, &overflow); // must succeed
@@ -398,7 +402,7 @@ Core_Result dx_assets_image_construct(dx_assets_image* SELF,
     return Core_Failure;
   }
   Core_Size bytes_per_pixel;
-  if (Core_PixelFormat_getNumberOfBytes(&bytes_per_pixel, pixel_format)) {
+  if (Core_PixelFormat_getNumberOfBytes(&bytes_per_pixel, pixelFormat)) {
     return Core_Failure;
   }
   Core_Size number_of_bytes;
@@ -415,36 +419,21 @@ Core_Result dx_assets_image_construct(dx_assets_image* SELF,
   EXTEND2 fill_size = { .width = SELF->width, .height = SELF->height };
   EXTEND2 image_size = { .width = SELF->width, .height = SELF->height };
 
-  switch (SELF->pixel_format) {
+  switch (SELF->pixelFormat) {
     case Core_PixelFormat_L8: {
       Core_InlineLN8 color = { .l = 0 };
-    #if 0
-      OFFSET2 fill_offset = { .left = 0, .top = 0 };
-      EXTEND2 fill_size = { .width = SELF->width, .height = SELF->height };
-      EXTEND2 image_size = { .width = SELF->width, .height = SELF->height };
-    #endif
       _fill_l8(SELF->pixels, fill_offset, fill_size, image_size, &color);
     } break;
   case Core_PixelFormat_Bgr8: {
     Core_Inline_BgrN8 color = { .r = dx_colors_black.r,
                                 .g = dx_colors_black.g,
                                 .b = dx_colors_black.b, };
-  #if 0
-    OFFSET2 fill_offset = { .left = 0, .top = 0 };
-    EXTEND2 fill_size = { .width = SELF->width, .height = SELF->height };
-    EXTEND2 image_size = { .width = SELF->width, .height = SELF->height };
-  #endif
     _fill_bgr8(SELF->pixels, fill_offset, fill_size, image_size, &color);
   } break;
   case Core_PixelFormat_Rgb8: {
     Core_InlineRgbN8 color = { .r = dx_colors_black.r,
                                 .g = dx_colors_black.g,
                                 .b = dx_colors_black.b, };
-  #if 0
-    OFFSET2 fill_offset = { .left = 0, .top = 0 };
-    EXTEND2 fill_size = { .width = SELF->width, .height = SELF->height };
-    EXTEND2 image_size = { .width = SELF->width, .height = SELF->height };
-  #endif
     _fill_rgb8(SELF->pixels, fill_offset, fill_size, image_size, &dx_colors_black);
   } break;
   default: {
@@ -464,16 +453,16 @@ Core_Result dx_assets_image_construct(dx_assets_image* SELF,
     SELF->pixels = NULL;
     return Core_Failure;
   }
-  Core_EndConstructor(dx_assets_image);
+  Core_EndConstructor(Core_Assets_Image);
 }
 
-Core_Result dx_assets_image_create(dx_assets_image** RETURN,
-                                   Core_String* name, 
-                                   Core_PixelFormat pixel_format,
-                                   Core_Size width,
-                                   Core_Size height) {
-  DX_CREATE_PREFIX(dx_assets_image);
-  if (dx_assets_image_construct(SELF, name, pixel_format, width, height)) {
+Core_Result Core_Assets_Image_create(Core_Assets_Image** RETURN,
+                                     Core_String* name, 
+                                     Core_PixelFormat pixelFormat,
+                                     Core_Size width,
+                                     Core_Size height) {
+  DX_CREATE_PREFIX(Core_Assets_Image);
+  if (Core_Assets_Image_construct(SELF, name, pixelFormat, width, height)) {
     CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
@@ -502,8 +491,11 @@ static void read_image_deallocate(void* context, void* p) {
   }
 }
 
-Core_Result dx_assets_image_construct_path(dx_assets_image* SELF, Core_String* name, Core_String* path) {
-  Core_BeginConstructor(dx_assets_image);
+Core_Result Core_Assets_Image_construct_path(Core_Assets_Image* SELF, Core_String* name, Core_String* path) {
+  Core_BeginConstructor(Core_Assets_Image);
+  if (Core_Assets_Def_construct(CORE_ASSETS_DEF(SELF))) {
+    return Core_Failure;
+  }
   //
   Core_Boolean containsSymbol = Core_False;
   if (Core_String_containsSymbol(&containsSymbol, path, '\0')) {
@@ -564,10 +556,10 @@ Core_Result dx_assets_image_construct_path(dx_assets_image* SELF, Core_String* n
   SELF->height = height;
   switch (pixel_format) {
     case DX_WIC_PLUGIN_PIXEL_FORMAT_BN8_GN8_RN8: {
-      SELF->pixel_format = Core_PixelFormat_Bgr8;
+      SELF->pixelFormat = Core_PixelFormat_Bgr8;
     } break;
     case DX_WIC_PLUGIN_PIXEL_FORMAT_RN8_GN8_BN8: {
-      SELF->pixel_format = Core_PixelFormat_Rgb8;
+      SELF->pixelFormat = Core_PixelFormat_Rgb8;
     } break;
     default: {
       Core_Memory_deallocate(pixels);
@@ -588,12 +580,12 @@ Core_Result dx_assets_image_construct_path(dx_assets_image* SELF, Core_String* n
     return Core_Failure;
   }
 
-  Core_EndConstructor(dx_assets_image);
+  Core_EndConstructor(Core_Assets_Image);
 }
 
-Core_Result dx_assets_image_create_path(dx_assets_image** RETURN, Core_String* name, Core_String* path) {
-  DX_CREATE_PREFIX(dx_assets_image);
-  if (dx_assets_image_construct_path(SELF, name, path)) {
+Core_Result Core_Assets_Image_create_path(Core_Assets_Image** RETURN, Core_String* name, Core_String* path) {
+  DX_CREATE_PREFIX(Core_Assets_Image);
+  if (Core_Assets_Image_construct_path(SELF, name, path)) {
     CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
@@ -602,8 +594,8 @@ Core_Result dx_assets_image_create_path(dx_assets_image** RETURN, Core_String* n
   return Core_Success;
 }
 
-static Core_Result on_color_fill_image_operation(dx_assets_image* SELF, OFFSET2 offset, EXTEND2 extend, Core_Assets_ImageOperations_ColorFill* image_operation) {
-  switch (SELF->pixel_format) {
+static Core_Result on_color_fill_image_operation(Core_Assets_Image* SELF, OFFSET2 offset, EXTEND2 extend, Core_Assets_ImageOperations_ColorFill* image_operation) {
+  switch (SELF->pixelFormat) {
   case Core_PixelFormat_Rgb8: {
     EXTEND2 image_size = { .width = SELF->width, .height = SELF->height };
     _fill_rgb8(SELF->pixels, offset, extend, image_size, &(CORE_ASSETS_COLORRGBN8(image_operation->color->object)->value));
@@ -620,12 +612,12 @@ static Core_Result on_color_fill_image_operation(dx_assets_image* SELF, OFFSET2 
 #include "Core/Assets/ImageOperations/MirrorHorizontalImpl.i"
 #include "Core/Assets/ImageOperations/MirrorVerticalImpl.i"
 
-Core_Result dx_assets_image_apply(dx_assets_image* SELF,
-                                  Core_Size left,
-                                  Core_Size top,
-                                  Core_Size width,
-                                  Core_Size height,
-                                  Core_Assets_ImageOperation* image_operation) {
+Core_Result Core_Assets_Image_apply(Core_Assets_Image* SELF,
+                                    Core_Size left,
+                                    Core_Size top,
+                                    Core_Size width,
+                                    Core_Size height,
+                                    Core_Assets_ImageOperation* image_operation) {
   Core_Type* type = NULL;
   Core_Boolean result = Core_False;
   //

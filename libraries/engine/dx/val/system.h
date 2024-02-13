@@ -13,7 +13,7 @@ static inline dx_val_system* DX_VAL_SYSTEM(void* p) {
 }
 
 struct dx_val_system {
-  dx_system _parent;
+  Core_System _parent;
   /// @brief A weak reference to the message queue.
   Core_MessageQueue* msg_queue;
   /// @brief The state of the keyboard.
@@ -29,7 +29,7 @@ static inline dx_val_system_Dispatch* DX_VAL_SYSTEM_DISPATCH(void* p) {
 }
 
 struct dx_val_system_Dispatch {
-  dx_system_Dispatch _parent;
+  Core_System_Dispatch _parent;
   Core_Result (*get_context)(dx_val_context**, dx_val_system*);
 };
 

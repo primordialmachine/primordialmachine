@@ -1,42 +1,46 @@
 {
   "type" : "enumeration",
-  "last-update" : "2023-12-26",
+  "last-update" : "2024-01-14",
   "indices" : "val",
-  "name" : "Core_DepthCompareFunction",
-  "id" : "core-depthcomparefunction",
-  "signature" : "typedef enum Core_DepthCompareFunction &lt;implementation&gt; Core_DepthCompareFunction;",
-  "description": "An enumeration of depth compare functions. A depth compare function identifies a technique that compares depth value of an incoming fragment to its corresponding depth value in the depth buffer.",
+  "name" : "Core_DepthCompareMode",
+  "id" : "core-depthcomparemode",
+  "signature" : "typedef enum Core_DepthCompareMode &lt;implementation&gt; Core_DepthCompareMode;",
+  "description": [
+    "An enumeration of depth compare modes.",
+    " ",
+    "A depth compare mode denotes if an incoming fragment is retained or discarded depending on the outcome of the comparison of its depth value with its corresponding depth value in the depth buffer."
+  ],
   "elements": [
     {
-      "name" : "Core_DepthCompareFunction_Always",
+      "name" : "Core_DepthCompareMode_Always",
       "description" : "The incoming fragment always passes."
     },
     {
-      "name" : "Core_DepthComparefunction_Never",
+      "name" : "Core_DepthCompareMode_Never",
       "description" : "The incoming fragment never passes."
     },
     {
-      "name" : "Core_DepthCompareFunction_Equal",
+      "name" : "Core_DepthCompareMode_Equal",
       "description" : "The incoming fragment passes if its depth value is equal to its corresponding depth value in the depth buffer."
     },
     {
-      "name" : "Core_DepthCompareFunction_NotEqual",
+      "name" : "Core_DepthCompareMode_NotEqual",
       "description" : "The incoming fragment passes if its depth value is not equal to its corresponding depth value in the depth buffer."
     },
     {
-      "name" : "Core_DepthCompareFunction_LessThan",
+      "name" : "Core_DepthCompareMode_LessThan",
       "description" : "The incoming fragment passes if its depth value is less than its corresponding depth value in the depth buffer."
     },
     {
-      "name" : "Core_DepthCompareFunction_LessThanOrEqualTo",
+      "name" : "Core_DepthCompareMode_LessThanOrEqualTo",
       "description" : "The incoming fragment passes if its depth value is less than or equal to its corresponding depth value in the depth buffer."
     },
     {
-      "name" : "Core_DepthCompareFunction_GreaterThan",
+      "name" : "Core_DepthCompareMode_GreaterThan",
       "description" : "The incoming fragment passes if its depth value is greater than its corresponding depth value in the depth buffer."
     },
     {
-      "name" : "Core_DepthComparefunction_GreaterThanOrEqualTo",
+      "name" : "Core_DepthCompareMode_GreaterThanOrEqualTo",
       "description" : "The incoming fragment passes if its depth value is greater than or equal to its coressponding depth value in the depth buffer."
     }
   ]

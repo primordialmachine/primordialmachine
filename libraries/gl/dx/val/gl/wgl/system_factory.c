@@ -17,7 +17,7 @@ static void Core_Val_Gl_Wgl_SystemFactory_destruct(Core_Val_Gl_Wgl_SystemFactory
 {/*Intentionally empty.*/}
 
 static void Core_Val_Gl_Wgl_SystemFactory_constructDispatch(Core_Val_Gl_Wgl_SystemFactory_Dispatch* SELF) {
-  DX_SYSTEM_FACTORY_DISPATCH(SELF)->create_system = (Core_Result(*)(dx_system**, dx_system_factory*, Core_MessageQueue*)) & createSystem;
+  CORE_SYSTEMFACTORY_DISPATCH(SELF)->create_system = (Core_Result(*)(Core_System**, Core_SystemFactory*, Core_MessageQueue*)) & createSystem;
 }
 
 Core_Result Core_Val_Gl_Wgl_SystemFactory_construct(Core_Val_Gl_Wgl_SystemFactory* SELF) {

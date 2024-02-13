@@ -1,5 +1,5 @@
-#if !defined(DX_APPLICATION_H_INCLUDED)
-#define DX_APPLICATION_H_INCLUDED
+#if !defined(CORE_APPLICATION_H_INCLUDED)
+#define CORE_APPLICATION_H_INCLUDED
 
 #include "dx/core.h"
 
@@ -155,4 +155,4 @@ Core_Result dx_application_emit_quit_msg(dx_application* SELF);
 /// @procedure
 Core_Result dx_application_get(dx_application** RETURN);
 
-#endif // DX_APPLICATION_H_INCLUDED
+#endif // CORE_APPLICATION_H_INCLUDED

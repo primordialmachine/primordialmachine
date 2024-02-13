@@ -1,55 +1,46 @@
-#if !defined(DX_SYSTEM_H_INCLUDED)
-#define DX_SYSTEM_H_INCLUDED
+#if !defined(CORE_SYSTEM_H_INCLUDED)
+#define CORE_SYSTEM_H_INCLUDED
 
 #include "dx/core.h"
 
-/// @brief A system is an object with special semantics.
-/// A system (dx_system derived type) is created via a system factory (dx_system_factory derived type).
-/// 
-/// A system is started up and shutted down.
-/// - A system has two states, "started up" and "shutted down". The initial state is "shutted down".
-/// - A successful call to dx_system_startup on a "shutted down" system puts the system in the "started up" state.
-///   The system remains in "shutted down" state if the call fails.
-///   A call to dx_system_startup on a "started up" system is undefined behavior
-/// - a call to dx_system_shutdown on a "started up" system puts the system in the "shutted down" state.
-///   A call to dx_system_shutdown on a "shutted down" system or a failure of this call is undefined behavior.
-Core_declareObjectType("dx.system",
-                       dx_system,
+/* http://localhost/core#core-system */
+Core_declareObjectType("Core.System",
+                       Core_System,
                        Core_Object);
 
-static inline dx_system* DX_SYSTEM(void* p) {
-  return (dx_system*)p;
+static inline Core_System* CORE_SYSTEM(void* p) {
+  return (Core_System*)p;
 }
 
-struct dx_system {
+struct Core_System {
   Core_Object _parent;
 };
 
-static inline dx_system_Dispatch* DX_SYSTEM_DISPATCH(void* p) {
-  return (dx_system_Dispatch*)p;
+static inline Core_System_Dispatch* CORE_SYSTEM_DISPATCH(void* p) {
+  return (Core_System_Dispatch*)p;
 }
 
-struct dx_system_Dispatch {
+struct Core_System_Dispatch {
   Core_Object_Dispatch _parent;
-  Core_Result (*startup)(dx_system*);
-  Core_Result (*shutdown)(dx_system*);
+  Core_Result (*startup)(Core_System*);
+  Core_Result (*shutdown)(Core_System*);
 };
 
-/// @constructor{dx_system}
-Core_Result dx_system_construct(dx_system* SELF);
+/// @constructor{Core_System}
+Core_Result Core_System_construct(Core_System* SELF);
 
 /// @brief Startup this system.
-/// @method{dx_system}
+/// @method{Core_System}
 /// @pre The system is shutted down.
-static inline Core_Result dx_system_startup(dx_system* SELF) {
-  DX_OBJECT_VIRTUALCALL(dx_system, startup, SELF);
+static inline Core_Result Core_System_startup(Core_System* SELF) {
+  DX_OBJECT_VIRTUALCALL(Core_System, startup, SELF);
 }
 
 /// @brief Shutdown this system.
-/// @method{dx_system}
+/// @method{Core_System}
 /// @pre The system is started up.
-static inline Core_Result dx_system_shutdown(dx_system* SELF) {
-  DX_OBJECT_VIRTUALCALL(dx_system, shutdown, SELF);
+static inline Core_Result Core_System_shutdown(Core_System* SELF) {
+  DX_OBJECT_VIRTUALCALL(Core_System, shutdown, SELF);
 }
 
-#endif // DX_SYSTEM_H_INCLUDED
+#endif // CORE_SYSTEM_H_INCLUDED

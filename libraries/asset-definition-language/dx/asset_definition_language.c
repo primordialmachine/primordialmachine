@@ -186,7 +186,7 @@ Core_Result dx_adl_compile(dx_assets_scene** RETURN, dx_ddl_node* node) {
           return Core_Failure;
         }
         if (isEqualTo[0]) {
-          dx_assets_image* image = DX_ASSETS_IMAGE(symbol->asset);
+          Core_Assets_Image* image = CORE_ASSETS_IMAGE(symbol->asset);
           Core_Size n;
           if (dx_inline_object_array_get_size(&n, &image->operations)) {
             CORE_UNREFERENCE(context);
@@ -202,7 +202,7 @@ Core_Result dx_adl_compile(dx_assets_scene** RETURN, dx_ddl_node* node) {
               Core_InlineHashMapPPIterator_uninitialize(&iterator);
               return Core_Failure;
             }
-            if (dx_assets_image_apply(image, 0, 0, image->width, image->height, operation)) {
+            if (Core_Assets_Image_apply(image, 0, 0, image->width, image->height, operation)) {
               CORE_UNREFERENCE(context);
               context = NULL;
               Core_InlineHashMapPPIterator_uninitialize(&iterator);

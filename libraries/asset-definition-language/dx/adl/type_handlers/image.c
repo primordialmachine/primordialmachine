@@ -36,7 +36,7 @@ static Core_Result _parse_image_operation(dx_ddl_node* node, dx_adl_symbol* symb
 
 static Core_Result _parse_image_operations(dx_ddl_node* node, dx_adl_symbol* symbol, dx_adl_context* context);
 
-static Core_Result _parse_image(dx_assets_image** RETURN, dx_ddl_node* node, dx_adl_context* context);
+static Core_Result _parse_image(Core_Assets_Image** RETURN, dx_ddl_node* node, dx_adl_context* context);
 
 static Core_Result _parse(Core_Object** RETURN, dx_adl_type_handlers_image* SELF, dx_ddl_node* node, dx_adl_context* context);
 
@@ -204,7 +204,7 @@ static Core_Result _parse_image_operation(dx_ddl_node* node, dx_adl_symbol* symb
   CORE_REFERENCE(reader_symbol->asset);
   CORE_UNREFERENCE(reader_symbol);
   reader_symbol = NULL;
-  dx_assets_image* image = DX_ASSETS_IMAGE(symbol->asset);
+  Core_Assets_Image* image = CORE_ASSETS_IMAGE(symbol->asset);
   if (dx_inline_object_array_append(&image->operations, CORE_OBJECT(operation))) {
     CORE_UNREFERENCE(operation);
     operation = NULL;
@@ -244,13 +244,13 @@ static Core_Result _parse_image_operations(dx_ddl_node* node, dx_adl_symbol* sym
   return Core_Success;
 }
 
-static Core_Result _parse_image_with_path(dx_assets_image** RETURN, Core_String* name_value, dx_ddl_node* node, dx_adl_context* context) {
+static Core_Result _parse_image_with_path(Core_Assets_Image** RETURN, Core_String* name_value, dx_ddl_node* node, dx_adl_context* context) {
   // Case of "path".
   Core_String* path_value = dx_adl_semantical_read_string_field(node, NAME(path_key), context->names);
   if (!path_value) {
     return Core_Failure;
   }
-  if (dx_assets_image_create_path(RETURN, name_value, path_value)) {
+  if (Core_Assets_Image_create_path(RETURN, name_value, path_value)) {
     CORE_UNREFERENCE(path_value);
     path_value = NULL;
     return Core_Failure;
@@ -260,7 +260,7 @@ static Core_Result _parse_image_with_path(dx_assets_image** RETURN, Core_String*
   return Core_Success;
 }
 
-static Core_Result _parse_image_with_size_and_format(dx_assets_image** RETURN, Core_String* name_value, dx_ddl_node* node, dx_adl_context* context) {
+static Core_Result _parse_image_with_size_and_format(Core_Assets_Image** RETURN, Core_String* name_value, dx_ddl_node* node, dx_adl_context* context) {
   // Case of "width", "height", and "pixelFormat".
   Core_Size width_value, height_value;
   Core_String* pixel_format_string = dx_adl_semantical_read_string_field(node, NAME(pixel_format_key), context->names);
@@ -293,14 +293,14 @@ static Core_Result _parse_image_with_size_and_format(dx_assets_image** RETURN, C
   if (dx_adl_semantical_read_sz(&height_value, node, NAME(height_key))) {
     return Core_Failure;
   }
-  if (dx_assets_image_create(RETURN, name_value, pixel_format_value, width_value, height_value)) {
+  if (Core_Assets_Image_create(RETURN, name_value, pixel_format_value, width_value, height_value)) {
     return Core_Failure;
   }
   return Core_Success;
 }
 
-static Core_Result _parse_image(dx_assets_image** RETURN, dx_ddl_node* node, dx_adl_context* context) {
-  dx_assets_image* image_value = NULL;
+static Core_Result _parse_image(Core_Assets_Image** RETURN, dx_ddl_node* node, dx_adl_context* context) {
+  Core_Assets_Image* image_value = NULL;
   Core_String* name_value = NULL;
   Core_Size width_value, height_value;
   // name
@@ -367,14 +367,14 @@ static Core_Result _parse(Core_Object** RETURN, dx_adl_type_handlers_image* SELF
   if (_check_keys(SELF, node)) {
     return Core_Failure;
   }
-  return _parse_image((dx_assets_image**)RETURN, node, context);
+  return _parse_image((Core_Assets_Image**)RETURN, node, context);
 }
 
 static Core_Result _resolve(dx_adl_type_handlers_image* SELF, dx_adl_symbol* symbol, dx_adl_context* context) {
   if (symbol->resolved) {
     return Core_Success;
   }
-  dx_assets_image* image = DX_ASSETS_IMAGE(symbol->asset);
+  Core_Assets_Image* image = CORE_ASSETS_IMAGE(symbol->asset);
   // operations?
   {
     Core_Error last_error = Core_getError();

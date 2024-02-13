@@ -13,7 +13,7 @@ static inline dx_aal_system* DX_AAL_SYSTEM(void* p) {
 }
 
 struct dx_aal_system {
-  dx_system _parent;
+  Core_System _parent;
   /// @brief A weak reference to the message queue.
   Core_MessageQueue* msg_queue;
 };
@@ -23,7 +23,7 @@ static inline dx_aal_system_Dispatch* DX_AAL_SYSTEM_DISPATCH(void* p) {
 }
 
 struct dx_aal_system_Dispatch {
-  dx_system_Dispatch _parent;
+  Core_System_Dispatch _parent;
   Core_Result (*get_context)(dx_aal_context**, dx_aal_system*);
 };
 

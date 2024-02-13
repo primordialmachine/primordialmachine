@@ -1,5 +1,5 @@
 
-static Core_Result on_checkerboard_pattern_fill_image_operation(dx_assets_image* SELF, OFFSET2 offset, EXTEND2 extend, Core_Assets_ImageOperations_CheckerboardPatternFill* image_operation) {
+static Core_Result on_checkerboard_pattern_fill_image_operation(Core_Assets_Image* SELF, OFFSET2 offset, EXTEND2 extend, Core_Assets_ImageOperations_CheckerboardPatternFill* image_operation) {
   Core_Assets_ImageOperations_ColorFill* first = NULL;
   if (Core_Assets_ImageOperations_ColorFill_create(&first)) {
     return Core_Failure;
@@ -45,9 +45,9 @@ static Core_Result on_checkerboard_pattern_fill_image_operation(dx_assets_image*
       int even_x = x % 2 == 0;
       int even_y = y % 2 == 0;
       if (even_x != even_y) {
-        dx_assets_image_apply(SELF, l, t, w, h, CORE_ASSETS_IMAGEOPERATION(first));
+        Core_Assets_Image_apply(SELF, l, t, w, h, CORE_ASSETS_IMAGEOPERATION(first));
       } else {
-        dx_assets_image_apply(SELF, l, t, w, h, CORE_ASSETS_IMAGEOPERATION(second));
+        Core_Assets_Image_apply(SELF, l, t, w, h, CORE_ASSETS_IMAGEOPERATION(second));
       }
     }
   }

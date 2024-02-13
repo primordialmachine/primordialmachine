@@ -1,0 +1,10 @@
+{
+  "type" : "object",
+  "last-update" : "2024-02-11",
+  "indices" : "assets",
+  "name" : "Core_Assets_Viewer",
+  "id" : "core-assets-viewer",
+  "signature" : "typedef struct Core_Assets_Viewer Core_Assets_Viewer;",
+  "extends" : "Core_Assets_Def",
+  "description": "An viewer asset definition."
+}

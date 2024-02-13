@@ -5,7 +5,7 @@
 #include "Core/Assets/Ref.h"
 
 /// @brief A viewer instance asset.
-Core_declareObjectType("dx.assets.viewer_instance",
+Core_declareObjectType("Core.Assets.ViewerInstance",
                        dx_assets_viewer_instance,
                        Core_Object);
 

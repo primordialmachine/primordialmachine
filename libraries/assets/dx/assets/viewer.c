@@ -1,6 +1,9 @@
+// Copyright (c) 2018-2024 Michael Heilmann. All rights reserved.
 #include "dx/assets/viewer.h"
 
-#include "dx/assets/optics.h"
+#include "Core/Assets/Optics.h"
+#include "Core/Assets/OrthographicOptics.h"
+#include "Core/Assets/PerspectiveOptics.h"
 
 Core_defineObjectType("dx.assets.viewer",
                       dx_assets_viewer,
@@ -33,7 +36,7 @@ Core_Result dx_assets_viewer_construct(dx_assets_viewer* SELF, Core_String* name
   SELF->name = name;
   CORE_REFERENCE(name);
 
-  if (dx_asset_optics_perspective_create((dx_asset_optics_perspective**)&SELF->optics)) {
+  if (Core_Assets_PerspectiveOptics_create((Core_Assets_PerspectiveOptics**)&SELF->optics)) {
     CORE_UNREFERENCE(SELF->name);
     SELF->name = NULL;
     return Core_Failure;

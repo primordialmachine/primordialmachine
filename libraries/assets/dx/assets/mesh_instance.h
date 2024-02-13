@@ -4,7 +4,7 @@
 #if !defined(DX_ASSET_MESH_INSTANCE_H_INCLUDED)
 #define DX_ASSET_MESH_INSTANCE_H_INCLUDED
 
-#include "dx/assets/matrix_4x4_f32.h"
+#include "Core/Assets/Matrix4x4R32.h"
 #include "dx/assets/mesh.h"
 
 /// @brief A mesh instance asset.
@@ -21,7 +21,7 @@ struct dx_asset_mesh_instance {
   /// @brief Reference to the mesh of this mesh instance.
   Core_Assets_Ref* mesh_reference;
   /// @brief The world matrix of this mesh instance.
-  dx_assets_matrix_4x4_f32* world_matrix;
+  Core_Assets_Matrix4x4R32* world_matrix;
 };
 
 static inline dx_asset_mesh_instance_Dispatch* DX_ASSET_MESH_INSTANCE_DISPATCH(void* p) {

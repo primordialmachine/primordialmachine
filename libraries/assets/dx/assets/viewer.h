@@ -1,27 +1,25 @@
-/// @file dx/asset/viewer.h
-/// @brief Representation of a "viewer" asset.
-/// @author Michael Heilmann (michaelheilmann@primordialmachine.com)
-#if !defined(DX_ASSET_VIEWER_H_INCLUDED)
-#define DX_ASSET_VIEWER_H_INCLUDED
+// Copyright (c) 2018-2024 Michael Heilmann. All rights reserved.
+#if !defined(CORE_ASSETS_VIEWER_H_INCLUDED)
+#define CORE_ASSETS_VIEWER_H_INCLUDED
 
-#include "dx/core.h"
-typedef struct dx_assets_optics dx_assets_optics;
+#include "Core/Assets/Def.h"
+typedef struct Core_Assets_Optics Core_Assets_Optics;
 typedef struct dx_assets_viewer_controller dx_assets_viewer_controller;
 
-/// @brief A viewer asset.
-Core_declareObjectType("dx.assets.viewer",
+/* http://localhost/assets#core-assets-viewer */
+Core_declareObjectType("Core.Assets.Viewer",
                        dx_assets_viewer,
                        Core_Object);
 
-static inline dx_assets_viewer* DX_ASSETS_VIEWER(void* p) {
+static inline dx_assets_viewer* CORE_ASSETS_VIEWER(void* p) {
   return (dx_assets_viewer*)p;
 }
 
 struct dx_assets_viewer {
   Core_Object _parent;
   /// @brief A pointer to the optics of this viewer.
-  /// @default dx_assets_optics_perspective with default values.
-  dx_assets_optics* optics;
+  /// @default A Core_Assets_PerspectiveOptics objects with default values.
+  Core_Assets_Optics* optics;
   /// @brief A pointer to the ADL name of this viewer.
   Core_String* name;
   /// @brief The up vector.
@@ -34,7 +32,7 @@ struct dx_assets_viewer {
   dx_assets_viewer_controller* controller;
 };
 
-static inline dx_assets_viewer_Dispatch* DX_ASSETS_VIEWER_DISPATCH(void* p) {
+static inline dx_assets_viewer_Dispatch* CORE_ASSETS_VIEWER_DISPATCH(void* p) {
   return (dx_assets_viewer_Dispatch*)p;
 }
 
@@ -52,4 +50,4 @@ Core_Result dx_assets_viewer_construct(dx_assets_viewer* SELF, Core_String* name
 /// @create-operator{dx_assets_viewer}
 Core_Result dx_assets_viewer_create(dx_assets_viewer** RETURN, Core_String* name);
 
-#endif // DX_ASSETS_VIEWER_H_INCLUDED
+#endif // CORE_ASSETS_VIEWER_H_INCLUDED

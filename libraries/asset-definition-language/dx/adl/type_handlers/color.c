@@ -152,7 +152,6 @@ static Core_Result _parse_color_rgb_u8(dx_ddl_node* node, dx_adl_context* contex
   if (dx_adl_semantical_read_n8(&b, node, NAME(blue_key))) {
     return Core_Failure;
   }
-  // TODO: Check bounds.
   target->r = r;
   target->g = g;
   target->b = b;

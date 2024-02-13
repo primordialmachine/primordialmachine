@@ -5,14 +5,14 @@
 
 Core_declareObjectType("dx.val.system_factory",
                        dx_val_system_factory,
-                       dx_system_factory);
+                       Core_SystemFactory);
 
 static inline dx_val_system_factory* DX_VAL_SYSTEM_FACTORY(void* p) {
   return (dx_val_system_factory*)p;
 }
 
 struct dx_val_system_factory {
-  dx_system_factory _parent;
+  Core_SystemFactory _parent;
 };
 
 static inline dx_val_system_factory_Dispatch* DX_VAL_SYSTEM_FACTORY_DISPATCH(void* p) {
@@ -20,7 +20,7 @@ static inline dx_val_system_factory_Dispatch* DX_VAL_SYSTEM_FACTORY_DISPATCH(voi
 }
 
 struct dx_val_system_factory_Dispatch {
-  dx_system_factory_Dispatch _parent;
+  Core_SystemFactory_Dispatch _parent;
 };
 
 /// @brief Construct this VAL system factory_.

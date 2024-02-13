@@ -1,16 +1,16 @@
 #include "dx/core/system_factory.h"
 
-Core_defineObjectType("dx.system_factory",
-                      dx_system_factory,
+Core_defineObjectType("Core.SystemFactory",
+                      Core_SystemFactory,
                       Core_Object);
 
-static void dx_system_factory_destruct(dx_system_factory* SELF)
+static void Core_SystemFactory_destruct(Core_SystemFactory* SELF)
 {/*Intentionally empty.*/}
 
-static void dx_system_factory_constructDispatch(dx_system_factory_Dispatch* SELF)
+static void Core_SystemFactory_constructDispatch(Core_SystemFactory_Dispatch* SELF)
 {/*Intentionally empty.*/}
 
-Core_Result dx_system_factory_construct(dx_system_factory* SELF) {
-  Core_BeginConstructor(dx_system_factory);
-  Core_EndConstructor(dx_system_factory);
+Core_Result Core_SystemFactory_construct(Core_SystemFactory* SELF) {
+  Core_BeginConstructor(Core_SystemFactory);
+  Core_EndConstructor(Core_SystemFactory);
 }

@@ -1,16 +1,16 @@
 #include "dx/core/system.h"
 
-Core_defineObjectType("dx.system",
-                      dx_system,
+Core_defineObjectType("Core.System",
+                      Core_System,
                       Core_Object);
 
-static void dx_system_destruct(dx_system* SELF)
+static void Core_System_destruct(Core_System* SELF)
 {/*Intentionally empty.*/}
 
-static void dx_system_constructDispatch(dx_system_Dispatch* SELF)
+static void Core_System_constructDispatch(Core_System_Dispatch* SELF)
 {/*Intentionally empty.*/}
 
-Core_Result dx_system_construct(dx_system* SELF) {
-  Core_BeginConstructor(dx_system);
-  Core_EndConstructor(dx_system);
+Core_Result Core_System_construct(Core_System* SELF) {
+  Core_BeginConstructor(Core_System);
+  Core_EndConstructor(Core_System);
 }

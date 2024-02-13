@@ -1,0 +1,10 @@
+{
+  "type" : "object",
+  "last-update" : "2024-02-13",
+  "indices" : "core",
+  "name" : "Core_SystemFactory",
+  "id" : "core-systemfactory",
+  "signature" : "typedef struct Core_SystemFactory Core_SystemFactory;",
+  "extends" : "Core_Object",
+  "description": "The base of all factories for @{code('Core_System')} derived type objects."
+}

@@ -1,0 +1,10 @@
+{
+  "type" : "object",
+  "last-update" : "2024-02-11",
+  "indices" : "assets",
+  "name" : "Core_Assets_PerspectiveOptics",
+  "id" : "core-assets-perspectiveoptics",
+  "signature" : "typedef struct Core_Assets_PerspectiveOptics Core_Assets_PerspectiveOptics;",
+  "extends" : "Core_Assets_Optics",
+  "description": "A perspective optics asset definition."
+}

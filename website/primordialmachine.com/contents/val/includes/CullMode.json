@@ -1,13 +1,18 @@
 {
   "type" : "enumeration",
-  "last-update" : "2023-12-26",
+  "last-update" : "2024-01-14",
   "indices" : "val",
   "name" : "Core_CullMode",
   "id" : "core-cullmode",
   "signature" : "typedef enum Core_CullMode &lt;implementation&gt; Core_CullMode;",
   "description": [
     "An enumeration of cull modes.",
-    "A cull mode identitifes a technique for deciding wether a fragment is removed based on its facing towards the viewer."
+    " ",
+    "A cull mode identitifes a technique for deciding wether a triangle is removed based on its facing towards the viewer.",
+    " ",
+    "A triangle facing towards the viewer is called front-facing, a triangle facing away from the viewer is called back-facing.",
+    " ",
+    "The classification if a fragment is facing towards the viewer is usually done in window coordinate space." 
   ],
   "elements": [
     {

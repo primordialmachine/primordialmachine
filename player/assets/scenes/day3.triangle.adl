@@ -69,7 +69,7 @@
         z : 0,
       },
       optics : {
-        type : 'Optics.Orthographic'
+        type : 'OrthographicOptics'
       },
     },// Viewer
     {

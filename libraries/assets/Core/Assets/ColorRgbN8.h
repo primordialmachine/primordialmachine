@@ -1,3 +1,4 @@
+// Copyright (c) 2018-2024 Michael Heilmann. All rights reserved.
 #if !defined(CORE_ASSETS_COLORGBN8_H_INCLUDED)
 #define CORE_ASSETS_COLORGBN8_H_INCLUDED
 
@@ -5,14 +6,14 @@
 
 Core_declareObjectType("Core.Assets.ColorRgbN8",
                        Core_Assets_ColorRgbN8,
-                       Core_Object);
+                       Core_Assets_Def);
 
 static inline Core_Assets_ColorRgbN8* CORE_ASSETS_COLORRGBN8(void* p) {
   return (Core_Assets_ColorRgbN8*)p;
 }
 
 struct Core_Assets_ColorRgbN8 {
-  Core_Object _parent;
+  Core_Assets_Def _parent;
   Core_InlineRgbN8 value;
 };
 
@@ -21,7 +22,7 @@ static inline Core_Assets_ColorRgbN8_Dispatch* CORE_ASSETS_COLORRGBN8_DISPATCH(v
 }
 
 struct Core_Assets_ColorRgbN8_Dispatch {
-  Core_Object_Dispatch _parent;
+  Core_Assets_Def_Dispatch _parent;
 };
 
 /// @detail The color is initialized with the specified values.

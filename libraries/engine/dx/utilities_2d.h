@@ -169,7 +169,7 @@ static inline Core_Result dx_engine_utilities_2d_create_material(dx_val_material
 /// @param h The height of the pixel rectangle.
 /// @default-return
 /// @defaut-failure
-static inline Core_Result dx_assets_extensions_create_texture_from_pixels(dx_assets_texture** RETURN, void* pixels, Core_PixelFormat pixel_format, Core_Natural32 width, Core_Natural32 height) {
+static inline Core_Result dx_assets_extensions_create_texture_from_pixels(Core_Assets_Texture** RETURN, void* pixels, Core_PixelFormat pixel_format, Core_Natural32 width, Core_Natural32 height) {
   if (width > Core_Size_Greatest || height > Core_Size_Greatest) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
@@ -179,8 +179,8 @@ static inline Core_Result dx_assets_extensions_create_texture_from_pixels(dx_ass
   if (Core_String_create(&image_name, "<temporary>", sizeof("<temporary>") - 1)) {
     return Core_Failure;
   }
-  dx_assets_image* image = NULL;
-  if (dx_assets_image_create(&image, image_name, pixel_format, width, height)) {
+  Core_Assets_Image* image = NULL;
+  if (Core_Assets_Image_create(&image, image_name, pixel_format, width, height)) {
     CORE_UNREFERENCE(image_name);
     image_name = NULL;
     return Core_Failure;
@@ -234,8 +234,8 @@ static inline Core_Result dx_assets_extensions_create_texture_from_pixels(dx_ass
     image_reference = NULL;
     return Core_Failure;
   }
-  dx_assets_texture* texture = NULL;
-  if (dx_assets_texture_create(&texture, texture_name, image_reference)) {
+  Core_Assets_Texture* texture = NULL;
+  if (Core_Assets_Texture_create(&texture, texture_name, image_reference)) {
     CORE_UNREFERENCE(texture_name);
     texture_name = NULL;
     CORE_UNREFERENCE(image_reference);
@@ -252,7 +252,7 @@ static inline Core_Result dx_assets_extensions_create_texture_from_pixels(dx_ass
   return Core_Success;
 }
 
-static inline Core_Result dx_assets_extensions_create_texture_from_glyph(dx_assets_texture** RETURN, dx_font_glyph* glyph) {
+static inline Core_Result dx_assets_extensions_create_texture_from_glyph(Core_Assets_Texture** RETURN, dx_font_glyph* glyph) {
   uint32_t width = 0,
            height = 0;
   if (dx_font_glyph_get_size(glyph, &width, &height)) {
@@ -262,7 +262,7 @@ static inline Core_Result dx_assets_extensions_create_texture_from_glyph(dx_asse
   if (dx_font_glyph_get_pixels(glyph, &pixels)) {
     return Core_Failure;
   }
-  dx_assets_texture* texture = NULL;
+  Core_Assets_Texture* texture = NULL;
   if (dx_assets_extensions_create_texture_from_pixels(&texture, pixels, Core_PixelFormat_L8, width, height)) {
     return Core_Failure;
   }

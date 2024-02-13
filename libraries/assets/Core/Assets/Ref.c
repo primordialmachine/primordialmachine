@@ -1,3 +1,4 @@
+// Copyright (c) 2018-2024 Michael Heilmann. All rights reserved.
 #include "Core/Assets/Ref.h"
 
 Core_defineObjectType("Core.Assets.Ref",

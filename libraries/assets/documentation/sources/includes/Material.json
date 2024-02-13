@@ -1,0 +1,10 @@
+{
+  "type" : "object",
+  "last-update" : "2024-02-11",
+  "indices" : "assets",
+  "name" : "Core_Assets_Material",
+  "id" : "core-assets-material",
+  "signature" : "typedef struct Core_Assets_Material Core_Assets_Material;",
+  "extends" : "Core_Assets_Def",
+  "description": "A material asset definition."
+}

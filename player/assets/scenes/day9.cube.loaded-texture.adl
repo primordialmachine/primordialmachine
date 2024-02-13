@@ -89,7 +89,7 @@
         z : 0,
       },
       optics : {
-        type : 'Optics.Perspective'
+        type : 'PerspectiveOptics'
       },
       controller: {
         type : 'ViewerControllers.RotateY',

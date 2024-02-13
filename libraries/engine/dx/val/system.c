@@ -2,7 +2,7 @@
 
 Core_defineObjectType("dx.val.system",
                       dx_val_system,
-                      dx_system);
+                      Core_System);
 
 static void dx_val_system_destruct(dx_val_system* SELF) {
   CORE_UNREFERENCE(SELF->mouse_state);
@@ -15,9 +15,9 @@ static void dx_val_system_constructDispatch(dx_val_system_Dispatch* SELF)
 {/*Intentionally empty.*/}
 
 Core_Result dx_val_system_construct(dx_val_system* SELF, Core_MessageQueue* msg_queue) {
-  DX_CONSTRUCT_PREFIX(dx_val_system);
+  Core_BeginConstructor(dx_val_system);
   SELF->msg_queue = msg_queue;
-  if (dx_system_construct(DX_SYSTEM(SELF))) {
+  if (Core_System_construct(CORE_SYSTEM(SELF))) {
     return Core_Failure;
   }
   if (dx_keyboard_state_create(&SELF->keyboard_state)) {
@@ -28,8 +28,7 @@ Core_Result dx_val_system_construct(dx_val_system* SELF, Core_MessageQueue* msg_
     SELF->keyboard_state = NULL;
     return Core_Failure;
   }
-  CORE_OBJECT(SELF)->type = TYPE;
-  return Core_Success;
+  Core_EndConstructor(dx_val_system);
 }
 
 Core_Result dx_val_system_emit_keyboard_key_pressed_msg(dx_val_system* SELF, Core_KeyboardKey key, Core_ModifierKeys modifierKeys) {

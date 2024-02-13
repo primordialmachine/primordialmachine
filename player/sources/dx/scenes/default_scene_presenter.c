@@ -212,7 +212,7 @@ static Core_Result tick(dx_default_scene_presenter* SELF, Core_Real32 delta_seco
   if (dx_inline_object_array_get_at((Core_Object**) &val_viewer, & SELF->viewers, n - 1)) {
     return Core_Failure;
   }
-  dx_assets_viewer* viewer_asset = DX_ASSETS_VIEWER(val_viewer->asset_viewer_instance->viewer_reference->object);
+  dx_assets_viewer* viewer_asset = CORE_ASSETS_VIEWER(val_viewer->asset_viewer_instance->viewer_reference->object);
   if (viewer_asset->controller) {
     dx_assets_viewer_controller* viewer_controller_asset = viewer_asset->controller;
     if (dx_assets_viewer_controller_update(viewer_controller_asset, viewer_asset, delta_seconds)) {
@@ -231,7 +231,7 @@ static Core_Result update_viewer(dx_default_scene_presenter* SELF, Core_Integer3
   if (dx_inline_object_array_get_at((Core_Object**)&val_viewer, &SELF->viewers, n - 1)) {
     return Core_Failure;
   }
-  dx_assets_viewer* viewer_asset = DX_ASSETS_VIEWER(val_viewer->asset_viewer_instance->viewer_reference->object);
+  dx_assets_viewer* viewer_asset = CORE_ASSETS_VIEWER(val_viewer->asset_viewer_instance->viewer_reference->object);
   if (viewer_asset) {
     val_viewer->up = viewer_asset->up;
     val_viewer->target = viewer_asset->target;
@@ -283,7 +283,7 @@ static Core_Result make_commands_1(dx_val_command_list* commands) {
   command = NULL;
 
   // pipeline state command
-  if (dx_val_command_create_pipeline_state(&command, Core_CullMode_Back, Core_DepthCompareFunction_LessThan, Core_True)) {
+  if (dx_val_command_create_pipeline_state(&command, Core_CullMode_Back, Core_DepthCompareMode_LessThan, Core_True)) {
     return Core_Failure;
   }
   if (dx_val_command_list_append(commands, command)) {

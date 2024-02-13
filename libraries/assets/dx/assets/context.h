@@ -1,3 +1,4 @@
+// Copyright (c) 2018-2024 Michael Heilmann. All rights reserved.
 #if !defined(DX_ASSETS_CONTEXT_H_INCLUDED)
 #define DX_ASSETS_CONTEXT_H_INCLUDED
 

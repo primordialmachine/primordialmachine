@@ -16,9 +16,9 @@ static void dx_val_viewer_constructDispatch(dx_val_viewer_Dispatch* SELF)
 
 Core_Result dx_val_viewer_construct(dx_val_viewer* SELF, dx_assets_viewer_instance* asset_viewer_instance) {
   DX_CONSTRUCT_PREFIX(dx_val_viewer);
-  SELF->source = DX_ASSETS_VIEWER(asset_viewer_instance->viewer_reference->object)->source;
-  SELF->target = DX_ASSETS_VIEWER(asset_viewer_instance->viewer_reference->object)->target;
-  SELF->up = DX_ASSETS_VIEWER(asset_viewer_instance->viewer_reference->object)->up;
+  SELF->source = CORE_ASSETS_VIEWER(asset_viewer_instance->viewer_reference->object)->source;
+  SELF->target = CORE_ASSETS_VIEWER(asset_viewer_instance->viewer_reference->object)->target;
+  SELF->up = CORE_ASSETS_VIEWER(asset_viewer_instance->viewer_reference->object)->up;
   SELF->asset_viewer_instance = asset_viewer_instance;
   dx_mat4_set_identity(&SELF->view_matrix);
   dx_mat4_set_identity(&SELF->projection_matrix);
@@ -43,21 +43,21 @@ Core_Result dx_val_viewer_get_projection_matrix(DX_MAT4* RETURN, dx_val_viewer* 
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
   }
-  dx_assets_optics* optics = DX_ASSETS_VIEWER(SELF->asset_viewer_instance->viewer_reference->object)->optics;
+  Core_Assets_Optics* optics = CORE_ASSETS_VIEWER(SELF->asset_viewer_instance->viewer_reference->object)->optics;
   if (!optics) {
     return Core_Failure;
   }
   Core_Boolean result;
   Core_Type* type = NULL;
   //
-  if (dx_asset_optics_perspective_getType(&type)) {
+  if (Core_Assets_PerspectiveOptics_getType(&type)) {
     return Core_Failure;
   }
   if (Core_Type_isLowerThanOrEqualTo(&result, CORE_OBJECT(optics)->type, type)) {
     return Core_Failure;
   }
   if (result) {
-    dx_asset_optics_perspective* optics1 = DX_ASSET_OPTICS_PERSPECTIVE(optics);
+    Core_Assets_PerspectiveOptics* optics1 = CORE_ASSETS_PERSPECTIVEOPTICS(optics);
     // use actual aspect ratio
     if (optics1->aspect_ratio) {
       Core_Memory_deallocate(optics1->aspect_ratio);
@@ -72,25 +72,25 @@ Core_Result dx_val_viewer_get_projection_matrix(DX_MAT4* RETURN, dx_val_viewer* 
     return Core_Success;
   }
   //
-  if (dx_asset_optics_orthographic_getType(&type)) {
+  if (Core_Assets_OrthographicOptics_getType(&type)) {
     return Core_Failure;
   }
   if (Core_Type_isLowerThanOrEqualTo(&result, CORE_OBJECT(optics)->type, type)) {
     return Core_Failure;
   }
   if (result) {
-    dx_asset_optics_orthographic* optics1 = DX_ASSET_OPTICS_ORTHOGRAPHIC(optics);
+    Core_Assets_OrthographicOptics* optics1 = CORE_ASSETS_ORTHOGRAPHICOPTICS(optics);
     Core_Real32 left = -1.f;
     Core_Real32 right = +1.f;
-    if (optics1->scale_x) {
-      left *= *optics1->scale_x;
-      right *= *optics1->scale_x;
+    if (optics1->scaleX) {
+      left *= *optics1->scaleX;
+      right *= *optics1->scaleX;
     }
     Core_Real32 bottom = -1.f;
     Core_Real32 top = +1.f;
-    if (optics1->scale_y) {
-      bottom *= *optics1->scale_y;
-      top *= *optics1->scale_y;
+    if (optics1->scaleY) {
+      bottom *= *optics1->scaleY;
+      top *= *optics1->scaleY;
     }
     dx_mat4_set_ortho(&SELF->projection_matrix, left, right, bottom, top, optics1->near, optics1->far);
     *RETURN = SELF->projection_matrix;

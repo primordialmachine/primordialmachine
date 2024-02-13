@@ -1,0 +1,14 @@
+{
+  "type" : "object",
+  "last-update" : "2024-02-11",
+  "indices" : "assets",
+  "name" : "Core_Assets_ColorRgbN8",
+  "id" : "core-assets-colorrgbn8",
+  "signature" : "typedef struct Core_Assets_ColorRgbN8 Core_Assets_ColorRgbN8;",
+  "extends" : "Core_Assets_Def",
+  "description": [
+    "A color asset definition. Denotes a color in RGB space. ",
+    "The component values are of type @{code('Core_Natural8')} where ",
+    "a value of @{code('Core_Natural8_Least')} denotes minimum intensity and a value of @{code('Core_Natural8_Greatest')} denotes maximal intensity."
+  ]
+}

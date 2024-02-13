@@ -161,7 +161,7 @@ static Core_Result _parse(Core_Object** RETURN, dx_adl_type_handlers_viewer_cont
     return Core_Failure;
   }
   Core_Real32 degrees_per_second;
-  dx_assets_vector_3_f32* source = NULL,
+  Core_Assets_Vector3R32* source = NULL,
                         * target = NULL,
                         * up = NULL;
   // source

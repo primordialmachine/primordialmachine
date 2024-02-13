@@ -6,5 +6,5 @@
   "id" : "core-assets-image",
   "signature" : "typedef struct Core_Assets_Image Core_Assets_Image;",
   "extends" : "Core_Assets_Def",
-  "description": "An image asset."
+  "description": "An image asset definition."
 }

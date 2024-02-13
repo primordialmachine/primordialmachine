@@ -5,17 +5,17 @@
 typedef struct Core_Assets_Context Core_Assets_Context;
 
 /// @brief A system for assets.
-/// @extends dx_system
+/// @extends Core_System
 Core_declareObjectType("dx.assets.system",
                        dx_assets_system,
-                       dx_system);
+                       Core_System);
 
 static inline dx_assets_system* DX_ASSETS_SYSTEM(void* p) {
   return (dx_assets_system*)p;
 }
 
 struct dx_assets_system {
-  dx_system _parent;
+  Core_System _parent;
 };
 
 static inline dx_assets_system_Dispatch* DX_ASSETS_SYSTEM_DISPATCH(void* p) {
@@ -23,7 +23,7 @@ static inline dx_assets_system_Dispatch* DX_ASSETS_SYSTEM_DISPATCH(void* p) {
 }
 
 struct dx_assets_system_Dispatch {
-  dx_system_Dispatch _parent;
+  Core_System_Dispatch _parent;
   Core_Result(*get_context)(Core_Assets_Context**, dx_assets_system*);
 };
 

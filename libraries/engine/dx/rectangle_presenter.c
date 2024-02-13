@@ -43,7 +43,7 @@ static Core_Result fill_rectangle(dx_rectangle_presenter* SELF, DX_RECT2_F32 con
   }
 
   // pipeline state command
-  if (dx_val_command_create_pipeline_state(&command, Core_CullMode_Back, Core_DepthCompareFunction_Always, Core_False)) {
+  if (dx_val_command_create_pipeline_state(&command, Core_CullMode_Back, Core_DepthCompareMode_Always, Core_False)) {
     return Core_Failure;
   }
   if (dx_val_command_list_append(SELF->val_command_list, command)) {
@@ -123,7 +123,7 @@ static Core_Result stroke_rectangle(dx_rectangle_presenter* SELF, DX_RECT2_F32 c
   dx_val_buffer_set_data(SELF->val_buffer, &vertex_data, sizeof(vertex_data));
 
   // pipeline state command
-  if (dx_val_command_create_pipeline_state(&command, Core_CullMode_Back, Core_DepthCompareFunction_Always, Core_False)) {
+  if (dx_val_command_create_pipeline_state(&command, Core_CullMode_Back, Core_DepthCompareMode_Always, Core_False)) {
     return Core_Failure;
   }
   if (dx_val_command_list_append(SELF->val_command_list, command)) {

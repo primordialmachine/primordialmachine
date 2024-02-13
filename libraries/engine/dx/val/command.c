@@ -151,19 +151,19 @@ Core_Result dx_val_command_create_scissor_test(dx_val_command** RETURN, Core_Boo
 }
 
 
-Core_Result dx_val_command_construct_pipeline_state(dx_val_command* SELF, Core_CullMode cullMode, Core_DepthCompareFunction depthCompareFunction, Core_Boolean depthWriteEnabled) {
+Core_Result dx_val_command_construct_pipeline_state(dx_val_command* SELF, Core_CullMode cullMode, Core_DepthCompareMode depthCompareMode, Core_Boolean depthWriteEnabled) {
   DX_CONSTRUCT_PREFIX(dx_val_command);
   SELF->kind = DX_VAL_COMMAND_KIND_PIPELINE_STATE;
   SELF->pipeline_state.cullMode = cullMode;
-  SELF->pipeline_state.depthCompareFunction = depthCompareFunction;
+  SELF->pipeline_state.depthCompareMode = depthCompareMode;
   SELF->pipeline_state.depthWriteEnabled = depthWriteEnabled;
   CORE_OBJECT(SELF)->type = TYPE;
   return Core_Success;
 }
 
-Core_Result dx_val_command_create_pipeline_state(dx_val_command** RETURN, Core_CullMode cull_mode, Core_DepthCompareFunction depthCompareFunction, Core_Boolean depth_write_enabled) {
+Core_Result dx_val_command_create_pipeline_state(dx_val_command** RETURN, Core_CullMode cull_mode, Core_DepthCompareMode depthCompareMode, Core_Boolean depth_write_enabled) {
   DX_CREATE_PREFIX(dx_val_command);
-  if (dx_val_command_construct_pipeline_state(SELF, cull_mode, depthCompareFunction, depth_write_enabled)) {
+  if (dx_val_command_construct_pipeline_state(SELF, cull_mode, depthCompareMode, depth_write_enabled)) {
     CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;

@@ -8,7 +8,7 @@ Core_defineObjectType("dx.val.material",
 
 static Core_Result add_to_backend(dx_val_material* SELF) {
   if (SELF->material_asset->ambient_texture_reference && SELF->material_asset->ambient_texture_reference->object) {
-    dx_assets_texture* asset_ambient_texture = DX_ASSETS_TEXTURE(SELF->material_asset->ambient_texture_reference->object);
+    Core_Assets_Texture* asset_ambient_texture = CORE_ASSETS_TEXTURE(SELF->material_asset->ambient_texture_reference->object);
     dx_val_texture* ambient_texture = NULL;
     if (dx_val_context_create_texture(&ambient_texture, SELF->context)) {
       return Core_Failure;

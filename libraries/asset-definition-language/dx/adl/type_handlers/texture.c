@@ -27,7 +27,7 @@ static Core_Result _uninitialize_expected_keys(dx_adl_type_handlers_texture* SEL
 
 static Core_Result _check_keys(dx_adl_type_handlers_texture* SELF, dx_ddl_node* node);
 
-static Core_Result _parse_texture(dx_assets_texture** RETURN, dx_ddl_node* node, dx_adl_context* context);
+static Core_Result _parse_texture(Core_Assets_Texture** RETURN, dx_ddl_node* node, dx_adl_context* context);
 
 static Core_Result _parse(Core_Object** RETURN,
                         dx_adl_type_handlers_texture* SELF,
@@ -141,7 +141,7 @@ static Core_Result _check_keys(dx_adl_type_handlers_texture* SELF, dx_ddl_node* 
   return Core_Success;
 }
 
-static Core_Result _parse_texture(dx_assets_texture** RETURN, dx_ddl_node* node, dx_adl_context* context) {
+static Core_Result _parse_texture(Core_Assets_Texture** RETURN, dx_ddl_node* node, dx_adl_context* context) {
   // name
   Core_String* name_value = NULL;
   if (dx_asset_definition_language_parser_parse_name(&name_value, node, context)) {
@@ -155,8 +155,8 @@ static Core_Result _parse_texture(dx_assets_texture** RETURN, dx_ddl_node* node,
     return Core_Failure;
   }
   //
-  dx_assets_texture* texture_value = NULL;
-  if (dx_assets_texture_create(&texture_value, name_value, image_reference_value)) {
+  Core_Assets_Texture* texture_value = NULL;
+  if (Core_Assets_Texture_create(&texture_value, name_value, image_reference_value)) {
     CORE_UNREFERENCE(image_reference_value);
     image_reference_value = NULL;
     CORE_UNREFERENCE(name_value);
@@ -181,14 +181,14 @@ static Core_Result _parse(Core_Object** RETURN, dx_adl_type_handlers_texture* SE
   if (_check_keys(SELF, node)) {
     return Core_Failure;
   }
-  return _parse_texture((dx_assets_texture**)RETURN, node, context);
+  return _parse_texture((Core_Assets_Texture**)RETURN, node, context);
 }
 
 static Core_Result _resolve(dx_adl_type_handlers_texture* SELF, dx_adl_symbol* symbol, dx_adl_context* context) {
   if (symbol->resolved) {
     return Core_Success;
   }
-  dx_assets_texture* texture = DX_ASSETS_TEXTURE(symbol->asset);
+  Core_Assets_Texture* texture = CORE_ASSETS_TEXTURE(symbol->asset);
   if (texture->image_reference->object) {
     symbol->resolved = true;
     return Core_Success;

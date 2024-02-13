@@ -6,7 +6,7 @@ static Core_Assets_Context* g_context = NULL;
 
 Core_defineObjectType("dx.assets.system",
                       dx_assets_system,
-                      dx_system);
+                      Core_System);
 
 static Core_Result startup(dx_assets_system* SELF);
 
@@ -41,8 +41,8 @@ static void dx_assets_system_destruct(dx_assets_system* SELF)
 {/*Intentionally empty.*/}
 
 static void dx_assets_system_constructDispatch(dx_assets_system_Dispatch* SELF) {
-  DX_SYSTEM_DISPATCH(SELF)->startup = (Core_Result(*)(dx_system*)) & startup;
-  DX_SYSTEM_DISPATCH(SELF)->shutdown = (Core_Result(*)(dx_system*)) & shutdown;
+  CORE_SYSTEM_DISPATCH(SELF)->startup = (Core_Result(*)(Core_System*)) & startup;
+  CORE_SYSTEM_DISPATCH(SELF)->shutdown = (Core_Result(*)(Core_System*)) & shutdown;
   SELF->get_context = &get_context;
 }
 

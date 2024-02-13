@@ -1,3 +1,4 @@
+// Copyright (c) 2018-2024 Michael Heilmann. All rights reserved.
 #if !defined(CORE_ASSETS_DEF_H_INCLUDED)
 #define CORE_ASSETS_DEF_H_INCLUDED
 

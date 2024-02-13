@@ -16,9 +16,9 @@ static void _on_expected_key_key_added(void** a);
 
 static void _on_expected_key_key_removed(void** a);
 
-static Core_Result _on_hash_expected_key_key(Core_Size* RETURN, void** a);
+static Core_Result _on_hash_expected_key_key(Core_Size* RETURN, Core_String** a);
 
-static Core_Result _on_compare_expected_key_keys(Core_Boolean* RETURN, void** a, void** b);
+static Core_Result _on_compare_expected_key_keys(Core_Boolean* RETURN, Core_String** a, Core_String** b);
 
 static Core_Result _initialize_expected_keys(dx_adl_type_handlers_optics_orthographic* SELF);
 
@@ -26,7 +26,7 @@ static Core_Result _uninitialize_expected_keys(dx_adl_type_handlers_optics_ortho
 
 static Core_Result _check_keys(dx_adl_type_handlers_optics_orthographic* SELF, dx_ddl_node* node);
 
-static Core_Result _parse_optics_orthographic(dx_asset_optics_orthographic** RETURN, dx_ddl_node* node, dx_adl_context* context);
+static Core_Result _parse_optics_orthographic(Core_Assets_OrthographicOptics** RETURN, dx_ddl_node* node, dx_adl_context* context);
 
 static Core_Result _parse(Core_Object**, dx_adl_type_handlers_optics_orthographic*, dx_ddl_node* node, dx_adl_context* context);
 
@@ -135,7 +135,7 @@ static Core_Result _check_keys(dx_adl_type_handlers_optics_orthographic* SELF, d
   return Core_Success;
 }
 
-static Core_Result _parse_optics_orthographic(dx_asset_optics_orthographic** RETURN, dx_ddl_node* node, dx_adl_context* context) {
+static Core_Result _parse_optics_orthographic(Core_Assets_OrthographicOptics** RETURN, dx_ddl_node* node, dx_adl_context* context) {
   // Paranoia mode.
   Core_String* received_type = NULL;
   if (dx_asset_definition_language_parser_parse_type(&received_type, node, context)) {
@@ -154,8 +154,8 @@ static Core_Result _parse_optics_orthographic(dx_asset_optics_orthographic** RET
     return Core_Failure;
   }
   //
-  dx_asset_optics_orthographic* optics_asset = NULL;
-  if (dx_asset_optics_orthographic_create(&optics_asset)) {
+  Core_Assets_OrthographicOptics* optics_asset = NULL;
+  if (Core_Assets_OrthographicOptics_create(&optics_asset)) {
     return Core_Failure;
   }
   // near?
@@ -196,7 +196,7 @@ static Core_Result _parse(Core_Object** RETURN, dx_adl_type_handlers_optics_orth
   if (_check_keys(SELF, node)) {
     return Core_Failure;
   }
-  return _parse_optics_orthographic((dx_asset_optics_orthographic**)RETURN, node,context);
+  return _parse_optics_orthographic((Core_Assets_OrthographicOptics**)RETURN, node,context);
 }
 
 static Core_Result _resolve(dx_adl_type_handlers_optics_orthographic* SELF, dx_adl_symbol* symbol, dx_adl_context* context) {

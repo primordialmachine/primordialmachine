@@ -1,0 +1,10 @@
+{
+  "type" : "object",
+  "last-update" : "2024-02-11",
+  "indices" : "assets",
+  "name" : "Core_Assets_Vector3R32",
+  "id" : "core-assets-vector3r32",
+  "signature" : "typedef struct Core_Assets_Vector3R32 Core_Assets_Vector3R32;",
+  "extends" : "Core_Assets_Def",
+  "description": "A real-valued vector with three components."
+}

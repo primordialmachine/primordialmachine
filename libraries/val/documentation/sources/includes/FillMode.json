@@ -1,0 +1,27 @@
+{
+  "type" : "enumeration",
+  "last-update" : "2024-01-14",
+  "indices" : "val",
+  "name" : "Core_FillMode",
+  "id" : "core-fillmode",
+  "signature" : "typedef enum Core_FillMode &lt;implementation&gt; Core_FillMode;",
+  "description": [
+    "An enumeration of fill modes.",
+    " ",
+    "The fill mode determines if a primitive is rasterized as a solid, as lines, or as points."
+  ],
+  "elements": [
+    {
+      "name" : "Core_FillMode_Solid",
+      "description" : "Fill mode in which polygons are rasterized as solids."
+    },
+    {
+      "name" : "Core_FillMode_Lines",
+      "description" : "Fill mode in which polygons are rasterized as lines. "
+    },
+    {
+      "name" : "Core_FillMode_Point",
+      "description" : "Fill mode in which polygons are rasterized as points."
+    }
+  ]
+}

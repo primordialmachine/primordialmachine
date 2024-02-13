@@ -2,7 +2,7 @@
 
 Core_defineObjectType("dx.val.system_factory",
                       dx_val_system_factory,
-                      dx_system_factory);
+                      Core_SystemFactory);
 
 static void dx_val_system_factory_destruct(dx_val_system_factory* SELF)
 {/*Intentionally empty.*/}
@@ -11,10 +11,9 @@ static void dx_val_system_factory_constructDispatch(dx_val_system_factory_Dispat
 {/*Intentionally empty.*/}
 
 Core_Result dx_val_system_factory_construct(dx_val_system_factory* SELF) {
-  DX_CONSTRUCT_PREFIX(dx_val_system_factory);
-  if (dx_system_factory_construct(DX_SYSTEM_FACTORY(SELF))) {
+  Core_BeginConstructor(dx_val_system_factory);
+  if (Core_SystemFactory_construct(CORE_SYSTEMFACTORY(SELF))) {
     return Core_Failure;
   }
-  CORE_OBJECT(SELF)->type = TYPE;
-  return Core_Success;
+  Core_EndConstructor(dx_val_system_factory);
 }

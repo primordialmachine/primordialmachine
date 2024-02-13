@@ -27,8 +27,8 @@ static void dx_aal_al_system_destruct(dx_aal_al_system* SELF)
 
 static void dx_aal_al_system_constructDispatch(dx_aal_al_system_Dispatch* SELF) {
   DX_AAL_SYSTEM_DISPATCH(SELF)->get_context = (Core_Result(*)(dx_aal_context**, dx_aal_system*)) & get_context;
-  DX_SYSTEM_DISPATCH(SELF)->shutdown = (Core_Result(*)(dx_system*)) & shutdown;
-  DX_SYSTEM_DISPATCH(SELF)->startup = (Core_Result(*)(dx_system*)) & startup;
+  CORE_SYSTEM_DISPATCH(SELF)->shutdown = (Core_Result(*)(Core_System*)) & shutdown;
+  CORE_SYSTEM_DISPATCH(SELF)->startup = (Core_Result(*)(Core_System*)) & startup;
 }
 
 static Core_Result startup(dx_aal_al_system* SELF) {

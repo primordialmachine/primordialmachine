@@ -26,7 +26,7 @@ static Core_Result _uninitialize_expected_keys(dx_adl_type_handlers_optics_persp
 
 static Core_Result _check_keys(dx_adl_type_handlers_optics_perspective* SELF, dx_ddl_node* node);
 
-static Core_Result _parse_optics_perspective(dx_asset_optics_perspective** RETURN, dx_ddl_node* node, dx_adl_context* context);
+static Core_Result _parse_optics_perspective(Core_Assets_PerspectiveOptics** RETURN, dx_ddl_node* node, dx_adl_context* context);
 
 static Core_Result _parse(Core_Object**, dx_adl_type_handlers_optics_perspective*, dx_ddl_node* node, dx_adl_context* context);
 
@@ -137,7 +137,7 @@ static Core_Result _check_keys(dx_adl_type_handlers_optics_perspective* SELF, dx
   return Core_Success;
 }
 
-static Core_Result _parse_optics_perspective(dx_asset_optics_perspective** RETURN, dx_ddl_node* node, dx_adl_context* context) {
+static Core_Result _parse_optics_perspective(Core_Assets_PerspectiveOptics** RETURN, dx_ddl_node* node, dx_adl_context* context) {
   // Paranoia mode.
   Core_String* received_type = NULL;
   if (dx_asset_definition_language_parser_parse_type(&received_type, node, context)) {
@@ -156,8 +156,8 @@ static Core_Result _parse_optics_perspective(dx_asset_optics_perspective** RETUR
     return Core_Failure;
   }
   //
-  dx_asset_optics_perspective* optics_asset = NULL;
-  if (dx_asset_optics_perspective_create(&optics_asset)) {
+  Core_Assets_PerspectiveOptics* optics_asset = NULL;
+  if (Core_Assets_PerspectiveOptics_create(&optics_asset)) {
     return Core_Failure;
   }
   // fieldOfViewY?
@@ -243,7 +243,7 @@ static Core_Result _parse(Core_Object** RETURN, dx_adl_type_handlers_optics_pers
   if (_check_keys(SELF, node)) {
     return Core_Failure;
   }
-  return _parse_optics_perspective((dx_asset_optics_perspective**)RETURN, node,context);
+  return _parse_optics_perspective((Core_Assets_PerspectiveOptics**)RETURN, node,context);
 }
 
 static Core_Result _resolve(dx_adl_type_handlers_optics_perspective* SELF, dx_adl_symbol* symbol, dx_adl_context* context) {

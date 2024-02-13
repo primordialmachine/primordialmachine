@@ -1,0 +1,10 @@
+{
+  "type" : "object",
+  "last-update" : "2024-02-11",
+  "indices" : "assets",
+  "name" : "Core_Assets_OrthographicOptics",
+  "id" : "core-assets-orthographicoptics",
+  "signature" : "typedef struct Core_Assets_OrthographicOptics Core_Assets_OrthographicOptics;",
+  "extends" : "Core_Assets_Optics",
+  "description": "An orthographic optics asset definition."
+}

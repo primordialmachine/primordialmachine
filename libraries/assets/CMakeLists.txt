@@ -56,8 +56,18 @@ list(APPEND ${name}.inlays  "Core/Assets/ImageOperations/MirrorHorizontalImpl.i"
 list(APPEND ${name}.sources "Core/Assets/ImageOperations/MirrorVertical.c")
 list(APPEND ${name}.headers "Core/Assets/ImageOperations/MirrorVertical.h")
 list(APPEND ${name}.inlays  "Core/Assets/ImageOperations/MirrorVerticalImpl.i")
+list(APPEND ${name}.sources "Core/Assets/Optics.c")
+list(APPEND ${name}.headers "Core/Assets/Optics.h")
+list(APPEND ${name}.sources "Core/Assets/PerspectiveOptics.c")
+list(APPEND ${name}.headers "Core/Assets/PerspectiveOptics.h")
+list(APPEND ${name}.sources "Core/Assets/OrthographicOptics.c")
+list(APPEND ${name}.headers "Core/Assets/OrthographicOptics.h")
 list(APPEND ${name}.sources "Core/Assets/Ref.c")
 list(APPEND ${name}.headers "Core/Assets/Ref.h")
+list(APPEND ${name}.sources "Core/Assets/Matrix4x4R32.c")
+list(APPEND ${name}.headers "Core/Assets/Matrix4x4R32.h")
+list(APPEND ${name}.sources "Core/Assets/Vector3R32.c")
+list(APPEND ${name}.headers "Core/Assets/Vector3R32.h")
 
 list(APPEND ${name}.sources "dx/assets/scene.c")
 list(APPEND ${name}.headers "dx/assets/scene.h")
@@ -69,9 +79,6 @@ list(APPEND ${name}.headers "dx/assets/material_controller.h")
 
 list(APPEND ${name}.sources "dx/assets/texture.c")
 list(APPEND ${name}.headers "dx/assets/texture.h")
-
-list(APPEND ${name}.sources "dx/assets/optics.c")
-list(APPEND ${name}.headers "dx/assets/optics.h")
 
 # assets - mesh & mesh instance
 list(APPEND ${name}.sources "dx/assets/mesh.c")
@@ -85,11 +92,6 @@ list(APPEND ${name}.sources "dx/assets/viewer_instance.c")
 list(APPEND ${name}.headers "dx/assets/viewer_instance.h")
 list(APPEND ${name}.sources "dx/assets/viewer_controller.c")
 list(APPEND ${name}.headers "dx/assets/viewer_controller.h")
-
-list(APPEND ${name}.sources "dx/assets/matrix_4x4_f32.c")
-list(APPEND ${name}.headers "dx/assets/matrix_4x4_f32.h")
-list(APPEND ${name}.sources "dx/assets/vector_3_f32.c")
-list(APPEND ${name}.headers "dx/assets/vector_3_f32.h")
 
 # Small utility function to find files by expression and append them to the specified list.
 function(add_files file_list expression)

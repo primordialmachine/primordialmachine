@@ -1,0 +1,10 @@
+{
+  "type" : "object",
+  "last-update" : "2024-02-11",
+  "indices" : "assets",
+  "name" : "Core_Assets_Matrix4x4R32",
+  "id" : "core-assets-matrix4x4r32",
+  "signature" : "typedef struct Core_Assets_Matrix4x4R32 Core_Assets_Matrix4x4R32;",
+  "extends" : "Core_Assets_Def",
+  "description": "A real-valued matrix with four rows and four columns."
+}
