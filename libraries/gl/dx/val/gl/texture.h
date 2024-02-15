@@ -20,15 +20,14 @@ static inline dx_val_gl_texture* DX_VAL_GL_TEXTURE(void* p) {
 #define DX_VAL_GL_TEXTURE_BORDER_COLOR_DIRTY (1<<4)
 
 struct dx_val_gl_texture {
-  dx_val_texture _parent;
+  Core_Visuals_Texture _parent;
   GLuint id;
   uint8_t flags;
-  Core_TextureMagnificationFilter texture_magnification_filter;
-  Core_TextureMinificationFilter texture_minification_filter;
+  Core_TextureFilter texture_magnification_filter;
+  Core_TextureFilter texture_minification_filter;
   Core_TextureAddressMode texture_address_mode_u;
   Core_TextureAddressMode texture_address_mode_v;
-  /// @todo This should be Core_InlineRgbaR32.
-  DX_VEC4 texture_border_color;
+  Core_InlineRgbaR32 texture_border_color;
 };
 
 static inline dx_val_gl_texture_Dispatch* DX_VAL_GL_TEXTURE_DISPATCH(void* p) {
@@ -36,7 +35,7 @@ static inline dx_val_gl_texture_Dispatch* DX_VAL_GL_TEXTURE_DISPATCH(void* p) {
 }
 
 struct dx_val_gl_texture_Dispatch {
-  dx_val_texture_Dispatch _parent;
+  Core_Visuals_Texture_Dispatch _parent;
 };
 
 /// @method-call

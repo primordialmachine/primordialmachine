@@ -36,7 +36,7 @@
   #define LEAVE(FUNCTION_NAME)
 #endif
 
-static Core_Result dx_player_create_application(dx_application** RETURN, Core_MessageQueue* msg_queue);
+static Core_Result dx_player_create_application(Core_Application** RETURN, Core_MessageQueue* msg_queue);
 
 #if Core_VisualsBackend_OpenGl4 == Core_VisualsBackend
   #include "dx/val/gl.h"
@@ -50,49 +50,49 @@ static Core_Result dx_player_create_application(dx_application** RETURN, Core_Me
   #error("environment not (yet) supported")
 #endif
 
-static Core_Result dx_player_create_application(dx_application** RETURN, Core_MessageQueue* msg_queue) {
+static Core_Result dx_player_create_application(Core_Application** RETURN, Core_MessageQueue* msg_queue) {
 #if Core_VisualsBackend_OpenGl4 == Core_VisualsBackend && Core_OperatingSystem_Windows == Core_OperatingSystem
-  dx_val_system_factory* val_system_factory = NULL;
-  if (Core_Val_Gl_Wgl_SystemFactory_create((Core_Val_Gl_Wgl_SystemFactory**)&val_system_factory)) {
+  Core_Visuals_SystemFactory* visualsSystemFactory = NULL;
+  if (Core_Val_Gl_Wgl_SystemFactory_create((Core_Val_Gl_Wgl_SystemFactory**)&visualsSystemFactory)) {
     return Core_Failure;
   }
 #else
   #error("environment not (yet) supported")
 #endif
 #if Core_AudialsBackend_OpenAl == Core_AudialsBackend
-  dx_aal_system_factory* aal_system_factory = NULL;
-  if (dx_aal_al_system_factory_create((dx_aal_al_system_factory**)&aal_system_factory)) {
-    CORE_UNREFERENCE(val_system_factory);
-    val_system_factory = NULL;
+  Core_Audials_SystemFactory* audialsSystemFactory = NULL;
+  if (Core_Audials_Al_SystemFactory_create((Core_Audials_Al_SystemFactory**)&audialsSystemFactory)) {
+    CORE_UNREFERENCE(visualsSystemFactory);
+    visualsSystemFactory = NULL;
     return Core_Failure;
   }
 #else
   #error("environment not (yet) supported")
 #endif
-  dx_assets_system_factory* assets_system_factory = NULL;
-  if (dx_assets_system_factory_create(&assets_system_factory)) {
-    CORE_UNREFERENCE(aal_system_factory);
-    aal_system_factory = NULL;
-    CORE_UNREFERENCE(val_system_factory);
-    val_system_factory = NULL;
+  Core_Assets_SystemFactory* assets_system_factory = NULL;
+  if (Core_Assets_SystemFactory_create(&assets_system_factory)) {
+    CORE_UNREFERENCE(audialsSystemFactory);
+    audialsSystemFactory = NULL;
+    CORE_UNREFERENCE(visualsSystemFactory);
+    visualsSystemFactory = NULL;
     return Core_Failure;
   }
-  dx_application* temporary = NULL;
-  if (dx_application_create(&temporary, val_system_factory, aal_system_factory, assets_system_factory, msg_queue)) {
+  Core_Application* temporary = NULL;
+  if (Core_Application_create(&temporary, visualsSystemFactory, audialsSystemFactory, assets_system_factory, msg_queue)) {
     CORE_UNREFERENCE(assets_system_factory);
     assets_system_factory = NULL;
-    CORE_UNREFERENCE(aal_system_factory);
-    aal_system_factory = NULL;
-    CORE_UNREFERENCE(val_system_factory);
-    val_system_factory = NULL;
+    CORE_UNREFERENCE(audialsSystemFactory);
+    audialsSystemFactory = NULL;
+    CORE_UNREFERENCE(visualsSystemFactory);
+    visualsSystemFactory = NULL;
     return Core_Failure;
   }
   CORE_UNREFERENCE(assets_system_factory);
   assets_system_factory = NULL;
-  CORE_UNREFERENCE(aal_system_factory);
-  aal_system_factory = NULL;
-  CORE_UNREFERENCE(val_system_factory);
-  val_system_factory = NULL;
+  CORE_UNREFERENCE(audialsSystemFactory);
+  audialsSystemFactory = NULL;
+  CORE_UNREFERENCE(visualsSystemFactory);
+  visualsSystemFactory = NULL;
   *RETURN = temporary;
   return Core_Success;
 }
@@ -101,21 +101,21 @@ static Core_Result dx_player_create_application(dx_application** RETURN, Core_Me
 /// @brief Create an application with the specified message queue.
 /// @param msg_queue A pointer to the message queue.
 /// @return A pointer to the application on success. The null pointer on failure. 
-static dx_application* create_application(Core_MessageQueue* msg_queue);
+static Core_Application* create_application(Core_MessageQueue* msg_queue);
 
-static dx_application* create_application(Core_MessageQueue* msg_queue) {
-  dx_application* application = NULL;
+static Core_Application* create_application(Core_MessageQueue* msg_queue) {
+  Core_Application* application = NULL;
   if (dx_player_create_application(&application, msg_queue)) {
     return NULL;
   }
-  return DX_APPLICATION(application);
+  return CORE_APPLICATION(application);
 }
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 static dx_application_presenter* g_application_presenter = NULL;
 
-static dx_application* g_application = NULL;
+static Core_Application* g_application = NULL;
 
 static Core_MessageQueue*g_msg_queue  = NULL;
 
@@ -144,12 +144,12 @@ Core_Result dx_application_presenter_get(dx_application_presenter** RETURN) {
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 static Core_Result startup_managers() {
-  dx_val_context* val_context = NULL;
-  if (dx_application_get_val_context(&val_context, g_application)) {
+  Core_Visuals_Context* val_context = NULL;
+  if (Core_Application_get_val_context(&val_context, g_application)) {
     return Core_Failure;
   }
-  dx_aal_context* aal_context = NULL;
-  if (dx_application_get_aal_context(&aal_context, g_application)) {
+  Core_Audials_Context* aal_context = NULL;
+  if (Core_Application_get_aal_context(&aal_context, g_application)) {
     CORE_UNREFERENCE(val_context);
     val_context = NULL;
     return Core_Failure;
@@ -182,8 +182,8 @@ static void shutdown_managers() {
 
 static Core_Result run() {
   ENTER(DX_C_FUNCTION_NAME);
-  dx_val_context* val_context = NULL;
-  if (dx_application_get_val_context(&val_context, g_application)) {
+  Core_Visuals_Context* val_context = NULL;
+  if (Core_Application_get_val_context(&val_context, g_application)) {
     return Core_Failure;
   }
   {
@@ -223,7 +223,7 @@ static Core_Result run() {
     Core_Message* msg = NULL;
     //
     Core_String* msgText = NULL;
-    if (dx_val_context_get_information(&msgText, val_context)) {
+    if (Core_Visuals_Context_getInformation(&msgText, val_context)) {
       CORE_UNREFERENCE(val_context);
       val_context = NULL;
       LEAVE(DX_C_FUNCTION_NAME);
@@ -290,7 +290,7 @@ static Core_Result startup() {
     LEAVE(DX_C_FUNCTION_NAME);
     return Core_Failure;
   }
-  if (dx_application_startup_systems(g_application)) {
+  if (Core_Application_startup_systems(g_application)) {
     CORE_UNREFERENCE(g_application);
     g_application = NULL;
     CORE_UNREFERENCE(g_msg_queue);
@@ -300,7 +300,7 @@ static Core_Result startup() {
     return Core_Failure;
   }
   if (startup_managers()) {
-    dx_application_shutdown_systems(g_application);
+    Core_Application_shutdown_systems(g_application);
     CORE_UNREFERENCE(g_application);
     g_application = NULL;
     CORE_UNREFERENCE(g_msg_queue);
@@ -309,10 +309,10 @@ static Core_Result startup() {
     LEAVE(DX_C_FUNCTION_NAME);
     return Core_Failure;
   }
-  dx_val_context* val_context = NULL;
-  if (dx_application_get_val_context(&val_context, g_application)) {
+  Core_Visuals_Context* val_context = NULL;
+  if (Core_Application_get_val_context(&val_context, g_application)) {
     shutdown_managers();
-    dx_application_shutdown_systems(g_application);
+    Core_Application_shutdown_systems(g_application);
     CORE_UNREFERENCE(g_application);
     g_application = NULL;
     CORE_UNREFERENCE(g_msg_queue);
@@ -329,7 +329,7 @@ static Core_Result startup() {
     val_context = NULL;
 
     shutdown_managers();
-    dx_application_shutdown_systems(g_application);
+    Core_Application_shutdown_systems(g_application);
     CORE_UNREFERENCE(g_application);
     g_application = NULL;
     CORE_UNREFERENCE(g_msg_queue);
@@ -349,7 +349,7 @@ static Core_Result shutdown() {
   CORE_UNREFERENCE(g_application_presenter);
   g_application_presenter = NULL;
   shutdown_managers();
-  dx_application_shutdown_systems(g_application);
+  Core_Application_shutdown_systems(g_application);
   CORE_UNREFERENCE(g_application);
   g_application = NULL;
   CORE_UNREFERENCE(g_msg_queue);

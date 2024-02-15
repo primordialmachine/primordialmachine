@@ -88,4 +88,4 @@ endfunction()
 
 dx_end_project(${name})
 
-target_link_libraries(${name} "Core" "dailies.assets" "dailies.data-definition-language" "dailies.document-definition-language")
+target_link_libraries(${name} "Core" "Core.Assets" "dailies.data-definition-language" "dailies.document-definition-language")

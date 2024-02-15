@@ -1,5 +1,6 @@
 #include "dx/aal/al/context.h"
 
+#include "Core/Memory.h"
 #include "dx/aal/al/system.h"
 
 #define AL_LIBTYPE_STATIC
@@ -7,13 +8,15 @@
 
 Core_defineObjectType("dx.aal.al.context",
                       dx_aal_al_context,
-                      dx_aal_context);
+                      Core_Audials_Context);
 
-static Core_Result start(dx_aal_al_context* SELF);
+static Core_Result startSound(dx_aal_al_context* SELF);
 
-static Core_Result stop(dx_aal_al_context* SELF);
+static Core_Result stopSound(dx_aal_al_context* SELF);
 
 static void dx_aal_al_context_destruct(dx_aal_al_context* SELF) {
+  alDeleteSources(1, &SELF->source);
+  SELF->source = 0;
   alDeleteBuffers(1, &SELF->buffer);
   SELF->buffer = 0;
   alcDestroyContext(SELF->context);
@@ -21,13 +24,13 @@ static void dx_aal_al_context_destruct(dx_aal_al_context* SELF) {
 }
 
 static void dx_aal_al_context_constructDispatch(dx_aal_al_context_Dispatch* SELF) {
-  DX_AAL_CONTEXT_DISPATCH(SELF)->start = (Core_Result(*)(dx_aal_context*)) & start;
-  DX_AAL_CONTEXT_DISPATCH(SELF)->stop = (Core_Result(*)(dx_aal_context*)) & stop;
+  CORE_AUDIALS_CONTEXT_DISPATCH(SELF)->startSound = (Core_Result(*)(Core_Audials_Context*)) & startSound;
+  CORE_AUDIALS_CONTEXT_DISPATCH(SELF)->stopSound = (Core_Result(*)(Core_Audials_Context*)) & stopSound;
 }
 
 Core_Result dx_aal_al_context_construct(dx_aal_al_context * SELF, dx_aal_al_system* system) {
   Core_BeginConstructor(dx_aal_al_context);
-  if (dx_aal_context_construct(DX_AAL_CONTEXT(SELF))) {
+  if (Core_Audials_Context_construct(CORE_AUDIALS_CONTEXT(SELF))) {
     return Core_Failure;
   }
   ALCint attributes[] = {
@@ -89,6 +92,14 @@ Core_Result dx_aal_al_context_construct(dx_aal_al_context * SELF, dx_aal_al_syst
   }
   alBufferData(SELF->buffer, AL_FORMAT_MONO8, data, sizeof(uint8_t) * sample_rate * duration, sample_rate);
   Core_Memory_deallocate(data);
+  alGenSources(1, &SELF->source);
+  if (alGetError()) {
+    alDeleteBuffers(1, &SELF->buffer);
+    SELF->buffer = 0;
+    alcDestroyContext(SELF->context);
+    SELF->context = NULL;
+    return Core_Failure;
+  }
   Core_EndConstructor(dx_aal_al_context);
 }
 
@@ -103,10 +114,10 @@ Core_Result dx_aal_al_context_create(dx_aal_al_context** RETURN, dx_aal_al_syste
   return Core_Success;
 }
 
-static Core_Result start(dx_aal_al_context* SELF) {
+static Core_Result startSound(dx_aal_al_context* SELF) {
   return Core_Success;
 }
 
-static Core_Result stop(dx_aal_al_context* SELF) {
+static Core_Result stopSound(dx_aal_al_context* SELF) {
   return Core_Success;
 }

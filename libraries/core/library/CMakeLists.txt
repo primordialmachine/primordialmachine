@@ -1,6 +1,6 @@
-# Copyright (c) 2023 Michael Heilmann. All rights reserved.
+# Copyright (c) 2023-2024 Michael Heilmann. All rights reserved.
 # Author: Michael Heilmann (michaelheilmann@primordialmachine.com
-# Copyright: Copyright (c) 2023 Michael Heilmann. All rights reserved.
+# Copyright: Copyright (c) 2023-2024 Michael Heilmann. All rights reserved.
 
 cmake_minimum_required(VERSION 3.20)
 
@@ -22,15 +22,13 @@ list(APPEND ${name}.sources "dx/core.c")
 list(APPEND ${name}.headers "dx/core.h")
 
 # "core" folder.
-list(APPEND ${name}.sources "dx/core/context.c")
-list(APPEND ${name}.headers "dx/core/context.h")
-list(APPEND ${name}.sources "dx/core/system.c")
-list(APPEND ${name}.headers "dx/core/system.h")
-list(APPEND ${name}.sources "dx/core/system_factory.c")
-list(APPEND ${name}.headers "dx/core/system_factory.h")
+list(APPEND ${name}.sources "Core/Context.c")
+list(APPEND ${name}.headers "Core/Context.h")
+list(APPEND ${name}.sources "Core/System.c")
+list(APPEND ${name}.headers "Core/System.h")
+list(APPEND ${name}.sources "Core/SystemFactory.c")
+list(APPEND ${name}.headers "Core/SystemFactory.h")
 
-list(APPEND ${name}.sources "dx/core/annotations.c")
-list(APPEND ${name}.headers "dx/core/annotations.h")
 list(APPEND ${name}.sources "dx/core/_get_best_array_size.c")
 list(APPEND ${name}.headers "dx/core/_get_best_array_size.h")
 
@@ -84,8 +82,6 @@ list(APPEND ${name}.headers "dx/core/TypeSystem.h")
 list(APPEND ${name}.sources "dx/core/TypeSystem.library.c")
 list(APPEND ${name}.headers "dx/core/TypeSystem.library.h")
 
-list(APPEND ${name}.sources "dx/core/MessageQueue.c")
-list(APPEND ${name}.headers "dx/core/MessageQueue.h")
 
 # "README.md".
 list(APPEND ${name}.readmes "README.md")
@@ -93,6 +89,10 @@ list(APPEND ${name}.readmes "README.md")
 # Main include file.
 list(APPEND ${name}.sources "Core/Include.c")
 list(APPEND ${name}.headers "Core/Include.h")
+
+# "Annotations".
+list(APPEND ${name}.sources "Core/Annotations.c")
+list(APPEND ${name}.headers "Core/Annotations.h")
 
 # "Configurations".
 list(APPEND ${name}.sources "Core/Configuration.c")
@@ -138,6 +138,10 @@ list(APPEND ${name}.headers "Core/ApplicationMessage.h")
 list(APPEND ${name}.sources "Core/ApplicationMessageKind.c")
 list(APPEND ${name}.headers "Core/ApplicationMessageKind.h")
 
+# "Message Queue".
+list(APPEND ${name}.sources "Core/MessageQueue.c")
+list(APPEND ${name}.headers "Core/MessageQueue.h")
+
 # "Runtime".
 list(APPEND ${name}.sources "Core/Error.c")
 list(APPEND ${name}.headers "Core/Error.h")
@@ -181,12 +185,18 @@ list(APPEND ${name}.sources "Core/FileSystem/FileAccessMode.c")
 list(APPEND ${name}.headers "Core/FileSystem/FileAccessMode.h")
 list(APPEND ${name}.sources "Core/FileSystem/FileType.c")
 list(APPEND ${name}.headers "Core/FileSystem/FileType.h")
+list(APPEND ${name}.sources "Core/FileSystem/FileHandle.c")
+list(APPEND ${name}.headers "Core/FileSystem/FileHandle.h")
+list(APPEND ${name}.sources "Core/FileSystem/FileMapping.c")
+list(APPEND ${name}.headers "Core/FileSystem/FileMapping.h")
 list(APPEND ${name}.sources "Core/FileSystem/getFileContents.c")
 list(APPEND ${name}.headers "Core/FileSystem/getFileContents.h")
 list(APPEND ${name}.sources "Core/FileSystem/getFileType.c")
 list(APPEND ${name}.headers "Core/FileSystem/getFileType.h")
 list(APPEND ${name}.sources "Core/FileSystem/NonExistingFilePolicy.c")
 list(APPEND ${name}.headers "Core/FileSystem/NonExistingFilePolicy.h")
+list(APPEND ${name}.sources "Core/FileSystem/setFileContents.c")
+list(APPEND ${name}.headers "Core/FileSystem/setFileContents.h")
 
 # "Input".
 list(APPEND ${name}.sources "Core/Input/InputMessageKind.c")
@@ -215,6 +225,14 @@ list(APPEND ${name}.sources "Core/Input/ModifierKeys.c")
 list(APPEND ${name}.headers "Core/Input/ModifierKeys.h")
 list(APPEND ${name}.inlays  "Core/Input/ModifierKeys.i")
 
+# "Audials".
+list(APPEND ${name}.sources "Core/Audials/Context.c")
+list(APPEND ${name}.headers "Core/Audials/Context.h")
+list(APPEND ${name}.sources "Core/Audials/System.c")
+list(APPEND ${name}.headers "Core/Audials/System.h")
+list(APPEND ${name}.sources "Core/Audials/SystemFactory.c")
+list(APPEND ${name}.headers "Core/Audials/SystemFactory.h")
+
 # "Visuals".
 list(APPEND ${name}.sources "Core/Visuals/CullMode.c")
 list(APPEND ${name}.headers "Core/Visuals/CullMode.h")
@@ -240,6 +258,12 @@ list(APPEND ${name}.sources "Core/Visuals/CanvasDpiChangedMessage.c")
 list(APPEND ${name}.headers "Core/Visuals/CanvasDpiChangedMessage.h")
 list(APPEND ${name}.sources "Core/Visuals/CanvasStateChangedMessage.c")
 list(APPEND ${name}.headers "Core/Visuals/CanvasStateChangedMessage.h")
+list(APPEND ${name}.sources "Core/Visuals/SystemFactory.c")
+list(APPEND ${name}.headers "Core/Visuals/SystemFactory.h")
+list(APPEND ${name}.sources "Core/Visuals/SoftwarePixelBuffer.c")
+list(APPEND ${name}.headers "Core/Visuals/SoftwarePixelBuffer.h")
+list(APPEND ${name}.sources "Core/Visuals/TextureFilter.c")
+list(APPEND ${name}.headers "Core/Visuals/TextureFilter.h")
 
 # Small utility function to find files by expression and append them to the specified list.
 function(add_files file_list expression)

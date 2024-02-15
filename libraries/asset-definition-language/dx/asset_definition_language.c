@@ -202,7 +202,7 @@ Core_Result dx_adl_compile(dx_assets_scene** RETURN, dx_ddl_node* node) {
               Core_InlineHashMapPPIterator_uninitialize(&iterator);
               return Core_Failure;
             }
-            if (Core_Assets_Image_apply(image, 0, 0, image->width, image->height, operation)) {
+            if (Core_Assets_Image_apply(image, 0, 0, image->backing.extend.width, image->backing.extend.height, operation)) {
               CORE_UNREFERENCE(context);
               context = NULL;
               Core_InlineHashMapPPIterator_uninitialize(&iterator);

@@ -1,15 +1,15 @@
 {
   "type" : "create-operator",
-  "last-update" : "2024-02-11",
+  "last-update" : "2024-02-28",
   "indices" : "core",
   "name" : "Core_WeakReference_create",
   "id" : "core-weakreference-create",
   "signature" : "Core_Result Core_WeakReference_create(Core_WeakReference** RETURN, Core_Object* object);",
   "parameters" : [
     {
-      "name" : "SELF",
-      "type" : "@{code('Core_WeakReference*')}",
-      "description" : "A pointer to this @{code('Core_WeakReference')} object."
+      "name" : "RETURN",
+      "type" : "@{code('Core_WeakReference**')}",
+      "description" : "A pointer to a @{code('Core_WeakReference*')} variable."
     },
     {
       "name" : "object",

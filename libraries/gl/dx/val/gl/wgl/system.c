@@ -57,8 +57,8 @@ static void gl_wgl_close_window_internal(Core_Val_Gl_Wgl_Window* window) {
 }
 
 static Core_Result gl_wgl_open_window_internal(Core_Val_Gl_Wgl_Window** window, Core_Result(*init_wgl)(Core_Val_Gl_Wgl_Window*)) {
-  dx_gl_wgl_application* application = NULL;
-  if (dx_application_get((dx_application**) & application)) {
+  Core_Application* application = NULL;
+  if (Core_Application_get(&application)) {
     return Core_Failure;
   }
   Core_Val_Gl_Wgl_Window* window1 = NULL;
@@ -799,7 +799,7 @@ static Core_Result map_keyboard_key(Core_KeyboardKey* RETURN, Core_Val_Gl_Wgl_Sy
 static Core_Result get_modifiers(uint8_t* RETURN, Core_Val_Gl_Wgl_System* SELF) {
   uint8_t modifiers = 0;
   Core_Boolean state;
-  dx_keyboard_state* keyboard_state = DX_VAL_SYSTEM(SELF)->keyboard_state;
+  dx_keyboard_state* keyboard_state = CORE_VISUALS_SYSTEM(SELF)->keyboard_state;
   //
   if (dx_keyboard_state_get_state(&state, keyboard_state, Core_KeyboardKey_LeftShift)) {
     return Core_Failure;
@@ -840,11 +840,11 @@ static LRESULT CALLBACK window_procedure(HWND wnd, UINT msg, WPARAM wparam, LPAR
     case WM_KEYDOWN:
     case WM_SYSKEYUP:
     case WM_SYSKEYDOWN: {
-      dx_application* app = NULL;
-      if (dx_application_get(&app)) {
+      Core_Application* app = NULL;
+      if (Core_Application_get(&app)) {
         return 0;
       }
-      if (Core_Val_Gl_Wgl_System_onKeyboardKeyMessage(CORE_VAL_GL_WGL_SYSTEM(app->val_system), wnd, msg, wparam, lparam)) {
+      if (Core_Val_Gl_Wgl_System_onKeyboardKeyMessage(CORE_VAL_GL_WGL_SYSTEM(app->visualsSystem), wnd, msg, wparam, lparam)) {
         Core_setError(Core_Error_NoError); // Ignore the error.
         CORE_UNREFERENCE(app);
         app = NULL;
@@ -863,11 +863,11 @@ static LRESULT CALLBACK window_procedure(HWND wnd, UINT msg, WPARAM wparam, LPAR
     case WM_RBUTTONUP:
     case WM_XBUTTONDOWN:
     case WM_XBUTTONUP: {
-      dx_application* app = NULL;
-      if (dx_application_get(&app)) {
+      Core_Application* app = NULL;
+      if (Core_Application_get(&app)) {
         return 0;
       }
-      if (Core_Val_Gl_Wgl_System_onMouseButtonMessage(CORE_VAL_GL_WGL_SYSTEM(app->val_system), wnd, msg, wparam, lparam)) {
+      if (Core_Val_Gl_Wgl_System_onMouseButtonMessage(CORE_VAL_GL_WGL_SYSTEM(app->visualsSystem), wnd, msg, wparam, lparam)) {
         Core_setError(Core_Error_NoError); // Ignore the error.
         CORE_UNREFERENCE(app);
         app = NULL;
@@ -879,11 +879,11 @@ static LRESULT CALLBACK window_procedure(HWND wnd, UINT msg, WPARAM wparam, LPAR
     } break;
     // mouse pointer messages
     case WM_MOUSEMOVE: {
-      dx_application* app = NULL;
-      if (dx_application_get(&app)) {
+      Core_Application* app = NULL;
+      if (Core_Application_get(&app)) {
         return 0;
       }
-      if (Core_Val_Gl_Wgl_System_onMousePointerMessage(CORE_VAL_GL_WGL_SYSTEM(app->val_system), wnd, msg, wparam, lparam)) {
+      if (Core_Val_Gl_Wgl_System_onMousePointerMessage(CORE_VAL_GL_WGL_SYSTEM(app->visualsSystem), wnd, msg, wparam, lparam)) {
         Core_setError(Core_Error_NoError); // Ignore the error.
         CORE_UNREFERENCE(app);
         app = NULL;
@@ -896,11 +896,11 @@ static LRESULT CALLBACK window_procedure(HWND wnd, UINT msg, WPARAM wparam, LPAR
     // application/window
     case WM_ACTIVATE:
     case WM_SIZE: {
-      dx_application* app = NULL;
-      if (dx_application_get(&app)) {
+      Core_Application* app = NULL;
+      if (Core_Application_get(&app)) {
         return 0;
       }
-      if (Core_Val_Gl_Wgl_System_onWindowMessage(CORE_VAL_GL_WGL_SYSTEM(app->val_system), wnd, msg, wparam, lparam)) {
+      if (Core_Val_Gl_Wgl_System_onWindowMessage(CORE_VAL_GL_WGL_SYSTEM(app->visualsSystem), wnd, msg, wparam, lparam)) {
         CORE_UNREFERENCE(app);
         app = NULL;
         return 0;
@@ -910,11 +910,11 @@ static LRESULT CALLBACK window_procedure(HWND wnd, UINT msg, WPARAM wparam, LPAR
       return 0;
     } break;
     case WM_CLOSE: {
-      dx_application* app = NULL;
-      if (dx_application_get(&app)) {
+      Core_Application* app = NULL;
+      if (Core_Application_get(&app)) {
         return 0;
       }
-      if (dx_application_emit_quit_msg(DX_APPLICATION(app))) {
+      if (Core_Application_emit_quit_msg(CORE_APPLICATION(app))) {
         CORE_UNREFERENCE(app);
         app = NULL;
         return 0;
@@ -947,7 +947,7 @@ static Core_Result shutdown(Core_Val_Gl_Wgl_System* SELF) {
   return Core_Success;
 }
 
-static Core_Result get_context(dx_gl_wgl_context** RETURN, Core_Val_Gl_Wgl_System* SELF) {
+static Core_Result getContext(dx_gl_wgl_context** RETURN, Core_Val_Gl_Wgl_System* SELF) {
   if (!g_context) {
     Core_setError(Core_Error_NotInitialized);
     return Core_Failure;
@@ -984,7 +984,7 @@ static void Core_Val_Gl_Wgl_System_destruct(Core_Val_Gl_Wgl_System* SELF) {
 static void Core_Val_Gl_Wgl_System_constructDispatch(Core_Val_Gl_Wgl_System_Dispatch* SELF) {
   CORE_SYSTEM_DISPATCH(SELF)->startup = (Core_Result(*)(Core_System*)) & startup;
   CORE_SYSTEM_DISPATCH(SELF)->shutdown = (Core_Result(*)(Core_System*)) & shutdown;
-  DX_VAL_SYSTEM_DISPATCH(SELF)->get_context = (Core_Result(*)(dx_val_context**,dx_val_system*)) & get_context;
+  CORE_VISUALS_SYSTEM_DISPATCH(SELF)->getContext = (Core_Result(*)(Core_Visuals_Context**,Core_Visuals_System*)) & getContext;
   CORE_VAL_GL_SYSTEM_DISPATCH(SELF)->getWindow = (Core_Result(*)(dx_val_gl_window**,Core_Val_Gl_System*)) & getWindow;
 }
 
@@ -1059,21 +1059,21 @@ Core_Result Core_Val_Gl_Wgl_System_onMouseButtonMessage(Core_Val_Gl_Wgl_System* 
     return Core_Failure;
   }
   Core_Boolean old;
-  if (dx_mouse_state_get_button_state(&old, DX_VAL_SYSTEM(SELF)->mouse_state, mouse_button)) {
+  if (dx_mouse_state_get_button_state(&old, CORE_VISUALS_SYSTEM(SELF)->mouse_state, mouse_button)) {
     return Core_Failure;
   }
   Core_Boolean new = (msg == WM_LBUTTONDOWN || msg == WM_MBUTTONDOWN || msg == WM_RBUTTONDOWN || msg == WM_XBUTTONDOWN)
     ? true
     : false;
-  dx_mouse_state_set_pointer_state(DX_VAL_SYSTEM(SELF)->mouse_state, x, y);
-  dx_mouse_state_set_button_state(DX_VAL_SYSTEM(SELF)->mouse_state, mouse_button, new);
+  dx_mouse_state_set_pointer_state(CORE_VISUALS_SYSTEM(SELF)->mouse_state, x, y);
+  dx_mouse_state_set_button_state(CORE_VISUALS_SYSTEM(SELF)->mouse_state, mouse_button, new);
   if (old != new) {
     if (new) {
-      if (dx_val_system_emit_mouse_button_pressed_msg(DX_VAL_SYSTEM(SELF), mouse_button, x, y, modifiers)) {
+      if (Core_Visuals_System_emitMouseButtonPressedMessage(CORE_VISUALS_SYSTEM(SELF), mouse_button, x, y, modifiers)) {
         return Core_Failure;
       }
     } else {
-      if (dx_val_system_emit_mouse_button_released_msg(DX_VAL_SYSTEM(SELF), mouse_button, x, y, modifiers)) {
+      if (Core_Visuals_System_emitMouseButtonReleasedMessage(CORE_VISUALS_SYSTEM(SELF), mouse_button, x, y, modifiers)) {
         return Core_Failure;
       }
     }
@@ -1088,8 +1088,8 @@ Core_Result Core_Val_Gl_Wgl_System_onMousePointerMessage(Core_Val_Gl_Wgl_System*
   if (get_modifiers(&modifiers, SELF)) {
     return Core_Failure;
   }
-  dx_mouse_state_set_pointer_state(DX_VAL_SYSTEM(SELF)->mouse_state, x, y);
-  if (dx_val_system_emit_mouse_pointer_moved_msg(DX_VAL_SYSTEM(SELF), x, y, modifiers)) {
+  dx_mouse_state_set_pointer_state(CORE_VISUALS_SYSTEM(SELF)->mouse_state, x, y);
+  if (Core_Visuals_System_emitMousePointerMovedMessage(CORE_VISUALS_SYSTEM(SELF), x, y, modifiers)) {
     return Core_Failure;
   }
   return Core_Success;
@@ -1105,18 +1105,18 @@ Core_Result Core_Val_Gl_Wgl_System_onKeyboardKeyMessage(Core_Val_Gl_Wgl_System* 
     return Core_Failure;
   }
   Core_Boolean old;
-  if (dx_keyboard_state_get_state(&old, DX_VAL_SYSTEM(SELF)->keyboard_state, keyboard_key)) {
+  if (dx_keyboard_state_get_state(&old, CORE_VISUALS_SYSTEM(SELF)->keyboard_state, keyboard_key)) {
     return Core_Failure;
   }
   Core_Boolean new = msg == WM_KEYDOWN ? true : false;
-  dx_keyboard_state_set_state(DX_VAL_SYSTEM(SELF)->keyboard_state, keyboard_key, new);
+  dx_keyboard_state_set_state(CORE_VISUALS_SYSTEM(SELF)->keyboard_state, keyboard_key, new);
   if (old != new) {
     if (msg == WM_KEYUP) {
-      if (dx_val_system_emit_keyboard_key_released_msg(DX_VAL_SYSTEM(SELF), keyboard_key, modifiers)) {
+      if (Core_Visuals_System_emitKeyboardKeyReleasedMessage(CORE_VISUALS_SYSTEM(SELF), keyboard_key, modifiers)) {
         return Core_Failure;
       }
     } else {
-      if (dx_val_system_emit_keyboard_key_pressed_msg(DX_VAL_SYSTEM(SELF), keyboard_key, modifiers)) {
+      if (Core_Visuals_System_emitKeyboardKeyPressedMessage(CORE_VISUALS_SYSTEM(SELF), keyboard_key, modifiers)) {
         return Core_Failure;
       }
     }
@@ -1129,12 +1129,12 @@ Core_Result Core_Val_Gl_Wgl_System_onWindowMessage(Core_Val_Gl_Wgl_System* SELF,
     case WM_ACTIVATE: {
       if (wparam) {
         // canvas was activated
-        if (dx_val_system_emit_canvas_activated_msg(DX_VAL_SYSTEM(SELF))) {
+        if (Core_Visuals_System_emitCanvasActivatedMessage(CORE_VISUALS_SYSTEM(SELF))) {
           return Core_Failure;
         }
       } else {
         // canvas was deactivated
-        if (dx_val_system_emit_canvas_deactivated_msg(DX_VAL_SYSTEM(SELF))) {
+        if (Core_Visuals_System_emitCanvasDeactivatedMessage(CORE_VISUALS_SYSTEM(SELF))) {
           return Core_Failure;
         }
       }
@@ -1143,7 +1143,7 @@ Core_Result Core_Val_Gl_Wgl_System_onWindowMessage(Core_Val_Gl_Wgl_System* SELF,
     case WM_SIZE: {
       UINT width = LOWORD(lparam);
       UINT height = HIWORD(lparam);
-      if (dx_val_system_emit_canvas_size_changed_msg(DX_VAL_SYSTEM(SELF), (Core_Real32)width, (Core_Real32)height)) {
+      if (Core_Visuals_System_emitCanvasSizeChangedMessage(CORE_VISUALS_SYSTEM(SELF), (Core_Real32)width, (Core_Real32)height)) {
         return Core_Failure;
       }
       return Core_Success;

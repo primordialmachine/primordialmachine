@@ -7,14 +7,14 @@
 
 Core_declareObjectType("Core.Val.Gl.System",
                        Core_Val_Gl_System,
-                       dx_val_system);
+                       Core_Visuals_System);
 
 static inline Core_Val_Gl_System* CORE_VAL_GL_SYSTEM(void* p) {
   return (Core_Val_Gl_System*)p;
 }
 
 struct Core_Val_Gl_System {
-  dx_val_system _parent;
+  Core_Visuals_System _parent;
 };
 
 static inline Core_Val_Gl_System_Dispatch* CORE_VAL_GL_SYSTEM_DISPATCH(void* p) {
@@ -22,7 +22,7 @@ static inline Core_Val_Gl_System_Dispatch* CORE_VAL_GL_SYSTEM_DISPATCH(void* p) 
 }
 
 struct Core_Val_Gl_System_Dispatch {
-  dx_val_system_Dispatch _parent;
+  Core_Visuals_System_Dispatch _parent;
   Core_Result(*getWindow)(dx_val_gl_window**, Core_Val_Gl_System*);
 };
 

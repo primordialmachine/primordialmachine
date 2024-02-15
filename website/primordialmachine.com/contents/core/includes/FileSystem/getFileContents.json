@@ -4,13 +4,13 @@
   "indices" : "core",
   "name" : "Core_getFileContents",
   "id" : "core-getfilecontents",
-  "signature" : "Core_Result Core_getFileContents(Core_String* path, void **bytes, Core_Size *numberOfBytes);",
+  "signature" : "Core_Result Core_getFileContents(Core_String* pathName, void **bytes, Core_Size *numberOfBytes);",
   "signatureRemarks": null,
   "parameters" : [
     {
-      "name" : "path",
+      "name" : "pathName",
       "type" : "Core_String*",
-      "description" : "The path of the file."
+      "description" : "The path name of the file."
     },
     {
       "name" : "bytes",
@@ -26,7 +26,11 @@
   "errors" : [
     {
       "errorCode" : "@{code('Core_Error_ArgumentInvalid')}",
-      "errorCondition" : "@{code('path')} is a null pointer."
+      "errorCondition" : "@{code('pathName')} is a null pointer."
+    },
+    {
+      "errorCode" : "@{code('Core_Error_ArgumentInvalid')}",
+      "errorCondition" : "@{code('pathName')} is not a valid path."
     },
     {
       "errorCode" : "@{code('Core_Error_ArgumentInvalid')}",

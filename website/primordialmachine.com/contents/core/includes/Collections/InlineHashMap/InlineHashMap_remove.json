@@ -1,0 +1,38 @@
+{
+  "type" : "function",
+  "last-update" : "2024-02-18",
+  "indices" : "core",
+  "name" : "Core_InlineHashMap_remove",
+  "id" : "core-inlinehashmap-remove",
+  "signature" : "Core_Result Core_InlineHashMap&lt;Suffix&gt;_remove(Core_InlineHashMap&lt;Suffix&gt;* SELF, Core_InlineHashMap&lt;Suffix&gt;_Key key);",
+  "signatureRemarks": "<p>where <code>&lt;KeySuffix&gt;</code> <code>&lt;ValueSuffix&gt;</code> can assume the value of <code>P</code>.</p>",
+  "parameters" : [
+    {
+      "name" : "SELF",
+      "type" : "@{code('Core_InlineHashMap&lt;Suffix&gt;*')}",
+      "description" : "A pointer to a @{code('Core_InlineHashMap&lt;Suffix&gt;')} object."
+    },
+    {
+      "name" : "key",
+      "type" : "@{code('Core_InlineHashMap_Key&lt;Suffix&gt;')}",
+      "description" : "The key."
+    }
+  ],
+  "success": "No entry for the specified key exists.",
+  "errors" : [
+    {
+      "errorCode" : "Core_Error_ArgumentInvalid",
+      "errorCondition" : "@{code('SELF')} is a null pointer."
+    },
+    {
+      "errorCode" : "Core_Error_NotFound",
+      "errorCondition" : "If no entry for the specified key was found."
+    }
+  ],
+  "description" : "Remove an entry from this hash map.",
+  "return" : "@{code('Core_Success')} on success. @{code('Core_Failure')} on failure.",
+  "remarks" : [
+    "This function sets the by-thread error variable on failure.",
+    "This function fails only with the specified errors/error conditions."
+  ]
+}

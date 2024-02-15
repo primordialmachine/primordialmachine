@@ -81,13 +81,7 @@ Core_Result Core_InlineHashMapPP_set(Core_InlineHashMapPP* SELF, Core_InlineHash
 /* http://localhost/core#core-inlinehashmap-get */
 Core_Result Core_InlineHashMapPP_get(Core_InlineHashMapPP_Value* RETURN, Core_InlineHashMapPP const* SELF, Core_InlineHashMapPP_Key key);
 
-/// @ingroup Core_Aggregates
-/// @brief Remove an entry from this hashmap.
-/// @param SELF A pointer to this hashmap.
-/// @param key The key.
-/// @method-call
-/// @error #Core_Error_NotFound no entry for the specified key was found
-/// @error #Core_Error_ArgumentInvalid @a self was a null pointer
+/* http://localhost/core#core-inlinehashmap-remove */
 Core_Result Core_InlineHashMapPP_remove(Core_InlineHashMapPP* SELF, Core_InlineHashMapPP_Key key);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/

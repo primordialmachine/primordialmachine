@@ -47,7 +47,7 @@ add_custom_command(TARGET ${name} POST_BUILD
                    ${CMAKE_CURRENT_BINARY_DIR}/../plugins/freetype-plugin/plugin/$<CONFIG>/freetype-plugin.dll $<TARGET_FILE_DIR:${name}>
                    COMMAND_EXPAND_LISTS)
 
-target_link_libraries(${name} dailies.engine)
+target_link_libraries(${name} Core.Engine)
 target_link_libraries(${name} dailies.val.gl)
 target_link_libraries(${name} dailies.aal.al)
 

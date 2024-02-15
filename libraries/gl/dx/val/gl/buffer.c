@@ -21,8 +21,8 @@ static void dx_val_gl_buffer_constructDispatch(dx_val_gl_buffer_Dispatch* SELF) 
 }
 
 static Core_Result dx_val_gl_buffer_construct(dx_val_gl_buffer* SELF, dx_val_gl_context* context) {
-  DX_CONSTRUCT_PREFIX(dx_val_gl_buffer);
-  if (dx_val_buffer_construct(DX_VAL_BUFFER(SELF), DX_VAL_CONTEXT(context))) {
+  Core_BeginConstructor(dx_val_gl_buffer);
+  if (dx_val_buffer_construct(DX_VAL_BUFFER(SELF), CORE_VISUALS_CONTEXT(context))) {
     return Core_Failure;
   }
   context->glGetError(); // clear the error variable
@@ -31,8 +31,7 @@ static Core_Result dx_val_gl_buffer_construct(dx_val_gl_buffer* SELF, dx_val_gl_
     Core_setError(Core_Error_EnvironmentFailed);
     return Core_Failure;
   }
-  CORE_OBJECT(SELF)->type = TYPE;
-  return Core_Success;
+  Core_EndConstructor(dx_val_gl_buffer);
 }
 
 static Core_Result dx_val_gl_buffer_set_data(dx_val_gl_buffer* SELF, void const* p, Core_Size n) {

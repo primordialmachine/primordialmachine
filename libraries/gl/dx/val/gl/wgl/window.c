@@ -253,7 +253,7 @@ static void Core_Val_Gl_Wgl_Window_constructDispatch(Core_Val_Gl_Wgl_Window_Disp
   DX_VAL_GL_WINDOW_DISPATCH(SELF)->getCanvasSize = (Core_Result(*)(dx_val_gl_window*,Core_Integer32*,Core_Integer32*)) & getCanvasSize;
 }
 
-Core_Result Core_Val_Gl_Wgl_Window_construct(Core_Val_Gl_Wgl_Window* SELF, dx_gl_wgl_application* application) {
+Core_Result Core_Val_Gl_Wgl_Window_construct(Core_Val_Gl_Wgl_Window* SELF, Core_Application* application) {
   Core_BeginConstructor(Core_Val_Gl_Wgl_Window);
   if (!application) {
     Core_setError(Core_Error_ArgumentInvalid);
@@ -265,7 +265,7 @@ Core_Result Core_Val_Gl_Wgl_Window_construct(Core_Val_Gl_Wgl_Window* SELF, dx_gl
   SELF->application = application;
   CORE_REFERENCE(application);
   SELF->wnd = CreateWindowEx(WS_EX_APPWINDOW | WS_EX_WINDOWEDGE,
-                             CORE_VAL_GL_WGL_SYSTEM(DX_APPLICATION(application)->val_system)->class_name,
+                             CORE_VAL_GL_WGL_SYSTEM(CORE_APPLICATION(application)->visualsSystem)->class_name,
                              "Media Evaluation Framework",
                              WS_OVERLAPPEDWINDOW | WS_CLIPSIBLINGS | WS_CLIPCHILDREN,
                              CW_USEDEFAULT,
@@ -274,7 +274,7 @@ Core_Result Core_Val_Gl_Wgl_Window_construct(Core_Val_Gl_Wgl_Window* SELF, dx_gl
                              CW_USEDEFAULT,
                              NULL,
                              NULL,
-                             CORE_VAL_GL_WGL_SYSTEM(DX_APPLICATION(application)->val_system)->instance_handle,
+                             CORE_VAL_GL_WGL_SYSTEM(CORE_APPLICATION(application)->visualsSystem)->instance_handle,
                              NULL);
   if (!SELF->wnd) {
     CORE_UNREFERENCE(application);
@@ -317,7 +317,7 @@ Core_Result Core_Val_Gl_Wgl_Window_construct(Core_Val_Gl_Wgl_Window* SELF, dx_gl
   Core_EndConstructor(Core_Val_Gl_Wgl_Window);
 }
 
-Core_Result Core_Val_Gl_Wgl_Window_create(Core_Val_Gl_Wgl_Window** RETURN, dx_gl_wgl_application* application) {
+Core_Result Core_Val_Gl_Wgl_Window_create(Core_Val_Gl_Wgl_Window** RETURN, Core_Application* application) {
   DX_CREATE_PREFIX(Core_Val_Gl_Wgl_Window);
   if (Core_Val_Gl_Wgl_Window_construct(SELF, application)) {
     CORE_UNREFERENCE(SELF);

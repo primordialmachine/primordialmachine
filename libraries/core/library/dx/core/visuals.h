@@ -15,40 +15,9 @@
 #include "Core/Visuals/DepthCompareMode.h"
 #include "core/Visuals/PixelFormat.h"
 #include "Core/Visuals/TextureAddressMode.h"
+#include "Core/Visuals/TextureFilter.h"
 #include "Core/Visuals/VertexFormat.h"
 #include "Core/Visuals/WindingMode.h"
-
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-
-/// @ingroup Core_Visuals
-/// @brief Enumeration of texture minification filters.
-Core_declareEnumerationType("Core.TextureMinificationFilter",
-                            Core_TextureMinificationFilter);
-
-enum Core_TextureMinificationFilter {
-
-  /// GL_TEXTURE_MIN_FILTER with GL_NEAREST in OpenGL.
-  Core_TextureMinificationFilter_Nearest,
-
-  /// GL_TEXTURE_MIN_FILTER with GL_LINEAR in OpenGL
-  Core_TextureMinificationFilter_Linear,
-
-};
-
-/// @ingroup Core_Visuals
-/// @brief Enumeration of texture magnification filters.
-Core_declareEnumerationType("Core.TextureMagnificationFilter",
-                            Core_TextureMagnificationFilter);
-
-enum Core_TextureMagnificationFilter {
-
-  /// GL_TEXTURE_MAG_FILTER with GL_NEAREST in OpenGL.
-  Core_TextureMagnificationFilter_Nearest,
-
-  /// GL_TEXTURE_MAG_FILTER with GL_LINEAR in OpenGL.
-  Core_TextureMagnificationFilter_Linear,
-
-};
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 

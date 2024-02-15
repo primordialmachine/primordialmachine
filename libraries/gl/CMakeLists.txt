@@ -63,4 +63,4 @@ endfunction()
 
 dx_end_project(${name})
 
-target_link_libraries(${name} "dailies.engine")
+target_link_libraries(${name} "Core.Engine")

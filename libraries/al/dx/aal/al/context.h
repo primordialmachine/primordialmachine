@@ -1,7 +1,7 @@
 #if !defined(DX_AAL_AL_CONTEXT_H_INCLUDED)
 #define DX_AAL_AL_CONTEXT_H_INCLUDED
 
-#include "dx/aal/context.h"
+#include "Core/Audials/Context.h"
 typedef struct dx_aal_al_system dx_aal_al_system;
 
 #define AL_LIBTYPE_STATIC
@@ -10,16 +10,17 @@ typedef struct dx_aal_al_system dx_aal_al_system;
 
 Core_declareObjectType("dx.aal.al.context",
                        dx_aal_al_context,
-                       dx_aal_context);
+                       Core_Audials_Context);
 
 static inline dx_aal_al_context* DX_AAL_AL_CONTEXT(void* p) {
   return (dx_aal_al_context*)p;
 }
 
 struct dx_aal_al_context {
-  dx_aal_context _parent;
+  Core_Audials_Context _parent;
   ALCcontext* context;
   ALuint buffer;
+  ALuint source;
 };
 
 static inline dx_aal_al_context_Dispatch* DX_AAL_AL_CONTEXT_DISPATCH(void* p) {
@@ -27,7 +28,7 @@ static inline dx_aal_al_context_Dispatch* DX_AAL_AL_CONTEXT_DISPATCH(void* p) {
 }
 
 struct dx_aal_al_context_Dispatch {
-  dx_aal_context_Dispatch _parent;
+  Core_Audials_Context_Dispatch _parent;
 };
 
 /// @brief Construct this AAL AL context.

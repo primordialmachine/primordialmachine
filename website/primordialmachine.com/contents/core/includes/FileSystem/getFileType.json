@@ -4,7 +4,7 @@
   "indices" : "core",
   "name" : "Core_getFileType",
   "id" : "core-getfiletype",
-  "signature" : "Core_Result Core_getFileType(Core_FileType* RETURN, Core_String* path);",
+  "signature" : "Core_Result Core_getFileType(Core_FileType* RETURN, Core_String* pathName);",
   "signatureRemarks": null,
   "parameters" : [
     {
@@ -13,9 +13,9 @@
       "description" : "A pointer to a @{code('Core_FileType')} variable."
     },
     {
-      "name" : "path",
+      "name" : "pathName",
       "type" : "Core_String*",
-      "description" : "The path of the file."
+      "description" : "The path name of the file."
     }
   ],
   "errors" : [
@@ -25,11 +25,11 @@
     },
     {
       "errorCode" : "@{code('Core_Error_ArgumentInvalid')}",
-      "errorCondition" : "@{code('path')} is a null pointer."
+      "errorCondition" : "@{code('pathName')} is a null pointer."
     },
     {
       "errorCode" : "@{code('Core_Error_ArgumentInvalid')}",
-      "errorCondition" : "@{code('path')} is not a valid path."
+      "errorCondition" : "@{code('pathName')} is not a valid path."
     },
     {
       "errorCode" : "@{code('Core_Error_EnvironmentFailed')}",

@@ -2,7 +2,7 @@
 
 #include "Core/Error.h"
 
-#include "dx/core/annotations.h"
+#include "Core/Annotations.h"
 
 Core_ThreadLocal() Core_Error g_error = Core_Error_NoError;
 

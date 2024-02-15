@@ -31,7 +31,7 @@ struct dx_default_application_presenter {
   
   /// @brief
   /// A strong reference to the application object.
-  dx_application* application;
+  Core_Application* application;
   
   /// @brief
   /// A strong reference to the user interface manager (UI manager).
@@ -61,8 +61,8 @@ struct dx_default_application_presenter_Dispatch {
   dx_application_presenter_Dispatch _parent;
 };
 
-Core_Result dx_default_application_presenter_construct(dx_default_application_presenter* SELF, dx_application* application, dx_cl_interpreter* cl_interpreter, Core_MessageQueue* message_queue);
+Core_Result dx_default_application_presenter_construct(dx_default_application_presenter* SELF, Core_Application* application, dx_cl_interpreter* cl_interpreter, Core_MessageQueue* message_queue);
 
-Core_Result dx_default_application_presenter_create(dx_default_application_presenter** RETURN, dx_application* application, dx_cl_interpreter* cl_interpreter, Core_MessageQueue* message_queue);
+Core_Result dx_default_application_presenter_create(dx_default_application_presenter** RETURN, Core_Application* application, dx_cl_interpreter* cl_interpreter, Core_MessageQueue* message_queue);
 
 #endif // DX_PLAYER_DEFAULT_APPLICATION_PRESENTER_H_INCLUDED

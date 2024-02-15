@@ -28,7 +28,7 @@
 /// @defgroup Core_FileSystem Core:FileSystem
 /// Functionality related to the file system.
 
-#include "dx/core/context.h"
+#include "Core/Context.h"
 #include "dx/core/core.h"
 
 // @todo Fixme.
@@ -36,7 +36,7 @@
 #include "Core/Include.h"
 
 #include "dx/core/math.h"
-#include "dx/core/MessageQueue.h"
+#include "Core/MessageQueue.h"
 #include "dx/core/object.h"
 #include "dx/core/object_array.h"
 #include "dx/core/os.h"
@@ -45,8 +45,8 @@
 #include "dx/core/signals.h"
 #include "dx/core/string_buffer.h"
 #include "dx/core/visuals.h"
-#include "dx/core/system.h"
-#include "dx/core/system_factory.h"
+#include "Core/System.h"
+#include "Core/SystemFactory.h"
 
 // begin: dx/core/input
 #include "dx/core/keyboard_state.h"

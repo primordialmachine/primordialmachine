@@ -1,7 +1,7 @@
 #if !defined(DX_CORE_CORE_H_INCLUDED)
 #define DX_CORE_CORE_H_INCLUDED
 
-#include "dx/core/annotations.h"
+#include "Core/Annotations.h"
 #include "dx/core/configuration.h"
 #include "Core/FundamentalTypes.h"
 #include "Core/Error.h"

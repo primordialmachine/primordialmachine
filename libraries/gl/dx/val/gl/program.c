@@ -35,9 +35,9 @@ static Core_Result dx_val_gl_program_bind(dx_val_gl_program* SELF, dx_val_cbindi
 static Core_Result dx_val_gl_program_activate(dx_val_gl_program* SELF);
 
 static Core_Result dx_val_gl_program_construct(dx_val_gl_program* SELF,
-                                             dx_val_gl_context* ctx,
-                                             Core_String* vertex_program_text,
-                                             Core_String* fragment_program_text);
+                                               dx_val_gl_context* ctx,
+                                               Core_String* vertex_program_text,
+                                               Core_String* fragment_program_text);
 
 static Core_Result
 create_shader
@@ -256,7 +256,7 @@ static Core_Result dx_val_gl_program_construct(dx_val_gl_program* SELF,
                                                Core_String* vertex_program_text,
                                                Core_String* fragment_program_text) {
   DX_CONSTRUCT_PREFIX(dx_val_gl_program);
-  if (dx_val_program_construct(DX_VAL_PROGRAM(SELF), DX_VAL_CONTEXT(ctx))) {
+  if (dx_val_program_construct(DX_VAL_PROGRAM(SELF), CORE_VISUALS_CONTEXT(ctx))) {
     return Core_Failure;
   }
   SELF->vertex_program_id = 0;

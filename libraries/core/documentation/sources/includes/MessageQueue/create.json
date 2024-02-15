@@ -1,0 +1,36 @@
+{
+  "type" : "create-operator",
+  "last-update" : "2024-02-21",
+  "indices" : "core",
+  "name" : "Core_MessageQueue_create",
+  "id" : "core-messagequeue-create",
+  "signature" : "Core_Result Core_MessageQueue_create(Core_MessageQueue** RETURN);",
+  "parameters" : [
+    {
+      "name" : "RETURN",
+      "type" : "@{code('Core_MessageQueue**')}",
+      "description" : "A pointer to a @{code('Core_MessageQueue*')} object."
+    },
+    {
+      "name" : "object",
+      "type" : "@{code('Core_Object*')}",
+      "description" : "A pointer to a @{code('Core_Object')} object or a null pointer."
+    }
+  ],
+  "success": [
+    "A @{code('Core_MessageQueue')} object was created. @{code('*RETURN')} was assigned a pointer to that object."
+  ],
+  "errors" : [
+    {
+      "errorCode" : "Core_Error_ArgumentInvalid",
+      "errorCondition" : "@{code('SELF')} is a null pointer."
+    },
+    {
+      "errorCode" : "Core_Error_AllocationFailed",
+      "errorCondition" : "An allocation failed."
+    }
+  ],
+  "description" : "Create a @{code('Core_MessageQueue')} object.",
+  "return" : "@{code('Core_Success')} on success. @{code('Core_Failure')} on failure.",
+  "remarks" : "This function sets the by-thread error variable on failure."
+}

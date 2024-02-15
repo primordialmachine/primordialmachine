@@ -44,7 +44,7 @@ static Core_Result get_information(Core_String** RETURN, dx_val_gl_context* self
     return Core_Failure;
   }
   Core_Boolean vsync_enabled;
-  if (dx_val_context_get_vsync_enabled(&vsync_enabled, DX_VAL_CONTEXT(self))) {
+  if (Core_Visuals_Context_getVsyncEnabled(&vsync_enabled, CORE_VISUALS_CONTEXT(self))) {
     CORE_UNREFERENCE(vendor);
     vendor = NULL;
     CORE_UNREFERENCE(renderer);
@@ -95,7 +95,7 @@ static Core_Result get_information(Core_String** RETURN, dx_val_gl_context* self
 
 Core_defineObjectType("dx.val.gl.context",
                       dx_val_gl_context,
-                      dx_val_context);
+                      Core_Visuals_Context);
 
 static Core_Result enter_frame(dx_val_gl_context* SELF) {
   SELF->glDepthMask(SELF->depth_write_enabled ? GL_TRUE : GL_FALSE);
@@ -175,9 +175,9 @@ static Core_Result execute_commands(dx_val_gl_context* SELF, dx_val_command_list
       }
       // assign texture to texture unit
       if (command->draw_command.texture) {
-        dx_val_context_bind_texture(DX_VAL_CONTEXT(SELF), 0, command->draw_command.texture);
+        Core_Visuals_Context_bindTexture(CORE_VISUALS_CONTEXT(SELF), 0, command->draw_command.texture);
       } else {
-        dx_val_context_bind_texture(DX_VAL_CONTEXT(SELF), 0, NULL);
+        Core_Visuals_Context_bindTexture(CORE_VISUALS_CONTEXT(SELF), 0, NULL);
       }
       // activate binding and activate program, then render.
       if (dx_val_program_activate(command->draw_command.program)) {
@@ -281,26 +281,25 @@ static void dx_val_gl_context_destruct(dx_val_gl_context* SELF) {
 }
 
 static void dx_val_gl_context_constructDispatch(dx_val_gl_context_Dispatch* SELF) {
-  DX_VAL_CONTEXT_DISPATCH(SELF)->get_information = (Core_Result (*)(Core_String**, dx_val_context*)) & get_information;
-  DX_VAL_CONTEXT_DISPATCH(SELF)->bind_texture = (Core_Result(*)(dx_val_context*, Core_Size, dx_val_texture*)) & bind_texture;
-  DX_VAL_CONTEXT_DISPATCH(SELF)->create_buffer = (Core_Result (*)(dx_val_buffer**, dx_val_context*)) & create_buffer;
-  DX_VAL_CONTEXT_DISPATCH(SELF)->create_cbinding = (Core_Result(*)(dx_val_cbinding**, dx_val_context*)) & create_cbinding;
-  DX_VAL_CONTEXT_DISPATCH(SELF)->create_vbinding = (Core_Result (*)(dx_val_vbinding**, dx_val_context*, Core_VertexFormat, dx_val_buffer*)) & create_vbinding;
-  DX_VAL_CONTEXT_DISPATCH(SELF)->create_program = (Core_Result (*)(dx_val_program**,dx_val_context*, dx_val_program_text*)) & create_program;
-  DX_VAL_CONTEXT_DISPATCH(SELF)->create_texture = (Core_Result (*)(dx_val_texture**, dx_val_context*)) & create_texture;
-  DX_VAL_CONTEXT_DISPATCH(SELF)->execute_commands = (Core_Result(*)(dx_val_context*, dx_val_command_list*)) & execute_commands;
-  DX_VAL_CONTEXT_DISPATCH(SELF)->enter_frame = (Core_Result(*)(dx_val_context*)) & enter_frame;
+  CORE_VISUALS_CONTEXT_DISPATCH(SELF)->getInformation = (Core_Result (*)(Core_String**, Core_Visuals_Context*)) & get_information;
+  CORE_VISUALS_CONTEXT_DISPATCH(SELF)->bindTexture = (Core_Result(*)(Core_Visuals_Context*, Core_Size, Core_Visuals_Texture*)) & bind_texture;
+  CORE_VISUALS_CONTEXT_DISPATCH(SELF)->createBuffer = (Core_Result (*)(dx_val_buffer**, Core_Visuals_Context*)) & create_buffer;
+  CORE_VISUALS_CONTEXT_DISPATCH(SELF)->createConstantBinding = (Core_Result(*)(dx_val_cbinding**, Core_Visuals_Context*)) & create_cbinding;
+  CORE_VISUALS_CONTEXT_DISPATCH(SELF)->createVariableBinding = (Core_Result (*)(dx_val_vbinding**, Core_Visuals_Context*, Core_VertexFormat, dx_val_buffer*)) & create_vbinding;
+  CORE_VISUALS_CONTEXT_DISPATCH(SELF)->createProgram = (Core_Result (*)(dx_val_program**, Core_Visuals_Context*, dx_val_program_text*)) & create_program;
+  CORE_VISUALS_CONTEXT_DISPATCH(SELF)->createTexture = (Core_Result (*)(Core_Visuals_Texture**, Core_Visuals_Context*)) & create_texture;
+  CORE_VISUALS_CONTEXT_DISPATCH(SELF)->executeCommands = (Core_Result(*)(Core_Visuals_Context*, dx_val_command_list*)) & execute_commands;
+  CORE_VISUALS_CONTEXT_DISPATCH(SELF)->enterFrame = (Core_Result(*)(Core_Visuals_Context*)) & enter_frame;
 }
 
 Core_Result dx_val_gl_context_construct(dx_val_gl_context* SELF, Core_Result(*link)(void** RETURN, char const* name)) {
-  DX_CONSTRUCT_PREFIX(dx_val_gl_context);
-  if (dx_val_context_construct(DX_VAL_CONTEXT(SELF))) {
+  Core_BeginConstructor(dx_val_gl_context);
+  if (Core_Visuals_Context_construct(CORE_VISUALS_CONTEXT(SELF))) {
     return Core_Failure;
   }
 #define DEFINE(TYPE, NAME, EXTENSION_NAME) (SELF)->NAME = NULL;
 #include "dx/val/gl/functions.i"
 #undef DEFINE
-
 #define DEFINE(TYPE, NAME, EXTENSION_NAME) \
   if (link((void**)&((SELF)->NAME), #NAME)) { \
     dx_log("unable to link " #NAME "\n", sizeof("unable to link " #NAME "\n") - 1); \
@@ -308,9 +307,6 @@ Core_Result dx_val_gl_context_construct(dx_val_gl_context* SELF, Core_Result(*li
   }
 #include "dx/val/gl/functions.i"
 #undef DEFINE
-
   SELF->depth_write_enabled = Core_True;
-
-  CORE_OBJECT(SELF)->type = TYPE;
-  return Core_Success;
+  Core_EndConstructor(dx_val_gl_context);
 }

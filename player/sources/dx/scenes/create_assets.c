@@ -12,12 +12,12 @@
 static Core_Result _create_scene_from_text(dx_assets_scene** RETURN, char const* adl_text, Core_Size adl_text_length);
 
 static Core_Result _create_scene_from_text(dx_assets_scene** RETURN, char const* adl_text, Core_Size adl_text_length) {
-  dx_application* application = NULL;
-  if (dx_application_get(&application)) {
+  Core_Application* application = NULL;
+  if (Core_Application_get(&application)) {
     return Core_Failure;
   }
   Core_Assets_Context* context = NULL;
-  if (dx_application_get_assets_context(&context, application)) {
+  if (Core_Application_get_assets_context(&context, application)) {
     CORE_UNREFERENCE(application);
     application = NULL;
     return Core_Failure;

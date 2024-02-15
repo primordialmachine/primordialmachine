@@ -27,6 +27,12 @@ static inline void Core_InlineRgbR32_set(Core_InlineRgbR32* c, Core_Real32 r, Co
   c->b = b;
 }
 
+static inline Core_Boolean Core_InlineRgbR32_areEqual(Core_InlineRgbR32 const* v, Core_InlineRgbR32 const* w) {
+  return v->r == w->r
+      && v->g == w->g
+      && v->b == w->b;
+}
+
 void dx_rgb_f32_lerp(Core_InlineRgbR32 const* a, Core_InlineRgbR32 const* b, Core_Real32 t, Core_InlineRgbR32* c);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
@@ -43,6 +49,13 @@ static inline void Core_InlineRgbaR32_set(Core_InlineRgbaR32* c, Core_Real32 r, 
   c->g = g;
   c->b = b;
   c->a = a;
+}
+
+static inline Core_Boolean Core_InlineRgbaR32_areEqual(Core_InlineRgbaR32 const* v, Core_InlineRgbaR32 const* w) {
+  return v->r == w->r
+      && v->g == w->g
+      && v->b == w->b
+      && v->a == w->a;
 }
 
 void dx_rgba_f32_lerp(Core_InlineRgbaR32 const* a, Core_InlineRgbaR32 const* b, Core_Real32 t, Core_InlineRgbaR32* c);
@@ -65,26 +78,26 @@ static inline void Core_InlineAbgrN8_set(Core_InlineAbgrN8* c, Core_Natural8 a, 
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-typedef struct Core_Inline_AlN8 {
+typedef struct Core_InlineAlN8 {
   Core_Natural8 a;
   Core_Natural8 l;
-} Core_Inline_AlN8;
+} Core_InlineAlN8;
 
-static inline void Core_Inline_AlN8_set(Core_Inline_AlN8* c, Core_Natural8 a, Core_Natural8 l) {
+static inline void Core_InlineAlN8_set(Core_InlineAlN8* c, Core_Natural8 a, Core_Natural8 l) {
   c->a = a;
   c->l = l;
 }
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-typedef struct Core_Inline_ArgbN8 {
+typedef struct Core_InlineArgbN8 {
   Core_Natural8 a;
   Core_Natural8 r;
   Core_Natural8 g;
   Core_Natural8 b;
-} Core_Inline_ArgbN8;
+} Core_InlineArgbN8;
 
-static inline void Core_Inline_ArgbN8_set(Core_Inline_ArgbN8* c, Core_Natural8 a, Core_Natural8 r, Core_Natural8 g, Core_Natural8 b) {
+static inline void Core_InlineArgbN8_set(Core_InlineArgbN8* c, Core_Natural8 a, Core_Natural8 r, Core_Natural8 g, Core_Natural8 b) {
   c->a = a;
   c->r = r;
   c->g = g;
@@ -93,13 +106,13 @@ static inline void Core_Inline_ArgbN8_set(Core_Inline_ArgbN8* c, Core_Natural8 a
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-typedef struct Core_Inline_BgrN8 {
+typedef struct Core_InlineBgrN8 {
   Core_Natural8 b;
   Core_Natural8 g;
   Core_Natural8 r;
-} Core_Inline_BgrN8;
+} Core_InlineBgrN8;
 
-static inline void Core_Inline_BgrN8_set(Core_Inline_BgrN8* c, Core_Natural8 b, Core_Natural8 g, Core_Natural8 r) {
+static inline void Core_InlineBgrN8_set(Core_InlineBgrN8* c, Core_Natural8 b, Core_Natural8 g, Core_Natural8 r) {
   c->b = b;
   c->g = g;
   c->r = r;
@@ -107,14 +120,14 @@ static inline void Core_Inline_BgrN8_set(Core_Inline_BgrN8* c, Core_Natural8 b, 
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-typedef struct Core_Inline_BgraN8 {
+typedef struct Core_InlineBgraN8 {
   Core_Natural8 b;
   Core_Natural8 g;
   Core_Natural8 r;
   Core_Natural8 a;
-} Core_Inline_BgraN8;
+} Core_InlineBgraN8;
 
-static inline void Core_Inline_BgraN8_set(Core_Inline_BgraN8* c, Core_Natural8 b, Core_Natural8 g, Core_Natural8 r, Core_Natural8 a) {
+static inline void Core_InlineBgraN8_set(Core_InlineBgraN8* c, Core_Natural8 b, Core_Natural8 g, Core_Natural8 r, Core_Natural8 a) {
   c->b = b;
   c->g = g;
   c->r = r;
@@ -206,28 +219,28 @@ extern Core_InlineRgbN8 const dx_colors_blue;
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-typedef struct Core_RgbaN8 {
+typedef struct Core_InlineRgbaN8 {
   Core_Natural8 r;
   Core_Natural8 g;
   Core_Natural8 b;
   Core_Natural8 a;
-} Core_RgbaN8;
+} Core_InlineRgbaN8;
 
-static inline void Core_RgbaN8_set(Core_RgbaN8* c, Core_Natural8 r, Core_Natural8 g, Core_Natural8 b, Core_Natural8 a) {
+static inline void Core_InlineRgbaN8_set(Core_InlineRgbaN8* c, Core_Natural8 r, Core_Natural8 g, Core_Natural8 b, Core_Natural8 a) {
   c->r = r;
   c->g = g;
   c->b = b;
   c->a = a;
 }
 
-static inline Core_Boolean Core_RgbaN8_areEqual(Core_RgbaN8 const* a, Core_RgbaN8 const* b) {
+static inline Core_Boolean Core_InlineRgbaN8_areEqual(Core_InlineRgbaN8 const* a, Core_InlineRgbaN8 const* b) {
   return a->r == b->r
       && a->g == b->g
       && a->b == b->b
       && a->a == b->a; 
 }
 
-static inline void Core_RgbaN8_to_rgba_f32(Core_RgbaN8 const* source, Core_Real32 a, Core_InlineRgbaR32* target) {
+static inline void Core_InlineRgbaN8_to_rgba_f32(Core_InlineRgbaN8 const* source, Core_Real32 a, Core_InlineRgbaR32* target) {
   target->r = ((Core_Real32)source->r) / 255.f;
   target->g = ((Core_Real32)source->g) / 255.f;
   target->b = ((Core_Real32)source->b) / 255.f;

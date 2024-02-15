@@ -5,10 +5,10 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
-static Core_Result _getFileType(Core_FileType* RETURN, char const* path);
+static Core_Result _getFileType(Core_FileType* RETURN, char const* pathName);
 
-static Core_Result _getFileType(Core_FileType* RETURN, char const* path) {
-  DWORD t = GetFileAttributesA(path);
+static Core_Result _getFileType(Core_FileType* RETURN, char const* pathName) {
+  DWORD t = GetFileAttributesA(pathName);
   if (t == INVALID_FILE_ATTRIBUTES) {
     t = GetLastError();
     SetLastError(0);
@@ -38,10 +38,10 @@ static Core_Result _getFileType(Core_FileType* RETURN, char const* path) {
   }
 }
 
-Core_Result Core_getFileType(Core_FileType* RETURN, Core_String* path) {
+Core_Result Core_getFileType(Core_FileType* RETURN, Core_String* pathName) {
   //
   Core_Boolean containsSymbol;
-  if (Core_String_containsSymbol(&containsSymbol, path, '\0')) {
+  if (Core_String_containsSymbol(&containsSymbol, pathName, '\0')) {
     return Core_Failure;
   }
   if (containsSymbol) {
@@ -52,7 +52,7 @@ Core_Result Core_getFileType(Core_FileType* RETURN, Core_String* path) {
   if (Core_String_create(&format, "${s}\0", sizeof("${s}\0") - 1)) {
     return Core_Failure;
   }
-  if (Core_String_printf(&path, format, path)) {
+  if (Core_String_printf(&pathName, format, pathName)) {
     CORE_UNREFERENCE(format);
     format = NULL;
     return Core_Failure;
@@ -61,13 +61,13 @@ Core_Result Core_getFileType(Core_FileType* RETURN, Core_String* path) {
   format = NULL;
   //
   Core_FileType file_state;
-  if (_getFileType(&file_state, path->bytes)) {
-    CORE_UNREFERENCE(path);
-    path = NULL;
+  if (_getFileType(&file_state, pathName->bytes)) {
+    CORE_UNREFERENCE(pathName);
+    pathName = NULL;
     return Core_Failure;
   }
-  CORE_UNREFERENCE(path);
-  path = NULL;
+  CORE_UNREFERENCE(pathName);
+  pathName = NULL;
   *RETURN = file_state;
   return Core_Success;
 }

@@ -1,0 +1,52 @@
+{
+  "type" : "function",
+  "last-update" : "2024-02-15",
+  "indices" : "core",
+  "name" : "Core_setFileContentsMemoryMapped",
+  "id" : "core-setfilecontentsmemorymapped",
+  "signature" : "Core_Result Core_setFileContentsMemoryMapped(Core_String* pathName, void const *bytes, Core_Size numberOfBytes);",
+  "signatureRemarks": null,
+  "parameters" : [
+    {
+      "name" : "pathName",
+      "type" : "Core_String*",
+      "description" : "The path name of the file."
+    },
+    {
+      "name" : "bytes",
+      "type" : "Core_Natural8*",
+      "description" : "A pointer to an array of @{code('numberOfBytes')} Bytes."
+    },
+    {
+      "name" : "numberOfBytes",
+      "type" : "Core_Size",
+      "description" : "The number of Bytes in the array pointed to by @{code('bytes')}."
+    }
+  ],
+  "errors" : [
+    {
+      "errorCode" : "@{code('Core_Error_ArgumentInvalid')}",
+      "errorCondition" : "@{code('pathName')} is a null pointer."
+    },
+    {
+      "errorCode" : "@{code('Core_Error_ArgumentInvalid')}",
+      "errorCondition" : "@{code('pathName')} is not a valid path."
+    },
+    {
+      "errorCode" : "@{code('Core_Error_ArgumentInvalid')}",
+      "errorCondition" : "@{code('bytes')} is a null pointer."
+    },
+    {
+      "errorCode" : "@{code('Core_Error_ArgumentInvalid')}",
+      "errorCondition" : "@{code('numberOfBytes')} is a null pointer."
+    },
+    {
+      "errorCode" : "@{code('Core_Error_EnvironmentFailed')}",
+      "errorCondition" : "The environment failed."
+    }
+  ],
+  "description" : "Sets the contents of a file. The file is created if it does not exist.",
+  "success" : "The contents of the file was set. The file was created if it did not exist.",
+  "return" : "@{code('Core_Success')} on success. @{code('Core_Failure')} on failure.",
+  "remarks" : "This function sets the by-thread error variable on failure."
+}

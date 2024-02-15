@@ -3,17 +3,10 @@
 
 #include "Core/String.h"
 
-/// @ingroup os
-/// @brief Get the page size.
-/// @param RETURN A pointer to a Core_Size variable.
-/// @procedure
-/// @success <code>*RETURN</code> was assigned the page size.
+/* http://localhost/core#core-getpagesize */
 Core_Result Core_getPageSize(Core_Size* RETURN);
 
-/// @ingroup os
-/// @brief Get the number of CPU cores.
-/// @procedure
-/// @success <code>*RETURN</code> was assigned the number of cores.
+/* http://localhost/core#core-getnumberofcores */
 Core_Result Core_getNumberOfCores(Core_Size* RETURN);
 
 /// @ingroup os

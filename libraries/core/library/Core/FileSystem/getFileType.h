@@ -7,6 +7,6 @@
 #include "Core/FileSystem/FileType.h"
 
 /* http://localhost/core#core-getfiletype */
-Core_Result Core_getFileType(Core_FileType* RETURN, Core_String* path);
+Core_Result Core_getFileType(Core_FileType* RETURN, Core_String* pathName);
 
 #endif // CORE_FILESYSTEM_GETFILETYPE_H_INCLUDED

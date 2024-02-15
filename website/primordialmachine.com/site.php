@@ -132,6 +132,30 @@ function on_head($properties) {
       echo '  <link rel="stylesheet" type="text/css" href="' . ($properties['site_url_prefix']) . $stylesheet . '">';
     }
   }
+  
+  echo
+  "
+  <script>
+  /*
+   * location.hash returns the anchor part of an URL as a string,  with hash (#) symbol included. */
+   * wait for page elements to load
+   * execute function only if the anchor exists in the URL address
+   */
+  window.onload = function() {
+    if(location.hash) {
+      // remove # from the string
+      var elId = location.hash.replace('#','');
+      // locate the anchored element on the page by its ID property 
+      var scrollToEl = document.getElementById(elId);
+      // scroll to the anchored element
+      if (scrollToEl) {
+        scrollToEl.scrollIntoView(true);
+      }
+    }
+  }
+  </script> 
+  "
+  ;
 
   echo '</head>';
 }

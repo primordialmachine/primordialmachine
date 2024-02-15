@@ -1,0 +1,25 @@
+{
+  "type" : "enumeration",
+  "last-update" : "2024-02-28",
+  "indices" : "val",
+  "name" : "Core_TextureFilter",
+  "id" : "core-texturefilter",
+  "signature" : "typedef enum Core_TextureFilter &lt;implementation&gt; Core_TextureFilter;",
+  "description": [
+    "An enumeration of texture filters."
+  ],
+  "elements": [
+    {
+      "name" : "Core_TextureFilter_Nearest",
+      "description" : [
+        "Nearest filtering."
+      ]
+    },
+    {
+      "name" : "Core_TextureFilter_Linear",
+      "description" : [
+        "Linear filtering."
+      ]
+    }
+  ]
+}

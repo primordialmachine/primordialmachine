@@ -1,0 +1,10 @@
+{
+  "type" : "object",
+  "last-update" : "2024-02-21",
+  "indices" : "core",
+  "name" : "Core_MessageQueue",
+  "id" : "core-messagequeue",
+  "signature" : "typedef struct Core_MessageQueue Core_MessageQueue;",
+  "extends" : "Core_Object",
+  "description": "A message queue."
+}

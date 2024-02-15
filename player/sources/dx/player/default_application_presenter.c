@@ -285,8 +285,8 @@ static Core_Result startup(dx_default_application_presenter* SELF) {
     return Core_Failure;
   }
 
-  dx_val_context* val_context = NULL;
-  if (dx_application_get_val_context(&val_context, SELF->application)) {
+  Core_Visuals_Context* val_context = NULL;
+  if (Core_Application_get_val_context(&val_context, SELF->application)) {
     return Core_Failure;
   }
 
@@ -346,12 +346,12 @@ static Core_Result addFpsOverlayMessage(dx_default_application_presenter* SELF) 
 
 // Add to the overlay a message informing about the canvas size.
 static Core_Result addCanvasSizeOverlayMessage(dx_default_application_presenter* SELF) {
-  dx_val_context* valContext = NULL;
-  if (dx_application_get_val_context(&valContext, SELF->application)) {
+  Core_Visuals_Context* valContext = NULL;
+  if (Core_Application_get_val_context(&valContext, SELF->application)) {
     return Core_Failure;
   }
   Core_Integer32 horizontal, vertical;
-  if (dx_val_context_get_canvas_size(valContext, &horizontal, &vertical)) {
+  if (Core_Visuals_Context_getCanvasSize(valContext, &horizontal, &vertical)) {
     CORE_UNREFERENCE(valContext);
     valContext = NULL;
     return Core_Failure;
@@ -378,12 +378,12 @@ static Core_Result addCanvasSizeOverlayMessage(dx_default_application_presenter*
 
 // Add to the overlay a message informing about the canvas dpi.
 static Core_Result addCanvasDpiOverlayMessage(dx_default_application_presenter* SELF) {
-  dx_val_context* valContext = NULL;
-  if (dx_application_get_val_context(&valContext, SELF->application)) {
+  Core_Visuals_Context* valContext = NULL;
+  if (Core_Application_get_val_context(&valContext, SELF->application)) {
     return Core_Failure;
   }
   Core_Integer32 horizontal, vertical;
-  if (dx_val_context_get_canvas_dpi(valContext, &horizontal, &vertical)) {
+  if (Core_Visuals_Context_getCanvasDpi(valContext, &horizontal, &vertical)) {
     CORE_UNREFERENCE(valContext);
     valContext = NULL;
     return Core_Failure;
@@ -409,12 +409,12 @@ static Core_Result addCanvasDpiOverlayMessage(dx_default_application_presenter* 
 }
 
 static Core_Result addDpiOverlayMessage(dx_default_application_presenter* SELF) {
-  dx_val_context* valContext = NULL;
-  if (dx_application_get_val_context(&valContext, SELF->application)) {
+  Core_Visuals_Context* valContext = NULL;
+  if (Core_Application_get_val_context(&valContext, SELF->application)) {
     return Core_Failure;
   } 
   Core_Integer32 dpiHorizontal, dpiVertical;
-  if (dx_val_context_get_canvas_dpi(valContext, &dpiHorizontal, &dpiVertical)) {
+  if (Core_Visuals_Context_getCanvasDpi(valContext, &dpiHorizontal, &dpiVertical)) {
     CORE_UNREFERENCE(valContext);
     valContext = NULL;
     return Core_Failure;
@@ -446,8 +446,8 @@ static Core_Result run(dx_default_application_presenter* SELF) {
   Core_Natural64 now = last;
   Core_Natural64 delta = now - last;
 
-  dx_val_context* val_context = NULL;
-  if (dx_application_get_val_context(&val_context, SELF->application)) {
+  Core_Visuals_Context* val_context = NULL;
+  if (Core_Application_get_val_context(&val_context, SELF->application)) {
     return Core_Failure;
   }
 
@@ -459,7 +459,7 @@ static Core_Result run(dx_default_application_presenter* SELF) {
     }
     delta = now - last;
     last = now;
-    if (dx_application_update(SELF->application)) {
+    if (Core_Application_update(SELF->application)) {
       CORE_UNREFERENCE(val_context);
       val_context = NULL;
       return Core_Failure;
@@ -486,12 +486,12 @@ static Core_Result run(dx_default_application_presenter* SELF) {
       }
     } while (true);
     dx_fps_counter_on_enter_frame(SELF->fps_counter);
-    dx_val_context_enter_frame(val_context);
+    Core_Visuals_Context_enterFrame(val_context);
 
     // Get the canvas size.
     Core_Integer32 canvas_size_horizontal, canvas_size_vertical;
-    if (dx_val_context_get_canvas_size(val_context, &canvas_size_horizontal, &canvas_size_vertical)) {
-      dx_val_context_leave_frame(val_context);
+    if (Core_Visuals_Context_getCanvasSize(val_context, &canvas_size_horizontal, &canvas_size_vertical)) {
+      Core_Visuals_Context_leaveFrame(val_context);
       dx_fps_counter_on_leave_frame(SELF->fps_counter);
       CORE_UNREFERENCE(val_context);
       val_context = NULL;
@@ -499,8 +499,8 @@ static Core_Result run(dx_default_application_presenter* SELF) {
     }
     // Get the DPI.
     Core_Integer32 dpi_horizontal, dpi_vertical;
-    if (dx_val_context_get_canvas_dpi(val_context, &dpi_horizontal, &dpi_vertical)) {
-      dx_val_context_leave_frame(val_context);
+    if (Core_Visuals_Context_getCanvasDpi(val_context, &dpi_horizontal, &dpi_vertical)) {
+      Core_Visuals_Context_leaveFrame(val_context);
       dx_fps_counter_on_leave_frame(SELF->fps_counter);
       CORE_UNREFERENCE(val_context);
       val_context = NULL;
@@ -515,14 +515,14 @@ static Core_Result run(dx_default_application_presenter* SELF) {
     if (SELF->scene_index < n) {
       dx_scene_presenter* scene_presenter = NULL;
       if (dx_inline_object_array_get_at((Core_Object**)&scene_presenter, SELF->scene_presenters, SELF->scene_index)) {
-        dx_val_context_leave_frame(val_context);
+        Core_Visuals_Context_leaveFrame(val_context);
         dx_fps_counter_on_leave_frame(SELF->fps_counter);
         CORE_UNREFERENCE(val_context);
         val_context = NULL;
         return Core_Failure;
       }
       if (dx_scene_presenter_render(scene_presenter, val_context, delta_seconds, canvas_size_horizontal, canvas_size_vertical)) {
-        dx_val_context_leave_frame(val_context);
+        Core_Visuals_Context_leaveFrame(val_context);
         dx_fps_counter_on_leave_frame(SELF->fps_counter);
         CORE_UNREFERENCE(val_context);
         val_context = NULL;
@@ -531,7 +531,7 @@ static Core_Result run(dx_default_application_presenter* SELF) {
     }
     {
       if (updateOverlay(SELF)) {
-        dx_val_context_leave_frame(val_context);
+        Core_Visuals_Context_leaveFrame(val_context);
         dx_fps_counter_on_leave_frame(SELF->fps_counter);
         CORE_UNREFERENCE(val_context);
         val_context = NULL;
@@ -540,7 +540,7 @@ static Core_Result run(dx_default_application_presenter* SELF) {
     }
     dx_console_render(SELF->console, delta_seconds, canvas_size_horizontal, canvas_size_vertical, dpi_horizontal, dpi_vertical);
     dx_overlay_render(SELF->overlay, delta_seconds, canvas_size_horizontal, canvas_size_vertical, dpi_horizontal, dpi_vertical);
-    dx_val_context_leave_frame(val_context);
+    Core_Visuals_Context_leaveFrame(val_context);
     dx_fps_counter_on_leave_frame(SELF->fps_counter);
   }
   CORE_UNREFERENCE(val_context);
@@ -549,8 +549,8 @@ static Core_Result run(dx_default_application_presenter* SELF) {
 }
 
 static Core_Result shutdown(dx_default_application_presenter* SELF) {
-  dx_val_context* val_context = NULL;
-  if (dx_application_get_val_context(&val_context, SELF->application)) {
+  Core_Visuals_Context* val_context = NULL;
+  if (Core_Application_get_val_context(&val_context, SELF->application)) {
     return Core_Failure;
   }  
   Core_Size n;
@@ -591,7 +591,7 @@ Core_defineObjectType("dx.default_application_presenter",
                       dx_default_application_presenter,
                       dx_application_presenter);
 
-static Core_Result create_standard_ui(dx_default_application_presenter* SELF, dx_application* application) {
+static Core_Result create_standard_ui(dx_default_application_presenter* SELF, Core_Application* application) {
   //
   if (dx_ui_manager_create(&SELF->ui_manager, application->font_presenter, application->rectangle_presenter)) {
     return Core_Failure;
@@ -656,7 +656,7 @@ static void dx_default_application_presenter_constructDispatch(dx_default_applic
   DX_APPLICATION_PRESENTER_DISPATCH(SELF)->quit_requested = (Core_Result(*)(Core_Boolean*, dx_application_presenter*)) & quit_requested;
 }
 
-Core_Result dx_default_application_presenter_construct(dx_default_application_presenter* SELF, dx_application* application, dx_cl_interpreter* cl_interpreter, Core_MessageQueue* message_queue) {
+Core_Result dx_default_application_presenter_construct(dx_default_application_presenter* SELF, Core_Application* application, dx_cl_interpreter* cl_interpreter, Core_MessageQueue* message_queue) {
   DX_CONSTRUCT_PREFIX(dx_default_application_presenter);
   if (dx_application_presenter_construct(DX_APPLICATION_PRESENTER(SELF))) {
     return Core_Failure;
@@ -699,7 +699,7 @@ Core_Result dx_default_application_presenter_construct(dx_default_application_pr
   return Core_Success;
 }
 
-Core_Result dx_default_application_presenter_create(dx_default_application_presenter** RETURN, dx_application* application, dx_cl_interpreter* cl_interpreter, Core_MessageQueue* message_queue) {
+Core_Result dx_default_application_presenter_create(dx_default_application_presenter** RETURN, Core_Application* application, dx_cl_interpreter* cl_interpreter, Core_MessageQueue* message_queue) {
   DX_CREATE_PREFIX(dx_default_application_presenter);
   if (dx_default_application_presenter_construct(SELF, application, cl_interpreter, message_queue)) {
     CORE_UNREFERENCE(SELF);

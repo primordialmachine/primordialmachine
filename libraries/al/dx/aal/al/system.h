@@ -1,7 +1,7 @@
 #if !defined(DX_AAL_AL_SYSTEM_H_INCLUDED)
 #define DX_AAL_AL_SYSTEM_H_INCLUDED
 
-#include "dx/aal/system.h"
+#include "Core/Audials/System.h"
 typedef struct dx_aal_al_context dx_aal_al_context;
 
 #define AL_LIBTYPE_STATIC
@@ -9,14 +9,14 @@ typedef struct dx_aal_al_context dx_aal_al_context;
 
 Core_declareObjectType("dx.aal.al.system",
                        dx_aal_al_system,
-                       dx_aal_system);
+                       Core_Audials_System);
 
 static inline dx_aal_al_system* DX_AAL_AL_SYSTEM(void* p) {
   return (dx_aal_al_system*)p;
 }
 
 struct dx_aal_al_system {
-  dx_aal_system _parent;
+  Core_Audials_System _parent;
   ALCdevice* device;
 };
 
@@ -25,7 +25,7 @@ static inline dx_aal_al_system_Dispatch* DX_AAL_AL_SYSTEM_DISPATCH(void* p) {
 }
 
 struct dx_aal_al_system_Dispatch {
-  dx_aal_system_Dispatch _parent;
+  Core_Audials_System_Dispatch _parent;
 };
 
 /// @brief Construct this AAL AL system.

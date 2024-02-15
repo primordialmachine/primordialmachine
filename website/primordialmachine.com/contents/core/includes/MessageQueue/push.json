@@ -1,0 +1,40 @@
+{
+  "type" : "method",
+  "last-update" : "2024-02-21",
+  "indices" : "core",
+  "name" : "Core_MessageQueue_push",
+  "id" : "core-messagequeue-push",
+  "signature" : "Core_Result Core_MessageQueue_push(Core_MessageQueue* SELF, Core_Message* message);",
+  "parameters" : [
+    {
+      "name" : "SELF",
+      "type" : "@{code('Core_MessageQueue*')}",
+      "description" : "A pointer to this @{code('Core_MessageQueue')} object."
+    },
+    {
+      "name" : "message",
+      "type" : "@{code('Core_Message*')}",
+      "description" : "A pointer to a @{code('Core_Message')} object."
+    }
+  ],
+  "success": [
+    "The message was aappened to this message queue and the message queue acquired a reference to that message."
+  ],
+  "errors" : [
+    {
+      "errorCode" : "Core_Error_ArgumentInvalid",
+      "errorCondition" : "@{code('SELF')} is a null pointer."
+    },
+    {
+      "errorCode" : "Core_Error_ArgumentInvalid",
+      "errorCondition" : "@{code('message')} is a null pointer."
+    },
+     {
+      "errorCode" : "Core_Error_AllocationFailed",
+      "errorCondition" : "An allocation failed."
+    }
+  ],
+  "description" : "Push a message to this message queue.",
+  "return" : "@{code('Core_Success')} on success. @{code('Core_Failure')} on failure.",
+  "remarks" : "This function sets the by-thread error variable on failure."
+}

@@ -8,6 +8,12 @@
 #include "Core/Tests/safeMulIx.h"
 #include "Core/Tests/safeMulNx.h"
 #include "Core/Tests/Utf8/InlineUtf8IteratorTests.h"
+#include "Core/Tests/FileSystem/getFileContentsTests.h"
+#include "core/Tests/FileSystem/getFileContentsCallbackTests.h"
+#include "Core/Tests/FileSystem/getFileContentsMemoryMappedTests.h"
+#include "Core/Tests/FileSystem/getFileContentsMemoryMappedCallbackTests.h"
+#include "Core/Tests/FileSystem/setFileContentsTests.h"
+#include "Core/Tests/FileSystem/setFileContentsMemoryMappedTests.h"
 
 #include "Core/Tests/Signals/Test1.h"
 
@@ -159,6 +165,43 @@ static Core_Result run_tests() {
     return Core_Failure;
   }
   fprintf(stdout, "Core.Tests.Utf8.inlineUtf8IteratorTests succeeded\n");
+
+  if (Core_Tests_FileSystem_getFileContentsTests()) {
+    fprintf(stdout, "Core.Tests.FileSystem.getFileContentsTests failed\n");
+    return Core_Failure;
+  }
+  fprintf(stdout, "Core.Tests.FileSystem.getFileContentsTests succeeded\n");
+
+  if (Core_Tests_FileSystem_getFileContentsCallbackTests()) {
+    fprintf(stdout, "Core.Tests.FileSystem.getFileContentsCallbackTests failed\n");
+    return Core_Failure;
+  }
+  fprintf(stdout, "Core.Tests.FileSystem.getFileContentsCallbackTests succeeded\n");
+
+  if (Core_Tests_FileSystem_getFileContentsMemoryMappedTests()) {
+    fprintf(stdout, "Core.Tests.FileSystem.getFileContentsMemoryMappedTests failed\n");
+    return Core_Failure;
+  }
+  fprintf(stdout, "Core.Tests.FileSystem.getFileContentsMemoryMappedTests succeeded\n");
+
+  if (Core_Tests_FileSystem_getFileContentsMemoryMappedCallbackTests()) {
+    fprintf(stdout, "Core.Tests.FileSystem.getFileContentsMemoryMappedCallbackTests failed\n");
+    return Core_Failure;
+  }
+  fprintf(stdout, "Core.Tests.FileSystem.getFileContentsMemoryMappedCallbackTests succeeded\n");
+
+  if (Core_Tests_FileSystem_setFileContentsTests()) {
+    fprintf(stdout, "Core.Tests.FileSystem.setFileContentsTests failed\n");
+    return Core_Failure;
+  }
+  fprintf(stdout, "Core.Tests.FileSystem.setFileContentsTests succeeded\n");
+
+  if (Core_Tests_FileSystem_setFileContentsMemoryMappedTests()) {
+    fprintf(stdout, "Core.Tests.FileSystem.setFileContentsMemoryMappedTests failed\n");
+    return Core_Failure;
+  }
+  fprintf(stdout, "Core.Tests.FileSystem.setFileContentsMemoryMappedTests succeeded\n");
+
 #if defined(DX_MATH_WITH_TESTS) && 1 == DX_MATH_WITH_TESTS
   if (dx_math_tests()) {
     fprintf(stdout, "Core.Tests.mathTests failed\n");

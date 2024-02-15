@@ -5,25 +5,25 @@
 
 Core_defineObjectType("dx.val.gl.texture",
                       dx_val_gl_texture,
-                      dx_val_texture);
+                      Core_Visuals_Texture);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 static Core_Result dx_val_gl_texture_set_data(dx_val_gl_texture* SELF, Core_Assets_Texture* texture) {
-  dx_val_gl_context* context = DX_VAL_GL_CONTEXT(DX_VAL_TEXTURE(SELF)->context);
-  switch (CORE_ASSETS_IMAGE(texture->image_reference->object)->pixelFormat) {
+  dx_val_gl_context* context = DX_VAL_GL_CONTEXT(CORE_VISUALS_TEXTURE(SELF)->context);
+  switch (CORE_ASSETS_IMAGE(texture->image_reference->object)->backing.pixelFormat) {
   case Core_PixelFormat_L8: {
     context->glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     context->glBindTexture(GL_TEXTURE_2D, SELF->id);
     context->glTexImage2D(GL_TEXTURE_2D,
                           0,
                           GL_RED,
-                          CORE_ASSETS_IMAGE(texture->image_reference->object)->width,
-                          CORE_ASSETS_IMAGE(texture->image_reference->object)->height,
+                          CORE_ASSETS_IMAGE(texture->image_reference->object)->backing.extend.width,
+                          CORE_ASSETS_IMAGE(texture->image_reference->object)->backing.extend.height,
                           0,
                           GL_RED,
                           GL_UNSIGNED_BYTE,
-                          CORE_ASSETS_IMAGE(texture->image_reference->object)->pixels);
+                          CORE_ASSETS_IMAGE(texture->image_reference->object)->backing.pixels);
   } break;
   case Core_PixelFormat_Rgb8: {
     context->glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
@@ -31,12 +31,12 @@ static Core_Result dx_val_gl_texture_set_data(dx_val_gl_texture* SELF, Core_Asse
     context->glTexImage2D(GL_TEXTURE_2D,
                           0,
                           GL_RGB,
-                          CORE_ASSETS_IMAGE(texture->image_reference->object)->width,
-                          CORE_ASSETS_IMAGE(texture->image_reference->object)->height,
+                          CORE_ASSETS_IMAGE(texture->image_reference->object)->backing.extend.width,
+                          CORE_ASSETS_IMAGE(texture->image_reference->object)->backing.extend.height,
                           0,
                           GL_RGB,
                           GL_UNSIGNED_BYTE,
-                          CORE_ASSETS_IMAGE(texture->image_reference->object)->pixels);
+                          CORE_ASSETS_IMAGE(texture->image_reference->object)->backing.pixels);
   } break;
   case Core_PixelFormat_Bgr8: {
     context->glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
@@ -44,11 +44,11 @@ static Core_Result dx_val_gl_texture_set_data(dx_val_gl_texture* SELF, Core_Asse
     context->glTexImage2D(GL_TEXTURE_2D,
                           0,
                           GL_RGB,
-                          CORE_ASSETS_IMAGE(texture->image_reference->object)->width,
-                          CORE_ASSETS_IMAGE(texture->image_reference->object)->height, 0,
+                          CORE_ASSETS_IMAGE(texture->image_reference->object)->backing.extend.width,
+                          CORE_ASSETS_IMAGE(texture->image_reference->object)->backing.extend.height, 0,
                           GL_BGR,
                           GL_UNSIGNED_BYTE,
-                          CORE_ASSETS_IMAGE(texture->image_reference->object)->pixels);
+                          CORE_ASSETS_IMAGE(texture->image_reference->object)->backing.pixels);
   } break;
   default: {
     Core_setError(Core_Error_EnvironmentFailed);
@@ -94,22 +94,22 @@ static Core_Result dx_val_gl_texture_get_texture_address_mode_v(Core_TextureAddr
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-static Core_Result dx_val_gl_texture_set_texture_border_color(dx_val_gl_texture* SELF, DX_VEC4 const* texture_border_color) {
-  if (!dx_vec4_are_equal(&SELF->texture_border_color, texture_border_color)) {
+static Core_Result dx_val_gl_texture_set_texture_border_color(dx_val_gl_texture* SELF, Core_InlineRgbaR32 const* texture_border_color) {
+  if (!Core_InlineRgbaR32_areEqual(&SELF->texture_border_color, texture_border_color)) {
     SELF->texture_border_color = *texture_border_color;
     SELF->flags |= DX_VAL_GL_TEXTURE_BORDER_COLOR_DIRTY;
   }
   return Core_Success;
 }
 
-static Core_Result dx_val_gl_texture_get_texture_border_color(DX_VEC4* RETURN, dx_val_gl_texture* SELF) {
+static Core_Result dx_val_gl_texture_get_texture_border_color(Core_InlineRgbaR32* RETURN, dx_val_gl_texture* SELF) {
   *RETURN = SELF->texture_border_color;
   return Core_Success;
 }
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-static Core_Result dx_val_gl_texture_set_texture_minification_filter(dx_val_gl_texture* SELF, Core_TextureMinificationFilter texture_minification_filter) {
+static Core_Result dx_val_gl_texture_set_texture_minification_filter(dx_val_gl_texture* SELF, Core_TextureFilter texture_minification_filter) {
   if (SELF->texture_minification_filter != texture_minification_filter) {
     SELF->texture_minification_filter = texture_minification_filter;
     SELF->flags |= DX_VAL_GL_TEXTURE_MINIFICATION_FILTER_DIRTY;
@@ -117,14 +117,14 @@ static Core_Result dx_val_gl_texture_set_texture_minification_filter(dx_val_gl_t
   return Core_Success;
 }
 
-static Core_Result dx_val_gl_texture_get_texture_minification_filter(Core_TextureMinificationFilter* RETURN, dx_val_gl_texture* SELF) {
+static Core_Result dx_val_gl_texture_get_texture_minification_filter(Core_TextureFilter* RETURN, dx_val_gl_texture* SELF) {
   *RETURN = SELF->texture_minification_filter;
   return Core_Success;
 }
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-static Core_Result dx_val_gl_texture_set_texture_magnification_filter(dx_val_gl_texture* SELF, Core_TextureMagnificationFilter texture_magnification_filter) {
+static Core_Result dx_val_gl_texture_set_texture_magnification_filter(dx_val_gl_texture* SELF, Core_TextureFilter texture_magnification_filter) {
   if (SELF->texture_magnification_filter != texture_magnification_filter) {
     SELF->texture_magnification_filter = texture_magnification_filter;
     SELF->flags |= DX_VAL_GL_TEXTURE_MAGNIFICATION_FILTER_DIRTY;
@@ -132,7 +132,7 @@ static Core_Result dx_val_gl_texture_set_texture_magnification_filter(dx_val_gl_
   return Core_Success;
 }
 
-static Core_Result dx_val_gl_texture_get_texture_magnification_filter(Core_TextureMagnificationFilter* RETURN, dx_val_gl_texture* SELF) {
+static Core_Result dx_val_gl_texture_get_texture_magnification_filter(Core_TextureFilter* RETURN, dx_val_gl_texture* SELF) {
   *RETURN = SELF->texture_magnification_filter;
   return Core_Success;
 }
@@ -140,7 +140,7 @@ static Core_Result dx_val_gl_texture_get_texture_magnification_filter(Core_Textu
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 static Core_Result upload(dx_val_gl_texture* SELF) {
-  dx_val_gl_context* context = DX_VAL_GL_CONTEXT(DX_VAL_TEXTURE(SELF)->context);
+  dx_val_gl_context* context = DX_VAL_GL_CONTEXT(CORE_VISUALS_TEXTURE(SELF)->context);
   
   // bind the texture
   context->glBindTexture(GL_TEXTURE_2D, SELF->id);
@@ -206,10 +206,10 @@ static Core_Result upload(dx_val_gl_texture* SELF) {
   if (SELF->flags & DX_VAL_GL_TEXTURE_MINIFICATION_FILTER_DIRTY) {
 
     switch (SELF->texture_minification_filter) {
-      case Core_TextureMinificationFilter_Linear: {
+      case Core_TextureFilter_Linear: {
         context->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
       } break;
-      case Core_TextureMinificationFilter_Nearest: {
+      case Core_TextureFilter_Nearest: {
         context->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
       } break;
       default: {
@@ -229,10 +229,10 @@ static Core_Result upload(dx_val_gl_texture* SELF) {
   if (SELF->flags & DX_VAL_GL_TEXTURE_MAGNIFICATION_FILTER_DIRTY) {
 
     switch (SELF->texture_magnification_filter) {
-      case Core_TextureMagnificationFilter_Linear: {
+      case Core_TextureFilter_Linear: {
         context->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
       } break;
-      case Core_TextureMagnificationFilter_Nearest: {
+      case Core_TextureFilter_Nearest: {
         context->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
       } break;
       default: {
@@ -266,29 +266,29 @@ static Core_Result upload(dx_val_gl_texture* SELF) {
 
 static void dx_val_gl_texture_destruct(dx_val_gl_texture* SELF) {
   if (SELF->id) {
-    dx_val_gl_context* context = DX_VAL_GL_CONTEXT(DX_VAL_TEXTURE(SELF)->context);
+    dx_val_gl_context* context = DX_VAL_GL_CONTEXT(CORE_VISUALS_TEXTURE(SELF)->context);
     context->glDeleteTextures(1, &SELF->id);
     SELF->id = 0;
   }
 }
 
 static void dx_val_gl_texture_constructDispatch(dx_val_gl_texture_Dispatch* self) {
-  DX_VAL_TEXTURE_DISPATCH(self)->set_data = (Core_Result(*)(dx_val_texture*, Core_Assets_Texture*)) & dx_val_gl_texture_set_data;
+  CORE_VISUALS_TEXTURE_DISPATCH(self)->setData = (Core_Result(*)(Core_Visuals_Texture*, Core_Assets_Texture*)) & dx_val_gl_texture_set_data;
 
-  DX_VAL_TEXTURE_DISPATCH(self)->set_texture_address_mode_u = (Core_Result(*)(dx_val_texture*, Core_TextureAddressMode)) & dx_val_gl_texture_set_texture_address_mode_u;
-  DX_VAL_TEXTURE_DISPATCH(self)->get_texture_address_mode_u = (Core_Result(*)(Core_TextureAddressMode*, dx_val_texture*)) & dx_val_gl_texture_get_texture_address_mode_u;
+  CORE_VISUALS_TEXTURE_DISPATCH(self)->setAddressModeU = (Core_Result(*)(Core_Visuals_Texture*, Core_TextureAddressMode)) & dx_val_gl_texture_set_texture_address_mode_u;
+  CORE_VISUALS_TEXTURE_DISPATCH(self)->getAddressModeU = (Core_Result(*)(Core_TextureAddressMode*, Core_Visuals_Texture*)) & dx_val_gl_texture_get_texture_address_mode_u;
 
-  DX_VAL_TEXTURE_DISPATCH(self)->set_texture_address_mode_v = (Core_Result(*)(dx_val_texture*, Core_TextureAddressMode)) & dx_val_gl_texture_set_texture_address_mode_v;
-  DX_VAL_TEXTURE_DISPATCH(self)->get_texture_address_mode_v = (Core_Result(*)(Core_TextureAddressMode*, dx_val_texture*)) & dx_val_gl_texture_get_texture_address_mode_v;
+  CORE_VISUALS_TEXTURE_DISPATCH(self)->setAddressModeV = (Core_Result(*)(Core_Visuals_Texture*, Core_TextureAddressMode)) & dx_val_gl_texture_set_texture_address_mode_v;
+  CORE_VISUALS_TEXTURE_DISPATCH(self)->getAddressModeV = (Core_Result(*)(Core_TextureAddressMode*, Core_Visuals_Texture*)) & dx_val_gl_texture_get_texture_address_mode_v;
 
-  DX_VAL_TEXTURE_DISPATCH(self)->set_texture_minification_filter = (Core_Result(*)(dx_val_texture*, Core_TextureMinificationFilter)) & dx_val_gl_texture_set_texture_minification_filter;
-  DX_VAL_TEXTURE_DISPATCH(self)->get_texture_minification_filter = (Core_Result(*)(Core_TextureMinificationFilter*, dx_val_texture*)) & dx_val_gl_texture_get_texture_minification_filter;
+  CORE_VISUALS_TEXTURE_DISPATCH(self)->setMinificationFilter = (Core_Result(*)(Core_Visuals_Texture*, Core_TextureFilter)) & dx_val_gl_texture_set_texture_minification_filter;
+  CORE_VISUALS_TEXTURE_DISPATCH(self)->getMinificationFilter = (Core_Result(*)(Core_TextureFilter*, Core_Visuals_Texture*)) & dx_val_gl_texture_get_texture_minification_filter;
 
-  DX_VAL_TEXTURE_DISPATCH(self)->set_texture_magnification_filter = (Core_Result(*)(dx_val_texture*, Core_TextureMagnificationFilter)) & dx_val_gl_texture_set_texture_magnification_filter;
-  DX_VAL_TEXTURE_DISPATCH(self)->get_texture_magnification_filter = (Core_Result(*)(Core_TextureMagnificationFilter*, dx_val_texture*)) & dx_val_gl_texture_get_texture_magnification_filter;
+  CORE_VISUALS_TEXTURE_DISPATCH(self)->setMagnificationFilter = (Core_Result(*)(Core_Visuals_Texture*, Core_TextureFilter)) & dx_val_gl_texture_set_texture_magnification_filter;
+  CORE_VISUALS_TEXTURE_DISPATCH(self)->getMagnificationFilter = (Core_Result(*)(Core_TextureFilter*, Core_Visuals_Texture*)) & dx_val_gl_texture_get_texture_magnification_filter;
 
-  DX_VAL_TEXTURE_DISPATCH(self)->set_texture_border_color = (Core_Result(*)(dx_val_texture*, DX_VEC4 const*)) & dx_val_gl_texture_set_texture_border_color;
-  DX_VAL_TEXTURE_DISPATCH(self)->get_texture_border_color = (Core_Result(*)(DX_VEC4*, dx_val_texture*)) & dx_val_gl_texture_get_texture_border_color;
+  CORE_VISUALS_TEXTURE_DISPATCH(self)->setBorderColor = (Core_Result(*)(Core_Visuals_Texture*, Core_InlineRgbaR32 const*)) & dx_val_gl_texture_set_texture_border_color;
+  CORE_VISUALS_TEXTURE_DISPATCH(self)->getBorderColor = (Core_Result(*)(Core_InlineRgbaR32*, Core_Visuals_Texture*)) & dx_val_gl_texture_get_texture_border_color;
 }
 
 static Core_Result fill_amber(Core_Assets_Image* image_value) {
@@ -311,7 +311,7 @@ static Core_Result fill_amber(Core_Assets_Image* image_value) {
   }
   CORE_UNREFERENCE(color_value);
   color_value = NULL;
-  if (Core_Assets_Image_apply(image_value, 0, 0, image_value->width, image_value->height, CORE_ASSETS_IMAGEOPERATION(image_operation_value))) {
+  if (Core_Assets_Image_apply(image_value, 0, 0, image_value->backing.extend.width, image_value->backing.extend.height, CORE_ASSETS_IMAGEOPERATION(image_operation_value))) {
     CORE_UNREFERENCE(image_operation_value);
     image_operation_value = NULL;
     return Core_Failure;
@@ -323,7 +323,7 @@ static Core_Result fill_amber(Core_Assets_Image* image_value) {
 
 Core_Result dx_val_gl_texture_construct(dx_val_gl_texture* SELF, dx_val_gl_context* context) {
   DX_CONSTRUCT_PREFIX(dx_val_gl_texture);
-  if (dx_val_texture_construct(DX_VAL_TEXTURE(SELF), DX_VAL_CONTEXT(context))) {
+  if (Core_Visuals_Texture_construct(CORE_VISUALS_TEXTURE(SELF), CORE_VISUALS_CONTEXT(context))) {
     return Core_Failure;
   }
 
@@ -335,13 +335,13 @@ Core_Result dx_val_gl_texture_construct(dx_val_gl_texture* SELF, dx_val_gl_conte
   SELF->texture_address_mode_v = Core_TextureAddressMode_Repeat;
   SELF->flags |= DX_VAL_GL_TEXTURE_ADDRESS_MODE_V_DIRTY;
 
-  SELF->texture_border_color = (DX_VEC4){ 1.f, 1.f, 1.f, 1.f, };
+  SELF->texture_border_color = (Core_InlineRgbaR32){ .r = 1.f, .g = 1.f, .b = 1.f, .a = 1.f, };
   SELF->flags |= DX_VAL_GL_TEXTURE_BORDER_COLOR_DIRTY;
 
-  SELF->texture_minification_filter = Core_TextureMinificationFilter_Linear;
+  SELF->texture_minification_filter = Core_TextureFilter_Linear;
   SELF->flags |= DX_VAL_GL_TEXTURE_MINIFICATION_FILTER_DIRTY;
 
-  SELF->texture_magnification_filter = Core_TextureMagnificationFilter_Linear;
+  SELF->texture_magnification_filter = Core_TextureFilter_Linear;
   SELF->flags |= DX_VAL_GL_TEXTURE_MAGNIFICATION_FILTER_DIRTY;
 
   context->glGetError(); // clear the error variable
@@ -375,10 +375,10 @@ Core_Result dx_val_gl_texture_construct(dx_val_gl_texture* SELF, dx_val_gl_conte
     SELF->id = 0;
     return Core_Failure;
   }
-  switch (image->pixelFormat) {
+  switch (image->backing.pixelFormat) {
   case Core_PixelFormat_Rgb8: {
     context->glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-    context->glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, image->width, image->height, 0, GL_RGB, GL_UNSIGNED_BYTE, image->pixels);
+    context->glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, image->backing.extend.width, image->backing.extend.height, 0, GL_RGB, GL_UNSIGNED_BYTE, image->backing.pixels);
   } break;
   default: {
     Core_setError(Core_Error_EnvironmentFailed);

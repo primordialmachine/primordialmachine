@@ -180,23 +180,23 @@ static Core_Result _parse_optics_perspective(Core_Assets_PerspectiveOptics** RET
     Core_Real32 value;
     Core_String* key = NAME(aspect_ratio_key);
     if (!dx_adl_semantical_read_f32(&value, node, key)) {
-      if (!optics_asset->aspect_ratio) {
-        if (Core_Memory_allocate(&optics_asset->aspect_ratio, sizeof(Core_Real32))) {
+      if (!optics_asset->aspectRatio) {
+        if (Core_Memory_allocate(&optics_asset->aspectRatio, sizeof(Core_Real32))) {
           CORE_UNREFERENCE(optics_asset);
           optics_asset = NULL;
           return Core_Failure;
         }
       }
-      *optics_asset->aspect_ratio = value;
+      *optics_asset->aspectRatio = value;
     } else {
       if (Core_Error_NotFound != Core_getError()) {
         CORE_UNREFERENCE(optics_asset);
         optics_asset = NULL;
         return Core_Failure;
       }
-      if (optics_asset->aspect_ratio) {
-        Core_Memory_deallocate(optics_asset->aspect_ratio);
-        optics_asset->aspect_ratio = NULL;
+      if (optics_asset->aspectRatio) {
+        Core_Memory_deallocate(optics_asset->aspectRatio);
+        optics_asset->aspectRatio = NULL;
       }
       Core_setError(Core_Error_NoError);
     }

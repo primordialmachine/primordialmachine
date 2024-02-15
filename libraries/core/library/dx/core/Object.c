@@ -173,7 +173,9 @@ void Core_unreference(Core_Object* object) {
     }
     _relinquish_weak_references_lock();
     // signals
+    Core_Error oldError = Core_getError();
     Core_Signals_disconnectAll(object);
+    Core_setError(oldError);
     // destruct
     while (object->type) {
       _dx_rti_type* type = (_dx_rti_type*)object->type;

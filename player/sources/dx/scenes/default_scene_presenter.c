@@ -16,7 +16,7 @@ Core_defineObjectType("dx.default_scene_presenter",
                       dx_default_scene_presenter,
                       dx_scene_presenter);
 
-static Core_Result on_scene_asset_object(dx_default_scene_presenter* SELF, dx_val_context* context, Core_Object* asset_object) {
+static Core_Result on_scene_asset_object(dx_default_scene_presenter* SELF, Core_Visuals_Context* context, Core_Object* asset_object) {
   Core_Type* type = NULL;
   Core_Boolean result = Core_False;
   // mesh instance
@@ -97,7 +97,7 @@ static Core_Result on_scene_asset_object(dx_default_scene_presenter* SELF, dx_va
   return Core_Success;
 }
 
-static Core_Result mesh_instance_on_startup(dx_default_scene_presenter* SELF, dx_val_context* context, dx_assets_scene* asset_scene) {
+static Core_Result mesh_instance_on_startup(dx_default_scene_presenter* SELF, Core_Visuals_Context* context, dx_assets_scene* asset_scene) {
   if (dx_inline_object_array_initialize(&SELF->mesh_instances, 0)) {
     return Core_Failure;
   }
@@ -297,7 +297,7 @@ static Core_Result make_commands_1(dx_val_command_list* commands) {
   return Core_Success;
 }
 
-static Core_Result dx_default_scene_presenter_startup(dx_default_scene_presenter* SELF, dx_val_context* context) {
+static Core_Result dx_default_scene_presenter_startup(dx_default_scene_presenter* SELF, Core_Visuals_Context* context) {
   if (_create_scene_from_file(&SELF->asset_scene, SELF->path)) {
     return Core_Failure;
   }
@@ -332,7 +332,7 @@ static Core_Result dx_default_scene_presenter_startup(dx_default_scene_presenter
   return Core_Success;
 }
 
-static Core_Result dx_default_scene_presenter_render(dx_default_scene_presenter* SELF, dx_val_context* context, Core_Real32 delta_seconds, Core_Integer32 canvas_width, Core_Integer32 canvas_height) {
+static Core_Result dx_default_scene_presenter_render(dx_default_scene_presenter* SELF, Core_Visuals_Context* context, Core_Real32 delta_seconds, Core_Integer32 canvas_width, Core_Integer32 canvas_height) {
   update_viewer(SELF, canvas_width, canvas_height);
   tick2(SELF, delta_seconds, canvas_width, canvas_height);
   tick(SELF, delta_seconds);
@@ -364,7 +364,7 @@ static Core_Result dx_default_scene_presenter_render(dx_default_scene_presenter*
     command->viewport_command.h = (Core_Real32)canvas_height;
   }
   // the "on enter frame" commands.
-  if (dx_val_context_execute_commands(context, SELF->commands)) {
+  if (Core_Visuals_Context_executeCommands(context, SELF->commands)) {
     return Core_Failure;
   }
   // the "per mesh instance" commands.
@@ -382,7 +382,7 @@ static Core_Result dx_default_scene_presenter_render(dx_default_scene_presenter*
       dx_val_cbinding* cbinding = dx_val_mesh_instance_get_cbinding(mesh_instance);
       dx_val_mesh_instance_update_cbinding(mesh_instance, cbinding);
       viewer_push_constants(SELF, cbinding, canvas_width, canvas_height);
-      if (dx_val_context_execute_commands(context, mesh_instance->commands)) {
+      if (Core_Visuals_Context_executeCommands(context, mesh_instance->commands)) {
         return Core_Failure;
       }
     }
@@ -390,7 +390,7 @@ static Core_Result dx_default_scene_presenter_render(dx_default_scene_presenter*
   return Core_Success;
 }
 
-static Core_Result dx_default_scene_presenter_shutdown(dx_default_scene_presenter* SELF, dx_val_context* context) {
+static Core_Result dx_default_scene_presenter_shutdown(dx_default_scene_presenter* SELF, Core_Visuals_Context* context) {
   mesh_instance_on_shutdown(SELF);
   if (SELF->asset_scene) {
     CORE_UNREFERENCE(SELF->asset_scene);
@@ -411,9 +411,9 @@ static void dx_default_scene_presenter_destruct(dx_default_scene_presenter* SELF
 }
 
 static void dx_default_scene_presenter_constructDispatch(dx_default_scene_presenter_Dispatch* SELF) {
-  DX_SCENE_PRESENTER_DISPATCH(SELF)->startup = (Core_Result (*)(dx_scene_presenter*, dx_val_context*)) & dx_default_scene_presenter_startup;
-  DX_SCENE_PRESENTER_DISPATCH(SELF)->render = (Core_Result(*)(dx_scene_presenter*, dx_val_context*, Core_Real32, Core_Integer32, Core_Integer32)) & dx_default_scene_presenter_render;
-  DX_SCENE_PRESENTER_DISPATCH(SELF)->shutdown = (Core_Result(*)(dx_scene_presenter*, dx_val_context*)) dx_default_scene_presenter_shutdown;
+  DX_SCENE_PRESENTER_DISPATCH(SELF)->startup = (Core_Result (*)(dx_scene_presenter*, Core_Visuals_Context*)) & dx_default_scene_presenter_startup;
+  DX_SCENE_PRESENTER_DISPATCH(SELF)->render = (Core_Result(*)(dx_scene_presenter*, Core_Visuals_Context*, Core_Real32, Core_Integer32, Core_Integer32)) & dx_default_scene_presenter_render;
+  DX_SCENE_PRESENTER_DISPATCH(SELF)->shutdown = (Core_Result(*)(dx_scene_presenter*, Core_Visuals_Context*)) dx_default_scene_presenter_shutdown;
 }
 
 Core_Result dx_default_scene_presenter_construct(dx_default_scene_presenter* SELF, Core_String* path) {

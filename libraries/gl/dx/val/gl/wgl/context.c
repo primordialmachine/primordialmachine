@@ -66,7 +66,7 @@ static Core_Result enter_frame(dx_gl_wgl_context* SELF) {
   if (Core_Type_getDispatch(&dispatch, parentType)) {
     return Core_Failure;
   }
-  if (DX_VAL_CONTEXT_DISPATCH(dispatch)->enter_frame(DX_VAL_CONTEXT(SELF))) {
+  if (CORE_VISUALS_CONTEXT_DISPATCH(dispatch)->enterFrame(CORE_VISUALS_CONTEXT(SELF))) {
     return Core_Failure;
   }
   return Core_Success;
@@ -148,12 +148,12 @@ static void dx_gl_wgl_context_destruct(dx_gl_wgl_context* SELF) {
 }
 
 static void dx_gl_wgl_context_constructDispatch(dx_gl_wgl_context_Dispatch* SELF) {
-  DX_VAL_CONTEXT_DISPATCH(SELF)->enter_frame = (Core_Result (*)(dx_val_context*)) & enter_frame;
-  DX_VAL_CONTEXT_DISPATCH(SELF)->leave_frame = (Core_Result(*)(dx_val_context*)) & leave_frame;
-  DX_VAL_CONTEXT_DISPATCH(SELF)->get_canvas_size = (Core_Result(*)(dx_val_context*, Core_Integer32*, Core_Integer32*)) & get_canvas_size;
-  DX_VAL_CONTEXT_DISPATCH(SELF)->get_vsync_enabled = (Core_Result(*)(Core_Boolean*, dx_val_context*)) & get_vsync_enabled;
-  DX_VAL_CONTEXT_DISPATCH(SELF)->set_vsync_enabled = (Core_Result(*)(dx_val_context*, Core_Boolean)) & set_vsync_enabled;
-  DX_VAL_CONTEXT_DISPATCH(SELF)->get_canvas_dpi = (Core_Result(*)(dx_val_context*, Core_Integer32*, Core_Integer32*)) & get_canvas_dpi;
+  CORE_VISUALS_CONTEXT_DISPATCH(SELF)->enterFrame = (Core_Result (*)(Core_Visuals_Context*)) & enter_frame;
+  CORE_VISUALS_CONTEXT_DISPATCH(SELF)->leaveFrame = (Core_Result(*)(Core_Visuals_Context*)) & leave_frame;
+  CORE_VISUALS_CONTEXT_DISPATCH(SELF)->getCanvasSize = (Core_Result(*)(Core_Visuals_Context*, Core_Integer32*, Core_Integer32*)) & get_canvas_size;
+  CORE_VISUALS_CONTEXT_DISPATCH(SELF)->getVsyncEnabled = (Core_Result(*)(Core_Boolean*, Core_Visuals_Context*)) & get_vsync_enabled;
+  CORE_VISUALS_CONTEXT_DISPATCH(SELF)->setVsyncEnabled = (Core_Result(*)(Core_Visuals_Context*, Core_Boolean)) & set_vsync_enabled;
+  CORE_VISUALS_CONTEXT_DISPATCH(SELF)->getCanvasDpi = (Core_Result(*)(Core_Visuals_Context*, Core_Integer32*, Core_Integer32*)) & get_canvas_dpi;
 }
 
 Core_Result dx_gl_wgl_context_create(dx_gl_wgl_context** RETURN, Core_Val_Gl_Wgl_Window* window) {

@@ -1,0 +1,38 @@
+{
+  "type" : "method",
+  "last-update" : "2024-02-21",
+  "indices" : "core",
+  "name" : "Core_MessageQueue_pop",
+  "id" : "core-messagequeue-pop",
+  "signature" : "Core_Result Core_MessageQueue_pop(Core_Message** RETURN, Core_MessageQueue* SELF);",
+  "parameters" : [
+    {
+      "name" : "RETURN",
+      "type" : "@{code('Core_Message**')}",
+      "description" : "A pointer to this @{code('Core_Message*')} variable."
+    },
+    {
+      "name" : "SELF",
+      "type" : "@{code('Core_MessageQueue*')}",
+      "description" : "A pointer to this @{code('Core_MessageQueue*')} object."
+    }
+  ],
+  "success": [
+    "If a message was available for removal then @{code('*RETURN')} was assigned a pointer to that message and the caller acquired a reference to that message.",
+    " ",
+    "Otherwise @{code('*RETURN')} was assigned the null pointer."
+  ],
+  "errors" : [
+    {
+      "errorCode" : "Core_Error_ArgumentInvalid",
+      "errorCondition" : "@{code('RETURN')} is a null pointer."
+    },
+    {
+      "errorCode" : "Core_Error_ArgumentInvalid",
+      "errorCondition" : "@{code('SELF')} is a null pointer."
+    }
+  ],
+  "description" : "Pop a message from this message queue.",
+  "return" : "@{code('Core_Success')} on success. @{code('Core_Failure')} on failure.",
+  "remarks" : "This function sets the by-thread error variable on failure."
+}

@@ -93,11 +93,11 @@ static Core_Result command_document_definition_language_library_print_info(dx_ap
 }
 
 static Core_Result command_application_request_quit(dx_application_presenter* application_presenter) {
-  dx_application* application = NULL;
-  if (dx_application_get(&application)) { 
+  Core_Application* application = NULL;
+  if (Core_Application_get(&application)) {
     return Core_Failure;
   }
-  if (dx_application_emit_quit_msg(application)) {
+  if (Core_Application_emit_quit_msg(application)) {
     CORE_UNREFERENCE(application);
     application = NULL;
     return Core_Failure;

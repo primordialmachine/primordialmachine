@@ -32,14 +32,14 @@ typedef void (APIENTRY *PFNGLFLUSHPROC)();
 
 Core_declareObjectType("dx.val.gl.context",
                        dx_val_gl_context,
-                       dx_val_context);
+                       Core_Visuals_Context);
 
 static inline dx_val_gl_context* DX_VAL_GL_CONTEXT(void* p) {
   return (dx_val_gl_context*)p;
 }
 
 struct dx_val_gl_context {
-  dx_val_context _parent;
+  Core_Visuals_Context _parent;
   // remember as this is part of the command-modifiable state and must be restored when modified during the execution of certain commands (e.g., clear depth).
   Core_Boolean depth_write_enabled;
 #define DEFINE(TYPE, NAME, EXTENSION_NAME) TYPE NAME;
@@ -48,7 +48,7 @@ struct dx_val_gl_context {
 };
 
 struct dx_val_gl_context_Dispatch {
-  dx_val_context_Dispatch _parent;
+  Core_Visuals_Context_Dispatch _parent;
 };
 
 Core_Result dx_val_gl_context_construct(dx_val_gl_context* SELF, Core_Result (*link)(void** RETURN, char const* name));
