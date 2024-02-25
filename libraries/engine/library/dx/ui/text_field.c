@@ -63,9 +63,10 @@ static inline Core_Result create_font(dx_ui_text_field* SELF) {
   if (Core_String_create(&font_file, FONT_FILE, strlen(FONT_FILE))) {
     return Core_Failure;
   }
-  dx_font* font = NULL;
+  Core_Font* font = NULL;
   Core_Size font_size = get_font_size();
-  Core_Result result = dx_font_manager_get_or_create_font(&font, DX_UI_WIDGET(SELF)->manager->font_presenter->font_manager, font_file, font_size);
+  Core_FontSystem* fontSystem = DX_UI_WIDGET(SELF)->manager->font_presenter->fontSystem;
+  Core_Result result = Core_FontSystem_getOrCreateFont(&font, fontSystem, font_file, font_size);
   CORE_UNREFERENCE(font_file);
   font_file = NULL;
   if (result) {
@@ -395,7 +396,7 @@ static Core_Result update_text_bounds(dx_ui_text_field* SELF) {
   // The distance from one baseline to the previous/next baseline multiplied by 1.5.
   // @todo The baseline distance multiplier should be part of the properties of the ui widget.
   Core_Real32 baseline_distance;
-  if (dx_font_get_baseline_distance(&baseline_distance, SELF->font)) {
+  if (Core_Font_getBaselineDistance(&baseline_distance, CORE_FONT(SELF->font))) {
     return Core_Failure;
   }
   baseline_distance = baseline_distance * 1.5f;
@@ -566,7 +567,7 @@ static Core_Result on_render(dx_ui_text_field* SELF, DX_UI_RENDER_ARGS const* ar
   // The distance from one baseline to the previous/next baseline multiplied by 1.5.
   // @todo The baseline distance multiplier should be part of the properties of the ui widget.
   Core_Real32 baseline_distance;
-  dx_font_get_baseline_distance(&baseline_distance, SELF->font);
+  Core_Font_getBaselineDistance(&baseline_distance, CORE_FONT(SELF->font));
   baseline_distance = baseline_distance * 1.5f;
 
   Core_Size n;
@@ -705,13 +706,13 @@ static Core_Result render(dx_ui_text_field* SELF) {
   return Core_Success;
 }
 
-Core_Result dx_ui_text_get_font(dx_font** RETURN, dx_ui_text_field* SELF) {
+Core_Result dx_ui_text_get_font(Core_Font** RETURN, dx_ui_text_field* SELF) {
   CORE_REFERENCE(SELF->font);
   *RETURN = SELF->font;
   return Core_Success;
 }
 
-Core_Result dx_ui_text_set_font(dx_ui_text_field* SELF, dx_font* font) {
+Core_Result dx_ui_text_set_font(dx_ui_text_field* SELF, Core_Font* font) {
   CORE_REFERENCE(font);
   CORE_UNREFERENCE(SELF->font);
   SELF->font = font;

@@ -1,67 +1,7 @@
 #if !defined(DX_ASSETS_MESH_H_INCLUDED)
 #define DX_ASSETS_MESH_H_INCLUDED
 
-#include "dx/assets/material.h"
-
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-
-/// @brief
-/// If the number of indices is three, then a face is called a triangle.
-/// If the number of indices is greater than three, then the face is called a polygon.
-/// A face of four indices is also called a quadriliteral.
-Core_declareObjectType("dx.assets.face",
-                       dx_assets_face,
-                       Core_Object);
-
-static inline dx_assets_face* DX_ASSETS_FACE(void* p) {
-  return (dx_assets_face*)p;
-}
-
-struct dx_assets_face {
-  Core_Object _parent;
-  Core_Size number_of_indices;
-  uint32_t *indices;
-};
-
-static inline dx_assets_face_Dispatch* DX_ASSETS_FACE_DISPATCH(void* p) {
-  return (dx_assets_face_Dispatch*)p;
-}
-
-struct dx_assets_face_Dispatch {
-  Core_Object_Dispatch _parent;
-};
-
-/// @param a The first index.
-/// @param b The second index.
-/// @param c The third index.
-/// @constructor{dx_assets_face}
-Core_Result dx_assets_face_construct_triangle(dx_assets_face* SELF, uint32_t a, uint32_t b, uint32_t c);
-
-Core_Result dx_assets_face_create_triangle(dx_assets_face** RETURN, uint32_t a, uint32_t b, uint32_t c);
-
-/// @param a The first index.
-/// @param b The second index.
-/// @param c The third index.
-/// @param c The fourth index.
-/// @constructor{dx_assets_face}
-Core_Result dx_assets_face_construct_quadriliteral(dx_assets_face* SELF, uint32_t a, uint32_t b, uint32_t c, uint32_t d);
-
-Core_Result dx_assets_face_create_quadriliteral(dx_assets_face** RETURN, uint32_t a, uint32_t b, uint32_t c, uint32_t d);
-
-/// @brief Construct this face.
-/// @param other A pointer of the face to copy.
-/// @constructor{dx_assets_face}
-Core_Result dx_assets_face_construct_copy(dx_assets_face* SELF, dx_assets_face* other);
-
-Core_Result dx_assets_face_create_copy(dx_assets_face** RETURN, dx_assets_face* other);
-
-/// @brief Convert this face into triangles. Add those triangles to the specified list.
-/// @param SELF 
-/// @param faces 
-/// @return 
-/// @remarks If the face is a triangle, then its copy is added to the list.
-/// If the face is a quadriliteral (with four indices i0, i1, i2, i3) then it is split at indices i0 and i2.
-Core_Result dx_assets_face_to_triangles(dx_assets_face* SELF, dx_inline_object_array* faces);
+#include "Core/Assets/Material.h"
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
@@ -73,7 +13,7 @@ Core_Result dx_assets_face_to_triangles(dx_assets_face* SELF, dx_inline_object_a
 /// rgba ambient denotes the color coordinates and the alpha of the vertex in the non-pbr lighting model.
 /// uv ambient denotes the texture coordinates for the rgba ambient texture in the non-pbr ligthting model.
 /// A mesh always has a dx_asset_material associated.
-Core_declareObjectType("dx.assets.mesh",
+Core_declareObjectType("Core.Assets.Mesh",
                        dx_assets_mesh,
                        Core_Object);
 

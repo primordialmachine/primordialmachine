@@ -39,22 +39,84 @@ Core_Result Core_Assets_ImageOperations_CheckerboardPatternFill_create(Core_Asse
   return Core_Success;
 }
 
-#define PROPERTY(TYPE, PROPERTY_TYPE, PROPERTY_NAME) \
-  Core_Result TYPE##_set_##PROPERTY_NAME(TYPE* SELF, PROPERTY_TYPE PROPERTY_NAME) { \
-    SELF->PROPERTY_NAME = PROPERTY_NAME; \
-    return Core_Success; \
-  } \
-  Core_Result TYPE##_get_##PROPERTY_NAME##(PROPERTY_TYPE* RETURN, TYPE* SELF) { \
-    *RETURN = SELF->PROPERTY_NAME; \
-    return Core_Success; \
+
+Core_Result Core_Assets_ImageOperations_CheckerboardPatternFill_setNumberOfCheckersHorizontal(Core_Assets_ImageOperations_CheckerboardPatternFill* SELF, Core_Size numberOfCheckersHorizontal) {
+  if (!SELF) {
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
+  }
+  SELF->numberOfCheckersHorizontal = numberOfCheckersHorizontal;
+  return Core_Success;
+}
+
+Core_Result Core_Assets_ImageOperations_CheckerboardPatternFill_getNumberOfCheckersHorizontal(Core_Size* RETURN, Core_Assets_ImageOperations_CheckerboardPatternFill* SELF) {
+  if (!SELF || !RETURN) {
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
+  }
+  *RETURN = SELF->numberOfCheckersHorizontal;
+  return Core_Success;
+}
+
+
+Core_Result Core_Assets_ImageOperations_CheckerboardPatternFill_setNumberOfCheckersVertical(Core_Assets_ImageOperations_CheckerboardPatternFill* SELF, Core_Size numberOfCheckersVertical) {
+  if (!SELF) {
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
+  }
+  SELF->numberOfCheckersVertical = numberOfCheckersVertical;
+  return Core_Success;
+}
+
+Core_Result Core_Assets_ImageOperations_CheckerboardPatternFill_getNumberOfCheckersVertical(Core_Size* RETURN, Core_Assets_ImageOperations_CheckerboardPatternFill* SELF) {
+  if (!SELF || !RETURN) {
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
+  }
+  *RETURN = SELF->numberOfCheckersVertical;
+  return Core_Success;
+}
+
+
+Core_Result Core_Assets_ImageOperations_CheckerboardPatternFill_setCheckerSizeHorizontal(Core_Assets_ImageOperations_CheckerboardPatternFill* SELF, Core_Size checkerSizeHorizontal) {
+  if (!SELF) {
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
+  }
+  SELF->checkerSizeHorizontal = checkerSizeHorizontal;
+  return Core_Success;
+}
+
+Core_Result Core_Assets_ImageOperations_CheckerboardPatternFill_getCheckerSizeHorizontal(Core_Size* RETURN, Core_Assets_ImageOperations_CheckerboardPatternFill* SELF) {
+  if (!SELF || !RETURN) {
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
+  }
+  *RETURN = SELF->checkerSizeHorizontal;
+  return Core_Success;
+}
+
+
+Core_Result Core_Assets_ImageOperations_CheckerboardPatternFill_setCheckerSizeVertical(Core_Assets_ImageOperations_CheckerboardPatternFill* SELF, Core_Size checkerSizeVertical) {
+  if (!SELF) {
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
+  }
+  SELF->checkerSizeVertical = checkerSizeVertical;
+  return Core_Success;
   }
 
-PROPERTY(Core_Assets_ImageOperations_CheckerboardPatternFill, Core_Size, number_of_checkers_horizontal)
-PROPERTY(Core_Assets_ImageOperations_CheckerboardPatternFill, Core_Size, number_of_checkers_vertical)
-PROPERTY(Core_Assets_ImageOperations_CheckerboardPatternFill, Core_Size, checker_size_horizontal)
-PROPERTY(Core_Assets_ImageOperations_CheckerboardPatternFill, Core_Size, checker_size_vertical)
+Core_Result Core_Assets_ImageOperations_CheckerboardPatternFill_getCheckerSizeVertical(Core_Size* RETURN, Core_Assets_ImageOperations_CheckerboardPatternFill* SELF) {
+  if (!SELF || !RETURN) {
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
+  }
+  *RETURN = SELF->checkerSizeVertical;
+  return Core_Success;
+}
 
-Core_Result Core_Assets_ImageOperations_CheckerboardPatternFill_set_first_checker_color(Core_Assets_ImageOperations_CheckerboardPatternFill* SELF, Core_Assets_ColorRgbN8* first_checker_color) {
+
+Core_Result Core_Assets_ImageOperations_CheckerboardPatternFill_setFirstCheckerColor(Core_Assets_ImageOperations_CheckerboardPatternFill* SELF, Core_Assets_ColorRgbN8* first_checker_color) {
   if (!SELF->first_checker_color) {
     Core_String* name = NULL;
     if (Core_String_create(&name, "<anonymous>", sizeof("<anonymous") - 1)) {
@@ -76,14 +138,14 @@ Core_Result Core_Assets_ImageOperations_CheckerboardPatternFill_set_first_checke
   return Core_Success;
 }
 
-Core_Result Core_Assets_ImageOperations_CheckerboardPatternFill_get_first_checker_color(Core_InlineRgbN8* RETURN, Core_Assets_ImageOperations_CheckerboardPatternFill* SELF) {
+Core_Result Core_Assets_ImageOperations_CheckerboardPatternFill_getFirstCheckerColor(Core_InlineRgbN8* RETURN, Core_Assets_ImageOperations_CheckerboardPatternFill* SELF) {
   *RETURN = CORE_ASSETS_COLORRGBN8(SELF->first_checker_color->object)->value;
   return Core_Success;
 }
 
 #undef PROPERTY
 
-Core_Result Core_Assets_ImageOperations_CheckerboardPatternFill_set_second_checker_color(Core_Assets_ImageOperations_CheckerboardPatternFill* SELF, Core_Assets_ColorRgbN8* second_checker_color) {
+Core_Result Core_Assets_ImageOperations_CheckerboardPatternFill_setSecondCheckerColor(Core_Assets_ImageOperations_CheckerboardPatternFill* SELF, Core_Assets_ColorRgbN8* second_checker_color) {
   if (!SELF->second_checker_color) {
     Core_String* name = NULL;
     if (Core_String_create(&name, "<anonymous>", sizeof("<anonymous") - 1)) {
@@ -105,7 +167,7 @@ Core_Result Core_Assets_ImageOperations_CheckerboardPatternFill_set_second_check
   return Core_Success;
 }
 
-Core_Result Core_Assets_ImageOperations_CheckerboardPatternFill_get_second_checker_color(Core_InlineRgbN8* RETURN, Core_Assets_ImageOperations_CheckerboardPatternFill* SELF) {
+Core_Result Core_Assets_ImageOperations_CheckerboardPatternFill_getSecondCheckerColor(Core_InlineRgbN8* RETURN, Core_Assets_ImageOperations_CheckerboardPatternFill* SELF) {
   *RETURN = CORE_ASSETS_COLORRGBN8(SELF->second_checker_color)->value;
   return Core_Success;
 }

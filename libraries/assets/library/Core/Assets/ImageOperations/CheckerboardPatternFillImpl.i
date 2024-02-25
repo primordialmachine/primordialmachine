@@ -18,9 +18,9 @@ static Core_Result on_checkerboard_pattern_fill_image_operation(Core_Assets_Imag
     return Core_Failure;
   }
 
-  for (Core_Size y = 0; y < image_operation->number_of_checkers_vertical; ++y) {
-    Core_Size t = offset.top + y * image_operation->checker_size_vertical,
-              h = image_operation->checker_size_vertical;
+  for (Core_Size y = 0; y < image_operation->numberOfCheckersVertical; ++y) {
+    Core_Size t = offset.top + y * image_operation->checkerSizeVertical,
+              h = image_operation->checkerSizeVertical;
     // Fast clip.
     if (t + h > offset.top + extend.height) {
       continue;
@@ -30,9 +30,9 @@ static Core_Result on_checkerboard_pattern_fill_image_operation(Core_Assets_Imag
       Core_Size delta = (t + h) - (offset.top + extend.height);
       h -= delta;
     }
-    for (Core_Size x = 0; x < image_operation->number_of_checkers_horizontal; ++x) {
-      Core_Size l = offset.left + x * image_operation->checker_size_horizontal,
-                w = image_operation->checker_size_horizontal;
+    for (Core_Size x = 0; x < image_operation->numberOfCheckersHorizontal; ++x) {
+      Core_Size l = offset.left + x * image_operation->checkerSizeHorizontal,
+                w = image_operation->checkerSizeHorizontal;
       // Fast clip.
       if (l > offset.left + extend.width) {
         continue;

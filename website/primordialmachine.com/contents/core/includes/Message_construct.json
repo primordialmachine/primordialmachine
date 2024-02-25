@@ -1,0 +1,32 @@
+{
+  "type" : "constructor",
+  "last-update" : "2024-02-25",
+  "indices" : "core",
+  "name" : "Core_Message_construct",
+  "id" : "core-message-construct",
+  "signature" : "Core_Result Core_Message_construct(Core_Object* SELF, Core_Natural64 timeStamp);",
+  "parameters" : [
+    {
+      "name" : "SELF",
+      "type" : "@{code('Core_Message*')}",
+      "description" : "A pointer to this @{code('Core_Object')} object."
+    },
+    {
+      "name" : "timeStamp",
+      "type" : "@{code('Core_Message*')}",
+      "description" : "The time stamp of this message. A time stamp value as for example retrieved by @{ref('Core_getNow')}."
+    }
+  ],
+  "success": "This @{code('Core_Object')} object was constructed.",
+  "errors" : [
+    {
+      "errorCode" : "Core_Error_ArgumentInvalid",
+      "errorCondition" : "@{code('SELF')} is a null pointer."
+    }
+  ],
+  "description" : "Construct a @{code('Core_Message')} object.",
+  "return" : "@{code('Core_Success')} on success. @{code('Core_Failure')} on failure.",
+  "remarks" : [
+    "This function sets the by-thread error variable on failure."
+  ]
+}

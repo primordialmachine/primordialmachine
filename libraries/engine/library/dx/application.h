@@ -3,7 +3,7 @@
 
 #include "dx/core.h"
 
-typedef struct dx_font_manager dx_font_manager;
+typedef struct Core_FontSystem Core_FontSystem;
 typedef struct dx_rectangle_presenter dx_rectangle_presenter;
 typedef struct dx_font_presenter dx_font_presenter;
 
@@ -21,11 +21,12 @@ typedef struct Core_Assets_SystemFactory Core_Assets_SystemFactory;
 
 /// The representation of an application.
 /// An application is the owner of at least the following objects:
-/// - VAL (visuals abstraction layer) system.
-/// - AAL (audials abstraction layer) system
-/// - Assets system
+/// - configuration
+/// - visuals system
+/// - audials system
+/// - assets system
 /// These systems are started up and shut down through the application object's functions (dx_application_startup and dx_application_shutdown).
-Core_declareObjectType("Core.application",
+Core_declareObjectType("Core.Application",
                        Core_Application,
                        Core_Object);
 
@@ -45,15 +46,12 @@ struct Core_Application {
   
   /// @brief The visuals system.
   Core_Visuals_System* visualsSystem;
-  
   /// @brief The audials system.
   Core_Audials_System* audialsSystem;
-  
   /// @brief The assets system.
   Core_Assets_System* assetsSystem;
-  
-  /// @brief The font manager.
-  dx_font_manager* font_manager;
+  /// @brief The fonts system.
+  Core_FontSystem* fontSystem;
 
   dx_rectangle_presenter* rectangle_presenter;
   dx_font_presenter* font_presenter;

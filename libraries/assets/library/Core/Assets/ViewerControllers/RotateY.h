@@ -1,37 +1,11 @@
-#if !defined(DX_ASSETS_VIEWER_CONTROLLER_H_INCLUDED)
-#define DX_ASSETS_VIEWER_CONTROLLER_H_INCLUDED
+#if !defined(DX_ASSETS_VIEWERCONTROLLERS_ROTATEY_H_INCLUDED)
+#define DX_ASSETS_VIEWERCONTROLLERS_ROTATEY_H_INCLUDED
 
-#include "dx/core.h"
-typedef struct dx_assets_viewer dx_assets_viewer;
-
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-
-Core_declareObjectType("dx.assets.viewer_controller",
-                       dx_assets_viewer_controller,
-                       Core_Object);
-
-static inline dx_assets_viewer_controller* DX_ASSETS_VIEWER_CONTROLLER(void* p) {
-  return (dx_assets_viewer_controller*)p;
-}
-
-struct dx_assets_viewer_controller {
-  Core_Object _parent;
-  Core_Result (*update)(dx_assets_viewer_controller* SELF, dx_assets_viewer* viewer, Core_Real32 delta_seconds);
-};
-
-struct dx_assets_viewer_controller_Dispatch {
-  Core_Object_Dispatch _parent;
-};
-
-Core_Result dx_assets_viewer_controller_construct(dx_assets_viewer_controller* SELF);
-
-Core_Result dx_assets_viewer_controller_update(dx_assets_viewer_controller* SELF, dx_assets_viewer* viewer, Core_Real32 delta_seconds);
-
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+#include "Core/Assets/ViewerController.h"
 
 /// @brief Controller that positions the viewer at a certain point and rotates the viewer around the y-axis.
 /// The viewer is looking at a specified point.
-Core_declareObjectType("dx.asset.viewer_controllers.rotate_y",
+Core_declareObjectType("Core.Assets.ViewerControllers.RotateY",
                        dx_asset_viewer_controllers_rotate_y,
                        dx_assets_viewer_controller);
 
@@ -70,6 +44,4 @@ Core_Result dx_asset_viewer_controllers_rotate_y_construct(dx_asset_viewer_contr
 
 Core_Result dx_asset_viewer_controllers_rotate_y_create(dx_asset_viewer_controllers_rotate_y** RETURN);
 
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-
-#endif // DX_ASSETS_VIEWER_CONTROLLER_H_INCLUDED
+#endif // DX_ASSETS_VIEWERCONTROLLERS_ROTATEY_H_INCLUDED

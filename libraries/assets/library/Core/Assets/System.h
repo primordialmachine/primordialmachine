@@ -1,3 +1,5 @@
+// Copyright (c) 2018-2024 Michael Heilmann. All rights reserved.
+
 #if !defined(CORE_ASSETS_SYSTEM_H_INCLUDED)
 #define CORE_ASSETS_SYSTEM_H_INCLUDED
 
@@ -27,7 +29,6 @@ struct Core_Assets_System_Dispatch {
   Core_Result(*getContext)(Core_Assets_Context**, Core_Assets_System*);
 };
 
-/// @brief Construct this system.
 /// @constructor{Core_Assets_System}
 Core_Result Core_Assets_System_construct(Core_Assets_System* SELF);
 

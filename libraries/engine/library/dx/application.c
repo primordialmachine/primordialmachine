@@ -10,7 +10,7 @@
 
 
 #include "dx/val/system.h"
-#include "Core/Audials/system.h"
+#include "Core/Audials/System.h"
 #include "Core/Assets/System.h"
 
 #include "dx/font_manager.h"
@@ -35,11 +35,11 @@ static Core_Result shutdown_secondary_systems(Core_Application* SELF);
 
 static Core_Result shutdown_systems(Core_Application* SELF);
 
-static Core_Result get_val_context(Core_Visuals_Context** RETURN, Core_Application* SELF);
+static Core_Result getVisualsContext(Core_Visuals_Context** RETURN, Core_Application* SELF);
 
-static Core_Result get_aal_context(Core_Audials_Context** RETURN, Core_Application* SELF);
+static Core_Result getAudialsContext(Core_Audials_Context** RETURN, Core_Application* SELF);
 
-static Core_Result get_assets_context(Core_Assets_Context** RETURN, Core_Application* SELF);
+static Core_Result getAssetsContext(Core_Assets_Context** RETURN, Core_Application* SELF);
 
 static void Core_Application_destruct(Core_Application* SELF) {
   CORE_UNREFERENCE(SELF->assetsSystem);
@@ -61,9 +61,9 @@ static void Core_Application_constructDispatch(Core_Application_Dispatch* SELF) 
   CORE_APPLICATION_DISPATCH(SELF)->startup_systems = (Core_Result(*)(Core_Application*)) & startup_systems;
   CORE_APPLICATION_DISPATCH(SELF)->shutdown_systems = (Core_Result(*)(Core_Application*)) & shutdown_systems;
   CORE_APPLICATION_DISPATCH(SELF)->update = (Core_Result(*)(Core_Application*))&update;
-  CORE_APPLICATION_DISPATCH(SELF)->get_val_context = (Core_Result(*)(Core_Visuals_Context**, Core_Application*)) & get_val_context;
-  CORE_APPLICATION_DISPATCH(SELF)->get_aal_context = (Core_Result(*)(Core_Audials_Context**, Core_Application*)) & get_aal_context;
-  CORE_APPLICATION_DISPATCH(SELF)->get_assets_context = (Core_Result(*)(Core_Assets_Context**, Core_Application*)) & get_assets_context;
+  CORE_APPLICATION_DISPATCH(SELF)->get_val_context = (Core_Result(*)(Core_Visuals_Context**, Core_Application*)) & getVisualsContext;
+  CORE_APPLICATION_DISPATCH(SELF)->get_aal_context = (Core_Result(*)(Core_Audials_Context**, Core_Application*)) & getAudialsContext;
+  CORE_APPLICATION_DISPATCH(SELF)->get_assets_context = (Core_Result(*)(Core_Assets_Context**, Core_Application*)) & getAssetsContext;
 }
 
 static Core_Result update(Core_Application* SELF) {
@@ -85,47 +85,58 @@ static Core_Result update(Core_Application* SELF) {
 }
 
 static Core_Result startup_secondary_systems(Core_Application* SELF) {
-  Core_Visuals_Context* val_context = NULL;
-  if (Core_Application_get_val_context(&val_context, g_application)) {
+  Core_Visuals_Context* visualsContext = NULL;
+  if (Core_Application_get_val_context(&visualsContext, g_application)) {
     return Core_Failure;
   }
-  Core_Audials_Context* aal_context = NULL;
-  if (Core_Application_get_aal_context(&aal_context, g_application)) {
-    CORE_UNREFERENCE(val_context);
-    val_context = NULL;
+  Core_Audials_Context* audialsContext = NULL;
+  if (Core_Application_get_aal_context(&audialsContext, g_application)) {
+    CORE_UNREFERENCE(visualsContext);
+    visualsContext = NULL;
     return Core_Failure;
   }
-  if (dx_font_manager_create(&SELF->font_manager, val_context)) {
-    CORE_UNREFERENCE(aal_context);
-    aal_context = NULL;
-    CORE_UNREFERENCE(val_context);
-    val_context = NULL;
+  if (Core_DefaultFontSystem_create((Core_DefaultFontSystem**) & SELF->fontSystem, visualsContext)) {
+    CORE_UNREFERENCE(audialsContext);
+    audialsContext = NULL;
+    CORE_UNREFERENCE(visualsContext);
+    visualsContext = NULL;
     return Core_Failure;
   }
-  if (dx_rectangle_presenter_create(&SELF->rectangle_presenter, val_context, aal_context)) {
-    CORE_UNREFERENCE(SELF->font_manager);
-    SELF->font_manager = NULL;
-    CORE_UNREFERENCE(aal_context);
-    aal_context = NULL;
-    CORE_UNREFERENCE(val_context);
-    val_context = NULL;
+  if (Core_System_startup(CORE_SYSTEM(SELF->fontSystem))) {
+    CORE_UNREFERENCE(SELF->fontSystem);
+    SELF->fontSystem = NULL;
+    CORE_UNREFERENCE(audialsContext);
+    audialsContext = NULL;
+    CORE_UNREFERENCE(visualsContext);
+    visualsContext = NULL;
     return Core_Failure;
   }
-  if (dx_font_presenter_create(&SELF->font_presenter, SELF->font_manager, SELF->rectangle_presenter)) {
+  if (dx_rectangle_presenter_create(&SELF->rectangle_presenter, visualsContext, audialsContext)) {
+    Core_System_shutdown(CORE_SYSTEM(SELF->fontSystem));
+    CORE_UNREFERENCE(SELF->fontSystem);
+    SELF->fontSystem = NULL;
+    CORE_UNREFERENCE(audialsContext);
+    audialsContext = NULL;
+    CORE_UNREFERENCE(visualsContext);
+    visualsContext = NULL;
+    return Core_Failure;
+  }
+  if (dx_font_presenter_create(&SELF->font_presenter, SELF->fontSystem, SELF->rectangle_presenter)) {
     CORE_UNREFERENCE(SELF->rectangle_presenter);
     SELF->rectangle_presenter = NULL;
-    CORE_UNREFERENCE(SELF->font_manager);
-    SELF->font_manager = NULL;
-    CORE_UNREFERENCE(aal_context);
-    aal_context = NULL;
-    CORE_UNREFERENCE(val_context);
-    val_context = NULL;
+    Core_System_shutdown(CORE_SYSTEM(SELF->fontSystem));
+    CORE_UNREFERENCE(SELF->fontSystem);
+    SELF->fontSystem = NULL;
+    CORE_UNREFERENCE(audialsContext);
+    audialsContext = NULL;
+    CORE_UNREFERENCE(visualsContext);
+    visualsContext = NULL;
     return Core_Failure;
   }
-  CORE_UNREFERENCE(aal_context);
-  aal_context = NULL;
-  CORE_UNREFERENCE(val_context);
-  val_context = NULL;
+  CORE_UNREFERENCE(audialsContext);
+  audialsContext = NULL;
+  CORE_UNREFERENCE(visualsContext);
+  visualsContext = NULL;
   return Core_Success;
 }
 
@@ -156,8 +167,9 @@ static Core_Result shutdown_secondary_systems(Core_Application* SELF) {
   SELF->font_presenter = NULL;
   CORE_UNREFERENCE(SELF->rectangle_presenter);
   SELF->rectangle_presenter = NULL;
-  CORE_UNREFERENCE(SELF->font_manager);
-  SELF->font_manager = NULL;
+  Core_System_shutdown(CORE_SYSTEM(SELF->fontSystem));
+  CORE_UNREFERENCE(SELF->fontSystem);
+  SELF->fontSystem = NULL;
   return Core_Success;
 }
 
@@ -177,7 +189,7 @@ static Core_Result shutdown_systems(Core_Application* SELF) {
   return Core_Success;
 }
 
-static Core_Result get_val_context(Core_Visuals_Context** RETURN, Core_Application* SELF) {
+static Core_Result getVisualsContext(Core_Visuals_Context** RETURN, Core_Application* SELF) {
   Core_Visuals_Context* context = NULL;
   if (Core_Visuals_System_getContext(&context, SELF->visualsSystem)) {
     return Core_Failure;
@@ -186,7 +198,7 @@ static Core_Result get_val_context(Core_Visuals_Context** RETURN, Core_Applicati
   return Core_Success;
 }
 
-static Core_Result get_aal_context(Core_Audials_Context** RETURN, Core_Application* SELF) {
+static Core_Result getAudialsContext(Core_Audials_Context** RETURN, Core_Application* SELF) {
   Core_Audials_Context* context = NULL;
   if (Core_Audials_System_getContext(&context, SELF->audialsSystem)) {
     return Core_Failure;
@@ -195,7 +207,7 @@ static Core_Result get_aal_context(Core_Audials_Context** RETURN, Core_Applicati
   return Core_Success;
 }
 
-static Core_Result get_assets_context(Core_Assets_Context** RETURN, Core_Application* SELF) {
+static Core_Result getAssetsContext(Core_Assets_Context** RETURN, Core_Application* SELF) {
   Core_Assets_Context* context = NULL;
   if (Core_Assets_System_getContext(&context, SELF->assetsSystem)) {
     return Core_Failure;

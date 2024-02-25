@@ -1,13 +1,13 @@
 // Copyright (c) 2018-2024 Michael Heilmann. All rights reserved.
-#include "dx/assets/viewer.h"
+#include "Core/Assets/Viewer.h"
 
 #include "Core/Assets/Optics.h"
 #include "Core/Assets/OrthographicOptics.h"
 #include "Core/Assets/PerspectiveOptics.h"
 
-Core_defineObjectType("dx.assets.viewer",
+Core_defineObjectType("Core.Assets.Viewer",
                       dx_assets_viewer,
-                      Core_Object);
+                      Core_Assets_Def);
 
 static void dx_assets_viewer_destruct(dx_assets_viewer* self) {
   if (self->controller) {
@@ -26,7 +26,11 @@ static void dx_assets_viewer_constructDispatch(dx_assets_viewer_Dispatch* self)
 {/*Intentionally empty.*/}
 
 Core_Result dx_assets_viewer_construct(dx_assets_viewer* SELF, Core_String* name) {
-  DX_CONSTRUCT_PREFIX(dx_assets_viewer);
+  Core_BeginConstructor(dx_assets_viewer);
+
+  if (Core_Assets_Def_construct(CORE_ASSETS_DEF(SELF))) {
+    return Core_Failure;
+  }
 
   if (!name) {
     Core_setError(Core_Error_ArgumentInvalid);
@@ -48,8 +52,7 @@ Core_Result dx_assets_viewer_construct(dx_assets_viewer* SELF, Core_String* name
   dx_vec3_set(&SELF->target, 0.f, 0.f, -1.f);
   dx_vec3_set(&SELF->up, 0.f, 1.f, 0.f);
 
-  CORE_OBJECT(SELF)->type = TYPE;
-  return Core_Success;
+  Core_EndConstructor(dx_assets_viewer);
 }
 
 Core_Result dx_assets_viewer_create(dx_assets_viewer** RETURN, Core_String* name) {

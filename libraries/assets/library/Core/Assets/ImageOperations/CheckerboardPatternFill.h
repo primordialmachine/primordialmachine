@@ -5,9 +5,7 @@
 #include "Core/Assets/Ref.h"
 #include "Core/Assets/ColorRgbN8.h"
 
-/// @extends Core_Assets_ImageOperation
-/// @brief An image operation.
-/// Fills an image with the a checkerboard pattern.
+/* http://localhost/assets#core-assets-imageoperations-checkerboardpatternfill */
 Core_declareObjectType("Core.Assets.ImageOperations.CheckerboardPatternFill",
                        Core_Assets_ImageOperations_CheckerboardPatternFill,
                        Core_Assets_ImageOperation);
@@ -19,11 +17,11 @@ static inline Core_Assets_ImageOperations_CheckerboardPatternFill* CORE_ASSETS_I
 struct Core_Assets_ImageOperations_CheckerboardPatternFill {
   Core_Assets_ImageOperation _parent;
   
-  Core_Size number_of_checkers_horizontal;
-  Core_Size number_of_checkers_vertical;
+  Core_Size numberOfCheckersHorizontal;
+  Core_Size numberOfCheckersVertical;
 
-  Core_Size checker_size_horizontal;
-  Core_Size checker_size_vertical;
+  Core_Size checkerSizeHorizontal;
+  Core_Size checkerSizeVertical;
 
   /// @brief
   /// The reference to the first checker color.
@@ -56,75 +54,75 @@ Core_Result Core_Assets_ImageOperations_CheckerboardPatternFill_create(Core_Asse
 /// @brief Set the number of checkers along the horizontal axis.
 /// @param number_of_checkers_horizontal The number of checkers along the horizontal axis.
 /// @method{Core_Assets_ImageOperations_CheckerboardPatternFill}
-Core_Result Core_Assets_ImageOperations_CheckerboardPatternFill_set_number_of_checkers_horizontal(Core_Assets_ImageOperations_CheckerboardPatternFill* SELF, Core_Size number_of_checkers_horizontal);
+Core_Result Core_Assets_ImageOperations_CheckerboardPatternFill_setNumberOfCheckersHorizontal(Core_Assets_ImageOperations_CheckerboardPatternFill* SELF, Core_Size numberOfCheckersHorizontal);
 
 /// @brief Get the number of checkers along the horizontal axis.
 /// @param RETURN A pointer to a <code>Core_Size</code> variable.
 /// @success <code>*RETURN</code> was assigned the number of checkers along the horizontal axis.
 /// @method{Core_Assets_ImageOperations_CheckerboardPatternFill}
-Core_Result Core_Assets_ImageOperations_CheckerboardPatternFill_get_number_of_checkers_horizontal(Core_Size* RETURN, Core_Assets_ImageOperations_CheckerboardPatternFill* SELF);
+Core_Result Core_Assets_ImageOperations_CheckerboardPatternFill_getNumberOfCheckersHorizontal(Core_Size* RETURN, Core_Assets_ImageOperations_CheckerboardPatternFill* SELF);
 
 
 
 /// @brief Set the number of checkers along the vertical axis.
 /// @param number_of_checkers_vertical The number of checkers along the vertical axis.
 /// @method{Core_Assets_ImageOperations_CheckerboardPatternFill}
-Core_Result Core_Assets_ImageOperations_CheckerboardPatternFill_set_number_of_checkers_vertical(Core_Assets_ImageOperations_CheckerboardPatternFill* SELF, Core_Size number_of_checkers_vertical);
+Core_Result Core_Assets_ImageOperations_CheckerboardPatternFill_setNumberOfCheckersVertical(Core_Assets_ImageOperations_CheckerboardPatternFill* SELF, Core_Size number_of_checkers_vertical);
 
 /// @brief Get the number of checkers along the vertical axis.
 /// @param RETURN A pointer to a <code>Core_Size</code>.
 /// @success <code>*RETURN</code> was assigned the number of checkers along the vertical axis.
 /// @method{Core_Assets_ImageOperations_CheckerboardPatternFill}
-Core_Result Core_Assets_ImageOperations_CheckerboardPatternFill_get_number_of_checkers_vertical(Core_Size* RETURN, Core_Assets_ImageOperations_CheckerboardPatternFill* SELF);
+Core_Result Core_Assets_ImageOperations_CheckerboardPatternFill_getNumberOfCheckersVertical(Core_Size* RETURN, Core_Assets_ImageOperations_CheckerboardPatternFill* SELF);
 
 
 
 /// @brief Set the size of a checker along the horizontal axis.
 /// @param checker_size_horizontal The size of a checker along the horizontal axis.
 /// @method{Core_Assets_ImageOperations_CheckerboardPatternFill}
-Core_Result Core_Assets_ImageOperations_CheckerboardPatternFill_set_checker_size_horizontal(Core_Assets_ImageOperations_CheckerboardPatternFill* SELF, Core_Size checker_size_horizontal);
+Core_Result Core_Assets_ImageOperations_CheckerboardPatternFill_setCheckerSizeHorizontal(Core_Assets_ImageOperations_CheckerboardPatternFill* SELF, Core_Size checker_size_horizontal);
 
 /// @brief Get the size of a checker along the horizontal axis.
 /// @param RETURN A pointer to the Core_Size variable.
 /// @success <code>*RETURN</code> was assigned the size of a checker along the horizontal axis.
 /// @method{Core_Assets_ImageOperations_CheckerboardPatternFill}
-Core_Result Core_Assets_ImageOperations_CheckerboardPatternFill_get_checker_size_horizontal(Core_Size* RETURN, Core_Assets_ImageOperations_CheckerboardPatternFill* SELF);
+Core_Result Core_Assets_ImageOperations_CheckerboardPatternFill_getCheckerSizeHorizontal(Core_Size* RETURN, Core_Assets_ImageOperations_CheckerboardPatternFill* SELF);
 
 
 
 /// @brief Set the size of a checker along the vertical axis.
 /// @param checker_size_vertical The size of a checker along the vertical axis.
 /// @method{Core_Assets_ImageOperations_CheckerboardPatternFill}
-Core_Result Core_Assets_ImageOperations_CheckerboardPatternFill_set_checker_size_vertical(Core_Assets_ImageOperations_CheckerboardPatternFill* SELF, Core_Size checker_size_vertical);
+Core_Result Core_Assets_ImageOperations_CheckerboardPatternFill_setCheckerSizeVertical(Core_Assets_ImageOperations_CheckerboardPatternFill* SELF, Core_Size checker_size_vertical);
 
 /// @brief Get the size of a checker along the vertical axis.
 /// @param RETURN A pointer to the Core_Size variable.
 /// @success <code>*RETURN</code> was assigned the size of a checker along the vertical axis.
 /// @method{Core_Assets_ImageOperations_CheckerboardPatternFill}
-Core_Result Core_Assets_ImageOperations_CheckerboardPatternFill_get_checker_size_vertical(Core_Size* RETURN, Core_Assets_ImageOperations_CheckerboardPatternFill* SELF);
+Core_Result Core_Assets_ImageOperations_CheckerboardPatternFill_getCheckerSizeVertical(Core_Size* RETURN, Core_Assets_ImageOperations_CheckerboardPatternFill* SELF);
 
 
 
 /// @brief Set the first checker color.
 /// @param first_checker_color A pointer to the DX_RGB_U8 color object providing the color values.
 /// @method{Core_Assets_ImageOperations_CheckerboardPatternFill}
-Core_Result Core_Assets_ImageOperations_CheckerboardPatternFill_set_first_checker_color(Core_Assets_ImageOperations_CheckerboardPatternFill* SELF, Core_Assets_ColorRgbN8* first_checker_color);
+Core_Result Core_Assets_ImageOperations_CheckerboardPatternFill_setFirstCheckerColor(Core_Assets_ImageOperations_CheckerboardPatternFill* SELF, Core_Assets_ColorRgbN8* first_checker_color);
 
 /// @brief Get the first checker color.
 /// @param RETURN A pointer to the DX_RGB_U8 color object receiving the color values.
 /// @method{Core_Assets_ImageOperations_CheckerboardPatternFill}
-Core_Result Core_Assets_ImageOperations_CheckerboardPatternFill_get_first_checker_color(Core_InlineRgbN8* RETURN, Core_Assets_ImageOperations_CheckerboardPatternFill* SELF);
+Core_Result Core_Assets_ImageOperations_CheckerboardPatternFill_getFirstCheckerColor(Core_InlineRgbN8* RETURN, Core_Assets_ImageOperations_CheckerboardPatternFill* SELF);
 
 
 
 /// @brief Set the second checker color.
 /// @param second_checker_color A pointer to the DX_RGB_U8 color object providing the color values.
 /// @method{Core_Assets_ImageOperations_CheckerboardPatternFill}
-Core_Result Core_Assets_ImageOperations_CheckerboardPatternFill_set_second_checker_color(Core_Assets_ImageOperations_CheckerboardPatternFill* SELF, Core_Assets_ColorRgbN8* second_checker_color);
+Core_Result Core_Assets_ImageOperations_CheckerboardPatternFill_setSecondCheckerColor(Core_Assets_ImageOperations_CheckerboardPatternFill* SELF, Core_Assets_ColorRgbN8* second_checker_color);
 
 /// @brief Get the first checker color.
 /// @param RETURN A pointer to the DX_RGB_U8 color object receiving the color values.
 /// @method{Core_Assets_ImageOperations_CheckerboardPatternFill}
-Core_Result Core_Assets_ImageOperations_CheckerboardPatternFill_get_second_checker_color(Core_InlineRgbN8* RETURN, Core_Assets_ImageOperations_CheckerboardPatternFill* SELF);
+Core_Result Core_Assets_ImageOperations_CheckerboardPatternFill_getSecondCheckerColor(Core_InlineRgbN8* RETURN, Core_Assets_ImageOperations_CheckerboardPatternFill* SELF);
 
 #endif // CORE_ASSETS_IMAGEOPERATIONS_CHECKERBOARDPATTERNFILL_H_INCLUDED

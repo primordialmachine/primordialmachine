@@ -18,8 +18,8 @@ struct dx_val_material {
   Core_Object _parent;
   Core_Visuals_Context* context;
   /// @brief A pointer to the underlaying material asset.
-  dx_assets_material* material_asset;
-  /// @brief The ambient color as specified by dx_assets_material.ambient_color.
+  Core_Assets_Material* material_asset;
+  /// @brief The ambient color as specified by Core_Assets_Material.ambientColor.
   Core_InlineRgbaR32 ambient_color;
   /// @brief Pointer to the ambient texture or the null pointer as specified by dx_assets_material.ambient_texture.
   Core_Visuals_Texture* ambient_texture;
@@ -33,8 +33,8 @@ struct dx_val_material_Dispatch {
   Core_Object_Dispatch _parent;
 };
 
-Core_Result dx_val_material_construct(dx_val_material* SELF, Core_Visuals_Context* context, dx_assets_material* material_asset);
+Core_Result dx_val_material_construct(dx_val_material* SELF, Core_Visuals_Context* context, Core_Assets_Material* material_asset);
 
-Core_Result dx_val_material_create(dx_val_material** RETURN, Core_Visuals_Context* context, dx_assets_material* material_asset);
+Core_Result dx_val_material_create(dx_val_material** RETURN, Core_Visuals_Context* context, Core_Assets_Material* material_asset);
 
 #endif // DX_VAL_MATERIAL_H_INCLUDED

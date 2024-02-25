@@ -122,8 +122,8 @@ static inline Core_Result dx_engine_utilities_2d_create_material(dx_val_material
   if (Core_String_create(&name_string, name, strlen(name))) {
     return Core_Failure;
   }
-  dx_assets_material* material_asset = NULL;
-  if (dx_assets_material_create(&material_asset, name_string)) {
+  Core_Assets_Material* material_asset = NULL;
+  if (Core_Assets_Material_create(&material_asset, name_string)) {
     CORE_UNREFERENCE(name_string);
     name_string = NULL;
     return Core_Failure;
@@ -137,7 +137,7 @@ static inline Core_Result dx_engine_utilities_2d_create_material(dx_val_material
     material_asset = NULL;
     return Core_Failure;
   }
-  if (dx_assets_material_set_ambient_color(material_asset, ambient_color)) {
+  if (Core_Assets_Material_setAmbientColor(material_asset, ambient_color)) {
     CORE_UNREFERENCE(ambient_color);
     ambient_color = NULL;
     CORE_UNREFERENCE(material_asset);
@@ -159,116 +159,41 @@ static inline Core_Result dx_engine_utilities_2d_create_material(dx_val_material
   return Core_Success;
 }
 
-/// @utility
-/// @brief 
-/// Create an anonymous image asset from the specified pixel rectangle.
-/// Create an anonymous texture asset from the image.
-/// @param RETURN A pointer to a <code>dx_asset_texture*</code> variable.
-/// @param p A pointer to the pixels.
-/// @param w The width of the pixel rectangle.
-/// @param h The height of the pixel rectangle.
-/// @default-return
-/// @defaut-failure
-static inline Core_Result dx_assets_extensions_create_texture_from_pixels(Core_Assets_Texture** RETURN, void* pixels, Core_PixelFormat pixel_format, Core_Natural32 width, Core_Natural32 height) {
-  if (width > Core_Size_Greatest || height > Core_Size_Greatest) {
-    Core_setError(Core_Error_ArgumentInvalid);
-    return Core_Failure;
-  }
-  //
-  Core_String* image_name = NULL;
-  if (Core_String_create(&image_name, "<temporary>", sizeof("<temporary>") - 1)) {
-    return Core_Failure;
-  }
+static inline Core_Result Core_Assets_Extensions_createTextureFromGlyph(Core_Assets_Texture** RETURN, Core_Glyph* glyph) {
   Core_Assets_Image* image = NULL;
-  if (Core_Assets_Image_create(&image, image_name, pixel_format, width, height)) {
-    CORE_UNREFERENCE(image_name);
-    image_name = NULL;
+  if (Core_Glyph_getImage(glyph, &image)) {
     return Core_Failure;
   }
-  Core_Size number_of_bytes_per_pixel;
-  if (Core_PixelFormat_getNumberOfBytes(&number_of_bytes_per_pixel, pixel_format)) {
+  Core_Assets_Ref* imageReference = NULL;
+  if (Core_Assets_Ref_create(&imageReference, image->name)) {
     CORE_UNREFERENCE(image);
     image = NULL;
-    CORE_UNREFERENCE(image_name);
-    image_name = NULL;
     return Core_Failure;
   }
-  Core_Size overflow;
-  Core_Size number_of_pixels;
-  Core_safeMulSz(&number_of_pixels, width, height, &overflow); // must succeed
-  if (overflow) {
-    CORE_UNREFERENCE(image);
-    image = NULL;
-    CORE_UNREFERENCE(image_name);
-    image_name = NULL;
-    Core_setError(Core_Error_ArgumentInvalid);
-    return Core_Failure;
-  }
-
-  Core_Size number_of_bytes;
-  Core_safeMulSz(&number_of_bytes, number_of_pixels, number_of_bytes_per_pixel, &overflow); // must succeed
-  if (overflow) {
-    CORE_UNREFERENCE(image);
-    image = NULL;
-    CORE_UNREFERENCE(image_name);
-    image_name = NULL;
-    Core_setError(Core_Error_ArgumentInvalid);
-    return Core_Failure;
-  }
-  Core_Memory_copy(image->backing.pixels, pixels, number_of_bytes);
-  Core_Assets_Ref* image_reference = NULL;
-  if (Core_Assets_Ref_create(&image_reference, image_name)) {
-    CORE_UNREFERENCE(image);
-    image = NULL;
-    CORE_UNREFERENCE(image_name);
-    image_name = NULL;
-    return Core_Failure;
-  }
-  CORE_UNREFERENCE(image_name);
-  image_name = NULL;
-  image_reference->object = CORE_OBJECT(image);
+  imageReference->object = CORE_OBJECT(image);
   //
-  Core_String* texture_name = NULL;
-  if (Core_String_create(&texture_name, "<temporary>", sizeof("<temporary>") - 1)) {
-    CORE_UNREFERENCE(image_reference);
-    image_reference = NULL;
+  Core_String* textureName = NULL;
+  if (Core_String_create(&textureName, "<temporary>", sizeof("<temporary>") - 1)) {
+    CORE_UNREFERENCE(imageReference);
+    imageReference = NULL;
     return Core_Failure;
   }
   Core_Assets_Texture* texture = NULL;
-  if (Core_Assets_Texture_create(&texture, texture_name, image_reference)) {
-    CORE_UNREFERENCE(texture_name);
-    texture_name = NULL;
-    CORE_UNREFERENCE(image_reference);
-    image_reference = NULL;
+  if (Core_Assets_Texture_create(&texture, textureName, imageReference)) {
+    CORE_UNREFERENCE(textureName);
+    textureName = NULL;
+    CORE_UNREFERENCE(imageReference);
+    imageReference = NULL;
     return Core_Failure;
   }
-  CORE_UNREFERENCE(texture_name);
-  texture_name = NULL;
-  CORE_UNREFERENCE(image_reference);
-  image_reference = NULL;
+  CORE_UNREFERENCE(textureName);
+  textureName = NULL;
+  CORE_UNREFERENCE(imageReference);
+  imageReference = NULL;
   //
   *RETURN = texture;
   //
   return Core_Success;
 }
-
-static inline Core_Result dx_assets_extensions_create_texture_from_glyph(Core_Assets_Texture** RETURN, dx_font_glyph* glyph) {
-  uint32_t width = 0,
-           height = 0;
-  if (dx_font_glyph_get_size(glyph, &width, &height)) {
-    return Core_Failure;
-  }
-  void* pixels = NULL;
-  if (dx_font_glyph_get_pixels(glyph, &pixels)) {
-    return Core_Failure;
-  }
-  Core_Assets_Texture* texture = NULL;
-  if (dx_assets_extensions_create_texture_from_pixels(&texture, pixels, Core_PixelFormat_L8, width, height)) {
-    return Core_Failure;
-  }
-  *RETURN = texture;
-  return Core_Success;
-}
-
 
 #endif // DX_ENGINE_UTILITIES_2D_H_INCLUDED

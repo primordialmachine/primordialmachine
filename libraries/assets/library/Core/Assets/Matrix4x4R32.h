@@ -1,4 +1,5 @@
 // Copyright (c) 2018-2024 Michael Heilmann. All rights reserved.
+
 #if !defined(CORE_ASSETS_MATRIX4X4R32_H_INCLUDED)
 #define CORE_ASSETS_MATRIX4X4R32_H_INCLUDED
 

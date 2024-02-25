@@ -8,8 +8,9 @@
 #include "Core/Assets/ImageOperation.h"
 #include "Core/Assets/ImageOperations/ColorFill.h"
 #include "Core/Assets/ImageOperations/CheckerboardPatternFill.h"
-#include "dx/assets/material.h"
-#include "dx/assets/material_controller.h"
+#include "Core/Assets/Material.h"
+#include "Core/Assets/MaterialController.h"
+#include "Core/Assets/MaterialControllers/AmbientColor.h"
 #include "Core/Assets/Matrix4x4R32.h"
 #include "dx/assets/mesh.h"
 #include "dx/assets/mesh_instance.h"
@@ -25,9 +26,10 @@
 #include "Core/Assets/SystemFactory.h"
 #include "dx/assets/texture.h"
 #include "Core/Assets/Vector3R32.h"
-#include "dx/assets/viewer.h"
+#include "Core/Assets/Viewer.h"
+#include "Core/Assets/ViewerController.h"
+#include "Core/Assets/ViewerControllers/RotateY.h"
 #include "dx/assets/viewer_instance.h"
-#include "dx/assets/viewer_controller.h"
 
 
 /// @brief The name of this library.

@@ -1,3 +1,5 @@
+// Copyright (c) 2018-2024 Michael Heilmann. All rights reserved.
+
 #if !defined(CORE_ASSETS_VECTOR3R32_H_INCLUDED)
 #define CORE_ASSETS_VECTOR3R32_H_INCLUDED
 

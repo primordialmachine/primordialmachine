@@ -108,6 +108,25 @@ list(APPEND ${name}.headers "dx/rectangle_presenter.h")
 list(APPEND ${name}.sources "dx/utilities_2d.c")
 list(APPEND ${name}.headers "dx/utilities_2d.h")
 
+list(APPEND ${name}.sources "Core/Glyph.c")
+list(APPEND ${name}.headers "Core/Glyph.h")
+list(APPEND ${name}.sources "Core/DefaultFontSystem/Key.c")
+list(APPEND ${name}.headers "Core/DefaultFontSystem/Key.h")
+list(APPEND ${name}.sources "Core/DefaultFontSystem/Glyph.c")
+list(APPEND ${name}.headers "Core/DefaultFontSystem/Glyph.h")
+list(APPEND ${name}.sources "Core/DefaultFontSystem/Font.c")
+list(APPEND ${name}.headers "Core/DefaultFontSystem/Font.h")
+list(APPEND ${name}.sources "Core/DefaultFontSystem/FontLoaderPlugin.c")
+list(APPEND ${name}.headers "Core/DefaultFontSystem/FontLoaderPlugin.h")
+list(APPEND ${name}.sources "Core/DefaultFontSystem.c")
+list(APPEND ${name}.headers "Core/DefaultFontSystem.h")
+
+# "Fonts".
+list(APPEND ${name}.sources "Core/Font.c")
+list(APPEND ${name}.headers "Core/Font.h")
+list(APPEND ${name}.sources "Core/FontSystem.c")
+list(APPEND ${name}.headers "Core/FontSystem.h")
+
 # Small utility function to find files by expression and append them to the specified list.
 function(add_files file_list expression)
   file(GLOB_RECURSE temporary ${expression})

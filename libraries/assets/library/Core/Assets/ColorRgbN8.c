@@ -1,4 +1,5 @@
 // Copyright (c) 2018-2024 Michael Heilmann. All rights reserved.
+
 #include "Core/Assets/ColorRgbN8.h"
 
 Core_defineObjectType("Core.Assets.ColorRgbN8",

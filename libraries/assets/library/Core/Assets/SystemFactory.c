@@ -1,3 +1,5 @@
+// Copyright (c) 2018-2024 Michael Heilmann. All rights reserved.
+
 #include "Core/Assets/SystemFactory.h"
 
 #include "Core/Assets/System.h"

@@ -5,7 +5,7 @@
 #include "dx/ui/scrollbar_policy.h"
 #include "dx/document.h"
 typedef struct dx_ui_scrollbar dx_ui_scrollbar;
-typedef struct dx_font dx_font;
+typedef struct Core_Font Core_Font;
 
 Core_declareObjectType("dx.ui.text_field",
                        dx_ui_text_field,
@@ -56,7 +56,7 @@ struct dx_ui_text_field {
   /// @brief The text color of this UI text.
   Core_InlineRgbaR32 text_color;
   /// @brief The font of this UI text.
-  dx_font* font;
+  Core_Font* font;
   /// @brief The text document of this UI text.
   dx_text_document* text;
 };
@@ -108,18 +108,18 @@ Core_Result dx_ui_text_field_set_text_color(dx_ui_text_field* SELF, Core_InlineR
 /// @{
 
 /// @brief Get the font.
-/// @param RETURN A pointer to a <code>dx_font*</code> variable.
+/// @param RETURN A pointer to a <code>Core_Font*</code> variable.
 /// @success <code>*RETURN</code> was assigned a pointer to the font object.
 /// The caller acquired a reference to the font object.
 /// @method{dx_ui_text_field}
-Core_Result dx_ui_text_get_font(dx_font** RETURN, dx_ui_text_field* SELF);
+Core_Result dx_ui_text_get_font(Core_Font** RETURN, dx_ui_text_field* SELF);
 
 /// @brief Set the font.
 /// @param font A pointer to the font..
 /// @success The font was set.
 /// This text field acquired a reference to the font object.
 /// @method{dx_ui_text_field}
-Core_Result dx_ui_text_set_font(dx_ui_text_field* SELF, dx_font* font);
+Core_Result dx_ui_text_set_font(dx_ui_text_field* SELF, Core_Font* font);
 
 /// @}
 

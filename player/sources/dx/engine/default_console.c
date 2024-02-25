@@ -290,13 +290,13 @@ static Core_Result render(dx_default_console* SELF, Core_Real32 delta_seconds, C
     // this is basically the standard distance from one baseline to another.
     // usually, you want this value to be multiplied by 1.5.
     Core_Real32 baseline_distance;
-    dx_font_get_baseline_distance(&baseline_distance, SELF->ui_output_field->font);
+    Core_Font_getBaselineDistance(&baseline_distance, CORE_FONT(SELF->ui_output_field->font));
     // the distance from the baseline to the maximal extend of any symbol above the baseline.
     Core_Real32 ascender;
-    dx_font_get_ascender(&ascender, SELF->ui_output_field->font);
+    Core_Font_getAscender(&ascender, CORE_FONT(SELF->ui_output_field->font));
     // the distance from the baseline to the maximal extend of any symbol below the baseline.
     Core_Real32 descender;
-    dx_font_get_descender(&descender, SELF->ui_output_field->font);
+    Core_Font_getDescender(&descender, CORE_FONT(SELF->ui_output_field->font));
     // the distance of the baselines of two lines.
     baseline_distance = baseline_distance * 1.5f;
     Core_Real32 insets_x = 16.f;
@@ -458,7 +458,7 @@ static Core_Result on_layout(dx_default_console* SELF, Core_Real32 console_x, Co
   // set the size of the "input" text field.
   {
     Core_Real32 baseline_distance;
-    dx_font_get_baseline_distance(&baseline_distance, SELF->ui_input_field->font);
+    Core_Font_getBaselineDistance(&baseline_distance, CORE_FONT(SELF->ui_input_field->font));
     baseline_distance *= 1.5f;
 
     Core_InlineVector2R32 s;

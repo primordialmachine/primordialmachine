@@ -53,14 +53,14 @@ static Core_Result on_scene_asset_object(dx_default_scene_presenter* SELF, Core_
     return Core_Failure;
   }
   // material
-  if (dx_assets_material_getType(&type)) {
+  if (Core_Assets_Material_getType(&type)) {
     return Core_Failure;
   }
   if (Core_Type_isLowerThanOrEqualTo(&result, asset_object->type, type)) {
     return Core_Failure;
   }
   if (result) {
-    dx_assets_material* material_asset = DX_ASSETS_MATERIAL(asset_object);
+    Core_Assets_Material* material_asset = CORE_ASSETS_MATERIAL(asset_object);
     if (dx_inline_object_array_append(&SELF->material_assets, CORE_OBJECT(material_asset))) {
       CORE_UNREFERENCE(material_asset);
       material_asset = NULL;
@@ -172,12 +172,12 @@ static Core_Result tick2(dx_default_scene_presenter* SELF, Core_Real32 delta_sec
       return Core_Failure;
     }
     for (Core_Size i = 0; i < n; ++i) {
-      dx_assets_material* material_asset = NULL;
+      Core_Assets_Material* material_asset = NULL;
       if (dx_inline_object_array_get_at((Core_Object**)&material_asset, &SELF->material_assets, i)) {
         return Core_Failure;
       }
       if (material_asset->controller) {
-        if (dx_assets_material_controller_update(material_asset->controller, material_asset, delta_seconds)) {
+        if (Core_Assets_MaterialController_update(material_asset->controller, material_asset, delta_seconds)) {
           return Core_Failure;
         }
       }
@@ -193,7 +193,7 @@ static Core_Result tick2(dx_default_scene_presenter* SELF, Core_Real32 delta_sec
     if (dx_inline_object_array_get_at((Core_Object**)&mesh_instance, &SELF->mesh_instances, i)) {
       return Core_Failure;
     }
-    Core_InlineRgbN8 a = CORE_ASSETS_COLORRGBN8(mesh_instance->mesh->material->material_asset->ambient_color->object)->value;
+    Core_InlineRgbN8 a = CORE_ASSETS_COLORRGBN8(mesh_instance->mesh->material->material_asset->ambientColor->object)->value;
     dx_rgb_n8_to_rgba_f32(&a, 1.f, &mesh_instance->mesh->material->ambient_color);
   }
   return Core_Success;

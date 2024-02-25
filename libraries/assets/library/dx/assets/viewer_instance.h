@@ -1,7 +1,7 @@
 #if !defined(DX_ASSETS_VIEWER_INSTANCE_H_INCLUDED)
 #define DX_ASSETS_VIEWER_INSTANCE_H_INCLUDED
 
-#include "dx/assets/viewer.h"
+#include "Core/Assets/Viewer.h"
 #include "Core/Assets/Ref.h"
 
 /// @brief A viewer instance asset.

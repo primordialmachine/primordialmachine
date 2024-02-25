@@ -5,9 +5,7 @@
 #include "Core/Assets/Ref.h"
 #include "Core/Assets/ColorRgbN8.h"
 
-/// @extends Core_Assets_ImageOperation
-/// @brief An image operation.
-/// Fills an image with a color.
+/* http://localhost/assets#core-assets-imageoperations-colorfill */
 Core_declareObjectType("Core.Assets.ImageOperations.ColorFill",
                        Core_Assets_ImageOperations_ColorFill,
                        Core_Assets_ImageOperation);

@@ -9,14 +9,14 @@ typedef struct dx_assets_viewer_controller dx_assets_viewer_controller;
 /* http://localhost/assets#core-assets-viewer */
 Core_declareObjectType("Core.Assets.Viewer",
                        dx_assets_viewer,
-                       Core_Object);
+                       Core_Assets_Def);
 
 static inline dx_assets_viewer* CORE_ASSETS_VIEWER(void* p) {
   return (dx_assets_viewer*)p;
 }
 
 struct dx_assets_viewer {
-  Core_Object _parent;
+  Core_Assets_Def _parent;
   /// @brief A pointer to the optics of this viewer.
   /// @default A Core_Assets_PerspectiveOptics objects with default values.
   Core_Assets_Optics* optics;
@@ -37,7 +37,7 @@ static inline dx_assets_viewer_Dispatch* CORE_ASSETS_VIEWER_DISPATCH(void* p) {
 }
 
 struct dx_assets_viewer_Dispatch {
-  Core_Object_Dispatch _parent;
+  Core_Assets_Def_Dispatch _parent;
 };
 
 /// @default

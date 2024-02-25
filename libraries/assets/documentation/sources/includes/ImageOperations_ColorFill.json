@@ -1,0 +1,12 @@
+{
+  "type" : "object",
+  "last-update" : "2024-02-25",
+  "indices" : "assets",
+  "name" : "Core_Assets_ImageOperations_ColorFill",
+  "id" : "core-assets-imageoperations-colorfill",
+  "signature" : "typedef struct Core_Assets_ImageOperations_ColorFill Core_Assets_ImageOperations_ColorFill;",
+  "extends" : "Core_Assets_ImageOperation",
+  "description": [
+    "An image operation asset definition. Fill the image with a color. "
+  ]
+}

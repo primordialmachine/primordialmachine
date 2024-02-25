@@ -19,11 +19,6 @@ if (str_ends_with($dir, DIRECTORY_SEPARATOR)) {
 class CdocHtmlEmitter extends CdocEmitter {
 
   /**
-   * The "template language" interpreter.
-   */
-  private TlInterpreter $interpreter;
-
-  /**
    * Emit a 3rd level headline ("<h3>") with
    * - the HTML text $text
    * - the HTML ID $id
@@ -37,9 +32,8 @@ class CdocHtmlEmitter extends CdocEmitter {
     echo '</h3>';
   }
 
-  public function __construct() {
-    $this->interpreter = new TlInterpreter(new TlParser(new TlScanner()));
-  }
+  public function __construct()
+  {/*Intentionally empty.*/}
   
   public function getLinkInfo(CdocFile $file) {
     $url = App::getInstance()->site_url_prefix . $file->getJsonData()['indices'][0] . '#' . $file->getJsonData()['id'];
@@ -59,7 +53,7 @@ class CdocHtmlEmitter extends CdocEmitter {
   public function emitContentsEntry(CdocFile $file) {
     $jsonData = $file->getJsonData();
 
-    $interpreter = new TlInterpreter(new TlParser(new TlScanner()));
+    $interpreter = CdocContext::getInstance()->getInterpreter();
 
     echo '<div class="cdoc-entry">';
 

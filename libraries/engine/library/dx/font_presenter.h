@@ -26,8 +26,8 @@ struct dx_glyph_atlas {
   Core_Object _parent;
   // the rectangle presenter
   dx_rectangle_presenter* rectangle_presenter;
-  // the font manager
-  dx_font_manager* font_manager;
+  // the font system
+  Core_FontSystem* fontSystem;
   // the context to render the font
   Core_Visuals_Context* val_context;
 };
@@ -42,14 +42,14 @@ struct dx_glyph_atlas_Dispatch {
 
 /// @brief Construct this glyph atlas.
 /// @param SELf A pointer to this glyph atlas.
-/// @param font_manager A pointer to the font manager.
+/// @param fontSystem A pointer to the font system.
 /// @param rectangle_presenter A pointer to the rectangle presenter.
 /// @param val_context A pointer to the VAL context.
-Core_Result dx_glyph_atlas_construct(dx_glyph_atlas* SELF, dx_font_manager* font_manager, dx_rectangle_presenter* rectangle_presenter, Core_Visuals_Context* val_context);
+Core_Result dx_glyph_atlas_construct(dx_glyph_atlas* SELF, Core_FontSystem* fontSystem, dx_rectangle_presenter* rectangle_presenter, Core_Visuals_Context* val_context);
 
-Core_Result dx_glyph_atlas_create(dx_glyph_atlas** RETURN, dx_font_manager* font_manager, dx_rectangle_presenter* rectangle_presenter, Core_Visuals_Context* val_context);
+Core_Result dx_glyph_atlas_create(dx_glyph_atlas** RETURN, Core_FontSystem* fontSystem, dx_rectangle_presenter* rectangle_presenter, Core_Visuals_Context* val_context);
 
-Core_Result dx_glyph_atlas_get_texture(dx_glyph_atlas* SELF, dx_font_glyph* glyph, Core_Visuals_Texture** val_texture, DX_RECT2_F32 *texture_coordinates);
+Core_Result dx_glyph_atlas_get_texture(dx_glyph_atlas* SELF, Core_Glyph* glyph, Core_Visuals_Texture** val_texture, DX_RECT2_F32 *texture_coordinates);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
@@ -65,8 +65,8 @@ struct dx_font_presenter {
   dx_presenter _parent;
   // the rectangle presenter
   dx_rectangle_presenter* rectangle_presenter;
-  // the font manager
-  dx_font_manager* font_manager;
+  // The font system.
+  Core_FontSystem* fontSystem;
   /// the material to render the font
   dx_val_material* val_material;
   // the constant binding to render the font
@@ -91,9 +91,9 @@ struct dx_font_presenter_Dispatch {
   dx_presenter_Dispatch _parent;
 };
 
-Core_Result dx_font_presenter_construct(dx_font_presenter* SELf, dx_font_manager* font_manager, dx_rectangle_presenter* rectangle_presenter);
+Core_Result dx_font_presenter_construct(dx_font_presenter* SELf, Core_FontSystem* fontSystem, dx_rectangle_presenter* rectangle_presenter);
 
-Core_Result dx_font_presenter_create(dx_font_presenter** RETURN, dx_font_manager* font_manager, dx_rectangle_presenter* rectangle_presenter);
+Core_Result dx_font_presenter_create(dx_font_presenter** RETURN, Core_FontSystem* fontSystem, dx_rectangle_presenter* rectangle_presenter);
 
 /// @brief Enumeration of policies for not available glyphs.
 typedef enum DX_GLYH_NOT_AVAILABLE_POLICY {
@@ -177,7 +177,7 @@ Core_Result dx_font_presenter_render_line_string(dx_font_presenter* SELF,
                                                  Core_InlineVector2R32 const* position,
                                                  Core_String* string,
                                                  Core_InlineRgbaR32 const* text_color,
-                                                 dx_font* font,
+                                                 Core_Font* font,
                                                  DX_TEXT_PRESENTATION_OPTIONS const* options);
 
 /// @brief 
@@ -194,7 +194,7 @@ Core_Result dx_font_presenter_render_line_string(dx_font_presenter* SELF,
 Core_Result dx_font_presenter_measure_line_string(dx_font_presenter* SELF,
                                                   Core_InlineVector2R32 const* position,
                                                   Core_String* string,
-                                                  dx_font* font,
+                                                  Core_Font* font,
                                                   DX_TEXT_MEASUREMENT_OPTIONS const* options,
                                                   DX_RECT2_F32* bounds);
 
@@ -213,7 +213,7 @@ Core_Result dx_font_presenter_render_line_string_iterator(dx_font_presenter* SEL
                                                           Core_InlineVector2R32 const* position,
                                                           Core_StringIterator* string_iterator,
                                                           Core_InlineRgbaR32 const* text_color,
-                                                          dx_font* font,
+                                                          Core_Font* font,
                                                           DX_TEXT_PRESENTATION_OPTIONS const* options);
 
 /// @brief 
@@ -230,7 +230,7 @@ Core_Result dx_font_presenter_render_line_string_iterator(dx_font_presenter* SEL
 Core_Result dx_font_presenter_measure_line_string_iterator(dx_font_presenter* SELF,
                                                            Core_InlineVector2R32 const* position,
                                                            Core_StringIterator* string_iterator,
-                                                           dx_font* font,
+                                                           Core_Font* font,
                                                            DX_TEXT_MEASUREMENT_OPTIONS const* options,
                                                            DX_RECT2_F32* bounds);
 

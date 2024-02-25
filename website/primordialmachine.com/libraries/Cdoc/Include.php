@@ -20,6 +20,9 @@ if (str_ends_with($dir, DIRECTORY_SEPARATOR)) {
 /// @author Michael Heilmann
 class CdocContext {
   
+  /// The "template language" interpreter.
+  private TlInterpreter $interpreter;
+  
   private static $instance = null;
 
   public static function getInstance() {
@@ -29,8 +32,87 @@ class CdocContext {
 
     return self::$instance;
   }
+  
+  public function getLinkInfo(CdocFile $file) {
+    $url = App::getInstance()->site_url_prefix . $file->getJsonData()['indices'][0] . '#' . $file->getJsonData()['id'];
+    $text = $file->getJsonData()['name'];
+    return array( 'url' => $url, 'text' => $text );
+  }
 
   protected function __construct() {
+    $this->interpreter = new TlInterpreter(new TlParser(new TlScanner()));
+    // 'newline' function
+    $f = function (TlInterpreter $interpreter, TlAst $ast) {
+      if ($interpreter->getStack()->size() < 1) {
+        throw new Exception('stack corruption');
+      }
+      $nargs = $interpreter->getStack()->pop();
+      if (!is_int($nargs)) {
+        throw new Exception('stack corruption');
+      }
+      if ($nargs != 0) {
+        throw new Exception('invalid number of arguments');
+      }
+      echo '</br>';
+    }; 
+    $this->interpreter->registerFunction('newline', $f);
+    
+    // 'code' function
+    $f = function (TlInterpreter $interpreter, TlAst $ast) {
+      if ($interpreter->getStack()->size() < 1) {
+        throw new Exception('stack corruption');
+      }
+      $nargs = $interpreter->getStack()->pop();
+      if (!is_int($nargs)) {
+        throw new Exception('stack corruption');
+      }
+      if ($nargs != 1) {
+        throw new Exception('invalid number of arguments');
+      }
+      $arg1 = $interpreter->getStack()->pop();
+      echo '<code>' . $arg1 . '</code>';
+    };
+    $this->interpreter->registerFunction('code', $f);
+
+    // 'meta' function
+    $f = function (TlInterpreter $interpreter, TlAst $ast) {
+      if ($interpreter->getStack()->size() < 1) {
+        throw new Exception('stack corruption');
+      }
+      $nargs = $interpreter->getStack()->pop();
+      if (!is_int($nargs)) {
+        throw new Exception('stack corruption');
+      }
+      if ($nargs != 1) {
+        throw new Exception('invalid number of arguments');
+      }
+      $arg1 = $interpreter->getStack()->pop();
+      echo '<code>' . $arg1 . '</code>';
+    };
+    $this->interpreter->registerFunction('meta', $f);
+    
+    // 'ref' function
+    $f = function (TlInterpreter $interpreter, TlAst $ast) {
+      if ($interpreter->getStack()->size() < 1) {
+        throw new Exception('stack corruption');
+      }
+      $nargs = $interpreter->getStack()->pop();
+      if (!is_int($nargs)) {
+        throw new Exception('stack corruption');
+      }
+      if ($nargs != 1) {
+        throw new Exception('invalid number of arguments');
+      }
+      $arg1 = $interpreter->getStack()->pop();
+      $file = CdocIndexManager::getInstance()->getFileByName($arg1);
+      $linkInfo = $this->getLinkInfo($file);
+      echo '<a href="' . $linkInfo['url'] . '">' . '<code>' . $linkInfo['text'] . '</code>' . '</a>';
+    };
+    $this->interpreter->registerFunction('ref', $f);
+  }
+
+  public function getInterpreter() : TlInterpreter {
+    return $this->interpreter;
   }
 
   /// This is a map. An entry consists of the path name of a Cdoc file to a CdocFile object of that Cdoc file.

@@ -1,0 +1,12 @@
+{
+  "type" : "object",
+  "last-update" : "2024-02-25",
+  "indices" : "assets",
+  "name" : "Core_Assets_ImageOperations_CheckboardPatternFill",
+  "id" : "core-assets-imageoperations-checkerboardpatternll",
+  "signature" : "typedef struct Core_Assets_ImageOperations_CheckboardPatternFill Core_Assets_ImageOperations_CheckboardPatternFill;",
+  "extends" : "Core_Assets_ImageOperation",
+  "description": [
+    "An image operation asset definition. Fill an image with a checkerboard pattern. "
+  ]
+}

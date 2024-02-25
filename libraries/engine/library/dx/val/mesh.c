@@ -186,7 +186,7 @@ on_error:
 
 static Core_Result add_material_to_backend(dx_val_mesh* SELF) {
   if (SELF->mesh_asset->material_reference && SELF->mesh_asset->material_reference->object) {
-    if (dx_val_material_create(&SELF->material, SELF->context, DX_ASSETS_MATERIAL(SELF->mesh_asset->material_reference->object))) {
+    if (dx_val_material_create(&SELF->material, SELF->context, CORE_ASSETS_MATERIAL(SELF->mesh_asset->material_reference->object))) {
       return Core_Failure;
     }
   }
@@ -239,7 +239,7 @@ static Core_Result add_to_backend(dx_val_mesh* SELF) {
   } break;
   case Core_VertexFormat_position_xyz_ambient_uv: {
    flags |= DX_PROGRAM_WITH_VERTEX_AMBIENT_UV;
-   if (SELF->material->material_asset->ambient_texture_reference && SELF->material->material_asset->ambient_texture_reference->object) {
+   if (SELF->material->material_asset->ambientTextureReference && SELF->material->material_asset->ambientTextureReference->object) {
       flags |= DX_PROGRAM_WITH_MATERIAL_AMBIENT_TEXTURE;
     }
   } break;

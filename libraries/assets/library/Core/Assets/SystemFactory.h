@@ -1,3 +1,5 @@
+// Copyright (c) 2018-2024 Michael Heilmann. All rights reserved.
+
 #if !defined(CORE_ASSETS_SYSTEMFACTORY_H_INCLUDED)
 #define CORE_ASSETS_SYSTEMFACTORY_H_INCLUDED
 

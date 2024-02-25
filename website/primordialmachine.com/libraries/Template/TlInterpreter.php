@@ -33,55 +33,17 @@ class TlInterpreter {
   
   private array $functions;
   
+  /// @brief Get the stack of this interpreter.
+  /// @return The stack of this interpreter.
+  public function getStack() : TlStack {
+    return $this->stack;
+  }
+  
   function __construct(TlParser $parser) {
     $this->isInParagraph = false;
     $this->parser = $parser;
     $this->stack = new TlStack();
     $this->functions = array();
-    
-    $this->functions['newline'] = function (TlInterpreter $interpreter, TlAst $ast) {
-      if ($this->stack->size() < 1) {
-        throw new Exception('stack corruption');
-      }
-      $nargs = $this->stack->pop();
-      if (!is_int($nargs)) {
-        throw new Exception('stack corruption');
-      }
-      if ($nargs != 0) {
-        throw new Exception('invalid number of arguments');
-      }
-      echo '</br>';
-    }; 
-    
-    $this->functions['code'] = function (TlInterpreter $interpreter, TlAst $ast) {
-      if ($this->stack->size() < 1) {
-        throw new Exception('stack corruption');
-      }
-      $nargs = $this->stack->pop();
-      if (!is_int($nargs)) {
-        throw new Exception('stack corruption');
-      }
-      if ($nargs != 1) {
-        throw new Exception('invalid number of arguments');
-      }
-      $arg1 = $this->stack->pop();
-      echo '<code>' . $arg1 . '</code>';
-    };
-
-    $this->functions['meta'] = function (TlInterpreter $interpreter, TlAst $ast) {
-      if ($this->stack->size() < 1) {
-        throw new Exception('stack corruption');
-      }
-      $nargs = $this->stack->pop();
-      if (!is_int($nargs)) {
-        throw new Exception('stack corruption');
-      }
-      if ($nargs != 1) {
-        throw new Exception('invalid number of arguments');
-      }
-      $arg1 = $this->stack->pop();
-      echo '<code>' . $arg1 . '</code>';
-    };
   }
 
   public function onCodeArgumentList(TlAst $ast) {
@@ -125,6 +87,10 @@ class TlInterpreter {
     }
   }
 
+  /// @brief Register a function.
+  /// @param $name [string] The name of the function.
+  /// @param $function A function of the signature (TlInterpreter, TlAst)
+  /// @throw Exception a function of the name is already registered.
   public function registerFunction(string $name, $function) {
     if (isset($this->functions[$name])) {
       throw new Exception('a function of name `' . $name . '` is already registered');

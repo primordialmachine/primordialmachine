@@ -18,9 +18,9 @@ static void _on_expected_key_key_added(void** a);
 
 static void _on_expected_key_key_removed(void** a);
 
-static Core_Result _on_hash_expected_key_key(Core_Size* RETURN, void** a);
+static Core_Result _on_hash_expected_key_key(Core_Size* RETURN, Core_String** a);
 
-static Core_Result _on_compare_expected_key_keys(Core_Boolean* RETURN, void** a, void** b);
+static Core_Result _on_compare_expected_key_keys(Core_Boolean* RETURN, Core_String** a, Core_String** b);
 
 static Core_Result _initialize_expected_keys(dx_adl_type_handlers_material* SELF);
 
@@ -28,11 +28,11 @@ static Core_Result _uninitialize_expected_keys(dx_adl_type_handlers_material* SE
 
 static Core_Result _check_keys(dx_adl_type_handlers_material* SELF, dx_ddl_node* node);
 
-static Core_Result _parse_material_controller(dx_assets_material_controller** RETURN, dx_ddl_node* node, dx_adl_context* context);
+static Core_Result _parse_material_controller(Core_Assets_MaterialController** RETURN, dx_ddl_node* node, dx_adl_context* context);
 
-static Core_Result _parse_ambient_color(dx_assets_material* material, dx_ddl_node* node, dx_adl_context* context);
+static Core_Result _parse_ambient_color(Core_Assets_Material* material, dx_ddl_node* node, dx_adl_context* context);
 
-static Core_Result _parse_material(dx_assets_material** RETURN, dx_ddl_node* node, dx_adl_context* context);
+static Core_Result _parse_material(Core_Assets_Material** RETURN, dx_ddl_node* node, dx_adl_context* context);
 
 static Core_Result _parse(Core_Object** RETURN, dx_adl_type_handlers_material* SELF, dx_ddl_node* node, dx_adl_context* context);
 
@@ -147,7 +147,7 @@ static Core_Result _check_keys(dx_adl_type_handlers_material* SELF, dx_ddl_node*
   return Core_Success;
 }
 
-static Core_Result _parse_material_controller(dx_assets_material_controller** RETURN, dx_ddl_node* node, dx_adl_context* context) {
+static Core_Result _parse_material_controller(Core_Assets_MaterialController** RETURN, dx_ddl_node* node, dx_adl_context* context) {
   Core_String* received_type = NULL;
   if (dx_asset_definition_language_parser_parse_type(&received_type, node, context)) {
     return Core_Failure;
@@ -176,14 +176,14 @@ static Core_Result _parse_material_controller(dx_assets_material_controller** RE
   }
 }
 
-static Core_Result _parse_ambient_color(dx_assets_material* material, dx_ddl_node* node, dx_adl_context* context) {
-  if (dx_adl_semantical_read_color_instance_field(&material->ambient_color, node, true, NAME(ambient_color_key), context)) {
+static Core_Result _parse_ambient_color(Core_Assets_Material* material, dx_ddl_node* node, dx_adl_context* context) {
+  if (dx_adl_semantical_read_color_instance_field(&material->ambientColor, node, true, NAME(ambient_color_key), context)) {
     return Core_Failure;
   }
   return Core_Success;
 }
 
-static Core_Result _parse_material(dx_assets_material** RETURN, dx_ddl_node* node, dx_adl_context* context) {
+static Core_Result _parse_material(Core_Assets_Material** RETURN, dx_ddl_node* node, dx_adl_context* context) {
   Core_String* name_value = NULL;
   // name
   {
@@ -191,8 +191,8 @@ static Core_Result _parse_material(dx_assets_material** RETURN, dx_ddl_node* nod
       return Core_Failure;
     }
   }
-  dx_assets_material* material_value = NULL;
-  if (dx_assets_material_create(&material_value, name_value)) {
+  Core_Assets_Material* material_value = NULL;
+  if (Core_Assets_Material_create(&material_value, name_value)) {
     CORE_UNREFERENCE(name_value);
     name_value = NULL;
     return Core_Failure;
@@ -216,7 +216,7 @@ static Core_Result _parse_material(dx_assets_material** RETURN, dx_ddl_node* nod
       return Core_Failure;
     } else {
       if (NULL != texture_reference) {
-        if (dx_assets_material_set_ambient_texture(material_value, texture_reference)) {
+        if (Core_Assets_Material_setAmbientTexture(material_value, texture_reference)) {
           CORE_UNREFERENCE(texture_reference);
           texture_reference = NULL;
           CORE_UNREFERENCE(material_value);
@@ -240,7 +240,7 @@ static Core_Result _parse_material(dx_assets_material** RETURN, dx_ddl_node* nod
         Core_setError(Core_Error_NoError);
       }
     } else {
-      dx_assets_material_controller* controller_asset = NULL;
+      Core_Assets_MaterialController* controller_asset = NULL;
       if (_parse_material_controller(&controller_asset, child_node, context)) {
         CORE_UNREFERENCE(child_node);
         child_node = NULL;
@@ -265,37 +265,37 @@ static Core_Result _parse(Core_Object** RETURN, dx_adl_type_handlers_material* S
   if (_check_keys(SELF, node)) {
     return Core_Failure;
   }
-  return _parse_material((dx_assets_material**)RETURN, node, context);
+  return _parse_material((Core_Assets_Material**)RETURN, node, context);
 }
 
 static Core_Result _resolve_ambient_color(dx_adl_type_handlers_material* SELF, dx_adl_symbol* symbol, dx_adl_context* context) {
-  dx_assets_material* material = DX_ASSETS_MATERIAL(symbol->asset);
+  Core_Assets_Material* material = CORE_ASSETS_MATERIAL(symbol->asset);
   // default to opaque white if no color is specified
-  if (!material->ambient_color) {
+  if (!material->ambientColor) {
     Core_InlineRgbN8 WHITE = { .r = 255, .g = 255, .b = 255 };
     Core_String* name = NULL;
     if (Core_String_create(&name, "<anonymous>", sizeof("<anonymous>") - 1)) {
       return Core_Failure;
     }
-    if (Core_Assets_Ref_create(&material->ambient_color, name)) {
+    if (Core_Assets_Ref_create(&material->ambientColor, name)) {
       CORE_UNREFERENCE(name);
       name = NULL;
       return Core_Failure;
     }
     CORE_UNREFERENCE(name);
     name = NULL;
-    if (Core_Assets_ColorRgbN8_create((Core_Assets_ColorRgbN8**)&material->ambient_color->object, &WHITE)) {
-      CORE_UNREFERENCE(material->ambient_color);
-      material->ambient_color = NULL;
+    if (Core_Assets_ColorRgbN8_create((Core_Assets_ColorRgbN8**)&material->ambientColor->object, &WHITE)) {
+      CORE_UNREFERENCE(material->ambientColor);
+      material->ambientColor = NULL;
       return Core_Failure;
     }
   } else {
     dx_adl_symbol* color_symbol = NULL;
-    if (dx_asset_definitions_get(&color_symbol, context->definitions, material->ambient_color->name)) {
+    if (dx_asset_definitions_get(&color_symbol, context->definitions, material->ambientColor->name)) {
       return Core_Failure;
     }
     Core_Assets_ColorRgbN8* color_asset = CORE_ASSETS_COLORRGBN8(color_symbol->asset);
-    if (dx_assets_material_set_ambient_color(material, color_asset)) {
+    if (Core_Assets_Material_setAmbientColor(material, color_asset)) {
       CORE_UNREFERENCE(color_symbol);
       color_symbol = NULL;
       return Core_Failure;
@@ -307,27 +307,27 @@ static Core_Result _resolve_ambient_color(dx_adl_type_handlers_material* SELF, d
 }
 
 static Core_Result _resolve_ambient_texture(dx_adl_type_handlers_material* SELF, dx_adl_symbol* symbol, dx_adl_context* context) {
-  dx_assets_material* material = DX_ASSETS_MATERIAL(symbol->asset);
+  Core_Assets_Material* material = CORE_ASSETS_MATERIAL(symbol->asset);
 
   // if there is no ambient textur or the ambient texture was resolved already, return successfully.
-  if (!material->ambient_texture_reference) {
+  if (!material->ambientTextureReference) {
     return Core_Success;
   }
-  if (material->ambient_texture_reference->object) {
+  if (material->ambientTextureReference->object) {
     return Core_Success;
   }
   // otherwise resolve
   dx_adl_symbol* referenced_symbol = NULL;
-  if (dx_asset_definitions_get(&referenced_symbol, context->definitions, material->ambient_texture_reference->name)) {
+  if (dx_asset_definitions_get(&referenced_symbol, context->definitions, material->ambientTextureReference->name)) {
     return Core_Failure;
   }
-  material->ambient_texture_reference->object = referenced_symbol->asset;
-  if (!material->ambient_texture_reference->object) {
+  material->ambientTextureReference->object = referenced_symbol->asset;
+  if (!material->ambientTextureReference->object) {
     CORE_UNREFERENCE(referenced_symbol);
     referenced_symbol = NULL;
     return Core_Failure;
   }
-  CORE_REFERENCE(material->ambient_texture_reference->object);
+  CORE_REFERENCE(material->ambientTextureReference->object);
   CORE_UNREFERENCE(referenced_symbol);
   referenced_symbol = NULL;
   return Core_Success;
@@ -337,7 +337,7 @@ static Core_Result _resolve(dx_adl_type_handlers_material* SELF, dx_adl_symbol* 
   if (symbol->resolved) {
     return Core_Success;
   }
-  dx_assets_material* material = DX_ASSETS_MATERIAL(symbol->asset);
+  Core_Assets_Material* material = CORE_ASSETS_MATERIAL(symbol->asset);
   if (_resolve_ambient_texture(SELF, symbol, context)) {
     return Core_Failure;
   }

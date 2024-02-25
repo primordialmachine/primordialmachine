@@ -15,8 +15,8 @@ static void dx_glyph_atlas_destruct(dx_glyph_atlas* SELF) {
   CORE_UNREFERENCE(SELF->rectangle_presenter);
   SELF->rectangle_presenter = NULL;
 
-  CORE_UNREFERENCE(SELF->font_manager);
-  SELF->font_manager = NULL;
+  CORE_UNREFERENCE(SELF->fontSystem);
+  SELF->fontSystem = NULL;
 
   CORE_UNREFERENCE(SELF->val_context);
   SELF->val_context = NULL;
@@ -25,19 +25,19 @@ static void dx_glyph_atlas_destruct(dx_glyph_atlas* SELF) {
 static void dx_glyph_atlas_constructDispatch(dx_glyph_atlas_Dispatch* SELF)
 {/*Intentionally empty.*/}
 
-Core_Result dx_glyph_atlas_construct(dx_glyph_atlas* SELF, dx_font_manager* font_manager, dx_rectangle_presenter* rectangle_presenter, Core_Visuals_Context* val_context) {
+Core_Result dx_glyph_atlas_construct(dx_glyph_atlas* SELF, Core_FontSystem* fontSystem, dx_rectangle_presenter* rectangle_presenter, Core_Visuals_Context* val_context) {
   DX_CONSTRUCT_PREFIX(dx_glyph_atlas);
   //
-  if (!font_manager) {
+  if (!fontSystem) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
   }
-  SELF->font_manager = font_manager;
-  CORE_REFERENCE(font_manager);
+  SELF->fontSystem = fontSystem;
+  CORE_REFERENCE(fontSystem);
   //
   if (!rectangle_presenter) {
-    CORE_UNREFERENCE(SELF->font_manager);
-    SELF->font_manager = NULL;
+    CORE_UNREFERENCE(SELF->fontSystem);
+    SELF->fontSystem = NULL;
 
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
@@ -49,8 +49,8 @@ Core_Result dx_glyph_atlas_construct(dx_glyph_atlas* SELF, dx_font_manager* font
     CORE_UNREFERENCE(SELF->rectangle_presenter);
     SELF->rectangle_presenter = NULL;
 
-    CORE_UNREFERENCE(SELF->font_manager);
-    SELF->font_manager = NULL;
+    CORE_UNREFERENCE(SELF->fontSystem);
+    SELF->fontSystem = NULL;
 
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
@@ -63,9 +63,9 @@ Core_Result dx_glyph_atlas_construct(dx_glyph_atlas* SELF, dx_font_manager* font
   return Core_Success;
 }
 
-Core_Result dx_glyph_atlas_create(dx_glyph_atlas** RETURN, dx_font_manager* font_manager, dx_rectangle_presenter* rectangle_presenter, Core_Visuals_Context* val_context) {
+Core_Result dx_glyph_atlas_create(dx_glyph_atlas** RETURN, Core_FontSystem* fontSystem, dx_rectangle_presenter* rectangle_presenter, Core_Visuals_Context* val_context) {
   DX_CREATE_PREFIX(dx_glyph_atlas)
-  if (dx_glyph_atlas_construct(SELF, font_manager, rectangle_presenter, val_context)) {
+  if (dx_glyph_atlas_construct(SELF, fontSystem, rectangle_presenter, val_context)) {
     CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
@@ -74,13 +74,13 @@ Core_Result dx_glyph_atlas_create(dx_glyph_atlas** RETURN, dx_font_manager* font
   return Core_Success;
 }
 
-Core_Result dx_glyph_atlas_get_texture(dx_glyph_atlas* SELF, dx_font_glyph *glyph, Core_Visuals_Texture** val_texture, DX_RECT2_F32* texture_coordinates) {
+Core_Result dx_glyph_atlas_get_texture(dx_glyph_atlas* SELF, Core_Glyph* glyph, Core_Visuals_Texture** val_texture, DX_RECT2_F32* texture_coordinates) {
   DX_RECT2_F32 texture_coordinates_1;
-  if (dx_font_glyph_get_texture_coordinates(glyph, &texture_coordinates_1)) {
+  if (Core_Glyph_getTextureCoordinates(glyph, &texture_coordinates_1)) {
     return Core_Failure;
   }
   Core_Assets_Texture* assets_texture;
-  if (dx_assets_extensions_create_texture_from_glyph(&assets_texture, glyph)) {
+  if (Core_Assets_Extensions_createTextureFromGlyph(&assets_texture, glyph)) {
     return Core_Failure;
   }
   Core_Visuals_Texture* val_texture_1 = NULL;
@@ -121,7 +121,7 @@ Core_Result dx_glyph_atlas_get_texture(dx_glyph_atlas* SELF, dx_font_glyph *glyp
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-static Core_Result create_font(dx_font** RETURN, dx_font_presenter* SELF, char const* path);
+static Core_Result create_font(Core_Font** RETURN, dx_font_presenter* SELF, char const* path);
 
 static Core_Result
 present_glyph
@@ -138,9 +138,9 @@ static Core_Result create_text_presenter(dx_font_presenter* SELF);
 
 static void destroy_text_presenter(dx_font_presenter* SELF);
 
-static Core_Result on_render_code_point(dx_font_presenter* SELF, Core_InlineVector2R32* position, uint32_t code_point, dx_font* font, Core_InlineRgbaR32 const* text_color, DX_TEXT_PRESENTATION_OPTIONS const* options);
+static Core_Result on_render_code_point(dx_font_presenter* SELF, Core_InlineVector2R32* position, uint32_t code_point, Core_Font* font, Core_InlineRgbaR32 const* text_color, DX_TEXT_PRESENTATION_OPTIONS const* options);
 
-static Core_Result on_measure_code_point(dx_font_presenter* SELF, Core_InlineVector2R32* position, uint32_t code_point, dx_font* font,
+static Core_Result on_measure_code_point(dx_font_presenter* SELF, Core_InlineVector2R32* position, uint32_t code_point, Core_Font* font,
                                          DX_TEXT_MEASUREMENT_OPTIONS const* options,
                                          DX_RECT2_F32* bounds);
 
@@ -148,13 +148,13 @@ Core_defineObjectType("dx.font_presenter",
                       dx_font_presenter,
                       Core_Object);
 
-static Core_Result create_font(dx_font** RETURN, dx_font_presenter* SELF, char const* path) {
+static Core_Result create_font(Core_Font** RETURN, dx_font_presenter* SELF, char const* path) {
   Core_String* font_file = NULL;
   if (Core_String_create(&font_file, path, strlen(path))) {
     return Core_Failure;
   }
-  dx_font* font = NULL;
-  Core_Result result = dx_font_manager_get_or_create_font(&font, SELF->font_manager, font_file, 12);
+  Core_Font* font = NULL;
+  Core_Result result = Core_FontSystem_getOrCreateFont(&font, SELF->fontSystem, font_file, 12);
   CORE_UNREFERENCE(font_file);
   font_file = NULL;
   if (result) {
@@ -254,7 +254,7 @@ static void destroy_text_presenter(dx_font_presenter* SELF) {
 }
 
 /// @param [in,out] position A pointer to the position. After the code point was rendered, the position is advanced.
-static Core_Result on_render_code_point(dx_font_presenter* SELF, Core_InlineVector2R32* position, uint32_t code_point, dx_font* font, Core_InlineRgbaR32 const* text_color, DX_TEXT_PRESENTATION_OPTIONS const* options) {
+static Core_Result on_render_code_point(dx_font_presenter* SELF, Core_InlineVector2R32* position, uint32_t code_point, Core_Font* font, Core_InlineRgbaR32 const* text_color, DX_TEXT_PRESENTATION_OPTIONS const* options) {
   // The colors "red" and "green".
   // @todo Cache those.
   Core_InlineRgbaR32 red, green;
@@ -277,8 +277,8 @@ static Core_Result on_render_code_point(dx_font_presenter* SELF, Core_InlineVect
     };
   }
 
-  dx_font_glyph* glyph = NULL;
-  if (dx_font_glyph_create(&glyph, code_point, font)) {
+  Core_Glyph* glyph = NULL;
+  if (Core_DefaultFontSystem_Glyph_create((Core_DefaultFontSystem_Glyph**) & glyph, code_point, CORE_DEFAULTFONTSYSTEM_FONT(font))) {
     // the glyph was not found in the font.
     if (Core_Error_NotFound == Core_getError()) {
       switch (options->glyph_not_availabe_policy) {
@@ -288,7 +288,7 @@ static Core_Result on_render_code_point(dx_font_presenter* SELF, Core_InlineVect
         } break;
         case DX_GLYPH_NOT_AVAILABLE_POLICY_PLACEHOLDER: {
           code_point = (Core_Natural32)'_';
-          if (dx_font_glyph_create(&glyph, code_point, font)) {
+          if (Core_DefaultFontSystem_Glyph_create((Core_DefaultFontSystem_Glyph**) & glyph, code_point, CORE_DEFAULTFONTSYSTEM_FONT(font))) {
             return Core_Failure;
           }
         } break;
@@ -301,19 +301,19 @@ static Core_Result on_render_code_point(dx_font_presenter* SELF, Core_InlineVect
     }
   }
   Core_Real32 _advance_x, _advance_y;
-  if (dx_font_glyph_get_glyph_advance(glyph, &_advance_x, &_advance_y)) {
+  if (Core_Glyph_getGlyphAdvance(glyph, &_advance_x, &_advance_y)) {
     CORE_UNREFERENCE(glyph);
     glyph = NULL;
     return Core_Failure;
   }
   Core_Real32 _bearing_x, _bearing_y;
-  if (dx_font_glyph_get_glyph_bearing(glyph, &_bearing_x, &_bearing_y)) {
+  if (Core_Glyph_getGlyphBearing(glyph, &_bearing_x, &_bearing_y)) {
     CORE_UNREFERENCE(glyph);
     glyph = NULL;
     return Core_Failure;
   }
   uint32_t char_size_x_n32, char_size_y_n32;
-  if (dx_font_glyph_get_size(glyph, &char_size_x_n32, &char_size_y_n32)) {
+  if (Core_Glyph_getSize(glyph, &char_size_x_n32, &char_size_y_n32)) {
     CORE_UNREFERENCE(glyph);
     glyph = NULL;
     return Core_Failure;
@@ -351,7 +351,7 @@ static Core_Result on_render_code_point(dx_font_presenter* SELF, Core_InlineVect
   }
   if (options->present_glyph) {
     dx_glyph_atlas* glyph_atlas = NULL;
-    if (dx_glyph_atlas_create(&glyph_atlas, SELF->font_manager, SELF->rectangle_presenter, DX_PRESENTER(SELF)->val_context)) {
+    if (dx_glyph_atlas_create(&glyph_atlas, SELF->fontSystem, SELF->rectangle_presenter, DX_PRESENTER(SELF)->val_context)) {
       CORE_UNREFERENCE(glyph);
       glyph = NULL;
       return Core_Failure;
@@ -400,7 +400,7 @@ static Core_Result on_render_code_point(dx_font_presenter* SELF, Core_InlineVect
 static Core_Result on_measure_code_point(dx_font_presenter* SELF,
                                          Core_InlineVector2R32* position,
                                          uint32_t code_point,
-                                         dx_font* font,
+                                         Core_Font* font,
                                          DX_TEXT_MEASUREMENT_OPTIONS const* options,
                                          DX_RECT2_F32* bounds) {
   if (code_point == '\n' || code_point == '\r') {
@@ -424,8 +424,8 @@ static Core_Result on_measure_code_point(dx_font_presenter* SELF,
     };
   }
 
-  dx_font_glyph* glyph = NULL;
-  if (dx_font_glyph_create(&glyph, code_point, font)) {
+  Core_Glyph* glyph = NULL;
+  if (Core_DefaultFontSystem_Glyph_create((Core_DefaultFontSystem_Glyph**) & glyph, code_point, CORE_DEFAULTFONTSYSTEM_FONT(font))) {
     // the glyph was not found in the font.
     if (Core_Error_NotFound == Core_getError()) {
       switch (options->glyph_not_availabe_policy) {
@@ -435,7 +435,7 @@ static Core_Result on_measure_code_point(dx_font_presenter* SELF,
         } break;
         case DX_GLYPH_NOT_AVAILABLE_POLICY_PLACEHOLDER: {
           code_point = (Core_Natural32)'_';
-          if (dx_font_glyph_create(&glyph, code_point, font)) {
+          if (Core_DefaultFontSystem_Glyph_create((Core_DefaultFontSystem_Glyph**)&glyph, code_point, CORE_DEFAULTFONTSYSTEM_FONT(font))) {
             return Core_Failure;
           }
         } break;
@@ -448,19 +448,19 @@ static Core_Result on_measure_code_point(dx_font_presenter* SELF,
     }
   }
   Core_Real32 _advance_x, _advance_y;
-  if (dx_font_glyph_get_glyph_advance(glyph, &_advance_x, &_advance_y)) {
+  if (Core_Glyph_getGlyphAdvance(glyph, &_advance_x, &_advance_y)) {
     CORE_UNREFERENCE(glyph);
     glyph = NULL;
     return Core_Failure;
   }
   Core_Real32 _bearing_x, _bearing_y;
-  if (dx_font_glyph_get_glyph_bearing(glyph, &_bearing_x, &_bearing_y)) {
+  if (Core_Glyph_getGlyphBearing(glyph, &_bearing_x, &_bearing_y)) {
     CORE_UNREFERENCE(glyph);
     glyph = NULL;
     return Core_Failure;
   }
   uint32_t char_size_x_n32, char_size_y_n32;
-  if (dx_font_glyph_get_size(glyph, &char_size_x_n32, &char_size_y_n32)) {
+  if (Core_Glyph_getSize(glyph, &char_size_x_n32, &char_size_y_n32)) {
     CORE_UNREFERENCE(glyph);
     glyph = NULL;
     return Core_Failure;
@@ -470,7 +470,7 @@ static Core_Result on_measure_code_point(dx_font_presenter* SELF,
   //
   if (options->text_bounds_type == dx_text_bounds_type_logical) {
     Core_Real32 _ascender, _descender;
-    if (dx_font_get_ascender(&_ascender, font) || dx_font_get_descender(&_descender, font)) {
+    if (Core_Font_getAscender(&_ascender, CORE_FONT(font)) || Core_Font_getDescender(&_descender, CORE_FONT(font))) {
       CORE_UNREFERENCE(glyph);
       glyph = NULL;
       return Core_Failure;
@@ -511,14 +511,14 @@ static void dx_font_presenter_destruct(dx_font_presenter* SELF) {
   CORE_UNREFERENCE(SELF->rectangle_presenter);
   SELF->rectangle_presenter = NULL;
 
-  CORE_UNREFERENCE(SELF->font_manager);
-  SELF->font_manager = NULL;
+  CORE_UNREFERENCE(SELF->fontSystem);
+  SELF->fontSystem = NULL;
 }
 
 static void dx_font_presenter_constructDispatch(dx_font_presenter_Dispatch* SELF)
 {/*Intentionally empty.*/}
 
-Core_Result dx_font_presenter_construct(dx_font_presenter* SELF, dx_font_manager* font_manager, dx_rectangle_presenter* rectangle_presenter) {
+Core_Result dx_font_presenter_construct(dx_font_presenter* SELF, Core_FontSystem* fontSystem, dx_rectangle_presenter* rectangle_presenter) {
   DX_CONSTRUCT_PREFIX(dx_font_presenter);
   Core_Visuals_Context* val_context = NULL;
   Core_Audials_Context* aal_context = NULL;
@@ -542,16 +542,16 @@ Core_Result dx_font_presenter_construct(dx_font_presenter* SELF, dx_font_manager
   CORE_UNREFERENCE(val_context);
   val_context = NULL;
   //
-  if (!font_manager) {
+  if (!fontSystem) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
   }
-  SELF->font_manager = font_manager;
-  CORE_REFERENCE(font_manager);
+  SELF->fontSystem = fontSystem;
+  CORE_REFERENCE(fontSystem);
   //
   if (!rectangle_presenter) {
-    CORE_UNREFERENCE(SELF->font_manager);
-    SELF->font_manager = NULL;
+    CORE_UNREFERENCE(SELF->fontSystem);
+    SELF->fontSystem = NULL;
 
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
@@ -564,8 +564,8 @@ Core_Result dx_font_presenter_construct(dx_font_presenter* SELF, dx_font_manager
     CORE_UNREFERENCE(SELF->rectangle_presenter);
     SELF->rectangle_presenter = NULL;
     //
-    CORE_UNREFERENCE(SELF->font_manager);
-    SELF->font_manager = NULL;
+    CORE_UNREFERENCE(SELF->fontSystem);
+    SELF->fontSystem = NULL;
     //
     return Core_Failure;
   }
@@ -577,8 +577,8 @@ Core_Result dx_font_presenter_construct(dx_font_presenter* SELF, dx_font_manager
     CORE_UNREFERENCE(SELF->rectangle_presenter);
     SELF->rectangle_presenter = NULL;
     //
-    CORE_UNREFERENCE(SELF->font_manager);
-    SELF->font_manager = NULL;
+    CORE_UNREFERENCE(SELF->fontSystem);
+    SELF->fontSystem = NULL;
     //
     return Core_Failure;
   }
@@ -593,8 +593,8 @@ Core_Result dx_font_presenter_construct(dx_font_presenter* SELF, dx_font_manager
     CORE_UNREFERENCE(SELF->rectangle_presenter);
     SELF->rectangle_presenter = NULL;
     //
-    CORE_UNREFERENCE(SELF->font_manager);
-    SELF->font_manager = NULL;
+    CORE_UNREFERENCE(SELF->fontSystem);
+    SELF->fontSystem = NULL;
     //
     return Core_Failure;
   }
@@ -612,8 +612,8 @@ Core_Result dx_font_presenter_construct(dx_font_presenter* SELF, dx_font_manager
     CORE_UNREFERENCE(SELF->rectangle_presenter);
     SELF->rectangle_presenter = NULL;
     //
-    CORE_UNREFERENCE(SELF->font_manager);
-    SELF->font_manager = NULL;
+    CORE_UNREFERENCE(SELF->fontSystem);
+    SELF->fontSystem = NULL;
     //
     return Core_Failure;
   }
@@ -635,8 +635,8 @@ Core_Result dx_font_presenter_construct(dx_font_presenter* SELF, dx_font_manager
       CORE_UNREFERENCE(SELF->rectangle_presenter);
       SELF->rectangle_presenter = NULL;
       //
-      CORE_UNREFERENCE(SELF->font_manager);
-      SELF->font_manager = NULL;
+      CORE_UNREFERENCE(SELF->fontSystem);
+      SELF->fontSystem = NULL;
       //
       return Core_Failure;
     }
@@ -647,9 +647,9 @@ Core_Result dx_font_presenter_construct(dx_font_presenter* SELF, dx_font_manager
   return Core_Success;
 }
 
-Core_Result dx_font_presenter_create(dx_font_presenter** RETURN, dx_font_manager* font_manager, dx_rectangle_presenter* rectangle_presenter) {
+Core_Result dx_font_presenter_create(dx_font_presenter** RETURN, Core_FontSystem* fontSystem, dx_rectangle_presenter* rectangle_presenter) {
   DX_CREATE_PREFIX(dx_font_presenter)
-  if (dx_font_presenter_construct(SELF, font_manager, rectangle_presenter)) {
+  if (dx_font_presenter_construct(SELF, fontSystem, rectangle_presenter)) {
     CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
@@ -658,7 +658,7 @@ Core_Result dx_font_presenter_create(dx_font_presenter** RETURN, dx_font_manager
   return Core_Success;
 }
 
-Core_Result dx_font_presenter_render_line_string(dx_font_presenter* SELF, Core_InlineVector2R32 const* position, Core_String* string, Core_InlineRgbaR32 const* text_color, dx_font* font,
+Core_Result dx_font_presenter_render_line_string(dx_font_presenter* SELF, Core_InlineVector2R32 const* position, Core_String* string, Core_InlineRgbaR32 const* text_color, Core_Font* font,
                                                  DX_TEXT_PRESENTATION_OPTIONS const* options) {
   Core_StringIterator* string_iterator = NULL;
   if (Core_String_createIterator(&string_iterator, string)) {
@@ -676,7 +676,7 @@ Core_Result dx_font_presenter_render_line_string(dx_font_presenter* SELF, Core_I
   return Core_Success;
 }
 
-Core_Result dx_font_presenter_measure_line_string(dx_font_presenter* SELF, Core_InlineVector2R32 const* position, Core_String* string, dx_font* font,
+Core_Result dx_font_presenter_measure_line_string(dx_font_presenter* SELF, Core_InlineVector2R32 const* position, Core_String* string, Core_Font* font,
                                                 DX_TEXT_MEASUREMENT_OPTIONS const* options, DX_RECT2_F32* bounds) {
   Core_StringIterator* string_iterator = NULL;
   if (Core_String_createIterator(&string_iterator, string)) {
@@ -694,14 +694,14 @@ Core_Result dx_font_presenter_measure_line_string(dx_font_presenter* SELF, Core_
   return Core_Success;
 }
 
-Core_Result dx_font_presenter_render_line_string_iterator(dx_font_presenter* SELF, Core_InlineVector2R32 const* position, Core_StringIterator* string_iterator, Core_InlineRgbaR32 const* text_color, dx_font* font,
+Core_Result dx_font_presenter_render_line_string_iterator(dx_font_presenter* SELF, Core_InlineVector2R32 const* position, Core_StringIterator* string_iterator, Core_InlineRgbaR32 const* text_color, Core_Font* font,
                                                           DX_TEXT_PRESENTATION_OPTIONS const* options) {
   // The distance from the baseline to the maximal extend of any symbol above the baseline.
   Core_Real32 ascender;
-  dx_font_get_ascender(&ascender, font);
+  Core_Font_getAscender(&ascender, CORE_FONT(font));
   // The distance from the baseline to the maximal extend of any symbol below the baseline.
   Core_Real32 descender;
-  dx_font_get_descender(&descender, font);
+  Core_Font_getDescender(&descender, CORE_FONT(font));
 
   Core_InlineRgbaR32 red, green;
   dx_rgb_n8_to_rgba_f32(&dx_colors_red, 1.f, &red);
@@ -733,15 +733,15 @@ Core_Result dx_font_presenter_render_line_string_iterator(dx_font_presenter* SEL
 Core_Result dx_font_presenter_measure_line_string_iterator(dx_font_presenter* SELF,
                                                            Core_InlineVector2R32 const* position,
                                                            Core_StringIterator* string_iterator,
-                                                           dx_font* font,
+                                                           Core_Font* font,
                                                            DX_TEXT_MEASUREMENT_OPTIONS const* options,
                                                            DX_RECT2_F32* bounds) {
   // The distance from the baseline to the maximal extend of any symbol above the baseline.
   Core_Real32 ascender;
-  dx_font_get_ascender(&ascender, font);
+  Core_Font_getAscender(&ascender, CORE_FONT(font));
   // The distance from the baseline to the maximal extend of any symbol below the baseline.
   Core_Real32 descender;
-  dx_font_get_descender(&descender, font);
+  Core_Font_getDescender(&descender, CORE_FONT(font));
 
   DX_RECT2_F32 bounds1;
   dx_rect2_f32_set2(&bounds1, position->e[0], position->e[1], 0.f, 0.f);

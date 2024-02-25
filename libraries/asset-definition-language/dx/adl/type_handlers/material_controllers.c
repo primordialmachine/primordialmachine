@@ -17,9 +17,9 @@ static void _on_expected_key_key_added(void** a);
 
 static void _on_expected_key_key_removed(void** a);
 
-static Core_Result _on_hash_expected_key_key(Core_Size* RETURN, void** a);
+static Core_Result _on_hash_expected_key_key(Core_Size* RETURN, Core_String** a);
 
-static Core_Result _on_compare_expected_key_keys(Core_Boolean* RETURN, void** a, void** b);
+static Core_Result _on_compare_expected_key_keys(Core_Boolean* RETURN, Core_String** a, Core_String** b);
 
 static Core_Result _initialize_expected_keys(dx_adl_type_handlers_material_controllers* SELF);
 
@@ -153,8 +153,8 @@ static Core_Result _parse(Core_Object** RETURN, dx_adl_type_handlers_material_co
   CORE_UNREFERENCE(received_type);
   received_type = NULL;
   if (isEqualTo) {
-    dx_assets_material_controllers_ambient_color* asset = NULL;
-    if (dx_assets_material_controllers_ambient_color_create(&asset)) {
+    Core_Assets_MaterialControllers_AmbientColor* asset = NULL;
+    if (Core_Assets_MaterialControllers_AmbientColor_create(&asset)) {
       return Core_Failure;
     }
     *RETURN = CORE_OBJECT(asset);
