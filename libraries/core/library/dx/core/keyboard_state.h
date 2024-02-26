@@ -4,56 +4,53 @@
 #include "dx/core/object.h"
 #include "Core/Input/KeyboardKey.h"
 
-/// @warning Keep this synchronized with keyboard_keys.i.
-#define dx_keyboard_state_configuration_number_of_keyboard_keys (255 + 1)
+/* WARNING: Must be kept synchronized with `Core/Input/KeyboardKeys.i`. */
+#define Core_KeyboardState_NumberOfKeyboardKeys (255 + 1)
 
-Core_declareObjectType("dx.keyboard_state",
-                       dx_keyboard_state,
+Core_declareObjectType("Core.KeyboardState",
+                       Core_KeyboardState,
                        Core_Object);
 
-static inline dx_keyboard_state* DX_KEYBOARD_STATE(void* p) {
-  return (dx_keyboard_state*)p;
+static inline Core_KeyboardState* CORE_KEYBOARD_STATE(void* p) {
+  return (Core_KeyboardState*)p;
 }
 
-struct dx_keyboard_state {
+struct Core_KeyboardState {
   Core_Object _parent;
-  Core_Boolean state[dx_keyboard_state_configuration_number_of_keyboard_keys];
+  Core_Boolean state[Core_KeyboardState_NumberOfKeyboardKeys];
 };
 
-static inline dx_keyboard_state_Dispatch* DX_KEYBOARD_STATE_DISPATCH(void* p) {
-  return (dx_keyboard_state_Dispatch*)p;
+static inline Core_KeyboardState_Dispatch* CORE_KEYBOARDSTATE_DISPATCH(void* p) {
+  return (Core_KeyboardState_Dispatch*)p;
 }
 
-struct dx_keyboard_state_Dispatch {
+struct Core_KeyboardState_Dispatch {
   Core_Object_Dispatch _parent;
 };
 
 /// @brief Construct this keyboard state.
-/// @param SELF A pointer to this keyboard state.
 /// @success The state of all keys is @a false.
-/// @default-runtime-calling-convent
-Core_Result dx_keyboard_state_construct(dx_keyboard_state* SELF);
+/// @constructor{Core_KeyboardState}
+Core_Result Core_KeyboardState_construct(Core_KeyboardState* SELF);
 
-Core_Result dx_keyboard_state_create(dx_keyboard_state** RETURN);
+/// @create-operator{Core_KeyboardState}
+Core_Result Core_KeyboardState_create(Core_KeyboardState** RETURN);
 
 /// @brief Get the state of a keyboard key.
 /// @param RETURN A pointer to a <code>Core_Boolean</code> variable.
-/// @param SELF A pointer to this keyboard state.
 /// @param key The keyboard key.
 /// @success <code>*RETURN</code> was assigned the state of the keyboard key.
-/// @default-runtime-calling-convent
-Core_Result dx_keyboard_state_get_state(Core_Boolean* RETURN, dx_keyboard_state* SELF, Core_KeyboardKey key);
+/// @method{Core_KeyboardState}
+Core_Result Core_KeyboardState_getState(Core_Boolean* RETURN, Core_KeyboardState* SELF, Core_KeyboardKey key);
 
 /// @brief Set the state of a keyboard key.
-/// @param SELF A pointer to this keyboard state.
 /// @param key The keyboard key.
 /// @param state The state.
-/// @default-runtime-calling-convent
-Core_Result dx_keyboard_state_set_state(dx_keyboard_state* SELF, Core_KeyboardKey key, Core_Boolean state);
+/// @method{Core_KeyboardState}
+Core_Result Core_KeyboardState_setState(Core_KeyboardState* SELF, Core_KeyboardKey key, Core_Boolean state);
 
 /// @brief Set the state of all keys to @a false.
-/// @param SELF A pointer to this keyboard state.
-/// @method-call
-Core_Result dx_keyboard_state_clear(dx_keyboard_state* SELF);
+/// @method{Core_KeyboardState}
+Core_Result Core_KeyboardState_clear(Core_KeyboardState* SELF);
 
 #endif // DX_KEYBOARD_STATE_H_INCLUDED

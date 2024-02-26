@@ -1,26 +1,26 @@
 #include "dx/core/keyboard_state.h"
 
-Core_defineObjectType("dx.keyboard_state",
-                      dx_keyboard_state,
+Core_defineObjectType("Core.KeyboardState",
+                      Core_KeyboardState,
                       Core_Object);
 
-static void dx_keyboard_state_destruct(dx_keyboard_state* SELF)
+static void Core_KeyboardState_destruct(Core_KeyboardState* SELF)
 {/*Intentionally empty.*/}
 
-static void dx_keyboard_state_constructDispatch(dx_keyboard_state_Dispatch* SELF)
+static void Core_KeyboardState_constructDispatch(Core_KeyboardState_Dispatch* SELF)
 {/*Intentionally empty.*/}
 
-Core_Result dx_keyboard_state_construct(dx_keyboard_state* SELF) {
-  Core_BeginConstructor(dx_keyboard_state);
-  for (Core_Size i = 0; i < dx_keyboard_state_configuration_number_of_keyboard_keys; ++i) {
+Core_Result Core_KeyboardState_construct(Core_KeyboardState* SELF) {
+  Core_BeginConstructor(Core_KeyboardState);
+  for (Core_Size i = 0; i < Core_KeyboardState_NumberOfKeyboardKeys; ++i) {
     SELF->state[i] = false;
   }
-  Core_EndConstructor(dx_keyboard_state);
+  Core_EndConstructor(Core_KeyboardState);
 }
 
-Core_Result dx_keyboard_state_create(dx_keyboard_state** RETURN) {
-  DX_CREATE_PREFIX(dx_keyboard_state);
-  if (dx_keyboard_state_construct(SELF)) {
+Core_Result Core_KeyboardState_create(Core_KeyboardState** RETURN) {
+  DX_CREATE_PREFIX(Core_KeyboardState);
+  if (Core_KeyboardState_construct(SELF)) {
     CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
@@ -29,8 +29,8 @@ Core_Result dx_keyboard_state_create(dx_keyboard_state** RETURN) {
   return Core_Success;
 }
 
-Core_Result dx_keyboard_state_get_state(Core_Boolean* RETURN, dx_keyboard_state* SELF, Core_KeyboardKey key) {
-  if (!RETURN || !SELF || key < 0 || key >= dx_keyboard_state_configuration_number_of_keyboard_keys) {
+Core_Result Core_KeyboardState_getState(Core_Boolean* RETURN, Core_KeyboardState* SELF, Core_KeyboardKey key) {
+  if (!RETURN || !SELF || key < 0 || key >= Core_KeyboardState_NumberOfKeyboardKeys) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
   }
@@ -38,8 +38,8 @@ Core_Result dx_keyboard_state_get_state(Core_Boolean* RETURN, dx_keyboard_state*
   return Core_Success;
 }
 
-Core_Result dx_keyboard_state_set_state(dx_keyboard_state* SELF, Core_KeyboardKey key, Core_Boolean state) {
-  if (!SELF || key < 0 || key >= dx_keyboard_state_configuration_number_of_keyboard_keys) {
+Core_Result Core_KeyboardState_setState(Core_KeyboardState* SELF, Core_KeyboardKey key, Core_Boolean state) {
+  if (!SELF || key < 0 || key >= Core_KeyboardState_NumberOfKeyboardKeys) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
   }
@@ -47,8 +47,8 @@ Core_Result dx_keyboard_state_set_state(dx_keyboard_state* SELF, Core_KeyboardKe
   return Core_Success;
 }
 
-Core_Result dx_keyboard_state_clear(dx_keyboard_state* SELF) {
-  for (Core_Size i = 0; i < dx_keyboard_state_configuration_number_of_keyboard_keys; ++i) {
+Core_Result Core_KeyboardState_clear(Core_KeyboardState* SELF) {
+  for (Core_Size i = 0; i < Core_KeyboardState_NumberOfKeyboardKeys; ++i) {
     SELF->state[i] = false;
   }
   return Core_Success;

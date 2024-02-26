@@ -17,9 +17,9 @@ static void _on_expected_key_key_added(void** a);
 
 static void _on_expected_key_key_removed(void** a);
 
-static Core_Result _on_hash_expected_key_key(Core_Size* RETURN, void** a);
+static Core_Result _on_hash_expected_key_key(Core_Size* RETURN, Core_String** a);
 
-static Core_Result _on_compare_expected_key_keys(Core_Boolean* RETURN, void** a, void** b);
+static Core_Result _on_compare_expected_key_keys(Core_Boolean* RETURN, Core_String** a, Core_String** b);
 
 static Core_Result _initialize_expected_keys(dx_adl_type_handlers_mesh_instance* SELF);
 

@@ -5,10 +5,12 @@ Core_defineObjectType("Core.Visuals.System",
                       Core_System);
 
 static void Core_Visuals_System_destruct(Core_Visuals_System* SELF) {
-  CORE_UNREFERENCE(SELF->mouse_state);
-  SELF->mouse_state = NULL;
-  CORE_UNREFERENCE(SELF->keyboard_state);
-  SELF->keyboard_state = NULL;
+  CORE_UNREFERENCE(SELF->mouseState);
+  SELF->mouseState = NULL;
+  CORE_UNREFERENCE(SELF->keyboardState);
+  SELF->keyboardState = NULL;
+  CORE_UNREFERENCE(SELF->messageQueue);
+  SELF->messageQueue = NULL;
 }
 
 static void Core_Visuals_System_constructDispatch(Core_Visuals_System_Dispatch* SELF)
@@ -17,15 +19,22 @@ static void Core_Visuals_System_constructDispatch(Core_Visuals_System_Dispatch* 
 Core_Result Core_Visuals_System_construct(Core_Visuals_System* SELF, Core_MessageQueue* messageQueue) {
   Core_BeginConstructor(Core_Visuals_System);
   SELF->messageQueue = messageQueue;
+  CORE_REFERENCE(SELF->messageQueue);
   if (Core_System_construct(CORE_SYSTEM(SELF))) {
+    CORE_UNREFERENCE(SELF->messageQueue);
+    SELF->messageQueue = NULL;
     return Core_Failure;
   }
-  if (dx_keyboard_state_create(&SELF->keyboard_state)) {
+  if (Core_KeyboardState_create(&SELF->keyboardState)) {
+    CORE_UNREFERENCE(SELF->messageQueue);
+    SELF->messageQueue = NULL;
     return Core_Failure;
   }
-  if (dx_mouse_state_create(&SELF->mouse_state)) {
-    CORE_UNREFERENCE(SELF->keyboard_state);
-    SELF->keyboard_state = NULL;
+  if (Core_MouseState_create(&SELF->mouseState)) {
+    CORE_UNREFERENCE(SELF->keyboardState);
+    SELF->keyboardState = NULL;
+    CORE_UNREFERENCE(SELF->messageQueue);
+    SELF->messageQueue = NULL;
     return Core_Failure;
   }
   Core_EndConstructor(Core_Visuals_System);

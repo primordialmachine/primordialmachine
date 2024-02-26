@@ -18,10 +18,10 @@ struct Core_Visuals_System {
   Core_MessageQueue* messageQueue;
   /// @brief The state of the keyboard.
   /// @todo This should be window-specific.
-  dx_keyboard_state* keyboard_state;
+  Core_KeyboardState* keyboardState;
   /// @brief The state of the mouse.
   /// @todo This should be window-specific.
-  dx_mouse_state* mouse_state;
+  Core_MouseState* mouseState;
 };
 
 static inline Core_Visuals_System_Dispatch* CORE_VISUALS_SYSTEM_DISPATCH(void* p) {

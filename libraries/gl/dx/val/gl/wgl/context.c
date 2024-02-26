@@ -10,17 +10,17 @@ static Core_Result link(void** RETURN, char const* name);
 
 static Core_Result isExtensionSupported(Core_Boolean* RETURN, dx_gl_wgl_context* SELF, char const* extension);
 
-static Core_Result enter_frame(dx_gl_wgl_context* SELF);
+static Core_Result enterFrame(dx_gl_wgl_context* SELF);
 
-static Core_Result leave_frame(dx_gl_wgl_context* SELF);
+static Core_Result leaveFrame(dx_gl_wgl_context* SELF);
 
-static Core_Result get_canvas_size(dx_gl_wgl_context* SELF, Core_Integer32* width, Core_Integer32* height);
+static Core_Result getCanvasSize(dx_gl_wgl_context* SELF, Core_Integer32* width, Core_Integer32* height);
 
-static Core_Result get_vsync_enabled(Core_Boolean* RETURN, dx_gl_wgl_context* SELF);
+static Core_Result getVsyncEnabled(Core_Boolean* RETURN, dx_gl_wgl_context* SELF);
 
-static Core_Result set_vsync_enabled(dx_gl_wgl_context* SELF, Core_Boolean is_vsync_enabled);
+static Core_Result setVsyncEnabled(dx_gl_wgl_context* SELF, Core_Boolean is_vsync_enabled);
 
-static Core_Result get_canvas_dpi(dx_gl_wgl_context* SELF, Core_Integer32* x, Core_Integer32* y);
+static Core_Result getCanvasDpi(dx_gl_wgl_context* SELF, Core_Integer32* x, Core_Integer32* y);
 
 static Core_Result link(void** RETURN, char const* name) {
   void* p = (void*)wglGetProcAddress(name);
@@ -59,7 +59,7 @@ static Core_Result isExtensionSupported(Core_Boolean* RETURN, dx_gl_wgl_context*
   return Core_Success;
 }
 
-static Core_Result enter_frame(dx_gl_wgl_context* SELF) {
+static Core_Result enterFrame(dx_gl_wgl_context* SELF) {
   Core_Type* parentType = NULL;
   Core_Type_getParent(&parentType, CORE_OBJECT(SELF)->type);
   dx_gl_wgl_context_Dispatch* dispatch = NULL;
@@ -72,27 +72,27 @@ static Core_Result enter_frame(dx_gl_wgl_context* SELF) {
   return Core_Success;
 }
 
-static Core_Result leave_frame(dx_gl_wgl_context* SELF) {
+static Core_Result leaveFrame(dx_gl_wgl_context* SELF) {
   DX_VAL_GL_CONTEXT(SELF)->glFlush();
   SwapBuffers(SELF->window->dc);
   return Core_Success;
 }
 
-static Core_Result get_canvas_size(dx_gl_wgl_context* SELF, Core_Integer32* width, Core_Integer32* height) {
+static Core_Result getCanvasSize(dx_gl_wgl_context* SELF, Core_Integer32* width, Core_Integer32* height) {
   return dx_val_gl_window_getCanvasSize(DX_VAL_GL_WINDOW(SELF->window), width, height);
 }
 
-static Core_Result get_vsync_enabled(Core_Boolean* RETURN, dx_gl_wgl_context* SELF) {
+static Core_Result getVsyncEnabled(Core_Boolean* RETURN, dx_gl_wgl_context* SELF) {
   *RETURN = (1 == SELF->functions.wglGetSwapIntervalEXT());
   return Core_Success;
 }
 
-static Core_Result set_vsync_enabled(dx_gl_wgl_context* SELF, Core_Boolean is_vsync_enabled) {
+static Core_Result setVsyncEnabled(dx_gl_wgl_context* SELF, Core_Boolean is_vsync_enabled) {
   SELF->functions.wglSwapIntervalEXT(is_vsync_enabled ? 1 : 0);
   return Core_Success;
 }
 
-static Core_Result get_canvas_dpi(dx_gl_wgl_context* SELF, Core_Integer32* x, Core_Integer32* y) {
+static Core_Result getCanvasDpi(dx_gl_wgl_context* SELF, Core_Integer32* x, Core_Integer32* y) {
   UINT z = GetDpiForWindow(SELF->window->wnd);
   *x = z;
   *y = z;
@@ -148,12 +148,12 @@ static void dx_gl_wgl_context_destruct(dx_gl_wgl_context* SELF) {
 }
 
 static void dx_gl_wgl_context_constructDispatch(dx_gl_wgl_context_Dispatch* SELF) {
-  CORE_VISUALS_CONTEXT_DISPATCH(SELF)->enterFrame = (Core_Result (*)(Core_Visuals_Context*)) & enter_frame;
-  CORE_VISUALS_CONTEXT_DISPATCH(SELF)->leaveFrame = (Core_Result(*)(Core_Visuals_Context*)) & leave_frame;
-  CORE_VISUALS_CONTEXT_DISPATCH(SELF)->getCanvasSize = (Core_Result(*)(Core_Visuals_Context*, Core_Integer32*, Core_Integer32*)) & get_canvas_size;
-  CORE_VISUALS_CONTEXT_DISPATCH(SELF)->getVsyncEnabled = (Core_Result(*)(Core_Boolean*, Core_Visuals_Context*)) & get_vsync_enabled;
-  CORE_VISUALS_CONTEXT_DISPATCH(SELF)->setVsyncEnabled = (Core_Result(*)(Core_Visuals_Context*, Core_Boolean)) & set_vsync_enabled;
-  CORE_VISUALS_CONTEXT_DISPATCH(SELF)->getCanvasDpi = (Core_Result(*)(Core_Visuals_Context*, Core_Integer32*, Core_Integer32*)) & get_canvas_dpi;
+  CORE_VISUALS_CONTEXT_DISPATCH(SELF)->enterFrame = (Core_Result (*)(Core_Visuals_Context*)) & enterFrame;
+  CORE_VISUALS_CONTEXT_DISPATCH(SELF)->leaveFrame = (Core_Result(*)(Core_Visuals_Context*)) & leaveFrame;
+  CORE_VISUALS_CONTEXT_DISPATCH(SELF)->getCanvasSize = (Core_Result(*)(Core_Visuals_Context*, Core_Integer32*, Core_Integer32*)) & getCanvasSize;
+  CORE_VISUALS_CONTEXT_DISPATCH(SELF)->getVsyncEnabled = (Core_Result(*)(Core_Boolean*, Core_Visuals_Context*)) & getVsyncEnabled;
+  CORE_VISUALS_CONTEXT_DISPATCH(SELF)->setVsyncEnabled = (Core_Result(*)(Core_Visuals_Context*, Core_Boolean)) & setVsyncEnabled;
+  CORE_VISUALS_CONTEXT_DISPATCH(SELF)->getCanvasDpi = (Core_Result(*)(Core_Visuals_Context*, Core_Integer32*, Core_Integer32*)) & getCanvasDpi;
 }
 
 Core_Result dx_gl_wgl_context_create(dx_gl_wgl_context** RETURN, Core_Val_Gl_Wgl_Window* window) {

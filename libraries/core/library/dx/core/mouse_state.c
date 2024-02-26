@@ -1,28 +1,28 @@
 #include "dx/core/mouse_state.h"
 
-Core_defineObjectType("dx.mouse_state",
-                      dx_mouse_state,
+Core_defineObjectType("Core.MouseState",
+                      Core_MouseState,
                       Core_Object);
 
-static void dx_mouse_state_destruct(dx_mouse_state* SELF)
+static void Core_MouseState_destruct(Core_MouseState* SELF)
 {/*Intentionally empty.*/}
 
-static void dx_mouse_state_constructDispatch(dx_mouse_state_Dispatch* SELF)
+static void Core_MouseState_constructDispatch(Core_MouseState_Dispatch* SELF)
 {/*Intentionally empty.*/}
 
-Core_Result dx_mouse_state_construct(dx_mouse_state* SELF) {
-  Core_BeginConstructor(dx_mouse_state);
+Core_Result Core_MouseState_construct(Core_MouseState* SELF) {
+  Core_BeginConstructor(Core_MouseState);
   SELF->x = 0.f;
   SELF->y = 0.f;
-  for (Core_Size i = 0; i < dx_mouse_state_configuration_number_of_mouse_buttons; ++i) {
+  for (Core_Size i = 0; i < Core_MouseState_NumberOfMouseButtons; ++i) {
     SELF->state[i] = false;
   }
-  Core_EndConstructor(dx_mouse_state);
+  Core_EndConstructor(Core_MouseState);
 }
 
-Core_Result dx_mouse_state_create(dx_mouse_state** RETURN) {
-  DX_CREATE_PREFIX(dx_mouse_state);
-  if (dx_mouse_state_construct(SELF)) {
+Core_Result Core_MouseState_create(Core_MouseState** RETURN) {
+  DX_CREATE_PREFIX(Core_MouseState);
+  if (Core_MouseState_construct(SELF)) {
     CORE_UNREFERENCE(SELF);
     SELF = NULL;
     return Core_Failure;
@@ -31,17 +31,23 @@ Core_Result dx_mouse_state_create(dx_mouse_state** RETURN) {
   return Core_Success;
 }
 
-Core_Result dx_mouse_state_get_button_state(Core_Boolean* RETURN, dx_mouse_state* SELF, Core_MouseButton button) {
+Core_Result Core_MouseState_getButtonState(Core_Boolean* RETURN, Core_MouseState* SELF, Core_MouseButton button) {
   *RETURN = SELF->state[(Core_Size)button];
   return Core_Success;
 }
 
-Core_Result dx_mouse_state_set_button_state(dx_mouse_state* SELF, Core_MouseButton button, Core_Boolean state) {
+Core_Result Core_MouseState_setButtonState(Core_MouseState* SELF, Core_MouseButton button, Core_Boolean state) {
   SELF->state[(Core_Size)button] = state;
   return Core_Success;
 }
 
-Core_Result dx_mouse_state_set_pointer_state(dx_mouse_state* SELF, Core_Real32 x, Core_Real32 y) {
+Core_Result Core_MouseState_getPointerState(Core_MouseState* SELF, Core_Real32 *x, Core_Real32 *y) {
+  *x = SELF->x;
+  *y = SELF->y;
+  return Core_Success;
+}
+
+Core_Result Core_MouseState_setPointerState(Core_MouseState* SELF, Core_Real32 x, Core_Real32 y) {
   SELF->x = x;
   SELF->y = y;
   return Core_Success;

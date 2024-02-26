@@ -19,15 +19,15 @@ Core_Result Core_setFileContents(Core_String* pathName, Core_Natural8 const* byt
                              Core_NonExistingFilePolicy_Create)) {
     return Core_Failure;
   }
-  static_assert(MAXDWORD < Core_Size_Greatest, "<environment not supported");
   Core_Size bytesWritten = 0;
   while (bytesWritten < numberOfBytes) {
-    DWORD bytesWrittenNow;
-    if (!WriteFile(fileHandle->hFileHandle, bytes + bytesWritten, numberOfBytes - bytesWritten, &bytesWrittenNow, NULL)) {
+    DWORD bytesWrittenNowDword;
+    DWORD bytesToWriteDword = numberOfBytes - bytesWritten;
+    if (!WriteFile(fileHandle->hFileHandle, bytes + bytesWritten, bytesToWriteDword, &bytesWrittenNowDword, NULL)) {
       Core_setError(Core_Error_EnvironmentFailed);
       return Core_Failure;
     }
-    bytesWritten += bytesWrittenNow;
+    bytesWritten += (Core_Size)bytesWrittenNowDword;
   }
   Core_FileHandle_destroy(fileHandle);
   fileHandle = NULL;

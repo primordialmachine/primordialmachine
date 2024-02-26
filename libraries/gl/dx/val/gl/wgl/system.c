@@ -37,11 +37,9 @@ __declspec(dllexport) DWORD NvOptimusEnablement = 1;
 // with up-to-date drivers
 __declspec(dllexport) int AmdPowerXpressRequestHighPerformance = 1;
 
-static Core_Result gl_wgl_open_window_internal(Core_Val_Gl_Wgl_Window** window, Core_Result(*init_wgl)(Core_Val_Gl_Wgl_Window*));
+static Core_Result gl_wgl_open_window_internal(Core_Val_Gl_Wgl_Window** window);
 
 static void gl_wgl_close_window_internal(Core_Val_Gl_Wgl_Window* window);
-
-static Core_Result gl_wgl_init_wgl(Core_Val_Gl_Wgl_Window* window);
 
 static Core_Result gl_wgl_open_window();
 
@@ -56,7 +54,7 @@ static void gl_wgl_close_window_internal(Core_Val_Gl_Wgl_Window* window) {
   window = NULL;
 }
 
-static Core_Result gl_wgl_open_window_internal(Core_Val_Gl_Wgl_Window** window, Core_Result(*init_wgl)(Core_Val_Gl_Wgl_Window*)) {
+static Core_Result gl_wgl_open_window_internal(Core_Val_Gl_Wgl_Window** window) {
   Core_Application* application = NULL;
   if (Core_Application_get(&application)) {
     return Core_Failure;
@@ -69,13 +67,6 @@ static Core_Result gl_wgl_open_window_internal(Core_Val_Gl_Wgl_Window** window, 
   }
   CORE_UNREFERENCE(application);
   application = NULL;
-  if (init_wgl) {
-    if (init_wgl(window1)) {
-      CORE_UNREFERENCE(window1);
-      window1 = NULL;
-      return Core_Failure;
-    }
-  }
 
   ShowWindow(window1->wnd, SW_SHOWNORMAL);
   UpdateWindow(window1->wnd);
@@ -90,7 +81,7 @@ static Core_Result gl_wgl_open_window() {
     return Core_Failure;
   }
   Core_Val_Gl_Wgl_Window* window;
-  if (gl_wgl_open_window_internal(&window, &gl_wgl_init_wgl)) {
+  if (gl_wgl_open_window_internal(&window)) {
     return Core_Failure;
   }
   CloseHelperWindow();
@@ -578,10 +569,6 @@ static Core_Result enumeratePixelFormats(Core_Val_Gl_Wgl_Window* window) {
   return Core_Success;
 }
 
-static Core_Result gl_wgl_init_wgl(Core_Val_Gl_Wgl_Window* window) {
-  return Core_Success;
-}
-
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 Core_defineObjectType("Core.Val.Gl.Wgl.System",
@@ -616,9 +603,9 @@ static Core_Result startup(Core_Val_Gl_Wgl_System* SELF);
 
 static Core_Result shutdown(Core_Val_Gl_Wgl_System* SELF);
 
-static Core_Result get_context(dx_gl_wgl_context** RETURN, Core_Val_Gl_Wgl_System* SELF);
+static Core_Result getContext(dx_gl_wgl_context** RETURN, Core_Val_Gl_Wgl_System* SELF);
 
-static Core_Result get_window(Core_Val_Gl_Wgl_Window** RETURN, Core_Val_Gl_Wgl_System* SELF);
+static Core_Result getWindow(Core_Val_Gl_Wgl_Window** RETURN, Core_Val_Gl_Wgl_System* SELF);
 
 static Core_Result map_mouse_button(Core_MouseButton* RETURN, Core_Val_Gl_Wgl_System* SELF, UINT msg, WPARAM wparam, LPARAM lparam) {
   switch (msg) {
@@ -799,33 +786,33 @@ static Core_Result map_keyboard_key(Core_KeyboardKey* RETURN, Core_Val_Gl_Wgl_Sy
 static Core_Result get_modifiers(uint8_t* RETURN, Core_Val_Gl_Wgl_System* SELF) {
   uint8_t modifiers = 0;
   Core_Boolean state;
-  dx_keyboard_state* keyboard_state = CORE_VISUALS_SYSTEM(SELF)->keyboard_state;
+  Core_KeyboardState* keyboard_state = CORE_VISUALS_SYSTEM(SELF)->keyboardState;
   //
-  if (dx_keyboard_state_get_state(&state, keyboard_state, Core_KeyboardKey_LeftShift)) {
+  if (Core_KeyboardState_getState(&state, keyboard_state, Core_KeyboardKey_LeftShift)) {
     return Core_Failure;
   }
   if (state) {
     modifiers |= Core_ModifierKeys_LeftShift;
   }
-  dx_keyboard_state_get_state(&state, keyboard_state, Core_KeyboardKey_RightShift);
+  Core_KeyboardState_getState(&state, keyboard_state, Core_KeyboardKey_RightShift);
   if (state) {
     modifiers |= Core_ModifierKeys_RightShift;
   }
   //
-  dx_keyboard_state_get_state(&state, keyboard_state, Core_KeyboardKey_LeftControl);
+  Core_KeyboardState_getState(&state, keyboard_state, Core_KeyboardKey_LeftControl);
   if (state) {
     modifiers |= Core_ModifierKeys_LeftControl;
   }
-  dx_keyboard_state_get_state(&state, keyboard_state, Core_KeyboardKey_RightControl);
+  Core_KeyboardState_getState(&state, keyboard_state, Core_KeyboardKey_RightControl);
   if (state) {
     modifiers |= Core_ModifierKeys_RightControl;
   }
   //
-  dx_keyboard_state_get_state(&state, keyboard_state, Core_KeyboardKey_LeftMenu);
+  Core_KeyboardState_getState(&state, keyboard_state, Core_KeyboardKey_LeftMenu);
   if (state) {
     modifiers |= Core_ModifierKeys_LeftMenu;
   }
-  dx_keyboard_state_get_state(&state, keyboard_state, Core_KeyboardKey_RightMenu);
+  Core_KeyboardState_getState(&state, keyboard_state, Core_KeyboardKey_RightMenu);
   if (state) {
     modifiers |= Core_ModifierKeys_RightMenu;
   }
@@ -1059,14 +1046,14 @@ Core_Result Core_Val_Gl_Wgl_System_onMouseButtonMessage(Core_Val_Gl_Wgl_System* 
     return Core_Failure;
   }
   Core_Boolean old;
-  if (dx_mouse_state_get_button_state(&old, CORE_VISUALS_SYSTEM(SELF)->mouse_state, mouse_button)) {
+  if (Core_MouseState_getButtonState(&old, CORE_VISUALS_SYSTEM(SELF)->mouseState, mouse_button)) {
     return Core_Failure;
   }
   Core_Boolean new = (msg == WM_LBUTTONDOWN || msg == WM_MBUTTONDOWN || msg == WM_RBUTTONDOWN || msg == WM_XBUTTONDOWN)
     ? true
     : false;
-  dx_mouse_state_set_pointer_state(CORE_VISUALS_SYSTEM(SELF)->mouse_state, x, y);
-  dx_mouse_state_set_button_state(CORE_VISUALS_SYSTEM(SELF)->mouse_state, mouse_button, new);
+  Core_MouseState_setPointerState(CORE_VISUALS_SYSTEM(SELF)->mouseState, x, y);
+  Core_MouseState_setButtonState(CORE_VISUALS_SYSTEM(SELF)->mouseState, mouse_button, new);
   if (old != new) {
     if (new) {
       if (Core_Visuals_System_emitMouseButtonPressedMessage(CORE_VISUALS_SYSTEM(SELF), mouse_button, x, y, modifiers)) {
@@ -1088,7 +1075,7 @@ Core_Result Core_Val_Gl_Wgl_System_onMousePointerMessage(Core_Val_Gl_Wgl_System*
   if (get_modifiers(&modifiers, SELF)) {
     return Core_Failure;
   }
-  dx_mouse_state_set_pointer_state(CORE_VISUALS_SYSTEM(SELF)->mouse_state, x, y);
+  Core_MouseState_setPointerState(CORE_VISUALS_SYSTEM(SELF)->mouseState, x, y);
   if (Core_Visuals_System_emitMousePointerMovedMessage(CORE_VISUALS_SYSTEM(SELF), x, y, modifiers)) {
     return Core_Failure;
   }
@@ -1105,11 +1092,11 @@ Core_Result Core_Val_Gl_Wgl_System_onKeyboardKeyMessage(Core_Val_Gl_Wgl_System* 
     return Core_Failure;
   }
   Core_Boolean old;
-  if (dx_keyboard_state_get_state(&old, CORE_VISUALS_SYSTEM(SELF)->keyboard_state, keyboard_key)) {
+  if (Core_KeyboardState_getState(&old, CORE_VISUALS_SYSTEM(SELF)->keyboardState, keyboard_key)) {
     return Core_Failure;
   }
   Core_Boolean new = msg == WM_KEYDOWN ? true : false;
-  dx_keyboard_state_set_state(CORE_VISUALS_SYSTEM(SELF)->keyboard_state, keyboard_key, new);
+  Core_KeyboardState_setState(CORE_VISUALS_SYSTEM(SELF)->keyboardState, keyboard_key, new);
   if (old != new) {
     if (msg == WM_KEYUP) {
       if (Core_Visuals_System_emitKeyboardKeyReleasedMessage(CORE_VISUALS_SYSTEM(SELF), keyboard_key, modifiers)) {

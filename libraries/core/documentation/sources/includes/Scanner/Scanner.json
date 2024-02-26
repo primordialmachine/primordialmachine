@@ -10,7 +10,7 @@
     "The base of a lexical analysis (aka scanner, aka lexer, aka lexical analyzer, ...).@{newline()}",
     "A lexical analysis ensures a Byte sequence is an UTF-8 Byte sequence and splits the symbols into words (aka tokens, ...).@{newline()}",
     "A lexical analysis provides",
-    "<ul>",
+    "<ul style=\"list-style: square inside;\">",
     "  <li>the Bytes of the word,</li>",
     "  <li>the start offset and the end offset, in Bytes, of the word.</li>",
     "<ul>"

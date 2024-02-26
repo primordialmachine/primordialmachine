@@ -27,8 +27,7 @@ struct Core_Message_Dispatch {
   Core_Object_Dispatch _parent;
 };
 
-/// @constructor{Core_Message}
-/// @param timeStamp The time stamp of this message. A time stamp value as for example retrieved by Core_getNow().
+/* http://localhost/core#core-message-construct */
 Core_Result Core_Message_construct(Core_Message* SELF, Core_Natural64 timeStamp);
 
 #endif // CORE_MESSAGE_H_INCLUDED
