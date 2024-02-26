@@ -64,6 +64,8 @@ list(APPEND ${name}.headers "dx/fps_counter.h")
 # "val" folder.
 list(APPEND ${name}.sources "dx/val/system.c")
 list(APPEND ${name}.headers "dx/val/system.h")
+list(APPEND ${name}.sources "dx/val/system_configuration.c")
+list(APPEND ${name}.headers "dx/val/system_configuration.h")
 list(APPEND ${name}.sources "dx/val/context.c")
 list(APPEND ${name}.headers "dx/val/context.h")
 list(APPEND ${name}.sources "dx/val/texture.c")

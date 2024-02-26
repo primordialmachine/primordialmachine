@@ -1,0 +1,21 @@
+/* Definition of a "unit". */
+{
+  type : "Unit",
+  properties : [
+    {
+      name : "prototype",
+      type : "UnitPrototype",
+      description : "The unit prototype this unit is based on",
+    },
+    {
+      name : "health",
+      type : "Integer",
+      description : "The health of the unit"
+    },
+    {
+      name : "position",
+      type : "Vector3",
+      description : "The position of the unit"
+    }
+  ]
+}

@@ -38,6 +38,8 @@ static char const* PATHNAMES[] = {
   //
   "./assets/scenes/day9.cube.loaded-texture.adl",
   "./assets/scenes/day9.octahedron.loaded-texture.adl",
+  //
+  "./assets/scenes/day10.font.adl",
 };
 
 static Core_Size const NUMBER_OF_PATHNAMES = sizeof(PATHNAMES) / sizeof(char const*);
@@ -230,7 +232,7 @@ static Core_Result print_info(dx_default_application_presenter* SELF) {
     if (Core_String_create(&f, cmds[i], strlen(cmds[i]))) {
       return Core_Failure;
     }
-    if (dx_cl_interpreter_execute(SELF->cl_interpreter, DX_APPLICATION_PRESENTER(SELF), f)) {
+    if (dx_cl_interpreter_execute(SELF->cl_interpreter, CORE_APPLICATIONPRESENTER(SELF), f)) {
       CORE_UNREFERENCE(f);
       f = NULL;
       return Core_Failure;
@@ -589,7 +591,7 @@ static Core_Result quit_requested(Core_Boolean* RETURN, dx_default_application_p
 
 Core_defineObjectType("dx.default_application_presenter",
                       dx_default_application_presenter,
-                      dx_application_presenter);
+                      Core_ApplicationPresenter);
 
 static Core_Result create_standard_ui(dx_default_application_presenter* SELF, Core_Application* application) {
   //
@@ -647,18 +649,18 @@ static void dx_default_application_presenter_destruct(dx_default_application_pre
 }
 
 static void dx_default_application_presenter_constructDispatch(dx_default_application_presenter_Dispatch* SELF) {
-  DX_APPLICATION_PRESENTER_DISPATCH(SELF)->run = (Core_Result(*)(dx_application_presenter*)) & run;
-  DX_APPLICATION_PRESENTER_DISPATCH(SELF)->shutdown = (Core_Result(*)(dx_application_presenter*)) &shutdown;
-  DX_APPLICATION_PRESENTER_DISPATCH(SELF)->startup = (Core_Result(*)(dx_application_presenter*)) &startup;
-  DX_APPLICATION_PRESENTER_DISPATCH(SELF)->get_console = (Core_Result(*)(dx_console**, dx_application_presenter*)) & get_console;
-  DX_APPLICATION_PRESENTER_DISPATCH(SELF)->get_cl_interpreter = (Core_Result(*)(dx_cl_interpreter**, dx_application_presenter*)) & get_cl_interpreter;
-  DX_APPLICATION_PRESENTER_DISPATCH(SELF)->request_quit = (Core_Result(*)(dx_application_presenter*)) & request_quit;
-  DX_APPLICATION_PRESENTER_DISPATCH(SELF)->quit_requested = (Core_Result(*)(Core_Boolean*, dx_application_presenter*)) & quit_requested;
+  CORE_APPLICATIONPRESENTER_DISPATCH(SELF)->run = (Core_Result(*)(Core_ApplicationPresenter*)) & run;
+  CORE_APPLICATIONPRESENTER_DISPATCH(SELF)->shutdown = (Core_Result(*)(Core_ApplicationPresenter*)) &shutdown;
+  CORE_APPLICATIONPRESENTER_DISPATCH(SELF)->startup = (Core_Result(*)(Core_ApplicationPresenter*)) &startup;
+  CORE_APPLICATIONPRESENTER_DISPATCH(SELF)->get_console = (Core_Result(*)(dx_console**, Core_ApplicationPresenter*)) & get_console;
+  CORE_APPLICATIONPRESENTER_DISPATCH(SELF)->get_cl_interpreter = (Core_Result(*)(dx_cl_interpreter**, Core_ApplicationPresenter*)) & get_cl_interpreter;
+  CORE_APPLICATIONPRESENTER_DISPATCH(SELF)->request_quit = (Core_Result(*)(Core_ApplicationPresenter*)) & request_quit;
+  CORE_APPLICATIONPRESENTER_DISPATCH(SELF)->quit_requested = (Core_Result(*)(Core_Boolean*, Core_ApplicationPresenter*)) & quit_requested;
 }
 
 Core_Result dx_default_application_presenter_construct(dx_default_application_presenter* SELF, Core_Application* application, dx_cl_interpreter* cl_interpreter, Core_MessageQueue* message_queue) {
   DX_CONSTRUCT_PREFIX(dx_default_application_presenter);
-  if (dx_application_presenter_construct(DX_APPLICATION_PRESENTER(SELF))) {
+  if (Core_ApplicationPresenter_construct(CORE_APPLICATIONPRESENTER(SELF))) {
     return Core_Failure;
   }
   SELF->scene_presenters = NULL;

@@ -1,17 +1,17 @@
 #include "dx/application_presenter.h"
 
-Core_defineObjectType("dx.application_presenter",
-                      dx_application_presenter,
+Core_defineObjectType("Core.ApplicationPresenter",
+                      Core_ApplicationPresenter,
                       Core_Object);
 
-static void dx_application_presenter_destruct(dx_application_presenter* SELF)
+static void Core_ApplicationPresenter_destruct(Core_ApplicationPresenter* SELF)
 {/*Intentionally empty.*/}
 
-static void dx_application_presenter_constructDispatch(dx_application_presenter_Dispatch* SELF)
+static void Core_ApplicationPresenter_constructDispatch(Core_ApplicationPresenter_Dispatch* SELF)
 {/*Intentionally empty.*/}
 
-Core_Result dx_application_presenter_construct(dx_application_presenter* SELF) {
-  DX_CONSTRUCT_PREFIX(dx_application_presenter);
+Core_Result Core_ApplicationPresenter_construct(Core_ApplicationPresenter* SELF) {
+  DX_CONSTRUCT_PREFIX(Core_ApplicationPresenter);
   CORE_OBJECT(SELF)->type = TYPE;
   return Core_Success;
 }

@@ -62,7 +62,7 @@ static Core_Result on_hash_key(Core_Size* RETURN, Core_String** a);
 
 static Core_Result on_compare_keys(Core_Boolean* RETURN, Core_String** a, Core_String** b);
 
-static Core_Result help(dx_application_presenter* application_presenter);
+static Core_Result help(Core_ApplicationPresenter* application_presenter);
 
 static void on_key_added(Core_Object** a) {
   DX_DEBUG_ASSERT(NULL != *a);
@@ -92,7 +92,7 @@ static Core_Result on_compare_keys(Core_Boolean* RETURN, Core_String** a, Core_S
   return Core_String_isEqualTo(RETURN, *a, *b);
 }
 
-static Core_Result help(dx_application_presenter* application_presenter) {
+static Core_Result help(Core_ApplicationPresenter* application_presenter) {
   Core_String* NEWLINE = NULL,
            * INDENT = NULL;
   if (Core_String_create(&NEWLINE, "\n", sizeof("\n") - 1)) {
@@ -105,7 +105,7 @@ static Core_Result help(dx_application_presenter* application_presenter) {
   }
 
   dx_cl_interpreter* cl_interpreter = NULL;
-  if (dx_application_presenter_get_cl_interpreter(&cl_interpreter, application_presenter)) {
+  if (Core_ApplicationPresenter_get_cl_interpreter(&cl_interpreter, application_presenter)) {
     CORE_UNREFERENCE(INDENT);
     INDENT = NULL;
     CORE_UNREFERENCE(NEWLINE);
@@ -125,7 +125,7 @@ static Core_Result help(dx_application_presenter* application_presenter) {
   CORE_UNREFERENCE(cl_interpreter);
   cl_interpreter = NULL;
   dx_console* console = NULL;
-  if (dx_application_presenter_get_console(&console, application_presenter)) {
+  if (Core_ApplicationPresenter_get_console(&console, application_presenter)) {
     CORE_UNREFERENCE(procedures);
     procedures = NULL;
     CORE_UNREFERENCE(INDENT);
@@ -279,7 +279,7 @@ Core_Result dx_cl_interpreter_create(dx_cl_interpreter** RETURN) {
   return Core_Success;
 }
 
-Core_Result dx_cl_interpreter_execute(dx_cl_interpreter* SELF, dx_application_presenter* application_presenter, Core_String* name) {
+Core_Result dx_cl_interpreter_execute(dx_cl_interpreter* SELF, Core_ApplicationPresenter* application_presenter, Core_String* name) {
   dx_cl_interpreter_procedure* p = NULL;
   if (Core_InlineHashMapPP_get((Core_InlineHashMapPP_Value*)&p, &SELF->procedures, name)) {
     return Core_Failure;

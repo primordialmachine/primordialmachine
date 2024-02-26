@@ -4,9 +4,9 @@
 #include "dx/player/default_application_presenter.h"
 
 /// @brief Get the singleton application presenter object.
-/// @param RETURN A pointer to a <code>dx_application_presenter*</code> object.
+/// @param RETURN A pointer to a <code>Core_ApplicationPresenter*</code> object.
 /// @success
-/// <code>*RETURN</code> was assigned a pointer to the <code>dx_application_presenter</code> singleton object.
+/// <code>*RETURN</code> was assigned a pointer to the <code>Core_ApplicationPresenter</code> singleton object.
 /// The caller acquired a reference to that object.
 /// @method-call
 /// @warning
@@ -16,7 +16,7 @@
 /// - acquire a reference to the application presenter when required and
 /// - relinquish that reference asap
 /// to ensure cycles are only temporay.
-Core_Result dx_application_presenter_get(dx_application_presenter** RETURN);
+Core_Result dx_application_presenter_get(Core_ApplicationPresenter** RETURN);
 
 /// @brief Run the engine with the specified command-line arguments. Does not return until the application terminates.
 /// @param argc The number of command-line arguments.

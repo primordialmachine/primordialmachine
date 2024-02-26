@@ -17,9 +17,9 @@ static void _on_expected_key_key_added(void** a);
 
 static void _on_expected_key_key_removed(void** a);
 
-static Core_Result _on_hash_expected_key_key(Core_Size* RETURN, void** a);
+static Core_Result _on_hash_expected_key_key(Core_Size* RETURN, Core_String** a);
 
-static Core_Result _on_compare_expected_key_keys(Core_Boolean* RETURN, void** a, void** b);
+static Core_Result _on_compare_expected_key_keys(Core_Boolean* RETURN, Core_String** a, Core_String** b);
 
 static Core_Result _initialize_expected_keys(dx_adl_type_handlers_viewer_instance* SELF);
 
@@ -32,6 +32,8 @@ static Core_Result _parse_viewer_instance(dx_assets_viewer_instance** RETURN, dx
 static Core_Result _parse(Core_Object** RETURN, dx_adl_type_handlers_viewer_instance* SELF, dx_ddl_node* node, dx_adl_context* context);
 
 static Core_Result _resolve(dx_adl_type_handlers_viewer_instance* SELF, dx_adl_symbol* symbol, dx_adl_context* context);
+
+static Core_Result _enter(dx_adl_type_handlers_viewer_instance* SELF, dx_ddl_node* source, dx_adl_context* context);
 
 Core_defineObjectType("dx.adl.type_handlers.viewer_instance",
                       dx_adl_type_handlers_viewer_instance,
@@ -194,6 +196,75 @@ static Core_Result _resolve(dx_adl_type_handlers_viewer_instance* SELF, dx_adl_s
   return Core_Success;
 }
 
+static Core_Result _enter(dx_adl_type_handlers_viewer_instance* SELF, dx_ddl_node* source, dx_adl_context* context) {
+  // type
+  Core_String* received_type = NULL;
+  if (dx_asset_definition_language_parser_parse_type(&received_type, source, context)) {
+    return Core_Failure;
+  }
+#if 0
+  Core_Boolean isEqualTo = Core_False;
+  if (Core_String_isEqualTo(&isEqualTo, received_type, NAME(material_type))) {
+    CORE_UNREFERENCE(received_type);
+    received_type = NULL;
+    return Core_Failure;
+  }
+  if (!isEqualTo) {
+    CORE_UNREFERENCE(received_type);
+    received_type = NULL;
+    Core_setError(Core_Error_SemanticalAnalysisFailed);
+    return Core_Failure;
+  }
+#endif
+  // generated name
+  Core_String* name = dx_adl_names_create_unique_name(context->names);
+#if 0
+  if (dx_asset_definition_language_parser_parse_name(&name, source, context)) {
+    CORE_UNREFERENCE(received_type);
+    received_type = NULL;
+    return Core_Failure;
+  }
+#endif
+  // enter
+  dx_adl_symbol* symbol = NULL;
+  if (dx_adl_symbol_create(&symbol, received_type, name)) {
+    return Core_Failure;
+  }
+  if (source) {
+    symbol->node = source;
+    CORE_REFERENCE(symbol->node);
+  }
+  if (dx_asset_definitions_set(context->definitions, name, symbol)) {
+    CORE_UNREFERENCE(symbol);
+    symbol = NULL;
+    if (Core_Error_Exists == Core_getError()) {
+      /// TODO: Emit positions.
+      /// TODO: Use dx_adl_diagnostics.
+      dx_log("a definition of name `", sizeof("a definition of name `") - 1);
+      dx_log(name->bytes, name->numberOfBytes);
+      dx_log("` already exists", sizeof("` already exists") - 1);
+      CORE_UNREFERENCE(name);
+      name = NULL;
+      CORE_UNREFERENCE(received_type);
+      received_type = NULL;
+      return Core_Failure;
+    } else {
+      CORE_UNREFERENCE(name);
+      name = NULL;
+      CORE_UNREFERENCE(received_type);
+      received_type = NULL;
+      return Core_Failure;
+    }
+  }
+  CORE_UNREFERENCE(symbol);
+  symbol = NULL;
+  CORE_UNREFERENCE(name);
+  name = NULL;
+  CORE_UNREFERENCE(received_type);
+  received_type = NULL;
+  return Core_Success;
+}
+
 Core_Result dx_adl_type_handlers_viewer_instance_construct(dx_adl_type_handlers_viewer_instance* SELF) {
   DX_CONSTRUCT_PREFIX(dx_adl_type_handlers_viewer_instance);
   if (dx_adl_type_handler_construct(DX_ADL_TYPE_HANDLER(SELF))) {
@@ -212,6 +283,7 @@ static void dx_adl_type_handlers_viewer_instance_destruct(dx_adl_type_handlers_v
 
 static void dx_adl_type_handlers_viewer_instance_constructDispatch(dx_adl_type_handlers_viewer_instance_Dispatch* SELF) {
   DX_ADL_TYPE_HANDLER_DISPATCH(SELF)->read = (Core_Result (*)(Core_Object**, dx_adl_type_handler*, dx_ddl_node*, dx_adl_context*)) & _parse;
+  DX_ADL_TYPE_HANDLER_DISPATCH(SELF)->enter = (Core_Result(*)(dx_adl_type_handler*, dx_ddl_node*, dx_adl_context*)) & _enter;
   DX_ADL_TYPE_HANDLER_DISPATCH(SELF)->resolve = (Core_Result(*)(dx_adl_type_handler*, dx_adl_symbol*, dx_adl_context*)) & _resolve;
 }
 

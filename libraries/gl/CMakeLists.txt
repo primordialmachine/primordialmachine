@@ -19,7 +19,7 @@ list(APPEND ${name}.readmes "README.md")
 
 # "val/gl.(c|h)"
 list(APPEND ${name}.sources "dx/val/gl.c")
-list(APPEND ${name}.headers "dX/val/gl.h")
+list(APPEND ${name}.headers "dx/val/gl.h")
 
 # "VAL OpenGL backend"
 list(APPEND ${name}.sources "dx/val/gl/context.c" "dx/val/gl/program.c" "dx/val/gl/buffer.c" "dx/val/gl/vbinding.c")

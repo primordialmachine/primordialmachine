@@ -1,6 +1,4 @@
-// Copyright (c) 2023 Michael Heilmann. All rights reserved.
-/// @author Michael Heilmann (michaelheilmann@primordialmachine.com
-/// @copyright Copyright (c) 2023 Michael Heilmann. All rights reserved.
+// Copyright (c) 2023-2024 Michael Heilmann. All rights reserved.
 
 #include "dx/player/run.h"
 

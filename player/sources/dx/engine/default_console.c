@@ -58,14 +58,14 @@ static Core_Result on_execute_prompt(dx_default_console* SELF) {
   if (Core_StringBuffer_getString(&string, SELF->prompt)) {
     return Core_Failure;
   }
-  dx_application_presenter* application_presenter = NULL;
+  Core_ApplicationPresenter* application_presenter = NULL;
   if (dx_application_presenter_get(&application_presenter)) {
     CORE_UNREFERENCE(string);
     string = NULL;
     return Core_Failure;
   }
   dx_cl_interpreter* cl_interpreter = NULL;
-  if (dx_application_presenter_get_cl_interpreter(&cl_interpreter, application_presenter)) {
+  if (Core_ApplicationPresenter_get_cl_interpreter(&cl_interpreter, application_presenter)) {
     CORE_UNREFERENCE(application_presenter);
     application_presenter = NULL;
     CORE_UNREFERENCE(string);

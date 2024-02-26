@@ -26,7 +26,7 @@
   ],
   "description" : [
     "Get a pointer to the Bytes of the current word.@{newline()}",
-    "The pointer remains valid as long as the @{code('Core_Scanner')} or derived type object is valid and the word does not change."
+    "The pointer remains valid as long as the @{code('Core_Scanner')} or derived type object is valid and the state of the scanner does not change."
   ],
   "return" : "@{code('Core_Success')} on success. @{code('Core_Failure')} on failure.",
   "remarks" : "This function sets the by-thread error variable on failure."

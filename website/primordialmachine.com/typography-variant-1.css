@@ -168,9 +168,12 @@ th {
 /*Definition Lists*/
 
 dl, ul {
-  font-weight: 200;
-  line-height: 1.5;
   margin-bottom: 1vw;
+  
+  font-family: var(--body-font-family) !important;
+  font-weight: var(--body-font-weight);
+  line-height: 1.5;
+  font-size: var(--normal-font-size);
 }
 
 dl > dt {

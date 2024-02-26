@@ -34,6 +34,10 @@ static Core_Result _parse(Core_Object** RETURN, dx_adl_type_handlers_image_opera
 
 static Core_Result _resolve(dx_adl_type_handlers_image_operations_color_fill* SELF, dx_adl_symbol* symbol, dx_adl_context* context);
 
+#if 0
+static Core_Result _enter(dx_adl_type_handlers_image_operations_color_fill* SELF, dx_ddl_node* source, dx_adl_context* context);
+#endif
+
 Core_defineObjectType("dx.adl.type_handlers.image_operations.color_fill_reader",
                       dx_adl_type_handlers_image_operations_color_fill,
                       dx_adl_type_handler);
@@ -180,6 +184,73 @@ static Core_Result _resolve(dx_adl_type_handlers_image_operations_color_fill* SE
   symbol->resolved = true;
   return Core_Success;
 }
+
+#if 0
+static Core_Result _enter(dx_adl_type_handlers_image_operations_color_fill* SELF, dx_ddl_node* source, dx_adl_context* context) {
+  // type
+  Core_String* received_type = NULL;
+  if (dx_asset_definition_language_parser_parse_type(&received_type, source, context)) {
+    return Core_Failure;
+  }
+  Core_Boolean isEqualTo = Core_False;
+  if (Core_String_isEqualTo(&isEqualTo, received_type, NAME(material_type))) {
+    CORE_UNREFERENCE(received_type);
+    received_type = NULL;
+    return Core_Failure;
+  }
+  if (!isEqualTo) {
+    CORE_UNREFERENCE(received_type);
+    received_type = NULL;
+    Core_setError(Core_Error_SemanticalAnalysisFailed);
+    return Core_Failure;
+  }
+  // name
+  Core_String* name = NULL;
+  if (dx_asset_definition_language_parser_parse_name(&name, source, context)) {
+    CORE_UNREFERENCE(received_type);
+    received_type = NULL;
+    return Core_Failure;
+  }
+  // enter
+  dx_adl_symbol* symbol = NULL;
+  if (dx_adl_symbol_create(&symbol, received_type, name)) {
+    return Core_Failure;
+  }
+  if (source) {
+    symbol->node = source;
+    CORE_REFERENCE(symbol->node);
+  }
+  if (dx_asset_definitions_set(context->definitions, name, symbol)) {
+    CORE_UNREFERENCE(symbol);
+    symbol = NULL;
+    if (Core_Error_Exists == Core_getError()) {
+      /// TODO: Emit positions.
+      /// TODO: Use dx_adl_diagnostics.
+      dx_log("a definition of name `", sizeof("a definition of name `") - 1);
+      dx_log(name->bytes, name->numberOfBytes);
+      dx_log("` already exists", sizeof("` already exists") - 1);
+      CORE_UNREFERENCE(name);
+      name = NULL;
+      CORE_UNREFERENCE(received_type);
+      received_type = NULL;
+      return Core_Failure;
+    } else {
+      CORE_UNREFERENCE(name);
+      name = NULL;
+      CORE_UNREFERENCE(received_type);
+      received_type = NULL;
+      return Core_Failure;
+    }
+  }
+  CORE_UNREFERENCE(symbol);
+  symbol = NULL;
+  CORE_UNREFERENCE(name);
+  name = NULL;
+  CORE_UNREFERENCE(received_type);
+  received_type = NULL;
+  return Core_Success;
+}
+#endif
 
 Core_Result dx_adl_type_handlers_image_operations_color_fill_construct(dx_adl_type_handlers_image_operations_color_fill* SELF) {
   DX_CONSTRUCT_PREFIX(dx_adl_type_handlers_image_operations_color_fill);

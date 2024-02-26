@@ -1,5 +1,5 @@
-#if !defined(DX_VAL_SYSTEM_H_INCLUDED)
-#define DX_VAL_SYSTEM_H_INCLUDED
+#if !defined(CORE_VISUALS_SYSTEM_H_INCLUDED)
+#define CORE_VISUALS_SYSTEM_H_INCLUDED
 
 #include "dx/core.h"
 #include "dx/val/context.h"
@@ -14,13 +14,11 @@ static inline Core_Visuals_System* CORE_VISUALS_SYSTEM(void* p) {
 
 struct Core_Visuals_System {
   Core_System _parent;
-  /// @brief A weak reference to the message queue.
+  /// @brief A reference to the message queue.
   Core_MessageQueue* messageQueue;
   /// @brief The state of the keyboard.
-  /// @todo This should be window-specific.
   Core_KeyboardState* keyboardState;
   /// @brief The state of the mouse.
-  /// @todo This should be window-specific.
   Core_MouseState* mouseState;
 };
 
@@ -34,16 +32,17 @@ struct Core_Visuals_System_Dispatch {
 };
 
 /// @param messageQueue A pointer to the message queue.
+/// The system acquires a reference to the message queue.
 /// @constructor{Core_Visuals_System}
 Core_Result Core_Visuals_System_construct(Core_Visuals_System* SELF, Core_MessageQueue* messageQueue);
 
-/// @brief Get the context.
+/// @brief Get the visuals context.
 /// @param RETURN A pointer to a <code>Core_Visuals_Context*</code> variable.
 /// @success
-/// <code>*RETURN</code> was assigned a pointer to the context object.
+/// <code>*RETURN</code> was assigned a pointer to the VAL context object.
 /// The caller acquired a reference to that object.
 /// @warning
-/// This function fails if this system is not started.
+/// This function fails if this visuals system is not started.
 /// @method{Core_Visuals_System}
 static inline Core_Result Core_Visuals_System_getContext(Core_Visuals_Context** RETURN, Core_Visuals_System* SELF) {
   DX_OBJECT_VIRTUALCALL(Core_Visuals_System, getContext, RETURN, SELF);
@@ -51,7 +50,7 @@ static inline Core_Result Core_Visuals_System_getContext(Core_Visuals_Context** 
 
 /// @internal
 /// @brief Emit a "keyboard key pressed" message.
-/// @param SELF A pointer to this system object.
+/// @param SELF A pointer to this VAL system object.
 /// @param key The keyboard key.
 /// @param modifierKeys The modifier keys.
 /// @method{Core_Visuals_System}
@@ -59,7 +58,7 @@ Core_Result Core_Visuals_System_emitKeyboardKeyPressedMessage(Core_Visuals_Syste
 
 /// @internal
 /// @brief Emit a "keyboard key released" message.
-/// @param SELF A pointer to this system object.
+/// @param SELF A pointer to this VAL system object.
 /// @param key The keyboard key.
 /// @param modifierKeys The modifier keys.
 /// @method{Core_Visuals_System}
@@ -67,7 +66,7 @@ Core_Result Core_Visuals_System_emitKeyboardKeyReleasedMessage(Core_Visuals_Syst
 
 /// @internal
 /// @brief Emit a "mouse button pressed" message.
-/// @param SELF A pointer to this system object.
+/// @param SELF A pointer to this VAL system object.
 /// @param button The mouse button.
 /// @param x, y The position.
 /// @param modifierKeys The modifier keys.

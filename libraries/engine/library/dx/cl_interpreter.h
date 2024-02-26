@@ -2,8 +2,8 @@
 #define DX_CL_INTERPRETER_H_INCLUDED
 
 #include "dx/core.h"
-typedef struct dx_application_presenter dx_application_presenter;
-typedef Core_Result(dx_cl_function)(dx_application_presenter* application_presenter);
+typedef struct Core_ApplicationPresenter Core_ApplicationPresenter;
+typedef Core_Result(dx_cl_function)(Core_ApplicationPresenter* application_presenter);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
@@ -62,7 +62,7 @@ Core_Result dx_cl_interpreter_construct(dx_cl_interpreter* SELF);
 
 Core_Result dx_cl_interpreter_create(dx_cl_interpreter** RETURN);
 
-Core_Result dx_cl_interpreter_execute(dx_cl_interpreter* SELF, dx_application_presenter* application_presenter, Core_String* command);
+Core_Result dx_cl_interpreter_execute(dx_cl_interpreter* SELF, Core_ApplicationPresenter* application_presenter, Core_String* command);
 
 Core_Result dx_cl_interpreter_register_function(dx_cl_interpreter* SELF, Core_String* name, dx_cl_function* function);
 

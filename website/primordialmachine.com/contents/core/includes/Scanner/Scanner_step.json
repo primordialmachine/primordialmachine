@@ -28,8 +28,8 @@
   ],
   "description" : [
     "Advance to the next word.@{newline()}",
-    "The scanner retains its current state",
-    "<ul>",
+    "The scanner retains its current state if",
+    "<ul style=\"list-style: square inside;\">",
     "  <li>the current word is the end of input word</li>",
     "  <li>the current word is an error word</li>",
     "</ul>"

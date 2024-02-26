@@ -28,7 +28,7 @@ list(APPEND ${name}.readmes "README.md")
 
 # "val/aal/al.(c|h)"
 list(APPEND ${name}.sources "dx/aal/al.c")
-list(APPEND ${name}.headers "dX/aal/al.h")
+list(APPEND ${name}.headers "dx/aal/al.h")
 
 # The folder "val/aal/al".
 list(APPEND ${name}.sources "dx/aal/al/context.c")

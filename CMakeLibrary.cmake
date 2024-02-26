@@ -1,6 +1,7 @@
-include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/compilers.cmake)
-include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/languages.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/compiler.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/language.cmake)
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/detect_void_pointer_size.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/operating_system.cmake)
 
 # Macro which ensures that certain compiler warnings are treated as compiler errors.
 macro(dx_configure_warnings target)
@@ -70,9 +71,11 @@ macro(dx_begin_project target)
 
   project(${target} LANGUAGES ${${target}.languages})
   
-  core_detect_compiler(${target} CORE_LANGUAGE_ID_C)
-  core_detect_compiler(${target} CORE_LANGUAGE_ID_CPP)
-  core_detect_compiler(${target} CORE_LANGUAGE_ID_MASM)
+  core_detect_operating_system(${target})
+  
+  core_detect_compiler(${target} ${CORE_LANGUAGE_ID_C})
+  core_detect_compiler(${target} ${CORE_LANGUAGE_ID_CPP})
+  core_detect_compiler(${target} ${CORE_LANGUAGE_ID_MASM})
 
   # Define the variables for assemblers, header, inlay, readme, and source files.
   set(${target}.asms "")
@@ -124,7 +127,7 @@ macro(dx_end_project target)
 
   #message( STATUS "${target}:" )
   message( STATUS " - kind: ${${target}.kind}" )
-  message( STATUS " - target_architecture: ${${target}.target_architecture}" )
+  message( STATUS " - target architecture: ${${target}.target_architecture}" )
   message( STATUS " - void pointer size: ${${target}.sizeof_void_pointer}" )
   
   if (DEFINED ${target}.private_include_directories)
@@ -142,3 +145,4 @@ macro(dx_end_project target)
   endif()
 
 endmacro()
+

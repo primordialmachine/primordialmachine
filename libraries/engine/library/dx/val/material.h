@@ -19,7 +19,7 @@ struct dx_val_material {
   Core_Visuals_Context* context;
   /// @brief A pointer to the underlaying material asset.
   Core_Assets_Material* material_asset;
-  /// @brief The ambient color as specified by Core_Assets_Material.ambientColor.
+  /// @brief The ambient color as specified by dx_assets_material.ambient_color.
   Core_InlineRgbaR32 ambient_color;
   /// @brief Pointer to the ambient texture or the null pointer as specified by dx_assets_material.ambient_texture.
   Core_Visuals_Texture* ambient_texture;

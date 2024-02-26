@@ -52,18 +52,18 @@ static Core_Result dx_player_create_application(Core_Application** RETURN, Core_
 
 static Core_Result dx_player_create_application(Core_Application** RETURN, Core_MessageQueue* msg_queue) {
 #if Core_VisualsBackend_OpenGl4 == Core_VisualsBackend && Core_OperatingSystem_Windows == Core_OperatingSystem
-  Core_Visuals_SystemFactory* visualsSystemFactory = NULL;
-  if (Core_Val_Gl_Wgl_SystemFactory_create((Core_Val_Gl_Wgl_SystemFactory**)&visualsSystemFactory)) {
+  Core_Visuals_SystemFactory* val_system_factory = NULL;
+  if (Core_Val_Gl_Wgl_SystemFactory_create((Core_Val_Gl_Wgl_SystemFactory**)&val_system_factory)) {
     return Core_Failure;
   }
 #else
   #error("environment not (yet) supported")
 #endif
 #if Core_AudialsBackend_OpenAl == Core_AudialsBackend
-  Core_Audials_SystemFactory* audialsSystemFactory = NULL;
-  if (Core_Audials_Al_SystemFactory_create((Core_Audials_Al_SystemFactory**)&audialsSystemFactory)) {
-    CORE_UNREFERENCE(visualsSystemFactory);
-    visualsSystemFactory = NULL;
+  Core_Audials_SystemFactory* aal_system_factory = NULL;
+  if (Core_Audials_Al_SystemFactory_create((Core_Audials_Al_SystemFactory**)&aal_system_factory)) {
+    CORE_UNREFERENCE(val_system_factory);
+    val_system_factory = NULL;
     return Core_Failure;
   }
 #else
@@ -71,28 +71,28 @@ static Core_Result dx_player_create_application(Core_Application** RETURN, Core_
 #endif
   Core_Assets_SystemFactory* assets_system_factory = NULL;
   if (Core_Assets_SystemFactory_create(&assets_system_factory)) {
-    CORE_UNREFERENCE(audialsSystemFactory);
-    audialsSystemFactory = NULL;
-    CORE_UNREFERENCE(visualsSystemFactory);
-    visualsSystemFactory = NULL;
+    CORE_UNREFERENCE(aal_system_factory);
+    aal_system_factory = NULL;
+    CORE_UNREFERENCE(val_system_factory);
+    val_system_factory = NULL;
     return Core_Failure;
   }
   Core_Application* temporary = NULL;
-  if (Core_Application_create(&temporary, visualsSystemFactory, audialsSystemFactory, assets_system_factory, msg_queue)) {
+  if (Core_Application_create(&temporary, val_system_factory, aal_system_factory, assets_system_factory, msg_queue)) {
     CORE_UNREFERENCE(assets_system_factory);
     assets_system_factory = NULL;
-    CORE_UNREFERENCE(audialsSystemFactory);
-    audialsSystemFactory = NULL;
-    CORE_UNREFERENCE(visualsSystemFactory);
-    visualsSystemFactory = NULL;
+    CORE_UNREFERENCE(aal_system_factory);
+    aal_system_factory = NULL;
+    CORE_UNREFERENCE(val_system_factory);
+    val_system_factory = NULL;
     return Core_Failure;
   }
   CORE_UNREFERENCE(assets_system_factory);
   assets_system_factory = NULL;
-  CORE_UNREFERENCE(audialsSystemFactory);
-  audialsSystemFactory = NULL;
-  CORE_UNREFERENCE(visualsSystemFactory);
-  visualsSystemFactory = NULL;
+  CORE_UNREFERENCE(aal_system_factory);
+  aal_system_factory = NULL;
+  CORE_UNREFERENCE(val_system_factory);
+  val_system_factory = NULL;
   *RETURN = temporary;
   return Core_Success;
 }
@@ -113,7 +113,7 @@ static Core_Application* create_application(Core_MessageQueue* msg_queue) {
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-static dx_application_presenter* g_application_presenter = NULL;
+static Core_ApplicationPresenter* g_application_presenter = NULL;
 
 static Core_Application* g_application = NULL;
 
@@ -131,7 +131,7 @@ static Core_Result shutdown();
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-Core_Result dx_application_presenter_get(dx_application_presenter** RETURN) {
+Core_Result dx_application_presenter_get(Core_ApplicationPresenter** RETURN) {
   if (!RETURN) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
@@ -253,19 +253,19 @@ static Core_Result run() {
     CORE_UNREFERENCE(msg);
     msg = NULL;
   }
-  if (dx_application_presenter_startup(g_application_presenter)) {
+  if (Core_ApplicationPresenter_startup(g_application_presenter)) {
     CORE_UNREFERENCE(val_context);
     val_context = NULL;
     LEAVE(DX_C_FUNCTION_NAME);
     return Core_Failure;
   }
-  if (dx_application_presenter_run(g_application_presenter)) {
+  if (Core_ApplicationPresenter_run(g_application_presenter)) {
     CORE_UNREFERENCE(val_context);
     val_context = NULL;
     LEAVE(DX_C_FUNCTION_NAME);
     return Core_Failure;
   }
-  dx_application_presenter_shutdown(g_application_presenter);
+  Core_ApplicationPresenter_shutdown(g_application_presenter);
   CORE_UNREFERENCE(val_context);
   val_context = NULL;
   LEAVE(DX_C_FUNCTION_NAME);

@@ -9,7 +9,7 @@
 #include "dx/engine.h"
 #include <string.h>
 
-static Core_Result print_library_info(dx_application_presenter* application_presenter, char const* name, Core_Natural64 major_version, Core_Natural64 minor_version) {
+static Core_Result print_library_info(Core_ApplicationPresenter* application_presenter, char const* name, Core_Natural64 major_version, Core_Natural64 minor_version) {
   Core_String* format_string = NULL,
            * name_string = NULL,
            * message_string = NULL;
@@ -38,7 +38,7 @@ static Core_Result print_library_info(dx_application_presenter* application_pres
   format_string = NULL;
   //
   dx_console* console = NULL;
-  if (dx_application_presenter_get_console(&console, application_presenter)) {
+  if (Core_ApplicationPresenter_get_console(&console, application_presenter)) {
     CORE_UNREFERENCE(message_string);
     message_string = NULL;
     return Core_Failure;
@@ -60,39 +60,39 @@ static Core_Result print_library_info(dx_application_presenter* application_pres
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-static Core_Result command_core_library_print_info(dx_application_presenter* application_presenter);
+static Core_Result command_core_library_print_info(Core_ApplicationPresenter* application_presenter);
 
-static Core_Result command_assets_library_print_info(dx_application_presenter* application_presenter);
+static Core_Result command_assets_library_print_info(Core_ApplicationPresenter* application_presenter);
 
-static Core_Result command_engine_library_print_info(dx_application_presenter* application_presenter);
+static Core_Result command_engine_library_print_info(Core_ApplicationPresenter* application_presenter);
 
-static Core_Result command_data_definition_language_library_print_info(dx_application_presenter* application_presenter);
+static Core_Result command_data_definition_language_library_print_info(Core_ApplicationPresenter* application_presenter);
 
-static Core_Result command_document_definition_language_library_print_info(dx_application_presenter* application_presenter);
+static Core_Result command_document_definition_language_library_print_info(Core_ApplicationPresenter* application_presenter);
 
-static Core_Result command_application_request_quit(dx_application_presenter* application_presenter);
+static Core_Result command_application_request_quit(Core_ApplicationPresenter* application_presenter);
 
-static Core_Result command_core_library_print_info(dx_application_presenter* application_presenter) {
+static Core_Result command_core_library_print_info(Core_ApplicationPresenter* application_presenter) {
   return print_library_info(application_presenter, CORE_LIBRARY_NAME, CORE_LIBRARY_MAJOR_VERSION, CORE_LIBRARY_MINOR_VERSION);
 }
 
-static Core_Result command_assets_library_print_info(dx_application_presenter* application_presenter) {
+static Core_Result command_assets_library_print_info(Core_ApplicationPresenter* application_presenter) {
   return print_library_info(application_presenter, DX_ASSETS_LIBRARY_NAME, DX_ASSETS_LIBRARY_MAJOR_VERSION, DX_ASSETS_LIBRARY_MINOR_VERSION);
 }
 
-static Core_Result command_engine_library_print_info(dx_application_presenter* application_presenter) {
+static Core_Result command_engine_library_print_info(Core_ApplicationPresenter* application_presenter) {
   return print_library_info(application_presenter, DX_ENGINE_LIBRARY_NAME, DX_ENGINE_LIBRARY_MAJOR_VERSION, DX_ENGINE_LIBRARY_MINOR_VERSION);
 }
 
-static Core_Result command_data_definition_language_library_print_info(dx_application_presenter* application_presenter) {
+static Core_Result command_data_definition_language_library_print_info(Core_ApplicationPresenter* application_presenter) {
   return print_library_info(application_presenter, DX_DATA_DEFINITION_LANGUAGE_LIBRARY_NAME, DX_DATA_DEFINITION_LANGUAGE_LIBRARY_MAJOR_VERSION, DX_DATA_DEFINITION_LANGUAGE_LIBRARY_MINOR_VERSION);
 }
 
-static Core_Result command_document_definition_language_library_print_info(dx_application_presenter* application_presenter) {
+static Core_Result command_document_definition_language_library_print_info(Core_ApplicationPresenter* application_presenter) {
   return print_library_info(application_presenter, DX_DOCUMENT_DEFINITION_LANGUAGE_LIBRARY_NAME, DX_DOCUMENT_DEFINITION_LANGUAGE_LIBRARY_MAJOR_VERSION, DX_DOCUMENT_DEFINITION_LANGUAGE_LIBRARY_MINOR_VERSION);
 }
 
-static Core_Result command_application_request_quit(dx_application_presenter* application_presenter) {
+static Core_Result command_application_request_quit(Core_ApplicationPresenter* application_presenter) {
   Core_Application* application = NULL;
   if (Core_Application_get(&application)) {
     return Core_Failure;

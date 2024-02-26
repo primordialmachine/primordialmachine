@@ -1,0 +1,103 @@
+# This program displays quadriliteral.
+# The top left corner (x,y) of the rectangle is
+# x := w / 2 - w / 4
+# y := h / 2 - h / 4
+# The width and height (w,h) of the rectangle is
+# w := w / 4
+# h := h / 4
+# The fill color (fillColor) of the rectangle is
+# is opaque red
+
+####################################################
+# step 1: push the canvas on the stack 
+push 0
+push getCanvas
+call
+
+####################################################
+# step 2: compute x
+# x := w / 2 - w / 4
+push 0
+push getCanvas
+call
+push 1
+push getCanvasWidth
+call
+dup
+push 2
+div
+swap
+# [canvasWidth / 2, canvasWidth]
+
+push 4
+div
+# [..., canvasWidth / 2, canvasWidth / 4]
+
+sub
+# [..., canvasWidth / 2 - canvasWidth / 4]
+
+
+####################################################
+# step 3: compute y
+# y := h / 2 - h / 4
+push 0
+push getCanvas
+call
+push 1
+push getCanvasHeight
+call
+dup
+push 2
+div
+swap
+# [canvasHeight / 2, canvasHeight]
+
+push 4
+div
+# [..., canvasHeight / 2, canvasHeight / 4]
+
+sub
+# [..., canvasHeight / 2 - canvasHeight / 4]
+
+####################################################
+# step 4: compute w
+# w  / 4
+push 0
+push getCanvas
+call
+push 1
+push getCanvasWidth
+call
+
+push 4
+div
+
+####################################################
+# step 5: compute h
+# h  / 4
+push 0
+push getCanvas
+call
+push 1
+push getCanvasHeight
+call
+
+push 4
+div
+
+####################################################
+# step 6: compute fillColor
+# fillColor
+push 0
+push getColorRed
+call
+
+####################################################
+# step 7: compute the number of arguments
+# (canvas, x, y, w, h, packedColor)
+push 6
+
+####################################################
+# step 8: push and invoke the function
+push fillRectangle
+call

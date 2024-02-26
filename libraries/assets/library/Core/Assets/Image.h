@@ -7,7 +7,7 @@
 #include "Core/Visuals/SoftwarePixelBuffer.h"
 typedef struct Core_Assets_ImageOperation Core_Assets_ImageOperation;
 
-/// @brief An image asset.
+/* http://localhost/assets#core-assets-image */
 Core_declareObjectType("Core.Assets.Image",
                        Core_Assets_Image,
                        Core_Assets_Def);
@@ -19,7 +19,7 @@ static inline Core_Assets_Image* CORE_ASSETS_IMAGE(void* p) {
 struct Core_Assets_Image {
   Core_Assets_Def _parent;
   
-  /// @brief A pointer to the name of this ADL image.
+  /// @brief A pointer to the name of this image asset.
   Core_String* name;
 
   /// @brief The backing software pixel buffer.

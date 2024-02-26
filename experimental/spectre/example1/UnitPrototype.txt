@@ -1,0 +1,36 @@
+/* Definition of a "unit prototype". */
+{
+  type : "UnitPrototype",
+  properties : [
+    {
+      name : "name",
+      type : "String",
+      description : "The name of this unit prototype"
+    },
+    {
+      name : "cost",
+      type : "Integer",
+      description : "The cost to build a unit of this unit prototype"
+    },
+    {
+      name : "movementSpeed",
+      type : "Integer",
+      description : "The movement speed of units of this unit prototype"
+    },
+    {
+      name : "health",
+      type : "Integer",
+      description : "The health of units of this unit prototype" 
+    },
+    {
+      name : "attack",
+      type : "Integer",
+      description : "The attack of units of this unit prototype"  
+    },
+    {
+      name : "defense",
+      type : "Integer",
+      description : "The defense of units of this unit prototype" 
+    },
+  ]
+}

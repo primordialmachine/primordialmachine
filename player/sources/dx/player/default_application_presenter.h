@@ -15,14 +15,14 @@
 
 Core_declareObjectType("dx.default_application_presenter",
                        dx_default_application_presenter,
-                       dx_application_presenter);
+                       Core_ApplicationPresenter);
 
 static inline dx_default_application_presenter* DX_DEFAULT_APPLICATION_PRESENTER(void* p) {
   return (dx_default_application_presenter*)p;
 }
 
 struct dx_default_application_presenter {
-  dx_application_presenter _parent;
+  Core_ApplicationPresenter _parent;
   
   /// @brief
   /// @a true if the application should quit. @a false otherwise.
@@ -32,6 +32,8 @@ struct dx_default_application_presenter {
   /// @brief
   /// A strong reference to the application object.
   Core_Application* application;
+  /// @brief The default assets context.
+  Core_Assets_Context* defaultAssetsContext;
   
   /// @brief
   /// A strong reference to the user interface manager (UI manager).
@@ -58,7 +60,7 @@ static inline dx_default_application_presenter_Dispatch* DX_DEFAULT_APPLICATION_
 }
 
 struct dx_default_application_presenter_Dispatch {
-  dx_application_presenter_Dispatch _parent;
+  Core_ApplicationPresenter_Dispatch _parent;
 };
 
 Core_Result dx_default_application_presenter_construct(dx_default_application_presenter* SELF, Core_Application* application, dx_cl_interpreter* cl_interpreter, Core_MessageQueue* message_queue);

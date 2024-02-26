@@ -13,90 +13,90 @@
 /// "applications presenters" are created, destroyed, and operated by "application execution environment".
 /// "application presenters" have a contract with the "application execution environment".
 /// 1) the "application presenter" is created by the "application execution environment"
-/// 2) dx_applicatione_presenter_startup is called for the "application presenter" by the "application execution environment".
+/// 2) _startup is called for the "application presenter" by the "application execution environment".
 /// If the call succeeds, go to 3) or 4).
 /// Otherwise got to 2) or 5)
-/// 3) dx_application_presenter_run is called for the "application presenter" by the "application execution environment".
-/// 4) dx_application_presenter_shutdown is called for the "application presenter" by the "application execution environment".
+/// 3) _run is called for the "application presenter" by the "application execution environment".
+/// 4) _shutdown is called for the "application presenter" by the "application execution environment".
 /// Go to 5.
 /// 5) the "application presenter" is destroyed by the "application execution environment".
-Core_declareObjectType("dx.application_presenter",
-                       dx_application_presenter,
+Core_declareObjectType("Core.ApplicationPresenter",
+                       Core_ApplicationPresenter,
                        Core_Object);
 
-static inline dx_application_presenter* DX_APPLICATION_PRESENTER(void *p) {
-  return (dx_application_presenter*)p;
+static inline Core_ApplicationPresenter* CORE_APPLICATIONPRESENTER(void *p) {
+  return (Core_ApplicationPresenter*)p;
 }
 
-struct dx_application_presenter {
+struct Core_ApplicationPresenter {
   Core_Object _parent;
 };
 
-static inline dx_application_presenter_Dispatch* DX_APPLICATION_PRESENTER_DISPATCH(void* p) {
-  return (dx_application_presenter_Dispatch*)p;
+static inline Core_ApplicationPresenter_Dispatch* CORE_APPLICATIONPRESENTER_DISPATCH(void* p) {
+  return (Core_ApplicationPresenter_Dispatch*)p;
 }
 
-struct dx_application_presenter_Dispatch {
+struct Core_ApplicationPresenter_Dispatch {
   Core_Object_Dispatch _parent;
-  Core_Result(*startup)(dx_application_presenter* SELF);
-  Core_Result(*run)(dx_application_presenter* SELF);
-  Core_Result(*shutdown)(dx_application_presenter* SELF);
-  Core_Result(*get_console)(dx_console**, dx_application_presenter* SELF);
-  Core_Result(*get_cl_interpreter)(dx_cl_interpreter**, dx_application_presenter* SELF);
-  Core_Result(*request_quit)(dx_application_presenter* SELF);
-  Core_Result(*quit_requested)(Core_Boolean* RETURN, dx_application_presenter* SELF);
+  Core_Result(*startup)(Core_ApplicationPresenter* SELF);
+  Core_Result(*run)(Core_ApplicationPresenter* SELF);
+  Core_Result(*shutdown)(Core_ApplicationPresenter* SELF);
+  Core_Result(*get_console)(dx_console**, Core_ApplicationPresenter* SELF);
+  Core_Result(*get_cl_interpreter)(dx_cl_interpreter**, Core_ApplicationPresenter* SELF);
+  Core_Result(*request_quit)(Core_ApplicationPresenter* SELF);
+  Core_Result(*quit_requested)(Core_Boolean* RETURN, Core_ApplicationPresenter* SELF);
 };
 
-/// @constructor{dx_application_presenter}
-Core_Result dx_application_presenter_construct(dx_application_presenter* SELF);
+/// @constructor{Core_ApplicationPresenter}
+Core_Result Core_ApplicationPresenter_construct(Core_ApplicationPresenter* SELF);
 
 /// @brief Callback. Invoked by the application execution environment.
-/// @method{dx_application_presenter}
-static inline Core_Result dx_application_presenter_startup(dx_application_presenter* SELF) {
-  DX_OBJECT_VIRTUALCALL(dx_application_presenter, startup, SELF);
+/// @method{Core_ApplicationPresenter}
+static inline Core_Result Core_ApplicationPresenter_startup(Core_ApplicationPresenter* SELF) {
+  DX_OBJECT_VIRTUALCALL(Core_ApplicationPresenter, startup, SELF);
 }
 
 /// @brief Callback. Invoked by the application execution environment.
-/// @method{dx_application_presenter}
-static inline Core_Result dx_application_presenter_run(dx_application_presenter* SELF) {
-  DX_OBJECT_VIRTUALCALL(dx_application_presenter, run, SELF);
+/// @method{Core_ApplicationPresenter}
+static inline Core_Result Core_ApplicationPresenter_run(Core_ApplicationPresenter* SELF) {
+  DX_OBJECT_VIRTUALCALL(Core_ApplicationPresenter, run, SELF);
 }
 
 /// @brief Callback. Invoked by the application execution environment.
-/// @method{dx_application_presenter}
-static inline Core_Result dx_application_presenter_shutdown(dx_application_presenter* SELF) {
-  DX_OBJECT_VIRTUALCALL(dx_application_presenter, shutdown, SELF);
+/// @method{Core_ApplicationPresenter}
+static inline Core_Result Core_ApplicationPresenter_shutdown(Core_ApplicationPresenter* SELF) {
+  DX_OBJECT_VIRTUALCALL(Core_ApplicationPresenter, shutdown, SELF);
 }
 
 /// @brief Acquire a reference to the console object.
 /// @param RETURN A pointer to a <code>Core_Context*</code> variable.
 /// @success <code>*RETURN</code> was assigned a reference to the console object.
 /// The caller acquired a reference to that object.
-/// @method{dx_application_presenter}
-static inline Core_Result dx_application_presenter_get_console(dx_console** RETURN, dx_application_presenter* SELF) {
-  DX_OBJECT_VIRTUALCALL(dx_application_presenter, get_console, RETURN, SELF);
+/// @method{Core_ApplicationPresenter}
+static inline Core_Result Core_ApplicationPresenter_get_console(dx_console** RETURN, Core_ApplicationPresenter* SELF) {
+  DX_OBJECT_VIRTUALCALL(Core_ApplicationPresenter, get_console, RETURN, SELF);
 }
 
 /// @brief Acquire a reference to the CL interpreter object.
 /// @param RETURN A pointer to a <code>dx_cl_interpreter*</code> variable.
 /// @success <code>*RETURN</code> was assigned a reference to the CL interpreter object.
 /// The caller acquired a reference to that object.
-/// @method{dx_application_presenter}
-static inline Core_Result dx_application_presenter_get_cl_interpreter(dx_cl_interpreter** RETURN, dx_application_presenter* SELF) {
-  DX_OBJECT_VIRTUALCALL(dx_application_presenter, get_cl_interpreter, RETURN, SELF);
+/// @method{Core_ApplicationPresenter}
+static inline Core_Result Core_ApplicationPresenter_get_cl_interpreter(dx_cl_interpreter** RETURN, Core_ApplicationPresenter* SELF) {
+  DX_OBJECT_VIRTUALCALL(Core_ApplicationPresenter, get_cl_interpreter, RETURN, SELF);
 }
 
 /// @brief Request the application to quit.
-/// @method{dx_application_presenter}
-static inline Core_Result dx_application_presenter_request_quit(dx_application_presenter* SELF) {
-  DX_OBJECT_VIRTUALCALL(dx_application_presenter, request_quit, SELF);
+/// @method{Core_ApplicationPresenter}
+static inline Core_Result Core_ApplicationPresenter_request_quit(Core_ApplicationPresenter* SELF) {
+  DX_OBJECT_VIRTUALCALL(Core_ApplicationPresenter, request_quit, SELF);
 }
 
 /// @brief Get if the application was requested to quit.
 /// @param RETURN A pointer to a <code>Core_Boolean</code> variable.
-/// @method{dx_application_presenter}
-static inline Core_Result dx_application_presenter_quit_requested(Core_Boolean* RETURN, dx_application_presenter* SELF) {
-  DX_OBJECT_VIRTUALCALL(dx_application_presenter, quit_requested, RETURN, SELF);
+/// @method{Core_ApplicationPresenter}
+static inline Core_Result Core_ApplicationPresenter_quit_requested(Core_Boolean* RETURN, Core_ApplicationPresenter* SELF) {
+  DX_OBJECT_VIRTUALCALL(Core_ApplicationPresenter, quit_requested, RETURN, SELF);
 }
 
 #endif // DX_APPLICATION_PRESENTER_H_INCLUDED
