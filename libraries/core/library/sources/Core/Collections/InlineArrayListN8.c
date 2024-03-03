@@ -24,7 +24,7 @@ Core_Result Core_InlineArrayListN8_steal(Core_InlineArrayListN8* SELF, char **by
     SELF->capacity = SELF->size;
   }
   char* new_elements = NULL;
-  if (Core_Memory_allocate((void**)new_elements, 0)) {
+  if (Core_Memory_allocate((void**)&new_elements, 0)) {
     return Core_Failure;
   }
   *bytes = SELF->elements;
