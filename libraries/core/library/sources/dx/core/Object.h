@@ -2,6 +2,7 @@
 #define CORE_OBJECT_H_INCLUDED
 
 #include "dx/core/TypeSystem.h"
+#include "Core/ReferenceCounter.h"
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
@@ -31,7 +32,7 @@ static inline Core_Object* CORE_OBJECT(void* p) {
 
 struct Core_Object {
   /// @brief The reference count of the object.
-  dx_reference_counter reference_count;
+  Core_ReferenceCounter reference_count;
   /// @brief A pointer to the type of this object or the null pointer.
   Core_Type* type;
   /// @brief Singly-linked list of weak references.

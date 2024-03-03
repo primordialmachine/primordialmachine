@@ -82,15 +82,15 @@ Core_Result Core_StringBuffer_clone(Core_StringBuffer** RETURN, Core_StringBuffe
   return Core_Success;
 }
 
-Core_Result Core_StringBuffer_get_byte(Core_Natural8* RETURN, Core_StringBuffer* SELF, Core_Size index) {
+Core_Result Core_StringBuffer_getByte(Core_Natural8* RETURN, Core_StringBuffer* SELF, Core_Size index) {
   return Core_InlineArrayListN8_get(RETURN, &SELF->backend, index);
 }
 
-Core_Result Core_StringBuffer_get_bytes(void** RETURN, Core_StringBuffer* SELF) {
+Core_Result Core_StringBuffer_getBytes(void** RETURN, Core_StringBuffer* SELF) {
   return Core_InlineArrayListN8_getElements(RETURN, &SELF->backend);
 }
 
-Core_Result Core_StringBuffer_create_iterator(Core_StringIterator** RETURN, Core_StringBuffer* SELF) {
+Core_Result Core_StringBuffer_createIterator(Core_StringIterator** RETURN, Core_StringBuffer* SELF) {
   return Core_StringBufferIterator_create((Core_StringBufferIterator**)RETURN, SELF);
 }
 
@@ -331,7 +331,7 @@ static Core_Result _string_buffer_iterator_increment_n(Core_StringBufferIterator
     return Core_Failure;
   }
   void* bytes;
-  if (Core_StringBuffer_get_bytes(&bytes, SELF->string_buffer)) {
+  if (Core_StringBuffer_getBytes(&bytes, SELF->string_buffer)) {
     return Core_Failure;
   }
   Core_Natural8 const* end = ((Core_Natural8 const*)bytes) + number_of_bytes;
@@ -369,7 +369,7 @@ static Core_Result Core_StringBufferIterator_get_value(uint32_t* RETURN, Core_St
     return Core_Failure;
   }
   void* bytes;
-  if (Core_StringBuffer_get_bytes(&bytes, SELF->string_buffer)) {
+  if (Core_StringBuffer_getBytes(&bytes, SELF->string_buffer)) {
     return Core_Failure;
   }
   char const* current = ((char const*)bytes) + SELF->index;
@@ -453,7 +453,7 @@ static Core_Result Core_StringBufferIterator_next_many(Core_StringBufferIterator
     return Core_Failure;
   }
   void* bytes;
-  if (Core_StringBuffer_get_bytes(&bytes, SELF->string_buffer)) {
+  if (Core_StringBuffer_getBytes(&bytes, SELF->string_buffer)) {
     return Core_Failure;
   }
   char const* current = ((char const*)bytes) + SELF->index;

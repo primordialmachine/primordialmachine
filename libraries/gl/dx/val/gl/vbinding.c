@@ -36,7 +36,7 @@ static Core_Result dx_val_gl_vbinding_construct(dx_val_gl_vbinding* SELF, Core_V
   // https://www.khronos.org/opengl/wiki/Vertex_Specification
   ctx->glBindBuffer(GL_ARRAY_BUFFER, buffer->id);
   switch (SELF->vertex_format) {
-  case Core_VertexFormat_position_xyz: {
+  case Core_VertexFormat_PositionXyz: {
     Core_Size stride = 3 * sizeof(Core_Real32);
     Core_Size offset = 0;
     
@@ -44,7 +44,7 @@ static Core_Result dx_val_gl_vbinding_construct(dx_val_gl_vbinding* SELF, Core_V
     ctx->glEnableVertexAttribArray(0);
     offset += 3 * sizeof(Core_Real32);
   } break;
-  case Core_VertexFormat_position_xyz_ambient_rgba: {
+  case Core_VertexFormat_PositionXyzAmbientRgba: {
     Core_Size stride = 3 * sizeof(Core_Real32) + 4 * sizeof(Core_Real32);
     Core_Size offset = 0;
     
@@ -56,7 +56,7 @@ static Core_Result dx_val_gl_vbinding_construct(dx_val_gl_vbinding* SELF, Core_V
     ctx->glEnableVertexAttribArray(1);
     offset += 4 * sizeof(Core_Real32);
   } break;
-  case Core_VertexFormat_position_xyz_ambient_uv: {
+  case Core_VertexFormat_PositionXyzAmbientUv: {
     Core_Size stride = 3 * sizeof(Core_Real32) + 2 * sizeof(Core_Real32);
     Core_Size offset = 0;
 
@@ -68,7 +68,7 @@ static Core_Result dx_val_gl_vbinding_construct(dx_val_gl_vbinding* SELF, Core_V
     ctx->glEnableVertexAttribArray(1);
     offset += 2 * sizeof(Core_Real32);
   } break;
-  case Core_VertexFormat_ambient_rgba:
+  case Core_VertexFormat_AmbientRgba:
   default: {
     Core_setError(Core_Error_ArgumentInvalid);
     ctx->glDeleteVertexArrays(1, &SELF->id);

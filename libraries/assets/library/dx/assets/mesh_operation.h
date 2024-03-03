@@ -34,12 +34,12 @@ static inline dx_asset_mesh_operation_Dispatch* DX_ASSET_MESH_OPERATION_DISPATCH
 
 struct dx_asset_mesh_operation_Dispatch {
   Core_Object_Dispatch _parent;
-  Core_Result (*apply)(dx_asset_mesh_operation* SELF, dx_assets_mesh* mesh);
+  Core_Result (*apply)(dx_asset_mesh_operation* SELF, Core_Assets_Mesh* mesh);
 };
 
 Core_Result dx_asset_mesh_operation_construct(dx_asset_mesh_operation* SELF, dx_asset_mesh_operation_kind kind);
 
-static inline Core_Result dx_asset_mesh_operation_apply(dx_asset_mesh_operation* SELF, dx_assets_mesh* mesh) {
+static inline Core_Result dx_asset_mesh_operation_apply(dx_asset_mesh_operation* SELF, Core_Assets_Mesh* mesh) {
   DX_OBJECT_VIRTUALCALL(dx_asset_mesh_operation, apply, SELF, mesh);
 }
 

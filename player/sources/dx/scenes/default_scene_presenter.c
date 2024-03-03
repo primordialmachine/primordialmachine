@@ -29,7 +29,7 @@ static Core_Result on_scene_asset_object(dx_default_scene_presenter* SELF, Core_
   if (result) {
     dx_asset_mesh_instance* asset_mesh_instance = DX_ASSET_MESH_INSTANCE(asset_object);
     dx_val_mesh* mesh = NULL;
-    if (dx_val_mesh_create(&mesh, context, DX_ASSETS_MESH(asset_mesh_instance->mesh_reference->object))) {
+    if (dx_val_mesh_create(&mesh, context, CORE_ASSETS_MESH(asset_mesh_instance->mesh_reference->object))) {
       return Core_Failure;
     }
     dx_val_mesh_instance* mesh_instance = NULL;

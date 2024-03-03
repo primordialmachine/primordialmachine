@@ -35,17 +35,17 @@ Core_Result Core_StringBuffer_create(Core_StringBuffer** RETURN);
 
 Core_Result Core_StringBuffer_clone(Core_StringBuffer** RETURN, Core_StringBuffer const* SELF);
 
-Core_Result Core_StringBuffer_get_byte(Core_Natural8* RETURN, Core_StringBuffer* SELF, Core_Size index);
+Core_Result Core_StringBuffer_getByte(Core_Natural8* RETURN, Core_StringBuffer* SELF, Core_Size index);
 
 
 /** @obsolete */
-Core_Result Core_StringBuffer_get_bytes(void** RETURN, Core_StringBuffer* SELF);
+Core_Result Core_StringBuffer_getBytes(void** RETURN, Core_StringBuffer* SELF);
 
 /// @brief Create an iterator for this string buffer.
 /// @param RETURN A pointer to a <code>Core_StringIterator*</code> variable.
 /// @success <code>*RETURN</code> was assigned the iterator.
 /// @method{Core_StringBuffer}
-Core_Result Core_StringBuffer_create_iterator(Core_StringIterator** RETURN, Core_StringBuffer* SELF);
+Core_Result Core_StringBuffer_createIterator(Core_StringIterator** RETURN, Core_StringBuffer* SELF);
 
 /* http://localhost/core#core-stringbuffer-appendbytes */
 Core_Result Core_StringBuffer_appendBytes(Core_StringBuffer* SELF, char const* p, Core_Size n);

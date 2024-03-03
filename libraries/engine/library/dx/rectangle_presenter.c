@@ -233,7 +233,7 @@ Core_Result dx_rectangle_presenter_construct(dx_rectangle_presenter* SELF, Core_
     return Core_Failure;
   }
   //
-  if (Core_Visuals_Context_createVariableBinding(&SELF->val_vbinding, DX_PRESENTER(SELF)->val_context, Core_VertexFormat_position_xyz, SELF->val_buffer)) {
+  if (Core_Visuals_Context_createVariableBinding(&SELF->val_vbinding, DX_PRESENTER(SELF)->val_context, Core_VertexFormat_PositionXyz, SELF->val_buffer)) {
     CORE_UNREFERENCE(SELF->val_buffer);
     SELF->val_buffer = NULL;
     //

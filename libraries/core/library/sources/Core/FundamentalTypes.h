@@ -40,7 +40,7 @@ typedef bool Core_Boolean;
 /* http://localhost/core/ring-1/#core-false */
 #define Core_False (false)
 
-Core_Result Core_Boolean_getType(Core_Type** RETURN);
+//Core_Result Core_Boolean_getType(Core_Type** RETURN);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
@@ -53,7 +53,7 @@ typedef size_t Core_Size;
 /* http://localhost/core/ring-1/#core-size-greatest */
 #define Core_Size_Greatest (SIZE_MAX)
 
-Core_Result Core_Size_getType(Core_Type** RETURN);
+//Core_Result Core_Size_getType(Core_Type** RETURN);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
@@ -66,7 +66,7 @@ typedef uint8_t Core_Natural8;
 /* http://localhost/core/ring-1/#core-natural8-greatest */
 #define Core_Natural8_Greatest (UINT8_MAX)
 
-Core_Result Core_Natural8_getType(Core_Type** RETURN);
+//Core_Result Core_Natural8_getType(Core_Type** RETURN);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
@@ -79,7 +79,7 @@ typedef uint16_t Core_Natural16;
 /* http://localhost/core/ring-1/#core-natural16-greatest */
 #define Core_Natural16_Greatest (UINT16_MAX)
 
-Core_Result Core_Natural16_getType(Core_Type** RETURN);
+//Core_Result Core_Natural16_getType(Core_Type** RETURN);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
@@ -92,7 +92,7 @@ typedef uint32_t Core_Natural32;
 /* http://localhost/core/ring-1/#core-natural32-greatest */
 #define Core_Natural32_Greatest (UINT32_MAX)
 
-Core_Result Core_Natural32_getType(Core_Type** RETURN);
+//Core_Result Core_Natural32_getType(Core_Type** RETURN);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
@@ -105,7 +105,7 @@ typedef uint64_t Core_Natural64;
 /* http://localhost/core/ring-1/#core-natural64-greatest */
 #define Core_Natural64_Greatest (UINT64_MAX)
 
-Core_Result Core_Natural64_getType(Core_Type** RETURN);
+//Core_Result Core_Natural64_getType(Core_Type** RETURN);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
@@ -118,7 +118,7 @@ typedef int8_t Core_Integer8;
 /* http://localhost/core/ring-1/#core-integer8-greatest */
 #define Core_Integer8_Greatest (INT8_MAX)
 
-Core_Result Core_Integer8_getType(Core_Type** RETURN);
+//Core_Result Core_Integer8_getType(Core_Type** RETURN);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
@@ -131,7 +131,7 @@ typedef int16_t Core_Integer16;
 /* http://localhost/core/ring-1/#core-integer16-greatest */
 #define Core_Integer16_Greatest (INT16_MAX)
 
-Core_Result Core_Integer16_getType(Core_Type** RETURN);
+//Core_Result Core_Integer16_getType(Core_Type** RETURN);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
@@ -144,7 +144,7 @@ typedef int32_t Core_Integer32;
 /* http://localhost/core/ring-1/#core-integer32-greatest */
 #define Core_Integer32_Greatest (INT32_MAX)
 
-Core_Result Core_Integer32_getType(Core_Type** RETURN);
+//Core_Result Core_Integer32_getType(Core_Type** RETURN);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
@@ -157,7 +157,7 @@ typedef int64_t Core_Integer64;
 /* http://localhost/core/ring-1/#core-integer64-greatest */
 #define Core_Integer64_Greatest (INT64_MAX)
 
-Core_Result Core_Integer64_getType(Core_Type** RETURN);
+//Core_Result Core_Integer64_getType(Core_Type** RETURN);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
@@ -201,7 +201,7 @@ Core_Result Core_isInfinityR32(Core_Boolean* RETURN, Core_Real32 x);
 /* http://localhost/core/ring-1/#core-isnonumber */
 Core_Result Core_isNoNumberR32(Core_Boolean* RETURN, Core_Real32 x);
 
-Core_Result Core_Real32_getType(Core_Type** RETURN);
+//Core_Result Core_Real32_getType(Core_Type** RETURN);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
@@ -245,7 +245,7 @@ Core_Result Core_isInfinityR64(Core_Boolean* RETURN, Core_Real64 x);
 /* http://localhost/core/ring-1/#core-isnonumber */
 Core_Result Core_isNoNumberR64(Core_Boolean* RETURN, Core_Real64 x);
 
-Core_Result Core_Real64_getType(Core_Type** RETURN);
+//Core_Result Core_Real64_getType(Core_Type** RETURN);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 

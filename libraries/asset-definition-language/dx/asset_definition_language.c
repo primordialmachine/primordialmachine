@@ -211,7 +211,7 @@ Core_Result dx_adl_compile(dx_assets_scene** RETURN, dx_ddl_node* node) {
           }
         } else if (isEqualTo[1]) {
           // The scene still uses the wrong mesh.
-          dx_assets_mesh* mesh = DX_ASSETS_MESH(symbol->asset);
+          Core_Assets_Mesh* mesh = CORE_ASSETS_MESH(symbol->asset);
           Core_Size n;
           if (dx_inline_object_array_get_size(&n, &mesh->operations)) {
             CORE_UNREFERENCE(context);

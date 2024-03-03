@@ -2,6 +2,7 @@
 
 #include "Core/FundamentalTypes.h"
 
+#include "dx/core/TypeSystem.h"
 #include <math.h>
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
@@ -41,3 +42,4 @@ Core_Result Core_isNoNumberR64(Core_Boolean* RETURN, Core_Real64 x) {
 }
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+

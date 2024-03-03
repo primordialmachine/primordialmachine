@@ -2,22 +2,14 @@
 #define DX_CORE_TYPESYSTEM_LIBRARY_H_INCLUDED
 
 #include "dx/core/TypeSystem.h"
+#include "Core/TypeSystem/TypeName.h"
 
-typedef struct _dx_rti_type _dx_rti_type;
+typedef struct _Core_Type _Core_Type;
 
-typedef struct _dx_rti_type_name _dx_rti_type_name;
-
-struct _dx_rti_type_name {
-  dx_reference_counter reference_count;
-  Core_Size hash_value;
-  Core_Size number_of_bytes;
-  char bytes[];
-};
-
-struct _dx_rti_type {
-  dx_reference_counter reference_count;
+struct _Core_Type {
+  Core_ReferenceCounter reference_count;
   Core_Natural8 flags;
-  _dx_rti_type_name* name;
+  _Core_TypeName* name;
   void (*on_type_destroyed)();
   union {
     // _DX_RTI_TYPE_NODE_FLAGS_FUNDAMENTAL
@@ -26,7 +18,7 @@ struct _dx_rti_type {
     } fundamental;
     // _DX_RTI_TYPE_NODE_FLAGS_OBJECT
     struct {
-      _dx_rti_type* parent;
+      _Core_Type* parent;
 
       Core_Size object_size;
       void (*destruct_object)(Core_Object*);

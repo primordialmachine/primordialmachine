@@ -157,12 +157,12 @@ Core_Result Core_Object_allocate(Core_Object** RETURN, Core_Size size) {
 
 void Core_reference(Core_Object *object) {
   Core_Debug_checkObjectMagicBytes(object);
-  dx_reference_counter_increment(&object->reference_count);
+  Core_ReferenceCounter_increment(&object->reference_count);
 }
 
 void Core_unreference(Core_Object* object) {
   Core_Debug_checkObjectMagicBytes(object);
-  if (!dx_reference_counter_decrement(&object->reference_count)) {
+  if (!Core_ReferenceCounter_decrement(&object->reference_count)) {
     // weak references
     _acquire_weak_references_lock();
     while (object->weak_references) {
@@ -178,7 +178,7 @@ void Core_unreference(Core_Object* object) {
     Core_setError(oldError);
     // destruct
     while (object->type) {
-      _dx_rti_type* type = (_dx_rti_type*)object->type;
+      _Core_Type* type = (_Core_Type*)object->type;
       if (type->object.destruct_object) {
         type->object.destruct_object(object);
       }
@@ -289,91 +289,5 @@ Core_Result Core_WeakReference_acquire(Core_Object** RETURN, Core_WeakReference*
   *RETURN = SELF->object;
   return Core_Success;
 }
-
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-
-
-
-Core_defineFundamentalType
-  (
-    "Core.Natural8",
-    Core_Natural8
-  );
-
-Core_defineFundamentalType
-  (
-    "Core.Natural16",
-    Core_Natural16
-  );
-
-Core_defineFundamentalType
-  (
-    "Core.Natural32",
-    Core_Natural32
-  );
-
-Core_defineFundamentalType
-  (
-    "Core.Natural64",
-    Core_Natural64
-  );
-
-
-
-Core_defineFundamentalType
-  (
-    "Core.Integer8",
-    Core_Integer8
-  );
-
-Core_defineFundamentalType
-  (
-    "Core.Integer16",
-    Core_Integer16
-  );
-
-Core_defineFundamentalType
-  (
-    "Core.Integer32",
-    Core_Integer32
-  );
-
-Core_defineFundamentalType
-  (
-    "Core.Integer64",
-    Core_Integer64
-  );
-
-
-
-Core_defineFundamentalType
-  (
-    "Core.Real32",
-    Core_Real32
-  );
-
-Core_defineFundamentalType
-  (
-    "Core.Real64",
-    Core_Real64
-  );
-
-
-
-Core_defineFundamentalType
-  (
-    "Core.Boolean",
-    Core_Boolean
-  );
-
-
-
-Core_defineFundamentalType
-  (
-    "Core.Size",
-    Core_Size
-  );
-
-
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/

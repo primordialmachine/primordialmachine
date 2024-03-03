@@ -33,7 +33,7 @@ static Core_Result _parse_mesh_operations(dx_ddl_node* node, dx_adl_symbol* symb
 
 static Core_Result _parse_vertex_format(Core_VertexFormat* RETURN, dx_ddl_node* node, dx_adl_context* context);
 
-static Core_Result _parse_mesh(dx_assets_mesh** RETURN, dx_ddl_node* node, dx_adl_context* context);
+static Core_Result _parse_mesh(Core_Assets_Mesh** RETURN, dx_ddl_node* node, dx_adl_context* context);
 
 static Core_Result _parse(Core_Object** RETURN, dx_adl_type_handlers_mesh* SELF, dx_ddl_node* node, dx_adl_context* context);
 
@@ -198,7 +198,7 @@ static Core_Result _parse_mesh_operation(dx_ddl_node* node, dx_adl_symbol* symbo
   CORE_REFERENCE(reader_symbol->asset);
   CORE_UNREFERENCE(reader_symbol);
   reader_symbol = NULL;
-  dx_assets_mesh* mesh = DX_ASSETS_MESH(symbol->asset);
+  Core_Assets_Mesh* mesh = CORE_ASSETS_MESH(symbol->asset);
   if (dx_inline_object_array_append(&mesh->operations, CORE_OBJECT(operation))) {
     CORE_UNREFERENCE(operation);
     operation = NULL;
@@ -252,15 +252,39 @@ static Core_Result _parse_vertex_format(Core_VertexFormat* RETURN, dx_ddl_node* 
   if (dx_ddl_node_list_get_size(&n, node)) {
     return Core_Failure;
   }
+  if (n > 3) {
+    Core_setError(Core_Error_SemanticalAnalysisFailed);
+    return Core_Failure;
+  }
+  Core_StringBuffer * stringBuffer;
+  Core_StringBuffer_create(&stringBuffer);
+  typedef struct SupportedEntry {
+    char const* name;
+    size_t const numberOfBytes;
+    Core_VertexFormat value;
+  } SupportedEntry;
+  SupportedEntry supported [] = {
+    { "|position xyz", sizeof("|position xyz") - 1, Core_VertexFormat_PositionXyz },
+    { "|position xyz|ambient rgba", sizeof("|position xyz|ambient rgba") - 1, Core_VertexFormat_PositionXyzAmbientRgba },
+    { "|position xyz|ambient uv", sizeof("|position xyz|ambient uv") - 1, Core_VertexFormat_PositionXyzAmbientUv },
+    { "|position xyz|ambient rgba|ambient uv", sizeof("|position xyz|ambient rgba|ambient uv") - 1, Core_VertexFormat_PositionXyzAmbientRgbaAmbientUv },
+    { "|ambient rgba", sizeof("|ambient rgba") - 1, Core_VertexFormat_AmbientRgba },
+    { "|ambient uv", sizeof("|ambient uv") - 1, Core_VertexFormat_AmbientUv },
+  };
+  const size_t supportedSize = sizeof(supported) / sizeof(SupportedEntry);
   for (Core_Size i = 0; i < n; ++i) {
     dx_ddl_node* child_node = NULL;
     if (dx_ddl_node_list_get(&child_node, node, i)) {
+      CORE_UNREFERENCE(stringBuffer);
+      stringBuffer = NULL;
       return Core_Failure;
     }
     Core_String* received_value = NULL;
     if (dx_ddl_node_get_string(&received_value, child_node)) {
       CORE_UNREFERENCE(child_node);
       child_node = NULL;
+      CORE_UNREFERENCE(stringBuffer);
+      stringBuffer = NULL;
       return Core_Failure;
     }
     CORE_UNREFERENCE(child_node);
@@ -271,26 +295,45 @@ static Core_Result _parse_vertex_format(Core_VertexFormat* RETURN, dx_ddl_node* 
         Core_String_isEqualTo(&isEqualTo[2], received_value, NAME(ambient_uv_string))) {
       CORE_UNREFERENCE(received_value);
       received_value = NULL;
+      CORE_UNREFERENCE(stringBuffer);
+      stringBuffer = NULL;
       return Core_Failure;
     }
+    Core_StringBuffer_appendBytes(stringBuffer, "|", sizeof("|") - 1);
+    Core_StringBuffer_appendString(stringBuffer, received_value);
     CORE_UNREFERENCE(received_value);
     received_value = NULL;
-    if (isEqualTo[0]) {
-      vertex_format |= Core_VertexFormat_position_xyz;
-    } else if (isEqualTo[1]) {
-      vertex_format |= Core_VertexFormat_ambient_rgba;
-    } else if (isEqualTo[2]) {
-      vertex_format |= Core_VertexFormat_ambient_uv;
-    } else {
-      Core_setError(Core_Error_SemanticalAnalysisFailed);
-      return Core_Failure;
+  }
+  Core_String* string;
+  Core_StringBuffer_getString(&string, stringBuffer);
+  CORE_UNREFERENCE(stringBuffer);
+  stringBuffer = NULL;
+  for (Core_Size i = 0, n = supportedSize; i < n; ++i) {
+    Core_Size numberOfBytes;
+    Core_String_getNumberOfBytes(&numberOfBytes, string);
+    if (numberOfBytes == supported[i].numberOfBytes) {
+      const void* bytes;
+      Core_String_getBytes(&bytes, string);
+      Core_Integer8 areEqual;
+      if (Core_Memory_compare(&areEqual, bytes, supported[i].name, numberOfBytes)) {
+        CORE_UNREFERENCE(string);
+        string = NULL;
+        return Core_Failure;
+      }
+      if (!areEqual) {
+        CORE_UNREFERENCE(string);
+        string = NULL;
+        *RETURN = supported[i].value;
+        return Core_Success;
+      }
     }
   }
-  *RETURN = vertex_format;
-  return Core_Success;
+  CORE_UNREFERENCE(string);
+  string = NULL;
+  return Core_Failure;
 }
 
-static Core_Result _parse_mesh(dx_assets_mesh** RETURN, dx_ddl_node* node, dx_adl_context* context) {
+static Core_Result _parse_mesh(Core_Assets_Mesh** RETURN, dx_ddl_node* node, dx_adl_context* context) {
   Core_String* name_value = NULL;
   // name
   {
@@ -326,7 +369,7 @@ static Core_Result _parse_mesh(dx_assets_mesh** RETURN, dx_ddl_node* node, dx_ad
     child_node = NULL;
   }
   // vertexFormat
-  Core_VertexFormat vertex_format_value = Core_VertexFormat_position_xyz_ambient_rgba_ambient_uv;
+  Core_VertexFormat vertex_format_value = Core_VertexFormat_PositionXyzAmbientRgbaAmbientUv;
   {
     Core_String* name = NAME(vertex_format_key);
     dx_ddl_node* child_node = NULL;
@@ -360,8 +403,8 @@ static Core_Result _parse_mesh(dx_assets_mesh** RETURN, dx_ddl_node* node, dx_ad
       return Core_Failure;
     }
   }
-  dx_assets_mesh* mesh_value = NULL;
-  if (dx_assets_mesh_create(&mesh_value, name_value, generator_value, vertex_format_value, material_reference_value)) {
+  Core_Assets_Mesh* mesh_value = NULL;
+  if (Core_Assets_Mesh_create(&mesh_value, name_value, generator_value, vertex_format_value, material_reference_value)) {
     CORE_UNREFERENCE(material_reference_value);
     material_reference_value = NULL;
     CORE_UNREFERENCE(generator_value);
@@ -388,14 +431,14 @@ static Core_Result _parse(Core_Object** RETURN, dx_adl_type_handlers_mesh* SELF,
   if (_check_keys(SELF, node)) {
     return Core_Failure;
   }
-  return _parse_mesh((dx_assets_mesh**)RETURN, node, context);
+  return _parse_mesh((Core_Assets_Mesh**)RETURN, node, context);
 }
 
 static Core_Result _resolve(dx_adl_type_handlers_mesh* SELF, dx_adl_symbol* symbol, dx_adl_context* context) {
   if (symbol->resolved) {
     return Core_Success;
   }
-  dx_assets_mesh* mesh = DX_ASSETS_MESH(symbol->asset);
+  Core_Assets_Mesh* mesh = CORE_ASSETS_MESH(symbol->asset);
   // operations
   {
     Core_Error last_error = Core_getError();
@@ -417,13 +460,13 @@ static Core_Result _resolve(dx_adl_type_handlers_mesh* SELF, dx_adl_symbol* symb
       child_node = NULL;
     }
   }
-  if (mesh->material_reference) {
-    if (mesh->material_reference->object) {
+  if (mesh->materialReference) {
+    if (mesh->materialReference->object) {
       symbol->resolved = true;
       return Core_Success;
     }
     dx_adl_symbol* referenced_symbol = NULL;
-    if (dx_asset_definitions_get(&referenced_symbol, context->definitions, mesh->material_reference->name)) {
+    if (dx_asset_definitions_get(&referenced_symbol, context->definitions, mesh->materialReference->name)) {
       return Core_Failure;
     }
     if (!referenced_symbol->asset) {
@@ -431,8 +474,8 @@ static Core_Result _resolve(dx_adl_type_handlers_mesh* SELF, dx_adl_symbol* symb
       referenced_symbol = NULL;
       return Core_Failure;
     }
-    mesh->material_reference->object = referenced_symbol->asset;
-    CORE_REFERENCE(mesh->material_reference->object);
+    mesh->materialReference->object = referenced_symbol->asset;
+    CORE_REFERENCE(mesh->materialReference->object);
     CORE_UNREFERENCE(referenced_symbol);
     referenced_symbol = NULL;
   }
@@ -446,20 +489,6 @@ static Core_Result _enter(dx_adl_type_handlers_mesh* SELF, dx_ddl_node* source, 
   if (dx_asset_definition_language_parser_parse_type(&received_type, source, context)) {
     return Core_Failure;
   }
-#if 0
-  Core_Boolean isEqualTo = Core_False;
-  if (Core_String_isEqualTo(&isEqualTo, received_type, NAME(material_type))) {
-    CORE_UNREFERENCE(received_type);
-    received_type = NULL;
-    return Core_Failure;
-  }
-  if (!isEqualTo) {
-    CORE_UNREFERENCE(received_type);
-    received_type = NULL;
-    Core_setError(Core_Error_SemanticalAnalysisFailed);
-    return Core_Failure;
-  }
-#endif
   // name
   Core_String* name = NULL;
   if (dx_asset_definition_language_parser_parse_name(&name, source, context)) {

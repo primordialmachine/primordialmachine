@@ -251,4 +251,87 @@ Core_Result Core_TypeSystem_defineObjectType(Core_Type** RETURN, char const* p, 
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
+Core_declareFundamentalType
+  (
+    "Core.Natural8",
+    Core_Natural8
+  );
+
+Core_declareFundamentalType
+  (
+    "Core.Natural16",
+    Core_Natural16
+  );
+
+Core_declareFundamentalType
+  (
+    "Core.Natural32",
+    Core_Natural32
+  );
+
+Core_declareFundamentalType
+  (
+    "Core.Natural64",
+    Core_Natural64
+  );
+
+
+
+Core_declareFundamentalType
+  (
+    "Core.Integer8",
+    Core_Integer8
+  );
+
+Core_declareFundamentalType
+  (
+    "Core.Integer16",
+    Core_Integer16
+  );
+
+Core_declareFundamentalType
+  (
+    "Core.Integer32",
+    Core_Integer32
+  );
+
+Core_declareFundamentalType
+  (
+    "Core.Integer64",
+    Core_Integer64
+  );
+
+
+
+Core_declareFundamentalType
+  (
+    "Core.Real32",
+    Core_Real32
+  );
+
+Core_declareFundamentalType
+  (
+    "Core.Real64",
+    Core_Real64
+  );
+
+
+
+Core_declareFundamentalType
+  (
+    "Core.Boolean",
+    Core_Boolean
+  );
+
+
+
+Core_declareFundamentalType
+  (
+    "Core.Size",
+    Core_Size
+  );
+
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
 #endif // DX_CORE_TYPESYSTEM_H_INCLUDED

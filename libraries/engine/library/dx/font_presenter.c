@@ -236,7 +236,7 @@ static Core_Result create_text_presenter(dx_font_presenter* SELF) {
   if (dx_engine_utilities_2d_create_program(&SELF->text.val_program, DX_PRESENTER(SELF)->val_context, "assets/gl", "font")) {
     return Core_Failure;
   }
-  if (Core_Visuals_Context_createVariableBinding(&SELF->text.val_vbinding, DX_PRESENTER(SELF)->val_context, Core_VertexFormat_position_xyz_ambient_uv, SELF->val_buffer)) {
+  if (Core_Visuals_Context_createVariableBinding(&SELF->text.val_vbinding, DX_PRESENTER(SELF)->val_context, Core_VertexFormat_PositionXyzAmbientUv, SELF->val_buffer)) {
     //
     CORE_UNREFERENCE(SELF->text.val_program);
     SELF->text.val_program = NULL;

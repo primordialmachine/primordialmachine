@@ -23,41 +23,7 @@
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-dx_reference_counter dx_reference_counter_increment(dx_reference_counter* reference_counter) {
-#if 1 == DX_ATOMIC_REFERENCE_COUNTING_ENABLED
-  #if defined(Core_OperatingSystem) && Core_OperatingSystem_Windows == Core_OperatingSystem
-    #if defined(_WIN64)
-        return InterlockedIncrement64(reference_counter);
-    #else
-        return InterlockedIncrement(reference_counter);
-    #endif
-  #elif defined(Core_OperatingSystem) && Core_OperatingSystem_Linux == Core_OperatingSystem
-    return __sync_add_and_fetch(&reference_counter, 1);
-  #else
-    #error("operating system not (yet) supported")
-  #endif
-#else
-  return ++(*reference_counter);
-#endif
-}
 
-dx_reference_counter dx_reference_counter_decrement(dx_reference_counter* reference_counter) {
-#if 1 == DX_ATOMIC_REFERENCE_COUNTING_ENABLED
-  #if defined(Core_OperatingSystem) && Core_OperatingSystem_Windows == Core_OperatingSystem
-    #if defined(_WIN64)
-        return InterlockedDecrement64(reference_counter);
-    #else
-        return InterlockedDecrement(reference_counter);
-    #endif
-  #elif defined(Core_OperatingSystem) && Core_OperatingSystem_Linux == Core_OperatingSystem
-    return __sync_subtract_and_fetch(&reference_counter, 1);
-  #else
-    #error("operating system not (yet) supported")
-  #endif
-#else
-  return --(*reference_counter);
-#endif
-}
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 

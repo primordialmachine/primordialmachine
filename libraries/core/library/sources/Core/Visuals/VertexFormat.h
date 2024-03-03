@@ -10,19 +10,26 @@ Core_declareEnumerationType("Core.VertexFormat",
                             Core_VertexFormat);
 
 enum Core_VertexFormat {
+#pragma push_macro("Shift")
+#define Shift (4)
 
-  Core_VertexFormat_position_xyz = 1,
+  // ...xx1
+  Core_VertexFormat_PositionXyz = 1,
 
-  Core_VertexFormat_ambient_rgba = 2,
+  // ...x10
+  Core_VertexFormat_AmbientRgba = 2,
 
-  Core_VertexFormat_ambient_uv = 4,
+  // ...100
+  Core_VertexFormat_AmbientUv = 4,
 
-  Core_VertexFormat_position_xyz_ambient_rgba = (Core_VertexFormat_position_xyz | Core_VertexFormat_ambient_rgba),
+  Core_VertexFormat_PositionXyzAmbientRgba = (Core_VertexFormat_PositionXyz << (Shift*1) | Core_VertexFormat_AmbientRgba << (Shift * 0)),
 
-  Core_VertexFormat_position_xyz_ambient_uv = (Core_VertexFormat_position_xyz | Core_VertexFormat_ambient_uv),
+  Core_VertexFormat_PositionXyzAmbientUv = (Core_VertexFormat_PositionXyz << (Shift*1) | Core_VertexFormat_AmbientUv << (Shift*0)),
 
-  Core_VertexFormat_position_xyz_ambient_rgba_ambient_uv = (Core_VertexFormat_position_xyz | Core_VertexFormat_ambient_rgba | Core_VertexFormat_ambient_uv),
-
+  Core_VertexFormat_PositionXyzAmbientRgbaAmbientUv = (Core_VertexFormat_PositionXyz << (Shift*2) | Core_VertexFormat_AmbientRgba << (Shift*1) | Core_VertexFormat_AmbientUv << (Shift*0)),
+  
+#undef Shift
+#pragma pop_macro("Shift")
 };
 
 #endif // CORE_VISUALS_VERTEXFORMAT_H_INCLUDED

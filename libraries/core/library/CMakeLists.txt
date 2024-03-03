@@ -124,6 +124,14 @@ list(APPEND ${name}.headers "sources/dx/core/Object.h")
 list(APPEND ${name}.sources "sources/dx/core/Object.library.c")
 list(APPEND ${name}.headers "sources/dx/core/Object.library.h")
 
+# "Reference Counter".
+list(APPEND ${name}.sources "sources/Core/ReferenceCounter.c")
+list(APPEND ${name}.headers "sources/Core/ReferenceCounter.h")
+
+
+# "Type System".
+list(APPEND ${name}.sources "sources/Core/TypeSystem/TypeName.c")
+list(APPEND ${name}.headers "sources/Core/TypeSystem/TypeName.h")
 list(APPEND ${name}.sources "sources/dx/core/TypeSystem.c")
 list(APPEND ${name}.headers "sources/dx/core/TypeSystem.h")
 list(APPEND ${name}.sources "sources/dx/core/TypeSystem.library.c")

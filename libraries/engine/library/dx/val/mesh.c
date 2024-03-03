@@ -185,8 +185,8 @@ on_error:
 }
 
 static Core_Result add_material_to_backend(dx_val_mesh* SELF) {
-  if (SELF->mesh_asset->material_reference && SELF->mesh_asset->material_reference->object) {
-    if (dx_val_material_create(&SELF->material, SELF->context, CORE_ASSETS_MATERIAL(SELF->mesh_asset->material_reference->object))) {
+  if (SELF->mesh_asset->materialReference && SELF->mesh_asset->materialReference->object) {
+    if (dx_val_material_create(&SELF->material, SELF->context, CORE_ASSETS_MATERIAL(SELF->mesh_asset->materialReference->object))) {
       return Core_Failure;
     }
   }
@@ -201,7 +201,7 @@ static void remove_material_from_backend(dx_val_mesh* SELF) {
 }
 
 static Core_Result add_to_backend(dx_val_mesh* SELF) {
-  Core_VertexFormat vertex_format = SELF->mesh_asset->vertex_format;
+  Core_VertexFormat vertex_format = SELF->mesh_asset->vertexFormat;
 
   // create buffer
   if (Core_Visuals_Context_createBuffer(&SELF->buffer, SELF->context)) {
@@ -210,7 +210,7 @@ static Core_Result add_to_backend(dx_val_mesh* SELF) {
 
   // upload data to buffer
   void* bytes; Core_Size number_of_bytes;
-  if (dx_assets_mesh_format(SELF->mesh_asset, vertex_format, &bytes, &number_of_bytes)) {
+  if (Core_Assets_Mesh_format(SELF->mesh_asset, vertex_format, &bytes, &number_of_bytes)) {
     return Core_Failure;
   }
   if (dx_val_buffer_set_data(SELF->buffer, bytes, number_of_bytes)) {
@@ -231,13 +231,13 @@ static Core_Result add_to_backend(dx_val_mesh* SELF) {
   // create the program
   uint8_t flags = DX_PROGRAM_WITH_MESH_AMBIENT_RGBA;
   switch (vertex_format) {
-  case Core_VertexFormat_position_xyz: {
+  case Core_VertexFormat_PositionXyz: {
     /*Intentionally empty.*/
   } break;
-  case Core_VertexFormat_position_xyz_ambient_rgba: {
+  case Core_VertexFormat_PositionXyzAmbientRgba: {
     flags |= DX_PROGRAM_WITH_VERTEX_AMBIENT_RGBA;
   } break;
-  case Core_VertexFormat_position_xyz_ambient_uv: {
+  case Core_VertexFormat_PositionXyzAmbientUv: {
    flags |= DX_PROGRAM_WITH_VERTEX_AMBIENT_UV;
    if (SELF->material->material_asset->ambientTextureReference && SELF->material->material_asset->ambientTextureReference->object) {
       flags |= DX_PROGRAM_WITH_MATERIAL_AMBIENT_TEXTURE;
@@ -312,7 +312,7 @@ static void dx_val_mesh_destruct(dx_val_mesh* SELF) {
 static void dx_val_mesh_constructDispatch(dx_val_mesh_Dispatch* SELF)
 {/*Intentionally empty.*/}
 
-Core_Result dx_val_mesh_construct(dx_val_mesh* SELF, Core_Visuals_Context* context, dx_assets_mesh* mesh_asset) {
+Core_Result dx_val_mesh_construct(dx_val_mesh* SELF, Core_Visuals_Context* context, Core_Assets_Mesh* mesh_asset) {
   DX_CONSTRUCT_PREFIX(dx_val_mesh);
 
   SELF->mesh_asset = mesh_asset;
@@ -323,6 +323,7 @@ Core_Result dx_val_mesh_construct(dx_val_mesh* SELF, Core_Visuals_Context* conte
   if (add_material_to_backend(SELF)) {
     CORE_UNREFERENCE(SELF->mesh_asset);
     SELF->mesh_asset = NULL;
+    return Core_Failure;
   }
 
   if (add_to_backend(SELF)) {
@@ -336,7 +337,7 @@ Core_Result dx_val_mesh_construct(dx_val_mesh* SELF, Core_Visuals_Context* conte
   return Core_Success;
 }
 
-Core_Result dx_val_mesh_create(dx_val_mesh** RETURN, Core_Visuals_Context* context, dx_assets_mesh* mesh_asset) {
+Core_Result dx_val_mesh_create(dx_val_mesh** RETURN, Core_Visuals_Context* context, Core_Assets_Mesh* mesh_asset) {
   DX_CREATE_PREFIX(dx_val_mesh);
   if (dx_val_mesh_construct(SELF, context, mesh_asset)) {
     CORE_UNREFERENCE(SELF);

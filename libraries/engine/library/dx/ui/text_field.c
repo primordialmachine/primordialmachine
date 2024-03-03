@@ -428,7 +428,7 @@ static Core_Result update_text_bounds(dx_ui_text_field* SELF) {
     // @todo Do NOT create a string each time.
     // Use dx_string_buffer's string iterator.
     void const* bytes = NULL;
-    if (Core_StringBuffer_get_bytes(&bytes, SELF->text->text)) {
+    if (Core_StringBuffer_getBytes(&bytes, SELF->text->text)) {
       return Core_Failure;
     }
     Core_Size number_of_bytes;
@@ -589,7 +589,7 @@ static Core_Result on_render(dx_ui_text_field* SELF, DX_UI_RENDER_ARGS const* ar
     // @todo Do NOT create a string each time.
     // Use dx_string_buffer's string iterator.
     void const* bytes = NULL;
-    if (Core_StringBuffer_get_bytes(&bytes, SELF->text->text)) {
+    if (Core_StringBuffer_getBytes(&bytes, SELF->text->text)) {
       return Core_Failure;
     }
     Core_Size number_of_bytes;

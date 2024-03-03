@@ -20,7 +20,7 @@ static inline dx_val_mesh* DX_VAL_MESH(void* p) {
 struct dx_val_mesh {
   Core_Object _parent;
   /// @brief A pointer to the corresponding asset mesh.
-  dx_assets_mesh* mesh_asset;
+  Core_Assets_Mesh* mesh_asset;
   /// @brief A pointer to the corresponding assset material.
   /// Usually the asset material of the asset mesh.
   dx_val_material* material;
@@ -38,8 +38,8 @@ struct dx_val_mesh_Dispatch {
   Core_Object_Dispatch _parent;
 };
 
-Core_Result dx_val_mesh_construct(dx_val_mesh* SELF, Core_Visuals_Context* context, dx_assets_mesh* mesh_asset);
+Core_Result dx_val_mesh_construct(dx_val_mesh* SELF, Core_Visuals_Context* context, Core_Assets_Mesh* mesh_asset);
 
-Core_Result dx_val_mesh_create(dx_val_mesh** RETURN, Core_Visuals_Context* context, dx_assets_mesh* mesh_asset);
+Core_Result dx_val_mesh_create(dx_val_mesh** RETURN, Core_Visuals_Context* context, Core_Assets_Mesh* mesh_asset);
 
 #endif // DX_VAL_MESH_H_INCLUDED

@@ -3,8 +3,8 @@
 // If a signal (t,n) -> s is defined then trying to define a signal (t,n) -> s' is an error.  
 // If (t,n) -> s then (t',n) -> s for any descendant types t' of t. We write t' < t to indicate that t' is a descendant type of t.
 // By the above: If a signal (t,n) -> s is defined then defining a signal (t',n) -> s' for any type t' <= t is an error.
-#if !defined(DX_CORE_SIGNALS_H_INCLUDED)
-#define DX_CORE_SIGNALS_H_INCLUDED
+#if !defined(CORE_SIGNALS_H_INCLUDED)
+#define CORE_SIGNALS_H_INCLUDED
 
 #include "Core/Error.h"
 #include "Core/Result.h"
@@ -35,4 +35,4 @@ Core_Result Core_Signals_connect(void** RETURN, Core_Object* instance, char cons
 /// @procedure
 Core_Result Core_Signals_invoke(Core_Object* instance, char const *p, Core_Size n, Core_Object* argument);
 
-#endif // DX_CORE_SIGNALS_H_INCLUDED
+#endif // CORE_SIGNALS_H_INCLUDED

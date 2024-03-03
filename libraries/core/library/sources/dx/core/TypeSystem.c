@@ -5,19 +5,17 @@
 #include "Core/Memory.h"
 #include "dx/core/inline_pointer_hashmap.h"
 
-static Core_Result _dx_rti_type_name_create(_dx_rti_type_name** RETURN, char const* bytes, Core_Size number_of_bytes);
+static Core_Result _Core_TypeHashMap_hashKeyCallback(Core_Size* RETURN, _Core_TypeName** a);
 
-static Core_Result _dx_rti_type_name_hash_key_callback(Core_Size* RETURN, _dx_rti_type_name** a);
+static Core_Result _Core_TypeHashMap_compareKeysCallback(Core_Boolean* RETURN, _Core_TypeName** a, _Core_TypeName** b);
 
-static Core_Result _dx_rti_type_name_compare_keys_callback(Core_Boolean* RETURN, _dx_rti_type_name** a, _dx_rti_type_name** b);
+static void _Core_TypeHashMap_keyAddedCallback(_Core_TypeName** a);
 
-static void _dx_rti_type_name_reference(_dx_rti_type_name* a);
+static void _Core_TypeHashMap_keyRemovedCallback(_Core_TypeName** a);
 
-static void _dx_rti_type_name_unreference(_dx_rti_type_name* a);
+static void _Core_TypeHashMap_valueAddedCallback(_Core_Type** a);
 
-static void _dx_rti_type_name_reference_callback(_dx_rti_type_name** a);
-
-static void _dx_rti_type_name_unreference_callback(_dx_rti_type_name** a);
+static void _Core_TypeHashMap_valueRemovedCallback(_Core_Type** a);
 
 #define _DX_RTI_TYPE_NODE_FLAGS_FUNDAMENTAL (1)
 #define _DX_RTI_TYPE_NODE_FLAGS_ENUMERATION (2)
@@ -27,8 +25,8 @@ static void _dx_rti_type_name_unreference_callback(_dx_rti_type_name** a);
 static Core_Size g_debug_number_of_types = 0;
 #endif
 
-static inline _dx_rti_type* _DX_RTI_TYPE(void* p) {
-  return (_dx_rti_type*)p;
+static inline _Core_Type* _DX_RTI_TYPE(void* p) {
+  return (_Core_Type*)p;
 }
 
 /// @internal
@@ -37,7 +35,7 @@ static inline _dx_rti_type* _DX_RTI_TYPE(void* p) {
 /// @return @a true if the type is a fundamental type. @a false if it is not a fundamental type.
 /// @a false is also returned on failure.
 /// @default-failure
-static Core_Boolean _dx_rti_type_is_fundamental(_dx_rti_type* ty);
+static Core_Boolean _dx_rti_type_is_fundamental(_Core_Type* ty);
 
 /// @internal
 /// @brief Get if a type is an enumeration type.
@@ -45,7 +43,7 @@ static Core_Boolean _dx_rti_type_is_fundamental(_dx_rti_type* ty);
 /// @return @a true if the type is an enumeration type. @a false if it is not an enumeration type.
 /// @a false is also returned on failure.
 /// @default-failure
-static Core_Boolean _dx_rti_type_is_enumeration(_dx_rti_type* ty);
+static Core_Boolean _dx_rti_type_is_enumeration(_Core_Type* ty);
 
 /// @internal
 /// @brief Get if a type is an object type.
@@ -53,14 +51,14 @@ static Core_Boolean _dx_rti_type_is_enumeration(_dx_rti_type* ty);
 /// @return @a true if the type is an objec type. @a false if it is not an object type.
 /// @a false is also returned on failure.
 /// @default-failure
-static Core_Boolean _dx_rti_type_is_object(_dx_rti_type* ty);
+static Core_Boolean _dx_rti_type_is_object(_Core_Type* ty);
 
 /// @internal
 /// @brief Ensure the dispatches of a type are created.
 /// This function does nothing if the type is not an object type.
 /// @param ty A pointer to the type.
 /// @default-return
-static Core_Result _dx_rti_type_ensure_Dispatches_created(_dx_rti_type* ty);
+static Core_Result _dx_rti_type_ensure_Dispatches_created(_Core_Type* ty);
 
 /// @internal
 /// @brief Ensure the dispatches of a type are destroyed.
@@ -70,21 +68,21 @@ static Core_Result _dx_rti_type_ensure_Dispatches_created(_dx_rti_type* ty);
 /// Always succeeds.
 /// @undefined
 /// @a ty does not point to a type.
-static Core_Result _dx_rti_type_ensure_Dispatches_destroyed(_dx_rti_type* ty);
+static Core_Result _dx_rti_type_ensure_Dispatches_destroyed(_Core_Type* ty);
 
-static Core_Boolean _dx_rti_type_is_fundamental(_dx_rti_type* ty) {
+static Core_Boolean _dx_rti_type_is_fundamental(_Core_Type* ty) {
   return _DX_RTI_TYPE_NODE_FLAGS_FUNDAMENTAL == (ty->flags & _DX_RTI_TYPE_NODE_FLAGS_FUNDAMENTAL);
 }
 
-static Core_Boolean _dx_rti_type_is_enumeration(_dx_rti_type* ty) {
+static Core_Boolean _dx_rti_type_is_enumeration(_Core_Type* ty) {
   return _DX_RTI_TYPE_NODE_FLAGS_ENUMERATION == (ty->flags & _DX_RTI_TYPE_NODE_FLAGS_ENUMERATION);
 }
 
-static Core_Boolean _dx_rti_type_is_object(_dx_rti_type* ty) {
+static Core_Boolean _dx_rti_type_is_object(_Core_Type* ty) {
   return _DX_RTI_TYPE_NODE_FLAGS_OBJECT == (ty->flags & _DX_RTI_TYPE_NODE_FLAGS_OBJECT);
 }
 
-static Core_Result _dx_rti_type_ensure_Dispatches_created(_dx_rti_type* ty) {
+static Core_Result _dx_rti_type_ensure_Dispatches_created(_Core_Type* ty) {
   if (!_dx_rti_type_is_object(ty)) {
     return Core_Success;
   }
@@ -110,7 +108,7 @@ static Core_Result _dx_rti_type_ensure_Dispatches_created(_dx_rti_type* ty) {
   return Core_Success;
 }
 
-static Core_Result _dx_rti_type_ensure_Dispatches_destroyed(_dx_rti_type* ty) {
+static Core_Result _dx_rti_type_ensure_Dispatches_destroyed(_Core_Type* ty) {
   if (!_dx_rti_type_is_object(ty)) {
     return Core_Success;
   }
@@ -124,32 +122,39 @@ static Core_Result _dx_rti_type_ensure_Dispatches_destroyed(_dx_rti_type* ty) {
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-static Core_Result _dx_rti_type_name_create(_dx_rti_type_name** RETURN, char const* bytes, Core_Size number_of_bytes) {
-  if (!RETURN) {
-    Core_setError(Core_Error_ArgumentInvalid);
-    return Core_Failure;
-  }
-  _dx_rti_type_name* SELF = NULL;
-  if (Core_Memory_allocate(&SELF, sizeof(_dx_rti_type_name) + number_of_bytes)) {
-    return Core_Failure;
-  }
-  if (Core_hashBytes(&SELF->hash_value, bytes, number_of_bytes)) {
-    Core_Memory_deallocate(SELF);
-    return Core_Failure;
-  }
-  Core_Memory_copy(SELF->bytes, bytes, number_of_bytes);
-  SELF->number_of_bytes = number_of_bytes;
-  SELF->reference_count = 1;
-  *RETURN = SELF;
-  return Core_Success;
+static void _dx_rti_type_reference(_Core_Type* a) {
+  Core_ReferenceCounter_increment(&a->reference_count);
 }
 
-static Core_Result _dx_rti_type_name_hash_key_callback(Core_Size* RETURN, _dx_rti_type_name** a) {
+static void _dx_rti_type_unreference(_Core_Type* a) {
+  if (0 == Core_ReferenceCounter_decrement(&a->reference_count)) {
+    if (a->on_type_destroyed) {
+      a->on_type_destroyed();
+    }
+    if (_dx_rti_type_is_object(a)) {
+      if (a->object.parent) {
+        _dx_rti_type_unreference(a->object.parent);
+        a->object.parent = NULL;
+      }
+      _dx_rti_type_ensure_Dispatches_destroyed(a);
+    }
+    _Core_TypeName_unreference(a->name);
+    a->name = NULL;
+    Core_Memory_deallocate(a);
+  #if defined(_DEBUG)
+    g_debug_number_of_types--;
+  #endif
+  }
+}
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+static Core_Result _Core_TypeHashMap_hashKeyCallback(Core_Size* RETURN, _Core_TypeName** a) {
   *RETURN = (*a)->hash_value;
   return Core_Success;
 }
 
-static Core_Result _dx_rti_type_name_compare_keys_callback(Core_Boolean* RETURN, _dx_rti_type_name** a, _dx_rti_type_name** b) {
+static Core_Result _Core_TypeHashMap_compareKeysCallback(Core_Boolean* RETURN, _Core_TypeName** a, _Core_TypeName** b) {
   if (*a == *b) {
     *RETURN = true;
   } else if ((*a)->number_of_bytes == (*b)->number_of_bytes) {
@@ -162,56 +167,19 @@ static Core_Result _dx_rti_type_name_compare_keys_callback(Core_Boolean* RETURN,
   return Core_Success;
 }
 
-static void _dx_rti_type_name_reference(_dx_rti_type_name* a) {
-  dx_reference_counter_increment(&a->reference_count);
+static void _Core_TypeHashMap_keyAddedCallback(_Core_TypeName** a) {
+  _Core_TypeName_reference(*a);
 }
 
-static void _dx_rti_type_name_unreference(_dx_rti_type_name* a) {
-  if (0 == dx_reference_counter_decrement(&a->reference_count)) {
-    Core_Memory_deallocate(a);
-  }
+static void _Core_TypeHashMap_keyRemovedCallback(_Core_TypeName** a) {
+  _Core_TypeName_unreference(*a);
 }
 
-static void _dx_rti_type_name_reference_callback(_dx_rti_type_name** a) {
-  _dx_rti_type_name_reference(*a);
-}
-
-static void _dx_rti_type_name_unreference_callback(_dx_rti_type_name** a) {
-  _dx_rti_type_name_unreference(*a);
-}
-
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-
-static void _dx_rti_type_reference(_dx_rti_type* a) {
-  dx_reference_counter_increment(&a->reference_count);
-}
-
-static void _dx_rti_type_unreference(_dx_rti_type* a) {
-  if (0 == dx_reference_counter_decrement(&a->reference_count)) {
-    if (a->on_type_destroyed) {
-      a->on_type_destroyed();
-    }
-    if (_dx_rti_type_is_object(a)) {
-      if (a->object.parent) {
-        _dx_rti_type_unreference(a->object.parent);
-        a->object.parent = NULL;
-      }
-      _dx_rti_type_ensure_Dispatches_destroyed(a);
-    }
-    _dx_rti_type_name_unreference(a->name);
-    a->name = NULL;
-    Core_Memory_deallocate(a);
-  #if defined(_DEBUG)
-    g_debug_number_of_types--;
-  #endif
-  }
-}
-
-static void _dx_rti_type_reference_callback(_dx_rti_type** a) {
+static void _Core_TypeHashMap_valueAddedCallback(_Core_Type** a) {
   _dx_rti_type_reference(*a);
 }
 
-static void _dx_rti_type_unreference_callback(_dx_rti_type** a) {
+static void _Core_TypeHashMap_valueRemovedCallback(_Core_Type** a) {
   _dx_rti_type_unreference(*a);
 }
 
@@ -221,12 +189,12 @@ static Core_InlineHashMapPP* g_types = NULL;
 
 Core_Result Core_TypeSystem_initialize() {
   static Core_InlineHashMapPP_Configuration const configuration = {
-    .compareKeysCallback = (Core_InlineHashMapPP_CompareKeysCallback*) & _dx_rti_type_name_compare_keys_callback,
-    .hashKeyCallback = (Core_InlineHashMapPP_HashKeyCallback*) & _dx_rti_type_name_hash_key_callback,
-    .keyAddedCallback = (Core_InlineHashMapPP_KeyAddedCallback*) & _dx_rti_type_name_reference_callback,
-    .keyRemovedCallback = (Core_InlineHashMapPP_KeyRemovedCallback*) & _dx_rti_type_name_unreference_callback,
-    .valueAddedCallback = (Core_InlineHashMapPP_ValueAddedCallback*) & _dx_rti_type_reference_callback,
-    .valueRemovedCallback = (Core_InlineHashMapPP_ValueRemovedCallback*) & _dx_rti_type_unreference_callback,
+    .compareKeysCallback = (Core_InlineHashMapPP_CompareKeysCallback*) & _Core_TypeHashMap_compareKeysCallback,
+    .hashKeyCallback = (Core_InlineHashMapPP_HashKeyCallback*) & _Core_TypeHashMap_hashKeyCallback,
+    .keyAddedCallback = (Core_InlineHashMapPP_KeyAddedCallback*) & _Core_TypeHashMap_keyAddedCallback,
+    .keyRemovedCallback = (Core_InlineHashMapPP_KeyRemovedCallback*) & _Core_TypeHashMap_keyRemovedCallback,
+    .valueAddedCallback = (Core_InlineHashMapPP_ValueAddedCallback*) & _Core_TypeHashMap_valueAddedCallback,
+    .valueRemovedCallback = (Core_InlineHashMapPP_ValueRemovedCallback*) & _Core_TypeHashMap_valueRemovedCallback,
   };
   if (Core_Memory_allocate(&g_types, sizeof(Core_InlineHashMapPP))) {
     return Core_Failure;
@@ -274,11 +242,11 @@ Core_Result Core_TypeSystem_isObjectType(Core_Boolean* RETURN, Core_Type* type) 
 }
 
 Core_Result Core_TypeSystem_defineEnumerationType(Core_Type** RETURN, char const* p, Core_Size n, void (*on_type_destroyed)()) {
-  _dx_rti_type_name* name = NULL;
-  if (_dx_rti_type_name_create(&name, p, n)) {
+  _Core_TypeName* name = NULL;
+  if (_Core_TypeName_create(&name, p, n)) {
     return Core_Failure;
   }
-  _dx_rti_type* type = NULL;
+  _Core_Type* type = NULL;
   if (Core_InlineHashMapPP_get(&type, g_types, name)) {
     if (Core_Error_NotFound != Core_getError()) {
       return Core_Failure;
@@ -290,11 +258,11 @@ Core_Result Core_TypeSystem_defineEnumerationType(Core_Type** RETURN, char const
     dx_log(p, n);
     dx_log("` already exists", sizeof("` already exists") - 1);
     Core_setError(Core_Error_Exists);
-    _dx_rti_type_name_unreference(name);
+    _Core_TypeName_unreference(name);
     name = NULL;
     return Core_Failure;
   }
-  if (Core_Memory_allocate(&type, sizeof(_dx_rti_type))) {
+  if (Core_Memory_allocate(&type, sizeof(_Core_Type))) {
     return Core_Failure;
   }
   type->on_type_destroyed = on_type_destroyed;
@@ -316,11 +284,11 @@ Core_Result Core_TypeSystem_defineEnumerationType(Core_Type** RETURN, char const
 }
 
 Core_Result Core_TypeSystem_defineFundamentalType(Core_Type** RETURN, char const* p, Core_Size n, void (*on_type_destroyed)(), Core_Size value_size) {
-  _dx_rti_type_name* name = NULL;
-  if (_dx_rti_type_name_create(&name, p, n)) {
+  _Core_TypeName* name = NULL;
+  if (_Core_TypeName_create(&name, p, n)) {
     return Core_Failure;
   }
-  _dx_rti_type* type = NULL;
+  _Core_Type* type = NULL;
   if (Core_InlineHashMapPP_get(&type, g_types, name)) {
     if (Core_Error_NotFound != Core_getError()) {
       return Core_Failure;
@@ -332,11 +300,11 @@ Core_Result Core_TypeSystem_defineFundamentalType(Core_Type** RETURN, char const
     dx_log(p, n);
     dx_log("` already exists", sizeof("` already exists") - 1);
     Core_setError(Core_Error_Exists);
-    _dx_rti_type_name_unreference(name);
+    _Core_TypeName_unreference(name);
     name = NULL;
     return Core_Failure;
   }
-  if (Core_Memory_allocate(&type, sizeof(_dx_rti_type))) {
+  if (Core_Memory_allocate(&type, sizeof(_Core_Type))) {
     return Core_Failure;
   }
   type->on_type_destroyed = on_type_destroyed;
@@ -358,11 +326,11 @@ Core_Result Core_TypeSystem_defineFundamentalType(Core_Type** RETURN, char const
 Core_Result Core_TypeSystem_defineObjectType(Core_Type** RETURN, char const* p, Core_Size n, void (*on_type_destroyed)(), Core_Type* parent,
   Core_Size object_size, void (*destruct_object)(Core_Object*),
   Core_Size dispatch_size, void (*constructDispatch)(Core_Object_Dispatch*)) {
-  _dx_rti_type_name* name = NULL;
-  if (_dx_rti_type_name_create(&name, p, n)) {
+  _Core_TypeName* name = NULL;
+  if (_Core_TypeName_create(&name, p, n)) {
     return Core_Failure;
   }
-  _dx_rti_type* type = NULL;
+  _Core_Type* type = NULL;
   if (Core_InlineHashMapPP_get(&type, g_types, name)) {
     if (Core_Error_NotFound != Core_getError()) {
       return Core_Failure;
@@ -373,7 +341,7 @@ Core_Result Core_TypeSystem_defineObjectType(Core_Type** RETURN, char const* p, 
     dx_log("a type of the name `", sizeof("a type of the name `") - 1);
     dx_log(p, n);
     dx_log("` already exists", sizeof("` already exists") - 1);
-    _dx_rti_type_name_unreference(name);
+    _Core_TypeName_unreference(name);
     name = NULL;
     Core_setError(Core_Error_Exists);
     return Core_Failure;
@@ -389,7 +357,7 @@ Core_Result Core_TypeSystem_defineObjectType(Core_Type** RETURN, char const* p, 
       dx_log("` of child type `", sizeof("` of child type `") - 1);
       dx_log(name->bytes, name->number_of_bytes);
       dx_log("` is not an object type\n", sizeof("` is not an object type\n") - 1);
-      _dx_rti_type_name_unreference(name);
+      _Core_TypeName_unreference(name);
       name = NULL;
       Core_setError(Core_Error_ArgumentInvalid);
       return Core_Failure;
@@ -402,7 +370,7 @@ Core_Result Core_TypeSystem_defineObjectType(Core_Type** RETURN, char const* p, 
       dx_log("` is greater than object size of child type `", sizeof("` is greater than object size of child type `") - 1);
       dx_log(name->bytes, name->number_of_bytes);
       dx_log("`\n", sizeof("`\n") - 1);
-      _dx_rti_type_name_unreference(name);
+      _Core_TypeName_unreference(name);
       name = NULL;
       Core_setError(Core_Error_ArgumentInvalid);
       return Core_Failure;
@@ -414,7 +382,7 @@ Core_Result Core_TypeSystem_defineObjectType(Core_Type** RETURN, char const* p, 
       dx_log("` is greater than dispatch size of child type `", sizeof("` is greater than dispatch size of child type `") - 1);
       dx_log(name->bytes, name->number_of_bytes);
       dx_log("`\n", sizeof("`\n") - 1);
-      _dx_rti_type_name_unreference(name);
+      _Core_TypeName_unreference(name);
       name = NULL;
       Core_setError(Core_Error_ArgumentInvalid);
       return Core_Failure;
@@ -422,8 +390,8 @@ Core_Result Core_TypeSystem_defineObjectType(Core_Type** RETURN, char const* p, 
   }
   // end sanity check
 
-  if (Core_Memory_allocate(&type, sizeof(_dx_rti_type))) {
-    _dx_rti_type_name_unreference(name);
+  if (Core_Memory_allocate(&type, sizeof(_Core_Type))) {
+    _Core_TypeName_unreference(name);
     name = NULL;
     return Core_Failure;
   }
@@ -462,7 +430,7 @@ Core_Result Core_TypeSystem_defineObjectType(Core_Type** RETURN, char const* p, 
   return Core_Success;
 }
 
-static inline bool _dx_rti_type_is_leq(_dx_rti_type* x, _dx_rti_type* y) {
+static inline bool _dx_rti_type_is_leq(_Core_Type* x, _Core_Type* y) {
   if (!x || !y) {
     Core_setError(Core_Error_ArgumentInvalid);
     return false;
@@ -477,7 +445,7 @@ static inline bool _dx_rti_type_is_leq(_dx_rti_type* x, _dx_rti_type* y) {
   if (!_dx_rti_type_is_object(y)) {
     return false;
   }
-  _dx_rti_type* z = x;
+  _Core_Type* z = x;
   do {
     if (z == y) {
       return true;
@@ -498,7 +466,7 @@ Core_Result Core_Type_getDispatch(void** RETURN, Core_Type* x) {
 }
 
 Core_Result Core_Type_getParent(Core_Type** RETURN, Core_Type* SELF) {
-  _dx_rti_type* SELF_ = _DX_RTI_TYPE(SELF);
+  _Core_Type* SELF_ = _DX_RTI_TYPE(SELF);
   if (_dx_rti_type_is_object(SELF_)) {
     *RETURN = (Core_Type*)SELF_->object.parent;
     return Core_Success;
@@ -509,8 +477,92 @@ Core_Result Core_Type_getParent(Core_Type** RETURN, Core_Type* SELF) {
 }
 
 Core_Result Core_Type_getName(Core_Type* SELF, char const** p, Core_Size* n) {
-  _dx_rti_type* SELF_ = _DX_RTI_TYPE(SELF);
+  _Core_Type* SELF_ = _DX_RTI_TYPE(SELF);
   *p = SELF_->name->bytes;
   *n = SELF_->name->number_of_bytes;
   return Core_Success;
 }
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+Core_defineFundamentalType
+  (
+    "Core.Natural8",
+    Core_Natural8
+  );
+
+Core_defineFundamentalType
+  (
+    "Core.Natural16",
+    Core_Natural16
+  );
+
+Core_defineFundamentalType
+  (
+    "Core.Natural32",
+    Core_Natural32
+  );
+
+Core_defineFundamentalType
+  (
+    "Core.Natural64",
+    Core_Natural64
+  );
+
+
+
+Core_defineFundamentalType
+  (
+    "Core.Integer8",
+    Core_Integer8
+  );
+
+Core_defineFundamentalType
+  (
+    "Core.Integer16",
+    Core_Integer16
+  );
+
+Core_defineFundamentalType
+  (
+    "Core.Integer32",
+    Core_Integer32
+  );
+
+Core_defineFundamentalType
+  (
+    "Core.Integer64",
+    Core_Integer64
+  );
+
+
+
+Core_defineFundamentalType
+  (
+    "Core.Real32",
+    Core_Real32
+  );
+
+Core_defineFundamentalType
+  (
+    "Core.Real64",
+    Core_Real64
+  );
+
+
+
+Core_defineFundamentalType
+  (
+    "Core.Boolean",
+    Core_Boolean
+  );
+
+
+
+Core_defineFundamentalType
+  (
+    "Core.Size",
+    Core_Size
+  );
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/

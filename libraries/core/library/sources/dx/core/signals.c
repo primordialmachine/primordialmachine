@@ -91,7 +91,7 @@ struct _SignalKey {
 };
 
 struct _Signal {
-  dx_reference_counter referenceCount;
+  Core_ReferenceCounter referenceCount;
   _SignalKey key;
 };
 
@@ -114,11 +114,11 @@ static Core_Result _Signal_destroy(_Signal* signal) {
 }
 
 static void _Signal_valueAdded(_Signal** SELF) {
-  dx_reference_counter_increment(&(*SELF)->referenceCount);
+  Core_ReferenceCounter_increment(&(*SELF)->referenceCount);
 }
 
 static void _Signal_valueRemoved(_Signal** SELF) {
-  if (!dx_reference_counter_decrement(&(*SELF)->referenceCount)) {
+  if (!Core_ReferenceCounter_decrement(&(*SELF)->referenceCount)) {
     _Signal_destroy(*SELF);
   }
 }

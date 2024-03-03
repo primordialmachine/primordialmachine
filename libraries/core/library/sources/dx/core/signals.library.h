@@ -1,5 +1,5 @@
-#if !defined(DX_CORE_SIGNALS_LIBRARY_H_INCLUDED)
-#define DX_CORE_SIGNALS_LIBRARY_H_INCLUDED
+#if !defined(CORE_SIGNALS_LIBRARY_H_INCLUDED)
+#define CORE_SIGNALS_LIBRARY_H_INCLUDED
 
 #include "dx/core/signals.h"
 
@@ -24,4 +24,4 @@ Core_Result Core_Signals_uninitialize();
 /// @remarks This functions fails only if @a instance is a null pointer.
 Core_Result Core_Signals_disconnectAll(Core_Object* instance);
 
-#endif // DX_CORE_SIGNALS_LIBRARY_H_INCLUDED
+#endif // CORE_SIGNALS_LIBRARY_H_INCLUDED

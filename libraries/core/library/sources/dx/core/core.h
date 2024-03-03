@@ -6,6 +6,7 @@
 #include "Core/FundamentalTypes.h"
 #include "Core/Error.h"
 #include "Core/Result.h"
+#include "Core/ReferenceCounter.h"
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
@@ -26,21 +27,6 @@
 /// @brief Macro causing a debug break if the expression evaluates to logically false.
 /// @param expression The expression.
 #define DX_DEBUG_ASSERT(expression) assert(expression)
-
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-
-/// @brief This must be aligned to 64-bit boundaries on 64-bit systems and to 32-bit boundaries on 32-bit systems.
-#if defined(_WIN64)
-  typedef int64_t dx_reference_counter;
-#else
-  typedef int32_t dx_reference_counter;
-#endif
-
-// @return The resulting incremented value.
-dx_reference_counter dx_reference_counter_increment(dx_reference_counter* reference_counter);
-
-// @return The resulting decremented value.
-dx_reference_counter dx_reference_counter_decrement(dx_reference_counter* reference_counter);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 

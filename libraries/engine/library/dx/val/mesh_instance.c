@@ -35,7 +35,7 @@ static Core_Result add_to_backend(dx_val_mesh_instance* self) {
                                            cbinding,
                                            self->mesh->program,
                                            0,
-                                           self->mesh->mesh_asset->number_of_vertices)) {
+                                           self->mesh->mesh_asset->numberOfVertices)) {
     CORE_UNREFERENCE(cbinding);
     cbinding = NULL;
     CORE_UNREFERENCE(self->commands);
