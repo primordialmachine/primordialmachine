@@ -1,3 +1,5 @@
+// Copyright (c) 2018-2024 Michael Heilmann. All rights reserved.
+
 #include "dx/core/inline_pointer_hashmap.h"
 
 #include "Core/Memory.h"

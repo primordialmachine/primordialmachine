@@ -1,3 +1,5 @@
+// Copyright (c) 2018-2024 Michael Heilmann. All rights reserved.
+
 #include "Core/StringIterator.h"
 
 Core_defineObjectType("Core.StringIterator",

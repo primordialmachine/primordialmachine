@@ -7,6 +7,7 @@
 #include "Core/Tests/safeAddNx.h"
 #include "Core/Tests/safeMulIx.h"
 #include "Core/Tests/safeMulNx.h"
+#include "Core/Tests/Utf8/InlineByteIteratorTests.h"
 #include "Core/Tests/Utf8/InlineUtf8IteratorTests.h"
 #include "Core/Tests/FileSystem/getFileContentsTests.h"
 #include "core/Tests/FileSystem/getFileContentsCallbackTests.h"
@@ -160,6 +161,13 @@ static Core_Result run_tests() {
   }
   fprintf(stdout, "Core.Tests.safeMulIxTests succeeded\n");
 #endif
+
+  if (Core_Tests_Utf8_inlineByteIteratorTests()) {
+    fprintf(stdout, "Core.Tests.Utf8.inlineByteIteratorTests failed\n");
+    return Core_Failure;
+  }
+  fprintf(stdout, "Core.Tests.Utf8.inlineByteIteratorTests succeeded\n");
+
   if (Core_Tests_Utf8_inlineUtf8IteratorTests()) {
     fprintf(stdout, "Core.Tests.Utf8.inlineUtf8IteratorTests failed\n");
     return Core_Failure;

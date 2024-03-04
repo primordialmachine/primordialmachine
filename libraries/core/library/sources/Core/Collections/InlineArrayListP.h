@@ -1,7 +1,4 @@
-/// @file dx/core/inline_pointer_array.h
-/// @brief A deque for pointers.
-/// @author Michael Heilmann (michaelheilmann@primordialmachine.com)
-/// @copyright Copyright (c) 2018-2024 Michael Heilmann. All rights reserved.
+// Copyright (c) 2018-2024 Michael Heilmann. All rights reserved.
 
 #if !defined(CORE_COLLECTIONS_INLINEARRAYLISTP_H_INCLUDED)
 #define CORE_COLLECTIONS_INLINEARRAYLISTP_H_INCLUDED

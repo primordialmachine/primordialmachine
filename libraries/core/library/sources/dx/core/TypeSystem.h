@@ -1,7 +1,7 @@
-#if !defined(DX_CORE_TYPESYSTEM_H_INCLUDED)
-#define DX_CORE_TYPESYSTEM_H_INCLUDED
+#if !defined(CORE_TYPESYSTEM_H_INCLUDED)
+#define CORE_TYPESYSTEM_H_INCLUDED
 
-#include "dx/core/core.h"
+#include "Core/FundamentalTypes.h"
 /*Forward declaration.*/
 typedef struct Core_Object Core_Object;
 /*Forward declaration.*/
@@ -68,16 +68,21 @@ Core_Result Core_Type_getName(Core_Type* SELF, char const** p, Core_Size* n);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-/// @brief Get if a type is an enumeration type.
-/// @param RETURN A pointer to a <code>Core_Boolean</code> variable.
-/// @param type A pointer to the type.
+/// @brief
+/// Get if a type is an enumeration type.
+/// @param RETURN
+/// A pointer to a <code>Core_Boolean</code> variable.
+/// @param type
+/// A pointer to the type.
 /// @return
 /// #Core_Success on success. #Core_Failure on failure.
 /// @success
 /// <code>*RETURN</code> was assigned @a Core_Boolean if the type pointed to by @a type is an enumeration type.
 /// Otherwise it was assigned @a Core_False.
-/// @error Core_Error_ArgumentInvalid @a type is null pointer.
-/// @undefined The runtime type system is not initialized.
+/// @error Core_Error_ArgumentInvalid
+/// @a type is null pointer.
+/// @undefined
+/// The runtime type system is not initialized.
 Core_Result Core_TypeSystem_isEnumerationType(Core_Boolean* RETURN, Core_Type* type);
 
 /// @brief Used to register enumeration types.
@@ -95,7 +100,7 @@ Core_Result Core_TypeSystem_isEnumerationType(Core_Boolean* RETURN, Core_Type* t
 /// 
 /// @error #Core_Error_AllocationFailed An allocation failed.
 /// @error #Core_Error_Exists A type of the same name already exists.
-Core_Result Core_TypeSystem_defineEnumerationType(Core_Type** RETURN, char const* p, Core_Size n, void(*on_type_destroyed)());
+Core_Result Core_TypeSystem_defineEnumerationType(Core_Type** RETURN, char const* p, Core_Size n, void(*onTypeDestroyed)());
 
 #define Core_declareEnumerationType(NAME, C_NAME) \
   Core_Result C_NAME##_getType(Core_Type** RETURN); \
@@ -124,16 +129,21 @@ Core_Result Core_TypeSystem_defineEnumerationType(Core_Type** RETURN, char const
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-/// @brief Get if a type is an fundamental type.
-/// @param RETURN A pointer to a <code>Core_Boolean</code> variable.
-/// @param type A pointer to the type.
+/// @brief
+/// Get if a type is an fundamental type.
+/// @param RETURN
+/// A pointer to a <code>Core_Boolean</code> variable.
+/// @param type
+/// A pointer to the type.
 /// @return
 /// #Core_Success on success. #Core_Failure on failure.
 /// @success
 /// <code>*RETURN</code> was assigned @a Core_Boolean if the type pointed to by @a type is an fundamental type.
 /// Otherwise it was assigned @a Core_False.
-/// @error Core_Error_ArgumentInvalid @a type is null pointer.
-/// @undefined The runtime type system is not initialized.
+/// @error Core_Error_ArgumentInvalid
+/// @a type is null pointer.
+/// @undefined
+/// The runtime type system is not initialized.
 Core_Result Core_TypeSystem_isFundamentalType(Core_Boolean* RETURN, Core_Type* type);
 
 /// @brief Used to register types like Core_(Integer|Natural)(8|16|32|64), Core_Real(32|64), Core_Size, and Core_Boolean.
@@ -151,7 +161,7 @@ Core_Result Core_TypeSystem_isFundamentalType(Core_Boolean* RETURN, Core_Type* t
 /// 
 /// @error #Core_Error_AllocationFailed an allocation failed
 /// @error #Core_Error_Exists a type of the same name already exists
-Core_Result Core_TypeSystem_defineFundamentalType(Core_Type** RETURN, char const* p, Core_Size n, void(*on_type_destroyed)(), Core_Size value_size);
+Core_Result Core_TypeSystem_defineFundamentalType(Core_Type** RETURN, char const* p, Core_Size n, void(*onTypeDestroyed)(), Core_Size value_size);
 
 #define Core_declareFundamentalType(NAME, CNAME) \
   Core_Result CNAME##_getType(Core_Type** RETURN); \
@@ -179,16 +189,21 @@ Core_Result Core_TypeSystem_defineFundamentalType(Core_Type** RETURN, char const
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-/// @brief Get if a type is an object type.
-/// @param RETURN A pointer to a <code>Core_Boolean</code> variable.
-/// @param type A pointer to the type.
+/// @brief
+/// Get if a type is an object type.
+/// @param RETURN
+/// A pointer to a <code>Core_Boolean</code> variable.
+/// @param type
+/// A pointer to the type.
 /// @return
 /// #Core_Success on success. #Core_Failure on failure.
 /// @success
 /// <code>*RETURN</code> was assigned @a Core_Boolean if the type pointed to by @a type is an object type.
 /// Otherwise it was assigned @a Core_False.
-/// @error Core_Error_ArgumentInvalid @a type is null pointer.
-/// @undefined The runtime type system is not initialized.
+/// @error Core_Error_ArgumentInvalid
+/// @a type is null pointer.
+/// @undefined
+/// The runtime type system is not initialized.
 Core_Result Core_TypeSystem_isObjectType(Core_Boolean* RETURN, Core_Type* type);
 
 /// @brief Used to register object types.
@@ -210,7 +225,7 @@ Core_Result Core_TypeSystem_isObjectType(Core_Boolean* RETURN, Core_Type* type);
 /// 
 /// @error #Core_Error_AllocationFailed An allocation failed.
 /// @error #Core_Error_Exists A type of the same name already exists.
-Core_Result Core_TypeSystem_defineObjectType(Core_Type** RETURN, char const* p, Core_Size n, void (*on_type_destroyed)(), Core_Type* parent,
+Core_Result Core_TypeSystem_defineObjectType(Core_Type** RETURN, char const* p, Core_Size n, void (*onTypeDestroyed)(), Core_Type* parent,
                                              Core_Size object_size, void (*object_destruct)(Core_Object*), \
                                              Core_Size dispatch_size, void (*dispatch_construct)(Core_Object_Dispatch*));
 
@@ -331,7 +346,6 @@ Core_declareFundamentalType
     Core_Size
   );
 
-
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-#endif // DX_CORE_TYPESYSTEM_H_INCLUDED
+#endif // CORE_TYPESYSTEM_H_INCLUDED

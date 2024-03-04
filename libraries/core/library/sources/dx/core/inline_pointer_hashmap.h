@@ -1,10 +1,7 @@
-/// @file dx/core/inline_pointer_hashmap.h
-/// @brief A hashmap for pointers.
-/// @author Michael Heilmann (michaelheilmann@primordialmachine.com)
-/// @copyright Copyright (c) 2018-2024 Michael Heilmann. All rights reserved.
+// Copyright (c) 2018-2024 Michael Heilmann. All rights reserved.
 
-#if !defined(DX_CORE_INLINE_POINTER_HASHMAP_H_INCLUDED)
-#define DX_CORE_INLINE_POINTER_HASHMAP_H_INCLUDED
+#if !defined(CORE_COLLECTIONS_INLINEHASHMAPPP_H_INCLUDED)
+#define CORE_COLLECTIONS_INLINEHASHMAPPP_H_INCLUDED
 
 #include "dx/core/core.h"
 typedef struct Core_InlineArrayListP Core_InlineArrayListP;
@@ -191,4 +188,4 @@ Core_Result Core_InlineHashMapPP_getValues(Core_InlineHashMapPP* SELF, Core_Inli
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-#endif // DX_CORE_INLINE_POINTER_HASHMAP_H_INCLUDED
+#endif // CORE_COLLECTIONS_INLINEHASHMAPPP_H_INCLUDED

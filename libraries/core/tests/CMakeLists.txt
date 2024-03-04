@@ -42,6 +42,8 @@ list(APPEND ${name}.headers "sources/Core/Tests/clearBits.h")
 
 list(APPEND ${name}.sources "sources/Core/Tests/Utf8/InlineUtf8IteratorTests.c")
 list(APPEND ${name}.headers "sources/Core/Tests/Utf8/InlineUtf8IteratorTests.h")
+list(APPEND ${name}.sources "sources/Core/Tests/Utf8/InlineByteIteratorTests.c")
+list(APPEND ${name}.headers "sources/Core/Tests/Utf8/InlineByteIteratorTests.h")
 
 list(APPEND ${name}.sources "sources/Core/Tests/FileSystem/getFileContentsTests.c")
 list(APPEND ${name}.headers "sources/Core/Tests/FileSystem/getFileContentsTests.h")

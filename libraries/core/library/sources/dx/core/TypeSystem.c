@@ -1,8 +1,8 @@
 #include "dx/core/TypeSystem.h"
 
 #include "Core/Hash.h"
-#include "dx/core/TypeSystem.library.h"
 #include "Core/Memory.h"
+#include "dx/core/TypeSystem.library.h"
 #include "dx/core/inline_pointer_hashmap.h"
 
 static Core_Result _Core_TypeHashMap_hashKeyCallback(Core_Size* RETURN, _Core_TypeName** a);
@@ -17,9 +17,18 @@ static void _Core_TypeHashMap_valueAddedCallback(_Core_Type** a);
 
 static void _Core_TypeHashMap_valueRemovedCallback(_Core_Type** a);
 
-#define _DX_RTI_TYPE_NODE_FLAGS_FUNDAMENTAL (1)
-#define _DX_RTI_TYPE_NODE_FLAGS_ENUMERATION (2)
-#define _DX_RTI_TYPE_NODE_FLAGS_OBJECT (4)
+// Type flag indicating a fundamental type.
+// Mutually exclusive with Core_TypeFlags_IsEnumeration and Core_TypeFlags_Object.
+#define Core_TypeFlags_IsFundamental (1)
+
+
+// Type flag indicating an enumeration type.
+// Mutually exclusive with Core_TypeFlags_IsFundamental and Core_TypeFlags_Object.
+#define Core_TypeFlags_IsEnumeration (2)
+
+// Type flag indicating an object type.
+// Mutually exclusive with Core_TypeFlags_IsEnumeration and Core_TypeFlags_Fundamental.
+#define Core_TypeFlags_IsObject (4)
 
 #if defined(_DEBUG)
 static Core_Size g_debug_number_of_types = 0;
@@ -30,86 +39,60 @@ static inline _Core_Type* _DX_RTI_TYPE(void* p) {
 }
 
 /// @internal
-/// @brief Get if a type is a fundamental type.
-/// @param ty A pointer to the type.
-/// @return @a true if the type is a fundamental type. @a false if it is not a fundamental type.
-/// @a false is also returned on failure.
-/// @default-failure
-static Core_Boolean _dx_rti_type_is_fundamental(_Core_Type* ty);
-
-/// @internal
-/// @brief Get if a type is an enumeration type.
-/// @param ty A pointer to the type.
-/// @return @a true if the type is an enumeration type. @a false if it is not an enumeration type.
-/// @a false is also returned on failure.
-/// @default-failure
-static Core_Boolean _dx_rti_type_is_enumeration(_Core_Type* ty);
-
-/// @internal
-/// @brief Get if a type is an object type.
-/// @param ty A pointer to the type.
-/// @return @a true if the type is an objec type. @a false if it is not an object type.
-/// @a false is also returned on failure.
-/// @default-failure
-static Core_Boolean _dx_rti_type_is_object(_Core_Type* ty);
-
-/// @internal
-/// @brief Ensure the dispatches of a type are created.
+/// @brief
+/// Ensure the dispatches of a type are created.
 /// This function does nothing if the type is not an object type.
-/// @param ty A pointer to the type.
-/// @default-return
-static Core_Result _dx_rti_type_ensure_Dispatches_created(_Core_Type* ty);
+/// @param type
+/// A pointer to the type.
+/// @return
+/// #Core_Success on success. #Core_Failure on failure.
+static Core_Result ensureDispatchesCreated(_Core_Type * type);
 
 /// @internal
-/// @brief Ensure the dispatches of a type are destroyed.
-/// @param ty A pointer to the type.
+/// @brief
+/// Ensure the dispatches of a type are destroyed.
+/// @param type A pointer to the type.
 /// @return
-/// #DX_SUCCESS on success. #Core_Failure on failure.
+/// #Core_Success on success. #Core_Failure on failure.
 /// Always succeeds.
 /// @undefined
-/// @a ty does not point to a type.
-static Core_Result _dx_rti_type_ensure_Dispatches_destroyed(_Core_Type* ty);
+/// @a type does not point to a type.
+static Core_Result ensureDispatchesDestroyed(_Core_Type* type);
 
-static Core_Boolean _dx_rti_type_is_fundamental(_Core_Type* ty) {
-  return _DX_RTI_TYPE_NODE_FLAGS_FUNDAMENTAL == (ty->flags & _DX_RTI_TYPE_NODE_FLAGS_FUNDAMENTAL);
-}
-
-static Core_Boolean _dx_rti_type_is_enumeration(_Core_Type* ty) {
-  return _DX_RTI_TYPE_NODE_FLAGS_ENUMERATION == (ty->flags & _DX_RTI_TYPE_NODE_FLAGS_ENUMERATION);
-}
-
-static Core_Boolean _dx_rti_type_is_object(_Core_Type* ty) {
-  return _DX_RTI_TYPE_NODE_FLAGS_OBJECT == (ty->flags & _DX_RTI_TYPE_NODE_FLAGS_OBJECT);
-}
-
-static Core_Result _dx_rti_type_ensure_Dispatches_created(_Core_Type* ty) {
-  if (!_dx_rti_type_is_object(ty)) {
+static Core_Result ensureDispatchesCreated(_Core_Type* type) {
+  Core_Boolean is;
+  Core_TypeSystem_isObjectType(&is, (Core_Type*)type);
+  if (!is) {
     return Core_Success;
   }
-  if (ty->object.dispatch) {
+  if (type->object.dispatch) {
     return Core_Success;
   }
-  if (ty->object.parent) {
-    if (_dx_rti_type_ensure_Dispatches_created(ty->object.parent)) {
+  if (type->object.parent) {
+    if (ensureDispatchesCreated(type->object.parent)) {
       return Core_Failure;
     }
   }
-  ty->object.dispatch = NULL;
-  if (Core_Memory_allocate(&ty->object.dispatch, ty->object.dispatch_size)) {
+  type->object.dispatch = NULL;
+  if (Core_Memory_allocate(&type->object.dispatch, type->object.dispatch_size)) {
     return Core_Failure;
   }
-  Core_Memory_zero(ty->object.dispatch, ty->object.dispatch_size);
-  if (ty->object.parent) {
-    Core_Memory_copy(ty->object.dispatch, ty->object.parent->object.dispatch, ty->object.parent->object.dispatch_size);
+  Core_Memory_zero(type->object.dispatch, type->object.dispatch_size);
+  if (type->object.parent) {
+    Core_Memory_copy(type->object.dispatch, type->object.parent->object.dispatch, type->object.parent->object.dispatch_size);
   }
-  if (ty->object.constructDispatch) {
-    ty->object.constructDispatch(ty->object.dispatch);
+  if (type->object.constructDispatch) {
+    type->object.constructDispatch(type->object.dispatch);
   }
   return Core_Success;
 }
 
-static Core_Result _dx_rti_type_ensure_Dispatches_destroyed(_Core_Type* ty) {
-  if (!_dx_rti_type_is_object(ty)) {
+static Core_Result ensureDispatchesDestroyed(_Core_Type* ty) {
+  Core_Boolean is;
+  if (Core_TypeSystem_isObjectType(&is, (Core_Type*)ty)) {
+    return Core_Failure;
+  }
+  if (!is) {
     return Core_Success;
   }
   if (!ty->object.dispatch) {
@@ -128,15 +111,17 @@ static void _dx_rti_type_reference(_Core_Type* a) {
 
 static void _dx_rti_type_unreference(_Core_Type* a) {
   if (0 == Core_ReferenceCounter_decrement(&a->reference_count)) {
-    if (a->on_type_destroyed) {
-      a->on_type_destroyed();
+    if (a->onTypeDestroyed) {
+      a->onTypeDestroyed();
     }
-    if (_dx_rti_type_is_object(a)) {
+    Core_Boolean is;
+    Core_TypeSystem_isObjectType(&is, (Core_Type*)a);
+    if (is) {
       if (a->object.parent) {
         _dx_rti_type_unreference(a->object.parent);
         a->object.parent = NULL;
       }
-      _dx_rti_type_ensure_Dispatches_destroyed(a);
+      ensureDispatchesDestroyed(a);
     }
     _Core_TypeName_unreference(a->name);
     a->name = NULL;
@@ -219,7 +204,7 @@ Core_Result Core_TypeSystem_isFundamentalType(Core_Boolean* RETURN, Core_Type* t
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
   }
-  *RETURN = _dx_rti_type_is_fundamental(_DX_RTI_TYPE(type));
+  *RETURN = Core_TypeFlags_IsFundamental == (_DX_RTI_TYPE(type)->flags & Core_TypeFlags_IsFundamental);
   return Core_Success;
 }
 
@@ -228,7 +213,7 @@ Core_Result Core_TypeSystem_isEnumerationType(Core_Boolean* RETURN, Core_Type* t
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
   }
-  *RETURN = _dx_rti_type_is_enumeration(_DX_RTI_TYPE(type));
+  *RETURN = Core_TypeFlags_IsEnumeration == (_DX_RTI_TYPE(type)->flags & Core_TypeFlags_IsEnumeration);
   return Core_Success;
 }
 
@@ -237,11 +222,11 @@ Core_Result Core_TypeSystem_isObjectType(Core_Boolean* RETURN, Core_Type* type) 
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
   }
-  *RETURN = _dx_rti_type_is_object(_DX_RTI_TYPE(type));
+  *RETURN = Core_TypeFlags_IsObject == (_DX_RTI_TYPE(type)->flags & Core_TypeFlags_IsObject);
   return Core_Success;
 }
 
-Core_Result Core_TypeSystem_defineEnumerationType(Core_Type** RETURN, char const* p, Core_Size n, void (*on_type_destroyed)()) {
+Core_Result Core_TypeSystem_defineEnumerationType(Core_Type** RETURN, char const* p, Core_Size n, void (*onTypeDestroyed)()) {
   _Core_TypeName* name = NULL;
   if (_Core_TypeName_create(&name, p, n)) {
     return Core_Failure;
@@ -265,8 +250,8 @@ Core_Result Core_TypeSystem_defineEnumerationType(Core_Type** RETURN, char const
   if (Core_Memory_allocate(&type, sizeof(_Core_Type))) {
     return Core_Failure;
   }
-  type->on_type_destroyed = on_type_destroyed;
-  type->flags = _DX_RTI_TYPE_NODE_FLAGS_ENUMERATION;
+  type->onTypeDestroyed = onTypeDestroyed;
+  type->flags = Core_TypeFlags_IsEnumeration;
   type->name = name;
   type->reference_count = 1;
   // add the type
@@ -283,7 +268,7 @@ Core_Result Core_TypeSystem_defineEnumerationType(Core_Type** RETURN, char const
   return Core_Success;
 }
 
-Core_Result Core_TypeSystem_defineFundamentalType(Core_Type** RETURN, char const* p, Core_Size n, void (*on_type_destroyed)(), Core_Size value_size) {
+Core_Result Core_TypeSystem_defineFundamentalType(Core_Type** RETURN, char const* p, Core_Size n, void (*onTypeDestroyed)(), Core_Size value_size) {
   _Core_TypeName* name = NULL;
   if (_Core_TypeName_create(&name, p, n)) {
     return Core_Failure;
@@ -307,8 +292,8 @@ Core_Result Core_TypeSystem_defineFundamentalType(Core_Type** RETURN, char const
   if (Core_Memory_allocate(&type, sizeof(_Core_Type))) {
     return Core_Failure;
   }
-  type->on_type_destroyed = on_type_destroyed;
-  type->flags = _DX_RTI_TYPE_NODE_FLAGS_FUNDAMENTAL;
+  type->onTypeDestroyed = onTypeDestroyed;
+  type->flags = Core_TypeFlags_IsFundamental;
   type->name = name;
   //_dx_rti_type_name_reference(type->name);
   type->reference_count = 1;
@@ -323,8 +308,8 @@ Core_Result Core_TypeSystem_defineFundamentalType(Core_Type** RETURN, char const
   return Core_Success;
 }
 
-Core_Result Core_TypeSystem_defineObjectType(Core_Type** RETURN, char const* p, Core_Size n, void (*on_type_destroyed)(), Core_Type* parent,
-  Core_Size object_size, void (*destruct_object)(Core_Object*),
+Core_Result Core_TypeSystem_defineObjectType(Core_Type** RETURN, char const* p, Core_Size n, void (*onTypeDestroyed)(), Core_Type* parent,
+  Core_Size object_size, void (*destructObject)(Core_Object*),
   Core_Size dispatch_size, void (*constructDispatch)(Core_Object_Dispatch*)) {
   _Core_TypeName* name = NULL;
   if (_Core_TypeName_create(&name, p, n)) {
@@ -350,7 +335,9 @@ Core_Result Core_TypeSystem_defineObjectType(Core_Type** RETURN, char const* p, 
   // begin sanity check
   if (parent) {
     // if a parent type is specified, then it must be an object type
-    if (_DX_RTI_TYPE_NODE_FLAGS_OBJECT != (_DX_RTI_TYPE(parent)->flags & _DX_RTI_TYPE_NODE_FLAGS_OBJECT)) {
+    Core_Boolean is;
+    Core_TypeSystem_isObjectType(&is, parent);
+    if (!is) {
       // "parent type <parent> of child type <child> is not an object type"
       dx_log("parent type `", sizeof("parent type `") - 1);
       dx_log(_DX_RTI_TYPE(parent)->name->bytes, _DX_RTI_TYPE(parent)->name->number_of_bytes);
@@ -395,13 +382,13 @@ Core_Result Core_TypeSystem_defineObjectType(Core_Type** RETURN, char const* p, 
     name = NULL;
     return Core_Failure;
   }
-  type->on_type_destroyed = on_type_destroyed;
-  type->flags = _DX_RTI_TYPE_NODE_FLAGS_OBJECT;
+  type->onTypeDestroyed = onTypeDestroyed;
+  type->flags = Core_TypeFlags_IsObject;
   type->name = name;
   type->reference_count = 1;
 
   type->object.object_size = object_size;
-  type->object.destruct_object = destruct_object;
+  type->object.destructObject = destructObject;
 
   type->object.dispatch_size = dispatch_size;
   type->object.constructDispatch = constructDispatch;
@@ -422,7 +409,7 @@ Core_Result Core_TypeSystem_defineObjectType(Core_Type** RETURN, char const* p, 
   g_debug_number_of_types++;
 #endif
   // Simply revert everything if this goes wrong.
-  if (_dx_rti_type_ensure_Dispatches_created(type)) {
+  if (ensureDispatchesCreated(type)) {
     Core_InlineHashMapPP_remove(g_types, name);
     return Core_Failure;
   }
@@ -430,33 +417,39 @@ Core_Result Core_TypeSystem_defineObjectType(Core_Type** RETURN, char const* p, 
   return Core_Success;
 }
 
-static inline bool _dx_rti_type_is_leq(_Core_Type* x, _Core_Type* y) {
-  if (!x || !y) {
+Core_Result Core_Type_isLowerThanOrEqualTo(Core_Boolean* RETURN, Core_Type* x, Core_Type* y) {
+  if (!RETURN || !x || !y) {
     Core_setError(Core_Error_ArgumentInvalid);
-    return false;
+    return Core_Failure;
   }
+  Core_Boolean is[2];
   // If the x is an enumeration type or a fundamental type,
   // then it is lower than or equal to y only if x and y are the same type.
-  if (_dx_rti_type_is_enumeration(x) || _dx_rti_type_is_fundamental(x)) {
-    return x == y;
+  if (Core_TypeSystem_isEnumerationType(&is[0], x) || Core_TypeSystem_isFundamentalType(&is[1], x)) {
+    return Core_Failure;
+  }
+  if (is[0] || is[1]) {
+    *RETURN = x == y;
+    return Core_Success;
   }
   // Otherwise x is an object type.
   // It can be lower than or equal to y only if y is also an object type.
-  if (!_dx_rti_type_is_object(y)) {
-    return false;
+  if (Core_TypeSystem_isObjectType(&is[0], y)) {
+    return Core_Failure;
   }
-  _Core_Type* z = x;
+  if (!is) {
+    *RETURN = false;
+    return Core_Success;
+  }
+  Core_Type* z = x;
   do {
     if (z == y) {
-      return true;
+      *RETURN = true;
+      return Core_Success;
     }
-    z = _DX_RTI_TYPE(z->object.parent);
+    z = (Core_Type*)(_DX_RTI_TYPE(z)->object.parent);
   } while (z != NULL);
-  return false;
-}
-
-Core_Result Core_Type_isLowerThanOrEqualTo(Core_Boolean* RETURN, Core_Type* x, Core_Type* y) {
-  *RETURN = _dx_rti_type_is_leq(_DX_RTI_TYPE(x), _DX_RTI_TYPE(y));
+  *RETURN = false;
   return Core_Success;
 }
 
@@ -466,9 +459,10 @@ Core_Result Core_Type_getDispatch(void** RETURN, Core_Type* x) {
 }
 
 Core_Result Core_Type_getParent(Core_Type** RETURN, Core_Type* SELF) {
-  _Core_Type* SELF_ = _DX_RTI_TYPE(SELF);
-  if (_dx_rti_type_is_object(SELF_)) {
-    *RETURN = (Core_Type*)SELF_->object.parent;
+  Core_Boolean is;
+  Core_TypeSystem_isObjectType(&is, SELF);
+  if (is) {
+    *RETURN = (Core_Type*)(_DX_RTI_TYPE(SELF)->object.parent);
     return Core_Success;
   } else {
     Core_setError(Core_Error_OperationInvalid);

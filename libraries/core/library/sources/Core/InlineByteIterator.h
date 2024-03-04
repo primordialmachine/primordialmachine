@@ -5,7 +5,6 @@
 
 #define INLINE static inline
 
-
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 typedef struct InlineByteIterator InlineByteIterator;
@@ -103,10 +102,10 @@ InlineByteIterator_next
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-typedef struct InlineByteIterator_C InlineByteIterator_C;
+// an Byte iterator iterating over the Bytes of a Cxx array.
+typedef struct InlineByteIteratorCxxArray InlineByteIteratorCxxArray;
 
-// An iterator for sequences of Bytes.
-struct InlineByteIterator_C {
+struct InlineByteIteratorCxxArray {
   InlineByteIterator parent;
   Core_Natural8 const* p;
   Core_Size n;
@@ -114,10 +113,10 @@ struct InlineByteIterator_C {
 };
 
 INLINE Core_Result
-InlineByteIterator_C_hasValue
+InlineByteIteratorCxxArray_hasValue
   (
     Core_Boolean* RETURN,
-    InlineByteIterator_C* SELF
+    InlineByteIteratorCxxArray* SELF
   )
 {
   if (!RETURN || !SELF) {
@@ -129,10 +128,10 @@ InlineByteIterator_C_hasValue
 }
 
 INLINE Core_Result
-InlineByteIterator_C_getIndex
+InlineByteIteratorCxxArray_getIndex
   (
     Core_Natural8* RETURN,
-    InlineByteIterator_C* SELF
+    InlineByteIteratorCxxArray* SELF
   )
 {
   if (!RETURN || !SELF) {
@@ -144,10 +143,10 @@ InlineByteIterator_C_getIndex
 }
 
 INLINE Core_Result
-InlineByteIterator_C_getValue
+InlineByteIteratorCxxArray_getValue
   (
     Core_Natural8* RETURN,
-    InlineByteIterator_C* SELF
+    InlineByteIteratorCxxArray* SELF
   )
 {
   if (!RETURN || !SELF) {
@@ -167,9 +166,9 @@ InlineByteIterator_C_getValue
 }
 
 INLINE Core_Result
-InlineByteIterator_C_next
+InlineByteIteratorCxxArray_next
   (
-    InlineByteIterator_C* SELF
+    InlineByteIteratorCxxArray* SELF
   )
 {
   if (!SELF) {
@@ -188,9 +187,9 @@ InlineByteIterator_C_next
 }
 
 INLINE Core_Result
-InlineByteIterator_C_uninitialize
+InlineByteIteratorCxxArray_uninitialize
   (
-    InlineByteIterator_C* SELF
+    InlineByteIteratorCxxArray* SELF
   )
 {
   return Core_Success;
@@ -198,19 +197,19 @@ InlineByteIterator_C_uninitialize
 
 
 INLINE Core_Result
-InlineByteIterator_C_initialize
+InlineByteIteratorCxxArray_initialize
   (
-    InlineByteIterator_C* SELF,
+    InlineByteIteratorCxxArray* SELF,
     Core_Natural8 const* p,
     Core_Size n
   )
 {
   if (InlineByteIterator_initialize((InlineByteIterator*)SELF,
-                                    (InlineByteIterator_HasValue*) & InlineByteIterator_C_hasValue,
-                                    (InlineByteIterator_GetIndex*) & InlineByteIterator_C_getIndex,
-                                    (InlineByteIterator_GetValue*) & InlineByteIterator_C_getValue,
-                                    (InlineByteIterator_Next*) & InlineByteIterator_C_next,
-                                    (InlineByteIterator_Uninitialize*) & InlineByteIterator_C_uninitialize)) {
+                                    (InlineByteIterator_HasValue*) & InlineByteIteratorCxxArray_hasValue,
+                                    (InlineByteIterator_GetIndex*) & InlineByteIteratorCxxArray_getIndex,
+                                    (InlineByteIterator_GetValue*) &InlineByteIteratorCxxArray_getValue,
+                                    (InlineByteIterator_Next*) &InlineByteIteratorCxxArray_next,
+                                    (InlineByteIterator_Uninitialize*) &InlineByteIteratorCxxArray_uninitialize)) {
     return Core_Failure;
   }
   SELF->p = p;
@@ -218,6 +217,124 @@ InlineByteIterator_C_initialize
   SELF->i = 0;
   return Core_Success;
 }
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+// an Byte iterator iterating over the Bytes of a Cxx array in reverse.
+// the last Byte is at index 0, the first Byte is at index n - 1
+typedef struct InlineByteIteratorCxxArrayReverse InlineByteIteratorCxxArrayReverse;
+
+struct InlineByteIteratorCxxArrayReverse {
+  InlineByteIterator parent;
+  Core_Natural8 const* p;
+  Core_Size n;
+  Core_Size i;
+};
+
+INLINE Core_Result
+InlineByteIteratorCxxArrayReverse_hasValue
+  (
+    Core_Boolean* RETURN,
+    InlineByteIteratorCxxArrayReverse* SELF
+  )
+{
+  if (!RETURN || !SELF) {
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
+  }
+  *RETURN = SELF->i < SELF->n;
+  return Core_Success;
+}
+
+INLINE Core_Result
+InlineByteIteratorCxxArrayReverse_getIndex
+  (
+    Core_Natural8* RETURN,
+    InlineByteIteratorCxxArrayReverse* SELF
+  )
+{
+  if (!RETURN || !SELF) {
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
+  }
+  *RETURN = SELF->i;
+  return Core_Success;
+}
+
+INLINE Core_Result
+InlineByteIteratorCxxArrayReverse_getValue
+  (
+    Core_Natural8* RETURN,
+    InlineByteIteratorCxxArrayReverse* SELF
+  )
+{
+  if (!RETURN || !SELF) {
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
+  }
+  Core_Boolean hasValue;
+  if (InlineByteIterator_hasValue(&hasValue, (InlineByteIterator*)SELF)) {
+    return Core_Failure;
+  }
+  if (!hasValue) {
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
+  }
+  *RETURN = SELF->p[SELF->n - SELF->i - 1];
+  return Core_Success;
+}
+
+INLINE Core_Result
+InlineByteIteratorCxxArrayReverse_next
+  (
+    InlineByteIteratorCxxArrayReverse* SELF
+  )
+{
+  if (!SELF) {
+    Core_setError(Core_Error_ArgumentInvalid);
+    return Core_Failure;
+  }
+  Core_Boolean hasValue;
+  if (InlineByteIterator_hasValue(&hasValue, (InlineByteIterator*)SELF)) {
+    return Core_Failure;
+  }
+  if (!hasValue) {
+    return Core_Success;
+  }
+  SELF->i++;
+  return Core_Success;
+}
+
+INLINE Core_Result
+InlineByteIteratorCxxArrayReverse_uninitialize
+  (
+    InlineByteIteratorCxxArrayReverse* SELF
+  )
+{ return Core_Success; }
+
+INLINE Core_Result
+InlineByteIteratorCxxArrayReverse_initialize
+  (
+    InlineByteIteratorCxxArrayReverse* SELF,
+    Core_Natural8 const* p,
+    Core_Size n
+  )
+{
+  if (InlineByteIterator_initialize((InlineByteIterator*)SELF,
+                                    (InlineByteIterator_HasValue*)&InlineByteIteratorCxxArrayReverse_hasValue,
+                                    (InlineByteIterator_GetIndex*)&InlineByteIteratorCxxArrayReverse_getIndex,
+                                    (InlineByteIterator_GetValue*)&InlineByteIteratorCxxArrayReverse_getValue,
+                                    (InlineByteIterator_Next*)&InlineByteIteratorCxxArrayReverse_next,
+                                    (InlineByteIterator_Uninitialize*)&InlineByteIteratorCxxArrayReverse_uninitialize)) {
+    return Core_Failure;
+  }
+  SELF->p = p;
+  SELF->n = n;
+  SELF->i = 0;
+  return Core_Success;
+}
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 #undef INLINE
 

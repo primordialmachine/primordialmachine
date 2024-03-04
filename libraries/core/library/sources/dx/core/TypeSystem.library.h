@@ -1,5 +1,5 @@
-#if !defined(DX_CORE_TYPESYSTEM_LIBRARY_H_INCLUDED)
-#define DX_CORE_TYPESYSTEM_LIBRARY_H_INCLUDED
+#if !defined(CORE_TYPESYSTEM_LIBRARY_H_INCLUDED)
+#define CORE_TYPESYSTEM_LIBRARY_H_INCLUDED
 
 #include "dx/core/TypeSystem.h"
 #include "Core/TypeSystem/TypeName.h"
@@ -10,18 +10,18 @@ struct _Core_Type {
   Core_ReferenceCounter reference_count;
   Core_Natural8 flags;
   _Core_TypeName* name;
-  void (*on_type_destroyed)();
+  void (*onTypeDestroyed)();
   union {
-    // _DX_RTI_TYPE_NODE_FLAGS_FUNDAMENTAL
+    // Core_TypeFlags_IsFundamental
     struct {
       Core_Size value_size;
     } fundamental;
-    // _DX_RTI_TYPE_NODE_FLAGS_OBJECT
+    // Core_TypeFlags_IsObject
     struct {
       _Core_Type* parent;
 
       Core_Size object_size;
-      void (*destruct_object)(Core_Object*);
+      void (*destructObject)(Core_Object*);
 
       Core_Size dispatch_size;
       void (*constructDispatch)(Core_Object_Dispatch*);
@@ -45,4 +45,4 @@ Core_Result Core_TypeSystem_initialize();
 /// @return #Core_Success on success. #Core_Failure on failure.
 Core_Result Core_TypeSystem_uninitialize();
 
-#endif // DX_CORE_TYPESYSTEM_LIBRARY_H_INCLUDED
+#endif // CORE_TYPESYSTEM_LIBRARY_H_INCLUDED

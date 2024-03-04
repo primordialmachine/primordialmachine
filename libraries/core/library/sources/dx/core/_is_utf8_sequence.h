@@ -1,8 +1,7 @@
 #if !defined(DX_CORE__IS_UTF8_SEQUENCE)
 #define DX_CORE__IS_UTF8_SEQUENCE
 
-#include "dx/core/core.h"
-#include "Core/InlineUtf8Iterator.h"
+#include "Core/Utf8.h"
 
 /// @brief Classify the first Byte of an UTF8 sequence to determine the length of the sequence.
 /// @param RETURN A pointer to a <code>Core_Size</code> variable.

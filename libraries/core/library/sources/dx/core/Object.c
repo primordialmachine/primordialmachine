@@ -179,8 +179,8 @@ void Core_unreference(Core_Object* object) {
     // destruct
     while (object->type) {
       _Core_Type* type = (_Core_Type*)object->type;
-      if (type->object.destruct_object) {
-        type->object.destruct_object(object);
+      if (type->object.destructObject) {
+        type->object.destructObject(object);
       }
       object->type = (Core_Type*)type->object.parent;
     }

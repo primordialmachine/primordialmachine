@@ -1,6 +1,6 @@
 #include "dx/core/_is_utf8_sequence.h"
 
-static Core_Result _utf8_symbol_range_to_byte_range_ex(InlineUtf8Iterator* utf8Iterator, _utf8_symbol_range* source, _utf8_byte_range* target) {
+static Core_Result _utf8_symbol_range_to_byte_range_ex(Core_Utf8_Iterator* utf8Iterator, _utf8_symbol_range* source, _utf8_byte_range* target) {
   if (!utf8Iterator || !source || !target) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
@@ -16,34 +16,34 @@ static Core_Result _utf8_symbol_range_to_byte_range_ex(InlineUtf8Iterator* utf8I
   Core_Boolean hasSymbol;
   //
   while (currentSymbolRange.start < source->start) {
-    if (InlineUtf8Iterator_hasSymbol(&hasSymbol, utf8Iterator)) {
+    if (Core_Utf8_Iterator_hasSymbol(&hasSymbol, utf8Iterator)) {
       return Core_Failure;
     }
     if (!hasSymbol) {
       Core_setError(Core_Error_ArgumentInvalid);
       return Core_Failure;
     }
-    if (InlineUtf8Iterator_next(utf8Iterator)) {
+    if (Core_Utf8_Iterator_next(utf8Iterator)) {
       return Core_Failure;
     }
     currentSymbolRange.start++;
   }
-  InlineUtf8Iterator_getByteIndex(&currentByteRange.start, utf8Iterator);
+  Core_Utf8_Iterator_getByteIndex(&currentByteRange.start, utf8Iterator);
   //
   while (currentSymbolRange.length < source->length) {
-    if (InlineUtf8Iterator_hasSymbol(&hasSymbol, utf8Iterator)) {
+    if (Core_Utf8_Iterator_hasSymbol(&hasSymbol, utf8Iterator)) {
       return Core_Failure;
     }
     if (!hasSymbol) {
       Core_setError(Core_Error_ArgumentInvalid);
       return Core_Failure;
     }
-    if (InlineUtf8Iterator_next(utf8Iterator)) {
+    if (Core_Utf8_Iterator_next(utf8Iterator)) {
       return Core_Failure;
     }
     currentSymbolRange.length++;
   }
-  InlineUtf8Iterator_getByteIndex(&currentByteRange.length, utf8Iterator);
+  Core_Utf8_Iterator_getByteIndex(&currentByteRange.length, utf8Iterator);
   currentByteRange.length -= currentByteRange.start;
   *target = currentByteRange;
   return Core_Success;
@@ -54,21 +54,22 @@ Core_Result _utf8_symbol_range_to_byte_range(Core_Natural8 const* p, Core_Size n
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
   }
-  InlineByteIterator_C byteIterator;
-  if (InlineByteIterator_C_initialize(&byteIterator, p, n)) {
+  InlineByteIteratorCxxArray byteIterator;
+  if (InlineByteIteratorCxxArray_initialize(&byteIterator, p, n)) {
     return Core_Failure;
   }
-  InlineUtf8Iterator utf8Iterator;
-  if (InlineUtf8Iterator_initialize(&utf8Iterator, (InlineByteIterator*)&byteIterator)) {
+  Core_Utf8_DefaultIterator _utf8Iterator;
+  Core_Utf8_Iterator* utf8Iterator = (Core_Utf8_Iterator*)&_utf8Iterator;
+  if (Core_Utf8_DefaultIterator_initialize(&_utf8Iterator, (InlineByteIterator*)&byteIterator)) {
     InlineByteIterator_uninitialize((InlineByteIterator*)&byteIterator);
     return Core_Failure;
   }
-  if (_utf8_symbol_range_to_byte_range_ex(&utf8Iterator, source, target)) {
-    InlineUtf8Iterator_uninitialize(&utf8Iterator);
+  if (_utf8_symbol_range_to_byte_range_ex(utf8Iterator, source, target)) {
+    Core_Utf8_Iterator_uninitialize(utf8Iterator);
     InlineByteIterator_uninitialize((InlineByteIterator*)&byteIterator);
     return Core_Failure;
   }
-  InlineUtf8Iterator_uninitialize(&utf8Iterator);
+  Core_Utf8_Iterator_uninitialize(utf8Iterator);
   InlineByteIterator_uninitialize((InlineByteIterator*)&byteIterator);
   return Core_Success;
 }

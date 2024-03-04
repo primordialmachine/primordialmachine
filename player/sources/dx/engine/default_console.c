@@ -115,7 +115,7 @@ static Core_Result on_keyboard_key_message(dx_default_console* SELF, Core_Keyboa
         return Core_Failure;
       }
       if (number_of_bytes > 0) {
-        return Core_StringBuffer_remove_last(SELF->prompt);
+        return Core_StringBuffer_removeLast(SELF->prompt);
       } else {
         return Core_Success;
       }

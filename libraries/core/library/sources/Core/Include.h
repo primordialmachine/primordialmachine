@@ -21,7 +21,7 @@
 #include "Core/FileSystem/setFileContents.h"
 #include "Core/Hash.h"
 #include "Core/InlineByteIterator.h"
-#include "Core/InlineUtf8Iterator.h"
+#include "Core/Utf8.h"
 #include "Core/Input/InputMessageKind.h"
 #include "Core/Input/InputMessage.h"
 #include "Core/Input/KeyboardKey.h"

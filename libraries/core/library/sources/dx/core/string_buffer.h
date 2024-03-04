@@ -107,6 +107,6 @@ Core_Result Core_StringBuffer_appendFV(Core_StringBuffer* SELF, Core_String* for
 /// @method{Core_StringBuffer}
 Core_Result Core_StringBuffer_appendF(Core_StringBuffer* SELF, Core_String* format, ...);
 
-Core_Result Core_StringBuffer_remove_last(Core_StringBuffer* SELF);
+Core_Result Core_StringBuffer_removeLast(Core_StringBuffer* SELF);
 
 #endif // DX_STRING_BUFFER_H_INCLUDED

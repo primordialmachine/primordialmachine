@@ -215,7 +215,7 @@ Core_Result Core_StringBuffer_appendF(Core_StringBuffer* SELF, Core_String* form
   return result;
 }
 
-Core_Result Core_StringBuffer_remove_last(Core_StringBuffer* SELF) {
+Core_Result Core_StringBuffer_removeLast(Core_StringBuffer* SELF) {
   if (!SELF) {
     Core_setError(Core_Error_ArgumentInvalid);
     return Core_Failure;
