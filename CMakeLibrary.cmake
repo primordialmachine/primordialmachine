@@ -2,6 +2,7 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/compiler.cmake)
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/language.cmake)
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/detect_void_pointer_size.cmake)
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/operating_system.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/instruction_set_architecture.cmake)
 
 # Macro which ensures that certain compiler warnings are treated as compiler errors.
 macro(dx_configure_warnings target)
@@ -70,7 +71,8 @@ macro(dx_begin_project target)
   endif()
 
   project(${target} LANGUAGES ${${target}.languages})
-  
+
+  core_detect_instruction_set_architecture(${target})  
   core_detect_operating_system(${target})
   
   core_detect_compiler(${target} ${CORE_LANGUAGE_ID_C})

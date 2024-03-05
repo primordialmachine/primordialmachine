@@ -6,3 +6,4 @@
 macro(core_detect_void_pointer_size target)
   set(${target}.sizeof_void_pointer ${CMAKE_SIZEOF_VOID_P})
 endmacro()
+

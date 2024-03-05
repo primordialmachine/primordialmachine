@@ -40,10 +40,12 @@ macro(core_detect_compiler target language)
 
   
   if (${language} EQUAL ${CORE_LANGUAGE_ID_C})
+    # Initialize if not yet initialized.
     if (NOT DEFINED ${target_name}.COMPILER_C_ID)
       set(${target}.COMPILER_C_ID ${CORE_COMPILER_C_ID_UNKNOWN})
       set(${target}.COMPILER_C_STRING ${CORE_COMPILER_C_STRING_UNKNOWN})
     endif()
+    # Perform detection.
     if (CMAKE_C_COMPILER_ID)
       if (CMAKE_C_COMPILER_ID MATCHES ".*clang")
         set(${target}.COMPILER_C_STRING ${CORE_COMPILER_C_STRING_CLANG})
@@ -80,6 +82,7 @@ macro(core_detect_compiler target language)
     endif()
     message( STATUS " - C++ compiler: ${${target}.COMPILER_CPP_STRING}")
   elseif (${language} EQUAL ${CORE_LANGUAGE_ID_MASM})
+    # Initialize if not yet initialized.
     if (NOT DEFINED ${target_name}.COMPILER_MASM_ID)
       set(${target}.COMPILER_MASM_ID ${CORE_COMPILER_MASM_ID_UNKNOWN})
       set(${target}.COMPILER_MASM_STRING ${CORE_COMPILER_MASM_STRING_UNKNOWN})

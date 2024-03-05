@@ -71,6 +71,19 @@
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
+#define Core_InstructionSetArchitecture_Unknown (0)
+
+/* http://localhost/core#core-instructionsetarchitecture-x64 */
+#define Core_InstructionSetArchitecture_X64 (1)
+
+/* http://localhost/core#core-instructionsetarchitecture-x86 */
+#define Core_InstructionSetArchitecture_X86 (2)
+
+/* http://localhost/core#core-instructionsetarchitecture */
+#define Core_InstructionSetArchitecture @Core_InstructionSetArchitecture@
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
 // If defined and evaluating to @a 1, then Core_safeMulN7 uses an assembler implementation and otherwise a pure C implementation.
 // Currently, the assember implementation is preferred so keep this enabled.
 #define Core_safeMulN8_withAsm @Core_safeMulN8_withAsm@
