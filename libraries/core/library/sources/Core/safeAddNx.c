@@ -40,4 +40,3 @@ Core_Result Core_safeAddSz(Core_Size* RETURN, Core_Size a, Core_Size b, Core_Siz
   *RETURN = t;
   return Core_Success;
 }
-

@@ -38,7 +38,7 @@ if (${${name}.INSTRUCTION_SET_ARCHITECTURE_ID} EQUAL ${CORE_INSTRUCTION_SET_ARCH
   set("Core_InstructionSetArchitecture" "Core_InstructionSetArchitecture_X64")
 elseif (${${name}.INSTRUCTION_SET_ARCHITECTURE_ID} EQUAL ${CORE_INSTRUCTION_SET_ARCHITECTURE_ID_X86})
   set("Core_InstructionSetArchitecture" "Core_InstructionSetArchitecture_X86")
-elseif (${${name}.INSTRUCTION_SET_ARCHITECTURE_ID} EQUAL ${CORE_COMPILER_CPP_ID_UNKNOWN})
+elseif (${${name}.INSTRUCTION_SET_ARCHITECTURE_ID} EQUAL ${CORE_INSTRUCTION_SET_ARCHITECTURE_ID_UNKNOWN})
   set("Core_InstructionSetArchitecture" "Core_InstructionSetArchitecture_Unknown")
 else()
   message(FATAL_ERROR "C++ compiler detection not executed")
@@ -347,17 +347,65 @@ endfunction()
 
 list(APPEND ${name}.sources "sources/Core/Intrinsic/_umul128/_umul128.c")
 list(APPEND ${name}.headers "sources/Core/Intrinsic/_umul128/_umul128.h")
+list(APPEND ${name}.sources "sources/Core/Intrinsic/_umul64/_umul64.c")
+list(APPEND ${name}.headers "sources/Core/Intrinsic/_umul64/_umul64.h")
+list(APPEND ${name}.sources "sources/Core/Intrinsic/_umul32/_umul32.c")
+list(APPEND ${name}.headers "sources/Core/Intrinsic/_umul32/_umul32.h")
+list(APPEND ${name}.sources "sources/Core/Intrinsic/_umul16/_umul16.c")
+list(APPEND ${name}.headers "sources/Core/Intrinsic/_umul16/_umul16.h")
+
+list(APPEND ${name}.sources "sources/Core/Intrinsic/_imul128/_imul128.c")
+list(APPEND ${name}.headers "sources/Core/Intrinsic/_imul128/_imul128.h")
+list(APPEND ${name}.sources "sources/Core/Intrinsic/_imul64/_imul64.c")
+list(APPEND ${name}.headers "sources/Core/Intrinsic/_imul64/_imul64.h")
+list(APPEND ${name}.sources "sources/Core/Intrinsic/_imul32/_imul32.c")
+list(APPEND ${name}.headers "sources/Core/Intrinsic/_imul32/_imul32.h")
+list(APPEND ${name}.sources "sources/Core/Intrinsic/_imul16/_imul16.c")
+list(APPEND ${name}.headers "sources/Core/Intrinsic/_imul16/_imul16.h")
 
 #
-add_files( ${name}.inlays  "sources/dx/core/asm/${infix}/_umul*.i")
-add_files( ${name}.sources "sources/dx/core/asm/${infix}/_umul*.c" )
-add_files( ${name}.headers "sources/dx/core/asm/${infix}/_umul*.h" )
-add_files( ${name}.asms    "sources/dx/core/asm/${infix}/_umul*.asm" )
-#
-add_files( ${name}.inlays  "sources/dx/core/asm/${infix}/_imul*.i")
-add_files( ${name}.sources "sources/dx/core/asm/${infix}/_imul*.c" )
-add_files( ${name}.headers "sources/dx/core/asm/${infix}/_imul*.h" )
-add_files( ${name}.asms    "sources/dx/core/asm/${infix}/_imul*.asm" )
+if (${${name}.INSTRUCTION_SET_ARCHITECTURE_ID} EQUAL ${CORE_INSTRUCTION_SET_ARCHITECTURE_ID_X64})
+
+  add_files( ${name}.asms    "sources/dx/core/asm/${infix}/_umul16_${infix}.asm")
+  add_files( ${name}.headers "sources/dx/core/asm/${infix}/_umul16_${infix}.h")
+  add_files( ${name}.asms    "sources/dx/core/asm/${infix}/_umul32_${infix}.asm")
+  add_files( ${name}.headers "sources/dx/core/asm/${infix}/_umul32_${infix}.h")
+  add_files( ${name}.asms    "sources/dx/core/asm/${infix}/_umul64_${infix}.asm")
+  add_files( ${name}.headers "sources/dx/core/asm/${infix}/_umul64_${infix}.h")
+
+  add_files( ${name}.sources "sources/dx/core/asm/${infix}/_imul128_${infix}.c" )
+  add_files( ${name}.headers "sources/dx/core/asm/${infix}/_imul128_${infix}.h" )
+  add_files( ${name}.asms    "sources/dx/core/asm/${infix}/_imul64_${infix}.asm" )
+  add_files( ${name}.headers "sources/dx/core/asm/${infix}/_imul64_${infix}.h" )
+  add_files( ${name}.asms    "sources/dx/core/asm/${infix}/_imul32_${infix}.asm" )
+  add_files( ${name}.headers "sources/dx/core/asm/${infix}/_imul32_${infix}.h" )
+  add_files( ${name}.asms    "sources/dx/core/asm/${infix}/_imul16_${infix}.asm" )
+  add_files( ${name}.headers "sources/dx/core/asm/${infix}/_imul16_${infix}.h" )
+
+elseif (${${name}.INSTRUCTION_SET_ARCHITECTURE_ID} EQUAL ${CORE_INSTRUCTION_SET_ARCHITECTURE_ID_X86})
+
+  add_files( ${name}.asms    "sources/dx/core/asm/${infix}/_umul64_${infix}_fastcall.asm" )
+  add_files( ${name}.headers "sources/dx/core/asm/${infix}/_umul64_${infix}_fastcall.h" )
+  add_files( ${name}.asms    "sources/dx/core/asm/${infix}/_umul32_${infix}_fastcall.asm" )
+  add_files( ${name}.headers "sources/dx/core/asm/${infix}/_umul32_${infix}_fastcall.h" )
+  add_files( ${name}.asms    "sources/dx/core/asm/${infix}/_umul16_${infix}_fastcall.asm" )
+  add_files( ${name}.headers "sources/dx/core/asm/${infix}/_umul16_${infix}_fastcall.h" )
+
+  add_files( ${name}.sources "sources/dx/core/asm/${infix}/_imul128_${infix}.c" )
+  add_files( ${name}.headers "sources/dx/core/asm/${infix}/_imul128_${infix}.h" )
+  add_files( ${name}.asms    "sources/dx/core/asm/${infix}/_imul64_${infix}_fastcall.asm" )
+  add_files( ${name}.headers "sources/dx/core/asm/${infix}/_imul64_${infix}_fastcall.h" )
+  add_files( ${name}.asms    "sources/dx/core/asm/${infix}/_imul32_${infix}_fastcall.asm" )
+  add_files( ${name}.headers "sources/dx/core/asm/${infix}/_imul32_${infix}_fastcall.h" )
+  add_files( ${name}.asms    "sources/dx/core/asm/${infix}/_imul16_${infix}_fastcall.asm" )
+  add_files( ${name}.headers "sources/dx/core/asm/${infix}/_imul16_${infix}_fastcall.h" )
+
+  #add_files( ${name}.sources "sources/dx/core/asm/${infix}/_imul*.c" )
+  #add_files( ${name}.headers "sources/dx/core/asm/${infix}/_imul*.h" )
+  #add_files( ${name}.asms    "sources/dx/core/asm/${infix}/_imul*.asm" )
+
+endif()
+
 #
 if( CMAKE_SIZEOF_VOID_P EQUAL 4 )
   set_source_files_properties(

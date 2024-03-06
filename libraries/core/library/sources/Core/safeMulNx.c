@@ -2,16 +2,8 @@
 
 #include "Core/safeMulNx.h"
 
-#if Core_OperatingSystem_Windows == Core_OperatingSystem
-  #if defined(Core_safeMulN8_withAsm) && 1 == Core_safeMulN8_withAsm
-    #if defined(_M_X64)
-      #include "dx/core/asm/x64/_umul16.h"
-    #elif defined(_M_IX86)
-      #include "dx/core/asm/x86/_umul16.h"
-    #else
-      #error("environment not (yet) supported")
-    #endif
-  #endif
+#if defined(Core_safeMulN8_withAsm) && 1 == Core_safeMulN8_withAsm
+  #include "Core/Intrinsic/_umul16/_umul16.h"
 #endif
 
 Core_Result Core_safeMulN8(Core_Natural8* RETURN, Core_Natural8 x, Core_Natural8 y, Core_Natural8* z) {
@@ -33,13 +25,7 @@ Core_Result Core_safeMulN8(Core_Natural8* RETURN, Core_Natural8 x, Core_Natural8
 }
 
 #if defined(Core_safeMulN16_withAsm) && 1 == Core_safeMulN16_withAsm
-  #if defined(_M_X64)
-    #include "dx/core/asm/x64/_umul32.h"
-  #elif defined(_M_IX86)
-    #include "dx/core/asm/x86/_umul32.h"
-  #else
-    #error("environment not (yet) supported")
-  #endif
+  #include "Core/Intrinsic/_umul32/_umul32.h"
 #endif
 
 Core_Result Core_safeMulN16(Core_Natural16* RETURN, Core_Natural16 x, Core_Natural16 y, Core_Natural16* z) {
@@ -61,13 +47,7 @@ Core_Result Core_safeMulN16(Core_Natural16* RETURN, Core_Natural16 x, Core_Natur
 }
 
 #if defined(Core_safeMulN32_withAsm) && 1 == Core_safeMulN32_withAsm
-  #if defined(_M_X64)
-    #include "dx/core/asm/x64/_umul64.h"
-  #elif defined(_M_IX86)
-    #include "dx/core/asm/x86/_umul64.h"
-  #else
-    #error("environment not (yet) supported")
-  #endif
+  #include "Core/Intrinsic/_umul64/_umul64.h"
 #endif
 
 Core_Result Core_safeMulN32(Core_Natural32* RETURN, Core_Natural32 x, Core_Natural32 y, Core_Natural32* z) {
@@ -89,10 +69,10 @@ Core_Result Core_safeMulN32(Core_Natural32* RETURN, Core_Natural32 x, Core_Natur
 }
 
 #if Core_OperatingSystem_Windows == Core_OperatingSystem
-  #if defined(_M_X64)
-    #include "dx/core/asm/x64/_umul128.h"
-  #elif defined(_M_IX86)
-    #include "dx/core/asm/x86/_umul128.h"
+  #if Core_InstructionSetArchitecture_X64 == Core_InstructionSetArchitecture
+    #include "Core/Intrinsic/_umul128/_umul128.h"
+  #elif Core_InstructionSetArchitecture_X86 == Core_InstructionSetArchitecture
+    #include "Core/Intrinsic/_umul128/_umul128.h"
   #else
     #error("environment not (yet) supported")
   #endif
@@ -111,12 +91,11 @@ Core_Result Core_safeMulN64(Core_Natural64* RETURN, Core_Natural64 x, Core_Natur
 }
 
 Core_Result Core_safeMulSz(Core_Size* RETURN, Core_Size x, Core_Size y, Core_Size* z) {
-#if defined(_M_X64)
+#if Core_InstructionSetArchitecture_X64 == Core_InstructionSetArchitecture
   return Core_safeMulN64(RETURN, x, y, z);
-#elif defined(_M_IX86)
+#elif Core_InstructionSetArchitecture_X86 == Core_InstructionSetArchitecture
   return Core_safeMulN32(RETURN, x, y, z);
 #else
   #error("environment not (yet) supported")
 #endif
 }
-

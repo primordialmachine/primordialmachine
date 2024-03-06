@@ -2,19 +2,9 @@
 
 #include "Core/safeMulIx.h"
 
-#if Core_OperatingSystem_Windows == Core_OperatingSystem
-  #if defined(Core_safeMulI8_withAsm) && 1 == Core_safeMulI8_withAsm
-    #if defined(_M_X64)
-      #include "dx/core/asm/x64/_imul16.h"
-    #elif defined(_M_IX86)
-      #include "dx/core/asm/x86/_imul16.h"
-    #else
-      #error("environment not supported")
-    #endif
-  #endif
-#endif
+#include "Core/Intrinsic/_imul16/_imul16.h"
 
-Core_Result Core_safeMulI8(int8_t* RETURN, int8_t x, int8_t y, int8_t* z) {
+Core_Result Core_safeMulI8(Core_Integer8* RETURN, Core_Integer8 x, Core_Integer8 y, Core_Integer8* z) {
 #if defined(Core_safeMulI8_withAsm) && 1 == Core_safeMulI8_withAsm
   int8_t lo, hi;
   lo = _dx_imul16(x, y, &hi);
@@ -28,17 +18,9 @@ Core_Result Core_safeMulI8(int8_t* RETURN, int8_t x, int8_t y, int8_t* z) {
   return Core_Success;
 }
 
-#if defined(Core_safeMulI16_withAsm) && 1 == Core_safeMulI16_withAsm
-  #if defined(_M_X64)
-    #include "dx/core/asm/x64/_imul32.h"
-  #elif defined(_M_IX86)
-    #include "dx/core/asm/x86/_imul32.h"
-  #else
-    #error("environment not (yet) supported")
-  #endif
-#endif
+#include "Core/Intrinsic/_imul32/_imul32.h"
 
-Core_Result Core_safeMulI16(int16_t* RETURN, int16_t x, int16_t y, int16_t* z) {
+Core_Result Core_safeMulI16(Core_Integer16* RETURN, Core_Integer16 x, Core_Integer16 y, Core_Integer16* z) {
 #if defined(Core_safeMulI16_withAsm) && 1 == Core_safeMulI16_withAsm
   int16_t lo, hi;
   lo = _dx_imul32(x, y, &hi);
@@ -52,17 +34,9 @@ Core_Result Core_safeMulI16(int16_t* RETURN, int16_t x, int16_t y, int16_t* z) {
   return Core_Success;
 }
 
-#if defined(Core_safeMulI32_withAsm) && 1 == Core_safeMulI32_withAsm
-  #if defined(_M_X64)
-    #include "dx/core/asm/x64/_imul64.h"
-  #elif defined(_M_IX86)
-    #include "dx/core/asm/x86/_imul64.h"
-  #else
-    #error("environment not supported")
-  #endif
-#endif
+#include "Core/Intrinsic/_imul64/_imul64.h"
 
-Core_Result Core_safeMulI32(int32_t* RETURN, int32_t x, int32_t y, int32_t* z) {
+Core_Result Core_safeMulI32(Core_Integer32* RETURN, Core_Integer32 x, Core_Integer32 y, Core_Integer32* z) {
 #if defined(Core_safeMulI32_withAsm) && 1 == Core_safeMulI32_withAsm
   int32_t lo, hi;
   lo = _dx_imul64(x, y, &hi);
@@ -76,17 +50,9 @@ Core_Result Core_safeMulI32(int32_t* RETURN, int32_t x, int32_t y, int32_t* z) {
   return Core_Success;
 }
 
-#if defined(Core_safeMulI64_withAsm) && 1 == Core_safeMulI64_withAsm
-  #if defined(_M_X64)
-    #include "dx/core/asm/x64/_imul128.h"
-  #elif defined(_M_IX86)
-    #include "dx/core/asm/x86/_imul128.h"
-  #else
-    #error("environment not (yet) supported")
-  #endif
-#endif
+#include "Core/Intrinsic/_imul128/_imul128.h"
 
-Core_Result Core_safeMulI64(int64_t* RETURN, int64_t x, int64_t y, int64_t* z) {
+Core_Result Core_safeMulI64(Core_Integer64* RETURN, Core_Integer64 x, Core_Integer64 y, Core_Integer64* z) {
 #if defined(Core_safeMulI64_withAsm) && 1 == Core_safeMulI64_withAsm
   int64_t lo, hi;
   lo = _dx_imul128(x, y, &hi);
@@ -97,4 +63,3 @@ Core_Result Core_safeMulI64(int64_t* RETURN, int64_t x, int64_t y, int64_t* z) {
 #endif
   return Core_Success;
 }
-
