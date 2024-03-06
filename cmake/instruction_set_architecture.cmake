@@ -31,4 +31,3 @@ macro(core_detect_instruction_set_architecture target)
   endif()
   message( STATUS " - instruction set architecture: ${${target}.INSTRUCTION_SET_ARCHITECTURE_STRING}")
 endmacro()
-

@@ -64,4 +64,3 @@ macro(core_detect_operating_system target)
   endif()
   message(STATUS " - operating system: ${${target}.OPERATING_SYSTEM_STRING}")
 endmacro()
-

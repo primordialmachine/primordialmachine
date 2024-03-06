@@ -90,4 +90,3 @@ macro(core_detect_compiler target language)
     message( STATUS " - MASM compiler: ${${target}.COMPILER_MASM_STRING}")
   endif()
 endmacro()
-

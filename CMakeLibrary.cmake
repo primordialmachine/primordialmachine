@@ -86,37 +86,32 @@ macro(dx_begin_project target)
   set(${target}.readmes "")
   set(${target}.sources "")
 
+  # Sanity check.
+  if (NOT (DEFINED ${target}.kind))
+    message ( FATAL_ERROR "${target}: ${target}.kind is not defined" )
+  endif() 
+  #Sanity check.
+  if (NOT (DEFINED ${target}.source_directory))
+    message ( FATAL_ERROR "${target}: ${target}.source_directory is not defined" )
+  endif()
+  if ("${${target}.kind}" STREQUAL "dynamic-library")
+    add_library(${target} MODULE)
+  elseif ("${${target}.kind}" STREQUAL "executable")
+    add_executable(${target})
+  elseif ("${${target}.kind}" STREQUAL "static-library")
+    add_library(${target})
+  else()
+    message ( FATAL_ERROR "${target}: ${target}.kind is `${${target}.kind}`. ${target}.kind must be defined to 'dynamic-library', 'executable', or 'static-library'" )
+  endif()
+
 endmacro()
 
 # asserts the following variables are defined
 # - ${target}.kind must be "dynamic-library", "static-library", or "executable".
 # - ${target}.source_directory must be defined and must exist
 macro(dx_end_project target)
-  # Sanity check.
-  if (NOT (DEFINED ${target}.kind))
-    message ( FATAL_ERROR "${target}: ${target}.kind is not defined" )
-  endif()
-  if ("${${target}.kind}" STREQUAL "dynamic-library")
-  elseif ("${${target}.kind}" STREQUAL "executable")
-  elseif ("${${target}.kind}" STREQUAL "static-library")
-  else()
-    message ( FATAL_ERROR "${target}: ${target}.kind is `${${target}.kind}`. ${target}.kind must be defined to 'dynamic-library', 'executable', or 'static-library'" )
-  endif()
-  
-  #Sanity check.
-  if (NOT (DEFINED ${target}.source_directory))
-    message ( FATAL_ERROR "${target}: ${target}.source_directory is not defined" )
-  endif()
-  
-  if ("${${target}.kind}" STREQUAL "dynamic-library")
-    add_library(${target} MODULE ${${target}.sources} ${${target}.headers} ${${target}.readmes} ${${target}.inlays} ${${target}.asms})
-  elseif ("${${target}.kind}" STREQUAL "executable")
-    add_executable(${target} ${${target}.sources} ${${target}.headers} ${${target}.readmes} ${${target}.inlays} ${${target}.asms})
-  elseif ("${${target}.kind}" STREQUAL "static-library")
-    add_library(${target} ${${target}.sources} ${${target}.headers} ${${target}.readmes} ${${target}.inlays} ${${target}.asms})
-  else()
-    message ( FATAL_ERROR "${target}: ${target}.kind is `${${target}.kind}`. ${target}.kind must be defined to 'dynamic-library', 'executable', or 'static-library'" )
-  endif()
+  target_sources(${target} PUBLIC ${${target}.headers})
+  target_sources(${target} PRIVATE ${${target}.sources} ${${target}.readmes} ${${target}.inlays} ${${target}.asms})
 
   source_group(TREE ${${target}.source_directory} FILES ${${target}.asms})
   source_group(TREE ${${target}.source_directory} FILES ${${target}.inlays})
@@ -147,4 +142,3 @@ macro(dx_end_project target)
   endif()
 
 endmacro()
-

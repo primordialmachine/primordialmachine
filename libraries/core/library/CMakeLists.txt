@@ -62,17 +62,14 @@ elseif (${${name}.OPERATING_SYSTEM_ID} EQUAL ${CORE_OPERATING_SYSTEM_ID_LINUX})
   set("Core_safeMulI16_withAsm" "(0)")
   set("Core_safeMulI32_withAsm" "(0)")
   set("Core_safeMulI64_withAsm" "(0)")
-
-  set("Core_hasUmul64", "{1}")
-  set("Core")
-
 elseif (${${name}.OPERATING_SYSTEM_ID} EQUAL ${CORE_OPERATING_SYSTEM_ID_UNKNOWN})
   set("Core_OperatingSystem" "Core_OperatingSystem_Unknown")
 else()
   message(FATAL_ERROR "operating system detection not executed")
 endif()
 
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/sources/dx/core/Configure.h.in ${CMAKE_CURRENT_SOURCE_DIR}/sources/dx/core/Configure.h)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/sources/dx/core/Configure.h.in ${CMAKE_CURRENT_BINARY_DIR}/sources/dx/core/Configure.h)
+target_include_directories(${name} PUBLIC ${CMAKE_CURRENT_BINARY_DIR}/sources)
 
 # configuration files.
 list(APPEND ${name}.sources "sources/dx/core/configuration.c")
@@ -348,6 +345,9 @@ function(add_files file_list expression)
   set(${file_list} ${${file_list}} ${temporary} PARENT_SCOPE)
 endfunction()
 
+list(APPEND ${name}.sources "sources/Core/Intrinsic/_umul128/_umul128.c")
+list(APPEND ${name}.headers "sources/Core/Intrinsic/_umul128/_umul128.h")
+
 #
 add_files( ${name}.inlays  "sources/dx/core/asm/${infix}/_umul*.i")
 add_files( ${name}.sources "sources/dx/core/asm/${infix}/_umul*.c" )
@@ -368,4 +368,3 @@ if( CMAKE_SIZEOF_VOID_P EQUAL 4 )
 endif()
 
 dx_end_project(${name})
-
