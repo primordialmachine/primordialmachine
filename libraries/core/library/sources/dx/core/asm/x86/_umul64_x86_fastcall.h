@@ -1,5 +1,5 @@
-#if !defined(DX_ASM_X86__UMUL64_H_INCLUDED)
-#define DX_ASM_X86__UMUL64_H_INCLUDED
+#if !defined(DX_ASM_X86__UMUL64_X86_FASTCALL_H_INCLUDED)
+#define DX_ASM_X86__UMUL64_X86_FASTCALL_H_INCLUDED
 
 #include <inttypes.h>
 
@@ -12,4 +12,4 @@ uint32_t _fastcall _dx_umul64_x86_fastcall(uint32_t x, uint32_t y, uint32_t* z);
 
 #endif
 
-#endif // DX_ASM_X86__UMUL64_H_INCLUDED
+#endif // DX_ASM_X86__UMUL64_X86_FASTCALL_H_INCLUDED

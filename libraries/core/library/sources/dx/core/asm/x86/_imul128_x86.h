@@ -1,5 +1,5 @@
-#if !defined(DX_ASM_X86__IMUL128_H_INCLUDED)
-#define DX_ASM_X86__IMUL128_H_INCLUDED
+#if !defined(DX_ASM_X86__IMUL128_X86_H_INCLUDED)
+#define DX_ASM_X86__IMUL128_X86_H_INCLUDED
 
 #include "dx/core/Configure.h"
 
@@ -14,4 +14,4 @@ int64_t _dx_imul128_x86(int64_t x, int64_t y, int64_t* z);
 
 #endif
 
-#endif // DX_ASM_X86__IMUL128_H_INCLUDED
+#endif // DX_ASM_X86__IMUL128_X86_H_INCLUDED
