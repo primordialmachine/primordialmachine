@@ -58,7 +58,7 @@ Core_Result Core_String_printfv(Core_String** RETURN, Core_String* format, va_li
   if (Core_InlineArrayListN8_initialize(&buffer, 0, &configuration)) {
     return Core_Failure;
   }
-  if (dx__format_v(&buffer, format->bytes, format->bytes + format->numberOfBytes, arguments)) {
+  if (Core_appendFormatV(&buffer, format->bytes, format->bytes + format->numberOfBytes, arguments)) {
     Core_InlineArrayListN8_uninitialize(&buffer);
     return Core_Failure;
   }

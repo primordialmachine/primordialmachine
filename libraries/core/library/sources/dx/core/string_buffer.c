@@ -204,7 +204,7 @@ Core_Result Core_StringBuffer_appendFV(Core_StringBuffer* SELF, Core_String* for
   if (Core_String_getBytes(&bytes, format)) {
     return Core_Failure;
   }
-  return dx__format_v(&SELF->backend, bytes, ((char const*)bytes) + number_of_bytes, arguments);
+  return Core_appendFormatV(&SELF->backend, bytes, ((char const*)bytes) + number_of_bytes, arguments);
 }
 
 Core_Result Core_StringBuffer_appendF(Core_StringBuffer* SELF, Core_String* format, ...) {

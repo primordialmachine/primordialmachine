@@ -278,7 +278,15 @@ static int parse(format_spec_t* format_spec, char const** start, char const* end
 
 #undef IS
 
-Core_Result dx__format_v(Core_InlineArrayListN8* buffer, char const* start, char const* end, va_list arguments) {
+Core_Result Core_insertFormatV(Core_InlineArrayListN8* buffer, Core_Size index, char const* start, char const* end, va_list arguments) {
+  return Core_Success;
+}
+
+Core_Result Core_prependFormatV(Core_InlineArrayListN8* buffer, char const* start, char const* end, va_list arguments) {
+  return Core_Success;
+}
+
+Core_Result Core_appendFormatV(Core_InlineArrayListN8* buffer, char const* start, char const* end, va_list arguments) {
   char const* current = start;
   while (current != end) {
     if (*current == '$') {
