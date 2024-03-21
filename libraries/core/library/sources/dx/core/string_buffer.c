@@ -195,7 +195,7 @@ Core_Result Core_StringBuffer_setString(Core_StringBuffer* SELF, Core_String* st
   return Core_InlineArrayListN8_set(&SELF->backend, bytes, number_of_bytes);
 }
 
-Core_Result Core_StringBuffer_appendFV(Core_StringBuffer* SELF, Core_String* format, va_list arguments) {
+Core_Result Core_StringBuffer_appendFv(Core_StringBuffer* SELF, Core_String* format, va_list arguments) {
   Core_Size number_of_bytes = 0;
   if (Core_String_getNumberOfBytes(&number_of_bytes, format)) {
     return Core_Failure;
@@ -210,7 +210,47 @@ Core_Result Core_StringBuffer_appendFV(Core_StringBuffer* SELF, Core_String* for
 Core_Result Core_StringBuffer_appendF(Core_StringBuffer* SELF, Core_String* format, ...) {
   va_list arguments;
   va_start(arguments, format);
-  Core_Result result = Core_StringBuffer_appendFV(SELF, format, arguments);
+  Core_Result result = Core_StringBuffer_appendFv(SELF, format, arguments);
+  va_end(arguments);
+  return result;
+}
+
+Core_Result Core_StringBuffer_prependFv(Core_StringBuffer* SELF, Core_String* format, va_list arguments) {
+  Core_Size number_of_bytes = 0;
+  if (Core_String_getNumberOfBytes(&number_of_bytes, format)) {
+    return Core_Failure;
+  }
+  void const* bytes = NULL;
+  if (Core_String_getBytes(&bytes, format)) {
+    return Core_Failure;
+  }
+  return Core_prependFormatV(&SELF->backend, bytes, ((char const*)bytes) + number_of_bytes, arguments);
+}
+
+Core_Result Core_StringBuffer_insertF(Core_StringBuffer* SELF, Core_Size index, Core_String* format, ...) {
+  va_list arguments;
+  va_start(arguments, format);
+  Core_Result result = Core_StringBuffer_insertFv(SELF, index, format, arguments);
+  va_end(arguments);
+  return result;
+}
+
+Core_Result Core_StringBuffer_insertFv(Core_StringBuffer* SELF, Core_Size index, Core_String* format, va_list arguments) {
+  Core_Size number_of_bytes = 0;
+  if (Core_String_getNumberOfBytes(&number_of_bytes, format)) {
+    return Core_Failure;
+  }
+  void const* bytes = NULL;
+  if (Core_String_getBytes(&bytes, format)) {
+    return Core_Failure;
+  }
+  return Core_insertFormatV(&SELF->backend, index, bytes, ((char const*)bytes) + number_of_bytes, arguments);
+}
+
+Core_Result Core_StringBuffer_prependF(Core_StringBuffer* SELF, Core_String* format, ...) {
+  va_list arguments;
+  va_start(arguments, format);
+  Core_Result result = Core_StringBuffer_prependFv(SELF, format, arguments);
   va_end(arguments);
   return result;
 }

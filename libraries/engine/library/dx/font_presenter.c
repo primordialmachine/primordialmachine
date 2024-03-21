@@ -326,10 +326,10 @@ static Core_Result on_render_code_point(dx_font_presenter* SELF, Core_InlineVect
     if (options->present_glyph_ascender) {
       // the positive y axis goes from bottom to top
       DX_RECT2_F32 target_rectangle;
-      dx_rect2_f32_set(&target_rectangle, position->e[0] + _bearing_x,
-                                          position->e[1],
-                                          position->e[0] + _bearing_x + char_width,
-                                          position->e[1] + _bearing_y);
+      dx_rect2_f32_set(&target_rectangle, position->v.e[0] + _bearing_x,
+                                          position->v.e[1],
+                                          position->v.e[0] + _bearing_x + char_width,
+                                          position->v.e[1] + _bearing_y);
       dx_rectangle_presenter_stroke_rectangle(SELF->rectangle_presenter, &target_rectangle, 0.f, &red);
     }
     // the descender
@@ -341,10 +341,10 @@ static Core_Result on_render_code_point(dx_font_presenter* SELF, Core_InlineVect
         // Note that some chars like '(' or ')' actually have an extend below the baseline although it is hard to notice.
         DX_RECT2_F32 target_rectangle;
         dx_rect2_f32_set(&target_rectangle,
-                         position->e[0] + _bearing_x,
-                         position->e[1] + d,
-                         position->e[0] + _bearing_x + char_width,
-                         position->e[1]);
+                         position->v.e[0] + _bearing_x,
+                         position->v.e[1] + d,
+                         position->v.e[0] + _bearing_x + char_width,
+                         position->v.e[1]);
         dx_rectangle_presenter_stroke_rectangle(SELF->rectangle_presenter, &target_rectangle, 0.f, &green);
       }
     }
@@ -371,10 +371,10 @@ static Core_Result on_render_code_point(dx_font_presenter* SELF, Core_InlineVect
     // the positive y axis goes from bottom to top
     DX_RECT2_F32 target_rectangle;
     dx_rect2_f32_set(&target_rectangle,
-                     position->e[0],
-                     position->e[1] - char_height,
-                     position->e[0] + char_width,
-                     position->e[1]);
+                     position->v.e[0],
+                     position->v.e[1] - char_height,
+                     position->v.e[0] + char_width,
+                     position->v.e[1]);
     Core_InlineVector2R32 bearing;
     dx_vec2_f32_set(&bearing, _bearing_x, _bearing_y);
     dx_rect2_f32_translate(&target_rectangle, &bearing);
@@ -387,7 +387,7 @@ static Core_Result on_render_code_point(dx_font_presenter* SELF, Core_InlineVect
     CORE_UNREFERENCE(texture);
     texture = NULL;
   }
-  position->e[0] += _advance_x; // advance
+  position->v.e[0] += _advance_x; // advance
   CORE_UNREFERENCE(glyph);
   glyph = NULL;
   return Core_Success;
@@ -415,10 +415,10 @@ static Core_Result on_measure_code_point(dx_font_presenter* SELF,
       } break;
       case DX_CODE_POINT_NOT_PRESENTABLE_POLICY_SKIP: {
         dx_rect2_f32_set(bounds,
-                        position->e[0],
-                        position->e[1],
-                        position->e[0],
-                        position->e[1]);
+                        position->v.e[0],
+                        position->v.e[1],
+                        position->v.e[0],
+                        position->v.e[1]);
         return Core_Success;
       } break;
     };
@@ -476,18 +476,18 @@ static Core_Result on_measure_code_point(dx_font_presenter* SELF,
       return Core_Failure;
     }
     dx_rect2_f32_set(bounds,
-                     position->e[0] + _bearing_x,
-                     position->e[1] + _descender,
-                     position->e[0] + _bearing_x + char_width,
-                     position->e[1] + _ascender);
+                     position->v.e[0] + _bearing_x,
+                     position->v.e[1] + _descender,
+                     position->v.e[0] + _bearing_x + char_width,
+                     position->v.e[1] + _ascender);
   } else {
     dx_rect2_f32_set(bounds,
-                     position->e[0] + _bearing_x,
-                     position->e[1] - (char_height - _bearing_y),
-                     position->e[0] + _bearing_x + char_width,
-                     position->e[1] + _bearing_y);
+                     position->v.e[0] + _bearing_x,
+                     position->v.e[1] - (char_height - _bearing_y),
+                     position->v.e[0] + _bearing_x + char_width,
+                     position->v.e[1] + _bearing_y);
   }
-  position->e[0] += _advance_x; // advance
+  position->v.e[0] += _advance_x; // advance
   CORE_UNREFERENCE(glyph);
   glyph = NULL;
   return Core_Success;
@@ -665,7 +665,7 @@ Core_Result dx_font_presenter_render_line_string(dx_font_presenter* SELF, Core_I
     return Core_Failure;
   }
   Core_InlineVector2R32 position1;
-  dx_vec2_f32_set(&position1, position->e[0], position->e[1]);
+  dx_vec2_f32_set(&position1, position->v.e[0], position->v.e[1]);
   if (dx_font_presenter_render_line_string_iterator(SELF, &position1, string_iterator, text_color, font, options)) {
     CORE_UNREFERENCE(string_iterator);
     string_iterator = NULL;
@@ -683,7 +683,7 @@ Core_Result dx_font_presenter_measure_line_string(dx_font_presenter* SELF, Core_
     return Core_Failure;
   }
   Core_InlineVector2R32 position1;
-  dx_vec2_f32_set(&position1, position->e[0], position->e[1]);
+  dx_vec2_f32_set(&position1, position->v.e[0], position->v.e[1]);
   if (dx_font_presenter_measure_line_string_iterator(SELF, &position1, string_iterator, font, options, bounds)) {
     CORE_UNREFERENCE(string_iterator);
     string_iterator = NULL;
@@ -744,7 +744,7 @@ Core_Result dx_font_presenter_measure_line_string_iterator(dx_font_presenter* SE
   Core_Font_getDescender(&descender, CORE_FONT(font));
 
   DX_RECT2_F32 bounds1;
-  dx_rect2_f32_set2(&bounds1, position->e[0], position->e[1], 0.f, 0.f);
+  dx_rect2_f32_set2(&bounds1, position->v.e[0], position->v.e[1], 0.f, 0.f);
 
   Core_InlineVector2R32 pos = *position;
 

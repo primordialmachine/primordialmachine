@@ -1,0 +1,133 @@
+// Copyright (c) 2023-2024 Michael Heilmann.All rights reserved.
+#if !defined(IDLIB_CONFIGURE_H_INCLUDED)
+#define IDLIB_CONFIGURE_H_INCLUDED
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+/**
+ * @since 1.0
+ * @brief An unkown operating system.
+ */
+#define IDLIB_OperatingSystem_Unknown (0)
+
+/**
+ * @since 1.0
+ * @brief The "Windows" operating system.
+ */
+#define IDLIB_OPERATING_SYSTEM_WINDOWS (1)
+
+/**
+ * @since 1.0
+ * @brief The "Unix" operating system.
+ */
+#define IDLIB_OPERATING_SYSTEM_UNIX (2)
+
+/** 
+ * @since 1.0
+ * @brief The "Linux" operating system.
+ */
+#define IDLIB_OPERATING_SYSTEM_LINUX (3)
+
+/**
+ * @since 1.0
+ * @brief The "MacOS" operating system.
+ */
+#define IDLIB_OPERATING_SYSTEM_MACOS (4)
+
+/**
+ * @since 1.0
+ * @brief The "iOS" operating system.
+ */
+#define IDLIB_OPERATING_SYSTEM_IOS (5)
+
+/**
+ * @since 1.0
+ * @brief The "iOS Simulator" operating system.
+ */
+#define IDLIB_OPERATING_SYSTEM_IOS_SIMULATOR (6)
+
+/**
+ * @since 1.0
+ * @brief The "Cygwin" operating system.
+ */
+#define IDLIB_OPERATING_SYSTEM_CYGWIN (7)
+
+/**
+ * @since 1.0
+ * @brief The "MSYS" operating system.
+ */
+#define IDLIB_OPERATING_SYSTEM_MSYS (8)
+
+/** 
+ * @since 1.0
+ * @brief The "MinGW" operating system.
+ */
+#define IDLIB_OPERATING_SYSTEM_MINGW (9)
+
+/**
+ * @since 1.0
+ * @brief Defined to an IDLIB_OPERATING_SYSTEM_* symbolic constant, denoting the operating system.
+ */
+#define IDLIB_OPERATING_SYSTEM @IDLIB_OPERATING_SYSTEM@
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+/**
+ * @since 1.0
+ * @brief An unknown C compiler.
+ */
+#define IDLIB_Compiler_C_Unknown (0)
+
+/**
+ * @since 1.0
+ * @brief The Microsoft Visual C compiler.
+ */
+#define IDLIB_COMPILER_C_MSVC (1)
+
+/**
+ * @since 1.0
+ * @brief The Gnu Compiler Collection C compiler.
+ */
+#define IDLIB_COMPILER_C_GCC (2)
+
+/**
+ * @since 1.0
+ * @brief The Clang C compiler.
+ */
+#define IDLIB_COMPILER_C_CLANG (3)
+
+/**
+ * @since 1.0
+ * @brief Defined to an IDLIB_COMPILER_C_* symbolic constant, denoting the compiler.
+ */
+#define IDLIB_COMPILER_C @IDLIB_COMPILER_C@
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+/**
+ * @since 1.0
+ * @brief An unknown instruction set architecture.
+ */
+#define IDLIB_INSTRUCTION_SET_ARCHITECTURE_UNKNOWN (0)
+
+/**
+ * @since 1.0
+ * @brief The "x64" instruction set architecture.
+ */
+#define IDLIB_INSTRUCTION_SET_ARCHITECTURE_X64 (1)
+
+/**
+ * @since 1.0
+ * @brief The "x86" instruction set architecture.
+ */
+#define IDLIB_INSTRUCTION_SET_ARCHITECTURE_X86 (2)
+
+/**
+ * @since 1.0
+ * @brief Defined to an IDLIB_INSTRUCTION_SET_ARCHITECTURE_* symbolic constant, denoting the instruction set architecture.
+ */
+#define IDLIB_INSTRUCTION_SET_ARCHITECTURE @IDLIB_INSTRUCTION_SET_ARCHITECTURE@
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+#endif // IDLIB_CONFIGURE_H_INCLUDED

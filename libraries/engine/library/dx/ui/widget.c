@@ -14,10 +14,10 @@ static Core_Result get_relative_rectangle(DX_RECT2_F32* RETURN, dx_ui_widget* SE
     return Core_Failure;
   }
   DX_RECT2_F32 rectangle;
-  dx_rect2_f32_set(&rectangle, position.e[0],
-                               position.e[1],
-                               position.e[0] + size.e[0],
-                               position.e[1] + size.e[1]);
+  dx_rect2_f32_set(&rectangle, position.v.e[0],
+                               position.v.e[1],
+                               position.v.e[0] + size.v.e[0],
+                               position.v.e[1] + size.v.e[1]);
   *RETURN = rectangle;
   return Core_Success;
 }

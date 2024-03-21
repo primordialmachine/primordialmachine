@@ -7,6 +7,7 @@
 #include "dx/core/configuration.h"
 #include "dx/core/core.h"
 #include "Core/Numerics.h"
+#include "idlib.h"
 
 typedef struct DX_VEC3 DX_VEC3;
 typedef struct DX_VEC4 DX_VEC4;
@@ -249,23 +250,23 @@ static inline void Core_InlineRgbaN8_to_rgba_f32(Core_InlineRgbaN8 const* source
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
+// @todo Use idlib.
 // Symbolic constant for the Core_Real32 representation of PI.
 #define DX_PI_F32 3.1415926f
 
+// @todo Use idlib.
 // @brief Convert an angle in degrees into the corresponding angle in radians.
 // @param a The angle in degrees.
 // @return The corresponding angle in radians.
 static inline Core_Real32 dx_deg_to_rad(Core_Real32 x) {
-  return (x / 180.f) * DX_PI_F32;
+  return idlib_deg_to_rad_f32(x);
 }
 
 // @brief Clamp a value to the range [0,1].
 // @param x The value to be clamped.
 // @return x clamped.
 static inline Core_Real32 dx_clamp(Core_Real32 x) {
-  if (x < 0.f) return 0.f;
-  else if (x > 1.f) return 1.f;
-  else return x;
+  return idlib_clamp_f32(x);
 }
 
 static inline void dx_lerp(Core_Real32 *result, Core_Real32 start, Core_Real32 end, Core_Real32 t) {
@@ -282,14 +283,15 @@ static inline void dx_lerp(Core_Real32 *result, Core_Real32 start, Core_Real32 e
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 typedef struct Core_InlineVector2R32 {
-  Core_Real32 e[2];
+  idlib_vector_2_f32 v;
 } Core_InlineVector2R32;
 
+/// @todo Use idlib.
 static inline void dx_vec2_f32_set(Core_InlineVector2R32* v, Core_Real32 x, Core_Real32 y) {
-  v->e[0] = x;
-  v->e[1] = y;
+  idlib_vector_2_f32_set(&v->v, x, y);
 }
 
+/// @todo Use idlib.
 /// @ingroup math
 /// @brief Compute the sum of two vectors.
 /// @param w Pointer to a DX_VEC2 object.
@@ -299,7 +301,9 @@ static inline void dx_vec2_f32_set(Core_InlineVector2R32* v, Core_Real32 x, Core
 /// The object's values represent the addend (aka the 2nd operand).
 /// @remarks @a RETURN, @a operand1, and @a operand2 all may refer to the same object.
 /// @post <code>*RETURN/<code> was assigned the product.
-void Core_InlineVector2R32_add_vv(Core_InlineVector2R32* RETURN, Core_InlineVector2R32 const* operand1, Core_InlineVector2R32 const* operand2);
+static inline void Core_InlineVector2R32_add_vv(Core_InlineVector2R32* RETURN, Core_InlineVector2R32 const* operand1, Core_InlineVector2R32 const* operand2) {
+  idlib_vector_2_f32_add(&RETURN->v, &operand1->v, &operand2->v);
+}
 
 /// @ingroup math
 /// @brief Compute the product of a vector and a scalar.
@@ -323,6 +327,7 @@ void Core_InlineVector2R32_mul_vs(Core_InlineVector2R32* RETURN, Core_InlineVect
 /// @post <code>*RETURN/<code> was assigned the product.
 void Core_InlineVector2R32_mulc_vv(Core_InlineVector2R32* RETURN, Core_InlineVector2R32 const* operand1, Core_InlineVector2R32 const* operand2);
 
+/// @todo Use idlib.
 /// @ingroup math
 /// @brief Compute the difference of two vectors.
 /// @param RETURN A pointer to a <code>Core_InlineVector2R32</code> variable.
@@ -332,30 +337,31 @@ void Core_InlineVector2R32_mulc_vv(Core_InlineVector2R32* RETURN, Core_InlineVec
 /// The second operand aka the subtrahend.
 /// @remarks @a RETURN, @a operand1, and @a operand2 all may refer to the same object.
 /// @post <code>*RETURN/<code> was assigned the difference.
-void Core_InlineVector2R32_sub_vv(Core_InlineVector2R32* RETURN, Core_InlineVector2R32 const* operand1, Core_InlineVector2R32 const* operand2);
+static inline void Core_InlineVector2R32_sub_vv(Core_InlineVector2R32* RETURN, Core_InlineVector2R32 const* operand1, Core_InlineVector2R32 const* operand2) {
+  idlib_vector_2_f32_subtract(&RETURN->v, &operand1->v, &operand2->v);
+}
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 typedef struct DX_VEC3 {
-  Core_Real32 e[3];
+  idlib_vector_3_f32 v;
 } DX_VEC3;
 
 static inline void dx_vec3_set(DX_VEC3* v, Core_Real32 x, Core_Real32 y, Core_Real32 z) {
-  v->e[0] = x;
-  v->e[1] = y;
-  v->e[2] = z;
+  idlib_vector_3_f32_set(&v->v, x, y, z);
 }
 
 static inline Core_Boolean dx_vec3_are_equal(DX_VEC3 const* u, DX_VEC3 const* v) {
-  return u->e[0] == v->e[0]
-      && u->e[1] == v->e[1]
-      && u->e[2] == v->e[2];
+  return idlib_vector_3_f32_are_equal(&u->v, &v->v);
 }
 
-// get the squared length of a vector
-// @param v the vector
-// @return the squared length of the vector
-Core_Real32 dx_vec3_sql(DX_VEC3 const* v);
+/// @ingroup math
+/// Get the squared length of a vector
+/// @param v the vector
+/// @return the squared length of the vector
+static inline Core_Real32 dx_vec3_sql(DX_VEC3 const* v) {
+  return idlib_vector_3_f32_get_squared_length(&v->v);
+}
 
 // Compute a normalized vector.
 // @param v the vector receiving the normalized vector
@@ -374,7 +380,9 @@ void dx_vec3_norm(DX_VEC3* v, DX_VEC3 const* u);
 /// The object's values represent the addend (aka the 2nd operand).
 /// @remarks @a w, @a u, and @a v all may refer to the same object.
 /// @post <code>*w/<code> was assigned the values of the sum vector.
-void dx_vec3_add3(DX_VEC3* w, DX_VEC3 const* u, DX_VEC3 const* v);
+static inline void dx_vec3_add3(DX_VEC3* w, DX_VEC3 const* u, DX_VEC3 const* v) {
+  idlib_vector_3_f32_add(&w->v, &u->v, &v->v);
+}
 
 /// @ingroup math
 /// @brief Compute the difference of two vectors.
@@ -385,7 +393,9 @@ void dx_vec3_add3(DX_VEC3* w, DX_VEC3 const* u, DX_VEC3 const* v);
 /// The object's values represent hte vector that is the the subtrahend (aka the 2nd operand).
 /// @remarks @a w, @a u, and @a v all may refer to the same object.
 /// @post <code>*w/<code> was assigned the values of the difference vector.
-void dx_vec3_sub3(DX_VEC3* w, DX_VEC3 const* u, DX_VEC3 const* v);
+static inline void dx_vec3_sub3(DX_VEC3* w, DX_VEC3 const* u, DX_VEC3 const* v) {
+  idlib_vector_3_f32_subtract(&w->v, &u->v, &v->v);
+}
 
 /// @ingroup math
 /// @brief Compute the cross product of two vectors.
@@ -398,17 +408,8 @@ void dx_vec3_sub3(DX_VEC3* w, DX_VEC3 const* u, DX_VEC3 const* v);
 /// @post <code>*w/<code> was assigned the values of the cross product vector.
 void dx_vec3_cross(DX_VEC3* w, DX_VEC3 const* u, DX_VEC3 const* v);
 
-static inline void dx_vec3_lerp(DX_VEC3 const* u, DX_VEC3 const* v, Core_Real32 t, DX_VEC3* w) {
-  t = dx_clamp(t);
-  if (t == 0.f) {
-    *w = *u;
-  } else if (t == 1.f) {
-    *w = *v;
-  } else {
-    w->e[0] = (1.f - t) * u->e[0] + t * v->e[0];
-    w->e[1] = (1.f - t) * u->e[1] + t * v->e[1];
-    w->e[2] = (1.f - t) * u->e[2] + t * v->e[2];
-  }
+static inline void dx_vec3_lerp(DX_VEC3 *w, DX_VEC3 const* u, DX_VEC3 const* v, Core_Real32 t) {
+  idlib_vector_3_f32_lerp(&w->v, &u->v, &v->v, t);
 }
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
@@ -668,8 +669,8 @@ static inline void dx_rect2_f32_union(DX_RECT2_F32* a, DX_RECT2_F32 const* x, DX
 }
 
 static inline void dx_rect2_f32_translate(DX_RECT2_F32* r, Core_InlineVector2R32 const* t) {
-  r->offset.x += t->e[0];
-  r->offset.y += t->e[1];
+  r->offset.x += t->v.e[0];
+  r->offset.y += t->v.e[1];
 }
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/

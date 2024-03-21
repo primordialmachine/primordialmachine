@@ -98,7 +98,7 @@ Core_Result Core_StringBuffer_getSubstring(Core_String** RETURN, Core_StringBuff
 /// - `${r32}` a Core_Real32 value.
 /// - `${r64}` a Core_Real64 value.
 /// @method{Core_StringBuffer}
-Core_Result Core_StringBuffer_appendFV(Core_StringBuffer* SELF, Core_String* format, va_list arguments);
+Core_Result Core_StringBuffer_appendFv(Core_StringBuffer* SELF, Core_String* format, va_list arguments);
 
 /// @brief Append a string. The string is can have format specifiers. Each format specifier is replaced by its correspnding arguments in the string.
 /// @param format A pointer to the string.
@@ -106,6 +106,62 @@ Core_Result Core_StringBuffer_appendFV(Core_StringBuffer* SELF, Core_String* for
 /// @see See Core_StringBuffer_appendfv for a description of the format specifiers.
 /// @method{Core_StringBuffer}
 Core_Result Core_StringBuffer_appendF(Core_StringBuffer* SELF, Core_String* format, ...);
+
+/// @brief Prepend a string. The string is can have format specifiers. Each format specifier is replaced by its correspnding arguments in the string.
+/// @param format A pointer to the string.
+/// @param arguments The variadic arguments.
+/// @details
+/// The following format specifiers are currently supported:
+/// - `${s}` a pointer to a Core_String object. Prints the contents of this string.
+/// - `$$` prints `%`.
+/// - `${i8}` a Core_Integer8 value.
+/// - `${i16}` a Core_Integer16 value.
+/// - `${i32}` a Core_Integer32 value.
+/// - `${i64}` a Core_Integer64 value.
+/// - `${n8}`  a Core_Natural8 value.
+/// - `${n16}` a Core_Natural16 value.
+/// - `${n32}` a Core_Natural32 value.
+/// - `${n64}` a Core_Natural64 value.
+/// - `${r32}` a Core_Real32 value.
+/// - `${r64}` a Core_Real64 value.
+/// @method{Core_StringBuffer}
+Core_Result Core_StringBuffer_prependFv(Core_StringBuffer* SELF, Core_String* format, va_list arguments);
+
+/// @brief Prepend a string. The string is can have format specifiers. Each format specifier is replaced by its correspnding arguments in the string.
+/// @param format A pointer to the string.
+/// @param arguments The variadic arguments.
+/// @see See Core_StringBuffer_appendfv for a description of the format specifiers.
+/// @method{Core_StringBuffer}
+Core_Result Core_StringBuffer_prependF(Core_StringBuffer* SELF, Core_String* format, ...);
+
+/// @brief Insert a string. The string is can have format specifiers. Each format specifier is replaced by its correspnding arguments in the string.
+/// @param index The index of the symbol at which to insert the string.
+/// @param format A pointer to the string.
+/// @param arguments The variadic arguments.
+/// @details
+/// The following format specifiers are currently supported:
+/// - `${s}` a pointer to a Core_String object. Prints the contents of this string.
+/// - `$$` prints `%`.
+/// - `${i8}` a Core_Integer8 value.
+/// - `${i16}` a Core_Integer16 value.
+/// - `${i32}` a Core_Integer32 value.
+/// - `${i64}` a Core_Integer64 value.
+/// - `${n8}`  a Core_Natural8 value.
+/// - `${n16}` a Core_Natural16 value.
+/// - `${n32}` a Core_Natural32 value.
+/// - `${n64}` a Core_Natural64 value.
+/// - `${r32}` a Core_Real32 value.
+/// - `${r64}` a Core_Real64 value.
+/// @method{Core_StringBuffer}
+Core_Result Core_StringBuffer_insertF(Core_StringBuffer* SELF, Core_Size index, Core_String* format, ...);
+
+/// @brief Insert a string. The string is can have format specifiers. Each format specifier is replaced by its correspnding arguments in the string.
+/// @param index The index of the symbol at which to insert the string.
+/// @param format A pointer to the string.
+/// @param arguments The variadic arguments.
+/// @see See Core_StringBuffer_appendfv for a description of the format specifiers.
+/// @method{Core_StringBuffer}
+Core_Result Core_StringBuffer_insertFv(Core_StringBuffer* SELF, Core_Size index, Core_String* format, va_list arguments);
 
 Core_Result Core_StringBuffer_removeLast(Core_StringBuffer* SELF);
 

@@ -279,169 +279,194 @@ static int parse(format_spec_t* format_spec, char const** start, char const* end
 #undef IS
 
 Core_Result Core_insertFormatV(Core_InlineArrayListN8* buffer, Core_Size index, char const* start, char const* end, va_list arguments) {
-  return Core_Success;
-}
-
-Core_Result Core_prependFormatV(Core_InlineArrayListN8* buffer, char const* start, char const* end, va_list arguments) {
-  return Core_Success;
-}
-
-Core_Result Core_appendFormatV(Core_InlineArrayListN8* buffer, char const* start, char const* end, va_list arguments) {
+  Core_InlineArrayListN8 temporaryBuffer;
+  Core_InlineArrayListN8_Configuration temporaryBufferConfiguration = {
+    .addedCallback = NULL,
+    .removedCallback = NULL,
+  };
+  if (Core_InlineArrayListN8_initialize(&temporaryBuffer, end - start, &temporaryBufferConfiguration)) {
+    return Core_Failure;
+  }
   char const* current = start;
   while (current != end) {
     if (*current == '$') {
       // We encountered a format symbol. Store all the bytes up to and excluding the format symbol in the buffer.
-      if (Core_InlineArrayListN8_appendMany(buffer, start, current - start)) {
+      if (Core_InlineArrayListN8_appendMany(&temporaryBuffer, start, current - start)) {
+        Core_InlineArrayListN8_uninitialize(&temporaryBuffer);
         return Core_Failure;
       }
       format_spec_t format_spec;
       parse(&format_spec, &current, end);
       if (format_spec.type == PRINT_ERROR) {
+        Core_InlineArrayListN8_uninitialize(&temporaryBuffer);
         Core_setError(Core_Error_ArgumentInvalid);
         return Core_Failure;
       }
       switch (format_spec.type) {
-      case PRINT_STRING: {
-        Core_String* argument = va_arg(arguments, Core_String*);
-        if (!argument) {
+        case PRINT_STRING: {
+          Core_String* argument = va_arg(arguments, Core_String*);
+          if (!argument) {
+            Core_InlineArrayListN8_uninitialize(&temporaryBuffer);
+            Core_setError(Core_Error_ArgumentInvalid);
+            return Core_Failure;
+          }
+          if (Core_InlineArrayListN8_appendMany(&temporaryBuffer, argument->bytes, argument->numberOfBytes)) {
+            Core_InlineArrayListN8_uninitialize(&temporaryBuffer);
+            return Core_Failure;
+          }
+        } break;
+        case PRINT_I8: {
+          Core_Integer8 argument = va_arg(arguments, Core_Integer8);
+          char temporary[44];
+          int result = snprintf(temporary, 44, "%"PRIi8, argument);
+          if (result < 0 || result >= 44) {
+            Core_InlineArrayListN8_uninitialize(&temporaryBuffer);
+            Core_setError(Core_Error_ArgumentInvalid);
+            return Core_Failure;
+          }
+          if (Core_InlineArrayListN8_appendMany(&temporaryBuffer, temporary, strlen(temporary))) {
+            Core_InlineArrayListN8_uninitialize(&temporaryBuffer);
+            return Core_Failure;
+          }
+        } break;
+        case PRINT_I16: {
+          Core_Integer16 argument = va_arg(arguments, Core_Integer16);
+          char temporary[44];
+          int result = snprintf(temporary, 44, "%"PRIi16, argument);
+          if (result < 0 || result >= 44) {
+            Core_InlineArrayListN8_uninitialize(&temporaryBuffer);
+            Core_setError(Core_Error_ArgumentInvalid);
+            return Core_Failure;
+          }
+          if (Core_InlineArrayListN8_appendMany(&temporaryBuffer, temporary, strlen(temporary))) {
+            Core_InlineArrayListN8_uninitialize(&temporaryBuffer);
+            return Core_Failure;
+          }
+        } break;
+        case PRINT_I32: {
+          Core_Integer32 argument = va_arg(arguments, Core_Integer32);
+          char temporary[44];
+          int result = snprintf(temporary, 44, "%"PRIi32, argument);
+          if (result < 0 || result >= 44) {
+            Core_InlineArrayListN8_uninitialize(&temporaryBuffer);
+            Core_setError(Core_Error_ConversionFailed);
+            return Core_Failure;
+          }
+          if (Core_InlineArrayListN8_appendMany(&temporaryBuffer, temporary, strlen(temporary))) {
+            Core_InlineArrayListN8_uninitialize(&temporaryBuffer);
+            return Core_Failure;
+          }
+        } break;
+        case PRINT_I64: {
+          Core_Integer64 argument = va_arg(arguments, Core_Integer64);
+          char temporary[44];
+          int result = snprintf(temporary, 44, "%"PRIi64, argument);
+          if (result < 0 || result >= 44) {
+            Core_InlineArrayListN8_uninitialize(&temporaryBuffer);
+            Core_setError(Core_Error_ArgumentInvalid);
+            return Core_Failure;
+          }
+          if (Core_InlineArrayListN8_appendMany(&temporaryBuffer, temporary, strlen(temporary))) {
+            Core_InlineArrayListN8_uninitialize(&temporaryBuffer);
+            return Core_Failure;
+          }
+        } break;
+        case PRINT_N8: {
+          Core_Natural8 argument = va_arg(arguments, Core_Natural8);
+          char temporary[44];
+          int result = snprintf(temporary, 44, "%"PRIu8, argument);
+          if (result < 0 || result >= 44) {
+            Core_InlineArrayListN8_uninitialize(&temporaryBuffer);
+            Core_setError(Core_Error_ArgumentInvalid);
+            return Core_Failure;
+          }
+          if (Core_InlineArrayListN8_appendMany(&temporaryBuffer, temporary, strlen(temporary))) {
+            Core_InlineArrayListN8_uninitialize(&temporaryBuffer);
+            return Core_Failure;
+          }
+        } break;
+        case PRINT_N16: {
+          Core_Natural16 argument = va_arg(arguments, Core_Natural16);
+          char temporary[44];
+          int result = snprintf(temporary, 44, "%"PRIu16, argument);
+          if (result < 0 || result >= 44) {
+            Core_InlineArrayListN8_uninitialize(&temporaryBuffer);
+            Core_setError(Core_Error_ArgumentInvalid);
+            return Core_Failure;
+          }
+          if (Core_InlineArrayListN8_appendMany(&temporaryBuffer, temporary, strlen(temporary))) {
+            return Core_Failure;
+          }
+        } break;
+        case PRINT_N32: {
+          Core_Natural32 argument = va_arg(arguments, Core_Natural32);
+          char temporary[44];
+          int result = snprintf(temporary, 44, "%"PRIu32, argument);
+          if (result < 0 || result >= 44) {
+            Core_InlineArrayListN8_uninitialize(&temporaryBuffer);
+            Core_setError(Core_Error_ArgumentInvalid);
+            return Core_Failure;
+          }
+          if (Core_InlineArrayListN8_appendMany(&temporaryBuffer, temporary, strlen(temporary))) {
+            Core_InlineArrayListN8_uninitialize(&temporaryBuffer);
+            return Core_Failure;
+          }
+        } break;
+        case PRINT_N64: {
+          Core_Natural64 argument = va_arg(arguments, Core_Natural64);
+          char temporary[44];
+          int result = snprintf(temporary, 44, "%"PRIu64, argument);
+          if (result < 0 || result >= 44) {
+            Core_InlineArrayListN8_uninitialize(&temporaryBuffer);
+            Core_setError(Core_Error_ArgumentInvalid);
+            return Core_Failure;
+          }
+          if (Core_InlineArrayListN8_appendMany(&temporaryBuffer, temporary, strlen(temporary))) {
+            Core_InlineArrayListN8_uninitialize(&temporaryBuffer);
+            return Core_Failure;
+          }
+        } break;
+        case PRINT_R32: {
+          Core_Real32 argument = va_arg(arguments, Core_Real32);
+          char temporary[44];
+          int result = snprintf(temporary, 44, "%.*f", (int)format_spec.fractional_digits, argument);
+          if (result < 0 || result >= 44) {
+            Core_InlineArrayListN8_uninitialize(&temporaryBuffer);
+            Core_setError(Core_Error_ArgumentInvalid);
+            return Core_Failure;
+          }
+          if (Core_InlineArrayListN8_appendMany(&temporaryBuffer, temporary, strlen(temporary))) {
+            Core_InlineArrayListN8_uninitialize(&temporaryBuffer);
+            return Core_Failure;
+          }
+        } break;
+        case PRINT_R64: {
+          Core_Real64 argument = va_arg(arguments, Core_Real64);
+          char temporary[44];
+          int result = snprintf(temporary, 44, "%.*lf", (int)format_spec.fractional_digits, argument);
+          if (result < 0 || result >= 44) {
+            Core_InlineArrayListN8_uninitialize(&temporaryBuffer);
+            Core_setError(Core_Error_ArgumentInvalid);
+            return Core_Failure;
+          }
+          if (Core_InlineArrayListN8_appendMany(&temporaryBuffer, temporary, strlen(temporary))) {
+            Core_InlineArrayListN8_uninitialize(&temporaryBuffer);
+            return Core_Failure;
+          }
+        } break;
+        case PRINT_DOLLAR: {
+          static char const bytes[] = "$";
+          if (Core_InlineArrayListN8_appendMany(&temporaryBuffer, bytes, sizeof(bytes) - 1)) {
+            Core_InlineArrayListN8_uninitialize(&temporaryBuffer);
+            return Core_Failure;
+          }
+        } break;
+        default: {
+          Core_InlineArrayListN8_uninitialize(&temporaryBuffer);
+          // Expected: Format specifier. Received: Unknown format specifier prefix.
           Core_setError(Core_Error_ArgumentInvalid);
           return Core_Failure;
-        }
-        if (Core_InlineArrayListN8_appendMany(buffer, argument->bytes, argument->numberOfBytes)) {
-          return Core_Failure;
-        }
-      } break;
-      case PRINT_I8: {
-        Core_Integer8 argument = va_arg(arguments, Core_Integer8);
-        char temporary[44];
-        int result = snprintf(temporary, 44, "%"PRIi8, argument);
-        if (result < 0 || result >= 44) {
-          Core_setError(Core_Error_ArgumentInvalid);
-          return Core_Failure;
-        }
-        if (Core_InlineArrayListN8_appendMany(buffer, temporary, strlen(temporary))) {
-          return Core_Failure;
-        }
-      } break;
-      case PRINT_I16: {
-        Core_Integer16 argument = va_arg(arguments, Core_Integer16);
-        char temporary[44];
-        int result = snprintf(temporary, 44, "%"PRIi16, argument);
-        if (result < 0 || result >= 44) {
-          Core_setError(Core_Error_ArgumentInvalid);
-          return Core_Failure;
-        }
-        if (Core_InlineArrayListN8_appendMany(buffer, temporary, strlen(temporary))) {
-          return Core_Failure;
-        }
-      } break;
-      case PRINT_I32: {
-        Core_Integer32 argument = va_arg(arguments, Core_Integer32);
-        char temporary[44];
-        int result = snprintf(temporary, 44, "%"PRIi32, argument);
-        if (result < 0 || result >= 44) {
-          Core_setError(Core_Error_ConversionFailed);
-          return Core_Failure;
-        }
-        if (Core_InlineArrayListN8_appendMany(buffer, temporary, strlen(temporary))) {
-          return Core_Failure;
-        }
-      } break;
-      case PRINT_I64: {
-        Core_Integer64 argument = va_arg(arguments, Core_Integer64);
-        char temporary[44];
-        int result = snprintf(temporary, 44, "%"PRIi64, argument);
-        if (result < 0 || result >= 44) {
-          Core_setError(Core_Error_ArgumentInvalid);
-          return Core_Failure;
-        }
-        if (Core_InlineArrayListN8_appendMany(buffer, temporary, strlen(temporary))) {
-          return Core_Failure;
-        }
-      } break;
-      case PRINT_N8: {
-        Core_Natural8 argument = va_arg(arguments, Core_Natural8);
-        char temporary[44];
-        int result = snprintf(temporary, 44, "%"PRIu8, argument);
-        if (result < 0 || result >= 44) {
-          Core_setError(Core_Error_ArgumentInvalid);
-          return Core_Failure;
-        }
-        if (Core_InlineArrayListN8_appendMany(buffer, temporary, strlen(temporary))) {
-          return Core_Failure;
-        }
-      } break;
-      case PRINT_N16: {
-        Core_Natural16 argument = va_arg(arguments, Core_Natural16);
-        char temporary[44];
-        int result = snprintf(temporary, 44, "%"PRIu16, argument);
-        if (result < 0 || result >= 44) {
-          Core_setError(Core_Error_ArgumentInvalid);
-          return Core_Failure;
-        }
-        if (Core_InlineArrayListN8_appendMany(buffer, temporary, strlen(temporary))) {
-          return Core_Failure;
-        }
-      } break;
-      case PRINT_N32: {
-        Core_Natural32 argument = va_arg(arguments, Core_Natural32);
-        char temporary[44];
-        int result = snprintf(temporary, 44, "%"PRIu32, argument);
-        if (result < 0 || result >= 44) {
-          Core_setError(Core_Error_ArgumentInvalid);
-          return Core_Failure;
-        }
-        if (Core_InlineArrayListN8_appendMany(buffer, temporary, strlen(temporary))) {
-          return Core_Failure;
-        }
-      } break;
-      case PRINT_N64: {
-        Core_Natural64 argument = va_arg(arguments, Core_Natural64);
-        char temporary[44];
-        int result = snprintf(temporary, 44, "%"PRIu64, argument);
-        if (result < 0 || result >= 44) {
-          Core_setError(Core_Error_ArgumentInvalid);
-          return Core_Failure;
-        }
-        if (Core_InlineArrayListN8_appendMany(buffer, temporary, strlen(temporary))) {
-          return Core_Failure;
-        }
-      } break;
-      case PRINT_R32: {
-        Core_Real32 argument = va_arg(arguments, Core_Real32);
-        char temporary[44];
-        int result = snprintf(temporary, 44, "%.*f", (int)format_spec.fractional_digits, argument);
-        if (result < 0 || result >= 44) {
-          Core_setError(Core_Error_ArgumentInvalid);
-          return Core_Failure;
-        }
-        if (Core_InlineArrayListN8_appendMany(buffer, temporary, strlen(temporary))) {
-          return Core_Failure;
-        }
-      } break;
-      case PRINT_R64: {
-        Core_Real64 argument = va_arg(arguments, Core_Real64);
-        char temporary[44];
-        int result = snprintf(temporary, 44, "%.*lf", (int)format_spec.fractional_digits, argument);
-        if (result < 0 || result >= 44) {
-          Core_setError(Core_Error_ArgumentInvalid);
-          return Core_Failure;
-        }
-        if (Core_InlineArrayListN8_appendMany(buffer, temporary, strlen(temporary))) {
-          return Core_Failure;
-        }
-      } break;
-      case PRINT_DOLLAR: {
-        static char const bytes[] = "$";
-        if (Core_InlineArrayListN8_appendMany(buffer, bytes, sizeof(bytes) - 1)) {
-          return Core_Failure;
-        }
-      } break;
-      default: {
-        // Expected: Format specifier. Received: Unknown format specifier prefix.
-        Core_setError(Core_Error_ArgumentInvalid);
-        return Core_Failure;
-      } break;
+        } break;
       };
       start = current;
     } else {
@@ -449,9 +474,29 @@ Core_Result Core_appendFormatV(Core_InlineArrayListN8* buffer, char const* start
     }
   }
   if (start != current) {
-    if (Core_InlineArrayListN8_appendMany(buffer, start, current - start)) {
+    if (Core_InlineArrayListN8_appendMany(&temporaryBuffer, start, current - start)) {
+      Core_InlineArrayListN8_uninitialize(&temporaryBuffer);
       return Core_Failure;
     }
+  }
+  if (Core_InlineArrayListN8_insertMany(buffer, index, temporaryBuffer.elements, temporaryBuffer.size)) {
+    Core_InlineArrayListN8_uninitialize(&temporaryBuffer);
+    return Core_Failure;
+  }
+  Core_InlineArrayListN8_uninitialize(&temporaryBuffer);
+  return Core_Success;
+}
+
+Core_Result Core_prependFormatV(Core_InlineArrayListN8* buffer, char const* start, char const* end, va_list arguments) {
+  if (Core_insertFormatV(buffer, 0, start, end, arguments)) {
+    return Core_Failure;
+  }
+  return Core_Success;
+}
+
+Core_Result Core_appendFormatV(Core_InlineArrayListN8* buffer, char const* start, char const* end, va_list arguments) {
+  if (Core_insertFormatV(buffer, buffer->size, start, end, arguments)) {
+    return Core_Failure;
   }
   return Core_Success;
 }

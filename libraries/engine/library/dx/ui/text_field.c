@@ -418,7 +418,7 @@ static Core_Result update_text_bounds(dx_ui_text_field* SELF) {
   dx_vec2_f32_set(&p, 0.f, 0.f);
 
   DX_RECT2_F32 text_bounds1;
-  dx_rect2_f32_set2(&text_bounds1, p.e[0], p.e[1], 0.f, 0.f);
+  dx_rect2_f32_set2(&text_bounds1, p.v.e[0], p.v.e[1], 0.f, 0.f);
 
   for (Core_Size i = n; i > 0; --i) {
     dx_text_range* line = NULL;
@@ -447,7 +447,7 @@ static Core_Result update_text_bounds(dx_ui_text_field* SELF) {
     dx_rect2_f32_union(&text_bounds1, &text_bounds1, &line_bounds);
     CORE_UNREFERENCE(string);
     string = NULL;
-    p.e[1] += baseline_distance;
+    p.v.e[1] += baseline_distance;
   }
   SELF->text_bounds = text_bounds1;
   return Core_Success;
@@ -462,8 +462,8 @@ static Core_Result get_text_bounds_rc(DX_RECT2_F32* RETURN, dx_ui_text_field* SE
   Core_InlineVector2R32 relative_position;
   dx_ui_widget_get_relative_position(&relative_position, DX_UI_WIDGET(SELF));
   DX_RECT2_F32 text_bounds_relative = SELF->text_bounds;
-  text_bounds_relative.offset.x += relative_position.e[0];
-  text_bounds_relative.offset.y += relative_position.e[1];
+  text_bounds_relative.offset.x += relative_position.v.e[0];
+  text_bounds_relative.offset.y += relative_position.v.e[1];
   *RETURN = text_bounds_relative;
   return Core_Success;
 }
@@ -486,14 +486,14 @@ static Core_Result on_render_scrollbars(dx_ui_text_field* SELF, DX_UI_RENDER_ARG
     }
     // the positive x axis goes from left to right
     // the positive y axis goes from bottom to top
-    SELF->vertical_scrollbar->relative_position.e[0] = s.e[0] - SCROLLBAR_SIZE;
-    SELF->vertical_scrollbar->relative_size.e[0] = SCROLLBAR_SIZE; 
-    SELF->vertical_scrollbar->relative_position.e[1] = 0.f;
-    SELF->vertical_scrollbar->relative_size.e[1] = s.e[1];
+    SELF->vertical_scrollbar->relative_position.v.e[0] = s.v.e[0] - SCROLLBAR_SIZE;
+    SELF->vertical_scrollbar->relative_size.v.e[0] = SCROLLBAR_SIZE; 
+    SELF->vertical_scrollbar->relative_position.v.e[1] = 0.f;
+    SELF->vertical_scrollbar->relative_size.v.e[1] = s.v.e[1];
     
     if (display_horizontal_scrollbar) {
-      SELF->vertical_scrollbar->relative_position.e[1] += SCROLLBAR_SIZE;
-      SELF->vertical_scrollbar->relative_size.e[1] -= SCROLLBAR_SIZE;
+      SELF->vertical_scrollbar->relative_position.v.e[1] += SCROLLBAR_SIZE;
+      SELF->vertical_scrollbar->relative_size.v.e[1] -= SCROLLBAR_SIZE;
     }
     dx_ui_widget_render(DX_UI_WIDGET(SELF->vertical_scrollbar));
   }
@@ -505,14 +505,14 @@ static Core_Result on_render_scrollbars(dx_ui_text_field* SELF, DX_UI_RENDER_ARG
     }
     // the positive x axis goes from left to right
     // the positive y axis goes from bottom to top
-    SELF->horizontal_scrollbar->relative_position.e[0] = 0.f;
+    SELF->horizontal_scrollbar->relative_position.v.e[0] = 0.f;
 
-    SELF->horizontal_scrollbar->relative_size.e[0] = s.e[0];
-    SELF->horizontal_scrollbar->relative_position.e[1] = 0.f;
-    SELF->horizontal_scrollbar->relative_size.e[1] = SCROLLBAR_SIZE;
+    SELF->horizontal_scrollbar->relative_size.v.e[0] = s.v.e[0];
+    SELF->horizontal_scrollbar->relative_position.v.e[1] = 0.f;
+    SELF->horizontal_scrollbar->relative_size.v.e[1] = SCROLLBAR_SIZE;
 
     if (display_vertical_scrollbar) {
-      SELF->horizontal_scrollbar->relative_size.e[0] -= SCROLLBAR_SIZE;
+      SELF->horizontal_scrollbar->relative_size.v.e[0] -= SCROLLBAR_SIZE;
     }
     dx_ui_widget_render(DX_UI_WIDGET(SELF->horizontal_scrollbar));
   }
@@ -579,7 +579,7 @@ static Core_Result on_render(dx_ui_text_field* SELF, DX_UI_RENDER_ARGS const* ar
   if (get_absolute_position(&p, SELF)) {
     return Core_Failure;
   }
-  p.e[1] += y_offset;
+  p.v.e[1] += y_offset;
 
   for (Core_Size i = n; i > 0; --i) {
     dx_text_range* line = NULL;
@@ -604,17 +604,17 @@ static Core_Result on_render(dx_ui_text_field* SELF, DX_UI_RENDER_ARGS const* ar
                                          &p, string, &SELF->text_color, SELF->font, &TEXT_PRESENTATION_OPTIONS);
     CORE_UNREFERENCE(string);
     string = NULL;
-    p.e[1] += baseline_distance;
+    p.v.e[1] += baseline_distance;
   }
   return Core_Success;
 }
 
 static Core_Result render(dx_ui_text_field* SELF) {
   DX_UI_RENDER_ARGS args = {
-    .canvas_horizontal_size = DX_UI_WIDGET(SELF)->manager->resolution.e[0],
-    .canvas_vertical_size = DX_UI_WIDGET(SELF)->manager->resolution.e[1],
-    .dpi_horizontal = DX_UI_WIDGET(SELF)->manager->dpi.e[0],
-    .dpi_vertical = DX_UI_WIDGET(SELF)->manager->dpi.e[1],
+    .canvas_horizontal_size = DX_UI_WIDGET(SELF)->manager->resolution.v.e[0],
+    .canvas_vertical_size = DX_UI_WIDGET(SELF)->manager->resolution.v.e[1],
+    .dpi_horizontal = DX_UI_WIDGET(SELF)->manager->dpi.v.e[0],
+    .dpi_vertical = DX_UI_WIDGET(SELF)->manager->dpi.v.e[1],
   };
 
   if (on_update(SELF, &args)) {

@@ -251,8 +251,8 @@ Core_Result dx_ui_manager_enter_render(dx_ui_manager* SELF) {
 
   // Update the viewport command.
   command = dx_val_command_list_get_at(SELF->command_list, 0);
-  command->viewport_command.w = SELF->resolution.e[0];
-  command->viewport_command.h = SELF->resolution.e[1];
+  command->viewport_command.w = SELF->resolution.v.e[0];
+  command->viewport_command.h = SELF->resolution.v.e[1];
 
   // Execute the commands.
   if (Core_Visuals_Context_executeCommands(DX_PRESENTER(SELF->font_presenter)->val_context, SELF->command_list)) {
@@ -271,7 +271,7 @@ Core_Result dx_ui_manager_enter_render(dx_ui_manager* SELF) {
   dx_val_cbinding_set_mat4(SELF->font_presenter->val_cbinding, "vs_matrices.view_matrix", &view_matrix);
 
   DX_MAT4 projection_matrix;
-  dx_mat4_set_ortho(&projection_matrix, 0.f, SELF->resolution.e[0], 0, SELF->resolution.e[1], -1, +1);
+  dx_mat4_set_ortho(&projection_matrix, 0.f, SELF->resolution.v.e[0], 0, SELF->resolution.v.e[1], -1, +1);
   dx_val_cbinding_set_mat4(SELF->font_presenter->rectangle_presenter->val_cbinding, "vs_matrices.projection_matrix", &projection_matrix);
   dx_val_cbinding_set_mat4(SELF->font_presenter->val_cbinding, "vs_matrices.projection_matrix", &projection_matrix);
 

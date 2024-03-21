@@ -4,6 +4,7 @@
 
 cmake_minimum_required(VERSION 3.20)
 
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/idlib-1.0)
 
 set(name "Core")
 set(${name}.kind "static-library")
@@ -416,3 +417,5 @@ if( CMAKE_SIZEOF_VOID_P EQUAL 4 )
 endif()
 
 dx_end_project(${name})
+
+target_link_libraries(${name} idlib)

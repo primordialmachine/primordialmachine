@@ -471,7 +471,7 @@ static Core_Result on_layout(dx_default_console* SELF, Core_Real32 console_x, Co
     dx_ui_widget_get_relative_size(&input_size, DX_UI_WIDGET(SELF->ui_input_field));
 
     Core_InlineVector2R32 s;
-    dx_vec2_f32_set(&s, console_w - insets_l - insets_r, console_h - input_size.e[1] - insets_t - margin);
+    dx_vec2_f32_set(&s, console_w - insets_l - insets_r, console_h - input_size.v.e[1] - insets_t - margin);
     dx_ui_widget_set_relative_size(DX_UI_WIDGET(SELF->ui_output_field), &s);
   }
 
@@ -490,7 +490,7 @@ static Core_Result on_layout(dx_default_console* SELF, Core_Real32 console_x, Co
     Core_InlineVector2R32 input_size;
     dx_ui_widget_get_relative_size(&input_size, DX_UI_WIDGET(SELF->ui_input_field));
 
-    b += input_size.e[1];
+    b += input_size.v.e[1];
 
     Core_InlineVector2R32 p;
     dx_vec2_f32_set(&p, console_x + insets_l, b);

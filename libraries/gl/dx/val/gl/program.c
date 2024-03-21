@@ -161,7 +161,7 @@ static Core_Result dx_val_gl_program_bind(dx_val_gl_program* SELF, dx_val_cbindi
         dx_val_cbinding_iter_uninitialize(&it);
         return Core_Failure;
       }
-      ctx->glUniform3fv(location, 1, &(v.e[0]));
+      ctx->glUniform3fv(location, 1, &(v.v.e[0]));
     } break;
     case DX_VAL_CBINDING_TYPE_VEC4: {
       DX_VEC4 v;

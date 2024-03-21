@@ -74,68 +74,40 @@ Core_InlineRgbN8 const dx_colors_blue = { 0, 0, 255 };
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-void Core_InlineVector2R32_add_vv(Core_InlineVector2R32* RETURN, Core_InlineVector2R32 const* operand1, Core_InlineVector2R32 const* operand2) {
-  RETURN->e[0] = operand1->e[0] + operand2->e[0];
-  RETURN->e[1] = operand1->e[1] + operand2->e[1];
-}
-
 void Core_InlineVector2R32_mul_vs(Core_InlineVector2R32* RETURN, Core_InlineVector2R32 const* operand1, Core_Real32 operand2) {
-  RETURN->e[0] = operand1->e[0] * operand2;
-  RETURN->e[1] = operand1->e[1] * operand2;
+  RETURN->v.e[0] = operand1->v.e[0] * operand2;
+  RETURN->v.e[1] = operand1->v.e[1] * operand2;
 }
 
 void Core_InlineVector2R32_mulc_vv(Core_InlineVector2R32* RETURN, Core_InlineVector2R32 const* operand1, Core_InlineVector2R32 const* operand2) {
-  RETURN->e[0] = operand1->e[0] * operand2->e[0];
-  RETURN->e[1] = operand1->e[1] * operand2->e[1];
-}
-
-void Core_InlineVector2R32_sub_vv(Core_InlineVector2R32* RETURN, Core_InlineVector2R32 const* operand1, Core_InlineVector2R32 const* operand2) {
-  RETURN->e[0] = operand1->e[0] - operand2->e[0];
-  RETURN->e[1] = operand1->e[1] - operand2->e[1];
+  RETURN->v.e[0] = operand1->v.e[0] * operand2->v.e[0];
+  RETURN->v.e[1] = operand1->v.e[1] * operand2->v.e[1];
 }
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-Core_Real32 dx_vec3_sql(DX_VEC3 const* u) {
-  return (u->e[0] * u->e[0])
-    + (u->e[1] * u->e[1])
-    + (u->e[2] * u->e[2]);
-}
-
 void dx_vec3_norm(DX_VEC3* u, DX_VEC3 const* v) {
   Core_Real32 sql = dx_vec3_sql(v);
   if (sql == 0.f) {
-    u->e[0] = 0.f;
-    u->e[1] = 0.f;
-    u->e[2] = 0.f;
+    u->v.e[0] = 0.f;
+    u->v.e[1] = 0.f;
+    u->v.e[2] = 0.f;
     return;
   }
   Core_Real32 l = sqrtf(sql);
-  u->e[0] = v->e[0] / l;
-  u->e[1] = v->e[1] / l;
-  u->e[2] = v->e[2] / l;
-}
-
-void dx_vec3_add3(DX_VEC3* w, DX_VEC3 const* u, DX_VEC3 const* v) {
-  w->e[0] = u->e[0] + v->e[0];
-  w->e[1] = u->e[1] + v->e[1];
-  w->e[2] = u->e[2] + v->e[2];
-}
-
-void dx_vec3_sub3(DX_VEC3* w, DX_VEC3 const* u, DX_VEC3 const* v) {
-  w->e[0] = u->e[0] - v->e[0];
-  w->e[1] = u->e[1] - v->e[1];
-  w->e[2] = u->e[2] - v->e[2];
+  u->v.e[0] = v->v.e[0] / l;
+  u->v.e[1] = v->v.e[1] / l;
+  u->v.e[2] = v->v.e[2] / l;
 }
 
 void dx_vec3_cross(DX_VEC3* w, DX_VEC3 const* u, DX_VEC3 const* v) {
   Core_Real32 t[3];
-  t[0] = u->e[1] * v->e[2] - u->e[2] * v->e[1];
-  t[1] = u->e[2] * v->e[0] - u->e[0] * v->e[2];
-  t[2] = u->e[0] * v->e[1] - u->e[1] * v->e[0];
-  w->e[0] = t[0];
-  w->e[1] = t[1];
-  w->e[2] = t[2];
+  t[0] = u->v.e[1] * v->v.e[2] - u->v.e[2] * v->v.e[1];
+  t[1] = u->v.e[2] * v->v.e[0] - u->v.e[0] * v->v.e[2];
+  t[2] = u->v.e[0] * v->v.e[1] - u->v.e[1] * v->v.e[0];
+  w->v.e[0] = t[0];
+  w->v.e[1] = t[1];
+  w->v.e[2] = t[2];
 }
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
@@ -374,19 +346,19 @@ void dx_mat4_set_look_at(DX_MAT4* a, DX_VEC3 const* source, DX_VEC3 const* targe
   dx_vec3_cross(&up2, &right, &forward);
 
   // column #1
-  r.e[0][0] = right.e[0];
-  r.e[1][0] = up2.e[0];
-  r.e[2][0] = -forward.e[0];
+  r.e[0][0] = right.v.e[0];
+  r.e[1][0] = up2.v.e[0];
+  r.e[2][0] = -forward.v.e[0];
   r.e[3][0] = 0.f;
   // column #2
-  r.e[0][1] = right.e[1];
-  r.e[1][1] = up2.e[1];
-  r.e[2][1] = -forward.e[1];
+  r.e[0][1] = right.v.e[1];
+  r.e[1][1] = up2.v.e[1];
+  r.e[2][1] = -forward.v.e[1];
   r.e[3][1] = 0.f;
   // column #3
-  r.e[0][2] = right.e[2];
-  r.e[1][2] = up2.e[2];
-  r.e[2][2] = -forward.e[2];
+  r.e[0][2] = right.v.e[2];
+  r.e[1][2] = up2.v.e[2];
+  r.e[2][2] = -forward.v.e[2];
   r.e[3][2] = 0.f;
   // column #4
   r.e[0][3] = 0.f;
@@ -394,7 +366,7 @@ void dx_mat4_set_look_at(DX_MAT4* a, DX_VEC3 const* source, DX_VEC3 const* targe
   r.e[2][3] = 0.f;
   r.e[3][3] = 1.f;
 
-  dx_mat4_set_translate(&t, -source->e[0], -source->e[1], -source->e[2]);
+  dx_mat4_set_translate(&t, -source->v.e[0], -source->v.e[1], -source->v.e[2]);
 
   dx_mat4_mul3(a, &r, &t);
 }
@@ -404,24 +376,24 @@ void dx_mat4_set_look_at(DX_MAT4* a, DX_VEC3 const* source, DX_VEC3 const* targe
 void dx_transform_point(DX_VEC3* u, DX_VEC3 const* v, DX_MAT4 const* m) {
   Core_Real32 e[3];
   
-  e[0] = m->e[0][0] * v->e[0]
-       + m->e[0][1] * v->e[1]
-       + m->e[0][2] * v->e[2]
+  e[0] = m->e[0][0] * v->v.e[0]
+       + m->e[0][1] * v->v.e[1]
+       + m->e[0][2] * v->v.e[2]
        + m->e[0][3] * 1.f;
   
-  e[1] = m->e[1][0] * v->e[0]
-       + m->e[1][1] * v->e[1]
-       + m->e[1][2] * v->e[2]
+  e[1] = m->e[1][0] * v->v.e[0]
+       + m->e[1][1] * v->v.e[1]
+       + m->e[1][2] * v->v.e[2]
        + m->e[1][3] * 1.f;
 
-  e[2] = m->e[2][0] * v->e[0]
-       + m->e[2][1] * v->e[1]
-       + m->e[2][2] * v->e[2]
+  e[2] = m->e[2][0] * v->v.e[0]
+       + m->e[2][1] * v->v.e[1]
+       + m->e[2][2] * v->v.e[2]
        + m->e[2][3] * 1.f;
 
-  u->e[0] = e[0];
-  u->e[1] = e[1];
-  u->e[2] = e[2];
+  u->v.e[0] = e[0];
+  u->v.e[1] = e[1];
+  u->v.e[2] = e[2];
 }
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
@@ -438,7 +410,7 @@ Core_Result dx_math_tests() {
   // it follows that f((0,0,-1)) = (0,0,-1)
   dx_mat4_set_rotate_y(&a, 0.f);
   dx_transform_point(&q, &p, &a);
-  if (!(EQ(q.e[0], 0.f) && EQ(q.e[1], 0.f) && EQ(q.e[2], -1.f))) {
+  if (!(EQ(q.v.e[0], 0.f) && EQ(q.v.e[1], 0.f) && EQ(q.v.e[2], -1.f))) {
     return Core_Failure;
   }
 
@@ -446,7 +418,7 @@ Core_Result dx_math_tests() {
   // it follows that f((0,0,-1)) = (-1,0,0)
   dx_mat4_set_rotate_y(&a, 90.f);
   dx_transform_point(&q, &p, &a);
-  if (!(EQ(q.e[0], -1.f) && EQ(q.e[1], 0.f) && EQ(q.e[2], 0.f))) {
+  if (!(EQ(q.v.e[0], -1.f) && EQ(q.v.e[1], 0.f) && EQ(q.v.e[2], 0.f))) {
     return Core_Failure;
   }
   
@@ -454,7 +426,7 @@ Core_Result dx_math_tests() {
   // it follows that f((0,0,-1))= (0,0,1)
   dx_mat4_set_rotate_y(&a, 180.f);
   dx_transform_point(&q, &p, &a);
-  if (!(EQ(q.e[0], 0.f) && EQ(q.e[1], 0.f) && EQ(q.e[2], 1.f))) {
+  if (!(EQ(q.v.e[0], 0.f) && EQ(q.v.e[1], 0.f) && EQ(q.v.e[2], 1.f))) {
     return Core_Failure;
   }
   
@@ -462,7 +434,7 @@ Core_Result dx_math_tests() {
   // it follows that f((0,0,-1)) = (1,0,0)
   dx_mat4_set_rotate_y(&a, 270.f);
   dx_transform_point(&q, &p, &a);
-  if (!(EQ(q.e[0], 1.f) && EQ(q.e[1], 0.f) && EQ(q.e[2], 0.f))) {
+  if (!(EQ(q.v.e[0], 1.f) && EQ(q.v.e[1], 0.f) && EQ(q.v.e[2], 0.f))) {
     return Core_Failure;
   }
 #undef EQ
