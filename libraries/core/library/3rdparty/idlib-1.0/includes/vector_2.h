@@ -7,14 +7,14 @@
 #include <stddef.h>
 
 /// @since 1.0
-/// A two component vector with elements of type idlib_f32.
+/// @brief A two component vector with elements of type idlib_f32.
 typedef struct idlib_vector_2_f23 {
   idlib_f32 e[2];
 } idlib_vector_2_f32;
 
 /// @since 1.0
-/// Get the squared length of a idlib_vector_2_f32 object.
-/// @param operand A pointer to the idlib_vector_2_f32 object.
+/// @brief Get the squared length of a idlib_vector_2_f32 object.
+/// @param operand A pointer to the idlib_vector_2_f32 object of which the squared length is computed.
 /// @return The squared length of the idlib_Vector_2_f32 object pointed to by @a operand.
 static inline idlib_f32
 idlib_vector_2_f32_get_squared_length
@@ -23,8 +23,8 @@ idlib_vector_2_f32_get_squared_length
   );
 
 /// @since 1.0
-/// Get the length of a idlib_vector_2_f32 object.
-/// @param operand A pointer to the idlib_vector_2_f32 object.
+/// @brief Get the length of a idlib_vector_2_f32 object.
+/// @param operand Pointer to the idlib_vector_2_f32 object of which the length is computed.
 /// @return The length of the idlib_Vector_2_f32 object pointed to by @a operand.
 static inline idlib_f32
 idlib_vector_2_f32_get_length
@@ -32,9 +32,36 @@ idlib_vector_2_f32_get_length
     idlib_vector_2_f32 const* operand
   );
 
-/// @since 0.1
+/// @since 1.0
+/// @brief Get the normalized vector for a vector.
+/// @param target Pointer to the idlib_vector_2_f32 object to assign the result to.
+/// @param operand Pointer to the idlib_vector_2_f32 object of which the normalized vector is computed.
+/// @return @a false if the vector represented by @a operand, @a true otherwise.
+/// If @a false is returned, then *target was assigned a copy of @a operand.
+/// @remarks
+/// "represented by @a operand" actually means "represented by the object pointed to by @a operand".
+static inline bool
+idlib_vector_2_f32_normalize
+  (
+    idlib_vector_2_f32* target,
+    idlib_vector_2_f32 const* operand
+  );
+
+/// @since 1.0
+/// @brief Negate a vector.
+/// @param target Pointer to the idlib_vector_2_f32 object to assign the result to.
+/// @param operand Pointer to the idlib_vector_2_f32 object to negate.
+/// @remarks @a target and @a operand all may refer to the same idlib_vector_2_f32 object.
+static inline void
+idlib_vector_2_f32_negate
+  (
+    idlib_vector_2_f32* target,
+    idlib_vector_2_f32 const* operand
+  );
+
+/// @since 1.0
 /// Assign an idlib_vector_2_f32 object the specified scalar values.
-/// @param target A pointer to the idlib_vector_2_f32 object.
+/// @param target A pointer to the idlib_vector_2_f32 object to assign the vector <code>(x,y)</code> to.
 /// @param x, y The scalar values.
 static inline void
 idlib_vector_2_f32_set
@@ -44,9 +71,9 @@ idlib_vector_2_f32_set
     idlib_f32 y
   );
 
-/// @since 0.1
+/// @since 1.0
 /// Assign an idlib_vector_2_f32 object the values of an zero vector.
-/// @param target A pointer to the idlib_vector_2_f32 object.
+/// @param target A pointer to the idlib_vector_2_f32 object to assign the vector <code>(x,y)</code> to.
 static inline void
 idlib_vector_2_f32_set_zero
   (
@@ -55,7 +82,7 @@ idlib_vector_2_f32_set_zero
 
 /// @since 1.0
 /// Compute the sum of two idlib_vector_2_f32 objects and assign the result to a idlib_vector_2_f32 object.
-/// @param target The idlib_vector_2_f32 object to assign the result to.
+/// @param target Pointer to the idlib_vector_2_f32 object to assign the result to.
 /// @param operand1 The idlib_vector_2_f32 object that is the augend (aka first term).
 /// @param operand2 The idlib_vector_2_f32 object that is the addend (aka second term).
 /// @remarks @a target, @a operand1, and @a operand2 all may refer to the same idlib_vector_2_f32 object.
@@ -69,7 +96,7 @@ idlib_vector_2_f32_add
 
 /// @since 1.0
 /// Compute the difference of two idlib_vector_2_f32 objects and assign the result to a idlib_vector_2_f32 object.
-/// @param target The idlib_vector_2_f32 object to assign the result to.
+/// @param target Pointer to the idlib_vector_2_f32 object to assign the result to.
 /// @param operand1 The idlib_vector_2_f32 object that is the minuend (aka first term).
 /// @param operand2 The idlib_vector_2_f32 object that is the subtrahend (aka second term).
 /// @remarks @a target, @a operand1, and @a operand2 all may refer to the same idlib_vector_2_f32 object.
@@ -95,9 +122,9 @@ idlib_vector_2_f32_are_equal
 
 /// @since 1.0
 /// Linear interpolation between two vectors.
-/// @param target The idlib_vector_2_f32 object to assign the result to.
-/// @param operand1 Pointer to an idlib_vector_2_f32 object, the first operand.
-/// @param operand2 Pointer to an idlib_vector_2_f32 object, the second operand.
+/// @param target Pointer to the idlib_vector_2_f32 object to assign the result to.
+/// @param operand1 Pointer to an idlib_vector_2_f32 object that is the start of the interpolation.
+/// @param operand2 Pointer to an idlib_vector_2_f32 object that is the end of the interpolation.
 /// @param operand3 idlib_f32 value, the interpolation factor.
 /// @remarks
 /// The interpolation factor is clamped to [0,1].
@@ -129,6 +156,36 @@ idlib_vector_2_f32_get_length
     idlib_vector_2_f32 const* operand
   )
 { return idlib_sqrt_f32(idlib_vector_2_f32_get_squared_length(operand)); }
+
+static inline bool
+idlib_vector_2_f32_normalize
+  (
+    idlib_vector_2_f32* target,
+    idlib_vector_2_f32 const* operand
+  )
+{
+  idlib_f32 sql = idlib_vector_2_f32_get_squared_length(operand);
+  if (sql == 0.f) {
+    target->e[0] = 0.f;
+    target->e[1] = 0.f;
+    return false;
+  } else {
+    idlib_f32 l = idlib_sqrt_f32(sql);
+    target->e[0] = operand->e[0] / l;
+    target->e[1] = operand->e[1] / l;
+    return true;
+  }
+}
+
+static inline void
+idlib_vector_2_f32_negate
+  (
+    idlib_vector_2_f32* target,
+    idlib_vector_2_f32 const* operand
+  )
+{
+  idlib_vector_2_f32_set(target, -operand->e[0], -operand->e[1]);
+}
 
 static inline void
 idlib_vector_2_f32_set

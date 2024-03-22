@@ -53,10 +53,10 @@ else()
   message(FATAL_ERROR "operating system detection not executed")
 endif()
 
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/includes/Configure.h.in ${CMAKE_CURRENT_BINARY_DIR}/includes/Configure.h)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/includes/configure.h.in ${CMAKE_CURRENT_BINARY_DIR}/includes/configure.h)
 
 target_include_directories(idlib PUBLIC ${CMAKE_CURRENT_BINARY_DIR}/includes)
-list(APPEND idlib-headers "${CMAKE_CURRENT_BINARY_DIR}/includes/Configure.h")
+list(APPEND idlib-headers "${CMAKE_CURRENT_BINARY_DIR}/includes/configure.h")
 
 ###############################################################################################################################################################
 

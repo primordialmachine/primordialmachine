@@ -185,7 +185,7 @@ static Core_Result dx_val_gl_program_bind(dx_val_gl_program* SELF, dx_val_cbindi
         dx_val_cbinding_iter_uninitialize(&it);
         return Core_Failure;
       }
-      ctx->glUniformMatrix4fv(location, 1, GL_TRUE, &(a.e[0][0]));
+      ctx->glUniformMatrix4fv(location, 1, GL_TRUE, &(a.m.e[0][0]));
     } break;
     case DX_VAL_CBINDING_TYPE_TEXTURE_INDEX: {
       Core_Size i;

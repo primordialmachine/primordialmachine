@@ -363,13 +363,16 @@ static inline Core_Real32 dx_vec3_sql(DX_VEC3 const* v) {
   return idlib_vector_3_f32_get_squared_length(&v->v);
 }
 
-// Compute a normalized vector.
-// @param v the vector receiving the normalized vector
-// @param u the vector to normalize 
-// @remarks The result is the normalized vector of the vector to be normalized if the vector to be normalized is a non-zero vector.
-// Otherwise the result is the zero vector.
-// @a v and @a u may refer to the same object.
-void dx_vec3_norm(DX_VEC3* v, DX_VEC3 const* u);
+/// @ingroup math
+/// Compute a normalized vector.
+/// @param v the vector receiving the normalized vector
+/// @param u the vector to normalize 
+/// @remarks The result is the normalized vector of the vector to be normalized if the vector to be normalized is a non-zero vector.
+/// Otherwise the result is the zero vector.
+/// @a v and @a u may refer to the same object.
+static inline void dx_vec3_norm(DX_VEC3* v, DX_VEC3 const* u) {
+  idlib_vector_3_f32_normalize(&v->v, &u->v);
+}
 
 /// @ingroup math
 /// @brief Compute the sum of two vectors.
@@ -399,15 +402,20 @@ static inline void dx_vec3_sub3(DX_VEC3* w, DX_VEC3 const* u, DX_VEC3 const* v) 
 
 /// @ingroup math
 /// @brief Compute the cross product of two vectors.
-/// @param w Pointer to a DX_VEC3 object.
+/// @param w Pointer to a DX_VEC3 object receiving the result.
 /// @param u Pointer to a DX_VEC3 object.
 /// The object's values represent the vector, that is the 1st operand.
 /// @param v Pointer to a DX_VEC3 object.
 /// The object's values represent the vector, that is the 2nd operand.
 /// @remarks @a w, @a u, and @a v all may refer to the same object.
 /// @post <code>*w/<code> was assigned the values of the cross product vector.
-void dx_vec3_cross(DX_VEC3* w, DX_VEC3 const* u, DX_VEC3 const* v);
+static inline void dx_vec3_cross(DX_VEC3* w, DX_VEC3 const* u, DX_VEC3 const* v) {
+  idlib_vector_3_f32_cross(&w->v, &u->v, &v->v);
+}
 
+/// @ingroup math
+/// Linear interpolation between two vectors.
+/// @param w Pointer to the DX_VEC3 object receiving the result.
 static inline void dx_vec3_lerp(DX_VEC3 *w, DX_VEC3 const* u, DX_VEC3 const* v, Core_Real32 t) {
   idlib_vector_3_f32_lerp(&w->v, &u->v, &v->v, t);
 }
@@ -473,32 +481,52 @@ static inline void dx_vec4_lerp(DX_VEC4 const* u, DX_VEC4 const* v, Core_Real32 
 // A 4x4 Core_Real32 matrix POD.
 typedef struct DX_MAT4 {
   // index i,j denotes i-th row and j-th colmn
-  Core_Real32 e[4][4];
+  idlib_matrix_4x4_f32 m;
 } DX_MAT4;
 
 // assign this matrix the values of an identity matrix
-void dx_mat4_set_identity(DX_MAT4* m);
+static inline void dx_mat4_set_identity(DX_MAT4* m) {
+  idlib_matrix_4x4_f32_set_identity(&m->m);
+}
 
 // assign this matrix the values of a translation matrix
-void dx_mat4_set_translate(DX_MAT4* m, Core_Real32 x, Core_Real32 y, Core_Real32 z);
+static inline void dx_mat4_set_translate(DX_MAT4* m, Core_Real32 x, Core_Real32 y, Core_Real32 z) {
+  idlib_vector_3_f32 t;
+  idlib_vector_3_f32_set(&t, x, y, z);
+  idlib_matrix_4x4_f32_set_translation(&m->m, &t);
+}
 
 // assign this matrix the values of transformation matrix representing
 // a counter-clockwise rotation around the x-axis by the specified number of degrees.
 // @param m A pointer to this matrix.
 // @param a The angle of rotation, in degrees.
-void dx_mat4_set_rotate_x(DX_MAT4* a, Core_Real32 x);
+static inline void dx_mat4_set_rotate_x(DX_MAT4* a, Core_Real32 x) {
+  idlib_matrix_4x4_f32_set_rotation_x(&a->m, x);
+}
 
 // assign this matrix the values of transformation matrix representing
 // a counter-clockwise rotation around the y-axis by the specified number of degrees.
 // @param m A pointer to this matrix.
 // @param a The angle of rotation, in degrees.
-void dx_mat4_set_rotate_y(DX_MAT4* a, Core_Real32 x);
+static inline void dx_mat4_set_rotate_y(DX_MAT4* a, Core_Real32 x) {
+  idlib_matrix_4x4_f32_set_rotation_y(&a->m, x);
+}
+
+// Because #include <Windows.h> defines near and far as macros.
+#if Core_Compiler_C == Core_Compiler_C_Msvc
+  #pragma push_macro("near")
+  #undef near
+  #pragma push_macro("far")
+  #undef far
+#endif
 
 /// Assign a DX_MAT4 object the values of an orthographic projection matrix such that
 /// - the positive z-axis points out of the screen (negative z-axis points into the screen)
 /// - the positive x-axis points to the right
 /// - the positive y-axis points to the top
-void dx_mat4_set_ortho(DX_MAT4* m, Core_Real32 left, Core_Real32 right, Core_Real32 bottom, Core_Real32 top, Core_Real32 near, Core_Real32 far);
+static inline void dx_mat4_set_ortho(DX_MAT4* m, Core_Real32 left, Core_Real32 right, Core_Real32 bottom, Core_Real32 top, Core_Real32 near, Core_Real32 far) {
+  idlib_matrix_4x4_f32_set_ortho(&m->m, left, right, bottom, top, near, far);
+}
 
 /// @brief Assignt a DX_MAT4 object the values of a perspective project matrix such that
 // - the positive z-axis points out of the screen (negative z-axis points into the screen)
@@ -526,7 +554,14 @@ void dx_mat4_set_ortho(DX_MAT4* m, Core_Real32 left, Core_Real32 right, Core_Rea
 /// \f[
 /// f = \cot\left(\frac{fieldOfVision}{2}\right)
 /// \f]
-void dx_mat4_set_perspective(DX_MAT4* m, Core_Real32 field_of_view_y, Core_Real32 aspect_ratio, Core_Real32 near, Core_Real32 far);
+static inline void dx_mat4_set_perspective(DX_MAT4* m, Core_Real32 field_of_view_y, Core_Real32 aspect_ratio, Core_Real32 near, Core_Real32 far) {
+  idlib_matrix_4x4_f32_set_perspective(&m->m, field_of_view_y, aspect_ratio, near, far);
+}
+
+#if Core_Compiler_C == Core_Compiler_C_Msvc
+  #pragma pop_macro("far")
+  #pragma pop_macro("near")
+#endif
 
 /// Compute the product of two matrices.
 /// @param c Pointer to a DX_MAT4 object.
@@ -536,7 +571,9 @@ void dx_mat4_set_perspective(DX_MAT4* m, Core_Real32 field_of_view_y, Core_Real3
 /// The object's values represent the matrix that is the multiplicand (aka the 2nd factor aka the 2nd operand).
 /// @remarks @a c, @a b, and @a b all may refer to the same object.
 /// @post <code>*c/<code> was assigned the values of the product matrix.
-void dx_mat4_mul3(DX_MAT4* c, DX_MAT4 const* a, DX_MAT4 const* b);
+static inline void dx_mat4_mul3(DX_MAT4* c, DX_MAT4 const* a, DX_MAT4 const* b) {
+  idlib_matrix_4x4_f32_multiply(&c->m, &a->m, &b->m);
+}
 
 /// Assign this matrix the value a of a view matrix.
 /// @param source the position vector of the point at which the viewer is located
@@ -562,7 +599,9 @@ void dx_mat4_mul3(DX_MAT4* c, DX_MAT4 const* a, DX_MAT4 const* b);
 /// | -forward.x | -forward.y | -forward.z | 0
 /// | 0          | 0          | 0          | 1
 /// @endcode
-void dx_mat4_set_look_at(DX_MAT4* a, DX_VEC3 const* source, DX_VEC3 const* target, DX_VEC3 const* up);
+static inline void dx_mat4_set_look_at(DX_MAT4* a, DX_VEC3 const* source, DX_VEC3 const* target, DX_VEC3 const* up) {
+  idlib_matrix_4x4_f32_set_look_at(&a->m, &source->v, &target->v, &up->v);
+}
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
